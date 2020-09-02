@@ -387,7 +387,7 @@ dashboards: {}
   #     url: https://example.com/repository/test-b64.json
   #     b64content: true
 
-## Reference to external ConfigMap per provider. Use provider name as key and ConfiMap name as value.
+## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
 ## ConfigMap data example:
 ##
