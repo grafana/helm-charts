@@ -283,7 +283,7 @@ the data sources in grafana can be imported. The secrets must be created before 
 that the datasources init container can list the secrets.
 
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
-data like usernames and passwords. Secrets are the more appropriate cluster ressource to manage those.
+data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
 Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 ```
@@ -359,7 +359,7 @@ the notification channels in grafana can be imported. The secrets must be create
 `helm install` so that the notifiers init container can list the secrets.
 
 Secrets are recommended over configmaps for this usecase because alert notification channels usually contain
-private data like SMTP usernames and passwords. Secrets are the more appropriate cluster ressource to manage those.
+private data like SMTP usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
 Example datasource config adapted from [Grafana](https://grafana.com/docs/grafana/latest/administration/provisioning/#alert-notification-channels):
 
