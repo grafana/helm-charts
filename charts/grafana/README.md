@@ -240,7 +240,7 @@ dashboards:
 
 ## BASE64 dashboards
 
-Dashboards could be storaged on a server that does not return JSON directly and instead of it returns a Base64 encoded file (e.g. Gerrit)
+Dashboards could be stored on a server that does not return JSON directly and instead of it returns a Base64 encoded file (e.g. Gerrit)
 A new parameter has been added to the url use case so if you specify a b64content value equals to true after the url entry a Base64 decoding is applied before save the file to disk.
 If this entry is not set or is equals to false not decoding is applied to the file before saving it to disk.
 
