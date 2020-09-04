@@ -2,10 +2,10 @@
 
 * Installs the web dashboarding system [Grafana](http://grafana.org/)
 
-## TL;DR;
+## TL;DR
 
 ```console
-$ helm install grafana/grafana
+helm install grafana/grafana
 ```
 
 ## Installing the Chart
@@ -13,7 +13,7 @@ $ helm install grafana/grafana
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm install --name my-release grafana/grafana
+helm install --name my-release grafana/grafana
 ```
 
 ## Uninstalling the Chart
@@ -21,7 +21,7 @@ $ helm install --name my-release grafana/grafana
 To uninstall/delete the my-release deployment:
 
 ```console
-$ helm delete my-release
+helm delete my-release
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -158,7 +158,7 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 | `serviceAccount.annotations`              | ServiceAccount annotations                    |                                                         |
 | `serviceAccount.create`                   | Create service account                        | `true`                                                  |
 | `serviceAccount.name`                     | Service account name to use, when empty will be set to created account if `serviceAccount.create` is set else to `default` | `` |
-| `serviceAccount.nameTest`                 | Service account name to use for test, when empty will be set to created account if `serviceAccount.create` is set else to `default` | `` |
+| `serviceAccount.nameTest`                 | Service account name to use for test, when empty will be set to created account if `serviceAccount.create` is set else to `default` | `nil` |
 | `rbac.create`                             | Create and use RBAC resources                 | `true`                                                  |
 | `rbac.namespaced`                         | Creates Role and Rolebinding instead of the default ClusterRole and ClusteRoleBindings for the grafana instance  | `false` |
 | `rbac.pspEnabled`                         | Create PodSecurityPolicy (with `rbac.create`, grant roles permissions as well) | `true`                 |
@@ -244,10 +244,11 @@ Dashboards could be storaged in a server that does not return JSON directly and 
 A new parameter has been added to the url use case so if you specify a b64content value equals to true after the url entry a Base64 decoding is applied before save the file to disk.
 If this entry is not set or is equals to false not decoding is applied to the file before saving it to disk.
 
-### Gerrit use case:
-Gerrit API for download files has the following schema: https://yourgerritserver/a/{project-name}/branches/{branch-id}/files/{file-id}/content where {project-name} and
+### Gerrit use case
+
+Gerrit API for download files has the following schema: <https://yourgerritserver/a/{project-name}/branches/{branch-id}/files/{file-id}/content> where {project-name} and
 {file-id} usualy has '/' in their values and so they MUST be replaced by %2F so if project-name is user/repo, branch-id is master and file-id is equals to dir1/dir2/dashboard
-the url value is https://yourgerritserver/a/user%2Frepo/branches/master/files/dir1%2Fdir2%2Fdashboard/content
+the url value is <https://yourgerritserver/a/user%2Frepo/branches/master/files/dir1%2Fdir2%2Fdashboard/content>
 
 ## Sidecar for dashboards
 
@@ -261,7 +262,8 @@ A recommendation is to use one configmap per dashboard, as a reduction of multip
 one configmap is currently not properly mirrored in grafana.
 
 Example dashboard config:
-```
+
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -286,7 +288,8 @@ Secrets are recommended over configmaps for this usecase because datasources usu
 data like usernames and passwords. Secrets are the more appropriate cluster ressource to manage those.
 
 Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
-```
+
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -363,7 +366,7 @@ private data like SMTP usernames and passwords. Secrets are the more appropriate
 
 Example datasource config adapted from [Grafana](https://grafana.com/docs/grafana/latest/administration/provisioning/#alert-notification-channels):
 
-```
+```yaml
 notifiers:
   - name: notification-channel-1
     type: slack
@@ -394,7 +397,7 @@ delete_notifiers:
 
 ## How to serve Grafana with a path prefix (/grafana)
 
-In order to serve Grafana with a prefix (e.g., http://example.com/grafana), add the following to your values.yaml.
+In order to serve Grafana with a prefix (e.g., <http://example.com/grafana>), add the following to your values.yaml.
 
 ```yaml
 ingress:
