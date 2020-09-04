@@ -240,14 +240,14 @@ dashboards:
 
 ## BASE64 dashboards
 
-Dashboards could be storaged in a server that does not return JSON directly and instead of it returns a Base64 encoded file (e.g. Gerrit)
+Dashboards could be stored on a server that does not return JSON directly and instead of it returns a Base64 encoded file (e.g. Gerrit)
 A new parameter has been added to the url use case so if you specify a b64content value equals to true after the url entry a Base64 decoding is applied before save the file to disk.
 If this entry is not set or is equals to false not decoding is applied to the file before saving it to disk.
 
 ### Gerrit use case
 
 Gerrit API for download files has the following schema: <https://yourgerritserver/a/{project-name}/branches/{branch-id}/files/{file-id}/content> where {project-name} and
-{file-id} usualy has '/' in their values and so they MUST be replaced by %2F so if project-name is user/repo, branch-id is master and file-id is equals to dir1/dir2/dashboard
+{file-id} usually has '/' in their values and so they MUST be replaced by %2F so if project-name is user/repo, branch-id is master and file-id is equals to dir1/dir2/dashboard
 the url value is <https://yourgerritserver/a/user%2Frepo/branches/master/files/dir1%2Fdir2%2Fdashboard/content>
 
 ## Sidecar for dashboards
@@ -285,7 +285,7 @@ the data sources in grafana can be imported. The secrets must be created before 
 that the datasources init container can list the secrets.
 
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
-data like usernames and passwords. Secrets are the more appropriate cluster ressource to manage those.
+data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
 Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 
@@ -362,7 +362,7 @@ the notification channels in grafana can be imported. The secrets must be create
 `helm install` so that the notifiers init container can list the secrets.
 
 Secrets are recommended over configmaps for this usecase because alert notification channels usually contain
-private data like SMTP usernames and passwords. Secrets are the more appropriate cluster ressource to manage those.
+private data like SMTP usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
 Example datasource config adapted from [Grafana](https://grafana.com/docs/grafana/latest/administration/provisioning/#alert-notification-channels):
 
