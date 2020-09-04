@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  grafana:
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-09-04T04:21:47.535149119Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 605be3d163079aa7f25efd0e71d9c6066966ae079fac254c20e5445cd804e0d1
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-5.6.0/grafana-5.6.0.tgz
+    version: 5.6.0
+generated: "2020-09-04T04:21:47.408492407Z"
