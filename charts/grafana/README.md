@@ -5,7 +5,7 @@
 ## TL;DR;
 
 ```console
-$ helm install stable/grafana
+$ helm install grafana/grafana
 ```
 
 ## Installing the Chart
@@ -13,7 +13,7 @@ $ helm install stable/grafana
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm install --name my-release stable/grafana
+$ helm install --name my-release grafana/grafana
 ```
 
 ## Uninstalling the Chart
