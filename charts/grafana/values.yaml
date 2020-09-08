@@ -124,6 +124,19 @@ service:
   labels: {}
   portName: service
 
+serviceMonitor:
+  ## If true, a ServiceMonitor CRD is created for a prometheus operator
+  ## https://github.com/coreos/prometheus-operator
+  ##
+  enabled: false
+  path: /metrics
+  #  namespace: monitoring
+  labels: {}
+  interval: 5m
+  scrapeTimeout: 30s
+  scheme: http
+  relabelings: []
+
 extraExposePorts: []
  # - name: keycloak
  #   port: 8080
