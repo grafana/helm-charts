@@ -132,9 +132,8 @@ serviceMonitor:
   path: /metrics
   #  namespace: monitoring
   labels: {}
-  interval: 5m
+  interval: 1m
   scrapeTimeout: 30s
-  scheme: http
   relabelings: []
 
 extraExposePorts: []
