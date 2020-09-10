@@ -130,7 +130,7 @@ serviceMonitor:
   ##
   enabled: false
   path: /metrics
-  #  namespace: monitoring
+  #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
   labels: {}
   interval: 1m
   scrapeTimeout: 30s
