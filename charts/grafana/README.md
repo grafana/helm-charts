@@ -178,6 +178,13 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 | `downloadDashboardsImage.sha`             | Curl docker image sha (optional)              | `""`                                                    |
 | `downloadDashboardsImage.pullPolicy`      | Curl docker image pull policy                 | `IfNotPresent`                                          |
 | `namespaceOverride`                       | Override the deployment namespace             | `""` (`Release.Namespace`)                              |
+| `serviceMonitor.enabled`                  | Use servicemonitor from prometheus operator   | `false`                                                 |
+| `serviceMonitor.namespace`                | Namespace this servicemonitor is installed in |                                                         |
+| `serviceMonitor.interval`                 | How frequently Prometheus should scrape       | `1m`                                                    |
+| `serviceMonitor.path`                     | Path to scrape                                | `/metrics`                                              |
+| `serviceMonitor.labels`                   | Labels for the servicemonitor passed to Prometheus Operator      |  `{}`                                |
+| `serviceMonitor.scrapeTimeout`            | Timeout after which the scrape is ended       | `30s`                                                   |
+| `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
 
 ### Example ingress with path
 
