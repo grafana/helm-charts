@@ -21,5 +21,6 @@ data:
       disableDeletion: {{ .Values.sidecar.dashboards.provider.disableDelete }}
       allowUiUpdates: {{ .Values.sidecar.dashboards.provider.allowUiUpdates }}
       options:
+        foldersFromFilesStructure: {{ .Values.sidecar.dashboards.provider.foldersFromFilesStructure }}
         path: {{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}
 {{- end}}
