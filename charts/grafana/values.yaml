@@ -515,6 +515,8 @@ sidecar:
       disableDelete: false
       # allow updating provisioned dashboards from the UI
       allowUiUpdates: false
+      # allow Grafana to replicate dashboard structure from filesystem
+      foldersFromFilesStructure: false
   datasources:
     enabled: false
     # label that the configmaps with datasources are marked with
