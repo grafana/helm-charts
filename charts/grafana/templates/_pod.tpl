@@ -330,8 +330,8 @@ containers:
 {{ toYaml $value | indent 10 }}
     {{- end }}
 {{- range $key, $value := .Values.env }}
-      - name: "{{ $key }}"
-        value: "{{ $value }}"
+      - name: "{{ tpl $key $ }}"
+        value: "{{ tpl $value $ }}"
 {{- end }}
     {{- if .Values.envFromSecret }}
     envFrom:
