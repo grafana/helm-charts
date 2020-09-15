@@ -423,3 +423,42 @@ grafana.ini:
   server:
     root_url: http://localhost:3000/grafana # this host can be localhost
 ```
+
+## How to securely reference secrets in grafana.ini
+
+This example uses Grafana uses [file providers](https://grafana.com/docs/grafana/latest/administration/configuration/#file-provider) for secret values and the `extraSecretMounts` configuration flag (Additional grafana server secret mounts) to mount the secrets.
+
+In grafana.ini:
+
+```yaml
+grafana.ini:
+  [auth.generic_oauth]
+  enabled = true
+  client_id = $__file{/etc/secrets/auth_generic_oauth/client_id}
+  client_secret = $__file{/etc/secrets/auth_generic_oauth/client_secret}
+```
+
+Existing secret, or created along with helm:
+
+```yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: auth-generic-oauth-secret
+type: Opaque
+stringData:
+  client_id: <value>
+  client_secret: <value>
+```
+
+Include in the `extraSecretMounts` configuration flag:
+
+```yaml
+- extraSecretMounts:
+  - name: auth-generic-oauth-secret-mount
+     secretName: auth-generic-oauth-secret
+     defaultMode: 0440
+     mountPath: /etc/secrets/auth_generic_oauth
+     readOnly: true
+```
