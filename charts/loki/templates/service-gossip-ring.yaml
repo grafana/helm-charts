@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "loki.fullname" . }}-gossip-ring
+  labels:
+    {{- include "loki.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http-gossip
+      port: 7946
+      targetPort: http-gossip
+      protocol: TCP
+  selector:
+    {{- include "loki.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/part-of: gossip-ring

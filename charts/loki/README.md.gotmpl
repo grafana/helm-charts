@@ -1,0 +1,110 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+## Configuration
+
+This chart configures Loki in microservices mode.
+The chart can be installed with defaults out of the box.
+As such, it runs two replicas of ingester and one replica for each of the other components using BoltDB as storage.
+Ingester is run as a StatefulSet so each Pod gets its own persistent volume.
+
+The chart does not support setting up Consul or Etcd for discovery.
+These would have to be set up separately.
+Instead, memberlist can be used which does not require a separate key/value store.
+The chart creates a headless service for the gossip ring which ingester, distributor, and querier are part of.
+
+As of now, setting up a cache server (Redis, Memcached) is not included either.
+This may be added at a later stage.
+
+### Example configuration using memberlist, boltdb-shipper, and S3 for storage
+
+Note that `loki.config` must be configured as string.
+That's required because it is passed through the `tpl` function in order to support templating.
+This means that a complete configuration needs to be supplied to the charts which is a good thing anyways.
+Also, this allows using a separate YAML file which can be passed using `--set-file loki.config=<path to config file>`.
+
+```yaml
+loki:
+  config: |
+    server:
+      log_level: info
+      # Must be set to 3100
+      http_listen_port: 3100
+
+    distributor:
+      ring:
+        kvstore:
+          store: memberlist
+
+    ingester:
+      # disable chunk transfer which is not possible with statefulsets
+      # and unnecessary for boltdb-shipper
+      max_transfer_retries: 0
+      lifecycler:
+        join_after: 0s
+        ring:
+          kvstore:
+            store: memberlist
+
+    memberlist:
+      join_members:
+        - {{"{{"}} include "loki.fullname" . {{"}}"}}-gossip-ring
+
+    limits_config:
+      ingestion_rate_mb: 10
+      ingestion_burst_size_mb: 20
+      max_concurrent_tail_requests: 20
+
+    schema_config:
+      configs:
+        - from: 2020-09-07
+          store: boltdb-shipper
+          object_store: aws
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+
+    storage_config:
+      aws:
+        s3: s3://eu-central-1
+        bucketnames: my-loki-s3-bucket
+      boltdb_shipper:
+        active_index_directory: /var/loki/index
+        shared_store: s3
+        cache_location: /var/loki/cache
+
+    query_range:
+      # make queries more cache-able by aligning them with their step intervals
+      align_queries_with_step: true
+      max_retries: 5
+      # parallelize queries in 15min intervals
+      split_queries_by_interval: 15m
+      cache_results: true
+
+      results_cache:
+        max_freshness: 10m
+        cache:
+          enable_fifocache: true
+          fifocache:
+            max_size_items: 1024
+            validity: 24h
+
+    frontend_worker:
+      frontend_address: {{"{{"}} include "loki.queryFrontendFullname" . {{"}}"}}:9095
+
+    frontend:
+      log_queries_longer_than: 5s
+      compress_responses: true
+```

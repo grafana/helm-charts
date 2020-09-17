@@ -1,0 +1,11 @@
+apiVersion: v2
+name: loki
+description: Helm chart for Grafana Loki
+type: application
+appVersion: 1.6.1
+version: 0.1.0
+home: https://github.com/unguiculus/loki-helm-chart
+sources:
+  - https://github.com/grafana/loki
+  - https://grafana.com/oss/loki/
+  - https://grafana.com/docs/loki/latest/
