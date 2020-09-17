@@ -1,0 +1,18 @@
+***********************************************************************
+ Loki Helm Chart
+ Chart version: {{ .Chart.Version }}
+ Loki version: {{ .Chart.AppVersion }}
+***********************************************************************
+
+Installed components:
+* gateway
+* ingester
+* distributor
+* querier
+* query-frontend
+{{- if .Values.tableManager.enabled }}
+* table-manager
+{{- end }}
+{{- if .Values.canary.enabled }}
+* canary
+{{- end }}

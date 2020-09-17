@@ -1,0 +1,62 @@
+{{- if .Values.canary.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "loki.canaryFullname" . }}
+  labels:
+    {{- include "loki.canaryLabels" . | nindent 4 }}
+spec:
+  revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "loki.canarySelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.loki.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.canary.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "loki.canaryLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      terminationGracePeriodSeconds: {{ .Values.canary.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: loki
+          image: "{{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag }}"
+          imagePullPolicy: {{ .Values.canary.image.pullPolicy }}
+          args:
+            - -addr={{ include "loki.gatewayFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+            - -labelname=instance
+            - -labelvalue=$(POD_NAME)
+            {{- if .Values.canary.extraArgs }}
+            {{- toYaml .Values.canary.extraArgs | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 3500
+              protocol: TCP
+          {{- with .Values.canary.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.canary.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.canary.resources | nindent 12 }}
+{{- end }}

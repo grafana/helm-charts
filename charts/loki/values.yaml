@@ -1,0 +1,458 @@
+# nameOverride -- Overrides the chart's name
+nameOverride: ""
+
+# fullnameOverride -- Overrides the chart's computed fullname
+fullnameOverride: ""
+
+# imagePullSecrets -- Image pull secrets for Docker images
+imagePullSecrets: []
+
+loki:
+  image:
+    # loki.image.repository -- Docker image repository
+    repository: grafana/loki
+    # loki.image.pullPolicy -- Docker image pull policy
+    pullPolicy: IfNotPresent
+    # loki.image.tag -- Overrides the image tag whose default is the chart's appVersion
+    tag: ""
+  # loki.podAnnotations -- Common annotations for all pods
+  podAnnotations: {}
+  # loki.revisionHistoryLimit -- The number of old ReplicaSets to retain to allow rollback
+  revisionHistoryLimit: 10
+  # loki.config -- Config file contents for Loki
+  # @default -- See values.yaml
+  config: |
+    auth_enabled: false
+
+    server:
+      http_listen_port: 3100
+
+    distributor:
+      ring:
+        kvstore:
+          store: memberlist
+
+    memberlist:
+      join_members:
+        - '{{ include "loki.fullname" . }}-gossip-ring'
+
+    ingester:
+      lifecycler:
+        ring:
+          kvstore:
+            store: memberlist
+      chunk_idle_period: 3m
+      chunk_block_size: 262144
+      chunk_retain_period: 1m
+      max_transfer_retries: 0
+
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+
+    schema_config:
+      configs:
+        - from: 2020-09-15
+          store: boltdb
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 168h
+
+    storage_config:
+      boltdb:
+        directory: /var/loki/index
+      filesystem:
+        directory: /var/loki/chunks
+
+    chunk_store_config:
+      max_look_back_period: 0s
+
+    table_manager:
+      retention_deletes_enabled: false
+      retention_period: 0s
+
+    query_range:
+      align_queries_with_step: true
+      max_retries: 5
+      split_queries_by_interval: 15m
+      cache_results: true
+      results_cache:
+        max_freshness: 10m
+        cache:
+          enable_fifocache: true
+          fifocache:
+            max_size_items: 1024
+            validity: 24h
+
+    frontend_worker:
+      frontend_address: '{{ include "loki.queryFrontendFullname" . }}:9095'
+
+    frontend:
+      log_queries_longer_than: 5s
+      compress_responses: true
+
+serviceAccount:
+  # serviceAccount.create -- Specifies whether a ServiceAccount should be created
+  create: true
+  # serviceAccount.name -- The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+  # serviceAccount.imagePullSecrets -- Image pull secrets for the service account
+  imagePullSecrets: []
+
+# ServiceMonitor configuration
+serviceMonitor:
+  # serviceMonitor.enabled -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  enabled: false
+  # serviceMonitor.namespace -- Alternative namespace for ServiceMonitor resources
+  namespace: null
+  # serviceMonitor.annotations -- ServiceMonitor annotations
+  annotations: {}
+  # serviceMonitor.labels -- Additional ServiceMonitor labels
+  labels: {}
+  # serviceMonitor.interval -- ServiceMonitor scrape interval
+  interval: null
+  # serviceMonitor.scrapeTimeout -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+
+# Configuration for the ingester
+ingester:
+  # ingester.replicas -- Number of replicas for the ingester
+  replicas: 2
+  # ingester.podAnnotations -- Annotations for ingester pods
+  podAnnotations: {}
+  # ingester.extraArgs -- Addition CLI args for the ingester
+  extraArgs: []
+  # ingester.extraEnv -- Environment variables to add to the ingester pods
+  extraEnv: []
+  # ingester.extraEnvFrom -- Environment variables from secrets or configmaps to add to the ingester pods
+  extraEnvFrom: []
+  # ingester.resources -- Resource requests and limits for the ingester
+  resources: {}
+  # ingester.terminationGracePeriodSeconds -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
+  # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
+  # all data and to successfully leave the member ring on shutdown.
+  terminationGracePeriodSeconds: 300
+  # ingester.affinity -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.ingesterSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  persistence:
+    # ingester.persistence.enabled -- Enable creating PVCs which is required when using boltdb-shipper
+    enabled: false
+    # ingester.persistence.size -- Size of persistent disk
+    size: 100Gi
+    # ngester.persistence.storageClass -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty (the default) or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: ""
+
+# Configuration for the distributor
+distributor:
+  # distributor.replicas -- Number of replicas for the distributor
+  replicas: 1
+  # distributor.podAnnotations -- Annotations for distributor pods
+  podAnnotations: {}
+  # distributor.extraArgs -- Addition CLI args for the distributor
+  extraArgs: []
+  # distributor.extraEnv -- Environment variables to add to the distributor pods
+  extraEnv: []
+  # distributor.extraEnvFrom -- Environment variables from secrets or configmaps to add to the distributor pods
+  extraEnvFrom: []
+  # distributor.resources -- Resource requests and limits for the distributor
+  resources: {}
+  # distributor.terminationGracePeriodSeconds -- Grace period to allow the distributor to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # distributor.affinity -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.distributorSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.distributorSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+# Configuration for the querier
+querier:
+  # querier.replicas -- Number of replicas for the querier
+  replicas: 1
+  # querier.podAnnotations -- Annotations for querier pods
+  podAnnotations: {}
+  # querier.extraArgs -- Addition CLI args for the querier
+  extraArgs: []
+  # querier.extraEnv -- Environment variables to add to the querier pods
+  extraEnv: []
+  # querier.extraEnvFrom -- Environment variables from secrets or configmaps to add to the querier pods
+  extraEnvFrom: []
+  # querier.resources -- Resource requests and limits for the querier
+  resources: {}
+  # querier.terminationGracePeriodSeconds -- Grace period to allow the querier to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # querier.affinity -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.querierSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.querierSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+# Configuration for the query-frontend
+queryFrontend:
+  # queryFrontend.replicas -- Number of replicas for the query-frontend
+  replicas: 1
+  # queryFrontend.podAnnotations -- Annotations for query-frontend pods
+  podAnnotations: {}
+  # queryFrontend.extraArgs -- Addition CLI args for the query-frontend
+  extraArgs: []
+  # queryFrontend.extraEnv -- Environment variables to add to the query-frontend pods
+  extraEnv: []
+  # queryFrontend.extraEnvFrom -- Environment variables from secrets or configmaps to add to the query-frontend pods
+  extraEnvFrom: []
+  # queryFrontend.resources -- Resource requests and limits for the query-frontend
+  resources: {}
+  # queryFrontend.terminationGracePeriodSeconds -- Grace period to allow the query-frontend to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # queryFrontend.affinity -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.queryFrontendSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.queryFrontendSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+# Configuration for the table-manager
+tableManager:
+  # tableManager.enabled -- Specifies whether the table-manager should be enabled
+  enabled: false
+  # tableManager.replicas -- Number of replicas for the table-manager
+  replicas: 1
+  # tableManager.podAnnotations -- Annotations for table-manager pods
+  podAnnotations: {}
+  # tableManager.extraArgs -- Addition CLI args for the table-manager
+  extraArgs: []
+  # tableManager.extraEnv -- Environment variables to add to the table-manager pods
+  extraEnv: []
+  # tableManager.extraEnvFrom -- Environment variables from secrets or configmaps to add to the table-manager pods
+  extraEnvFrom: []
+  # tableManager.resources -- Resource requests and limits for the table-manager
+  resources: {}
+  # tableManager.terminationGracePeriodSeconds -- Grace period to allow the table-manager to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # tableManager.affinity -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.tableManagerSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.tableManagerSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+# Configuration for the gateway
+gateway:
+  # gateway.replicas -- Number of replicas for the gateway
+  replicas: 1
+  image:
+    # gateway.image.repository -- The gateway image repository
+    repository: nginxinc/nginx-unprivileged
+    # gateway.image.tag -- The gateway image tag
+    tag: 1.18-alpine
+    # gateway.image.pullPolicy -- The gateway image pull policy
+    pullPolicy: IfNotPresent
+  # gateway.podAnnotations -- Annotations for gateway pods
+  podAnnotations: {}
+  # gateway.extraArgs -- Addition CLI args for the gateway
+  extraArgs: []
+  # gateway.extraEnv -- Environment variables to add to the gateway pods
+  extraEnv: []
+  # gateway.extraEnvFrom -- Environment variables from secrets or configmaps to add to the gateway pods
+  extraEnvFrom: []
+  # gateway.resources -- Resource requests and limits for the gateway
+  resources: {}
+  # gateway.terminationGracePeriodSeconds -- Grace period to allow the gateway to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # gateway.affinity -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.gatewaySelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.gatewaySelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Gateway service configuration
+  service:
+    # gateway.service.port -- Port of the gateway service
+    port: 80
+    # gateway.service.type -- Type of the gateway service
+    type: ClusterIP
+    # gateway.service.clusterIP -- ClusterIP of the gateway service
+    clusterIP: null
+    # gateway.service.nodePort -- Node port if service type is NodePort
+    nodePort: null
+    # gateway.service.loadBalancerIP -- Load balancer IPO address if service type is LoadBalancer
+    loadBalancerIP: null
+  # Gateway ingress configuration
+  ingress:
+    # gateway.ingress.enabled -- Specifies whether an ingress for the gateway should be created
+    enabled: false
+    # gateway.ingress.annotations -- Annotations for the gateway ingress
+    annotations: {}
+    # gateway.ingress.hosts -- Hosts configuration for the gateway ingress
+    hosts:
+      - host: gateway.loki.example.com
+        paths:
+          - /
+    # gateway.ingress.tls -- TLS configuration for the gateway ingress
+    tls:
+      - secretName: loki-gateway-tls
+        hosts:
+          - gateway.loki.example.com
+
+  # gateway.nginxConfig -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
+  # @default -- See values.yaml
+  nginxConfig: |
+    worker_processes  5;  ## Default: 1
+    error_log  /dev/stderr;
+    pid        /tmp/nginx.pid;
+    worker_rlimit_nofile 8192;
+
+    events {
+      worker_connections  4096;  ## Default: 1024
+    }
+
+    http {
+      client_body_temp_path /tmp/client_temp;
+      proxy_temp_path       /tmp/proxy_temp_path;
+      fastcgi_temp_path     /tmp/fastcgi_temp;
+      uwsgi_temp_path       /tmp/uwsgi_temp;
+      scgi_temp_path        /tmp/scgi_temp;
+
+      default_type application/octet-stream;
+      log_format   main '$remote_addr - $remote_user [$time_local]  $status '
+        '"$request" $body_bytes_sent "$http_referer" '
+        '"$http_user_agent" "$http_x_forwarded_for"';
+      access_log   /dev/stderr  main;
+      sendfile     on;
+      tcp_nopush   on;
+      resolver kube-dns.kube-system.svc.cluster.local;
+
+      server {
+        listen             8080;
+
+        location = / {
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100/ready;
+        }
+
+        location = /api/prom/push {
+          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+        }
+
+        location = /api/prom/tail {
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+        }
+
+        location ~ /api/prom/.* {
+          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+        }
+
+        location = /loki/api/v1/push {
+          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+        }
+
+        location = /loki/api/v1/tail {
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+        }
+
+        location ~ /loki/api/.* {
+          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+        }
+      }
+    }
+
+# Configuration for the canary
+canary:
+  # canary.enabled -- Specifies whether the canary should be enabled
+  enabled: false
+  # canary.kind -- canary can be run as a Deployment or DaemonSet
+  kind: Deployment
+  image:
+    # canary.image.repository -- canary image repository
+    repository: grafana/loki-canary
+    # canary.image.tag -- canary image tag
+    tag: "1.6.1"
+    # canary.image.pullPolicy -- canary image pull policy
+    pullPolicy: IfNotPresent
+  # canary.podAnnotations -- Annotations for canary pods
+  podAnnotations: {}
+  # canary.extraArgs -- Addition CLI args for the canary
+  extraArgs: []
+  # canary.extraEnv -- Environment variables to add to the canary pods
+  extraEnv: []
+  # canary.extraEnvFrom -- Environment variables from secrets or configmaps to add to the canary pods
+  extraEnvFrom: []
+  # canary.resources -- Resource requests and limits for the canary
+  resources: {}
+  # canary.terminationGracePeriodSeconds -- Grace period to allow the canary to shutdown before it is killed
+  terminationGracePeriodSeconds: 30

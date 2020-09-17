@@ -1,0 +1,31 @@
+{{- with .Values.serviceMonitor -}}
+  {{- if .enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "loki.fullname" $ }}-table-manager
+  {{- with .namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "loki.labels" $ | nindent 4 }}
+    {{- toYaml .labels | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: table-manager
+  endpoints:
+    - port: http
+      {{- with .interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+{{- end }}
+{{- end -}}

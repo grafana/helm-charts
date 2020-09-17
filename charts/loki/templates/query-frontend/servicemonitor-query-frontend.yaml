@@ -1,0 +1,30 @@
+{{- with .Values.serviceMonitor -}}
+  {{- if .enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "loki.queryFrontendFullname" $ }}
+  {{- with .namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "loki.queryFrontendLabels" $ | nindent 4 }}
+    {{- toYaml .labels | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.queryFrontendSelectorLabels" $ | nindent 6 }}
+  endpoints:
+    - port: http
+      {{- with .interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+{{- end }}
+{{- end -}}
