@@ -10,6 +10,14 @@
 
 {{ template "chart.requirementsSection" . }}
 
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add loki https://unguiculus.github.io/loki-helm-chart
+```
+
 {{ template "chart.valuesSection" . }}
 
 ## Configuration
