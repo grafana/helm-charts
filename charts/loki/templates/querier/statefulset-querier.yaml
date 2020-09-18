@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "loki.querierFullname" . }}
   labels:
@@ -7,10 +7,10 @@ metadata:
     app.kubernetes.io/part-of: gossip-ring
 spec:
   replicas: {{ .Values.querier.replicas }}
-  strategy:
+  updateStrategy:
     rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
+      partition: 0
+  serviceName: {{ include "loki.querierFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -41,7 +41,7 @@ spec:
         runAsUser: 10001
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
       containers:
-        - name: querier
+        - name: loki
           image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -78,7 +78,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki
-            - name: boltdb-cache
+            - name: data
               mountPath: /var/loki
           resources:
             {{- toYaml .Values.querier.resources | nindent 12 }}
@@ -98,5 +98,22 @@ spec:
         - name: config
           configMap:
             name: {{ include "loki.fullname" . }}
-        - name: boltdb-cache
+  {{- if not .Values.querier.persistence.enabled }}
+        - name: data
           emptyDir: {}
+  {{- else }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "loki.querierLabels" . | nindent 10 }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.querier.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.querier.persistence.size | quote }}
+  {{- end }}
