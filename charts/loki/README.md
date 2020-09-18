@@ -1,6 +1,6 @@
 # loki
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki
 
@@ -11,6 +11,14 @@ Helm chart for Grafana Loki
 * <https://github.com/grafana/loki>
 * <https://grafana.com/oss/loki/>
 * <https://grafana.com/docs/loki/latest/>
+
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add loki https://unguiculus.github.io/loki-helm-chart
+```
 
 ## Values
 
