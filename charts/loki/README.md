@@ -32,21 +32,21 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | canary.image.repository | string | `"grafana/loki-canary"` | canary image repository |
 | canary.image.tag | string | `"1.6.1"` | canary image tag |
 | canary.kind | string | `"Deployment"` | canary can be run as a Deployment or DaemonSet |
-| canary.nodeSelector | object | `{}` | Tolerations for canary pods |
+| canary.nodeSelector | object | `{}` | Node selector for canary pods |
 | canary.podAnnotations | object | `{}` | Annotations for canary pods |
 | canary.resources | object | `{}` | Resource requests and limits for the canary |
 | canary.terminationGracePeriodSeconds | int | `30` | Grace period to allow the canary to shutdown before it is killed |
-| canary.tolerations | list | `[]` |  |
+| canary.tolerations | list | `[]` | Tolerations for canary pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.extraArgs | list | `[]` | Addition CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
-| distributor.nodeSelector | object | `{}` | Tolerations for distributor pods |
+| distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
-| distributor.tolerations | list | `[]` |  |
+| distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.extraArgs | list | `[]` | Addition CLI args for the gateway |
@@ -60,7 +60,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":["/"]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | gateway.nginxConfig | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
-| gateway.nodeSelector | object | `{}` | Tolerations for gateway pods |
+| gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
@@ -70,13 +70,13 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.service.port | int | `80` | Port of the gateway service |
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
-| gateway.tolerations | list | `[]` |  |
+| gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Addition CLI args for the ingester |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
-| ingester.nodeSelector | object | `{}` | Tolerations for ingester pods |
+| ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.size | string | `"100Gi"` | Size of persistent disk |
 | ingester.persistence.storageClass | string | `""` |  |
@@ -84,7 +84,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ingester.replicas | int | `2` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
-| ingester.tolerations | list | `[]` |  |
+| ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
@@ -96,22 +96,25 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | querier.extraArgs | list | `[]` | Addition CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
-| querier.nodeSelector | object | `{}` | Tolerations for querier pods |
+| querier.nodeSelector | object | `{}` | Node selector for querier pods |
+| querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
+| querier.persistence.size | string | `"1Gi"` | Size of persistent disk |
+| querier.persistence.storageClass | string | `""` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty (the default) or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
 | querier.resources | object | `{}` | Resource requests and limits for the querier |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
-| querier.tolerations | list | `[]` |  |
+| querier.tolerations | list | `[]` | Tolerations for querier pods |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.extraArgs | list | `[]` | Addition CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
-| queryFrontend.nodeSelector | object | `{}` | Tolerations for query-frontend pods |
+| queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
-| queryFrontend.tolerations | list | `[]` |  |
+| queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
@@ -126,12 +129,12 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | tableManager.extraArgs | list | `[]` | Addition CLI args for the table-manager |
 | tableManager.extraEnv | list | `[]` | Environment variables to add to the table-manager pods |
 | tableManager.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the table-manager pods |
-| tableManager.nodeSelector | object | `{}` | Tolerations for table-manager pods |
+| tableManager.nodeSelector | object | `{}` | Node selector for table-manager pods |
 | tableManager.podAnnotations | object | `{}` | Annotations for table-manager pods |
 | tableManager.replicas | int | `1` | Number of replicas for the table-manager |
 | tableManager.resources | object | `{}` | Resource requests and limits for the table-manager |
 | tableManager.terminationGracePeriodSeconds | int | `30` | Grace period to allow the table-manager to shutdown before it is killed |
-| tableManager.tolerations | list | `[]` |  |
+| tableManager.tolerations | list | `[]` | Tolerations for table-manager pods |
 
 ## Configuration
 

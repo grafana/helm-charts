@@ -154,7 +154,7 @@ ingester:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # ingester.nodeSelector -- Node selector for ingester pods
   nodeSelector: {}
-  # ingester.nodeSelector -- Tolerations for ingester pods
+  # ingester.tolerations -- Tolerations for ingester pods
   tolerations: []
   persistence:
     # ingester.persistence.enabled -- Enable creating PVCs which is required when using boltdb-shipper
@@ -202,7 +202,7 @@ distributor:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # distributor.nodeSelector -- Node selector for distributor pods
   nodeSelector: {}
-  # distributor.nodeSelector -- Tolerations for distributor pods
+  # distributor.tolerations -- Tolerations for distributor pods
   tolerations: []
 
 # Configuration for the querier
@@ -239,8 +239,19 @@ querier:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # querier.nodeSelector -- Node selector for querier pods
   nodeSelector: {}
-  # querier.nodeSelector -- Tolerations for querier pods
+  # querier.tolerations -- Tolerations for querier pods
   tolerations: []
+  persistence:
+    # querier.persistence.enabled -- Enable creating PVCs for the querier cache
+    enabled: false
+    # querier.persistence.size -- Size of persistent disk
+    size: 1Gi
+    # querier.persistence.storageClass -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty (the default) or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: ""
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -276,7 +287,7 @@ queryFrontend:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # queryFrontend.nodeSelector -- Node selector for query-frontend pods
   nodeSelector: {}
-  # queryFrontend.nodeSelector -- Tolerations for query-frontend pods
+  # queryFrontend.tolerations -- Tolerations for query-frontend pods
   tolerations: []
 
 # Configuration for the table-manager
@@ -315,7 +326,7 @@ tableManager:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # tableManager.nodeSelector -- Node selector for table-manager pods
   nodeSelector: {}
-  # tableManager.nodeSelector -- Tolerations for table-manager pods
+  # tableManager.tolerations -- Tolerations for table-manager pods
   tolerations: []
 
 # Configuration for the gateway
@@ -359,7 +370,7 @@ gateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # gateway.nodeSelector -- Node selector for gateway pods
   nodeSelector: {}
-  # gateway.nodeSelector -- Tolerations for gateway pods
+  # gateway.tolerations -- Tolerations for gateway pods
   tolerations: []
   # Gateway service configuration
   service:
@@ -482,5 +493,5 @@ canary:
   terminationGracePeriodSeconds: 30
   # canary.nodeSelector -- Node selector for canary pods
   nodeSelector: {}
-  # canary.nodeSelector -- Tolerations for canary pods
+  # canary.tolerations -- Tolerations for canary pods
   tolerations: []
