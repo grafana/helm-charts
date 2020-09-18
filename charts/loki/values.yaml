@@ -152,6 +152,10 @@ ingester:
               matchLabels:
                 {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # ingester.nodeSelector -- Node selector for ingester pods
+  nodeSelector: {}
+  # ingester.nodeSelector -- Tolerations for ingester pods
+  tolerations: []
   persistence:
     # ingester.persistence.enabled -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -196,6 +200,10 @@ distributor:
               matchLabels:
                 {{- include "loki.distributorSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # distributor.nodeSelector -- Node selector for distributor pods
+  nodeSelector: {}
+  # distributor.nodeSelector -- Tolerations for distributor pods
+  tolerations: []
 
 # Configuration for the querier
 querier:
@@ -229,6 +237,10 @@ querier:
               matchLabels:
                 {{- include "loki.querierSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # querier.nodeSelector -- Node selector for querier pods
+  nodeSelector: {}
+  # querier.nodeSelector -- Tolerations for querier pods
+  tolerations: []
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -262,6 +274,10 @@ queryFrontend:
               matchLabels:
                 {{- include "loki.queryFrontendSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # queryFrontend.nodeSelector -- Node selector for query-frontend pods
+  nodeSelector: {}
+  # queryFrontend.nodeSelector -- Tolerations for query-frontend pods
+  tolerations: []
 
 # Configuration for the table-manager
 tableManager:
@@ -297,6 +313,10 @@ tableManager:
               matchLabels:
                 {{- include "loki.tableManagerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # tableManager.nodeSelector -- Node selector for table-manager pods
+  nodeSelector: {}
+  # tableManager.nodeSelector -- Tolerations for table-manager pods
+  tolerations: []
 
 # Configuration for the gateway
 gateway:
@@ -337,6 +357,10 @@ gateway:
               matchLabels:
                 {{- include "loki.gatewaySelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # gateway.nodeSelector -- Node selector for gateway pods
+  nodeSelector: {}
+  # gateway.nodeSelector -- Tolerations for gateway pods
+  tolerations: []
   # Gateway service configuration
   service:
     # gateway.service.port -- Port of the gateway service
@@ -456,3 +480,7 @@ canary:
   resources: {}
   # canary.terminationGracePeriodSeconds -- Grace period to allow the canary to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # canary.nodeSelector -- Node selector for canary pods
+  nodeSelector: {}
+  # canary.nodeSelector -- Tolerations for canary pods
+  tolerations: []

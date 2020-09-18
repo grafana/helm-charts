@@ -59,4 +59,12 @@ spec:
             timeoutSeconds: 1
           resources:
             {{- toYaml .Values.canary.resources | nindent 12 }}
+      {{- with .Values.canary.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.canary.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
