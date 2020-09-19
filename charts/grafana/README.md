@@ -186,7 +186,7 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 | `serviceMonitor.labels`                   | Labels for the servicemonitor passed to Prometheus Operator      |  `{}`                                |
 | `serviceMonitor.scrapeTimeout`            | Timeout after which the scrape is ended       | `30s`                                                   |
 | `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
-| `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`
+| `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
 
 ### Example ingress with path
 
