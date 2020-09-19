@@ -549,3 +549,7 @@ sidecar:
 ## Override the deployment namespace
 ##
 namespaceOverride: ""
+
+## Number of old ReplicaSets to retain
+##
+revisionHistoryLimit: 10
