@@ -124,7 +124,7 @@ ingester:
   replicas: 2
   # ingester.podAnnotations -- Annotations for ingester pods
   podAnnotations: {}
-  # ingester.extraArgs -- Addition CLI args for the ingester
+  # ingester.extraArgs -- Additional CLI args for the ingester
   extraArgs: []
   # ingester.extraEnv -- Environment variables to add to the ingester pods
   extraEnv: []
@@ -174,7 +174,7 @@ distributor:
   replicas: 1
   # distributor.podAnnotations -- Annotations for distributor pods
   podAnnotations: {}
-  # distributor.extraArgs -- Addition CLI args for the distributor
+  # distributor.extraArgs -- Additional CLI args for the distributor
   extraArgs: []
   # distributor.extraEnv -- Environment variables to add to the distributor pods
   extraEnv: []
@@ -211,7 +211,7 @@ querier:
   replicas: 1
   # querier.podAnnotations -- Annotations for querier pods
   podAnnotations: {}
-  # querier.extraArgs -- Addition CLI args for the querier
+  # querier.extraArgs -- Additional CLI args for the querier
   extraArgs: []
   # querier.extraEnv -- Environment variables to add to the querier pods
   extraEnv: []
@@ -259,7 +259,7 @@ queryFrontend:
   replicas: 1
   # queryFrontend.podAnnotations -- Annotations for query-frontend pods
   podAnnotations: {}
-  # queryFrontend.extraArgs -- Addition CLI args for the query-frontend
+  # queryFrontend.extraArgs -- Additional CLI args for the query-frontend
   extraArgs: []
   # queryFrontend.extraEnv -- Environment variables to add to the query-frontend pods
   extraEnv: []
@@ -298,7 +298,7 @@ tableManager:
   replicas: 1
   # tableManager.podAnnotations -- Annotations for table-manager pods
   podAnnotations: {}
-  # tableManager.extraArgs -- Addition CLI args for the table-manager
+  # tableManager.extraArgs -- Additional CLI args for the table-manager
   extraArgs: []
   # tableManager.extraEnv -- Environment variables to add to the table-manager pods
   extraEnv: []
@@ -337,12 +337,12 @@ gateway:
     # gateway.image.repository -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # gateway.image.tag -- The gateway image tag
-    tag: 1.18-alpine
+    tag: 1.19-alpine
     # gateway.image.pullPolicy -- The gateway image pull policy
     pullPolicy: IfNotPresent
   # gateway.podAnnotations -- Annotations for gateway pods
   podAnnotations: {}
-  # gateway.extraArgs -- Addition CLI args for the gateway
+  # gateway.extraArgs -- Additional CLI args for the gateway
   extraArgs: []
   # gateway.extraEnv -- Environment variables to add to the gateway pods
   extraEnv: []
@@ -481,8 +481,10 @@ canary:
     pullPolicy: IfNotPresent
   # canary.podAnnotations -- Annotations for canary pods
   podAnnotations: {}
-  # canary.extraArgs -- Addition CLI args for the canary
-  extraArgs: []
+  # canary.extraArgs -- Additional CLI args for the canary
+  extraArgs:
+    - -labelname=pod
+    - -labelvalue=$(POD_NAME)
   # canary.extraEnv -- Environment variables to add to the canary pods
   extraEnv: []
   # canary.extraEnvFrom -- Environment variables from secrets or configmaps to add to the canary pods

@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.querierLabels" . | nindent 8 }}
+        {{- include "loki.querierSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: gossip-ring
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
