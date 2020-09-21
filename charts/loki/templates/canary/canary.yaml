@@ -20,7 +20,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.canaryLabels" . | nindent 8 }}
+        {{- include "loki.canarySelectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.canary.terminationGracePeriodSeconds }}
@@ -34,7 +34,7 @@ spec:
           imagePullPolicy: {{ .Values.canary.image.pullPolicy }}
           args:
             - -addr={{ include "loki.gatewayFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-            - -labelname=instance
+            - -labelname=pod
             - -labelvalue=$(POD_NAME)
             {{- if .Values.canary.extraArgs }}
             {{- toYaml .Values.canary.extraArgs | nindent 12 }}
@@ -43,10 +43,14 @@ spec:
             - name: http
               containerPort: 3500
               protocol: TCP
-          {{- with .Values.canary.extraEnv }}
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{- with .Values.canary.extraEnv }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
           {{- with .Values.canary.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}

@@ -1,6 +1,6 @@
 # loki
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki
 
@@ -25,7 +25,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | canary.enabled | bool | `false` | Specifies whether the canary should be enabled |
-| canary.extraArgs | list | `[]` | Addition CLI args for the canary |
+| canary.extraArgs | list | `["-labelname=pod","-labelvalue=$(POD_NAME)"]` | Additional CLI args for the canary |
 | canary.extraEnv | list | `[]` | Environment variables to add to the canary pods |
 | canary.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the canary pods |
 | canary.image.pullPolicy | string | `"IfNotPresent"` | canary image pull policy |
@@ -38,7 +38,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | canary.terminationGracePeriodSeconds | int | `30` | Grace period to allow the canary to shutdown before it is killed |
 | canary.tolerations | list | `[]` | Tolerations for canary pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
-| distributor.extraArgs | list | `[]` | Addition CLI args for the distributor |
+| distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
@@ -49,12 +49,12 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
-| gateway.extraArgs | list | `[]` | Addition CLI args for the gateway |
+| gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` | The gateway image pull policy |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
-| gateway.image.tag | string | `"1.18-alpine"` | The gateway image tag |
+| gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
 | gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":["/"]}]` | Hosts configuration for the gateway ingress |
@@ -73,7 +73,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
-| ingester.extraArgs | list | `[]` | Addition CLI args for the ingester |
+| ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
@@ -93,7 +93,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | nameOverride | string | `""` | Overrides the chart's name |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
-| querier.extraArgs | list | `[]` | Addition CLI args for the querier |
+| querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
@@ -106,7 +106,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
-| queryFrontend.extraArgs | list | `[]` | Addition CLI args for the query-frontend |
+| queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
@@ -126,7 +126,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
-| tableManager.extraArgs | list | `[]` | Addition CLI args for the table-manager |
+| tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |
 | tableManager.extraEnv | list | `[]` | Environment variables to add to the table-manager pods |
 | tableManager.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the table-manager pods |
 | tableManager.nodeSelector | object | `{}` | Node selector for table-manager pods |
