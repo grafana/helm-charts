@@ -3,7 +3,7 @@ name: loki
 description: Helm chart for Grafana Loki
 type: application
 appVersion: 1.6.1
-version: 0.3.2
+version: 0.3.3
 home: https://github.com/unguiculus/loki-helm-chart
 sources:
   - https://github.com/grafana/loki
