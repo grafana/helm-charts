@@ -102,6 +102,8 @@ serviceAccount:
   name: null
   # serviceAccount.imagePullSecrets -- Image pull secrets for the service account
   imagePullSecrets: []
+  # serviceAccount.annotations -- Annotations for the service account
+  annotations: {}
 
 # ServiceMonitor configuration
 serviceMonitor:
