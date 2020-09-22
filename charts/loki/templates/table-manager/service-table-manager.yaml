@@ -10,11 +10,11 @@ spec:
   type: ClusterIP
   ports:
     - name: http
-      port: {{ .Values.service.httpPort }}
+      port: 3100
       targetPort: http
       protocol: TCP
     - name: grpc
-      port: {{ .Values.service.grpcPort }}
+      port: 9095
       targetPort: grpc
       protocol: TCP
   selector:
