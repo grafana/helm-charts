@@ -34,8 +34,6 @@ spec:
           imagePullPolicy: {{ .Values.canary.image.pullPolicy }}
           args:
             - -addr={{ include "loki.gatewayFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-            - -labelname=pod
-            - -labelvalue=$(POD_NAME)
             {{- if .Values.canary.extraArgs }}
             {{- toYaml .Values.canary.extraArgs | nindent 12 }}
             {{- end }}
