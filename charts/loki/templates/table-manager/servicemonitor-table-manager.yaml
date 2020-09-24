@@ -1,9 +1,10 @@
-{{- with .Values.serviceMonitor -}}
-  {{- if .enabled }}
+{{- if .Values.tableManager.enabled }}
+{{- with .Values.serviceMonitor }}
+{{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "loki.fullname" $ }}-table-manager
+  name: {{ include "loki.tableManagerFullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
@@ -12,13 +13,14 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "loki.labels" $ | nindent 4 }}
-    {{- toYaml .labels | nindent 4 }}
+    {{- include "loki.tableManagerLabels" $ | nindent 4 }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
-      {{- include "loki.selectorLabels" $ | nindent 6 }}
-      app.kubernetes.io/component: table-manager
+      {{- include "loki.tableManagerSelectorLabels" $ | nindent 6 }}
   endpoints:
     - port: http
       {{- with .interval }}
@@ -28,4 +30,5 @@ spec:
       scrapeTimeout: {{ . }}
       {{- end }}
 {{- end }}
-{{- end -}}
+{{- end }}
+{{- end }}
