@@ -1,6 +1,6 @@
-{{- if .Values.canary.enabled -}}
-{{- with .Values.serviceMonitor -}}
-  {{- if .enabled }}
+{{- if .Values.canary.enabled }}
+{{- with .Values.serviceMonitor }}
+{{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -14,7 +14,9 @@ metadata:
   {{- end }}
   labels:
     {{- include "loki.canaryLabels" $ | nindent 4 }}
-    {{- toYaml .labels | nindent 4 }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
@@ -28,5 +30,5 @@ spec:
       scrapeTimeout: {{ . }}
       {{- end }}
 {{- end }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
