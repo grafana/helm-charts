@@ -78,6 +78,11 @@ initContainers:
     image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    {{- if .Values.sidecar.datasources.envFromSecret }}
+    envFrom:
+      - secretRef:
+          name: {{ tpl .Values.sidecar.datasources.envFromSecret . }}
+    {{- end }}
     env:
       - name: METHOD
         value: LIST
