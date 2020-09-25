@@ -336,7 +336,7 @@ containers:
     {{- end }}
 {{- range $key, $value := .Values.env }}
       - name: "{{ tpl $key $ }}"
-        value: "{{ tpl $value $ }}"
+        value: "{{ tpl (print $value) $ }}"
 {{- end }}
     {{- if .Values.envFromSecret }}
     envFrom:
