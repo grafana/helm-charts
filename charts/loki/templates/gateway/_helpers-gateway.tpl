@@ -20,3 +20,10 @@ Selector gateway labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: gateway
 {{- end }}
+
+{{/*
+Auth secret name
+*/}}
+{{- define "loki.gatewayAuthSecret" -}}
+{{ .Values.gateway.basicauth.existingSecret | default (include "loki.gatewayFullname" . ) }}
+{{- end }}

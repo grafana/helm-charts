@@ -402,7 +402,17 @@ gateway:
       - secretName: loki-gateway-tls
         hosts:
           - gateway.loki.example.com
-
+  # Basic auth configuration
+  basicauth:
+    # gateway.basicauth.enabled -- Enables basic authentication for the gateway
+    enabled: false
+    # gateway.basicauth.username -- The basic auth username for the gateway
+    username: null
+    # gateway.basicauth.password -- The basic auth password for the gateway
+    password: null
+    # gateway.basicauth.existingSecret -- Existing basic auth secret to use. Must contain '.htpasswd' and,
+    # if canary is enabled, 'username' and 'password'
+    existingSecret: null
   # gateway.nginxConfig -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
   # @default -- See values.yaml
   nginxConfig: |
@@ -434,8 +444,14 @@ gateway:
       server {
         listen             8080;
 
+        {{- if .Values.gateway.basicauth.enabled }}
+        auth_basic           "Loki";
+        auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+        {{- end }}
+
         location = / {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100/ready;
+          return 200 'OK';
+          auth_basic off;
         }
 
         location = /api/prom/push {

@@ -65,6 +65,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/nginx
+            {{- if .Values.gateway.basicauth.enabled }}
+            - name: auth
+              mountPath: /etc/nginx/secrets
+            {{- end }}
             - name: tmp
               mountPath: /tmp
             - name: docker-entrypoint-d-override
@@ -87,6 +91,11 @@ spec:
         - name: config
           configMap:
             name: {{ include "loki.gatewayFullname" . }}
+        {{- if .Values.gateway.basicauth.enabled }}
+        - name: auth
+          secret:
+            secretName: {{ include "loki.gatewayAuthSecret" . }}
+        {{- end }}
         - name: tmp
           emptyDir: {}
         - name: docker-entrypoint-d-override

@@ -47,7 +47,6 @@ spec:
           args:
             - -config.file=/etc/loki/loki.yaml
             - -target=distributor
-            - -print-config-stderr
             {{- with .Values.distributor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

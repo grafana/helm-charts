@@ -34,6 +34,12 @@ spec:
           imagePullPolicy: {{ .Values.canary.image.pullPolicy }}
           args:
             - -addr={{ include "loki.gatewayFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+            {{- with .Values.gateway.basicauth }}
+            {{- if .enabled }}
+            - -user=$(USER)
+            - -pass=$(PASS)
+            {{- end }}
+            {{- end }}
             {{- if .Values.canary.extraArgs }}
             {{- toYaml .Values.canary.extraArgs | nindent 12 }}
             {{- end }}
@@ -46,6 +52,20 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            {{- with .Values.gateway.basicauth }}
+            {{- if .enabled }}
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "loki.gatewayAuthSecret" $ }}
+                  key: username
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "loki.gatewayAuthSecret" $ }}
+                  key: password
+            {{- end }}
+            {{- end }}
             {{- with .Values.canary.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

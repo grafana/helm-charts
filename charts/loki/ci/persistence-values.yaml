@@ -7,3 +7,12 @@ querier:
   persistence:
     enabled: true
     size: 100Mi
+
+gateway:
+  basicauth:
+    enabled: true
+    username: user
+    password: pass
+
+canary:
+  enabled: true

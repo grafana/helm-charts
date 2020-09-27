@@ -47,7 +47,6 @@ spec:
           args:
             - -config.file=/etc/loki/loki.yaml
             - -target=querier
-            - -print-config-stderr
             {{- with .Values.querier.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

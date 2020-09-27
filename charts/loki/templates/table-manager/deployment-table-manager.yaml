@@ -42,7 +42,6 @@ spec:
           args:
             - -config.file=/etc/loki/loki.yaml
             - -target=table-manager
-            - -print-config-stderr
             {{- with .Values.tableManager.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
