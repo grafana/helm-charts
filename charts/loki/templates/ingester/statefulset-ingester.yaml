@@ -47,7 +47,6 @@ spec:
           args:
             - -config.file=/etc/loki/loki.yaml
             - -target=ingester
-            - -print-config-stderr
             {{- with .Values.ingester.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
