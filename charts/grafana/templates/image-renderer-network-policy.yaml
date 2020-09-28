@@ -1,0 +1,78 @@
+{{- if and (.Values.imageRenderer.enabled) (.Values.imageRenderer.networkPolicy.limitIngress) }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "grafana.fullname" . }}-image-renderer-ingress
+  namespace: {{ template "grafana.namespace" . }}
+  annotations:
+    comment: Limit image-renderer ingress traffic from grafana
+spec:
+  podSelector:
+    matchLabels:
+  labels:
+    {{- include "grafana.imageRenderer.labels" . | nindent 4 }}
+    {{- if .Values.imageRenderer.labels }}
+      {{ toYaml .Values.imageRenderer.labels | nindent 4 }}
+    {{- end }}
+
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - port: {{ .Values.imageRenderer.service.port }}
+          protocol: TCP
+      from:
+        - namespaceSelector:
+            matchLabels:
+              name: {{ template "grafana.namespace" . }}
+          podSelector:
+            matchLabels:
+              {{- include "grafana.labels" . | nindent 14 }}
+              {{- if .Values.labels }}
+                {{ toYaml .Values.labels | nindent 4 }}
+              {{- end }}
+{{ end }}
+
+{{- if and (.Values.imageRenderer.enabled) (.Values.imageRenderer.networkPolicy.limitEgress) }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "grafana.fullname" . }}-image-renderer-egress
+  namespace: {{ template "grafana.namespace" . }}
+  annotations:
+    comment: Limit image-renderer egress traffic to grafana
+spec:
+  podSelector:
+    matchLabels:
+  labels:
+    {{- include "grafana.imageRenderer.labels" . | nindent 4 }}
+    {{- if .Values.imageRenderer.labels }}
+      {{ toYaml .Values.imageRenderer.labels | nindent 4 }}
+    {{- end }}
+
+  policyTypes:
+    - Egress
+  egress:
+    # allow dns resolution
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # talk only to grafana
+    - ports:
+        - port: {{ .Values.service.port }}
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              name: {{ template "grafana.namespace" . }}
+          podSelector:
+            matchLabels:
+              {{- include "grafana.labels" . | nindent 14 }}
+              {{- if .Values.labels }}
+                {{ toYaml .Values.labels | nindent 4 }}
+              {{- end }}
+{{ end }}

@@ -80,3 +80,23 @@ Selector labels
 app.kubernetes.io/name: {{ include "grafana.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "grafana.imageRenderer.labels" -}}
+helm.sh/chart: {{ include "grafana.chart" . }}
+{{ include "grafana.imageRenderer.selectorLabels" . }}
+{{- if or .Chart.AppVersion .Values.image.tag }}
+app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/*
+Selector labels ImageRenderer
+*/}}
+{{- define "grafana.imageRenderer.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "grafana.name" . }}-image-renderer
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
