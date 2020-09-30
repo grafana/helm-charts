@@ -5,6 +5,10 @@
 ## TL;DR
 
 ```console
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+```console
 helm install grafana/grafana
 ```
 
