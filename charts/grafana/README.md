@@ -191,6 +191,20 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 | `serviceMonitor.scrapeTimeout`            | Timeout after which the scrape is ended       | `30s`                                                   |
 | `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
 | `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
+| `imageRenderer.enabled`                    | Enable the image-renderer deployment & service                                     | `false`                          |
+| `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `grafana/grafana-image-renderer` |
+| `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `latest`                         |
+| `imageRenderer.image.sha`                  | image-renderer Image sha (optional)                                                | `""`                             |
+| `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `Always`                         |
+| `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
+| `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
+| `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
+| `imageRenderer.service.portName`           | image-renderer service port name                                                   | `'http'`                         |
+| `imageRenderer.service.port`               | image-renderer service port used by both service and deployment                    | `8081`                           |
+| `imageRenderer.podPortName`                | name of the image-renderer port on the pod                                         | `http`                           |
+| `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
+| `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods  | `true`                           |
+| `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods   | `false`                          |
 
 ### Example ingress with path
 
@@ -467,3 +481,16 @@ Include in the `extraSecretMounts` configuration flag:
      mountPath: /etc/secrets/auth_generic_oauth
      readOnly: true
 ```
+
+## Image Renderer Plug-In
+
+This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/docs/remote_rendering_using_docker.md)
+
+```yaml
+imageRenderer:
+  enabled: true
+```
+
+### Image Renderer NetworkPolicy
+
+By default the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance

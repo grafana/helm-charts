@@ -553,3 +553,37 @@ namespaceOverride: ""
 ## Number of old ReplicaSets to retain
 ##
 revisionHistoryLimit: 10
+
+## Add a seperate remote image renderer deployment/service
+imageRenderer:
+  # Enable the image-renderer deployment & service
+  enabled: false
+  image:
+    # image-renderer Image repository
+    repository: grafana/grafana-image-renderer
+    # image-renderer Image tag
+    tag: latest
+    # image-renderer Image sha (optional)
+    sha: ""
+    # image-renderer ImagePullPolicy
+    pullPolicy: Always
+  # image-renderer deployment securityContext
+  securityContext: {}
+  # image-renderer deployment Host Aliases
+  hostAliases: []
+  # image-renderer deployment priority class
+  priorityClassName: ''
+  service:
+    # image-renderer service port name
+    portName: 'http'
+    # image-renderer service port used by both service and deployment
+    port: 8081
+  # name of the image-renderer port on the pod
+  podPortName: http
+  # number of image-renderer replica sets to keep
+  revisionHistoryLimit: 10
+  networkPolicy:
+    # Enable a NetworkPolicy to limit inbound traffic to only the created grafana pods
+    limitIngress: true
+    # Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods
+    limitEgress: false
