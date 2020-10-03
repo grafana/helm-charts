@@ -3,4 +3,8 @@ remote: origin
 target-branch: main
 chart-dirs:
   - charts
+chart-repos:
+  - stable=https://kubernetes-charts.storage.googleapis.com/
+  - elastic=https://helm.elastic.co/
 helm-extra-args: --timeout 600s
+validate-maintainers: false

@@ -1,9 +1,18 @@
 # Promtail Helm Chart
 
+## Get Repo Info
+
+```console
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+```
+
+_See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
+
 ## Deploy Promtail only
 
 ```bash
-$ helm upgrade --install promtail loki/promtail --set "loki.serviceName=loki"
+helm upgrade --install promtail grafana/promtail --set "loki.serviceName=loki"
 ```
 
 ## Run Loki behind https ingress
@@ -13,7 +22,7 @@ By adding a certificate you create an https endpoint. For extra security enable 
 
 In Promtail set the following values to communicate with https and basic auth
 
-```
+```yaml
 loki:
   serviceScheme: https
   user: user
