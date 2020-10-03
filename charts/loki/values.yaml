@@ -111,6 +111,8 @@ serviceMonitor:
   enabled: false
   # serviceMonitor.namespace -- Alternative namespace for ServiceMonitor resources
   namespace: null
+  # serviceMonitor.namespaceSelector -- Namespace selector for ServiceMonitor resources
+  namespaceSelector: {}
   # serviceMonitor.annotations -- ServiceMonitor annotations
   annotations: {}
   # serviceMonitor.labels -- Additional ServiceMonitor labels
