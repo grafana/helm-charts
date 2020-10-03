@@ -17,6 +17,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
+  {{- with .namespaceSelector }}
+  namespaceSelector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "loki.ingesterSelectorLabels" $ | nindent 6 }}

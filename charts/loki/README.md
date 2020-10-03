@@ -1,6 +1,6 @@
 # loki
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki
 
@@ -128,6 +128,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
 | serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
+| serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
