@@ -496,8 +496,8 @@ canary:
   image:
     # canary.image.repository -- canary image repository
     repository: docker.io/grafana/loki-canary
-    # canary.image.tag -- canary image tag
-    tag: "1.6.1"
+    # canary.image.tag -- Overrides the canary image tag whose default is the chart's appVersion
+    tag: ""
     # canary.image.pullPolicy -- canary image pull policy
     pullPolicy: IfNotPresent
   # canary.podAnnotations -- Annotations for canary pods
