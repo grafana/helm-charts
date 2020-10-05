@@ -19,6 +19,8 @@ loki:
   podAnnotations: {}
   # loki.revisionHistoryLimit -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
+  # loki.memberlist -- If true, an additional headless service for memberlist (including ingester, distributor, and quierier pods) is created
+  memberlist: true
   # loki.config -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -34,7 +36,7 @@ loki:
 
     memberlist:
       join_members:
-        - {{ include "loki.fullname" . }}-gossip-ring
+        - {{ include "loki.fullname" . }}-memberlist
 
     ingester:
       lifecycler:

@@ -12,7 +12,7 @@ loki:
 
     memberlist:
       join_members:
-        - {{ include "loki.fullname" . }}-gossip-ring
+        - {{ include "loki.fullname" . }}-memberlist
 
     ingester:
       lifecycler:
