@@ -78,11 +78,11 @@ spec:
           env:
             - name: HTTP_PORT
               value: {{ .Values.imageRenderer.service.port | quote }}
-              securityContext:
-                capabilities:
-                  drop: ['all']
-                allowPrivilegeEscalation: false
-                readOnlyRootFilesystem: true
+          securityContext:
+            capabilities:
+              drop: ['all']
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
           volumeMounts:
             - mountPath: /tmp
               name: image-renderer-tmpfs
