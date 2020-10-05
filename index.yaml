@@ -295,4 +295,5175 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/grafana-5.6.0/grafana-5.6.0.tgz
     version: 5.6.0
-generated: "2020-09-04T04:21:47.408492407Z"
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-10-05T20:09:54.201022974+02:00"
+    deprecated: true
+    description: DEPRECATED - The leading tool for querying and visualizing time series
+      and metrics.
+    digest: 1a72b59f6a2315438e3823bb08c19bf0a4d4cce00c6d3e5fe5aac03d526986e3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.7.tgz
+    version: 5.5.7
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-10-05T20:09:54.198922724+02:00"
+    deprecated: true
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 76fc81b9920f7656b671def3f79fb6bb14d6e6f57bc1b85277351c2cbbc23f17
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.6.tgz
+    version: 5.5.6
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-10-05T20:09:54.196820521+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 15058e59b6176268d47f7ca0824121403480f57a07ec90ca733a3a13f0e43bbd
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.5.tgz
+    version: 5.5.5
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-10-05T20:09:54.194619869+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: d5bea5c0a6326626b74e3a541544eaa97b60d16a76409ba630711231b2c0ebf0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.4.tgz
+    version: 5.5.4
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-10-05T20:09:54.191239671+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: cd7d7aa2bb2e35a536eae65485da6d146ba7aab25266cc61bf9efd68941f814d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.3.tgz
+    version: 5.5.3
+  - apiVersion: v1
+    appVersion: 7.1.1
+    created: "2020-10-05T20:09:54.188258271+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 14f31d3514a06a40299c166371cfa3ce60dcdf5748f3209e6c896e04465c5317
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.2.tgz
+    version: 5.5.2
+  - apiVersion: v1
+    appVersion: 7.0.5
+    created: "2020-10-05T20:09:54.185148441+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: d43eddfb6eae0491c919437f7efec88edca02cace1a8bb56c526d55c8c461cd4
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.1.tgz
+    version: 5.5.1
+  - apiVersion: v1
+    appVersion: 7.0.5
+    created: "2020-10-05T20:09:54.182031992+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 159b0cb53b47ea8042853d8a2f7c03a70f00643cb930fb4215c3494b49a71799
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.5.0.tgz
+    version: 5.5.0
+  - apiVersion: v1
+    appVersion: 7.0.5
+    created: "2020-10-05T20:09:54.178965666+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e2f50fb1223751e0dbb9b95ba0b413550f78b79c74e33e2f9fd21cd18356300c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.4.1.tgz
+    version: 5.4.1
+  - apiVersion: v1
+    appVersion: 7.0.5
+    created: "2020-10-05T20:09:54.17588013+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b2fea578037d002e298a1db6df2682cd821bec43f8eb9ef055020cfdbdd0551b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.4.0.tgz
+    version: 5.4.0
+  - apiVersion: v1
+    appVersion: 7.0.5
+    created: "2020-10-05T20:09:54.172680283+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 402c0477d1a9907b90f28ea29ce2c0e5d4aafed8135666777d675fc96f31679c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.6.tgz
+    version: 5.3.6
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.168966805+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 159a03065705734552d08e1264e5f320a02429479d2fedcf006e61cd6794950d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.5.tgz
+    version: 5.3.5
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.166645854+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a8f6ea50ce0752974b8720ddda05c2cf5770aca9189f6ac44df8802988251158
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.4.tgz
+    version: 5.3.4
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.164343878+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 05b8c3e28e834b85bff8feeea92ce57f270c22bb4c07a75e04e4850ea1b58c89
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.3.tgz
+    version: 5.3.3
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.162093167+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 4bef1c7d28e199e5b03e892bfcdbcf9e9c97e3855b96ddcd565bd0cb7580ee57
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.2.tgz
+    version: 5.3.2
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.159816182+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 20a36acb5ac0dd151abe6298ec99aef0858be9bd0173d6acebf2fea50c891a2e
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.1.tgz
+    version: 5.3.1
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.157442439+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 79d408a92f8f1b78877dba988c5c0e624e284d94adb8770674128ce1942b389f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.3.0.tgz
+    version: 5.3.0
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.153883438+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a161007d0a89f1dd34b0a1b69bbc35e25628202add03c1c5f62adce2858d6037
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.2.1.tgz
+    version: 5.2.1
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.151584757+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 995cb0e28aa29d1d7374f0a795d5142b158eac9cdfc1c469b80d817fde0489be
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.2.0.tgz
+    version: 5.2.0
+  - apiVersion: v1
+    appVersion: 7.0.3
+    created: "2020-10-05T20:09:54.14928766+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 293dc83bac07f2c43c57624a6d624e7a6f8842ac8b479a24edf7be61e7770a08
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.1.4.tgz
+    version: 5.1.4
+  - apiVersion: v1
+    appVersion: 7.0.1
+    created: "2020-10-05T20:09:54.146981737+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3ecde250e0fc3b7fbe767d1f1a9720ffbc0a319e5fe7ce76e1464b066866e142
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.1.2.tgz
+    version: 5.1.2
+  - apiVersion: v1
+    appVersion: 7.0.1
+    created: "2020-10-05T20:09:54.144701616+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 47b10a531cd3cf72f388f6534496b6206ae5bd78df3ecb48e52cdcb7fdbaa9ae
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.1.1.tgz
+    version: 5.1.1
+  - apiVersion: v1
+    appVersion: 7.0.1
+    created: "2020-10-05T20:09:54.142358785+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 41018ac231f5c4c74d821d5590ebd2e81cf7815d33fc003acd09892dad09b1af
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.1.0.tgz
+    version: 5.1.0
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.124106985+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: de2681accdbf7e4ba906e22316de20b091d21feeeff51796b0cbf59569bdc49f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.26.tgz
+    version: 5.0.26
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.120836333+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 17f96f3d77c74141f8695b858e76cff4e4afab8436fa1746bccbdcdca8e75cd3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.25.tgz
+    version: 5.0.25
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.118566268+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: bf42ae6589eb21eaada1dd35378bc17e142cc757ba1c7cd89e2e147ede219971
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.24.tgz
+    version: 5.0.24
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.116411244+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a77d717eb264c63ffb862458753890560b95f49dd8ff5f511de5f7b33b2c0893
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.23.tgz
+    version: 5.0.23
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.114220863+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 686e26592e3b543dacff0569ad1f451d9b73a7b6a46a947c211f4d55a046c504
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.22.tgz
+    version: 5.0.22
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.112082273+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b69f79f70a1bc449491916695b32c5d285d865336e1d01a5e8251fb7ca45a3be
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.21.tgz
+    version: 5.0.21
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.10990121+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 873a5f0aec8e5d1fa545e13a4a9d83b348d71d6a03f5eb7f52e88da0ce4057af
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.20.tgz
+    version: 5.0.20
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.104121692+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 166ef880ff44a5e45af75bfc75912301b77662cb4e8beac4954b546b73239b05
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.19.tgz
+    version: 5.0.19
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.101951778+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2a4fabb3cb2e6918230a789b40af7cbe099d58c4a7835aedfeffcfa962cfbc2c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.18.tgz
+    version: 5.0.18
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.099787674+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 63942947bbb61ecbd6c807cdd8e752db0b1fafe99dd4ba41c1e322760ddb246d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.16.tgz
+    version: 5.0.16
+  - apiVersion: v1
+    appVersion: 6.7.3
+    created: "2020-10-05T20:09:54.097679699+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: d9d21824dd2538b32e68656dcf39c7e599679932a8856f1c754b1a539988ea2a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.15.tgz
+    version: 5.0.15
+  - apiVersion: v1
+    appVersion: 6.7.1
+    created: "2020-10-05T20:09:54.095578978+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ce97bc6c9dce73d55a3941b28559485878cdb1e4f09784d208a84930c0f08477
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.14.tgz
+    version: 5.0.14
+  - apiVersion: v1
+    appVersion: 6.7.1
+    created: "2020-10-05T20:09:54.093486074+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 60c097238d3dbd60c14163ff6a2581083f00ee000a430694cefc12084292263f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.13.tgz
+    version: 5.0.13
+  - apiVersion: v1
+    appVersion: 6.7.1
+    created: "2020-10-05T20:09:54.091323948+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e4a8b8f1c429dcba078a7fbb42fb5dadae4569f1d9dafc36bf4a86680ec252bb
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.12.tgz
+    version: 5.0.12
+  - apiVersion: v1
+    appVersion: 6.7.1
+    created: "2020-10-05T20:09:54.088062335+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ee5ec610739f38f905d9305c7131517a4158e08e13f7c287efb11dbd8162e222
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.11.tgz
+    version: 5.0.11
+  - apiVersion: v1
+    appVersion: 6.7.1
+    created: "2020-10-05T20:09:54.085840534+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5715ddf4d5a012a7bdb1f4ef0f4d4faebef022ad12f2c9d656fbe8a17a23d5c1
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.10.tgz
+    version: 5.0.10
+  - apiVersion: v1
+    appVersion: 6.7.1
+    created: "2020-10-05T20:09:54.140147583+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 05ddd8be5c6edf271abb20226d218417456d86f14262147a162bf65043011e7d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.9.tgz
+    version: 5.0.9
+  - apiVersion: v1
+    appVersion: 6.6.2
+    created: "2020-10-05T20:09:54.136931223+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 914bd3040484d06ef7fd85b75f9ae06ed092f917f2433611ff4452245432ffd0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.8.tgz
+    version: 5.0.8
+  - apiVersion: v1
+    appVersion: 6.6.2
+    created: "2020-10-05T20:09:54.134718237+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 841f90e40fa3fe75502ffa5ebfda9810d604bf6f3414e510546a9bfbbe19d4e3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.7.tgz
+    version: 5.0.7
+  - apiVersion: v1
+    appVersion: 6.6.2
+    created: "2020-10-05T20:09:54.132560005+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 9999dce000780c48e366d1330254f80cf63bb619f58575822524eb73ccb2de96
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.6.tgz
+    version: 5.0.6
+  - apiVersion: v1
+    appVersion: 6.6.2
+    created: "2020-10-05T20:09:54.130428637+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6ad771b18cfc16cbe134e43c0c448ab0384115ddd4e0495657da0564b5a9809d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.5.tgz
+    version: 5.0.5
+  - apiVersion: v1
+    appVersion: 6.6.2
+    created: "2020-10-05T20:09:54.128318609+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: df97a525291ac652646240b46270e80d5ac6a8232ee9d43c6808273ed49b9684
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.4.tgz
+    version: 5.0.4
+  - apiVersion: v1
+    appVersion: 6.6.2
+    created: "2020-10-05T20:09:54.126212854+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 9657074728fb46fa3c98ac34d130cac60ac00a4086966be5e68854cbd86df523
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.3.tgz
+    version: 5.0.3
+  - apiVersion: v1
+    appVersion: 6.6.1
+    created: "2020-10-05T20:09:54.107707357+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e88aca895606c5edeade9eac8133fe68b0cd7f9d6f216190614c7749504d0530
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.2.tgz
+    version: 5.0.2
+  - apiVersion: v1
+    appVersion: 6.6.1
+    created: "2020-10-05T20:09:54.083660928+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1128889c92d82f25a33c1e10e6847a5ad2832a417491d7eacfc39d4ff780327b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.1.tgz
+    version: 5.0.1
+  - apiVersion: v1
+    appVersion: 6.6.1
+    created: "2020-10-05T20:09:54.081580942+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2715b29214dc425b4bd3fba5ea4c624f6feb26f4350fc46c02c8eb2ddfff8b49
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-5.0.0.tgz
+    version: 5.0.0
+  - apiVersion: v1
+    appVersion: 6.6.0
+    created: "2020-10-05T20:09:54.079409763+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a9639d6fb79d7b7b12a212fbc810962a00e08df194cea2c8f37076dab1076659
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.6.3.tgz
+    version: 4.6.3
+  - apiVersion: v1
+    appVersion: 6.6.0
+    created: "2020-10-05T20:09:54.076557952+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f9bb1423f28325d174bc88dfab7937f8a1471d9e61300d4714199c91fedbce35
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.6.2.tgz
+    version: 4.6.2
+  - apiVersion: v1
+    appVersion: 6.6.0
+    created: "2020-10-05T20:09:54.072137833+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f095dfa544d06f2ae93c81e05aaa6a2534044f0ae70b006da9f0365172169ff2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.5.1.tgz
+    version: 4.5.1
+  - apiVersion: v1
+    appVersion: 6.6.0
+    created: "2020-10-05T20:09:54.069945163+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: abca39b720ed8f758c16aeb05ec8f3bc8d803956c7fc4388c81a44d8fb243aca
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.5.0.tgz
+    version: 4.5.0
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.067729977+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a12666c8ef8f1a0f90a348e6ff1c49bedcd3f066763997d3ecbef52553a3ba47
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.4.1.tgz
+    version: 4.4.1
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.065549249+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fef98d9e6084ee086b969aa59d6626820ef1a392e8424c088b13bd2e6269911b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.4.0.tgz
+    version: 4.4.0
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.063423453+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c00d30390ebcf38c6091e032ceb10311e5a98ee949c1ac7498044a0c2995c07c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.3.2.tgz
+    version: 4.3.2
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.06133584+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7f50ce0128f005c3f9dedcda6018585e763e259c325c38d4f652c7595bd318b6
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.3.1.tgz
+    version: 4.3.1
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.059167075+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0cf8616620dfc3f16e5c6a816de6fc9a6879f0d19aa21fd86781e5e931fb6316
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.3.0.tgz
+    version: 4.3.0
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.056217994+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 53d68a8033056b787e454f2a24d8f7f9de08ab9164f2aac1031a0bedcee6aa30
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.2.3.tgz
+    version: 4.2.3
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.054149188+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6f0d8aab1136f862fd9f7e8f0adc4ebf160a80fa479af87dc9d34b920db4b2ed
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.2.2.tgz
+    version: 4.2.2
+  - apiVersion: v1
+    appVersion: 6.5.2
+    created: "2020-10-05T20:09:54.052093251+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 167da4bfce9899eb26b7ef452e1b393d6e3eab15afffd1181fbc47b0d12a0265
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.2.1.tgz
+    version: 4.2.1
+  - apiVersion: v1
+    appVersion: 6.5.0
+    created: "2020-10-05T20:09:54.049948894+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: bd3574332076cc3d218904dcfca14cd742f75bf6720d720054290ebb2fc85618
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.2.0.tgz
+    version: 4.2.0
+  - apiVersion: v1
+    appVersion: 6.5.0
+    created: "2020-10-05T20:09:54.047876081+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 017409979d854230abcbfd34a1756a355490847c705f8298d17e5b719b5cc64c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.1.3.tgz
+    version: 4.1.3
+  - apiVersion: v1
+    appVersion: 6.5.0
+    created: "2020-10-05T20:09:54.045761665+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1dab42f86e92d2a771608a7dfc02640353f062e4412379127afcd792d340159c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.1.2.tgz
+    version: 4.1.2
+  - apiVersion: v1
+    appVersion: 6.5.0
+    created: "2020-10-05T20:09:54.043650886+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f271e4a0a273eb0242c04c0adb830b59c4ede82175d29cf790a3cff2f4fedba0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.1.1.tgz
+    version: 4.1.1
+  - apiVersion: v1
+    appVersion: 6.5.0
+    created: "2020-10-05T20:09:54.040513671+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 281371b779fb4f7fd9ff721fca2d42da7109ed7e6ba765a5756b7efca32c056f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.1.0.tgz
+    version: 4.1.0
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.038442583+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0868b81b2ee545fb38a72756d459b074e2f069ee46ff3dae078dba96ec0f98ec
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.0.5.tgz
+    version: 4.0.5
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.036420559+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 85b5c517c2d1110fed647efa0dc639b74d07ea9f8e4cb35a7752df106e902d82
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.0.4.tgz
+    version: 4.0.4
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.034269901+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 626019520114e755fe834c2fbf0f18b9d1d14b3c0479464303aef048050d7779
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.0.3.tgz
+    version: 4.0.3
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.032317575+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 685b332ab47c8c81ae4b05a6847b79d15b3b9a834d8d3ddd1759477300341a8a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.0.2.tgz
+    version: 4.0.2
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.030281634+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a860a4f64c7096760fa1aed141bfd630f5f1d539c4b1c84d95008fa0ed00fd2a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.0.1.tgz
+    version: 4.0.1
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.028293964+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 059156e8cc2a40accb21b31e8b4d9dfa360b7270ea47a5c9e42ec2b0ada3cf62
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-4.0.0.tgz
+    version: 4.0.0
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.902272182+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: d6d467ddb34e7e33835f94ca76447200be2a556a038b62d4a4670a500c2689f8
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.12.1.tgz
+    version: 3.12.1
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.900194622+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 86df90946833faa9b23ddf9e13724085936fd4327436efcc0f2d3dcfdd4435a9
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.12.0.tgz
+    version: 3.12.0
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.89814242+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 50f402de60cf5e2e23da271a8f61f21e29edc7ac7b29d061ff448bb2d5c7411f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.11.1.tgz
+    version: 3.11.1
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.89529879+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 8764fedf45d92fd4de5862f4d89d06652a419addc277c107b51a5386abb2bdd2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.11.0.tgz
+    version: 3.11.0
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.893363481+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ffe309aca9e887b7782c1f99c0b40f68ebddc7e28e0b22782e0fac7a5115ef5d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.10.2.tgz
+    version: 3.10.2
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.8914059+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0da38a0c5bc83ebe7740502b22ba73d02c44f32b0fee85d8b4d7d2e3c269246f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.10.1.tgz
+    version: 3.10.1
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:53.889484747+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 04261f6de3c731d874c7192fa063bd10a09df04ebdc2fe78809c9f02c7fd42e1
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.10.0.tgz
+    version: 3.10.0
+  - apiVersion: v1
+    appVersion: 6.4.2
+    created: "2020-10-05T20:09:54.02482606+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f59014da53890f61e8bf91b34462e3fae76faa89e69da146e576c5f23308ba86
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.9.2.tgz
+    version: 3.9.2
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:54.02293495+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0d4403b5651566f6f749831d2077e166939e0e48e232daddcc8a446dad863289
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.9.1.tgz
+    version: 3.9.1
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:54.02113554+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 552e3d93fa7b7b746cbf3d0380d9ff38067727631669ed0a0ddbbd109682df4b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.9.0.tgz
+    version: 3.9.0
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:54.001607593+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 00680dcfae627e609079a124351acd7153e5b7e1d4edcf150580b07314339f56
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.19.tgz
+    version: 3.8.19
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.999063015+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 69740475a5dbd9c1386a8d94b7f9c03722318a00f30341c94ae11d6b0d06106d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.18.tgz
+    version: 3.8.18
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.996530406+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ef6f159360151b2ac6330f453cb80f50ed3e488d6377ffb7f98709267e75fc94
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.17.tgz
+    version: 3.8.17
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.993808086+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ed4fe4aec714325bfb96ab9bf16028adfca9b424f30a5200370f2ffad365168b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.16.tgz
+    version: 3.8.16
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.991589119+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0e097f671f265aad910f650c0edbcffd2893ddcf392ccc7f59a9803babb5e5de
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.15.tgz
+    version: 3.8.15
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.989761522+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7b6da91338ffff3656a44b215ee6e3f5380b3590cdf2ef8815f03f669db0b750
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.14.tgz
+    version: 3.8.14
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.98789196+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fd8505625456d9c0c8332c2b18b0fbd9eb1ad95bf8b9a0fbe7e6d56f4d3bcef0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.13.tgz
+    version: 3.8.13
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.986055811+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 40f750155b2c795e3d9c7dc3b91671cbcb38ac77f26bec2ae6ad666b2f25d2e5
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.12.tgz
+    version: 3.8.12
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.984195993+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 84c347b94f364eb1a9c57b2af1152f15ff5d4be13fb910d45cead43c273eaeb8
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.11.tgz
+    version: 3.8.11
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:53.982445875+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 61acff3c976dde50caeeed7a678a7f9537897bd5e8c199a63ec57cd39a901ca2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.10.tgz
+    version: 3.8.10
+  - apiVersion: v1
+    appVersion: 6.3.5
+    created: "2020-10-05T20:09:54.019253719+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 667964e3dd47c2f4b5eb191f19c70fe7d071671170ce6eb6b57e172d15321cfe
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.9.tgz
+    version: 3.8.9
+  - apiVersion: v1
+    appVersion: 6.3.4
+    created: "2020-10-05T20:09:54.017558997+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: bd88d5a198f86502eeb7d3dd6665904a81fd1de2388afbd2fe4c5a963f0a796e
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.8.tgz
+    version: 3.8.8
+  - apiVersion: v1
+    appVersion: 6.3.4
+    created: "2020-10-05T20:09:54.015748046+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ad0e47e50a1ce4e8880a8183b84b01b27b6de344940e9d01869f5e490ea79101
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.7.tgz
+    version: 3.8.7
+  - apiVersion: v1
+    appVersion: 6.3.4
+    created: "2020-10-05T20:09:54.014014843+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 8988be5c38b4547cc1514ad39a2a0f4e2b98c32f4b0c478a15e67a3eee5f6463
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.6.tgz
+    version: 3.8.6
+  - apiVersion: v1
+    appVersion: 6.3.4
+    created: "2020-10-05T20:09:54.011272127+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: be5e683b965e30703ad85498b68470c033819d146680085d786a03d0a5e067e2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.5.tgz
+    version: 3.8.5
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:54.00881831+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 88b060b85c96c0152cf447e43dd2094f87c2ba8137147c94a376a0cd34f6e994
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.4.tgz
+    version: 3.8.4
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:54.00643688+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f70c7b268d2857947a88ba41f38e71da2df3c532954db4d696144eae709bef36
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.3.tgz
+    version: 3.8.3
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:54.00399678+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 93f7946d141e152f65fc420e82d1796491513b685768a845cd1d3d7bb649c7f0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.2.tgz
+    version: 3.8.2
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.980675948+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fa5ae5b8ee78c2ccfe2b0b81a21eb865155f0c274abcdb496457d21070a9d2a6
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.1.tgz
+    version: 3.8.1
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.978063106+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 38f7ca4d9b5680fd23a78099b6dda7b5d72b2dc2eb0df755f948d8ee605bf429
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.8.0.tgz
+    version: 3.8.0
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.976330296+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 729a799dda4ecbf7dd3ede3180c96c350b21a16603a960bd1b32ad71fea12cba
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.7.3.tgz
+    version: 3.7.3
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.974155303+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b5869e9605c6c9d0491d994a8eb874020a7e0592f3bbe22cb50984a165a1ff7a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.7.2.tgz
+    version: 3.7.2
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.971901511+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5b60511c9d40292dfcec0386e468dff58564168872049e5811a5124d090ec7d2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.7.1.tgz
+    version: 3.7.1
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.96957904+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: d088efcab5ccdbcf107203865f286a15f6ec9d55375196fca181b709ed3b5a3d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.7.0.tgz
+    version: 3.7.0
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.967295807+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0ac8be8c9c0b0b4e169a9e4091971e0826242a9b5dfe6155dd7668350347fead
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.6.0.tgz
+    version: 3.6.0
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.948158468+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7ad5009827ad6f971cc2718f7477a3d78fb65e35e2c5f1ed9c350470cc982619
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.13.tgz
+    version: 3.5.13
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.945574456+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f946e46acc2d44391e4ee165240f89052cae957594e440403dcb1afabef0a01e
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.12.tgz
+    version: 3.5.12
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.942989944+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 897894b9152765e4bd33b697d4122f83292790a87e5a512054243ebdd1081633
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.11.tgz
+    version: 3.5.11
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.941239779+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 81e0b6d9a996938b201f1ccb49140bd6a9061de753918a4a2a10a07f85d8b46f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.10.tgz
+    version: 3.5.10
+  - apiVersion: v1
+    appVersion: 6.2.5
+    created: "2020-10-05T20:09:53.965025105+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 97a9610f90108af9afc117b211b7aff708540b4758bd1fde8793530c1f2e3552
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.9.tgz
+    version: 3.5.9
+  - apiVersion: v1
+    appVersion: 6.2.4
+    created: "2020-10-05T20:09:53.961947272+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fe6868fc68c8bda372874350f0e10027acacb05068c48c1f2547ca9831dd9b04
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.8.tgz
+    version: 3.5.8
+  - apiVersion: v1
+    appVersion: 6.2.4
+    created: "2020-10-05T20:09:53.959687409+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 4398d33963767ec9f86e060772f629a3c02fb494ffb8b6809001285f40fda997
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.7.tgz
+    version: 3.5.7
+  - apiVersion: v1
+    appVersion: 6.2.4
+    created: "2020-10-05T20:09:53.957453293+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a605c53f3ed1a1f2b223caf21db8d2d37734fcb96e4506138e4f6b8eb5306a9f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.6.tgz
+    version: 3.5.6
+  - apiVersion: v1
+    appVersion: 6.2.4
+    created: "2020-10-05T20:09:53.955104275+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6c02fcee7422b53823e72857f82bcd5fe9cfc924f0043e4a4e70bab50aecdc9f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.5.tgz
+    version: 3.5.5
+  - apiVersion: v1
+    appVersion: 6.2.4
+    created: "2020-10-05T20:09:53.952760408+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b2c16aeed09be16af758f52402791b0f31cdb742bb9cdaa8cdde4c68e1360081
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.4.tgz
+    version: 3.5.4
+  - apiVersion: v1
+    appVersion: 6.2.3
+    created: "2020-10-05T20:09:53.950471836+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7a7184ea210b37d9e8b65e9731b6b0e148ba4978c182866dc3ddc78082439cbc
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.5.3.tgz
+    version: 3.5.3
+  - apiVersion: v1
+    appVersion: 6.2.3
+    created: "2020-10-05T20:09:53.939502866+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: bae5aaf7bfaef35fd585bc7f264d702ca599d7dbcf53edf2f55892070ced0c50
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.4.3.tgz
+    version: 3.4.3
+  - apiVersion: v1
+    appVersion: 6.2.2
+    created: "2020-10-05T20:09:53.937840557+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 72647443d8dd2f16df62c05083ac508fc905765b9e850d54f2d034cf2b61a23d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.4.2.tgz
+    version: 3.4.2
+  - apiVersion: v1
+    appVersion: 6.2.0
+    created: "2020-10-05T20:09:53.936191607+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2eb4942317d2785c1b5a6b74fcbbdb4f6256ca16b356fa6f4fd8551f7c620805
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.4.1.tgz
+    version: 3.4.1
+  - apiVersion: v1
+    appVersion: 6.2.0
+    created: "2020-10-05T20:09:53.93394649+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: cb4745a151f88d2961d7abee0425c7f1ddc8abb84aa56e067792a11f8b9a9083
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.4.0.tgz
+    version: 3.4.0
+  - apiVersion: v1
+    appVersion: 6.2.0
+    created: "2020-10-05T20:09:53.912452819+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ef50c0abe391c57a87dc855ddff3ed5eb35036fa659654cc30bf855f85cf8238
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.11.tgz
+    version: 3.3.11
+  - apiVersion: v1
+    appVersion: 6.2.0
+    created: "2020-10-05T20:09:53.90934047+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3eb63c38b005ee04bde4ca68b220073fd0670b08676294eff17bde2937256c38
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.10.tgz
+    version: 3.3.10
+  - apiVersion: v1
+    appVersion: 6.2.0
+    created: "2020-10-05T20:09:53.93164565+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 56c417e6c1d4e358d0ad248409e517336cea953f8b4d01628b3c927893d4d073
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.9.tgz
+    version: 3.3.9
+  - apiVersion: v1
+    appVersion: 6.1.6
+    created: "2020-10-05T20:09:53.928780502+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 9733a679b147344f4fc8c001acf698a32865d5c47361f8217a2483a7c471c6b0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.8.tgz
+    version: 3.3.8
+  - apiVersion: v1
+    appVersion: 6.1.6
+    created: "2020-10-05T20:09:53.926383989+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: bae265602192b0614c24bb41a25fbd800ae9aa574567b2db3a2913991356e1c4
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.7.tgz
+    version: 3.3.7
+  - apiVersion: v1
+    appVersion: 6.1.6
+    created: "2020-10-05T20:09:53.924105355+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c2f6bda8b72264b6131d41d44521545ae5da9e0040ae3acb48e8df058c76ee79
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.6.tgz
+    version: 3.3.6
+  - apiVersion: v1
+    appVersion: 6.1.6
+    created: "2020-10-05T20:09:53.921731733+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e1617acdd3f5e5b5303f6c4821c3154a072d9269e1450b670bc1441a1b6ebec7
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.5.tgz
+    version: 3.3.5
+  - apiVersion: v1
+    appVersion: 6.1.6
+    created: "2020-10-05T20:09:53.919404417+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 788d9107bdd841320da652623b770a9e54e7de6813dabd82ffa168a83731e710
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.4.tgz
+    version: 3.3.4
+  - apiVersion: v1
+    appVersion: 6.1.4
+    created: "2020-10-05T20:09:53.917097747+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 336f082a7f9c8e0fb1ce0728b83d0f2499525b229bbaa06214bbd426fda7884b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.3.tgz
+    version: 3.3.3
+  - apiVersion: v1
+    appVersion: 6.1.4
+    created: "2020-10-05T20:09:53.914794842+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 63407b0f2c0c7b61df46231c440b4a8498eb0f725ad41fc75db25fe0bf6cbeeb
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.2.tgz
+    version: 3.3.2
+  - apiVersion: v1
+    appVersion: 6.1.4
+    created: "2020-10-05T20:09:53.907491517+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7bc8339acf7c31dd90e3303181dfdf329c3a0ba4d8849c0495ed7da0a36cdfca
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.1.tgz
+    version: 3.3.1
+  - apiVersion: v1
+    appVersion: 6.1.3
+    created: "2020-10-05T20:09:53.905691656+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2122047ade031ff1d1b8d68295381a493aaf81a58ef61fb172eafd0ee0f8130c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.3.0.tgz
+    version: 3.3.0
+  - apiVersion: v1
+    appVersion: 6.1.3
+    created: "2020-10-05T20:09:53.904015704+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7d13a71a3986748dbf3c13f91b7af98825010bd5c9aa4bb741394384efe99f16
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.2.0.tgz
+    version: 3.2.0
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.887471895+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1b40ef955e9c680444b9a8b08d14005a892e70c42445cdcff4f6fd9fa8c7d5e4
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.1.0.tgz
+    version: 3.1.0
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.885815009+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3907a0756a531d49e42d4257399ac3c48a6d9f4034fff18ec7c09a74be617122
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.0.1.tgz
+    version: 3.0.1
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.884192962+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c399949abb0546be74f047c65157639067e5fe8cd46222c1fb7c290eb75e127c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-3.0.0.tgz
+    version: 3.0.0
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.882217716+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 976c9893406f87ae5fafcae266b1dcde9635f38149ffd3d4e0c2b96d541e66f0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.3.5.tgz
+    version: 2.3.5
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.879798239+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: feac1147cfd7177c5c4f752ae5c781d934613248d2c5e571a2bdf30fb9d06e16
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.3.4.tgz
+    version: 2.3.4
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.878246988+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b2427de809eb9dc5cbcb5521b2293e529d87ef710c180b4a54ec9d52e66f1c8c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.3.3.tgz
+    version: 2.3.3
+  - apiVersion: v1
+    appVersion: 6.0.2
+    created: "2020-10-05T20:09:53.876652552+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 55b928b1be1556dc7a7863f07e2a9f2c77cba818710537863ff4df7dcce761f9
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.3.1.tgz
+    version: 2.3.1
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.875043656+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 75daa2f5b2bb256f496c8af95d17d1e63fd9e5158fde16e07bac1aaa690fc881
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.3.0.tgz
+    version: 2.3.0
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.873356234+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3aac5faee9c361ec8e1c8e182159aab300065fb93f7991280fb9afbeb0c9e0fe
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.2.5.tgz
+    version: 2.2.5
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.871743364+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 245a3ecad2aee605d9acbf6c7fcfb04abdaf052dbdefed7fad91233598937549
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.2.4.tgz
+    version: 2.2.4
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.870225839+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e4d30d20f1f0973d8ce351ed43f0c6e88fcf7b36aff3f659b681cf98882e90b0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.2.3.tgz
+    version: 2.2.3
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.867368426+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 588d0c2083aeab8b5530ac2336fed444f88b7488bb8d872edb3692d34dbb89d8
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.2.2.tgz
+    version: 2.2.2
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.865765341+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f4d27f44aec66d9e1d55a18986f0782a13433dd5a4492c93fcd0d456fa8c59d9
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.2.1.tgz
+    version: 2.2.1
+  - apiVersion: v1
+    appVersion: 6.0.0
+    created: "2020-10-05T20:09:53.864217291+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2df22374b505064d5ecb082353f172af8589dd1e12a855e054f61d634033449f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.862647752+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 81d56a20c21566bee13f9d4b7350646070361cd05d8689677dbc0662c72b3958
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.1.2.tgz
+    version: 2.1.2
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.861047087+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5bf1c00c272d622393e01398cb81cc2f92f157d49d3ae8f6c0d04bd324d1805b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.1.1.tgz
+    version: 2.1.1
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.859387767+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a3cf2d8824e8eab8c22847c482cf4ce818180c5d2fb88fcb8ba1a36fc59a529e
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.857898128+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5f047e4b561e02041ffc094d1f354b350755766a94ae13a9387ef8ebd9627641
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.0.2.tgz
+    version: 2.0.2
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.856450421+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f9df03a4c4f807a4a7c440c1515db96c0b6245c8b2a1cea9003d8ba8ced6e6d1
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.854588309+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5986d6a87d1d36292ef09dacc38cf138d5f610f5ed04c4e1833f86c369305156
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-2.0.0.tgz
+    version: 2.0.0
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.841247797+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 616267bed1b41673ddc145e6536b71a18f05605b806bdd0cb66d625b9ee0cd45
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.26.1.tgz
+    version: 1.26.1
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.839322718+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6e31dcd3e07d8e6e2ffea63cd86b230bfff32db84d666b1d0c6ca0903bda99d2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.26.0.tgz
+    version: 1.26.0
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.837246066+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 67a94750f6c3ab845cdca21619959e2cbc19e7b98cbda7cdb77c91ea399f967c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.25.4.tgz
+    version: 1.25.4
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.834772196+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ed6bcaf83d0327ebda4d76ccb0e7cb665f4fdfde7bfd68e767aa6df171d10143
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.25.3.tgz
+    version: 1.25.3
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.833184994+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5e5147a07932602a473e62d73d2a81ab3d0d1c89e930c24ef65ad696b43e2e69
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.25.2.tgz
+    version: 1.25.2
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.8317832+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1b4582c477830264cb6f69076e9bf2f9cb55429182c85caa803095b9c2087ac0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.25.1.tgz
+    version: 1.25.1
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.830350844+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 48194e65b68e365581639db7cf4f8fff51ccae2bc96c6899aa2adb3ace1b3228
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.25.0.tgz
+    version: 1.25.0
+  - apiVersion: v1
+    appVersion: 5.4.3
+    created: "2020-10-05T20:09:53.828956415+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: d34b2d73b9c1679dd238e552145644254965ecf25eceb3004e785e6fd2478b15
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.24.2.tgz
+    version: 1.24.2
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.82749299+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1b61a4995424b249f8b70d7f5be82e9803c760edbc4f91586356b529cde517d4
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.24.1.tgz
+    version: 1.24.1
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.826053097+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 98cd42c9b804671b24aca287b53b9c4f86a4c2b99d2150203739bf27d94f199d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.24.0.tgz
+    version: 1.24.0
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.824659825+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 52da29b636921a32d3ba7f485b6094fdb524b69ecdf7b8bfa7c9bbfcd3d6e60b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.23.1.tgz
+    version: 1.23.1
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.822537278+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 36ed5d1e960964011a6d5e27491d90f611dcd4918884ea1ba07898c3c9b49523
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maorfr@gmail.com
+      name: maorfr
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.23.0.tgz
+    version: 1.23.0
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.821197598+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 77a8dd8e7d2c1b8ff6066d7283d4b2c24eb59efcc301cbb6d7aabb313ec5dd69
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.22.2.tgz
+    version: 1.22.2
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.819885923+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 14f10698ad67194a153300c3c93a7637f38443a4051325ebbefee8d593b4247f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.22.1.tgz
+    version: 1.22.1
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.818552196+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c1c7168487d11872b4915a5c4486c71b58d0f31920bbb3943c23bf4ffaf6b9af
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.21.4.tgz
+    version: 1.21.4
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.817194462+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0eb56675bfaefa90098e1be27c957f0046b74aeef63c945e73a6180944241834
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.21.3.tgz
+    version: 1.21.3
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.815847516+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ec7a9f2e4718ade05570c71aedea74419d4765acc472c8d18736e9a76f239670
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.21.2.tgz
+    version: 1.21.2
+  - apiVersion: v1
+    appVersion: 5.4.2
+    created: "2020-10-05T20:09:53.814525194+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 086de0ad42dcc94082d6a849fef5f455f5d8be08608418506bb7182b299d36dc
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.21.1.tgz
+    version: 1.21.1
+  - apiVersion: v1
+    appVersion: 5.4.1
+    created: "2020-10-05T20:09:53.813235748+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1b20c04aa595a438ee892713cff416827e0b03be885650d3903c13df7d1607ae
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.21.0.tgz
+    version: 1.21.0
+  - apiVersion: v1
+    appVersion: 5.4.1
+    created: "2020-10-05T20:09:53.811892231+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e5f4ee04a0812331ecf5cead51e5c5b3be9fb356142f0ba4e1fbe7b1492e17fb
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.20.1.tgz
+    version: 1.20.1
+  - apiVersion: v1
+    appVersion: 5.4.0
+    created: "2020-10-05T20:09:53.809511087+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: af47149d534e9a32ea07cfeae3148c3b7ac1c4744c849330c464a372c5b6b797
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.20.0.tgz
+    version: 1.20.0
+  - apiVersion: v1
+    appVersion: 5.3.4
+    created: "2020-10-05T20:09:53.804626387+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c20dee27ff96c8f47a74b34bf83b01e3ee4a67979512fd057d5339776d0568d9
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.19.1.tgz
+    version: 1.19.1
+  - apiVersion: v1
+    appVersion: 5.3.4
+    created: "2020-10-05T20:09:53.802849067+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3c3a58b6d7d7d728761ec8a757c0d5ef3b8e09456c764fc0645f52c83ac7667e
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.19.0.tgz
+    version: 1.19.0
+  - apiVersion: v1
+    appVersion: 5.3.4
+    created: "2020-10-05T20:09:53.80111651+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 33135eaa4c5caeebcb20b0cf40f3ac4e6604b1e294cb4c0922f1c8b8934c9e05
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.18.0.tgz
+    version: 1.18.0
+  - apiVersion: v1
+    appVersion: 5.3.4
+    created: "2020-10-05T20:09:53.799336241+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f26c5b7bcd77cec5b9ccdc13a37fe991ad3b436c4bfd35dde632c40c9d0a7f38
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.6.tgz
+    version: 1.17.6
+  - apiVersion: v1
+    appVersion: 5.3.2
+    created: "2020-10-05T20:09:53.797674236+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 53ecf72270730cba39ff7dffc803266ea2fa92b2a1ff0988d90c4af2495dd303
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.5.tgz
+    version: 1.17.5
+  - apiVersion: v1
+    appVersion: 5.3.2
+    created: "2020-10-05T20:09:53.795906714+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 37a2c2501050d0acc41d71f2dac289cfc46d8cf67879fb615fa454b2fa895237
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.4.tgz
+    version: 1.17.4
+  - apiVersion: v1
+    appVersion: 5.3.2
+    created: "2020-10-05T20:09:53.793813267+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1b361ff305a75435b69dc3010a87d0f9dbf95d10b8d3584ba6c912db16d73355
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.3.tgz
+    version: 1.17.3
+  - apiVersion: v1
+    appVersion: 5.3.1
+    created: "2020-10-05T20:09:53.792249915+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b232f834872cd904718fbabfd50b4288d79cf193b6075c63ffc854bd84fab9ee
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.2.tgz
+    version: 1.17.2
+  - apiVersion: v1
+    appVersion: 5.3.0
+    created: "2020-10-05T20:09:53.790940686+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0fee1add39256d8cacf895c3925c3e11a97f5775d146bb41a3733460d8f70e34
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.1.tgz
+    version: 1.17.1
+  - apiVersion: v1
+    appVersion: 5.3.0
+    created: "2020-10-05T20:09:53.789650708+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 25465fd45df26212c4e2b272f8cdfb6f28f4447fd4c4985b01b70a644448f8ed
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.17.0.tgz
+    version: 1.17.0
+  - apiVersion: v1
+    appVersion: 5.2.4
+    created: "2020-10-05T20:09:53.788345332+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 44a4f24252239d8a6dee6cdf6fa6dcbd722a19f016e35986a30ce963d705f2e3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.16.0.tgz
+    version: 1.16.0
+  - apiVersion: v1
+    appVersion: 5.2.4
+    created: "2020-10-05T20:09:53.787033378+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5b357137c7c91813cecb31b4d31e8e90dc69ca62855fdf422d097831c612b69d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.8.tgz
+    version: 1.14.8
+  - apiVersion: v1
+    appVersion: 5.2.4
+    created: "2020-10-05T20:09:53.785849092+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 4f5454d78ac12f614aa91a1773fa1885de1fb964f3be6af4056eca2d0fc17f24
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.7.tgz
+    version: 1.14.7
+  - apiVersion: v1
+    appVersion: 5.2.4
+    created: "2020-10-05T20:09:53.784551728+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3f2604a570cf1b138ae4bd378c42bc7123b7815ac545bc4a206c3262c6433843
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.6.tgz
+    version: 1.14.6
+  - apiVersion: v1
+    appVersion: 5.2.3
+    created: "2020-10-05T20:09:53.783321176+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 864b8fa3702174dcec375b5b7803243366432c95c8e6d307cf96a6601ccd0d10
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.5.tgz
+    version: 1.14.5
+  - apiVersion: v1
+    appVersion: 5.2.3
+    created: "2020-10-05T20:09:53.78200067+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e85fcd75fcb85df3ddeaecd29912cbb126f1a91bab5239d6d6707d3ad800c1ad
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.4.tgz
+    version: 1.14.4
+  - apiVersion: v1
+    appVersion: 5.2.3
+    created: "2020-10-05T20:09:53.779676754+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 20b58036e91015829294119fb06b0ed27fb2b5256fbc97df622e08103cd93ebf
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.3.tgz
+    version: 1.14.3
+  - apiVersion: v1
+    appVersion: 5.2.3
+    created: "2020-10-05T20:09:53.778337405+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c9f6785cb455a9ab606238925e3a926b92a19c41d23ad7aa4599d9308305f0a3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.2.tgz
+    version: 1.14.2
+  - apiVersion: v1
+    appVersion: 5.2.3
+    created: "2020-10-05T20:09:53.776992421+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0b3fc346b7fa71cbac8c3ce826ea8018aeb75e97f1d4b0f7216badbd721acf08
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.1.tgz
+    version: 1.14.1
+  - apiVersion: v1
+    appVersion: 5.2.2
+    created: "2020-10-05T20:09:53.775735805+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3cdc8d67585e27be61020c98d0931a18ca2a3456608ff92c359ac5390bf0e5b1
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.14.0.tgz
+    version: 1.14.0
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.774510654+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 93b0c8d59eea99f83d895da26ff40e7cbcbac772c0d85d2c5d7919e8c3a3df86
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.13.1.tgz
+    version: 1.13.1
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.773296264+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b060fbd284a9d16ba6a8e2735c11494abf875dcd5015ce8c904fc67681968960
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.13.0.tgz
+    version: 1.13.0
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.77204018+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 87979ca9ca2a7563a437cc24b1dc13d48665081ce9fbd44504aea5df26536215
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.12.0.tgz
+    version: 1.12.0
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.77078888+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fd24b0937a7cda584362e999cc03402c45247f841485ab710ceefb4c69271d05
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.6.tgz
+    version: 1.11.6
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.769680467+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f058cc4af310355cba1671dbb72e3244104c17335913bfcc9dd8a59d4ce73293
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.5.tgz
+    version: 1.11.5
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.768548108+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3b0ce39173fa8171ec05af47eabaa8aedebed81d4343a8418e8f5cc0fb850882
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.4.tgz
+    version: 1.11.4
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.766715475+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2f126521290956bfe0b0ab75fec998877d139f63fdfe1198767714cf67ec740e
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.3.tgz
+    version: 1.11.3
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.765239779+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 9d26056ee267eebba6f63ee76d421d4dff9c6654b10bbae8857e89305a1d163c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.2.tgz
+    version: 1.11.2
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.764116026+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f1f1d067f3c7e79f0735d30a6cb3ea4679f107c2d80038d164def051c60070b5
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.1.tgz
+    version: 1.11.1
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.76291988+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: baecafa032be4c0a0b647a0eb047a93d0529b2ef3c996f2a70b66cec33be0760
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.11.0.tgz
+    version: 1.11.0
+  - apiVersion: v1
+    appVersion: 5.1.3
+    created: "2020-10-05T20:09:53.761806086+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 006eca66d5ca25d3b09dd65874c0d170ec80728231b2e5b45abf63d2386e4971
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.10.2.tgz
+    version: 1.10.2
+  - apiVersion: v1
+    appVersion: 5.1.2
+    created: "2020-10-05T20:09:53.760852146+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b771d6d8d6394860608f7a790bb0e395eaeeeacf09d6c38eca36bbf2e9b95290
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.10.1.tgz
+    version: 1.10.1
+  - apiVersion: v1
+    appVersion: 5.1.2
+    created: "2020-10-05T20:09:53.759785743+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fdf12793a13f225e005e2c91493a20573bc712f0c28bb527c82552b20bab9497
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.10.0.tgz
+    version: 1.10.0
+  - apiVersion: v1
+    appVersion: 5.1.2
+    created: "2020-10-05T20:09:53.852097529+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0e49a605df51d877a6eaff17499d754a45a4ebb4e2783482cb359e263f37ad5b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.9.1.tgz
+    version: 1.9.1
+  - apiVersion: v1
+    appVersion: 5.1.2
+    created: "2020-10-05T20:09:53.850734479+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e2ac3354718e68602dd8ad1eb0fc1a8bc4068554fa03d31f133928eafae77664
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.9.0.tgz
+    version: 1.9.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.849453125+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 360b909b715314ae4db4fab8b887a83447fb3575ee4f8f5812af646215c2f062
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.8.0.tgz
+    version: 1.8.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.848212607+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7332f21983489a9ea23a43c587854ea04a488679380888c60a88029e50bd3178
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.7.0.tgz
+    version: 1.7.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.847025522+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 3683caf5a340e31ea568889b05f332aa8e6add5c806e1cda4c2b72a95102a61f
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.6.0.tgz
+    version: 1.6.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.845903364+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 16cb1a555e34ad950a915877a183ae2d80ac41a4519ee4724a5c929f70e715bc
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.5.1.tgz
+    version: 1.5.1
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.844758538+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 9bad55b9fc34d5904fbe5b669ee65e027ca24f239994ab05f208b23c16aa78d3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.843608209+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 589df42e2e53e86303b566a7d2d102e2e0b82962a63d58a38b864c25754be336
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.842462381+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a929c339b1236ed378348b093c74a843db5841e3e16033a40cb21c4a44c16152
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.3.0.tgz
+    version: 1.3.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.80775023+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 372cb94d52d633f31bf318afee18fb66ba1e24a10fc197a4032d7ebb42c94f9c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.2.2.tgz
+    version: 1.2.2
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.806727689+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2ede6ac58bffad4cdbc2c10a31e9ff0f6724d33d9497cca18eb53cb27d38dd44
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.80565983+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: cdd262a748ae9ec81087ebef219492fd1129ac8d4cd4c31ed52dccf33bca9994
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.758824173+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: ca41ef86b912df8bf9495baefb680dd67ac1800f7222ad879698cd0abe5d0436
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.758062529+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: b43f227a02d3486b246a1a2031cba7c44ccaf8873791ae5eb52652800544acd6
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.757299631+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 8602ed03b142be342ccfeb22b94d38d26373ae129600385443b0002624c1432c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.756547344+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0e08d59873ee685e31545e920b8fa5298d70ba6db0c8f24990e1e0fd7b82c80b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.755796305+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a32c194506a3f3263373c17e439d33b23c369c758a2d3a85c9d21dfc28c7e81a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
+    appVersion: 5.0.4
+    created: "2020-10-05T20:09:53.755044599+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: db21f9e72976debe3d4df88b46d3941e939cd43617e27ae2f789b559b96e64a3
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.8.5.tgz
+    version: 0.8.5
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.753035919+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a4eda71c1211c72a9208a924d9a21d2634a48cfef84b7c6825ef76bb621b0d5b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.8.4.tgz
+    version: 0.8.4
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.750971125+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2b0f6de9f6ef0932a93a1dbc275cb1bd1a534958c6ffb012fd4fbd41bd05b1b9
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.8.3.tgz
+    version: 0.8.3
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.749330375+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7d59ea87c6074919adfbf8821bba1c3fca912ec36f81f1aabbe23aa6e1a31437
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.8.2.tgz
+    version: 0.8.2
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.747536785+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e83d5c5f802f5a0af9099e60403509d21a3b1d95638b7a5c1e4f8ff5cfbfd27c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.8.0.tgz
+    version: 0.8.0
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.745900795+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 9febcb875c4638147c6f03fe9b96c6720cc1944fac70d9b785d146ca1d06de9a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.742648531+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 69e08f3d13bfb33cf828eb645fd978a01578b47811997d904276b7d77c796d9b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.6.2.tgz
+    version: 0.6.2
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.740981036+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c404e73e88cd3aa20635b334b9f9df785bb644c80171691ea4bf95502a256686
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.6.1.tgz
+    version: 0.6.1
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.744213803+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6c25c79e16df4c31637d3f8b1b379bb4c0a34157fa5b817f4c518ef50d43911b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.6.tgz
+    version: "0.6"
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.739336584+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 68ac750dbdf81637411e56aaaa4e8db7e86a99324a8d34a3f804e2ad14e80a76
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.8.tgz
+    version: 0.5.8
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.737860658+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e0c029c5521a2abd3958e6223db22412e76317193ee1b6cf0f1d72e68348af2a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.7.tgz
+    version: 0.5.7
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.736365348+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 75f81afedf440641e6bc70b3504a48c63a3ffeec7d49316c707c7002bbd12816
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.6.tgz
+    version: 0.5.6
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.73418868+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e66c0682010a8c5874d29f554db1a9770ef20445c9fe7b19374dfc337360bc4b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.5.tgz
+    version: 0.5.5
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.732635862+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 65591575ab6a749e6746f0d3c0891a4aa4f8306f916f2e5738d465d124f16641
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.4.tgz
+    version: 0.5.4
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.731123096+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: bc7bd5892e291ab30266b2c23aaed3dc99d102172c7c80d7766e30c257ec176a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.3.tgz
+    version: 0.5.3
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.729605954+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 8aa4b3db05eafad993aea5b4e61f3643380c65879b70c16b19c05ea7c545769c
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.2.tgz
+    version: 0.5.2
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.728183793+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c7e611f79c4330970b97ac8231d5024fd602d6c71d873bc8d5e7cf6e28c2a638
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.1.tgz
+    version: 0.5.1
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.726709407+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: aae6796d8c17dc7125ef7b237f63bdd63e79a95546d495368ce339b92a2ff76d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.725365358+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 0ad90e1121831245bc9d1d9d301de588d712267c39faf033b78cc8f8f7d9c208
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.4.5.tgz
+    version: 0.4.5
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.723910838+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1a099727ade1d8e84ba484bbd5a6b87e24373bc861751675f87d0fd9b07633b2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.4.4.tgz
+    version: 0.4.4
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.722493785+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fc800e67972c1a52a44ecaf0fe7f470376fc72231968946dc80109059831e8ce
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.721035709+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 1bed27297c7858ce63fac9af2c302ca3f8299b8882afe22598b1bfaf361a1264
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.719626295+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 595920d69d9c06d7ba4a03d68a5c7c3a3dd19bcb7268d4503ef11673a5d27e19
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.718112132+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6c707b9a7eb335340f684d0f820c8e5158b85fdc0287d39898a18ae88186c751
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.715871593+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6bf8033b83176c3019f661177b2009210de7402c29456016eb2e6d92d33b85f0
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.7.tgz
+    version: 0.3.7
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.714725632+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: dc8de07a99c200b5d221acb5b53b7247345d00c308e6505419891077c3562726
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.6.tgz
+    version: 0.3.6
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.713649776+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fe3e8e1d33d96872ec437813bc305c6224d2dcbf4485ec2d1c70888584acbfb8
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.5.tgz
+    version: 0.3.5
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.712527772+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 266a15822aaf5a79729d1755c288c487a4206069c7772fb1a31b7e9dc353a604
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.711384073+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 6514715c82d8d9db2ce38aa7a1ea716dbf0572c4787878935642290a51d04ce2
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.71035597+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 5be576b1d7b73fa759086ccec29843627b7d71d8a8c75d2c11944ebb9e335a49
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.709269109+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 721c85c6407ef534dc0d2366af3092f63229d51158abb124496efbe1a224907b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.708250485+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 8f1db00e769d13c2435841b9b89b2045653039ca377c4547f46b33ec566f60ef
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.707235853+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: e428e33b249f2261882632cc658c36d50df81460c091fd29404a3b3d16886416
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.706222871+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 2fefc51028c411641e5bf85b799fc8e608c7646c7054cfaa2149d4e83610d60a
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.705254865+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 7fac33dcd25d8ac60071e56968db133ecfa4f796732f92044d1f7714495840fd
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.704224105+02:00"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 037158b80733838ab2ad84928c999997ab76b5383cbeb4cce6c174fe5bc5ae8d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.702488219+02:00"
+    description: A Helm chart for Kubernetes
+    digest: e49f08bd26843eb0449304c72fd9be3e65de0d8647457f39807f9aa296ba9b6a
+    home: https://grafana.net
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
+    created: "2020-10-05T20:09:53.69751916+02:00"
+    description: A Helm chart for Kubernetes
+    digest: 283be1abb811d005b3759f65761e4465e79f2031be8a47b3d87256e88888f047
+    home: https://grafana.net
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: Ming Hsieh
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    urls:
+    - https://grafana.github.io/helm-charts/grafana-0.2.0.tgz
+    version: 0.2.0
+generated: "2020-10-05T20:09:53.695612001+02:00"
