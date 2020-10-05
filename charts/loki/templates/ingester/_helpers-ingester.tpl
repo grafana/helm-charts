@@ -1,12 +1,12 @@
 {{/*
-Common ingester labels
+ingester fullname
 */}}
 {{- define "loki.ingesterFullname" -}}
 {{ include "loki.fullname" . }}-ingester
 {{- end }}
 
 {{/*
-Common ingester labels
+ingester common labels
 */}}
 {{- define "loki.ingesterLabels" -}}
 {{ include "loki.labels" . }}
@@ -14,7 +14,7 @@ app.kubernetes.io/component: ingester
 {{- end }}
 
 {{/*
-Selector ingester labels
+ingester selector labels
 */}}
 {{- define "loki.ingesterSelectorLabels" -}}
 {{ include "loki.selectorLabels" . }}

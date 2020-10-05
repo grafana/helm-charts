@@ -60,3 +60,24 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Loki Docker image
+*/}}
+{{- define "loki.image" -}}
+{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag | default .Chart.AppVersion }}
+{{- end }}
+
+{{/*
+Memcached Docker image
+*/}}
+{{- define "loki.memcachedImage" -}}
+{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
+{{- end }}
+
+{{/*
+Memcached Exporter Docker image
+*/}}
+{{- define "loki.memcachedExporterImage" -}}
+{{ .Values.memcachedExporter.image.repository }}:{{ .Values.memcachedExporter.image.tag }}
+{{- end }}

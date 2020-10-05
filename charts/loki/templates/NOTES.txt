@@ -16,3 +16,15 @@ Installed components:
 {{- if .Values.canary.enabled }}
 * canary
 {{- end }}
+{{- if .Values.memcachedChunks.enabled }}
+* memcached-chunks
+{{- end }}
+{{- if .Values.memcachedFrontend.enabled }}
+* memcached-frontend
+{{- end }}
+{{- if .Values.memcachedIndexQueries.enabled }}
+* memcached-index-queries
+{{- end }}
+{{- if .Values.memcachedIndexWrites.enabled }}
+* memcached-index-writes
+{{- end }}

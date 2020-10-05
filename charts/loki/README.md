@@ -1,6 +1,6 @@
 # loki
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki
 
@@ -29,7 +29,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | canary.extraEnv | list | `[]` | Environment variables to add to the canary pods |
 | canary.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the canary pods |
 | canary.image.pullPolicy | string | `"IfNotPresent"` | canary image pull policy |
-| canary.image.repository | string | `"grafana/loki-canary"` | canary image repository |
+| canary.image.repository | string | `"docker.io/grafana/loki-canary"` | canary image repository |
 | canary.image.tag | string | `"1.6.1"` | canary image tag |
 | canary.kind | string | `"Deployment"` | canary can be run as a Deployment or DaemonSet |
 | canary.nodeSelector | object | `{}` | Node selector for canary pods |
@@ -57,7 +57,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` | The gateway image pull policy |
-| gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
+| gateway.image.repository | string | `"docker.io/nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
 | gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
@@ -91,10 +91,61 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
-| loki.image.repository | string | `"grafana/loki"` | Docker image repository |
+| loki.image.repository | string | `"docker.io/grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `""` | Overrides the image tag whose default is the chart's appVersion |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
+| memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
+| memcached.image.repository | string | `"docker.io/memcached"` | Memcached Docker image repository |
+| memcached.image.tag | string | `"1.6.7-alpine"` | Memcached Docker image tag |
+| memcachedChunks.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string |
+| memcachedChunks.enabled | bool | `false` | Specifies whether the Memcached chunks cache should be enabled |
+| memcachedChunks.extraArgs | list | `[]` | Additional CLI args for memcached-chunks |
+| memcachedChunks.extraEnv | list | `[]` | Environment variables to add to memcached-chunks pods |
+| memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
+| memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
+| memcachedChunks.podAnnotations | object | `{}` | Annotations for memcached-chunks pods |
+| memcachedChunks.replicas | int | `1` | Number of replicas for memcached-chunks |
+| memcachedChunks.resources | object | `{}` | Resource requests and limits for memcached-chunks |
+| memcachedChunks.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-chunks to shutdown before it is killed |
+| memcachedChunks.tolerations | list | `[]` | Tolerations for memcached-chunks pods |
+| memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
+| memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
+| memcachedExporter.image.repository | string | `"docker.io/prom/memcached-exporter"` | Memcached Exporter Docker image repository |
+| memcachedExporter.image.tag | string | `"v0.6.0"` | Memcached Exporter Docker image tag |
+| memcachedFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| memcachedFrontend.enabled | bool | `false` | Specifies whether the Memcached frontend cache should be enabled |
+| memcachedFrontend.extraArgs | list | `[]` | Additional CLI args for memcached-frontend |
+| memcachedFrontend.extraEnv | list | `[]` | Environment variables to add to memcached-frontend pods |
+| memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
+| memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
+| memcachedFrontend.podAnnotations | object | `{}` | Annotations for memcached-frontend pods |
+| memcachedFrontend.replicas | int | `1` | Number of replicas for memcached-frontend |
+| memcachedFrontend.resources | object | `{}` | Resource requests and limits for memcached-frontend |
+| memcachedFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-frontend to shutdown before it is killed |
+| memcachedFrontend.tolerations | list | `[]` | Tolerations for memcached-frontend pods |
+| memcachedIndexQueries.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string |
+| memcachedIndexQueries.enabled | bool | `false` | Specifies whether the Memcached index queries cache should be enabled |
+| memcachedIndexQueries.extraArgs | list | `[]` | Additional CLI args for memcached-index-queries |
+| memcachedIndexQueries.extraEnv | list | `[]` | Environment variables to add to memcached-index-queries pods |
+| memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
+| memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
+| memcachedIndexQueries.podAnnotations | object | `{}` | Annotations for memcached-index-queries pods |
+| memcachedIndexQueries.replicas | int | `1` | Number of replicas for memcached-index-queries |
+| memcachedIndexQueries.resources | object | `{}` | Resource requests and limits for memcached-index-queries |
+| memcachedIndexQueries.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-queries to shutdown before it is killed |
+| memcachedIndexQueries.tolerations | list | `[]` | Tolerations for memcached-index-queries pods |
+| memcachedIndexWrites.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string |
+| memcachedIndexWrites.enabled | bool | `false` | Specifies whether the Memcached index writes cache should be enabled |
+| memcachedIndexWrites.extraArgs | list | `[]` | Additional CLI args for memcached-index-writes |
+| memcachedIndexWrites.extraEnv | list | `[]` | Environment variables to add to memcached-index-writes pods |
+| memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
+| memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
+| memcachedIndexWrites.podAnnotations | object | `{}` | Annotations for memcached-index-writes pods |
+| memcachedIndexWrites.replicas | int | `1` | Number of replicas for memcached-index-writes |
+| memcachedIndexWrites.resources | object | `{}` | Resource requests and limits for memcached-index-writes |
+| memcachedIndexWrites.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-writes to shutdown before it is killed |
+| memcachedIndexWrites.tolerations | list | `[]` | Tolerations for memcached-index-writes pods |
 | nameOverride | string | `""` | Overrides the chart's name |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |

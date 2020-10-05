@@ -42,7 +42,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag | default .Chart.AppVersion }}"
+          image: {{ include "loki.image" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
             - -config.file=/etc/loki/loki.yaml
