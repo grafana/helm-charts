@@ -4,7 +4,7 @@ metadata:
   name: {{ include "loki.querierFullname" . }}
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
-    app.kubernetes.io/part-of: gossip-ring
+    app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.querier.replicas }}
   updateStrategy:
@@ -27,7 +27,7 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.querierSelectorLabels" . | nindent 8 }}
-        app.kubernetes.io/part-of: gossip-ring
+        app.kubernetes.io/part-of: memberlist
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -57,7 +57,7 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
-            - name: http-gossip
+            - name: http-memberlist
               containerPort: 7946
               protocol: TCP
           {{- with .Values.querier.extraEnv }}

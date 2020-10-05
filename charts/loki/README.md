@@ -1,6 +1,6 @@
 # loki
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki
 
@@ -30,7 +30,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | canary.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the canary pods |
 | canary.image.pullPolicy | string | `"IfNotPresent"` | canary image pull policy |
 | canary.image.repository | string | `"docker.io/grafana/loki-canary"` | canary image repository |
-| canary.image.tag | string | `"1.6.1"` | canary image tag |
+| canary.image.tag | string | `""` | Overrides the canary image tag whose default is the chart's appVersion |
 | canary.kind | string | `"Deployment"` | canary can be run as a Deployment or DaemonSet |
 | canary.nodeSelector | object | `{}` | Node selector for canary pods |
 | canary.podAnnotations | object | `{}` | Annotations for canary pods |
@@ -93,6 +93,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.repository | string | `"docker.io/grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `""` | Overrides the image tag whose default is the chart's appVersion |
+| loki.memberlist | bool | `true` | If true, an additional headless service for memberlist (including ingester, distributor, and quierier pods) is created |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
@@ -240,7 +241,7 @@ loki:
 
     memberlist:
       join_members:
-        - {{ include "loki.fullname" . }}-gossip-ring
+        - {{ include "loki.fullname" . }}-memberlist
 
     limits_config:
       ingestion_rate_mb: 10
