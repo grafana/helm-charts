@@ -30,7 +30,7 @@ spec:
       {{- end }}
       containers:
         - name: loki
-          image: "{{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag }}"
+          image: "{{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.canary.image.pullPolicy }}
           args:
             - -addr={{ include "loki.gatewayFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
