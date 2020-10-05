@@ -10,11 +10,11 @@ imagePullSecrets: []
 loki:
   image:
     # loki.image.repository -- Docker image repository
-    repository: grafana/loki
-    # loki.image.pullPolicy -- Docker image pull policy
-    pullPolicy: IfNotPresent
+    repository: docker.io/grafana/loki
     # loki.image.tag -- Overrides the image tag whose default is the chart's appVersion
     tag: ""
+    # loki.image.pullPolicy -- Docker image pull policy
+    pullPolicy: IfNotPresent
   # loki.podAnnotations -- Common annotations for all pods
   podAnnotations: {}
   # loki.revisionHistoryLimit -- The number of old ReplicaSets to retain to allow rollback
@@ -34,15 +34,16 @@ loki:
 
     memberlist:
       join_members:
-        - '{{ include "loki.fullname" . }}-gossip-ring'
+        - {{ include "loki.fullname" . }}-gossip-ring
 
     ingester:
       lifecycler:
         ring:
           kvstore:
             store: memberlist
-      chunk_idle_period: 3m
+      chunk_idle_period: 30m
       chunk_block_size: 262144
+      chunk_encoding: snappy
       chunk_retain_period: 1m
       max_transfer_retries: 0
 
@@ -88,7 +89,7 @@ loki:
             validity: 24h
 
     frontend_worker:
-      frontend_address: '{{ include "loki.queryFrontendFullname" . }}:9095'
+      frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
 
     frontend:
       log_queries_longer_than: 5s
@@ -339,7 +340,7 @@ gateway:
   replicas: 1
   image:
     # gateway.image.repository -- The gateway image repository
-    repository: nginxinc/nginx-unprivileged
+    repository: docker.io/nginxinc/nginx-unprivileged
     # gateway.image.tag -- The gateway image tag
     tag: 1.19-alpine
     # gateway.image.pullPolicy -- The gateway image pull policy
@@ -494,7 +495,7 @@ canary:
   kind: Deployment
   image:
     # canary.image.repository -- canary image repository
-    repository: grafana/loki-canary
+    repository: docker.io/grafana/loki-canary
     # canary.image.tag -- canary image tag
     tag: "1.6.1"
     # canary.image.pullPolicy -- canary image pull policy
@@ -516,4 +517,176 @@ canary:
   # canary.nodeSelector -- Node selector for canary pods
   nodeSelector: {}
   # canary.tolerations -- Tolerations for canary pods
+  tolerations: []
+
+memcached:
+  image:
+    # memcached.image.repository -- Memcached Docker image repository
+    repository: docker.io/memcached
+    # memcached.image.tag -- Memcached Docker image tag
+    tag: 1.6.7-alpine
+    # memcached.image.pullPolicy -- Memcached Docker image pull policy
+    pullPolicy: IfNotPresent
+
+memcachedExporter:
+  # memcachedExporter.enabled -- Specifies whether the Memcached Exporter should be enabled
+  enabled: false
+  image:
+    # memcachedExporter.image.repository -- Memcached Exporter Docker image repository
+    repository: docker.io/prom/memcached-exporter
+    # memcachedExporter.image.tag -- Memcached Exporter Docker image tag
+    tag: v0.6.0
+    # memcachedExporter.image.pullPolicy -- Memcached Exporter Docker image pull policy
+    pullPolicy: IfNotPresent
+
+memcachedChunks:
+  # memcachedChunks.enabled -- Specifies whether the Memcached chunks cache should be enabled
+  enabled: false
+  # memcachedChunks.replicas -- Number of replicas for memcached-chunks
+  replicas: 1
+  # memcachedChunks.podAnnotations -- Annotations for memcached-chunks pods
+  podAnnotations: {}
+  # memcachedChunks.extraArgs -- Additional CLI args for memcached-chunks
+  extraArgs: []
+  # memcachedChunks.extraEnv -- Environment variables to add to memcached-chunks pods
+  extraEnv: []
+  # memcachedChunks.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-chunks pods
+  extraEnvFrom: []
+  # memcachedChunks.resources -- Resource requests and limits for memcached-chunks
+  resources: {}
+  # memcachedChunks.terminationGracePeriodSeconds -- Grace period to allow memcached-chunks to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # memcachedChunks.affinity -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.memcachedChunksSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.memcachedChunksSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # memcachedChunks.nodeSelector -- Node selector for memcached-chunks pods
+  nodeSelector: {}
+  # memcachedChunks.tolerations -- Tolerations for memcached-chunks pods
+  tolerations: []
+
+memcachedFrontend:
+  # memcachedFrontend.enabled -- Specifies whether the Memcached frontend cache should be enabled
+  enabled: false
+  # memcachedFrontend.replicas -- Number of replicas for memcached-frontend
+  replicas: 1
+  # memcachedFrontend.podAnnotations -- Annotations for memcached-frontend pods
+  podAnnotations: {}
+  # memcachedFrontend.extraArgs -- Additional CLI args for memcached-frontend
+  extraArgs: []
+  # memcachedFrontend.extraEnv -- Environment variables to add to memcached-frontend pods
+  extraEnv: []
+  # memcachedFrontend.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-frontend pods
+  extraEnvFrom: []
+  # memcachedFrontend.resources -- Resource requests and limits for memcached-frontend
+  resources: {}
+  # memcachedFrontend.terminationGracePeriodSeconds -- Grace period to allow memcached-frontend to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # memcachedFrontend.affinity -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # memcachedFrontend.nodeSelector -- Node selector for memcached-frontend pods
+  nodeSelector: {}
+  # memcachedFrontend.tolerations -- Tolerations for memcached-frontend pods
+  tolerations: []
+
+memcachedIndexQueries:
+  # memcachedIndexQueries.enabled -- Specifies whether the Memcached index queries cache should be enabled
+  enabled: false
+  # memcachedIndexQueries.replicas -- Number of replicas for memcached-index-queries
+  replicas: 1
+  # memcachedIndexQueries.podAnnotations -- Annotations for memcached-index-queries pods
+  podAnnotations: {}
+  # memcachedIndexQueries.extraArgs -- Additional CLI args for memcached-index-queries
+  extraArgs: []
+  # memcachedIndexQueries.extraEnv -- Environment variables to add to memcached-index-queries pods
+  extraEnv: []
+  # memcachedIndexQueries.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-index-queries pods
+  extraEnvFrom: []
+  # memcachedIndexQueries.resources -- Resource requests and limits for memcached-index-queries
+  resources: {}
+  # memcachedIndexQueries.terminationGracePeriodSeconds -- Grace period to allow memcached-index-queries to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # memcachedIndexQueries.affinity -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # memcachedIndexQueries.nodeSelector -- Node selector for memcached-index-queries pods
+  nodeSelector: {}
+  # memcachedIndexQueries.tolerations -- Tolerations for memcached-index-queries pods
+  tolerations: []
+
+memcachedIndexWrites:
+  # memcachedIndexWrites.enabled -- Specifies whether the Memcached index writes cache should be enabled
+  enabled: false
+  # memcachedIndexWrites.replicas -- Number of replicas for memcached-index-writes
+  replicas: 1
+  # memcachedIndexWrites.podAnnotations -- Annotations for memcached-index-writes pods
+  podAnnotations: {}
+  # memcachedIndexWrites.extraArgs -- Additional CLI args for memcached-index-writes
+  extraArgs: []
+  # memcachedIndexWrites.extraEnv -- Environment variables to add to memcached-index-writes pods
+  extraEnv: []
+  # memcachedIndexWrites.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-index-writes pods
+  extraEnvFrom: []
+  # memcachedIndexWrites.resources -- Resource requests and limits for memcached-index-writes
+  resources: {}
+  # memcachedIndexWrites.terminationGracePeriodSeconds -- Grace period to allow memcached-index-writes to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # memcachedIndexWrites.affinity -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # memcachedIndexWrites.nodeSelector -- Node selector for memcached-index-writes pods
+  nodeSelector: {}
+  # memcachedIndexWrites.tolerations -- Tolerations for memcached-index-writes pods
   tolerations: []

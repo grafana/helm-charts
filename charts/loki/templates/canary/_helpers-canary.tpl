@@ -1,12 +1,12 @@
 {{/*
-Common canary labels
+canary fullname
 */}}
 {{- define "loki.canaryFullname" -}}
 {{ include "loki.fullname" . }}-canary
 {{- end }}
 
 {{/*
-Common canary labels
+canary common labels
 */}}
 {{- define "loki.canaryLabels" -}}
 {{ include "loki.labels" . }}
@@ -14,7 +14,7 @@ app.kubernetes.io/component: canary
 {{- end }}
 
 {{/*
-Selector canary labels
+canary selector labels
 */}}
 {{- define "loki.canarySelectorLabels" -}}
 {{ include "loki.selectorLabels" . }}

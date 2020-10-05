@@ -1,12 +1,12 @@
 {{/*
-Common query-frontend labels
+query-frontend fullname
 */}}
 {{- define "loki.queryFrontendFullname" -}}
 {{ include "loki.fullname" . }}-query-frontend
 {{- end }}
 
 {{/*
-Common query-frontend labels
+query-frontend common labels
 */}}
 {{- define "loki.queryFrontendLabels" -}}
 {{ include "loki.labels" . }}
@@ -14,7 +14,7 @@ app.kubernetes.io/component: query-frontend
 {{- end }}
 
 {{/*
-Selector query-frontend labels
+query-frontend selector labels
 */}}
 {{- define "loki.queryFrontendSelectorLabels" -}}
 {{ include "loki.selectorLabels" . }}
