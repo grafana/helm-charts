@@ -2,14 +2,15 @@
 
 * Installs the web dashboarding system [Grafana](http://grafana.org/)
 
-## Get Repo Info
+## TL;DR
 
 ```console
 helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
 ```
 
-_See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
+```console
+helm install grafana/grafana
+```
 
 ## Installing the Chart
 
