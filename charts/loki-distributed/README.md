@@ -1,8 +1,8 @@
-# loki
+# loki-distributed
 
-![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
-Helm chart for Grafana Loki
+Helm chart for Grafana Loki in microservices mode
 
 **Homepage:** <https://github.com/unguiculus/loki-helm-chart>
 
@@ -204,10 +204,7 @@ Ingester is run as a StatefulSet so each Pod gets its own persistent volume.
 The chart does not support setting up Consul or Etcd for discovery.
 These would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
-The chart creates a headless service for the gossip ring which ingester, distributor, and querier are part of.
-
-As of now, setting up a cache server (Redis, Memcached) is not included either.
-This may be added at a later stage.
+The chart creates a headless service for the memberlist which ingester, distributor, and querier are part of.
 
 ### Example configuration using memberlist, boltdb-shipper, and S3 for storage
 

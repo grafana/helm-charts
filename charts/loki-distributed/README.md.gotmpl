@@ -30,10 +30,7 @@ Ingester is run as a StatefulSet so each Pod gets its own persistent volume.
 The chart does not support setting up Consul or Etcd for discovery.
 These would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
-The chart creates a headless service for the gossip ring which ingester, distributor, and querier are part of.
-
-As of now, setting up a cache server (Redis, Memcached) is not included either.
-This may be added at a later stage.
+The chart creates a headless service for the memberlist which ingester, distributor, and querier are part of.
 
 ### Example configuration using memberlist, boltdb-shipper, and S3 for storage
 

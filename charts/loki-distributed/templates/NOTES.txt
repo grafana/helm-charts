@@ -1,5 +1,5 @@
 ***********************************************************************
- Loki Helm Chart
+ Welcome to Grafana Loki
  Chart version: {{ .Chart.Version }}
  Loki version: {{ .Chart.AppVersion }}
 ***********************************************************************
