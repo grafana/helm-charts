@@ -1,0 +1,16 @@
+podLabels:
+  customLableA: Aaaaa
+imageRenderer:
+  enabled: true
+  podLabels:
+    customLableB: Bbbbb
+  networkPolicy:
+    limitIngress: true
+    limitEgress: true
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1000Mi
+    requests:
+      cpu: 500m
+      memory: 50Mi

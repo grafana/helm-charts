@@ -87,7 +87,7 @@ spec:
             - mountPath: /tmp
               name: image-renderer-tmpfs
           resources:
-      {{ toYaml .Values.imageRenderer.resources | indent 6 }}
+            {{ toYaml .Values.imageRenderer.resources | nindent 12 }}
 
       {{- with .Values.imageRenderer.nodeSelector }}
       nodeSelector:
