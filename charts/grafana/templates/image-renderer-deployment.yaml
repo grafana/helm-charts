@@ -86,20 +86,21 @@ spec:
           volumeMounts:
             - mountPath: /tmp
               name: image-renderer-tmpfs
+      {{- with .Values.imageRenderer.resources }}
           resources:
-            {{ toYaml .Values.imageRenderer.resources | nindent 12 }}
-
+{{ toYaml . | indent 12 }}
+      {{- end }}
       {{- with .Values.imageRenderer.nodeSelector }}
       nodeSelector:
-      {{ toYaml . | indent 2 }}
+{{ toYaml . | indent 8 }}
       {{- end }}
       {{- with .Values.imageRenderer.affinity }}
       affinity:
-      {{ toYaml . | indent 2 }}
+{{ toYaml . | indent 8 }}
       {{- end }}
       {{- with .Values.imageRenderer.tolerations }}
       tolerations:
-      {{ toYaml . | indent 2 }}
+{{ toYaml . | indent 8 }}
       {{- end }}
       volumes:
         - name: image-renderer-tmpfs
