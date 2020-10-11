@@ -487,7 +487,7 @@ smtp:
 sidecar:
   image:
     repository: kiwigrid/k8s-sidecar
-    tag: 0.1.151
+    tag: 0.1.209
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
