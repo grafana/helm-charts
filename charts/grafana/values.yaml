@@ -558,6 +558,7 @@ revisionHistoryLimit: 10
 imageRenderer:
   # Enable the image-renderer deployment & service
   enabled: false
+  replicas: 1
   image:
     # image-renderer Image repository
     repository: grafana/grafana-image-renderer
