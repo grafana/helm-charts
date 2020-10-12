@@ -297,7 +297,7 @@ admin:
 ##   AWS_ROLE_ARN: arn:aws:iam::123456789000:role/iam-role-name-here
 ##   AWS_WEB_IDENTITY_TOKEN_FILE: /var/run/secrets/eks.amazonaws.com/serviceaccount/token
 ##   AWS_REGION: us-east-1
-## 5. uncoment the EKS example in
+## 5. uncomment the EKS section in extraSecretMounts: below
 
 env: {}
 
@@ -329,7 +329,7 @@ extraSecretMounts: []
   #   subPath: ""
   #
   # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
-  #  - name: aws-iam-token
+  # - name: aws-iam-token
   #   mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
   #   readOnly: true
   #   projected:
