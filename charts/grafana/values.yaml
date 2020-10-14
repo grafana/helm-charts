@@ -16,6 +16,7 @@ serviceAccount:
   name:
   nameTest:
 #  annotations:
+#    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
 
 replicas: 1
 
@@ -284,6 +285,27 @@ admin:
 # schedulerName:
 
 ## Extra environment variables that will be pass onto deployment pods
+##
+## to provide grafana with access to CloudWatch on AWS EKS:
+## 1. create an iam role of type "Web identity" with provider oidc.eks.* (note the provider for later)
+## 2. edit the "Trust relationships" of the role, add a line inside the StringEquals clause using the
+## same oidc eks provider as noted before (same as the existing line)
+## also, replace NAMESPACE and prometheus-operator-grafana with the service account namespace and name
+##
+##  "oidc.eks.us-east-1.amazonaws.com/id/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:sub": "system:serviceaccount:NAMESPACE:prometheus-operator-grafana",
+##
+## 3. attach a policy to the role, you can use a built in policy called CloudWatchReadOnlyAccess
+## 4. use the following env: (replace 123456789000 and iam-role-name-here with your aws account number and role name)
+##
+## env:
+##   AWS_ROLE_ARN: arn:aws:iam::123456789000:role/iam-role-name-here
+##   AWS_WEB_IDENTITY_TOKEN_FILE: /var/run/secrets/eks.amazonaws.com/serviceaccount/token
+##   AWS_REGION: us-east-1
+##
+## 5. uncomment the EKS section in extraSecretMounts: below
+## 6. uncomment the annotation section in the serviceAccount: above
+## make sure to replace arn:aws:iam::123456789000:role/iam-role-name-here with your role arn
+
 env: {}
 
 ## "valueFrom" environment variable references that will be added to deployment pods
@@ -312,6 +334,18 @@ extraSecretMounts: []
   #   secretName: grafana-secret-files
   #   readOnly: true
   #   subPath: ""
+  #
+  # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
+  # - name: aws-iam-token
+  #   mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
+  #   readOnly: true
+  #   projected:
+  #     defaultMode: 420
+  #     sources:
+  #       - serviceAccountToken:
+  #           audience: sts.amazonaws.com
+  #           expirationSeconds: 86400
+  #           path: token
 
 ## Additional grafana server volume mounts
 # Defines additional volume mounts.
@@ -339,6 +373,14 @@ datasources: {}
 #      url: http://prometheus-prometheus-server
 #      access: proxy
 #      isDefault: true
+#    - name: CloudWatch
+#        type: cloudwatch
+#        access: proxy
+#        uid: cloudwatch
+#        editable: false
+#        jsonData:
+#          authType: credentials
+#          defaultRegion: us-east-1
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels

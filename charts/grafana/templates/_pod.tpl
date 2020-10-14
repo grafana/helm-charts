@@ -434,10 +434,15 @@ volumes:
     emptyDir: {}
 {{- end -}}
 {{- range .Values.extraSecretMounts }}
+{{- if .secretName }}
   - name: {{ .name }}
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
+{{- else if .projected }}
+  - name: {{ .name }}
+    projected: {{- toYaml .projected | nindent 6 }}
+{{- end }}
 {{- end }}
 {{- range .Values.extraVolumeMounts }}
   - name: {{ .name }}
