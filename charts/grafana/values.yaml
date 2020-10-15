@@ -610,6 +610,10 @@ imageRenderer:
     sha: ""
     # image-renderer ImagePullPolicy
     pullPolicy: Always
+  # extra environment variables
+  env: {}
+    # RENDERING_ARGS: --disable-gpu,--window-size=1280x758
+    # RENDERING_MODE: clustered
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment Host Aliases
