@@ -2,6 +2,9 @@ podLabels:
   customLableA: Aaaaa
 imageRenderer:
   enabled: true
+  env:
+    RENDERING_ARGS: --disable-gpu,--window-size=1280x758
+    RENDERING_MODE: clustered
   podLabels:
     customLableB: Bbbbb
   networkPolicy:
