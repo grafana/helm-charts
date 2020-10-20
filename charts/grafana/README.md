@@ -317,6 +317,11 @@ that the datasources init container can list the secrets.
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
 data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
+In case you plan to add multiple datasources from multiple configmaps/secrets, ensure that the name
+of the file inside configmap/secret is unique. Otherwise, they will overwrite each other.
+In the example below, the filename is `datasource.yaml`.
+
+
 Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 
 ```yaml
