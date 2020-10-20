@@ -179,6 +179,10 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
+      {{- if .Values.sidecar.dashboards.folderAnnotation }}
+      - name: FOLDER_ANNOTATION
+        value: "{{ .Values.sidecar.dashboards.folderAnnotation }}"
+      {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
     volumeMounts:
