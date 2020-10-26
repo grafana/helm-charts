@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -82,7 +82,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
-| ingester.persistence.size | string | `"100Gi"` | Size of persistent disk |
+| ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | ingester.persistence.storageClass | string | `""` |  |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.replicas | int | `2` | Number of replicas for the ingester |
@@ -154,7 +154,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
-| querier.persistence.size | string | `"1Gi"` | Size of persistent disk |
+| querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | querier.persistence.storageClass | string | `""` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty (the default) or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
