@@ -127,7 +127,7 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 | `podLabels`                               | Pod labels                                    | `{}`                                                    |
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
 | `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                                  |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.1.0`                                                 |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `0.1.151`                                               |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
