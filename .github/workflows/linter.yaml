@@ -13,6 +13,7 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v3
         env:
+          FILTER_REGEX_EXCLUDE: .*(README\.md|Chart\.yaml).*
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_YAML: false
           DEFAULT_BRANCH: master

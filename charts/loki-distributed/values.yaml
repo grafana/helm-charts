@@ -167,7 +167,7 @@ ingester:
     # ingester.persistence.enabled -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
     # ingester.persistence.size -- Size of persistent disk
-    size: 100Gi
+    size: 10Gi
     # ngester.persistence.storageClass -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
@@ -252,7 +252,7 @@ querier:
     # querier.persistence.enabled -- Enable creating PVCs for the querier cache
     enabled: false
     # querier.persistence.size -- Size of persistent disk
-    size: 1Gi
+    size: 10Gi
     # querier.persistence.storageClass -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
