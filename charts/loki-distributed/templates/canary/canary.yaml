@@ -1,6 +1,6 @@
 {{- if .Values.canary.enabled }}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.canary.kind }}
 metadata:
   name: {{ include "loki.canaryFullname" . }}
   labels:

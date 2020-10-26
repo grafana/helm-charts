@@ -99,6 +99,7 @@ loki:
 
 canary:
   enabled: true
+  kind: DaemonSet
 
 memcachedExporter:
   enabled: true
