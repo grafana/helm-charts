@@ -9,10 +9,7 @@ querier:
     size: 100Mi
 
 gateway:
-  basicauth:
+  basicAuth:
     enabled: true
     username: user
     password: pass
-
-canary:
-  enabled: true
