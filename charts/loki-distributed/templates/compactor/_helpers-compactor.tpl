@@ -20,3 +20,11 @@ compactor selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: compactor
 {{- end }}
+
+{{/*
+compactor image
+*/}}
+{{- define "loki.compactorImage" -}}
+{{- $dict := dict "loki" .Values.loki.image "service" .Values.compactor.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
+{{- include "loki.lokiImage" $dict -}}
+{{- end }}

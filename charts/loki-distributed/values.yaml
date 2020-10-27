@@ -1,18 +1,25 @@
+global:
+  image:
+    # global.image.registry -- Overrides the Docker registry globally for all images
+    registry: null
+
 # nameOverride -- Overrides the chart's name
-nameOverride: ""
+nameOverride: null
 
 # fullnameOverride -- Overrides the chart's computed fullname
-fullnameOverride: ""
+fullnameOverride: null
 
 # imagePullSecrets -- Image pull secrets for Docker images
 imagePullSecrets: []
 
 loki:
   image:
+    # loki.image.registry -- The Docker registry
+    registry: docker.io
     # loki.image.repository -- Docker image repository
-    repository: docker.io/grafana/loki
+    repository: grafana/loki
     # loki.image.tag -- Overrides the image tag whose default is the chart's appVersion
-    tag: ""
+    tag: null
     # loki.image.pullPolicy -- Docker image pull policy
     pullPolicy: IfNotPresent
   # loki.podAnnotations -- Common annotations for all pods
@@ -129,6 +136,13 @@ serviceMonitor:
 ingester:
   # ingester.replicas -- Number of replicas for the ingester
   replicas: 2
+  image:
+    # ingester.image.registry -- The Docker registry for the ingester image. Overrides `loki.image.registry`
+    registry: null
+    # ingester.image.repository -- Docker image repository for the ingester image. Overrides `loki.image.repository`
+    repository: null
+    # ingester.image.tag -- Docker image tag for the ingester image. Overrides `loki.image.tag`
+    tag: null
   # ingester.podAnnotations -- Annotations for ingester pods
   podAnnotations: {}
   # ingester.extraArgs -- Additional CLI args for the ingester
@@ -171,14 +185,21 @@ ingester:
     # ingester.persistence.storageClass -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
-    # If empty (the default) or set to null, no storageClassName spec is
+    # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: ""
+    storageClass: null
 
 # Configuration for the distributor
 distributor:
   # distributor.replicas -- Number of replicas for the distributor
   replicas: 1
+  image:
+    # distributor.image.registry -- The Docker registry for the distributor image. Overrides `loki.image.registry`
+    registry: null
+    # distributor.image.repository -- Docker image repository for the distributor image. Overrides `loki.image.repository`
+    repository: null
+    # distributor.image.tag -- Docker image tag for the distributor image. Overrides `loki.image.tag`
+    tag: null
   # distributor.podAnnotations -- Annotations for distributor pods
   podAnnotations: {}
   # distributor.extraArgs -- Additional CLI args for the distributor
@@ -216,6 +237,13 @@ distributor:
 querier:
   # querier.replicas -- Number of replicas for the querier
   replicas: 1
+  image:
+    # querier.image.registry -- The Docker registry for the querier image. Overrides `loki.image.registry`
+    registry: null
+    # querier.image.repository -- Docker image repository for the querier image. Overrides `loki.image.repository`
+    repository: null
+    # querier.image.tag -- Docker image tag for the querier image. Overrides `loki.image.tag`
+    tag: null
   # querier.podAnnotations -- Annotations for querier pods
   podAnnotations: {}
   # querier.extraArgs -- Additional CLI args for the querier
@@ -256,14 +284,21 @@ querier:
     # querier.persistence.storageClass -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
-    # If empty (the default) or set to null, no storageClassName spec is
+    # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: ""
+    storageClass: null
 
 # Configuration for the query-frontend
 queryFrontend:
   # queryFrontend.replicas -- Number of replicas for the query-frontend
   replicas: 1
+  image:
+    # queryFrontend.image.registry -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
+    registry: null
+    # queryFrontend.image.repository -- Docker image repository for the query-frontend image. Overrides `loki.image.repository`
+    repository: null
+    # queryFrontend.image.tag -- Docker image tag for the query-frontend image. Overrides `loki.image.tag`
+    tag: null
   # queryFrontend.podAnnotations -- Annotations for query-frontend pods
   podAnnotations: {}
   # queryFrontend.extraArgs -- Additional CLI args for the query-frontend
@@ -303,6 +338,13 @@ tableManager:
   enabled: false
   # tableManager.replicas -- Number of replicas for the table-manager
   replicas: 1
+  image:
+    # tableManager.image.registry -- The Docker registry for the table-manager image. Overrides `loki.image.registry`
+    registry: null
+    # tableManager.image.repository -- Docker image repository for the table-manager image. Overrides `loki.image.repository`
+    repository: null
+    # tableManager.image.tag -- Docker image tag for the table-manager image. Overrides `loki.image.tag`
+    tag: null
   # tableManager.podAnnotations -- Annotations for table-manager pods
   podAnnotations: {}
   # tableManager.extraArgs -- Additional CLI args for the table-manager
@@ -341,8 +383,10 @@ gateway:
   # gateway.replicas -- Number of replicas for the gateway
   replicas: 1
   image:
+    # gateway.image.registry -- The Docker registry for the gateway image
+    registry: docker.io
     # gateway.image.repository -- The gateway image repository
-    repository: docker.io/nginxinc/nginx-unprivileged
+    repository: nginxinc/nginx-unprivileged
     # gateway.image.tag -- The gateway image tag
     tag: 1.19-alpine
     # gateway.image.pullPolicy -- The gateway image pull policy
@@ -492,6 +536,13 @@ gateway:
 compactor:
   # compactor.enabled -- Specifies whether compactor should be enabled
   enabled: false
+  image:
+    # compactor.image.registry -- The Docker registry for the compactor image. Overrides `loki.image.registry`
+    registry: null
+    # compactor.image.repository -- Docker image repository for the compactor image. Overrides `loki.image.repository`
+    repository: null
+    # compactor.image.tag -- Docker image tag for the compactor image. Overrides `loki.image.tag`
+    tag: null
   # compactor.podAnnotations -- Annotations for compactor pods
   podAnnotations: {}
   # compactor.extraArgs -- Additional CLI args for the compactor
@@ -516,14 +567,16 @@ compactor:
     # compactor.persistence.storageClass -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
-    # If empty (the default) or set to null, no storageClassName spec is
+    # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: ""
+    storageClass: null
 
 memcached:
   image:
+    # memcached.image.registry -- The Docker registry for the memcached
+    registry: docker.io
     # memcached.image.repository -- Memcached Docker image repository
-    repository: docker.io/memcached
+    repository: memcached
     # memcached.image.tag -- Memcached Docker image tag
     tag: 1.6.7-alpine
     # memcached.image.pullPolicy -- Memcached Docker image pull policy
@@ -533,8 +586,10 @@ memcachedExporter:
   # memcachedExporter.enabled -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   image:
+    # memcachedExporter.image.registry -- The Docker registry for the Memcached Exporter
+    registry: docker.io
     # memcachedExporter.image.repository -- Memcached Exporter Docker image repository
-    repository: docker.io/prom/memcached-exporter
+    repository: prom/memcached-exporter
     # memcachedExporter.image.tag -- Memcached Exporter Docker image tag
     tag: v0.6.0
     # memcachedExporter.image.pullPolicy -- Memcached Exporter Docker image pull policy

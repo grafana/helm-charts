@@ -20,3 +20,11 @@ querier selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: querier
 {{- end }}
+
+{{/*
+querier image
+*/}}
+{{- define "loki.querierImage" -}}
+{{- $dict := dict "loki" .Values.loki.image "service" .Values.querier.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
+{{- include "loki.lokiImage" $dict -}}
+{{- end }}

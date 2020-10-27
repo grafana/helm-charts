@@ -20,3 +20,11 @@ ingester selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: ingester
 {{- end }}
+
+{{/*
+ingester image
+*/}}
+{{- define "loki.ingesterImage" -}}
+{{- $dict := dict "loki" .Values.loki.image "service" .Values.ingester.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
+{{- include "loki.lokiImage" $dict -}}
+{{- end }}
