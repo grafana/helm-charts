@@ -1,0 +1,5 @@
+***********************************************************************
+ Welcome to Grafana Loki Canary
+ Chart version: {{ .Chart.Version }}
+ Loki version: {{ .Chart.AppVersion }}
+***********************************************************************

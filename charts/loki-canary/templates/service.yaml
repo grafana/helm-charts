@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "loki-canary.fullname" . }}
+  labels:
+    {{- include "loki-canary.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3500
+      targetPort: http
+      protocol: TCP
+  selector:
+    {{- include "loki-canary.selectorLabels" . | nindent 4 }}
