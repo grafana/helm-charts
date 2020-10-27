@@ -86,11 +86,11 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: data-{{ include "loki.fullname" . }}
+            name: {{ include "loki.fullname" . }}
         - name: data
           {{- if .Values.compactor.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "loki.compactorFullname" . }}
+            claimName: data-{{ include "loki.compactorFullname" . }}
           {{- else }}
           emptyDir: {}
           {{- end }}
