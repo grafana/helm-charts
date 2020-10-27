@@ -29,6 +29,7 @@ jobs:
 
       - name: Add dependency chart repos
         run: |
+          helm repo rm stable incubator
           helm repo add stable https://charts.helm.sh/stable
           helm repo add incubator https://charts.helm.sh/incubator
 
