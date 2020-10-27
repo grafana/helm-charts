@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.12.2](https://img.shields.io/badge/Version-0.12.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -226,9 +226,12 @@ loki:
           store: memberlist
 
     ingester:
-      # disable chunk transfer which is not possible with statefulsets
+      # Disable chunk transfer which is not possible with statefulsets
       # and unnecessary for boltdb-shipper
       max_transfer_retries: 0
+      chunk_idle_period: 1h
+      chunk_target_size: 1536000
+      max_chunk_age: 1h
       lifecycler:
         join_after: 0s
         ring:

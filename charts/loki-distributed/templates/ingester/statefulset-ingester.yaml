@@ -104,8 +104,6 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
-        labels:
-          {{- include "loki.ingesterLabels" . | nindent 10 }}
       spec:
         accessModes:
           - ReadWriteOnce
