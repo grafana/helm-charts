@@ -80,7 +80,6 @@ loki:
       split_queries_by_interval: 30m
       cache_results: true
       results_cache:
-        max_freshness: 10m
         cache:
           memcached_client:
             consistent_hash: true

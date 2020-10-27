@@ -53,6 +53,7 @@ loki:
       enforce_metric_name: false
       reject_old_samples: true
       reject_old_samples_max_age: 168h
+      max_cache_freshness_per_query: 10m
 
     schema_config:
       configs:
@@ -83,7 +84,6 @@ loki:
       split_queries_by_interval: 15m
       cache_results: true
       results_cache:
-        max_freshness: 10m
         cache:
           enable_fifocache: true
           fifocache:
@@ -487,6 +487,38 @@ gateway:
         }
       }
     }
+
+# Configuration for the compactor
+compactor:
+  # compactor.enabled -- Specifies whether compactor should be enabled
+  enabled: false
+  # compactor.podAnnotations -- Annotations for compactor pods
+  podAnnotations: {}
+  # compactor.extraArgs -- Additional CLI args for the compactor
+  extraArgs: []
+  # compactor.extraEnv -- Environment variables to add to the compactor pods
+  extraEnv: []
+  # compactor.extraEnvFrom -- Environment variables from secrets or configmaps to add to the compactor pods
+  extraEnvFrom: []
+  # compactor.resources -- Resource requests and limits for the compactor
+  resources: {}
+  # compactor.terminationGracePeriodSeconds -- Grace period to allow the compactor to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # compactor.nodeSelector -- Node selector for compactor pods
+  nodeSelector: {}
+  # compactor.tolerations -- Tolerations for compactor pods
+  tolerations: []
+  persistence:
+    # compactor.persistence.enabled -- Enable creating PVCs for the compactor
+    enabled: false
+    # compactor.persistence.size -- Size of persistent disk
+    size: 10Gi
+    # compactor.persistence.storageClass -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty (the default) or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: ""
 
 memcached:
   image:

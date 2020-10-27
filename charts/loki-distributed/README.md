@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -24,6 +24,18 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
+| compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
+| compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
+| compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
+| compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
+| compactor.persistence.enabled | bool | `false` | Enable creating PVCs for the compactor |
+| compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
+| compactor.persistence.storageClass | string | `""` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty (the default) or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
+| compactor.resources | object | `{}` | Resource requests and limits for the compactor |
+| compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
+| compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
@@ -231,6 +243,7 @@ loki:
       ingestion_rate_mb: 10
       ingestion_burst_size_mb: 20
       max_concurrent_tail_requests: 20
+      max_cache_freshness_per_query: 10m
 
     schema_config:
       configs:
@@ -260,7 +273,6 @@ loki:
       cache_results: true
 
       results_cache:
-        max_freshness: 10m
         cache:
           enable_fifocache: true
           fifocache:
