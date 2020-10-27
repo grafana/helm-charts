@@ -62,22 +62,37 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Loki Docker image
+Docker image name for Loki
+*/}}
+{{- define "loki.lokiImage" -}}
+{{- $registry := coalesce .global.registry .service.registry .loki.registry -}}
+{{- $repository := coalesce .service.repository .loki.repository -}}
+{{- $tag := coalesce .service.tag .loki.tag .defaultVersion | toString -}}
+{{- printf "%s/%s:%s" $registry $repository $tag -}}
+{{- end -}}
+
+{{/*
+Docker image name
 */}}
 {{- define "loki.image" -}}
-{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag | default .Chart.AppVersion }}
-{{- end }}
+{{- $registry := coalesce .global.registry .service.registry -}}
+{{- $tag := .service.tag | toString -}}
+{{- printf "%s/%s:%s" $registry .service.repository (.service.tag | toString) -}}
+{{- end -}}
 
 {{/*
 Memcached Docker image
 */}}
 {{- define "loki.memcachedImage" -}}
-{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
+{{- $dict := dict "service" .Values.memcached.image "global" .Values.global.image -}}
+{{- include "loki.image" $dict -}}
 {{- end }}
 
 {{/*
 Memcached Exporter Docker image
 */}}
 {{- define "loki.memcachedExporterImage" -}}
-{{ .Values.memcachedExporter.image.repository }}:{{ .Values.memcachedExporter.image.tag }}
+{{- $dict := dict "service" .Values.memcachedExporter.image "global" .Values.global.image -}}
+{{- include "loki.image" $dict -}}
 {{- end }}
+

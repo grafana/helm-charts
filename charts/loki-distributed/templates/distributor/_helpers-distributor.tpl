@@ -20,3 +20,11 @@ distributor selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: distributor
 {{- end }}
+
+{{/*
+distributor image
+*/}}
+{{- define "loki.distributorImage" -}}
+{{- $dict := dict "loki" .Values.loki.image "service" .Values.distributor.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
+{{- include "loki.lokiImage" $dict -}}
+{{- end }}

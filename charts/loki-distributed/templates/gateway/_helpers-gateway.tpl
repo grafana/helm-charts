@@ -27,3 +27,11 @@ Auth secret name
 {{- define "loki.gatewayAuthSecret" -}}
 {{ .Values.gateway.basicAuth.existingSecret | default (include "loki.gatewayFullname" . ) }}
 {{- end }}
+
+{{/*
+Gateway Docker image
+*/}}
+{{- define "loki.gatewayImage" -}}
+{{- $dict := dict "service" .Values.gateway.image "global" .Values.global.image -}}
+{{- include "loki.image" $dict -}}
+{{- end }}
