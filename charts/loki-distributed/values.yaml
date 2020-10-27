@@ -488,38 +488,6 @@ gateway:
       }
     }
 
-# Configuration for the canary
-canary:
-  # canary.enabled -- Specifies whether the canary should be enabled
-  enabled: false
-  # canary.kind -- canary can be run as a Deployment or DaemonSet
-  kind: Deployment
-  image:
-    # canary.image.repository -- canary image repository
-    repository: docker.io/grafana/loki-canary
-    # canary.image.tag -- Overrides the canary image tag whose default is the chart's appVersion
-    tag: ""
-    # canary.image.pullPolicy -- canary image pull policy
-    pullPolicy: IfNotPresent
-  # canary.podAnnotations -- Annotations for canary pods
-  podAnnotations: {}
-  # canary.extraArgs -- Additional CLI args for the canary
-  extraArgs:
-    - -labelname=pod
-    - -labelvalue=$(POD_NAME)
-  # canary.extraEnv -- Environment variables to add to the canary pods
-  extraEnv: []
-  # canary.extraEnvFrom -- Environment variables from secrets or configmaps to add to the canary pods
-  extraEnvFrom: []
-  # canary.resources -- Resource requests and limits for the canary
-  resources: {}
-  # canary.terminationGracePeriodSeconds -- Grace period to allow the canary to shutdown before it is killed
-  terminationGracePeriodSeconds: 30
-  # canary.nodeSelector -- Node selector for canary pods
-  nodeSelector: {}
-  # canary.tolerations -- Tolerations for canary pods
-  tolerations: []
-
 memcached:
   image:
     # memcached.image.repository -- Memcached Docker image repository

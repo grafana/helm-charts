@@ -24,19 +24,6 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| canary.enabled | bool | `false` | Specifies whether the canary should be enabled |
-| canary.extraArgs | list | `["-labelname=pod","-labelvalue=$(POD_NAME)"]` | Additional CLI args for the canary |
-| canary.extraEnv | list | `[]` | Environment variables to add to the canary pods |
-| canary.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the canary pods |
-| canary.image.pullPolicy | string | `"IfNotPresent"` | canary image pull policy |
-| canary.image.repository | string | `"docker.io/grafana/loki-canary"` | canary image repository |
-| canary.image.tag | string | `""` | Overrides the canary image tag whose default is the chart's appVersion |
-| canary.kind | string | `"Deployment"` | canary can be run as a Deployment or DaemonSet |
-| canary.nodeSelector | object | `{}` | Node selector for canary pods |
-| canary.podAnnotations | object | `{}` | Annotations for canary pods |
-| canary.resources | object | `{}` | Resource requests and limits for the canary |
-| canary.terminationGracePeriodSeconds | int | `30` | Grace period to allow the canary to shutdown before it is killed |
-| canary.tolerations | list | `[]` | Tolerations for canary pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
