@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "loki.fullname" . }}-compactor
+  name: {{ include "loki.compactorFullname" . }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: compactor
