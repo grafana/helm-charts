@@ -65,7 +65,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/nginx
-            {{- if .Values.gateway.basicauth.enabled }}
+            {{- if .Values.gateway.basicAuth.enabled }}
             - name: auth
               mountPath: /etc/nginx/secrets
             {{- end }}
@@ -91,7 +91,7 @@ spec:
         - name: config
           configMap:
             name: {{ include "loki.gatewayFullname" . }}
-        {{- if .Values.gateway.basicauth.enabled }}
+        {{- if .Values.gateway.basicAuth.enabled }}
         - name: auth
           secret:
             secretName: {{ include "loki.gatewayAuthSecret" . }}

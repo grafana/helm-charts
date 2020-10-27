@@ -25,5 +25,5 @@ app.kubernetes.io/component: gateway
 Auth secret name
 */}}
 {{- define "loki.gatewayAuthSecret" -}}
-{{ .Values.gateway.basicauth.existingSecret | default (include "loki.gatewayFullname" . ) }}
+{{ .Values.gateway.basicAuth.existingSecret | default (include "loki.gatewayFullname" . ) }}
 {{- end }}

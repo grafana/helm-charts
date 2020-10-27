@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -49,10 +49,10 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
-| gateway.basicauth.enabled | bool | `false` | Enables basic authentication for the gateway |
-| gateway.basicauth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' and, if canary is enabled, 'username' and 'password' |
-| gateway.basicauth.password | string | `nil` | The basic auth password for the gateway |
-| gateway.basicauth.username | string | `nil` | The basic auth username for the gateway |
+| gateway.basicAuth.enabled | bool | `false` | Enables basic authentication for the gateway |
+| gateway.basicAuth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' |
+| gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
+| gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
@@ -83,7 +83,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
-| ingester.persistence.storageClass | string | `""` |  |
+| ingester.persistence.storageClass | string | `""` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty (the default) or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.replicas | int | `2` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |

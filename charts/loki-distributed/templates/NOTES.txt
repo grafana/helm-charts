@@ -13,9 +13,6 @@ Installed components:
 {{- if .Values.tableManager.enabled }}
 * table-manager
 {{- end }}
-{{- if .Values.canary.enabled }}
-* canary
-{{- end }}
 {{- if .Values.memcachedChunks.enabled }}
 * memcached-chunks
 {{- end }}

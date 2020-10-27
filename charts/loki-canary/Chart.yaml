@@ -1,9 +1,9 @@
 apiVersion: v2
-name: loki-distributed
-description: Helm chart for Grafana Loki in microservices mode
+name: loki-canary
+description: Helm chart for Grafana Loki Canary
 type: application
-appVersion: 1.6.1
-version: 0.11.0
+appVersion: 2.0.0
+version: 0.1.0
 home: https://github.com/unguiculus/loki-helm-chart
 sources:
   - https://github.com/grafana/loki
