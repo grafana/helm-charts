@@ -359,8 +359,7 @@ extraSecretMounts: []
   #    volumeAttributes:
   #      secretProviderClass: "akv-grafana-spc"
   #    nodePublishSecretRef:                       # Only required when using service principal mode
-  #       name: grafana-akv-creds                  # Only required when using service principal mode                  
-
+  #       name: grafana-akv-creds                  # Only required when using service principal mode
 
 ## Additional grafana server volume mounts
 # Defines additional volume mounts.
