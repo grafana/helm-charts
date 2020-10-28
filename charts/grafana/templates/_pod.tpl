@@ -447,6 +447,9 @@ volumes:
 {{- else if .projected }}
   - name: {{ .name }}
     projected: {{- toYaml .projected | nindent 6 }}
+{{- else if .csi }}
+  - name: {{ .name }}
+    csi: {{- toYaml .csi | nindent 6 }}
 {{- end }}
 {{- end }}
 {{- range .Values.extraVolumeMounts }}

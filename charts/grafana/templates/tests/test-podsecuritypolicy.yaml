@@ -25,5 +25,6 @@ spec:
   - downwardAPI
   - emptyDir
   - projected
+  - csi
   - secret
 {{- end }}
