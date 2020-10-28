@@ -348,6 +348,18 @@ extraSecretMounts: []
   #           audience: sts.amazonaws.com
   #           expirationSeconds: 86400
   #           path: token
+  #
+  # for CSI e.g. Azure Key Vault use the following
+  # - name: secrets-store-inline
+  #  mountPath: /run/secrets
+  #  readOnly: true
+  #  csi:
+  #    driver: secrets-store.csi.k8s.io
+  #    readOnly: true
+  #    volumeAttributes:
+  #      secretProviderClass: "akv-grafana-spc"
+  #    nodePublishSecretRef:                       # Only required when using service principal mode
+  #       name: grafana-akv-creds                  # Only required when using service principal mode
 
 ## Additional grafana server volume mounts
 # Defines additional volume mounts.
