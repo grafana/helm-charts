@@ -489,6 +489,24 @@ Include in the `extraSecretMounts` configuration flag:
      readOnly: true
 ```
 
+### extraSecretMounts using a Container Storage Interface (CSI) provider
+
+This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Provider](https://github.com/Azure/secrets-store-csi-driver-provider-azure)
+
+```yaml
+- extraSecretMounts:
+  - name: secrets-store-inline
+    mountPath: /run/secrets
+    readOnly: true
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "my-provider"
+      nodePublishSecretRef:
+        name: akv-creds
+```
+
 ## Image Renderer Plug-In
 
 This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/docs/remote_rendering_using_docker.md)
