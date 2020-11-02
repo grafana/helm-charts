@@ -28,8 +28,7 @@ spec:
   jobLabel: "{{ .Release.Name }}"
   selector:
     matchLabels:
-      app: {{ template "grafana.name" . }}
-      release: "{{ .Release.Name }}"
+      {{- include "grafana.selectorLabels" . | nindent 8 }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
