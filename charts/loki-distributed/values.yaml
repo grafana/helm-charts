@@ -132,6 +132,27 @@ serviceMonitor:
   # serviceMonitor.scrapeTimeout -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
+# Rules for the Prometheus Operator
+prometheusRule:
+  # prometheusRule.enabled -- If enabled, a PrometheusRule resource for Prometheus Operator is created
+  enabled: false
+  # prometheusRule.namespace -- Alternative namespace for the PrometheusRule resource
+  namespace: null
+  # prometheusRule.annotations -- PrometheusRule annotations
+  annotations: {}
+  # prometheusRule.labels -- Additional PrometheusRule labels
+  labels: {}
+  # prometheusRule.groups -- Contents of Prometheus rules file
+  groups: []
+  # - name: loki-rules
+  #   rules:
+  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (job)
+  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (job, route)
+  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
 # Configuration for the ingester
 ingester:
   # ingester.replicas -- Number of replicas for the ingester
