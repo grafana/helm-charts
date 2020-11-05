@@ -136,6 +136,8 @@ serviceMonitor:
   #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
   labels: {}
   interval: 1m
+  scheme: http
+  tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
 
