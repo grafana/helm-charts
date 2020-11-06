@@ -21,6 +21,11 @@ spec:
     honorLabels: true
     port: {{ .Values.service.portName }}
     path: {{ .Values.serviceMonitor.path }}
+    scheme: {{ .Values.serviceMonitor.scheme }}
+    {{- if .Values.serviceMonitor.tlsConfig }}
+    tlsConfig:
+    {{- toYaml .Values.serviceMonitor.tlsConfig | nindent 6 }}
+    {{- end }}
     {{- if .Values.serviceMonitor.relabelings }}
     relabelings:
     {{- toYaml .Values.serviceMonitor.relabelings | nindent 4 }}

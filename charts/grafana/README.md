@@ -155,7 +155,7 @@ This version requires Helm >= 3.4.0.
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
 | `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
 | `sidecar.datasources.searchNamespace`     | If specified, the sidecar will search for datasources config-maps inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                               |
-| `sidecar.notifiers.enabled`               | Enables the cluster wide search for notifiers and adds/updates/deletes them in grafana |`false`       |
+| `sidecar.notifiers.enabled`               | Enables the cluster wide search for notifiers and adds/updates/deletes them in grafana | `false`        |
 | `sidecar.notifiers.label`                 | Label that config maps with notifiers should have to be added | `grafana_notifier`                               |
 | `sidecar.notifiers.searchNamespace`       | If specified, the sidecar will search for notifiers config-maps (or secrets) inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                               |
 | `smtp.existingSecret`                     | The name of an existing secret containing the SMTP credentials. | `""`                                  |
@@ -177,9 +177,9 @@ This version requires Helm >= 3.4.0.
 | `rbac.extraClusterRoleRules`              | Additional rules to add to the ClusterRole    | []                                                      |
 | `command`                     | Define command to be executed by grafana container at startup  | `nil`                                              |
 | `testFramework.enabled`                   | Whether to create test-related resources      | `true`                                                  |
-| `testFramework.image`                     | `test-framework` image repository.            | `bats/bats`                                        |
-| `testFramework.tag`                       | `test-framework` image tag.                   | `v1.1.0`                                                 |
-| `testFramework.imagePullPolicy`           | `test-framework` image pull policy.           | `IfNotPresent`                                             |
+| `testFramework.image`                     | `test-framework` image repository.            | `bats/bats`                                             |
+| `testFramework.tag`                       | `test-framework` image tag.                   | `v1.1.0`                                                |
+| `testFramework.imagePullPolicy`           | `test-framework` image pull policy.           | `IfNotPresent`                                          |
 | `testFramework.securityContext`           | `test-framework` securityContext              | `{}`                                                    |
 | `downloadDashboards.env`                  | Environment variables to be passed to the `download-dashboards` container | `{}`                        |
 | `downloadDashboards.resources`            | Resources of `download-dashboards` container  | `{}`                                                    |
@@ -192,6 +192,8 @@ This version requires Helm >= 3.4.0.
 | `serviceMonitor.namespace`                | Namespace this servicemonitor is installed in |                                                         |
 | `serviceMonitor.interval`                 | How frequently Prometheus should scrape       | `1m`                                                    |
 | `serviceMonitor.path`                     | Path to scrape                                | `/metrics`                                              |
+| `serviceMonitor.scheme`                   | Scheme to use for metrics scraping            | `http`                                                  |
+| `serviceMonitor.tlsConfig`                | TLS configuration block for the endpoint      | `{}`                                                    |
 | `serviceMonitor.labels`                   | Labels for the servicemonitor passed to Prometheus Operator      |  `{}`                                |
 | `serviceMonitor.scrapeTimeout`            | Timeout after which the scrape is ended       | `30s`                                                   |
 | `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
