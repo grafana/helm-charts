@@ -50,6 +50,7 @@ loki:
         ring:
           kvstore:
             store: memberlist
+          replication_factor: 1
       chunk_idle_period: 30m
       chunk_block_size: 262144
       chunk_encoding: snappy
@@ -64,17 +65,20 @@ loki:
 
     schema_config:
       configs:
-        - from: 2020-09-15
-          store: boltdb
+        - from: 2020-09-07
+          store: boltdb-shipper
           object_store: filesystem
           schema: v11
           index:
             prefix: loki_index_
-            period: 168h
+            period: 24h
 
     storage_config:
-      boltdb:
-        directory: /var/loki/index
+      boltdb_shipper:
+        shared_store: filesystem
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/cache
+        cache_ttl: 168h
       filesystem:
         directory: /var/loki/chunks
 
@@ -103,6 +107,9 @@ loki:
     frontend:
       log_queries_longer_than: 5s
       compress_responses: true
+
+    compactor:
+      shared_store: filesystem
 
 serviceAccount:
   # serviceAccount.create -- Specifies whether a ServiceAccount should be created
@@ -156,7 +163,7 @@ prometheusRule:
 # Configuration for the ingester
 ingester:
   # ingester.replicas -- Number of replicas for the ingester
-  replicas: 2
+  replicas: 1
   image:
     # ingester.image.registry -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null

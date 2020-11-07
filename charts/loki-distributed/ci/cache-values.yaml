@@ -19,11 +19,12 @@ loki:
         ring:
           kvstore:
             store: memberlist
+          replication_factor: 1
       chunk_idle_period: 30m
-      chunk_encoding: snappy
       chunk_block_size: 262144
       chunk_retain_period: 1m
       max_transfer_retries: 0
+
     limits_config:
       enforce_metric_name: false
       reject_old_samples: true
@@ -33,17 +34,20 @@ loki:
 
     schema_config:
       configs:
-        - from: 2020-09-15
-          store: boltdb
+        - from: 2020-09-07
+          store: boltdb-shipper
           object_store: filesystem
           schema: v11
           index:
             prefix: loki_index_
-            period: 168h
+            period: 24h
 
     storage_config:
-      boltdb:
-        directory: /var/loki/index
+      boltdb_shipper:
+        shared_store: filesystem
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/cache
+        cache_ttl: 168h
       filesystem:
         directory: /var/loki/chunks
       index_queries_cache_config:
@@ -64,14 +68,6 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedChunksFullname" . }}
-          service: http
-      write_dedupe_cache_config:
-        memcached:
-          batch_size: 100
-          parallelism: 100
-        memcached_client:
-          consistent_hash: true
-          host: {{ include "loki.memcachedIndexWritesFullname" . }}
           service: http
 
     query_range:
@@ -100,25 +96,16 @@ memcachedExporter:
   enabled: true
 
 memcachedChunks:
-  replicas: 2
   enabled: true
   extraArgs:
     - -vv
 
 memcachedFrontend:
-  replicas: 2
   enabled: true
   extraArgs:
     - -vv
 
 memcachedIndexQueries:
-  replicas: 2
-  enabled: true
-  extraArgs:
-    - -vv
-
-memcachedIndexWrites:
-  replicas: 2
   enabled: true
   extraArgs:
     - -vv
