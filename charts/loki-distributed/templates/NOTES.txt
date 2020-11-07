@@ -13,6 +13,9 @@ Installed components:
 {{- if .Values.tableManager.enabled }}
 * table-manager
 {{- end }}
+{{- if .Values.compactor.enabled }}
+* compactor
+{{- end }}
 {{- if .Values.memcachedChunks.enabled }}
 * memcached-chunks
 {{- end }}
