@@ -29,12 +29,12 @@ spec:
   {{- end -}}
 {{- if .Values.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
+{{ tpl (toYaml .Values.ingress.tls) $ | indent 4 }}
 {{- end }}
   rules:
   {{- if .Values.ingress.hosts  }}
   {{- range .Values.ingress.hosts }}
-    - host: {{ . }}
+    - host: {{ tpl . $}}
       http:
         paths:
 {{ if $extraPaths }}
