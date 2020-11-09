@@ -2,7 +2,7 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "loki.gatewayFullname" . }}
+  name: {{ include "loki.gatewayFullname" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
 spec:

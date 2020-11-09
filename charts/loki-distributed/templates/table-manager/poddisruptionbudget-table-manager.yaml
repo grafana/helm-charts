@@ -3,7 +3,7 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "loki.fullname" . }}-tableManager
+  name: {{ include "loki.fullname" . }}-tableManager
   labels:
     {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: tableManager
