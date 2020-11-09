@@ -2,7 +2,7 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "loki.querierFullname" . }}
+  name: {{ include "loki.querierFullname" . }}
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
 spec:

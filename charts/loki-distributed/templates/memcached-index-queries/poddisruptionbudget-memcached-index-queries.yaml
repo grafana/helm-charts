@@ -2,7 +2,7 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "loki.memcachedIndexQueriesFullname" . }}
+  name: {{ include "loki.memcachedIndexQueriesFullname" . }}
   labels:
     {{- include "loki.memcachedIndexQueriesLabels" . | nindent 4 }}
 spec:
