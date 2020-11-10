@@ -16,6 +16,9 @@ Installed components:
 {{- if .Values.compactor.enabled }}
 * compactor
 {{- end }}
+{{- if .Values.ruler.enabled }}
+* ruler
+{{- end }}
 {{- if .Values.memcachedChunks.enabled }}
 * memcached-chunks
 {{- end }}

@@ -26,8 +26,6 @@ loki:
   podAnnotations: {}
   # loki.revisionHistoryLimit -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
-  # loki.memberlist -- If true, an additional headless service for memberlist (including ingester, distributor, and quierier pods) is created
-  memberlist: true
   # loki.config -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -110,6 +108,18 @@ loki:
 
     compactor:
       shared_store: filesystem
+
+    ruler:
+      storage:
+        type: local
+        local:
+          directory: /etc/loki/rules
+      ring:
+        kvstore:
+          store: memberlist
+      rule_path: /tmp/loki/scratch
+      alertmanager_url: https://alertmanager.xx
+      external_url: https://alertmanager.xx
 
 serviceAccount:
   # serviceAccount.create -- Specifies whether a ServiceAccount should be created
@@ -598,6 +608,129 @@ compactor:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+
+# Configuration for the ruler
+ruler:
+  # ruler.enabled -- Specifies whether the ruler should be enabled
+  enabled: false
+  # ruler.replicas -- Number of replicas for the ruler
+  replicas: 1
+  image:
+    # ruler.image.registry -- The Docker registry for the ruler image. Overrides `loki.image.registry`
+    registry: null
+    # ruler.image.repository -- Docker image repository for the ruler image. Overrides `loki.image.repository`
+    repository: null
+    # ruler.image.tag -- Docker image tag for the ruler image. Overrides `loki.image.tag`
+    tag: null
+  # ruler.podAnnotations -- Annotations for ruler pods
+  podAnnotations: {}
+  # ruler.extraArgs -- Additional CLI args for the ruler
+  extraArgs: []
+  # ruler.extraEnv -- Environment variables to add to the ruler pods
+  extraEnv: []
+  # ruler.extraEnvFrom -- Environment variables from secrets or configmaps to add to the ruler pods
+  extraEnvFrom: []
+  # ruler.resources -- Resource requests and limits for the ruler
+  resources: {}
+  # ruler.terminationGracePeriodSeconds -- Grace period to allow the ruler to shutdown before it is killed
+  terminationGracePeriodSeconds: 300
+  # ruler.affinity -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.rulerSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.rulerSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # ruler.nodeSelector -- Node selector for ruler pods
+  nodeSelector: {}
+  # ruler.tolerations -- Tolerations for ruler pods
+  tolerations: []
+  persistence:
+    # ruler.persistence.enabled -- Enable creating PVCs for the ruler
+    enabled: false
+    # ruler.persistence.size -- Size of persistent disk
+    size: 10Gi
+    # ruler.persistence.storageClass -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
+  # ruler.directories -- Directories containing rules files
+  directories: {}
+    # tenant_foo:
+    #   rules1.txt: |
+    #     groups:
+    #       - name: should_fire
+    #         rules:
+    #           - alert: HighPercentageError
+    #             expr: |
+    #               sum(rate({app="foo", env="production"} |= "error" [5m])) by (job)
+    #                 /
+    #               sum(rate({app="foo", env="production"}[5m])) by (job)
+    #                 > 0.05
+    #             for: 10m
+    #             labels:
+    #               severity: page
+    #             annotations:
+    #               summary: High request latency
+    #       - name: credentials_leak
+    #         rules:
+    #           - alert: http-credentials-leaked
+    #             annotations:
+    #               message: "{{ $labels.job }} is leaking http basic auth credentials."
+    #             expr: 'sum by (cluster, job, pod) (count_over_time({namespace="prod"} |~ "http(s?)://(\\w+):(\\w+)@" [5m]) > 0)'
+    #             for: 10m
+    #             labels:
+    #               severity: critical
+    #   rules2.txt: |
+    #     groups:
+    #       - name: example
+    #         rules:
+    #         - alert: HighThroughputLogStreams
+    #           expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
+    #           for: 2m
+    # tenant_bar:
+    #   rules1.txt: |
+    #     groups:
+    #       - name: should_fire
+    #         rules:
+    #           - alert: HighPercentageError
+    #             expr: |
+    #               sum(rate({app="foo", env="production"} |= "error" [5m])) by (job)
+    #                 /
+    #               sum(rate({app="foo", env="production"}[5m])) by (job)
+    #                 > 0.05
+    #             for: 10m
+    #             labels:
+    #               severity: page
+    #             annotations:
+    #               summary: High request latency
+    #       - name: credentials_leak
+    #         rules:
+    #           - alert: http-credentials-leaked
+    #             annotations:
+    #               message: "{{ $labels.job }} is leaking http basic auth credentials."
+    #             expr: 'sum by (cluster, job, pod) (count_over_time({namespace="prod"} |~ "http(s?)://(\\w+):(\\w+)@" [5m]) > 0)'
+    #             for: 10m
+    #             labels:
+    #               severity: critical
+    #   rules2.txt: |
+    #     groups:
+    #       - name: example
+    #         rules:
+    #         - alert: HighThroughputLogStreams
+    #           expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
+    #           for: 2m
 
 memcached:
   image:

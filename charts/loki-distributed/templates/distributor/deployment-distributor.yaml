@@ -45,7 +45,7 @@ spec:
           image: {{ include "loki.distributorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
-            - -config.file=/etc/loki/loki.yaml
+            - -config.file=/etc/loki/config/config.yaml
             - -target=distributor
             {{- with .Values.distributor.extraArgs }}
             {{- toYaml . | nindent 12 }}
@@ -78,7 +78,7 @@ spec:
             timeoutSeconds: 1
           volumeMounts:
             - name: config
-              mountPath: /etc/loki
+              mountPath: /etc/loki/config
           resources:
             {{- toYaml .Values.distributor.resources | nindent 12 }}
       {{- with .Values.distributor.affinity }}

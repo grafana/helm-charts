@@ -45,7 +45,7 @@ spec:
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
-            - -config.file=/etc/loki/loki.yaml
+            - -config.file=/etc/loki/config/config.yaml
             - -target=ingester
             {{- with .Values.ingester.extraArgs }}
             {{- toYaml . | nindent 12 }}
@@ -76,7 +76,7 @@ spec:
             timeoutSeconds: 1
           volumeMounts:
             - name: config
-              mountPath: /etc/loki
+              mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
           resources:

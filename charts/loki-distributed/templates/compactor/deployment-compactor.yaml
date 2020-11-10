@@ -42,7 +42,7 @@ spec:
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
-            - -config.file=/etc/loki/loki.yaml
+            - -config.file=/etc/loki/config/config.yaml
             - -target=compactor
             - -boltdb.shipper.compactor.working-directory=/var/loki/compactor
             {{- with .Values.compactor.extraArgs }}
@@ -70,7 +70,7 @@ spec:
             timeoutSeconds: 1
           volumeMounts:
             - name: config
-              mountPath: /etc/loki
+              mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
           resources:

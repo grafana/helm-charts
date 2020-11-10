@@ -1,20 +1,21 @@
+{{- if .Values.ruler.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "loki.querierFullname" . }}
+  name: {{ include "loki.rulerFullname" . }}
   labels:
-    {{- include "loki.querierLabels" . | nindent 4 }}
+    {{- include "loki.rulerLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
-  replicas: {{ .Values.querier.replicas }}
+  replicas: {{ .Values.ruler.replicas }}
   updateStrategy:
     rollingUpdate:
       partition: 0
-  serviceName: {{ include "loki.querierFullname" . }}-headless
+  serviceName: {{ include "loki.rulerFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
-      {{- include "loki.querierSelectorLabels" . | nindent 6 }}
+      {{- include "loki.rulerSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -22,11 +23,11 @@ spec:
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.querier.podAnnotations }}
+        {{- with .Values.ruler.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.querierSelectorLabels" . | nindent 8 }}
+        {{- include "loki.rulerSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
@@ -39,15 +40,15 @@ spec:
         runAsGroup: 10001
         runAsNonRoot: true
         runAsUser: 10001
-      terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.ruler.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: {{ include "loki.querierImage" . }}
+          image: {{ include "loki.rulerImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
             - -config.file=/etc/loki/config/config.yaml
-            - -target=querier
-            {{- with .Values.querier.extraArgs }}
+            - -target=ruler
+            {{- with .Values.ruler.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
@@ -57,14 +58,11 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
-            - name: http-memberlist
-              containerPort: 7946
-              protocol: TCP
-          {{- with .Values.querier.extraEnv }}
+          {{- with .Values.ruler.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.querier.extraEnvFrom }}
+          {{- with .Values.ruler.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -79,17 +77,23 @@ spec:
               mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
+            - name: tmp
+              mountPath: /tmp/loki
+            {{- range $dir, $_ := .Values.ruler.directories }}
+            - name: {{ include "loki.rulerCreateRulesDirName" $dir }}
+              mountPath: /etc/loki/rules/{{ $dir }}
+            {{- end }}
           resources:
-            {{- toYaml .Values.querier.resources | nindent 12 }}
-      {{- with .Values.querier.affinity }}
+            {{- toYaml .Values.ruler.resources | nindent 12 }}
+      {{- with .Values.ruler.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.querier.nodeSelector }}
+      {{- with .Values.ruler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.querier.tolerations }}
+      {{- with .Values.ruler.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -97,7 +101,14 @@ spec:
         - name: config
           configMap:
             name: {{ include "loki.fullname" . }}
-  {{- if not .Values.querier.persistence.enabled }}
+        {{- range $dir, $_ := .Values.ruler.directories }}
+        - name: {{ include "loki.rulerCreateRulesDirName" $dir }}
+          configMap:
+            name: {{ include "loki.rulerFullname" $ }}-{{ include "loki.rulerCreateRulesDirName" $dir }}
+        {{- end }}
+        - name: tmp
+          emptyDir: {}
+  {{- if not .Values.ruler.persistence.enabled }}
         - name: data
           emptyDir: {}
   {{- else }}
@@ -107,10 +118,11 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.querier.persistence.storageClass }}
+        {{- with .Values.ruler.persistence.storageClass }}
         storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
         resources:
           requests:
-            storage: {{ .Values.querier.persistence.size | quote }}
+            storage: {{ .Values.ruler.persistence.size | quote }}
   {{- end }}
+{{- end }}
