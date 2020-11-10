@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.15.1](https://img.shields.io/badge/Version-0.15.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -104,7 +104,6 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
-| loki.memberlist | bool | `true` | If true, an additional headless service for memberlist (including ingester, distributor, and quierier pods) is created |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
@@ -195,6 +194,24 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
+| ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
+| ruler.directories | object | `{}` | Directories containing rules files |
+| ruler.enabled | bool | `false` | Specifies whether the ruler should be enabled |
+| ruler.extraArgs | list | `[]` | Additional CLI args for the ruler |
+| ruler.extraEnv | list | `[]` | Environment variables to add to the ruler pods |
+| ruler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ruler pods |
+| ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
+| ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
+| ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
+| ruler.nodeSelector | object | `{}` | Node selector for ruler pods |
+| ruler.persistence.enabled | bool | `false` | Enable creating PVCs for the ruler |
+| ruler.persistence.size | string | `"10Gi"` | Size of persistent disk |
+| ruler.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| ruler.podAnnotations | object | `{}` | Annotations for ruler pods |
+| ruler.replicas | int | `1` | Number of replicas for the ruler |
+| ruler.resources | object | `{}` | Resource requests and limits for the ruler |
+| ruler.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ruler to shutdown before it is killed |
+| ruler.tolerations | list | `[]` | Tolerations for ruler pods |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |

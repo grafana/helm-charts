@@ -43,7 +43,7 @@ spec:
           image: {{ include "loki.queryFrontendImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
-            - -config.file=/etc/loki/loki.yaml
+            - -config.file=/etc/loki/config/config.yaml
             - -target=query-frontend
             {{- with .Values.queryFrontend.extraArgs }}
             {{- toYaml . | nindent 12 }}
@@ -67,7 +67,7 @@ spec:
             readOnlyRootFilesystem: true
           volumeMounts:
             - name: config
-              mountPath: /etc/loki
+              mountPath: /etc/loki/config
           resources:
             {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
       {{- with .Values.queryFrontend.affinity }}
