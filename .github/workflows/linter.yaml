@@ -10,6 +10,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Check Docs
+        run: |
+          docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.4.0
+          if ! git diff --exit-code; then
+              echo "Documentation not up to date. Please run helm-docs and commit changes!" >&2
+              exit 1
+          fi
+
       - name: Lint Code Base
         uses: github/super-linter@v3.13.2
         env:
