@@ -95,4 +95,3 @@ Memcached Exporter Docker image
 {{- $dict := dict "service" .Values.memcachedExporter.image "global" .Values.global.image -}}
 {{- include "loki.image" $dict -}}
 {{- end }}
-

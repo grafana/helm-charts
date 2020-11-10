@@ -28,3 +28,13 @@ ingester image
 {{- $dict := dict "loki" .Values.loki.image "service" .Values.ingester.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
 {{- include "loki.lokiImage" $dict -}}
 {{- end }}
+
+{{/*
+ingester priority class name
+*/}}
+{{- define "loki.ingesterPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.ingester.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}

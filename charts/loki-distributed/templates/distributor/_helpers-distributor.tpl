@@ -28,3 +28,13 @@ distributor image
 {{- $dict := dict "loki" .Values.loki.image "service" .Values.distributor.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
 {{- include "loki.lokiImage" $dict -}}
 {{- end }}
+
+{{/*
+distributor priority class name
+*/}}
+{{- define "loki.distributorPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.distributor.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}

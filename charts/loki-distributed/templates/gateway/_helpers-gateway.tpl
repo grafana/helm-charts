@@ -22,16 +22,26 @@ app.kubernetes.io/component: gateway
 {{- end }}
 
 {{/*
-Auth secret name
+gateway auth secret name
 */}}
 {{- define "loki.gatewayAuthSecret" -}}
 {{ .Values.gateway.basicAuth.existingSecret | default (include "loki.gatewayFullname" . ) }}
 {{- end }}
 
 {{/*
-Gateway Docker image
+gateway Docker image
 */}}
 {{- define "loki.gatewayImage" -}}
 {{- $dict := dict "service" .Values.gateway.image "global" .Values.global.image -}}
 {{- include "loki.image" $dict -}}
+{{- end }}
+
+{{/*
+gateway priority class name
+*/}}
+{{- define "loki.gatewayPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.gateway.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
 {{- end }}

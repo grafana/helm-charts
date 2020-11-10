@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.17.0](https://img.shields.io/badge/Version-0.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -36,6 +36,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | compactor.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
+| compactor.priorityClassName | string | `"default"` | The name of the PriorityClass for compactor pods |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
@@ -48,6 +49,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
+| distributor.priorityClassName | string | `"default"` | The name of the PriorityClass for distributor pods |
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
@@ -72,6 +74,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.nginxConfig | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
+| gateway.priorityClassName | string | `"default"` | The name of the PriorityClass for gateway pods |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
@@ -82,6 +85,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
+| global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
@@ -95,6 +99,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
+| ingester.priorityClassName | string | `"default"` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `1` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
@@ -117,6 +122,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
 | memcachedChunks.podAnnotations | object | `{}` | Annotations for memcached-chunks pods |
+| memcachedChunks.priorityClassName | string | `"default"` | The name of the PriorityClass for memcached-chunks pods |
 | memcachedChunks.replicas | int | `1` | Number of replicas for memcached-chunks |
 | memcachedChunks.resources | object | `{}` | Resource requests and limits for memcached-chunks |
 | memcachedChunks.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-chunks to shutdown before it is killed |
@@ -133,6 +139,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
 | memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
 | memcachedFrontend.podAnnotations | object | `{}` | Annotations for memcached-frontend pods |
+| memcachedFrontend.priorityClassName | string | `"default"` | The name of the PriorityClass for memcached-frontend pods |
 | memcachedFrontend.replicas | int | `1` | Number of replicas for memcached-frontend |
 | memcachedFrontend.resources | object | `{}` | Resource requests and limits for memcached-frontend |
 | memcachedFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-frontend to shutdown before it is killed |
@@ -144,6 +151,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
 | memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
 | memcachedIndexQueries.podAnnotations | object | `{}` | Annotations for memcached-index-queries pods |
+| memcachedIndexQueries.priorityClassName | string | `"default"` | The name of the PriorityClass for memcached-index-queries pods |
 | memcachedIndexQueries.replicas | int | `1` | Number of replicas for memcached-index-queries |
 | memcachedIndexQueries.resources | object | `{}` | Resource requests and limits for memcached-index-queries |
 | memcachedIndexQueries.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-queries to shutdown before it is killed |
@@ -155,6 +163,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
 | memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
 | memcachedIndexWrites.podAnnotations | object | `{}` | Annotations for memcached-index-writes pods |
+| memcachedIndexWrites.priorityClassName | string | `"default"` | The name of the PriorityClass for memcached-index-writes pods |
 | memcachedIndexWrites.replicas | int | `1` | Number of replicas for memcached-index-writes |
 | memcachedIndexWrites.resources | object | `{}` | Resource requests and limits for memcached-index-writes |
 | memcachedIndexWrites.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-writes to shutdown before it is killed |
@@ -177,6 +186,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | querier.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
+| querier.priorityClassName | string | `"default"` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
 | querier.resources | object | `{}` | Resource requests and limits for the querier |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
@@ -190,6 +200,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `loki.image.tag` |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
+| queryFrontend.priorityClassName | string | `"default"` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
@@ -208,6 +219,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ruler.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | ruler.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ruler.podAnnotations | object | `{}` | Annotations for ruler pods |
+| ruler.priorityClassName | string | `"default"` | The name of the PriorityClass for ruler pods |
 | ruler.replicas | int | `1` | Number of replicas for the ruler |
 | ruler.resources | object | `{}` | Resource requests and limits for the ruler |
 | ruler.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ruler to shutdown before it is killed |
@@ -233,6 +245,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | tableManager.image.tag | string | `nil` | Docker image tag for the table-manager image. Overrides `loki.image.tag` |
 | tableManager.nodeSelector | object | `{}` | Node selector for table-manager pods |
 | tableManager.podAnnotations | object | `{}` | Annotations for table-manager pods |
+| tableManager.priorityClassName | string | `"default"` | The name of the PriorityClass for table-manager pods |
 | tableManager.replicas | int | `1` | Number of replicas for the table-manager |
 | tableManager.resources | object | `{}` | Resource requests and limits for the table-manager |
 | tableManager.terminationGracePeriodSeconds | int | `30` | Grace period to allow the table-manager to shutdown before it is killed |

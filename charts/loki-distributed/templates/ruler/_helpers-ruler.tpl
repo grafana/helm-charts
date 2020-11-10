@@ -35,3 +35,13 @@ format rules dir
 {{- define "loki.rulerCreateRulesDirName" -}}
 rules-{{ . | replace "_" "-" | trimSuffix "-" }}
 {{- end }}
+
+{{/*
+ruler priority class name
+*/}}
+{{- define "loki.rulerPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.ruler.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}
