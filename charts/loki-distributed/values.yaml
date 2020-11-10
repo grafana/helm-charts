@@ -2,6 +2,8 @@ global:
   image:
     # global.image.registry -- Overrides the Docker registry globally for all images
     registry: null
+  # global.priorityClassName -- Overrides the priorityClassName for all pods
+  priorityClassName: null
 
 # nameOverride -- Overrides the chart's name
 nameOverride: null
@@ -181,6 +183,8 @@ ingester:
     repository: null
     # ingester.image.tag -- Docker image tag for the ingester image. Overrides `loki.image.tag`
     tag: null
+  # ingester.priorityClassName -- The name of the PriorityClass for ingester pods
+  priorityClassName: null
   # ingester.podAnnotations -- Annotations for ingester pods
   podAnnotations: {}
   # ingester.extraArgs -- Additional CLI args for the ingester
@@ -238,6 +242,8 @@ distributor:
     repository: null
     # distributor.image.tag -- Docker image tag for the distributor image. Overrides `loki.image.tag`
     tag: null
+  # distributor.priorityClassName -- The name of the PriorityClass for distributor pods
+  priorityClassName: null
   # distributor.podAnnotations -- Annotations for distributor pods
   podAnnotations: {}
   # distributor.extraArgs -- Additional CLI args for the distributor
@@ -282,6 +288,8 @@ querier:
     repository: null
     # querier.image.tag -- Docker image tag for the querier image. Overrides `loki.image.tag`
     tag: null
+  # querier.priorityClassName -- The name of the PriorityClass for querier pods
+  priorityClassName: null
   # querier.podAnnotations -- Annotations for querier pods
   podAnnotations: {}
   # querier.extraArgs -- Additional CLI args for the querier
@@ -337,6 +345,8 @@ queryFrontend:
     repository: null
     # queryFrontend.image.tag -- Docker image tag for the query-frontend image. Overrides `loki.image.tag`
     tag: null
+  # queryFrontend.priorityClassName -- The name of the PriorityClass for query-frontend pods
+  priorityClassName: null
   # queryFrontend.podAnnotations -- Annotations for query-frontend pods
   podAnnotations: {}
   # queryFrontend.extraArgs -- Additional CLI args for the query-frontend
@@ -383,6 +393,8 @@ tableManager:
     repository: null
     # tableManager.image.tag -- Docker image tag for the table-manager image. Overrides `loki.image.tag`
     tag: null
+  # tableManager.priorityClassName -- The name of the PriorityClass for table-manager pods
+  priorityClassName: null
   # tableManager.podAnnotations -- Annotations for table-manager pods
   podAnnotations: {}
   # tableManager.extraArgs -- Additional CLI args for the table-manager
@@ -429,6 +441,8 @@ gateway:
     tag: 1.19-alpine
     # gateway.image.pullPolicy -- The gateway image pull policy
     pullPolicy: IfNotPresent
+  # gateway.priorityClassName -- The name of the PriorityClass for gateway pods
+  priorityClassName: null
   # gateway.podAnnotations -- Annotations for gateway pods
   podAnnotations: {}
   # gateway.extraArgs -- Additional CLI args for the gateway
@@ -581,6 +595,8 @@ compactor:
     repository: null
     # compactor.image.tag -- Docker image tag for the compactor image. Overrides `loki.image.tag`
     tag: null
+  # compactor.priorityClassName -- The name of the PriorityClass for compactor pods
+  priorityClassName: null
   # compactor.podAnnotations -- Annotations for compactor pods
   podAnnotations: {}
   # compactor.extraArgs -- Additional CLI args for the compactor
@@ -622,6 +638,8 @@ ruler:
     repository: null
     # ruler.image.tag -- Docker image tag for the ruler image. Overrides `loki.image.tag`
     tag: null
+  # ruler.priorityClassName -- The name of the PriorityClass for ruler pods
+  priorityClassName: null
   # ruler.podAnnotations -- Annotations for ruler pods
   podAnnotations: {}
   # ruler.extraArgs -- Additional CLI args for the ruler
@@ -761,6 +779,8 @@ memcachedChunks:
   enabled: false
   # memcachedChunks.replicas -- Number of replicas for memcached-chunks
   replicas: 1
+  # memcachedChunks.priorityClassName -- The name of the PriorityClass for memcached-chunks pods
+  priorityClassName: null
   # memcachedChunks.podAnnotations -- Annotations for memcached-chunks pods
   podAnnotations: {}
   # memcachedChunks.extraArgs -- Additional CLI args for memcached-chunks
@@ -799,6 +819,8 @@ memcachedFrontend:
   enabled: false
   # memcachedFrontend.replicas -- Number of replicas for memcached-frontend
   replicas: 1
+  # memcachedFrontend.priorityClassName -- The name of the PriorityClass for memcached-frontend pods
+  priorityClassName: null
   # memcachedFrontend.podAnnotations -- Annotations for memcached-frontend pods
   podAnnotations: {}
   # memcachedFrontend.extraArgs -- Additional CLI args for memcached-frontend
@@ -837,6 +859,8 @@ memcachedIndexQueries:
   enabled: false
   # memcachedIndexQueries.replicas -- Number of replicas for memcached-index-queries
   replicas: 1
+  # memcachedIndexQueries.priorityClassName -- The name of the PriorityClass for memcached-index-queries pods
+  priorityClassName: null
   # memcachedIndexQueries.podAnnotations -- Annotations for memcached-index-queries pods
   podAnnotations: {}
   # memcachedIndexQueries.extraArgs -- Additional CLI args for memcached-index-queries
@@ -875,6 +899,8 @@ memcachedIndexWrites:
   enabled: false
   # memcachedIndexWrites.replicas -- Number of replicas for memcached-index-writes
   replicas: 1
+  # memcachedIndexWrites.priorityClassName -- The name of the PriorityClass for memcached-index-writes pods
+  priorityClassName: null
   # memcachedIndexWrites.podAnnotations -- Annotations for memcached-index-writes pods
   podAnnotations: {}
   # memcachedIndexWrites.extraArgs -- Additional CLI args for memcached-index-writes

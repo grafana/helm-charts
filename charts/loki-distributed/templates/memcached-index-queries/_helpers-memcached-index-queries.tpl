@@ -20,3 +20,13 @@ memcached-index-queries selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: memcached-index-queries
 {{- end }}
+
+{{/*
+memcached-index-queries priority class name
+*/}}
+{{- define "loki.memcachedIndexQueriesPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.memcachedIndexQueries.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}

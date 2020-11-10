@@ -28,3 +28,13 @@ querier image
 {{- $dict := dict "loki" .Values.loki.image "service" .Values.querier.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
 {{- include "loki.lokiImage" $dict -}}
 {{- end }}
+
+{{/*
+querier priority class name
+*/}}
+{{- define "loki.querierPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.querier.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}

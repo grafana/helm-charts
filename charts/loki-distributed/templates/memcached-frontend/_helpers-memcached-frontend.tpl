@@ -20,3 +20,13 @@ memcached-frontend selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: memcached-frontend
 {{- end }}
+
+{{/*
+memcached-frontend priority class name
+*/}}
+{{- define "loki.memcachedFrontendPriorityClassName" -}}
+{{- $pcn := coalesce .Values.global.priorityClassName .Values.memcachedFrontend.priorityClassName -}}
+{{- if $pcn }}
+priorityClassName: {{ $pcn }}
+{{- end }}
+{{- end }}

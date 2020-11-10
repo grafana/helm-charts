@@ -29,6 +29,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- include "loki.tableManagerPriorityClassName" . | nindent 6 }}
       securityContext:
         fsGroup: 10001
         runAsGroup: 10001
