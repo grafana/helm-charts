@@ -43,5 +43,10 @@ spec:
       storageClassName: {{ .Values.persistence.storageClassName }}
       resources:
         requests:
-          storage: {{ .Values.persistence.size }} 
+          storage: {{ .Values.persistence.size }}
+      {{- with .Values.persistence.selectorLabels }}
+      selector:
+        matchLabels:
+{{ toYaml . | indent 10 }}
+      {{- end }}
 {{- end }}

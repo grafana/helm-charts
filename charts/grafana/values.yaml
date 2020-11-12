@@ -240,6 +240,7 @@ persistence:
   # annotations: {}
   finalizers:
     - kubernetes.io/pvc-protection
+  # selectorLabels: {}
   # subPath: ""
   # existingClaim:
 
