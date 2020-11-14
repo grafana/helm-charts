@@ -1,6 +1,6 @@
 {{- if .Values.ruler.enabled }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "loki.rulerFullname" . }}
   labels:
@@ -8,10 +8,10 @@ metadata:
     app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.ruler.replicas }}
-  updateStrategy:
+  strategy:
     rollingUpdate:
-      partition: 0
-  serviceName: {{ include "loki.rulerFullname" . }}-headless
+      maxSurge: 0
+      maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -81,7 +81,7 @@ spec:
             - name: tmp
               mountPath: /tmp/loki
             {{- range $dir, $_ := .Values.ruler.directories }}
-            - name: {{ include "loki.rulerCreateRulesDirName" $dir }}
+            - name: {{ include "loki.rulerRulesDirName" $dir }}
               mountPath: /etc/loki/rules/{{ $dir }}
             {{- end }}
           resources:
@@ -103,27 +103,12 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
         {{- range $dir, $_ := .Values.ruler.directories }}
-        - name: {{ include "loki.rulerCreateRulesDirName" $dir }}
+        - name: {{ include "loki.rulerRulesDirName" $dir }}
           configMap:
-            name: {{ include "loki.rulerFullname" $ }}-{{ include "loki.rulerCreateRulesDirName" $dir }}
+            name: {{ include "loki.rulerFullname" $ }}-{{ include "loki.rulerRulesDirName" $dir }}
         {{- end }}
         - name: tmp
           emptyDir: {}
-  {{- if not .Values.ruler.persistence.enabled }}
         - name: data
           emptyDir: {}
-  {{- else }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- with .Values.ruler.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.ruler.persistence.size | quote }}
-  {{- end }}
 {{- end }}

@@ -32,7 +32,7 @@ ruler image
 {{/*
 format rules dir
 */}}
-{{- define "loki.rulerCreateRulesDirName" -}}
+{{- define "loki.rulerRulesDirName" -}}
 rules-{{ . | replace "_" "-" | trimSuffix "-" }}
 {{- end }}
 
