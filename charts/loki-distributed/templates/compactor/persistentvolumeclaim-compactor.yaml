@@ -1,4 +1,4 @@
-{{- if .Values.compactor.enabled }}
+{{- if .Values.compactor.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
