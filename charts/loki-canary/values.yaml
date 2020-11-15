@@ -1,80 +1,80 @@
-# nameOverride -- Overrides the chart's name
+# -- Overrides the chart's name
 nameOverride: ""
 
-# fullnameOverride -- Overrides the chart's computed fullname
+# -- Overrides the chart's computed fullname
 fullnameOverride: ""
 
-# imagePullSecrets -- Image pull secrets for Docker images
+# -- Image pull secrets for Docker images
 imagePullSecrets: []
 
 image:
-  # image.repository -- Docker image repository
+  # -- Docker image repository
   repository: docker.io/grafana/loki-canary
-  # image.tag -- Overrides the image tag whose default is the chart's appVersion
+  # -- Overrides the image tag whose default is the chart's appVersion
   tag: ""
-  # image.pullPolicy -- Docker image pull policy
+  # -- Docker image pull policy
   pullPolicy: IfNotPresent
 
-# podAnnotations -- Common annotations for all pods
+# -- Common annotations for all pods
 podAnnotations: {}
 
-# revisionHistoryLimit -- The number of old ReplicaSets to retain to allow rollback
+# -- The number of old ReplicaSets to retain to allow rollback
 revisionHistoryLimit: 10
 
 serviceAccount:
-  # serviceAccount.create -- Specifies whether a ServiceAccount should be created
+  # -- Specifies whether a ServiceAccount should be created
   create: true
-  # serviceAccount.name -- The name of the ServiceAccount to use.
+  # -- The name of the ServiceAccount to use.
   # If not set and create is true, a name is generated using the fullname template
   name: null
-  # serviceAccount.imagePullSecrets -- Image pull secrets for the service account
+  # -- Image pull secrets for the service account
   imagePullSecrets: []
-  # serviceAccount.annotations -- Annotations for the service account
+  # -- Annotations for the service account
   annotations: {}
 
 # ServiceMonitor configuration
 serviceMonitor:
-  # serviceMonitor.enabled -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
   enabled: false
-  # serviceMonitor.namespace -- Alternative namespace for ServiceMonitor resources
+  # -- Alternative namespace for ServiceMonitor resources
   namespace: null
-  # serviceMonitor.namespaceSelector -- Namespace selector for ServiceMonitor resources
+  # -- Namespace selector for ServiceMonitor resources
   namespaceSelector: {}
-  # serviceMonitor.annotations -- ServiceMonitor annotations
+  # -- ServiceMonitor annotations
   annotations: {}
-  # serviceMonitor.labels -- Additional ServiceMonitor labels
+  # -- Additional ServiceMonitor labels
   labels: {}
-  # serviceMonitor.interval -- ServiceMonitor scrape interval
+  # -- ServiceMonitor scrape interval
   interval: null
-  # serviceMonitor.scrapeTimeout -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
-# extraArgs -- Additional CLI args for the canary
+# -- Additional CLI args for the canary
 extraArgs:
   - -labelname=pod
   - -labelvalue=$(POD_NAME)
-# extraEnv -- Environment variables to add to the canary pods
+# -- Environment variables to add to the canary pods
 extraEnv: []
-# extraEnvFrom -- Environment variables from secrets or configmaps to add to the canary pods
+# -- Environment variables from secrets or configmaps to add to the canary pods
 extraEnvFrom: []
-# resources -- Resource requests and limits for the canary
+# -- Resource requests and limits for the canary
 resources: {}
-# nodeSelector -- Node selector for canary pods
+# -- Node selector for canary pods
 nodeSelector: {}
-# tolerations -- Tolerations for canary pods
+# -- Tolerations for canary pods
 tolerations: []
 
-# lokiAddress -- The Loki server URL:Port, e.g. loki:3100
+# -- The Loki server URL:Port, e.g. loki:3100
 lokiAddress: null
 
 # Basic auth configuration
 basicAuth:
-  # basicAuth.enabled -- Enables basic authentication for the gateway
+  # -- Enables basic authentication for the gateway
   enabled: false
-  # basicAuth.username -- The basic auth username for the gateway
+  # -- The basic auth username for the gateway
   username: null
-  # basicAuth.password -- The basic auth password for the gateway
+  # -- The basic auth password for the gateway
   password: null
-  # basicAuth.existingSecret -- Existing basic auth secret to use. Must contain '.htpasswd' and,
+  # -- Existing basic auth secret to use. Must contain '.htpasswd' and,
   # if canary is enabled, 'username' and 'password'
   existingSecret: null

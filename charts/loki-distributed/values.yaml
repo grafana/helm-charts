@@ -1,34 +1,34 @@
 global:
   image:
-    # global.image.registry -- Overrides the Docker registry globally for all images
+    # -- Overrides the Docker registry globally for all images
     registry: null
-  # global.priorityClassName -- Overrides the priorityClassName for all pods
+  # -- Overrides the priorityClassName for all pods
   priorityClassName: null
 
-# nameOverride -- Overrides the chart's name
+# -- Overrides the chart's name
 nameOverride: null
 
-# fullnameOverride -- Overrides the chart's computed fullname
+# -- Overrides the chart's computed fullname
 fullnameOverride: null
 
-# imagePullSecrets -- Image pull secrets for Docker images
+# -- Image pull secrets for Docker images
 imagePullSecrets: []
 
 loki:
   image:
-    # loki.image.registry -- The Docker registry
+    # -- The Docker registry
     registry: docker.io
-    # loki.image.repository -- Docker image repository
+    # -- Docker image repository
     repository: grafana/loki
-    # loki.image.tag -- Overrides the image tag whose default is the chart's appVersion
+    # -- Overrides the image tag whose default is the chart's appVersion
     tag: null
-    # loki.image.pullPolicy -- Docker image pull policy
+    # -- Docker image pull policy
     pullPolicy: IfNotPresent
-  # loki.podAnnotations -- Common annotations for all pods
+  # -- Common annotations for all pods
   podAnnotations: {}
-  # loki.revisionHistoryLimit -- The number of old ReplicaSets to retain to allow rollback
+  # -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
-  # loki.config -- Config file contents for Loki
+  # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
     auth_enabled: false
@@ -124,44 +124,44 @@ loki:
       external_url: https://alertmanager.xx
 
 serviceAccount:
-  # serviceAccount.create -- Specifies whether a ServiceAccount should be created
+  # -- Specifies whether a ServiceAccount should be created
   create: true
-  # serviceAccount.name -- The name of the ServiceAccount to use.
+  # -- The name of the ServiceAccount to use.
   # If not set and create is true, a name is generated using the fullname template
   name: null
-  # serviceAccount.imagePullSecrets -- Image pull secrets for the service account
+  # -- Image pull secrets for the service account
   imagePullSecrets: []
-  # serviceAccount.annotations -- Annotations for the service account
+  # -- Annotations for the service account
   annotations: {}
 
 # ServiceMonitor configuration
 serviceMonitor:
-  # serviceMonitor.enabled -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
   enabled: false
-  # serviceMonitor.namespace -- Alternative namespace for ServiceMonitor resources
+  # -- Alternative namespace for ServiceMonitor resources
   namespace: null
-  # serviceMonitor.namespaceSelector -- Namespace selector for ServiceMonitor resources
+  # -- Namespace selector for ServiceMonitor resources
   namespaceSelector: {}
-  # serviceMonitor.annotations -- ServiceMonitor annotations
+  # -- ServiceMonitor annotations
   annotations: {}
-  # serviceMonitor.labels -- Additional ServiceMonitor labels
+  # -- Additional ServiceMonitor labels
   labels: {}
-  # serviceMonitor.interval -- ServiceMonitor scrape interval
+  # -- ServiceMonitor scrape interval
   interval: null
-  # serviceMonitor.scrapeTimeout -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
 # Rules for the Prometheus Operator
 prometheusRule:
-  # prometheusRule.enabled -- If enabled, a PrometheusRule resource for Prometheus Operator is created
+  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
   enabled: false
-  # prometheusRule.namespace -- Alternative namespace for the PrometheusRule resource
+  # -- Alternative namespace for the PrometheusRule resource
   namespace: null
-  # prometheusRule.annotations -- PrometheusRule annotations
+  # -- PrometheusRule annotations
   annotations: {}
-  # prometheusRule.labels -- Additional PrometheusRule labels
+  # -- Additional PrometheusRule labels
   labels: {}
-  # prometheusRule.groups -- Contents of Prometheus rules file
+  # -- Contents of Prometheus rules file
   groups: []
   # - name: loki-rules
   #   rules:
@@ -174,32 +174,32 @@ prometheusRule:
 
 # Configuration for the ingester
 ingester:
-  # ingester.replicas -- Number of replicas for the ingester
+  # -- Number of replicas for the ingester
   replicas: 1
   image:
-    # ingester.image.registry -- The Docker registry for the ingester image. Overrides `loki.image.registry`
+    # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
-    # ingester.image.repository -- Docker image repository for the ingester image. Overrides `loki.image.repository`
+    # -- Docker image repository for the ingester image. Overrides `loki.image.repository`
     repository: null
-    # ingester.image.tag -- Docker image tag for the ingester image. Overrides `loki.image.tag`
+    # -- Docker image tag for the ingester image. Overrides `loki.image.tag`
     tag: null
-  # ingester.priorityClassName -- The name of the PriorityClass for ingester pods
+  # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
-  # ingester.podAnnotations -- Annotations for ingester pods
+  # -- Annotations for ingester pods
   podAnnotations: {}
-  # ingester.extraArgs -- Additional CLI args for the ingester
+  # -- Additional CLI args for the ingester
   extraArgs: []
-  # ingester.extraEnv -- Environment variables to add to the ingester pods
+  # -- Environment variables to add to the ingester pods
   extraEnv: []
-  # ingester.extraEnvFrom -- Environment variables from secrets or configmaps to add to the ingester pods
+  # -- Environment variables from secrets or configmaps to add to the ingester pods
   extraEnvFrom: []
-  # ingester.resources -- Resource requests and limits for the ingester
+  # -- Resource requests and limits for the ingester
   resources: {}
-  # ingester.terminationGracePeriodSeconds -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
+  # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
-  # ingester.affinity -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -215,16 +215,16 @@ ingester:
               matchLabels:
                 {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # ingester.nodeSelector -- Node selector for ingester pods
+  # -- Node selector for ingester pods
   nodeSelector: {}
-  # ingester.tolerations -- Tolerations for ingester pods
+  # -- Tolerations for ingester pods
   tolerations: []
   persistence:
-    # ingester.persistence.enabled -- Enable creating PVCs which is required when using boltdb-shipper
+    # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
-    # ingester.persistence.size -- Size of persistent disk
+    # -- Size of persistent disk
     size: 10Gi
-    # ingester.persistence.storageClass -- Storage class to be used.
+    # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
@@ -233,30 +233,30 @@ ingester:
 
 # Configuration for the distributor
 distributor:
-  # distributor.replicas -- Number of replicas for the distributor
+  # -- Number of replicas for the distributor
   replicas: 1
   image:
-    # distributor.image.registry -- The Docker registry for the distributor image. Overrides `loki.image.registry`
+    # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
-    # distributor.image.repository -- Docker image repository for the distributor image. Overrides `loki.image.repository`
+    # -- Docker image repository for the distributor image. Overrides `loki.image.repository`
     repository: null
-    # distributor.image.tag -- Docker image tag for the distributor image. Overrides `loki.image.tag`
+    # -- Docker image tag for the distributor image. Overrides `loki.image.tag`
     tag: null
-  # distributor.priorityClassName -- The name of the PriorityClass for distributor pods
+  # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
-  # distributor.podAnnotations -- Annotations for distributor pods
+  # -- Annotations for distributor pods
   podAnnotations: {}
-  # distributor.extraArgs -- Additional CLI args for the distributor
+  # -- Additional CLI args for the distributor
   extraArgs: []
-  # distributor.extraEnv -- Environment variables to add to the distributor pods
+  # -- Environment variables to add to the distributor pods
   extraEnv: []
-  # distributor.extraEnvFrom -- Environment variables from secrets or configmaps to add to the distributor pods
+  # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
-  # distributor.resources -- Resource requests and limits for the distributor
+  # -- Resource requests and limits for the distributor
   resources: {}
-  # distributor.terminationGracePeriodSeconds -- Grace period to allow the distributor to shutdown before it is killed
+  # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # distributor.affinity -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -272,37 +272,37 @@ distributor:
               matchLabels:
                 {{- include "loki.distributorSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # distributor.nodeSelector -- Node selector for distributor pods
+  # -- Node selector for distributor pods
   nodeSelector: {}
-  # distributor.tolerations -- Tolerations for distributor pods
+  # -- Tolerations for distributor pods
   tolerations: []
 
 # Configuration for the querier
 querier:
-  # querier.replicas -- Number of replicas for the querier
+  # -- Number of replicas for the querier
   replicas: 1
   image:
-    # querier.image.registry -- The Docker registry for the querier image. Overrides `loki.image.registry`
+    # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
-    # querier.image.repository -- Docker image repository for the querier image. Overrides `loki.image.repository`
+    # -- Docker image repository for the querier image. Overrides `loki.image.repository`
     repository: null
-    # querier.image.tag -- Docker image tag for the querier image. Overrides `loki.image.tag`
+    # -- Docker image tag for the querier image. Overrides `loki.image.tag`
     tag: null
-  # querier.priorityClassName -- The name of the PriorityClass for querier pods
+  # -- The name of the PriorityClass for querier pods
   priorityClassName: null
-  # querier.podAnnotations -- Annotations for querier pods
+  # -- Annotations for querier pods
   podAnnotations: {}
-  # querier.extraArgs -- Additional CLI args for the querier
+  # -- Additional CLI args for the querier
   extraArgs: []
-  # querier.extraEnv -- Environment variables to add to the querier pods
+  # -- Environment variables to add to the querier pods
   extraEnv: []
-  # querier.extraEnvFrom -- Environment variables from secrets or configmaps to add to the querier pods
+  # -- Environment variables from secrets or configmaps to add to the querier pods
   extraEnvFrom: []
-  # querier.resources -- Resource requests and limits for the querier
+  # -- Resource requests and limits for the querier
   resources: {}
-  # querier.terminationGracePeriodSeconds -- Grace period to allow the querier to shutdown before it is killed
+  # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # querier.affinity -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -318,16 +318,16 @@ querier:
               matchLabels:
                 {{- include "loki.querierSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # querier.nodeSelector -- Node selector for querier pods
+  # -- Node selector for querier pods
   nodeSelector: {}
-  # querier.tolerations -- Tolerations for querier pods
+  # -- Tolerations for querier pods
   tolerations: []
   persistence:
-    # querier.persistence.enabled -- Enable creating PVCs for the querier cache
+    # -- Enable creating PVCs for the querier cache
     enabled: false
-    # querier.persistence.size -- Size of persistent disk
+    # -- Size of persistent disk
     size: 10Gi
-    # querier.persistence.storageClass -- Storage class to be used.
+    # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
@@ -336,30 +336,30 @@ querier:
 
 # Configuration for the query-frontend
 queryFrontend:
-  # queryFrontend.replicas -- Number of replicas for the query-frontend
+  # -- Number of replicas for the query-frontend
   replicas: 1
   image:
-    # queryFrontend.image.registry -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
+    # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
-    # queryFrontend.image.repository -- Docker image repository for the query-frontend image. Overrides `loki.image.repository`
+    # -- Docker image repository for the query-frontend image. Overrides `loki.image.repository`
     repository: null
-    # queryFrontend.image.tag -- Docker image tag for the query-frontend image. Overrides `loki.image.tag`
+    # -- Docker image tag for the query-frontend image. Overrides `loki.image.tag`
     tag: null
-  # queryFrontend.priorityClassName -- The name of the PriorityClass for query-frontend pods
+  # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
-  # queryFrontend.podAnnotations -- Annotations for query-frontend pods
+  # -- Annotations for query-frontend pods
   podAnnotations: {}
-  # queryFrontend.extraArgs -- Additional CLI args for the query-frontend
+  # -- Additional CLI args for the query-frontend
   extraArgs: []
-  # queryFrontend.extraEnv -- Environment variables to add to the query-frontend pods
+  # -- Environment variables to add to the query-frontend pods
   extraEnv: []
-  # queryFrontend.extraEnvFrom -- Environment variables from secrets or configmaps to add to the query-frontend pods
+  # -- Environment variables from secrets or configmaps to add to the query-frontend pods
   extraEnvFrom: []
-  # queryFrontend.resources -- Resource requests and limits for the query-frontend
+  # -- Resource requests and limits for the query-frontend
   resources: {}
-  # queryFrontend.terminationGracePeriodSeconds -- Grace period to allow the query-frontend to shutdown before it is killed
+  # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # queryFrontend.affinity -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -375,39 +375,39 @@ queryFrontend:
               matchLabels:
                 {{- include "loki.queryFrontendSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # queryFrontend.nodeSelector -- Node selector for query-frontend pods
+  # -- Node selector for query-frontend pods
   nodeSelector: {}
-  # queryFrontend.tolerations -- Tolerations for query-frontend pods
+  # -- Tolerations for query-frontend pods
   tolerations: []
 
 # Configuration for the table-manager
 tableManager:
-  # tableManager.enabled -- Specifies whether the table-manager should be enabled
+  # -- Specifies whether the table-manager should be enabled
   enabled: false
-  # tableManager.replicas -- Number of replicas for the table-manager
+  # -- Number of replicas for the table-manager
   replicas: 1
   image:
-    # tableManager.image.registry -- The Docker registry for the table-manager image. Overrides `loki.image.registry`
+    # -- The Docker registry for the table-manager image. Overrides `loki.image.registry`
     registry: null
-    # tableManager.image.repository -- Docker image repository for the table-manager image. Overrides `loki.image.repository`
+    # -- Docker image repository for the table-manager image. Overrides `loki.image.repository`
     repository: null
-    # tableManager.image.tag -- Docker image tag for the table-manager image. Overrides `loki.image.tag`
+    # -- Docker image tag for the table-manager image. Overrides `loki.image.tag`
     tag: null
-  # tableManager.priorityClassName -- The name of the PriorityClass for table-manager pods
+  # -- The name of the PriorityClass for table-manager pods
   priorityClassName: null
-  # tableManager.podAnnotations -- Annotations for table-manager pods
+  # -- Annotations for table-manager pods
   podAnnotations: {}
-  # tableManager.extraArgs -- Additional CLI args for the table-manager
+  # -- Additional CLI args for the table-manager
   extraArgs: []
-  # tableManager.extraEnv -- Environment variables to add to the table-manager pods
+  # -- Environment variables to add to the table-manager pods
   extraEnv: []
-  # tableManager.extraEnvFrom -- Environment variables from secrets or configmaps to add to the table-manager pods
+  # -- Environment variables from secrets or configmaps to add to the table-manager pods
   extraEnvFrom: []
-  # tableManager.resources -- Resource requests and limits for the table-manager
+  # -- Resource requests and limits for the table-manager
   resources: {}
-  # tableManager.terminationGracePeriodSeconds -- Grace period to allow the table-manager to shutdown before it is killed
+  # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # tableManager.affinity -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -423,39 +423,39 @@ tableManager:
               matchLabels:
                 {{- include "loki.tableManagerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # tableManager.nodeSelector -- Node selector for table-manager pods
+  # -- Node selector for table-manager pods
   nodeSelector: {}
-  # tableManager.tolerations -- Tolerations for table-manager pods
+  # -- Tolerations for table-manager pods
   tolerations: []
 
 # Configuration for the gateway
 gateway:
-  # gateway.replicas -- Number of replicas for the gateway
+  # -- Number of replicas for the gateway
   replicas: 1
   image:
-    # gateway.image.registry -- The Docker registry for the gateway image
+    # -- The Docker registry for the gateway image
     registry: docker.io
-    # gateway.image.repository -- The gateway image repository
+    # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
-    # gateway.image.tag -- The gateway image tag
+    # -- The gateway image tag
     tag: 1.19-alpine
-    # gateway.image.pullPolicy -- The gateway image pull policy
+    # -- The gateway image pull policy
     pullPolicy: IfNotPresent
-  # gateway.priorityClassName -- The name of the PriorityClass for gateway pods
+  # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
-  # gateway.podAnnotations -- Annotations for gateway pods
+  # -- Annotations for gateway pods
   podAnnotations: {}
-  # gateway.extraArgs -- Additional CLI args for the gateway
+  # -- Additional CLI args for the gateway
   extraArgs: []
-  # gateway.extraEnv -- Environment variables to add to the gateway pods
+  # -- Environment variables to add to the gateway pods
   extraEnv: []
-  # gateway.extraEnvFrom -- Environment variables from secrets or configmaps to add to the gateway pods
+  # -- Environment variables from secrets or configmaps to add to the gateway pods
   extraEnvFrom: []
-  # gateway.resources -- Resource requests and limits for the gateway
+  # -- Resource requests and limits for the gateway
   resources: {}
-  # gateway.terminationGracePeriodSeconds -- Grace period to allow the gateway to shutdown before it is killed
+  # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # gateway.affinity -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -471,49 +471,49 @@ gateway:
               matchLabels:
                 {{- include "loki.gatewaySelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # gateway.nodeSelector -- Node selector for gateway pods
+  # -- Node selector for gateway pods
   nodeSelector: {}
-  # gateway.tolerations -- Tolerations for gateway pods
+  # -- Tolerations for gateway pods
   tolerations: []
   # Gateway service configuration
   service:
-    # gateway.service.port -- Port of the gateway service
+    # -- Port of the gateway service
     port: 80
-    # gateway.service.type -- Type of the gateway service
+    # -- Type of the gateway service
     type: ClusterIP
-    # gateway.service.clusterIP -- ClusterIP of the gateway service
+    # -- ClusterIP of the gateway service
     clusterIP: null
-    # gateway.service.nodePort -- Node port if service type is NodePort
+    # -- Node port if service type is NodePort
     nodePort: null
-    # gateway.service.loadBalancerIP -- Load balancer IPO address if service type is LoadBalancer
+    # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
   # Gateway ingress configuration
   ingress:
-    # gateway.ingress.enabled -- Specifies whether an ingress for the gateway should be created
+    # -- Specifies whether an ingress for the gateway should be created
     enabled: false
-    # gateway.ingress.annotations -- Annotations for the gateway ingress
+    # -- Annotations for the gateway ingress
     annotations: {}
-    # gateway.ingress.hosts -- Hosts configuration for the gateway ingress
+    # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.loki.example.com
         paths:
           - /
-    # gateway.ingress.tls -- TLS configuration for the gateway ingress
+    # -- TLS configuration for the gateway ingress
     tls:
       - secretName: loki-gateway-tls
         hosts:
           - gateway.loki.example.com
   # Basic auth configuration
   basicAuth:
-    # gateway.basicAuth.enabled -- Enables basic authentication for the gateway
+    # -- Enables basic authentication for the gateway
     enabled: false
-    # gateway.basicAuth.username -- The basic auth username for the gateway
+    # -- The basic auth username for the gateway
     username: null
-    # gateway.basicAuth.password -- The basic auth password for the gateway
+    # -- The basic auth password for the gateway
     password: null
-    # gateway.basicAuth.existingSecret -- Existing basic auth secret to use. Must contain '.htpasswd'
+    # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
-  # gateway.nginxConfig -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
+  # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
   # @default -- See values.yaml
   nginxConfig: |
     worker_processes  5;  ## Default: 1
@@ -586,39 +586,39 @@ gateway:
 
 # Configuration for the compactor
 compactor:
-  # compactor.enabled -- Specifies whether compactor should be enabled
+  # -- Specifies whether compactor should be enabled
   enabled: false
   image:
-    # compactor.image.registry -- The Docker registry for the compactor image. Overrides `loki.image.registry`
+    # -- The Docker registry for the compactor image. Overrides `loki.image.registry`
     registry: null
-    # compactor.image.repository -- Docker image repository for the compactor image. Overrides `loki.image.repository`
+    # -- Docker image repository for the compactor image. Overrides `loki.image.repository`
     repository: null
-    # compactor.image.tag -- Docker image tag for the compactor image. Overrides `loki.image.tag`
+    # -- Docker image tag for the compactor image. Overrides `loki.image.tag`
     tag: null
-  # compactor.priorityClassName -- The name of the PriorityClass for compactor pods
+  # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
-  # compactor.podAnnotations -- Annotations for compactor pods
+  # -- Annotations for compactor pods
   podAnnotations: {}
-  # compactor.extraArgs -- Additional CLI args for the compactor
+  # -- Additional CLI args for the compactor
   extraArgs: []
-  # compactor.extraEnv -- Environment variables to add to the compactor pods
+  # -- Environment variables to add to the compactor pods
   extraEnv: []
-  # compactor.extraEnvFrom -- Environment variables from secrets or configmaps to add to the compactor pods
+  # -- Environment variables from secrets or configmaps to add to the compactor pods
   extraEnvFrom: []
-  # compactor.resources -- Resource requests and limits for the compactor
+  # -- Resource requests and limits for the compactor
   resources: {}
-  # compactor.terminationGracePeriodSeconds -- Grace period to allow the compactor to shutdown before it is killed
+  # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # compactor.nodeSelector -- Node selector for compactor pods
+  # -- Node selector for compactor pods
   nodeSelector: {}
-  # compactor.tolerations -- Tolerations for compactor pods
+  # -- Tolerations for compactor pods
   tolerations: []
   persistence:
-    # compactor.persistence.enabled -- Enable creating PVCs for the compactor
+    # -- Enable creating PVCs for the compactor
     enabled: false
-    # compactor.persistence.size -- Size of persistent disk
+    # -- Size of persistent disk
     size: 10Gi
-    # compactor.persistence.storageClass -- Storage class to be used.
+    # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
@@ -627,32 +627,32 @@ compactor:
 
 # Configuration for the ruler
 ruler:
-  # ruler.enabled -- Specifies whether the ruler should be enabled
+  # -- Specifies whether the ruler should be enabled
   enabled: false
-  # ruler.replicas -- Number of replicas for the ruler
+  # -- Number of replicas for the ruler
   replicas: 1
   image:
-    # ruler.image.registry -- The Docker registry for the ruler image. Overrides `loki.image.registry`
+    # -- The Docker registry for the ruler image. Overrides `loki.image.registry`
     registry: null
-    # ruler.image.repository -- Docker image repository for the ruler image. Overrides `loki.image.repository`
+    # -- Docker image repository for the ruler image. Overrides `loki.image.repository`
     repository: null
-    # ruler.image.tag -- Docker image tag for the ruler image. Overrides `loki.image.tag`
+    # -- Docker image tag for the ruler image. Overrides `loki.image.tag`
     tag: null
-  # ruler.priorityClassName -- The name of the PriorityClass for ruler pods
+  # -- The name of the PriorityClass for ruler pods
   priorityClassName: null
-  # ruler.podAnnotations -- Annotations for ruler pods
+  # -- Annotations for ruler pods
   podAnnotations: {}
-  # ruler.extraArgs -- Additional CLI args for the ruler
+  # -- Additional CLI args for the ruler
   extraArgs: []
-  # ruler.extraEnv -- Environment variables to add to the ruler pods
+  # -- Environment variables to add to the ruler pods
   extraEnv: []
-  # ruler.extraEnvFrom -- Environment variables from secrets or configmaps to add to the ruler pods
+  # -- Environment variables from secrets or configmaps to add to the ruler pods
   extraEnvFrom: []
-  # ruler.resources -- Resource requests and limits for the ruler
+  # -- Resource requests and limits for the ruler
   resources: {}
-  # ruler.terminationGracePeriodSeconds -- Grace period to allow the ruler to shutdown before it is killed
+  # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
-  # ruler.affinity -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -668,22 +668,22 @@ ruler:
               matchLabels:
                 {{- include "loki.rulerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # ruler.nodeSelector -- Node selector for ruler pods
+  # -- Node selector for ruler pods
   nodeSelector: {}
-  # ruler.tolerations -- Tolerations for ruler pods
+  # -- Tolerations for ruler pods
   tolerations: []
   persistence:
-    # ruler.persistence.enabled -- Enable creating PVCs for the ruler
+    # -- Enable creating PVCs for the ruler
     enabled: false
-    # ruler.persistence.size -- Size of persistent disk
+    # -- Size of persistent disk
     size: 10Gi
-    # ruler.persistence.storageClass -- Storage class to be used.
+    # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
-  # ruler.directories -- Directories containing rules files
+  # -- Directories containing rules files
   directories: {}
     # tenant_foo:
     #   rules1.txt: |
@@ -752,48 +752,48 @@ ruler:
 
 memcached:
   image:
-    # memcached.image.registry -- The Docker registry for the memcached
+    # -- The Docker registry for the memcached
     registry: docker.io
-    # memcached.image.repository -- Memcached Docker image repository
+    # -- Memcached Docker image repository
     repository: memcached
-    # memcached.image.tag -- Memcached Docker image tag
+    # -- Memcached Docker image tag
     tag: 1.6.7-alpine
-    # memcached.image.pullPolicy -- Memcached Docker image pull policy
+    # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
 
 memcachedExporter:
-  # memcachedExporter.enabled -- Specifies whether the Memcached Exporter should be enabled
+  # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   image:
-    # memcachedExporter.image.registry -- The Docker registry for the Memcached Exporter
+    # -- The Docker registry for the Memcached Exporter
     registry: docker.io
-    # memcachedExporter.image.repository -- Memcached Exporter Docker image repository
+    # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
-    # memcachedExporter.image.tag -- Memcached Exporter Docker image tag
+    # -- Memcached Exporter Docker image tag
     tag: v0.6.0
-    # memcachedExporter.image.pullPolicy -- Memcached Exporter Docker image pull policy
+    # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
 
 memcachedChunks:
-  # memcachedChunks.enabled -- Specifies whether the Memcached chunks cache should be enabled
+  # -- Specifies whether the Memcached chunks cache should be enabled
   enabled: false
-  # memcachedChunks.replicas -- Number of replicas for memcached-chunks
+  # -- Number of replicas for memcached-chunks
   replicas: 1
-  # memcachedChunks.priorityClassName -- The name of the PriorityClass for memcached-chunks pods
+  # -- The name of the PriorityClass for memcached-chunks pods
   priorityClassName: null
-  # memcachedChunks.podAnnotations -- Annotations for memcached-chunks pods
+  # -- Annotations for memcached-chunks pods
   podAnnotations: {}
-  # memcachedChunks.extraArgs -- Additional CLI args for memcached-chunks
+  # -- Additional CLI args for memcached-chunks
   extraArgs: []
-  # memcachedChunks.extraEnv -- Environment variables to add to memcached-chunks pods
+  # -- Environment variables to add to memcached-chunks pods
   extraEnv: []
-  # memcachedChunks.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-chunks pods
+  # -- Environment variables from secrets or configmaps to add to memcached-chunks pods
   extraEnvFrom: []
-  # memcachedChunks.resources -- Resource requests and limits for memcached-chunks
+  # -- Resource requests and limits for memcached-chunks
   resources: {}
-  # memcachedChunks.terminationGracePeriodSeconds -- Grace period to allow memcached-chunks to shutdown before it is killed
+  # -- Grace period to allow memcached-chunks to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # memcachedChunks.affinity -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -809,31 +809,31 @@ memcachedChunks:
               matchLabels:
                 {{- include "loki.memcachedChunksSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # memcachedChunks.nodeSelector -- Node selector for memcached-chunks pods
+  # -- Node selector for memcached-chunks pods
   nodeSelector: {}
-  # memcachedChunks.tolerations -- Tolerations for memcached-chunks pods
+  # -- Tolerations for memcached-chunks pods
   tolerations: []
 
 memcachedFrontend:
-  # memcachedFrontend.enabled -- Specifies whether the Memcached frontend cache should be enabled
+  # -- Specifies whether the Memcached frontend cache should be enabled
   enabled: false
-  # memcachedFrontend.replicas -- Number of replicas for memcached-frontend
+  # -- Number of replicas for memcached-frontend
   replicas: 1
-  # memcachedFrontend.priorityClassName -- The name of the PriorityClass for memcached-frontend pods
+  # -- The name of the PriorityClass for memcached-frontend pods
   priorityClassName: null
-  # memcachedFrontend.podAnnotations -- Annotations for memcached-frontend pods
+  # -- Annotations for memcached-frontend pods
   podAnnotations: {}
-  # memcachedFrontend.extraArgs -- Additional CLI args for memcached-frontend
+  # -- Additional CLI args for memcached-frontend
   extraArgs: []
-  # memcachedFrontend.extraEnv -- Environment variables to add to memcached-frontend pods
+  # -- Environment variables to add to memcached-frontend pods
   extraEnv: []
-  # memcachedFrontend.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-frontend pods
+  # -- Environment variables from secrets or configmaps to add to memcached-frontend pods
   extraEnvFrom: []
-  # memcachedFrontend.resources -- Resource requests and limits for memcached-frontend
+  # -- Resource requests and limits for memcached-frontend
   resources: {}
-  # memcachedFrontend.terminationGracePeriodSeconds -- Grace period to allow memcached-frontend to shutdown before it is killed
+  # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # memcachedFrontend.affinity -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -849,31 +849,31 @@ memcachedFrontend:
               matchLabels:
                 {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # memcachedFrontend.nodeSelector -- Node selector for memcached-frontend pods
+  # -- Node selector for memcached-frontend pods
   nodeSelector: {}
-  # memcachedFrontend.tolerations -- Tolerations for memcached-frontend pods
+  # -- Tolerations for memcached-frontend pods
   tolerations: []
 
 memcachedIndexQueries:
-  # memcachedIndexQueries.enabled -- Specifies whether the Memcached index queries cache should be enabled
+  # -- Specifies whether the Memcached index queries cache should be enabled
   enabled: false
-  # memcachedIndexQueries.replicas -- Number of replicas for memcached-index-queries
+  # -- Number of replicas for memcached-index-queries
   replicas: 1
-  # memcachedIndexQueries.priorityClassName -- The name of the PriorityClass for memcached-index-queries pods
+  # -- The name of the PriorityClass for memcached-index-queries pods
   priorityClassName: null
-  # memcachedIndexQueries.podAnnotations -- Annotations for memcached-index-queries pods
+  # -- Annotations for memcached-index-queries pods
   podAnnotations: {}
-  # memcachedIndexQueries.extraArgs -- Additional CLI args for memcached-index-queries
+  # -- Additional CLI args for memcached-index-queries
   extraArgs: []
-  # memcachedIndexQueries.extraEnv -- Environment variables to add to memcached-index-queries pods
+  # -- Environment variables to add to memcached-index-queries pods
   extraEnv: []
-  # memcachedIndexQueries.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-index-queries pods
+  # -- Environment variables from secrets or configmaps to add to memcached-index-queries pods
   extraEnvFrom: []
-  # memcachedIndexQueries.resources -- Resource requests and limits for memcached-index-queries
+  # -- Resource requests and limits for memcached-index-queries
   resources: {}
-  # memcachedIndexQueries.terminationGracePeriodSeconds -- Grace period to allow memcached-index-queries to shutdown before it is killed
+  # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # memcachedIndexQueries.affinity -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -889,31 +889,31 @@ memcachedIndexQueries:
               matchLabels:
                 {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # memcachedIndexQueries.nodeSelector -- Node selector for memcached-index-queries pods
+  # -- Node selector for memcached-index-queries pods
   nodeSelector: {}
-  # memcachedIndexQueries.tolerations -- Tolerations for memcached-index-queries pods
+  # -- Tolerations for memcached-index-queries pods
   tolerations: []
 
 memcachedIndexWrites:
-  # memcachedIndexWrites.enabled -- Specifies whether the Memcached index writes cache should be enabled
+  # -- Specifies whether the Memcached index writes cache should be enabled
   enabled: false
-  # memcachedIndexWrites.replicas -- Number of replicas for memcached-index-writes
+  # -- Number of replicas for memcached-index-writes
   replicas: 1
-  # memcachedIndexWrites.priorityClassName -- The name of the PriorityClass for memcached-index-writes pods
+  # -- The name of the PriorityClass for memcached-index-writes pods
   priorityClassName: null
-  # memcachedIndexWrites.podAnnotations -- Annotations for memcached-index-writes pods
+  # -- Annotations for memcached-index-writes pods
   podAnnotations: {}
-  # memcachedIndexWrites.extraArgs -- Additional CLI args for memcached-index-writes
+  # -- Additional CLI args for memcached-index-writes
   extraArgs: []
-  # memcachedIndexWrites.extraEnv -- Environment variables to add to memcached-index-writes pods
+  # -- Environment variables to add to memcached-index-writes pods
   extraEnv: []
-  # memcachedIndexWrites.extraEnvFrom -- Environment variables from secrets or configmaps to add to memcached-index-writes pods
+  # -- Environment variables from secrets or configmaps to add to memcached-index-writes pods
   extraEnvFrom: []
-  # memcachedIndexWrites.resources -- Resource requests and limits for memcached-index-writes
+  # -- Resource requests and limits for memcached-index-writes
   resources: {}
-  # memcachedIndexWrites.terminationGracePeriodSeconds -- Grace period to allow memcached-index-writes to shutdown before it is killed
+  # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # memcachedIndexWrites.affinity -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
+  # -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -929,7 +929,7 @@ memcachedIndexWrites:
               matchLabels:
                 {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
-  # memcachedIndexWrites.nodeSelector -- Node selector for memcached-index-writes pods
+  # -- Node selector for memcached-index-writes pods
   nodeSelector: {}
-  # memcachedIndexWrites.tolerations -- Tolerations for memcached-index-writes pods
+  # -- Tolerations for memcached-index-writes pods
   tolerations: []
