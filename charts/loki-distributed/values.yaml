@@ -28,6 +28,19 @@ loki:
   podAnnotations: {}
   # -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
+  # -- The SecurityContext for Loki pods
+  podSecurityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+  # -- The SecurityContext for Loki containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -451,6 +464,19 @@ gateway:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the gateway pods
   extraEnvFrom: []
+  # -- The SecurityContext for gateway containers
+  podSecurityContext:
+    fsGroup: 101
+    runAsGroup: 101
+    runAsNonRoot: true
+    runAsUser: 101
+  # -- The SecurityContext for gateway containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
@@ -760,6 +786,19 @@ memcached:
     tag: 1.6.7-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- The SecurityContext for memcached pods
+  podSecurityContext:
+    fsGroup: 11211
+    runAsGroup: 11211
+    runAsNonRoot: true
+    runAsUser: 11211
+  # -- The SecurityContext for memcached containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled

@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.18.1](https://img.shields.io/badge/Version-0.18.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.19.0](https://img.shields.io/badge/Version-0.19.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -60,6 +60,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.basicAuth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' |
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
+| gateway.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
@@ -74,6 +75,7 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | gateway.nginxConfig | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
+| gateway.podSecurityContext | object | `{"fsGroup":101,"runAsGroup":101,"runAsNonRoot":true,"runAsUser":101}` | The SecurityContext for gateway containers |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
@@ -105,16 +107,20 @@ helm repo add loki https://unguiculus.github.io/loki-helm-chart
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | loki.config | string | See values.yaml | Config file contents for Loki |
+| loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
+| loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
+| memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
 | memcached.image.registry | string | `"docker.io"` | The Docker registry for the memcached |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.7-alpine"` | Memcached Docker image tag |
+| memcached.podSecurityContext | object | `{"fsGroup":11211,"runAsGroup":11211,"runAsNonRoot":true,"runAsUser":11211}` | The SecurityContext for memcached pods |
 | memcachedChunks.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedChunks.enabled | bool | `false` | Specifies whether the Memcached chunks cache should be enabled |
 | memcachedChunks.extraArgs | list | `[]` | Additional CLI args for memcached-chunks |

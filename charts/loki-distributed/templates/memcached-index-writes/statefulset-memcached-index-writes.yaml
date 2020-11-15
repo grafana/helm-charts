@@ -36,10 +36,7 @@ spec:
       {{- end }}
       {{- include "loki.memcachedIndexWritesPriorityClassName" . | nindent 6 }}
       securityContext:
-        fsGroup: 11211
-        runAsGroup: 11211
-        runAsNonRoot: true
-        runAsUser: 11211
+        {{- toYaml .Values.memcached.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.memcachedIndexWrites.terminationGracePeriodSeconds }}
       containers:
         - name: memcached
@@ -61,6 +58,8 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.memcached.containerSecurityContext | nindent 12 }}
           readinessProbe:
             tcpSocket:
               port: http

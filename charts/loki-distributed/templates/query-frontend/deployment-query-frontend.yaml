@@ -34,10 +34,7 @@ spec:
       {{- end }}
       {{- include "loki.queryFrontendPriorityClassName" . | nindent 6 }}
       securityContext:
-        fsGroup: 10001
-        runAsGroup: 10001
-        runAsNonRoot: true
-        runAsUser: 10001
+        {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
       containers:
         - name: loki
@@ -65,7 +62,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
-            readOnlyRootFilesystem: true
+            {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
