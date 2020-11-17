@@ -179,9 +179,9 @@ prometheusRule:
   # - name: loki-rules
   #   rules:
   #     - record: job:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (job)
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
   #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (job, route)
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
   #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
   #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
@@ -724,9 +724,9 @@ ruler:
     #                 > 0.05
     #             for: 10m
     #             labels:
-    #               severity: page
+    #               severity: warning
     #             annotations:
-    #               summary: High request latency
+    #               summary: High error rate
     #       - name: credentials_leak
     #         rules:
     #           - alert: http-credentials-leaked
@@ -756,9 +756,9 @@ ruler:
     #                 > 0.05
     #             for: 10m
     #             labels:
-    #               severity: page
+    #               severity: warning
     #             annotations:
-    #               summary: High request latency
+    #               summary: High error rate
     #       - name: credentials_leak
     #         rules:
     #           - alert: http-credentials-leaked
