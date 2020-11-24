@@ -16,7 +16,7 @@ _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation
 To install the chart with the release name `my-release`:
 
 ```console
-helm install --name my-release grafana/grafana
+helm install my-release grafana/grafana
 ```
 
 ## Uninstalling the Chart
