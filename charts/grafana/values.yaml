@@ -647,6 +647,7 @@ imageRenderer:
     portName: 'http'
     # image-renderer service port used by both service and deployment
     port: 8081
+    targetPort: 3001
   # name of the image-renderer port on the pod
   podPortName: http
   # number of image-renderer replica sets to keep
