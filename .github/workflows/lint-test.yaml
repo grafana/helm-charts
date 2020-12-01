@@ -24,7 +24,7 @@ jobs:
           python-version: 3.7
 
       - name: Set up chart-testing
-        uses: quay.io/helmpack/chart-testing:v3.3.0
+        uses: helm/chart-testing-action@v2.0.1
 
       - name: Run chart-testing (list-changed)
         id: list-changed
