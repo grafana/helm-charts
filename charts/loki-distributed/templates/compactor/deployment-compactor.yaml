@@ -31,7 +31,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      priorityClassName: {{ include "loki.compactorPriorityClassName" . }}
+      {{ include "loki.compactorPriorityClassName" . }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
