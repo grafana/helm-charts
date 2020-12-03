@@ -48,10 +48,11 @@ loki:
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
-    auth_enabled: false
+    auth_enabled: true
 
     server:
       http_listen_port: 3100
+      log_level: info
 
     distributor:
       ring:
@@ -63,48 +64,42 @@ loki:
         - {{ include "loki.fullname" . }}-memberlist
 
     ingester:
+      # Disable chunk transfer which is not possible with statefulsets
+      # and unnecessary for boltdb-shipper
+      max_transfer_retries: 0
+      chunk_idle_period: 1h
+      chunk_target_size: 1536000
+      max_chunk_age: 1h
       lifecycler:
+        join_after: 0s
         ring:
           kvstore:
             store: memberlist
-          replication_factor: 1
-      chunk_idle_period: 30m
-      chunk_block_size: 262144
-      chunk_encoding: snappy
-      chunk_retain_period: 1m
-      max_transfer_retries: 0
 
     limits_config:
-      enforce_metric_name: false
-      reject_old_samples: true
-      reject_old_samples_max_age: 168h
+      ingestion_rate_mb: 10
+      ingestion_burst_size_mb: 20
+      max_concurrent_tail_requests: 20
       max_cache_freshness_per_query: 10m
 
     schema_config:
       configs:
         - from: 2020-09-07
           store: boltdb-shipper
-          object_store: filesystem
+          object_store: aws
           schema: v11
           index:
             prefix: loki_index_
             period: 24h
 
     storage_config:
+      aws:
+        s3: {{ .Values.s3_region }}
+        bucketnames: {{ .Values.bucketnames }}
       boltdb_shipper:
-        shared_store: filesystem
         active_index_directory: /var/loki/index
+        shared_store: s3
         cache_location: /var/loki/cache
-        cache_ttl: 168h
-      filesystem:
-        directory: /var/loki/chunks
-
-    chunk_store_config:
-      max_look_back_period: 0s
-
-    table_manager:
-      retention_deletes_enabled: false
-      retention_period: 0s
 
     query_range:
       align_queries_with_step: true
@@ -126,19 +121,19 @@ loki:
       compress_responses: true
 
     compactor:
-      shared_store: filesystem
+      shared_store: s3
 
-    ruler:
-      storage:
-        type: local
-        local:
-          directory: /etc/loki/rules
-      ring:
-        kvstore:
-          store: memberlist
-      rule_path: /tmp/loki/scratch
-      alertmanager_url: https://alertmanager.xx
-      external_url: https://alertmanager.xx
+      #    ruler:
+      #      storage:
+      #        type: local
+      #        local:
+      #          directory: /etc/loki/rules
+      #      ring:
+      #        kvstore:
+      #          store: memberlist
+      #      rule_path: /tmp/loki/scratch
+      #      alertmanager_url: https://alertmanager.xx
+      #      external_url: https://alertmanager.xx
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -197,7 +192,7 @@ prometheusRule:
 # Configuration for the ingester
 ingester:
   # -- Number of replicas for the ingester
-  replicas: 1
+  replicas: 3
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -208,7 +203,8 @@ ingester:
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
   # -- Annotations for ingester pods
-  podAnnotations: {}
+  podAnnotations:
+    iam.amazonaws.com/role: loki-data-s3-access
   # -- Additional CLI args for the ingester
   extraArgs: []
   # -- Environment variables to add to the ingester pods
@@ -243,7 +239,7 @@ ingester:
   tolerations: []
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
-    enabled: false
+    enabled: true
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -251,12 +247,12 @@ ingester:
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: null
+    storageClass: gp2
 
 # Configuration for the distributor
 distributor:
   # -- Number of replicas for the distributor
-  replicas: 1
+  replicas: 3
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
@@ -302,7 +298,7 @@ distributor:
 # Configuration for the querier
 querier:
   # -- Number of replicas for the querier
-  replicas: 1
+  replicas: 3
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
@@ -313,7 +309,8 @@ querier:
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
   # -- Annotations for querier pods
-  podAnnotations: {}
+  podAnnotations:
+    iam.amazonaws.com/role: loki-data-s3-access
   # -- Additional CLI args for the querier
   extraArgs: []
   # -- Environment variables to add to the querier pods
@@ -346,7 +343,7 @@ querier:
   tolerations: []
   persistence:
     # -- Enable creating PVCs for the querier cache
-    enabled: false
+    enabled: true
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -354,12 +351,12 @@ querier:
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: null
+    storageClass: gp2
 
 # Configuration for the query-frontend
 queryFrontend:
   # -- Number of replicas for the query-frontend
-  replicas: 1
+  replicas: 2
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
@@ -622,7 +619,7 @@ gateway:
 # Configuration for the compactor
 compactor:
   # -- Specifies whether compactor should be enabled
-  enabled: false
+  enabled: true
   image:
     # -- The Docker registry for the compactor image. Overrides `loki.image.registry`
     registry: null
@@ -650,7 +647,7 @@ compactor:
   tolerations: []
   persistence:
     # -- Enable creating PVCs for the compactor
-    enabled: false
+    enabled: true
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -658,7 +655,7 @@ compactor:
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: null
+    storageClass: gp2
 
 # Configuration for the ruler
 ruler:

@@ -1,0 +1,3 @@
+s3_region: s3://eu-central-1
+bucketnames: gs-loki-data
+
