@@ -633,7 +633,8 @@ imageRenderer:
     # image-renderer ImagePullPolicy
     pullPolicy: Always
   # extra environment variables
-  env: {}
+  env:
+    HTTP_HOST: "0.0.0.0"
     # RENDERING_ARGS: --disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
   # image-renderer deployment securityContext
@@ -647,7 +648,7 @@ imageRenderer:
     portName: 'http'
     # image-renderer service port used by both service and deployment
     port: 8081
-    targetPort: 3001
+    targetPort: 8081
   # name of the image-renderer port on the pod
   podPortName: http
   # number of image-renderer replica sets to keep
