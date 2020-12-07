@@ -5,6 +5,7 @@ metadata:
   namespace: {{ template "grafana.namespace" . }}
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
+    {{ .Values.sidecar.dashboards.label -}}: "1"
 data:
 {{- if .Values.plugins }}
   plugins: {{ join "," .Values.plugins }}
