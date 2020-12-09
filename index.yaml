@@ -17,7 +17,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-2.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-2.0.1.tgz
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
@@ -35,7 +35,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-2.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
@@ -53,7 +53,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.3.2.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.3.2.tgz
     version: 0.3.2
   - apiVersion: v1
     appVersion: v1.6.0
@@ -71,7 +71,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.3.1.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
     appVersion: v1.6.0
@@ -89,7 +89,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -107,7 +107,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -125,7 +125,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.1.5.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.1.5.tgz
     version: 0.1.5
   - apiVersion: v1
     appVersion: v1.5.0
@@ -143,7 +143,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.1.4.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v1
     appVersion: v1.5.0
@@ -161,7 +161,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.1.3.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v1
     appVersion: v1.5.0
@@ -179,7 +179,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.1.2.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v1
     appVersion: v1.4.1
@@ -197,7 +197,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.1.1.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
     appVersion: v1.4.1
@@ -215,7 +215,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.1.0.tgz
     version: 0.1.0
   - apiVersion: v1
     appVersion: v0.0.1
@@ -233,7 +233,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.0.5.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.0.5.tgz
     version: 0.0.5
   - apiVersion: v1
     appVersion: v0.0.1
@@ -251,7 +251,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.0.4.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.0.4.tgz
     version: 0.0.4
   - apiVersion: v1
     appVersion: v0.0.1
@@ -269,7 +269,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.0.3.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.0.3.tgz
     version: 0.0.3
   - apiVersion: v1
     appVersion: v0.0.1
@@ -287,7 +287,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.0.2.tgz
     version: 0.0.2
   - apiVersion: v1
     appVersion: v0.0.1
@@ -305,7 +305,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/fluent-bit-0.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/fluent-bit-0.0.1.tgz
     version: 0.0.1
   grafana:
   - apiVersion: v2
@@ -1330,7 +1330,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.7.tgz
     version: 5.5.7
   - apiVersion: v1
     appVersion: 7.1.1
@@ -1345,7 +1345,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.6.tgz
     version: 5.5.6
   - apiVersion: v1
     appVersion: 7.1.1
@@ -1366,7 +1366,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.5.tgz
     version: 5.5.5
   - apiVersion: v1
     appVersion: 7.1.1
@@ -1387,7 +1387,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.4.tgz
     version: 5.5.4
   - apiVersion: v1
     appVersion: 7.1.1
@@ -1408,7 +1408,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.3.tgz
     version: 5.5.3
   - apiVersion: v1
     appVersion: 7.1.1
@@ -1429,7 +1429,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.2.tgz
     version: 5.5.2
   - apiVersion: v1
     appVersion: 7.0.5
@@ -1450,7 +1450,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.1.tgz
     version: 5.5.1
   - apiVersion: v1
     appVersion: 7.0.5
@@ -1471,7 +1471,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.5.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.5.0.tgz
     version: 5.5.0
   - apiVersion: v1
     appVersion: 7.0.5
@@ -1492,7 +1492,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.4.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.4.1.tgz
     version: 5.4.1
   - apiVersion: v1
     appVersion: 7.0.5
@@ -1513,7 +1513,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.4.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.4.0.tgz
     version: 5.4.0
   - apiVersion: v1
     appVersion: 7.0.5
@@ -1534,7 +1534,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.6.tgz
     version: 5.3.6
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1555,7 +1555,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.5.tgz
     version: 5.3.5
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1576,7 +1576,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.4.tgz
     version: 5.3.4
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1597,7 +1597,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.3.tgz
     version: 5.3.3
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1618,7 +1618,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.2.tgz
     version: 5.3.2
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1639,7 +1639,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.1.tgz
     version: 5.3.1
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1660,7 +1660,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.3.0.tgz
     version: 5.3.0
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1681,7 +1681,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.2.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.2.1.tgz
     version: 5.2.1
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1702,7 +1702,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.2.0.tgz
     version: 5.2.0
   - apiVersion: v1
     appVersion: 7.0.3
@@ -1723,7 +1723,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.1.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.1.4.tgz
     version: 5.1.4
   - apiVersion: v1
     appVersion: 7.0.1
@@ -1744,7 +1744,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.1.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.1.2.tgz
     version: 5.1.2
   - apiVersion: v1
     appVersion: 7.0.1
@@ -1765,7 +1765,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.1.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.1.1.tgz
     version: 5.1.1
   - apiVersion: v1
     appVersion: 7.0.1
@@ -1786,7 +1786,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.1.0.tgz
     version: 5.1.0
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1807,7 +1807,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.26.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.26.tgz
     version: 5.0.26
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1828,7 +1828,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.25.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.25.tgz
     version: 5.0.25
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1849,7 +1849,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.24.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.24.tgz
     version: 5.0.24
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1870,7 +1870,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.23.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.23.tgz
     version: 5.0.23
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1891,7 +1891,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.22.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.22.tgz
     version: 5.0.22
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1912,7 +1912,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.21.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.21.tgz
     version: 5.0.21
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1933,7 +1933,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.20.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.20.tgz
     version: 5.0.20
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1954,7 +1954,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.19.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.19.tgz
     version: 5.0.19
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1975,7 +1975,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.18.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.18.tgz
     version: 5.0.18
   - apiVersion: v1
     appVersion: 6.7.3
@@ -1996,7 +1996,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.16.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.16.tgz
     version: 5.0.16
   - apiVersion: v1
     appVersion: 6.7.3
@@ -2017,7 +2017,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.15.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.15.tgz
     version: 5.0.15
   - apiVersion: v1
     appVersion: 6.7.1
@@ -2038,7 +2038,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.14.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.14.tgz
     version: 5.0.14
   - apiVersion: v1
     appVersion: 6.7.1
@@ -2059,7 +2059,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.13.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.13.tgz
     version: 5.0.13
   - apiVersion: v1
     appVersion: 6.7.1
@@ -2080,7 +2080,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.12.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.12.tgz
     version: 5.0.12
   - apiVersion: v1
     appVersion: 6.7.1
@@ -2101,7 +2101,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.11.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.11.tgz
     version: 5.0.11
   - apiVersion: v1
     appVersion: 6.7.1
@@ -2122,7 +2122,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.10.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.10.tgz
     version: 5.0.10
   - apiVersion: v1
     appVersion: 6.7.1
@@ -2143,7 +2143,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.9.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.9.tgz
     version: 5.0.9
   - apiVersion: v1
     appVersion: 6.6.2
@@ -2164,7 +2164,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.8.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.8.tgz
     version: 5.0.8
   - apiVersion: v1
     appVersion: 6.6.2
@@ -2185,7 +2185,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.7.tgz
     version: 5.0.7
   - apiVersion: v1
     appVersion: 6.6.2
@@ -2206,7 +2206,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.6.tgz
     version: 5.0.6
   - apiVersion: v1
     appVersion: 6.6.2
@@ -2227,7 +2227,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.5.tgz
     version: 5.0.5
   - apiVersion: v1
     appVersion: 6.6.2
@@ -2248,7 +2248,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.4.tgz
     version: 5.0.4
   - apiVersion: v1
     appVersion: 6.6.2
@@ -2269,7 +2269,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.3.tgz
     version: 5.0.3
   - apiVersion: v1
     appVersion: 6.6.1
@@ -2290,7 +2290,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.2.tgz
     version: 5.0.2
   - apiVersion: v1
     appVersion: 6.6.1
@@ -2311,7 +2311,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.1.tgz
     version: 5.0.1
   - apiVersion: v1
     appVersion: 6.6.1
@@ -2332,7 +2332,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-5.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-5.0.0.tgz
     version: 5.0.0
   - apiVersion: v1
     appVersion: 6.6.0
@@ -2353,7 +2353,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.6.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.6.3.tgz
     version: 4.6.3
   - apiVersion: v1
     appVersion: 6.6.0
@@ -2374,7 +2374,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.6.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.6.2.tgz
     version: 4.6.2
   - apiVersion: v1
     appVersion: 6.6.0
@@ -2395,7 +2395,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.5.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.5.1.tgz
     version: 4.5.1
   - apiVersion: v1
     appVersion: 6.6.0
@@ -2416,7 +2416,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.5.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.5.0.tgz
     version: 4.5.0
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2437,7 +2437,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.4.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.4.1.tgz
     version: 4.4.1
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2458,7 +2458,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.4.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.4.0.tgz
     version: 4.4.0
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2479,7 +2479,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.3.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.3.2.tgz
     version: 4.3.2
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2500,7 +2500,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.3.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.3.1.tgz
     version: 4.3.1
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2521,7 +2521,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.3.0.tgz
     version: 4.3.0
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2542,7 +2542,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.2.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.2.3.tgz
     version: 4.2.3
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2563,7 +2563,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.2.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.2.2.tgz
     version: 4.2.2
   - apiVersion: v1
     appVersion: 6.5.2
@@ -2584,7 +2584,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.2.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.2.1.tgz
     version: 4.2.1
   - apiVersion: v1
     appVersion: 6.5.0
@@ -2605,7 +2605,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.2.0.tgz
     version: 4.2.0
   - apiVersion: v1
     appVersion: 6.5.0
@@ -2626,7 +2626,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.1.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.1.3.tgz
     version: 4.1.3
   - apiVersion: v1
     appVersion: 6.5.0
@@ -2647,7 +2647,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.1.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.1.2.tgz
     version: 4.1.2
   - apiVersion: v1
     appVersion: 6.5.0
@@ -2668,7 +2668,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.1.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.1.1.tgz
     version: 4.1.1
   - apiVersion: v1
     appVersion: 6.5.0
@@ -2689,7 +2689,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.1.0.tgz
     version: 4.1.0
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2710,7 +2710,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.0.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.0.5.tgz
     version: 4.0.5
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2731,7 +2731,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.0.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.0.4.tgz
     version: 4.0.4
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2752,7 +2752,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.0.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.0.3.tgz
     version: 4.0.3
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2773,7 +2773,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.0.2.tgz
     version: 4.0.2
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2794,7 +2794,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.0.1.tgz
     version: 4.0.1
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2815,7 +2815,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-4.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-4.0.0.tgz
     version: 4.0.0
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2836,7 +2836,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.12.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.12.1.tgz
     version: 3.12.1
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2857,7 +2857,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.12.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.12.0.tgz
     version: 3.12.0
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2878,7 +2878,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.11.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.11.1.tgz
     version: 3.11.1
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2899,7 +2899,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.11.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.11.0.tgz
     version: 3.11.0
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2920,7 +2920,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.10.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.10.2.tgz
     version: 3.10.2
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2941,7 +2941,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.10.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.10.1.tgz
     version: 3.10.1
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2962,7 +2962,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.10.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.10.0.tgz
     version: 3.10.0
   - apiVersion: v1
     appVersion: 6.4.2
@@ -2983,7 +2983,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.9.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.9.2.tgz
     version: 3.9.2
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3004,7 +3004,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.9.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.9.1.tgz
     version: 3.9.1
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3025,7 +3025,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.9.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.9.0.tgz
     version: 3.9.0
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3046,7 +3046,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.19.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.19.tgz
     version: 3.8.19
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3067,7 +3067,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.18.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.18.tgz
     version: 3.8.18
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3088,7 +3088,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.17.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.17.tgz
     version: 3.8.17
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3109,7 +3109,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.16.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.16.tgz
     version: 3.8.16
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3130,7 +3130,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.15.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.15.tgz
     version: 3.8.15
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3151,7 +3151,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.14.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.14.tgz
     version: 3.8.14
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3172,7 +3172,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.13.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.13.tgz
     version: 3.8.13
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3193,7 +3193,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.12.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.12.tgz
     version: 3.8.12
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3214,7 +3214,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.11.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.11.tgz
     version: 3.8.11
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3235,7 +3235,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.10.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.10.tgz
     version: 3.8.10
   - apiVersion: v1
     appVersion: 6.3.5
@@ -3256,7 +3256,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.9.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.9.tgz
     version: 3.8.9
   - apiVersion: v1
     appVersion: 6.3.4
@@ -3277,7 +3277,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.8.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.8.tgz
     version: 3.8.8
   - apiVersion: v1
     appVersion: 6.3.4
@@ -3298,7 +3298,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.7.tgz
     version: 3.8.7
   - apiVersion: v1
     appVersion: 6.3.4
@@ -3319,7 +3319,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.6.tgz
     version: 3.8.6
   - apiVersion: v1
     appVersion: 6.3.4
@@ -3340,7 +3340,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.5.tgz
     version: 3.8.5
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3361,7 +3361,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.4.tgz
     version: 3.8.4
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3382,7 +3382,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.3.tgz
     version: 3.8.3
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3403,7 +3403,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.2.tgz
     version: 3.8.2
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3424,7 +3424,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.1.tgz
     version: 3.8.1
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3445,7 +3445,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.8.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.8.0.tgz
     version: 3.8.0
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3466,7 +3466,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.7.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.7.3.tgz
     version: 3.7.3
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3487,7 +3487,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.7.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.7.2.tgz
     version: 3.7.2
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3508,7 +3508,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.7.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.7.1.tgz
     version: 3.7.1
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3529,7 +3529,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.7.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.7.0.tgz
     version: 3.7.0
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3550,7 +3550,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.6.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.6.0.tgz
     version: 3.6.0
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3571,7 +3571,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.13.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.13.tgz
     version: 3.5.13
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3592,7 +3592,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.12.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.12.tgz
     version: 3.5.12
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3613,7 +3613,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.11.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.11.tgz
     version: 3.5.11
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3634,7 +3634,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.10.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.10.tgz
     version: 3.5.10
   - apiVersion: v1
     appVersion: 6.2.5
@@ -3655,7 +3655,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.9.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.9.tgz
     version: 3.5.9
   - apiVersion: v1
     appVersion: 6.2.4
@@ -3676,7 +3676,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.8.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.8.tgz
     version: 3.5.8
   - apiVersion: v1
     appVersion: 6.2.4
@@ -3697,7 +3697,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.7.tgz
     version: 3.5.7
   - apiVersion: v1
     appVersion: 6.2.4
@@ -3718,7 +3718,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.6.tgz
     version: 3.5.6
   - apiVersion: v1
     appVersion: 6.2.4
@@ -3739,7 +3739,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.5.tgz
     version: 3.5.5
   - apiVersion: v1
     appVersion: 6.2.4
@@ -3760,7 +3760,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.4.tgz
     version: 3.5.4
   - apiVersion: v1
     appVersion: 6.2.3
@@ -3781,7 +3781,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.5.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.5.3.tgz
     version: 3.5.3
   - apiVersion: v1
     appVersion: 6.2.3
@@ -3802,7 +3802,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.4.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.4.3.tgz
     version: 3.4.3
   - apiVersion: v1
     appVersion: 6.2.2
@@ -3823,7 +3823,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.4.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.4.2.tgz
     version: 3.4.2
   - apiVersion: v1
     appVersion: 6.2.0
@@ -3844,7 +3844,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.4.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.4.1.tgz
     version: 3.4.1
   - apiVersion: v1
     appVersion: 6.2.0
@@ -3865,7 +3865,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.4.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.4.0.tgz
     version: 3.4.0
   - apiVersion: v1
     appVersion: 6.2.0
@@ -3886,7 +3886,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.11.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.11.tgz
     version: 3.3.11
   - apiVersion: v1
     appVersion: 6.2.0
@@ -3907,7 +3907,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.10.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.10.tgz
     version: 3.3.10
   - apiVersion: v1
     appVersion: 6.2.0
@@ -3928,7 +3928,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.9.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.9.tgz
     version: 3.3.9
   - apiVersion: v1
     appVersion: 6.1.6
@@ -3949,7 +3949,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.8.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.8.tgz
     version: 3.3.8
   - apiVersion: v1
     appVersion: 6.1.6
@@ -3970,7 +3970,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.7.tgz
     version: 3.3.7
   - apiVersion: v1
     appVersion: 6.1.6
@@ -3991,7 +3991,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.6.tgz
     version: 3.3.6
   - apiVersion: v1
     appVersion: 6.1.6
@@ -4012,7 +4012,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.5.tgz
     version: 3.3.5
   - apiVersion: v1
     appVersion: 6.1.6
@@ -4033,7 +4033,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.4.tgz
     version: 3.3.4
   - apiVersion: v1
     appVersion: 6.1.4
@@ -4054,7 +4054,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.3.tgz
     version: 3.3.3
   - apiVersion: v1
     appVersion: 6.1.4
@@ -4075,7 +4075,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.2.tgz
     version: 3.3.2
   - apiVersion: v1
     appVersion: 6.1.4
@@ -4096,7 +4096,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.1.tgz
     version: 3.3.1
   - apiVersion: v1
     appVersion: 6.1.3
@@ -4117,7 +4117,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.3.0.tgz
     version: 3.3.0
   - apiVersion: v1
     appVersion: 6.1.3
@@ -4138,7 +4138,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.2.0.tgz
     version: 3.2.0
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4159,7 +4159,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.1.0.tgz
     version: 3.1.0
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4180,7 +4180,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.0.1.tgz
     version: 3.0.1
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4201,7 +4201,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-3.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-3.0.0.tgz
     version: 3.0.0
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4222,7 +4222,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.3.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.3.5.tgz
     version: 2.3.5
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4243,7 +4243,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.3.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.3.4.tgz
     version: 2.3.4
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4264,7 +4264,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.3.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.3.3.tgz
     version: 2.3.3
   - apiVersion: v1
     appVersion: 6.0.2
@@ -4285,7 +4285,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.3.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.3.1.tgz
     version: 2.3.1
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4306,7 +4306,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.3.0.tgz
     version: 2.3.0
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4327,7 +4327,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.2.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.2.5.tgz
     version: 2.2.5
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4348,7 +4348,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.2.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.2.4.tgz
     version: 2.2.4
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4369,7 +4369,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.2.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.2.3.tgz
     version: 2.2.3
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4390,7 +4390,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.2.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.2.2.tgz
     version: 2.2.2
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4411,7 +4411,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.2.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.2.1.tgz
     version: 2.2.1
   - apiVersion: v1
     appVersion: 6.0.0
@@ -4432,7 +4432,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.2.0.tgz
     version: 2.2.0
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4453,7 +4453,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.1.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.1.2.tgz
     version: 2.1.2
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4474,7 +4474,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.1.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.1.1.tgz
     version: 2.1.1
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4495,7 +4495,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.1.0.tgz
     version: 2.1.0
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4516,7 +4516,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.0.2.tgz
     version: 2.0.2
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4537,7 +4537,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.0.1.tgz
     version: 2.0.1
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4558,7 +4558,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-2.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4579,7 +4579,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.26.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.26.1.tgz
     version: 1.26.1
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4600,7 +4600,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.26.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.26.0.tgz
     version: 1.26.0
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4621,7 +4621,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.25.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.25.4.tgz
     version: 1.25.4
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4642,7 +4642,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.25.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.25.3.tgz
     version: 1.25.3
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4663,7 +4663,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.25.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.25.2.tgz
     version: 1.25.2
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4684,7 +4684,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.25.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.25.1.tgz
     version: 1.25.1
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4705,7 +4705,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.25.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.25.0.tgz
     version: 1.25.0
   - apiVersion: v1
     appVersion: 5.4.3
@@ -4726,7 +4726,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.24.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.24.2.tgz
     version: 1.24.2
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4747,7 +4747,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.24.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.24.1.tgz
     version: 1.24.1
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4768,7 +4768,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.24.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.24.0.tgz
     version: 1.24.0
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4789,7 +4789,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.23.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.23.1.tgz
     version: 1.23.1
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4810,7 +4810,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.23.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.23.0.tgz
     version: 1.23.0
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4829,7 +4829,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.22.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.22.2.tgz
     version: 1.22.2
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4848,7 +4848,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.22.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.22.1.tgz
     version: 1.22.1
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4867,7 +4867,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.21.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.21.4.tgz
     version: 1.21.4
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4886,7 +4886,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.21.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.21.3.tgz
     version: 1.21.3
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4905,7 +4905,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.21.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.21.2.tgz
     version: 1.21.2
   - apiVersion: v1
     appVersion: 5.4.2
@@ -4924,7 +4924,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.21.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.21.1.tgz
     version: 1.21.1
   - apiVersion: v1
     appVersion: 5.4.1
@@ -4943,7 +4943,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.21.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.21.0.tgz
     version: 1.21.0
   - apiVersion: v1
     appVersion: 5.4.1
@@ -4962,7 +4962,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.20.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.20.1.tgz
     version: 1.20.1
   - apiVersion: v1
     appVersion: 5.4.0
@@ -4981,7 +4981,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.20.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.20.0.tgz
     version: 1.20.0
   - apiVersion: v1
     appVersion: 5.3.4
@@ -5000,7 +5000,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.19.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.19.1.tgz
     version: 1.19.1
   - apiVersion: v1
     appVersion: 5.3.4
@@ -5019,7 +5019,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.19.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.19.0.tgz
     version: 1.19.0
   - apiVersion: v1
     appVersion: 5.3.4
@@ -5038,7 +5038,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.18.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.18.0.tgz
     version: 1.18.0
   - apiVersion: v1
     appVersion: 5.3.4
@@ -5057,7 +5057,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.6.tgz
     version: 1.17.6
   - apiVersion: v1
     appVersion: 5.3.2
@@ -5076,7 +5076,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.5.tgz
     version: 1.17.5
   - apiVersion: v1
     appVersion: 5.3.2
@@ -5095,7 +5095,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.4.tgz
     version: 1.17.4
   - apiVersion: v1
     appVersion: 5.3.2
@@ -5114,7 +5114,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.3.tgz
     version: 1.17.3
   - apiVersion: v1
     appVersion: 5.3.1
@@ -5133,7 +5133,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.2.tgz
     version: 1.17.2
   - apiVersion: v1
     appVersion: 5.3.0
@@ -5152,7 +5152,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.1.tgz
     version: 1.17.1
   - apiVersion: v1
     appVersion: 5.3.0
@@ -5171,7 +5171,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.17.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.17.0.tgz
     version: 1.17.0
   - apiVersion: v1
     appVersion: 5.2.4
@@ -5190,7 +5190,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.16.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.16.0.tgz
     version: 1.16.0
   - apiVersion: v1
     appVersion: 5.2.4
@@ -5209,7 +5209,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.8.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.8.tgz
     version: 1.14.8
   - apiVersion: v1
     appVersion: 5.2.4
@@ -5228,7 +5228,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.7.tgz
     version: 1.14.7
   - apiVersion: v1
     appVersion: 5.2.4
@@ -5247,7 +5247,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.6.tgz
     version: 1.14.6
   - apiVersion: v1
     appVersion: 5.2.3
@@ -5266,7 +5266,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.5.tgz
     version: 1.14.5
   - apiVersion: v1
     appVersion: 5.2.3
@@ -5285,7 +5285,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.4.tgz
     version: 1.14.4
   - apiVersion: v1
     appVersion: 5.2.3
@@ -5304,7 +5304,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.3.tgz
     version: 1.14.3
   - apiVersion: v1
     appVersion: 5.2.3
@@ -5323,7 +5323,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.2.tgz
     version: 1.14.2
   - apiVersion: v1
     appVersion: 5.2.3
@@ -5342,7 +5342,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.1.tgz
     version: 1.14.1
   - apiVersion: v1
     appVersion: 5.2.2
@@ -5361,7 +5361,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.14.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.14.0.tgz
     version: 1.14.0
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5380,7 +5380,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.13.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.13.1.tgz
     version: 1.13.1
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5399,7 +5399,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.13.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.13.0.tgz
     version: 1.13.0
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5418,7 +5418,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.12.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.12.0.tgz
     version: 1.12.0
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5437,7 +5437,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.6.tgz
     version: 1.11.6
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5456,7 +5456,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.5.tgz
     version: 1.11.5
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5475,7 +5475,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.4.tgz
     version: 1.11.4
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5494,7 +5494,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.3.tgz
     version: 1.11.3
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5513,7 +5513,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.2.tgz
     version: 1.11.2
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5532,7 +5532,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.1.tgz
     version: 1.11.1
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5551,7 +5551,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.11.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.11.0.tgz
     version: 1.11.0
   - apiVersion: v1
     appVersion: 5.1.3
@@ -5570,7 +5570,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.10.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.10.2.tgz
     version: 1.10.2
   - apiVersion: v1
     appVersion: 5.1.2
@@ -5589,7 +5589,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.10.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.10.1.tgz
     version: 1.10.1
   - apiVersion: v1
     appVersion: 5.1.2
@@ -5608,7 +5608,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.10.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.10.0.tgz
     version: 1.10.0
   - apiVersion: v1
     appVersion: 5.1.2
@@ -5627,7 +5627,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.9.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.9.1.tgz
     version: 1.9.1
   - apiVersion: v1
     appVersion: 5.1.2
@@ -5646,7 +5646,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.9.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.9.0.tgz
     version: 1.9.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5664,7 +5664,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.8.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.8.0.tgz
     version: 1.8.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5682,7 +5682,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.7.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.7.0.tgz
     version: 1.7.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5700,7 +5700,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.6.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.6.0.tgz
     version: 1.6.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5718,7 +5718,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.5.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.5.1.tgz
     version: 1.5.1
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5736,7 +5736,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.5.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.5.0.tgz
     version: 1.5.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5754,7 +5754,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.4.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.4.0.tgz
     version: 1.4.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5772,7 +5772,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.3.0.tgz
     version: 1.3.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5790,7 +5790,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.2.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.2.2.tgz
     version: 1.2.2
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5808,7 +5808,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.2.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.2.1.tgz
     version: 1.2.1
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5826,7 +5826,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5844,7 +5844,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.1.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.1.1.tgz
     version: 1.1.1
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5862,7 +5862,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5880,7 +5880,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5898,7 +5898,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5916,7 +5916,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-1.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
     appVersion: 5.0.4
@@ -5932,7 +5932,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.8.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.8.5.tgz
     version: 0.8.5
   - apiVersion: v1
     created: "2020-10-05T20:09:53.753035919+02:00"
@@ -5947,7 +5947,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.8.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.8.4.tgz
     version: 0.8.4
   - apiVersion: v1
     created: "2020-10-05T20:09:53.750971125+02:00"
@@ -5962,7 +5962,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.8.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.8.3.tgz
     version: 0.8.3
   - apiVersion: v1
     created: "2020-10-05T20:09:53.749330375+02:00"
@@ -5977,7 +5977,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.8.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.8.2.tgz
     version: 0.8.2
   - apiVersion: v1
     created: "2020-10-05T20:09:53.747536785+02:00"
@@ -5992,7 +5992,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.8.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.8.0.tgz
     version: 0.8.0
   - apiVersion: v1
     created: "2020-10-05T20:09:53.745900795+02:00"
@@ -6007,7 +6007,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.7.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.7.0.tgz
     version: 0.7.0
   - apiVersion: v1
     created: "2020-10-05T20:09:53.742648531+02:00"
@@ -6022,7 +6022,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.6.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.6.2.tgz
     version: 0.6.2
   - apiVersion: v1
     created: "2020-10-05T20:09:53.740981036+02:00"
@@ -6037,7 +6037,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.6.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.6.1.tgz
     version: 0.6.1
   - apiVersion: v1
     created: "2020-10-05T20:09:53.739336584+02:00"
@@ -6052,7 +6052,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.8.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.8.tgz
     version: 0.5.8
   - apiVersion: v1
     created: "2020-10-05T20:09:53.737860658+02:00"
@@ -6067,7 +6067,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.7.tgz
     version: 0.5.7
   - apiVersion: v1
     created: "2020-10-05T20:09:53.736365348+02:00"
@@ -6082,7 +6082,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.6.tgz
     version: 0.5.6
   - apiVersion: v1
     created: "2020-10-05T20:09:53.73418868+02:00"
@@ -6097,7 +6097,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.5.tgz
     version: 0.5.5
   - apiVersion: v1
     created: "2020-10-05T20:09:53.732635862+02:00"
@@ -6112,7 +6112,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.4.tgz
     version: 0.5.4
   - apiVersion: v1
     created: "2020-10-05T20:09:53.731123096+02:00"
@@ -6127,7 +6127,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.3.tgz
     version: 0.5.3
   - apiVersion: v1
     created: "2020-10-05T20:09:53.729605954+02:00"
@@ -6142,7 +6142,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.2.tgz
     version: 0.5.2
   - apiVersion: v1
     created: "2020-10-05T20:09:53.728183793+02:00"
@@ -6157,7 +6157,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.1.tgz
     version: 0.5.1
   - apiVersion: v1
     created: "2020-10-05T20:09:53.726709407+02:00"
@@ -6172,7 +6172,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.5.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.5.0.tgz
     version: 0.5.0
   - apiVersion: v1
     created: "2020-10-05T20:09:53.725365358+02:00"
@@ -6187,7 +6187,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.4.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.4.5.tgz
     version: 0.4.5
   - apiVersion: v1
     created: "2020-10-05T20:09:53.723910838+02:00"
@@ -6202,7 +6202,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.4.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.4.4.tgz
     version: 0.4.4
   - apiVersion: v1
     created: "2020-10-05T20:09:53.722493785+02:00"
@@ -6217,7 +6217,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.4.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.4.3.tgz
     version: 0.4.3
   - apiVersion: v1
     created: "2020-10-05T20:09:53.721035709+02:00"
@@ -6232,7 +6232,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.4.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.4.2.tgz
     version: 0.4.2
   - apiVersion: v1
     created: "2020-10-05T20:09:53.719626295+02:00"
@@ -6247,7 +6247,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.4.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.4.1.tgz
     version: 0.4.1
   - apiVersion: v1
     created: "2020-10-05T20:09:53.718112132+02:00"
@@ -6262,7 +6262,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.4.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v1
     created: "2020-10-05T20:09:53.715871593+02:00"
@@ -6277,7 +6277,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.7.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.7.tgz
     version: 0.3.7
   - apiVersion: v1
     created: "2020-10-05T20:09:53.714725632+02:00"
@@ -6292,7 +6292,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.6.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.6.tgz
     version: 0.3.6
   - apiVersion: v1
     created: "2020-10-05T20:09:53.713649776+02:00"
@@ -6307,7 +6307,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.5.tgz
     version: 0.3.5
   - apiVersion: v1
     created: "2020-10-05T20:09:53.712527772+02:00"
@@ -6322,7 +6322,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.4.tgz
     version: 0.3.4
   - apiVersion: v1
     created: "2020-10-05T20:09:53.711384073+02:00"
@@ -6337,7 +6337,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.3.tgz
     version: 0.3.3
   - apiVersion: v1
     created: "2020-10-05T20:09:53.71035597+02:00"
@@ -6352,7 +6352,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.2.tgz
     version: 0.3.2
   - apiVersion: v1
     created: "2020-10-05T20:09:53.709269109+02:00"
@@ -6367,7 +6367,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v1
     created: "2020-10-05T20:09:53.708250485+02:00"
@@ -6382,7 +6382,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.3.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v1
     created: "2020-10-05T20:09:53.707235853+02:00"
@@ -6397,7 +6397,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.2.5.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v1
     created: "2020-10-05T20:09:53.706222871+02:00"
@@ -6412,7 +6412,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.2.4.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v1
     created: "2020-10-05T20:09:53.705254865+02:00"
@@ -6427,7 +6427,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.2.3.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v1
     created: "2020-10-05T20:09:53.704224105+02:00"
@@ -6442,7 +6442,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.2.2.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
     created: "2020-10-05T20:09:53.702488219+02:00"
@@ -6456,7 +6456,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.2.1.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
     created: "2020-10-05T20:09:53.69751916+02:00"
@@ -6470,7 +6470,7 @@ entries:
     sources:
     - https://github.com/grafana/grafana
     urls:
-    - https://grafana.github.io/helm-charts/grafana-0.2.0.tgz
+    - https://grafana.github.io/helm-charts/packages/grafana-0.2.0.tgz
     version: 0.2.0
   loki:
   - apiVersion: v1
@@ -6488,7 +6488,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-2.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-2.1.0.tgz
     version: 2.1.0
   - apiVersion: v1
     appVersion: v2.0.0
@@ -6505,7 +6505,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-2.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-2.0.2.tgz
     version: 2.0.2
   - apiVersion: v1
     appVersion: v2.0.0
@@ -6522,7 +6522,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-2.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-2.0.1.tgz
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
@@ -6539,7 +6539,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-2.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
@@ -6556,7 +6556,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.31.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.31.1.tgz
     version: 0.31.1
   - apiVersion: v1
     appVersion: v1.6.0
@@ -6573,7 +6573,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.31.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.31.0.tgz
     version: 0.31.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -6590,7 +6590,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.30.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.30.2.tgz
     version: 0.30.2
   - apiVersion: v1
     appVersion: v1.5.0
@@ -6607,7 +6607,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.30.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.30.1.tgz
     version: 0.30.1
   - apiVersion: v1
     appVersion: v1.5.0
@@ -6624,7 +6624,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.30.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.30.0.tgz
     version: 0.30.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -6641,7 +6641,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.29.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.29.1.tgz
     version: 0.29.1
   - apiVersion: v1
     appVersion: v1.5.0
@@ -6658,7 +6658,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.29.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.29.0.tgz
     version: 0.29.0
   - apiVersion: v1
     appVersion: v1.4.1
@@ -6675,7 +6675,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.28.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.28.1.tgz
     version: 0.28.1
   - apiVersion: v1
     appVersion: v1.4.1
@@ -6692,7 +6692,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.28.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.28.0.tgz
     version: 0.28.0
   - apiVersion: v1
     appVersion: v1.4.2
@@ -6709,7 +6709,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.27.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.27.0.tgz
     version: 0.27.0
   - apiVersion: v1
     appVersion: v1.4.1
@@ -6726,7 +6726,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.26.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.26.1.tgz
     version: 0.26.1
   - apiVersion: v1
     appVersion: v1.4.0
@@ -6743,7 +6743,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.26.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.26.0.tgz
     version: 0.26.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -6760,7 +6760,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.25.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.25.3.tgz
     version: 0.25.3
   - apiVersion: v1
     appVersion: v1.3.0
@@ -6777,7 +6777,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.25.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.25.2.tgz
     version: 0.25.2
   - apiVersion: v1
     appVersion: v1.3.0
@@ -6794,7 +6794,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.25.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.25.1.tgz
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -6811,7 +6811,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.25.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.25.0.tgz
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -6828,7 +6828,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.24.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.24.0.tgz
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -6845,7 +6845,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.23.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.23.0.tgz
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.2.0
@@ -6862,7 +6862,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.22.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.22.0.tgz
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.2.0
@@ -6879,7 +6879,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.21.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.21.0.tgz
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.1.0
@@ -6896,7 +6896,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.20.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.20.0.tgz
     version: 0.20.0
   - apiVersion: v1
     appVersion: v1.0.0
@@ -6913,7 +6913,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.19.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.19.0.tgz
     version: 0.19.0
   - apiVersion: v1
     appVersion: v1.0.0
@@ -6930,7 +6930,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.18.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.18.0.tgz
     version: 0.18.0
   - apiVersion: v1
     appVersion: v0.4.0
@@ -6947,7 +6947,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.17.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.17.2.tgz
     version: 0.17.2
   - apiVersion: v1
     appVersion: v0.4.0
@@ -6964,7 +6964,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.17.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.17.1.tgz
     version: 0.17.1
   - apiVersion: v1
     appVersion: v0.4.0
@@ -6981,7 +6981,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.17.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.17.0.tgz
     version: 0.17.0
   - apiVersion: v1
     appVersion: v0.3.0
@@ -6998,7 +6998,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.16.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.16.1.tgz
     version: 0.16.1
   - apiVersion: v1
     appVersion: v0.3.0
@@ -7015,7 +7015,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.16.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.16.0.tgz
     version: 0.16.0
   - apiVersion: v1
     appVersion: v0.3.0
@@ -7032,7 +7032,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.15.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.15.0.tgz
     version: 0.15.0
   - apiVersion: v1
     appVersion: v0.3.0
@@ -7049,7 +7049,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.14.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.14.3.tgz
     version: 0.14.3
   - apiVersion: v1
     appVersion: v0.3.0
@@ -7066,7 +7066,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.14.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.14.2.tgz
     version: 0.14.2
   - apiVersion: v1
     appVersion: v0.3.0
@@ -7083,7 +7083,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.14.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.14.1.tgz
     version: 0.14.1
   - apiVersion: v1
     appVersion: v0.3.0
@@ -7100,7 +7100,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.14.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.14.0.tgz
     version: 0.14.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7117,7 +7117,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.13.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.13.0.tgz
     version: 0.13.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7134,7 +7134,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.12.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.12.0.tgz
     version: 0.12.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7151,7 +7151,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.11.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.11.0.tgz
     version: 0.11.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7168,7 +7168,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.10.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.10.0.tgz
     version: 0.10.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7185,7 +7185,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.9.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.9.2.tgz
     version: 0.9.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7202,7 +7202,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.9.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.9.1.tgz
     version: 0.9.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7219,7 +7219,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.9.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.9.0.tgz
     version: 0.9.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7236,7 +7236,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.8.5.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.8.5.tgz
     version: 0.8.5
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7253,7 +7253,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.8.4.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.8.4.tgz
     version: 0.8.4
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7270,7 +7270,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.8.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.8.3.tgz
     version: 0.8.3
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7287,7 +7287,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.8.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.8.2.tgz
     version: 0.8.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7304,7 +7304,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.8.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.8.1.tgz
     version: 0.8.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7321,7 +7321,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.8.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.8.0.tgz
     version: 0.8.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7338,7 +7338,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.7.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.7.2.tgz
     version: 0.7.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7355,7 +7355,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.7.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.7.1.tgz
     version: 0.7.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7372,7 +7372,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.7.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.7.0.tgz
     version: 0.7.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7389,7 +7389,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.6.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.6.0.tgz
     version: 0.6.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -7406,7 +7406,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-0.5.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-0.5.0.tgz
     version: 0.5.0
   loki-stack:
   - apiVersion: v1
@@ -7453,7 +7453,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-2.1.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-2.1.1.tgz
     version: 2.1.1
   - apiVersion: v1
     appVersion: v2.0.0
@@ -7499,7 +7499,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-2.1.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-2.1.0.tgz
     version: 2.1.0
   - apiVersion: v1
     appVersion: v2.0.0
@@ -7545,7 +7545,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-2.0.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-2.0.3.tgz
     version: 2.0.3
   - apiVersion: v1
     appVersion: v2.0.0
@@ -7591,7 +7591,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-2.0.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-2.0.2.tgz
     version: 2.0.2
   - apiVersion: v1
     appVersion: v2.0.0
@@ -7637,7 +7637,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-2.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-2.0.1.tgz
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
@@ -7683,7 +7683,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-2.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
@@ -7729,7 +7729,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.41.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.41.2.tgz
     version: 0.41.2
   - apiVersion: v1
     appVersion: v1.6.0
@@ -7775,7 +7775,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.41.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.41.1.tgz
     version: 0.41.1
   - apiVersion: v1
     appVersion: v1.6.0
@@ -7821,7 +7821,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.41.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.41.0.tgz
     version: 0.41.0
   - apiVersion: v1
     appVersion: v1.6.0
@@ -7867,7 +7867,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.40.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.40.1.tgz
     version: 0.40.1
   - apiVersion: v1
     appVersion: v1.6.0
@@ -7913,7 +7913,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.40.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.40.0.tgz
     version: 0.40.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -7959,7 +7959,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.39.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.39.0.tgz
     version: 0.39.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8005,7 +8005,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.38.4.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.38.4.tgz
     version: 0.38.4
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8051,7 +8051,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.38.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.38.3.tgz
     version: 0.38.3
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8097,7 +8097,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.38.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.38.2.tgz
     version: 0.38.2
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8135,7 +8135,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.38.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.38.1.tgz
     version: 0.38.1
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8173,7 +8173,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.38.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.38.0.tgz
     version: 0.38.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8211,7 +8211,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.37.4.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.37.4.tgz
     version: 0.37.4
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8249,7 +8249,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.37.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.37.3.tgz
     version: 0.37.3
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8287,7 +8287,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.37.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.37.2.tgz
     version: 0.37.2
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8325,7 +8325,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.37.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.37.1.tgz
     version: 0.37.1
   - apiVersion: v1
     appVersion: v1.5.0
@@ -8363,7 +8363,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.37.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.37.0.tgz
     version: 0.37.0
   - apiVersion: v1
     appVersion: v1.4.1
@@ -8401,7 +8401,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.36.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.36.2.tgz
     version: 0.36.2
   - apiVersion: v1
     appVersion: v1.4.1
@@ -8439,7 +8439,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.36.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.36.1.tgz
     version: 0.36.1
   - apiVersion: v1
     appVersion: v1.4.1
@@ -8477,7 +8477,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.36.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.36.0.tgz
     version: 0.36.0
   - apiVersion: v1
     appVersion: v1.4.2
@@ -8515,7 +8515,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.35.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.35.0.tgz
     version: 0.35.0
   - apiVersion: v1
     appVersion: v1.4.1
@@ -8553,7 +8553,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.34.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.34.2.tgz
     version: 0.34.2
   - apiVersion: v1
     appVersion: v1.4.0
@@ -8591,7 +8591,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.34.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.34.1.tgz
     version: 0.34.1
   - apiVersion: v1
     appVersion: v1.4.0
@@ -8629,7 +8629,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.34.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.34.0.tgz
     version: 0.34.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8667,7 +8667,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.33.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.33.1.tgz
     version: 0.33.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8705,7 +8705,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.33.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.33.0.tgz
     version: 0.33.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8743,7 +8743,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.32.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.32.2.tgz
     version: 0.32.2
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8781,7 +8781,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.32.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.32.1.tgz
     version: 0.32.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8819,7 +8819,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.32.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.32.0.tgz
     version: 0.32.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8857,7 +8857,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.31.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.31.2.tgz
     version: 0.31.2
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8895,7 +8895,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.31.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.31.1.tgz
     version: 0.31.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8933,7 +8933,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.31.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.31.0.tgz
     version: 0.31.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -8971,7 +8971,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.30.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.30.0.tgz
     version: 0.30.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -9009,7 +9009,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.29.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.29.0.tgz
     version: 0.29.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -9047,7 +9047,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.28.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.28.0.tgz
     version: 0.28.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -9085,7 +9085,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.27.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.27.1.tgz
     version: 0.27.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -9123,7 +9123,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.27.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.27.0.tgz
     version: 0.27.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -9161,7 +9161,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.26.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.26.0.tgz
     version: 0.26.0
   - apiVersion: v1
     appVersion: v1.2.0
@@ -9199,7 +9199,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.25.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.25.1.tgz
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.2.0
@@ -9237,7 +9237,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.25.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.25.0.tgz
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.2.0
@@ -9275,7 +9275,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.24.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.24.0.tgz
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.2.0
@@ -9313,7 +9313,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.23.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.23.0.tgz
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.1.0
@@ -9351,7 +9351,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.22.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.22.0.tgz
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.0.0
@@ -9389,7 +9389,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.21.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.21.0.tgz
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.0.0
@@ -9427,7 +9427,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.20.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.20.0.tgz
     version: 0.20.0
   - apiVersion: v1
     appVersion: v0.4.0
@@ -9465,7 +9465,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.19.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.19.1.tgz
     version: 0.19.1
   - apiVersion: v1
     appVersion: v0.4.0
@@ -9503,7 +9503,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.19.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.19.0.tgz
     version: 0.19.0
   - apiVersion: v1
     appVersion: v0.4.0
@@ -9541,7 +9541,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.18.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.18.1.tgz
     version: 0.18.1
   - apiVersion: v1
     appVersion: v0.4.0
@@ -9579,7 +9579,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.18.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.18.0.tgz
     version: 0.18.0
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9617,7 +9617,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.17.4.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.17.4.tgz
     version: 0.17.4
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9655,7 +9655,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.17.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.17.3.tgz
     version: 0.17.3
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9693,7 +9693,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.17.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.17.2.tgz
     version: 0.17.2
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9731,7 +9731,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.17.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.17.1.tgz
     version: 0.17.1
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9769,7 +9769,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.17.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.17.0.tgz
     version: 0.17.0
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9807,7 +9807,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.16.5.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.16.5.tgz
     version: 0.16.5
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9841,7 +9841,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.16.4.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.16.4.tgz
     version: 0.16.4
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9875,7 +9875,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.16.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.16.3.tgz
     version: 0.16.3
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9909,7 +9909,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.16.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.16.2.tgz
     version: 0.16.2
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9943,7 +9943,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.16.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.16.1.tgz
     version: 0.16.1
   - apiVersion: v1
     appVersion: v0.3.0
@@ -9977,7 +9977,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.16.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.16.0.tgz
     version: 0.16.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10011,7 +10011,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.15.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.15.0.tgz
     version: 0.15.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10045,7 +10045,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.14.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.14.0.tgz
     version: 0.14.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10079,7 +10079,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.13.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.13.1.tgz
     version: 0.13.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10113,7 +10113,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.13.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.13.0.tgz
     version: 0.13.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10147,7 +10147,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.12.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.12.0.tgz
     version: 0.12.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10181,7 +10181,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.11.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.11.1.tgz
     version: 0.11.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10215,7 +10215,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.11.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.11.0.tgz
     version: 0.11.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10249,7 +10249,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.10.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.10.1.tgz
     version: 0.10.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10283,7 +10283,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.10.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.10.0.tgz
     version: 0.10.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10317,7 +10317,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.9.5.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.9.5.tgz
     version: 0.9.5
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10351,7 +10351,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.9.4.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.9.4.tgz
     version: 0.9.4
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10377,7 +10377,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.9.3.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.9.3.tgz
     version: 0.9.3
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10403,7 +10403,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.9.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.9.2.tgz
     version: 0.9.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10429,7 +10429,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.9.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.9.1.tgz
     version: 0.9.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10455,7 +10455,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.9.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.9.0.tgz
     version: 0.9.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10481,7 +10481,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.8.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.8.1.tgz
     version: 0.8.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10507,7 +10507,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.8.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.8.0.tgz
     version: 0.8.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10533,7 +10533,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.7.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.7.2.tgz
     version: 0.7.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10559,7 +10559,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.7.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.7.1.tgz
     version: 0.7.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10585,7 +10585,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.7.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.7.0.tgz
     version: 0.7.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10611,7 +10611,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.6.2.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.6.2.tgz
     version: 0.6.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10637,7 +10637,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.6.1.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.6.1.tgz
     version: 0.6.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -10663,7 +10663,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/loki-stack-0.6.0.tgz
+    - https://grafana.github.io/helm-charts/packages/loki-stack-0.6.0.tgz
     version: 0.6.0
   promtail:
   - apiVersion: v1
@@ -10681,7 +10681,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-2.0.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-2.0.1.tgz
     version: 2.0.1
   - apiVersion: v1
     appVersion: v2.0.0
@@ -10698,7 +10698,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-2.0.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v1
     appVersion: v1.6.0
@@ -10715,7 +10715,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.25.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.25.1.tgz
     version: 0.25.1
   - apiVersion: v1
     appVersion: v1.6.0
@@ -10732,7 +10732,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.25.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.25.0.tgz
     version: 0.25.0
   - apiVersion: v1
     appVersion: v1.6.0
@@ -10749,7 +10749,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.24.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.24.0.tgz
     version: 0.24.0
   - apiVersion: v1
     appVersion: v1.5.0
@@ -10766,7 +10766,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.23.5.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.23.5.tgz
     version: 0.23.5
   - apiVersion: v1
     appVersion: v1.5.0
@@ -10783,7 +10783,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.23.4.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.23.4.tgz
     version: 0.23.4
   - apiVersion: v1
     appVersion: v1.5.0
@@ -10800,7 +10800,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.23.3.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.23.3.tgz
     version: 0.23.3
   - apiVersion: v1
     appVersion: v1.5.0
@@ -10817,7 +10817,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.23.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.23.2.tgz
     version: 0.23.2
   - apiVersion: v1
     appVersion: v1.5.0
@@ -10834,7 +10834,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.23.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.23.1.tgz
     version: 0.23.1
   - apiVersion: v1
     appVersion: v1.5.0
@@ -10851,7 +10851,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.23.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.23.0.tgz
     version: 0.23.0
   - apiVersion: v1
     appVersion: v1.4.1
@@ -10868,7 +10868,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.22.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.22.2.tgz
     version: 0.22.2
   - apiVersion: v1
     appVersion: v1.4.1
@@ -10885,7 +10885,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.22.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.22.1.tgz
     version: 0.22.1
   - apiVersion: v1
     appVersion: v1.4.1
@@ -10902,7 +10902,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.22.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.22.0.tgz
     version: 0.22.0
   - apiVersion: v1
     appVersion: v1.4.2
@@ -10919,7 +10919,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.21.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.21.0.tgz
     version: 0.21.0
   - apiVersion: v1
     appVersion: v1.4.1
@@ -10936,7 +10936,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.20.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.20.1.tgz
     version: 0.20.1
   - apiVersion: v1
     appVersion: v1.4.0
@@ -10953,7 +10953,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.20.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.20.0.tgz
     version: 0.20.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -10970,7 +10970,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.19.3.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.19.3.tgz
     version: 0.19.3
   - apiVersion: v1
     appVersion: v1.3.0
@@ -10987,7 +10987,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.19.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.19.2.tgz
     version: 0.19.2
   - apiVersion: v1
     appVersion: v1.3.0
@@ -11004,7 +11004,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.19.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.19.1.tgz
     version: 0.19.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -11021,7 +11021,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.19.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.19.0.tgz
     version: 0.19.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -11038,7 +11038,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.18.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.18.1.tgz
     version: 0.18.1
   - apiVersion: v1
     appVersion: v1.3.0
@@ -11055,7 +11055,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.18.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.18.0.tgz
     version: 0.18.0
   - apiVersion: v1
     appVersion: v1.3.0
@@ -11072,7 +11072,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.17.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.17.0.tgz
     version: 0.17.0
   - apiVersion: v1
     appVersion: v1.2.0
@@ -11089,7 +11089,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.16.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.16.2.tgz
     version: 0.16.2
   - apiVersion: v1
     appVersion: v1.2.0
@@ -11106,7 +11106,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.16.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.16.1.tgz
     version: 0.16.1
   - apiVersion: v1
     appVersion: v1.2.0
@@ -11123,7 +11123,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.16.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.16.0.tgz
     version: 0.16.0
   - apiVersion: v1
     appVersion: v1.1.0
@@ -11140,7 +11140,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.15.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.15.0.tgz
     version: 0.15.0
   - apiVersion: v1
     appVersion: v1.0.0
@@ -11157,7 +11157,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.14.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.14.0.tgz
     version: 0.14.0
   - apiVersion: v1
     appVersion: v0.4.0
@@ -11174,7 +11174,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.13.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.13.1.tgz
     version: 0.13.1
   - apiVersion: v1
     appVersion: v0.4.0
@@ -11191,7 +11191,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.13.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.13.0.tgz
     version: 0.13.0
   - apiVersion: v1
     appVersion: v0.3.0
@@ -11208,7 +11208,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.12.3.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.12.3.tgz
     version: 0.12.3
   - apiVersion: v1
     appVersion: v0.3.0
@@ -11225,7 +11225,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.12.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.12.2.tgz
     version: 0.12.2
   - apiVersion: v1
     appVersion: v0.3.0
@@ -11242,7 +11242,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.12.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.12.1.tgz
     version: 0.12.1
   - apiVersion: v1
     appVersion: v0.3.0
@@ -11259,7 +11259,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.12.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.12.0.tgz
     version: 0.12.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11276,7 +11276,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.11.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.11.0.tgz
     version: 0.11.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11293,7 +11293,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.10.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.10.0.tgz
     version: 0.10.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11310,7 +11310,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.9.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.9.0.tgz
     version: 0.9.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11327,7 +11327,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.8.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.8.1.tgz
     version: 0.8.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11344,7 +11344,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.8.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.8.0.tgz
     version: 0.8.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11361,7 +11361,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.7.3.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.7.3.tgz
     version: 0.7.3
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11378,7 +11378,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.7.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.7.2.tgz
     version: 0.7.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11395,7 +11395,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.7.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.7.1.tgz
     version: 0.7.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11412,7 +11412,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.7.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.7.0.tgz
     version: 0.7.0
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11429,7 +11429,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.6.3.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.6.3.tgz
     version: 0.6.3
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11446,7 +11446,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.6.2.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.6.2.tgz
     version: 0.6.2
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11463,7 +11463,7 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.6.1.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.6.1.tgz
     version: 0.6.1
   - apiVersion: v1
     appVersion: 0.0.1
@@ -11480,6 +11480,6 @@ entries:
     sources:
     - https://github.com/grafana/loki
     urls:
-    - https://grafana.github.io/helm-charts/promtail-0.6.0.tgz
+    - https://grafana.github.io/helm-charts/packages/promtail-0.6.0.tgz
     version: 0.6.0
 generated: "2020-12-09T10:53:57.006096877+01:00"
