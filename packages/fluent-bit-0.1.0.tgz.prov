@@ -1,0 +1,32 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v1
+appVersion: v1.4.1
+description: Uses fluent-bit Loki go plugin for gathering logs and sending them to
+  Loki
+engine: gotpl
+home: https://grafana.com/loki
+icon: https://github.com/grafana/loki/raw/master/docs/logo.png
+kubeVersion: ^1.10.0-0
+maintainers:
+- - email: lokiproject@googlegroups.com
+  name: Loki Maintainers
+name: fluent-bit
+sources:
+- - https://github.com/grafana/loki
+version: 0.1.0
+
+...
+files:
+  fluent-bit-0.1.0.tgz: sha256:3f82d2d5fd99653efbc16428bc7c8ba8f8f3ce23d47cf6a64f0c8501d6d6bb27
+-----BEGIN PGP SIGNATURE-----
+
+wsBcBAEBCgAQBQJejNkECRBwVKlVnTz7CwAAYwYIAF19UQV0NMNU7m2wTpOK+9Ze
+T93sXLpFsPc9WeRf6pMGaYRyI3l1VnZGeAfslm8kR6/V3S9zkrMtZAKQsKl/I6c9
+Hu2jLDAymIR8rXCuEbCYbLYrFOgmabpm6HJyOc+fsSAF0QjRl9kcy2GXqwb9QTjS
+OCzELgGmaPZaDKgMFqnjDh1ttfmA4fZ/lkJpcDsh2S83MYleTr/s/fmlYkxYtFcC
+1LgfBRyfX7xcTxfetk5lJdgi4b/EkyRm9qzPMtpvw8QFki+OYNYXv46iSr9mbx38
+A0hncIqdTa8TfkmH+OBlc2PNCrLQIy0AfJw82tEnOzw3Gc2emR2Ar63J0LL1+AI=
+=8URK
+-----END PGP SIGNATURE-----

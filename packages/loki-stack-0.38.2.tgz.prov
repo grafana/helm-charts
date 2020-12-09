@@ -1,0 +1,31 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v1
+appVersion: v1.5.0
+description: 'Loki: like Prometheus, but for logs.'
+engine: gotpl
+home: https://grafana.com/loki
+icon: https://github.com/grafana/loki/raw/master/docs/logo.png
+kubeVersion: ^1.10.0-0
+maintainers:
+- - email: lokiproject@googlegroups.com
+  name: Loki Maintainers
+name: loki-stack
+sources:
+- - https://github.com/grafana/loki
+version: 0.38.2
+
+...
+files:
+  loki-stack-0.38.2.tgz: sha256:86c5c3d6fb6196728c30ab63ac572578149ba79edaa1a8394c8f88ff9252fe76
+-----BEGIN PGP SIGNATURE-----
+
+wsBcBAEBCgAQBQJfGsPrCRBwVKlVnTz7CwAAdwIIAHMRDIA5JBpUztZD5m4zRWH/
+0KnGLRwhUiwpNKFZQuCG2S8/gzOMZfpGWip95xwVIfJ6jZkEl4sf2YBpAM75CNAu
+npC7s8KnAFx65ebxXoZaq1OWb6vGhGdQIDNfCmgnaVQtIcMXGPtbpbBc7+sKB5Lf
+3i6tVvXqwUeRfFWP8220n7qmZojugZ8AU6siv4O3CL2QFMnH02ZDvD7T4exiuDFz
+tDlblr4xVVYPQzf/a9wn6LGi0dh2UvKDClJxPN+uqWh4ML/UHYG0vovaGRM/B2LX
+9Z1UVpauWkUM14Xh8WqMwKQkJC/K3/0oH6u/cUtDnYBF6SV4JZ9Rc80Iy+MLQDc=
+=ZXvc
+-----END PGP SIGNATURE-----
