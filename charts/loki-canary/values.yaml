@@ -1,0 +1,80 @@
+# -- Overrides the chart's name
+nameOverride: ""
+
+# -- Overrides the chart's computed fullname
+fullnameOverride: ""
+
+# -- Image pull secrets for Docker images
+imagePullSecrets: []
+
+image:
+  # -- Docker image repository
+  repository: docker.io/grafana/loki-canary
+  # -- Overrides the image tag whose default is the chart's appVersion
+  tag: ""
+  # -- Docker image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Common annotations for all pods
+podAnnotations: {}
+
+# -- The number of old ReplicaSets to retain to allow rollback
+revisionHistoryLimit: 10
+
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  create: true
+  # -- The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+  # -- Image pull secrets for the service account
+  imagePullSecrets: []
+  # -- Annotations for the service account
+  annotations: {}
+
+# ServiceMonitor configuration
+serviceMonitor:
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for ServiceMonitor resources
+  namespace: null
+  # -- Namespace selector for ServiceMonitor resources
+  namespaceSelector: {}
+  # -- ServiceMonitor annotations
+  annotations: {}
+  # -- Additional ServiceMonitor labels
+  labels: {}
+  # -- ServiceMonitor scrape interval
+  interval: null
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+
+# -- Additional CLI args for the canary
+extraArgs:
+  - -labelname=pod
+  - -labelvalue=$(POD_NAME)
+# -- Environment variables to add to the canary pods
+extraEnv: []
+# -- Environment variables from secrets or configmaps to add to the canary pods
+extraEnvFrom: []
+# -- Resource requests and limits for the canary
+resources: {}
+# -- Node selector for canary pods
+nodeSelector: {}
+# -- Tolerations for canary pods
+tolerations: []
+
+# -- The Loki server URL:Port, e.g. loki:3100
+lokiAddress: null
+
+# Basic auth configuration
+basicAuth:
+  # -- Enables basic authentication for the gateway
+  enabled: false
+  # -- The basic auth username for the gateway
+  username: null
+  # -- The basic auth password for the gateway
+  password: null
+  # -- Existing basic auth secret to use. Must contain '.htpasswd' and,
+  # if canary is enabled, 'username' and 'password'
+  existingSecret: null

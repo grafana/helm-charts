@@ -1,0 +1,13 @@
+{{- if gt (int .Values.queryFrontend.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.queryFrontendFullname" . }}
+  labels:
+    {{- include "loki.queryFrontendLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.queryFrontendSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}

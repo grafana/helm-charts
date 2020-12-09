@@ -1,0 +1,17 @@
+{{- if .Values.tableManager.enabled }}
+{{- if gt (int .Values.tableManager.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.fullname" . }}-tableManager
+  labels:
+    {{- include "loki.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tableManager
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.labels" . | nindent 6 }}
+      app.kubernetes.io/component: tableManager
+  maxUnavailable: 1
+{{- end }}
+{{- end }}
