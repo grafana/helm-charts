@@ -38,8 +38,9 @@ jobs:
 
       - name: Add dependency chart repos
         run: |
-          helm repo add stable https://charts.helm.sh/stable
-          helm repo add incubator https://charts.helm.sh/incubator
+          helm repo add elastic https://helm.elastic.co
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo add prometheus "https://prometheus-community.github.io/helm-charts
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.1.0

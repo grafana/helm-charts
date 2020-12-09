@@ -1,15 +1,15 @@
 dependencies:
 - name: "loki"
   condition: loki.enabled
-  repository: "file://../loki"
+  repository: "https://grafana.github.io/helm-charts"
   version: "^2.0.0"
 - name: "promtail"
   condition: promtail.enabled
-  repository: "file://../promtail"
+  repository: "https://grafana.github.io/helm-charts"
   version: "^2.0.0"
 - name: "fluent-bit"
   condition: fluent-bit.enabled
-  repository: "file://../fluent-bit"
+  repository: "https://grafana.github.io/helm-charts"
   version: "^2.0.0"
 - name: "grafana"
   condition: grafana.enabled
