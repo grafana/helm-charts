@@ -4,7 +4,7 @@ description: Helm chart for Grafana Loki in microservices mode
 type: application
 appVersion: 2.0.0
 version: 0.19.4
-home: https://github.com/unguiculus/loki-helm-chart
+home: https://grafana.github.io/helm-charts
 sources:
   - https://github.com/grafana/loki
   - https://grafana.com/oss/loki/
