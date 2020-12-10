@@ -44,7 +44,7 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 
 ### To 6.0.0
 
-This version requires Helm >= 3.4.0.
+This version requires Helm >= 3.1.0.
 
 ## Configuration
 
