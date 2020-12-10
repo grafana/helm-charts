@@ -1,0 +1,15 @@
+ingester:
+  persistence:
+    enabled: true
+    size: 100Mi
+
+querier:
+  persistence:
+    enabled: true
+    size: 100Mi
+
+gateway:
+  basicAuth:
+    enabled: true
+    username: user
+    password: pass

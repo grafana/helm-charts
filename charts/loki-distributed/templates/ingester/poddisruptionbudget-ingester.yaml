@@ -1,0 +1,13 @@
+{{- if gt (int .Values.ingester.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.ingesterFullname" . }}
+  labels:
+    {{- include "loki.ingesterLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.ingesterSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}

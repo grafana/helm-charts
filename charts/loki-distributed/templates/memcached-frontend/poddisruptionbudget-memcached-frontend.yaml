@@ -1,0 +1,13 @@
+{{- if and .Values.memcachedFrontend.enabled (gt (int .Values.memcachedFrontend.replicas) 1) }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.memcachedFrontendFullname" . }}
+  labels:
+    {{- include "loki.memcachedFrontendLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}
