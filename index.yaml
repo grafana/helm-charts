@@ -7425,6 +7425,25 @@ entries:
     urls:
     - https://grafana.github.io/helm-charts/packages/loki-0.5.0.tgz
     version: 0.5.0
+  loki-canary:
+  - apiVersion: v2
+    appVersion: 2.0.0
+    created: "2020-12-10T21:10:16.829896916Z"
+    description: Helm chart for Grafana Loki Canary
+    digest: 4bc2606c9f573b98692c4062cbd85c176ef2f5b905deeefa527300429dfa1676
+    home: https://github.com/grafana/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-canary
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.1.2/loki-canary-0.1.2.tgz
+    version: 0.1.2
   loki-stack:
   - apiVersion: v1
     appVersion: v2.0.0
