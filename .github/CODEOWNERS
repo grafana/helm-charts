@@ -7,3 +7,4 @@
 * @prometheus-community/helm-charts-admins
 
 /charts/grafana/ @maorfr @rtluckie @torstenwalter @Xtigyro @zanhsieh
+/charts/loki-canary @unguiculus
