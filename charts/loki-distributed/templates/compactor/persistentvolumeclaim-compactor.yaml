@@ -1,0 +1,17 @@
+{{- if .Values.compactor.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-{{ include "loki.compactorFullname" . }}
+  labels:
+    {{- include "loki.compactorLabels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- with .Values.compactor.persistence.storageClass }}
+  storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+  {{- end }}
+  resources:
+    requests:
+      storage: "{{ .Values.compactor.persistence.size }}"
+{{- end }}

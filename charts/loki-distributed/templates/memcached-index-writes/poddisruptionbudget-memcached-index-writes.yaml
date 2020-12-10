@@ -1,0 +1,13 @@
+{{- if and .Values.memcachedIndexWrites.enabled (gt (int .Values.memcachedIndexWrites.replicas) 1) }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.memcachedIndexWritesFullname" . }}
+  labels:
+    {{- include "loki.memcachedIndexWritesLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}
