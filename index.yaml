@@ -10685,6 +10685,23 @@ entries:
   promtail:
   - apiVersion: v1
     appVersion: v2.0.0
+    created: "2020-12-10T00:16:43.880057359Z"
+    description: Responsible for gathering logs and sending them to Loki
+    digest: 2b42fb1aab90ce3124eb43014b319afe336ee68b3487f70fe6ad2e5aba7153a5
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: promtail
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/promtail-2.1.0/promtail-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v1
+    appVersion: v2.0.0
     created: "2020-12-09T10:53:57.670430048+01:00"
     description: Responsible for gathering logs and sending them to Loki
     digest: c422c2de596beab6ac336ea300f92a19a0a029631bc9b51582de80a9fb9e0012
