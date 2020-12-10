@@ -3,6 +3,23 @@ entries:
   fluent-bit:
   - apiVersion: v1
     appVersion: v2.0.0
+    created: "2020-12-10T00:03:56.321725129Z"
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    digest: e78a4f6c38ee54acb7033b1bc22d7457b68ddcfd4c27228527782d3c81b45af9
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: fluent-bit
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/fluent-bit-2.1.0/fluent-bit-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v1
+    appVersion: v2.0.0
     created: "2020-12-09T10:53:57.019682555+01:00"
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
     digest: b63784926bb372d2cd8347a1cf0fd80a7415be0cbcbebbf6283d4bd170ec77b3
