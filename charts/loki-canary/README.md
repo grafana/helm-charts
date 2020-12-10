@@ -17,7 +17,7 @@ Helm chart for Grafana Loki Canary
 Add the following repo to use the chart:
 
 ```console
-helm repo add loki https://unguiculus.github.io/loki-helm-chart
+helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
 ## Values
