@@ -77,6 +77,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
+| gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
 | gateway.service.nodePort | string | `nil` | Node port if service type is NodePort |
