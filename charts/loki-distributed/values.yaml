@@ -513,6 +513,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Annotations for the gateway service
+    annotations: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
