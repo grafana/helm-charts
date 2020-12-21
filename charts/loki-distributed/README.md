@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.20.0](https://img.shields.io/badge/Version-0.20.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.20.1](https://img.shields.io/badge/Version-0.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -279,13 +279,28 @@ The other components are optional and must be explicitly enabled.
 
 ## Configuration
 
-This chart configures Loki in microservices mode. It has been tested to work with [boltdb-shipper](https://grafana.com/docs/loki/latest/operations/storage/boltdb-shipper/)
+This chart configures Loki in microservices mode.
+It has been tested to work with [boltdb-shipper](https://grafana.com/docs/loki/latest/operations/storage/boltdb-shipper/)
 and [memberlist](https://grafana.com/docs/loki/latest/configuration/#memberlist_config) while other storage and discovery options should work as well.
 However, the chart does not support setting up Consul or Etcd for discovery,
 and it is not intended to support these going forward.
 They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which ingester, distributor, querier, and ruler are part of.
+
+----
+
+**NOTE:**
+In its default configuration, the chart uses `boltdb-shipper` and `filesystem` as storage.
+The reason for this is that the chart can be validated and installed in a CI pipeline.
+However, this setup is not fully functional.
+Querying will not be possible (or limited to the ingesters' in-memory caches) because that would otherwise require shared storage between ingesters and queriers
+which the chart does not support and would require a volume that supports `ReadWriteMany` access mode anyways.
+The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/loki/latest/storage/.
+
+Alternatively, in order to quickly test Loki using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) can be used.
+
+----
 
 ### Directory and File Locations
 
