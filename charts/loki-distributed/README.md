@@ -289,6 +289,7 @@ Instead, memberlist can be used which does not require a separate key/value stor
 The chart creates a headless service for the memberlist which ingester, distributor, querier, and ruler are part of.
 
 ----
+
 **NOTE:**
 In its default configuration, the chart uses `boltdb-shipper` and `filesystem` as storage.
 The reason for this is that the chart can be validated and installed in a CI pipeline.
@@ -296,6 +297,9 @@ However, this setup is not fully functional.
 Querying will not be possible (or limited to the ingesters' in-memory caches) because that would otherwise require shared storage between ingesters and queriers
 which the chart does not support and would require a volume that supports `ReadWriteMany` access mode anyways.
 The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/loki/latest/storage/.
+
+Alternatively, in order to quickly test Loki using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) can be used.
+
 ----
 
 ### Directory and File Locations
