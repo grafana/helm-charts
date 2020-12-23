@@ -64,6 +64,9 @@ spec:
           securityContext:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           volumeMounts:
+          {{- if .Values.global.extraVolumeMounts }}
+            {{ toYaml .Values.global.extraVolumeMounts | nindent 12}}
+          {{- end }}
             - name: config
               mountPath: /etc/loki/config
           resources:
@@ -81,6 +84,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+      {{- if .Values.global.extraVolumes }}
+        {{ toYaml .Values.global.extraVolumes | nindent 8}}
+      {{- end }}
         - name: config
           configMap:
             name: {{ include "loki.fullname" . }}
