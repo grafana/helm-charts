@@ -75,6 +75,9 @@ spec:
             initialDelaySeconds: 30
             timeoutSeconds: 1
           volumeMounts:
+          {{- if .Values.global.extraVolumeMounts }}
+            {{ toYaml .Values.global.extraVolumeMounts | nindent 12}}
+          {{- end }}
             - name: config
               mountPath: /etc/loki/config
             - name: data
@@ -94,6 +97,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+      {{- if .Values.global.extraVolumes }}
+        {{ toYaml .Values.global.extraVolumes | nindent 8}}
+      {{- end }}
         - name: config
           configMap:
             name: {{ include "loki.fullname" . }}
