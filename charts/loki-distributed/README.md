@@ -87,6 +87,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
+| global.extraVolumeMounts | list | `[]` | Extra volumeMounts definition in all deployment/statefulset |
+| global.extraVolumes | list | `[]` | Extra volumes definition in all deployment/statefulset |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |

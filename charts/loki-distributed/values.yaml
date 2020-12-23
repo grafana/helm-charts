@@ -5,10 +5,10 @@ global:
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
 
-  # -- Extra Volumes definition in all deployment/statefulset
+  # -- Extra volumes definition in all deployment/statefulset
   extraVolumes: []
 
-  # -- Extra Volume Mount definition in all deployment/statefulset
+  # -- Extra volumeMounts definition in all deployment/statefulset
   extraVolumeMounts: []
 
 # -- Overrides the chart's name
