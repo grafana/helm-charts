@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.20.1](https://img.shields.io/badge/Version-0.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.20.2](https://img.shields.io/badge/Version-0.20.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -85,10 +85,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
-| global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
-| global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global.extraVolumeMounts | list | `[]` | Extra volumeMounts definition in all deployment/statefulset |
 | global.extraVolumes | list | `[]` | Extra volumes definition in all deployment/statefulset |
+| global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
+| global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
