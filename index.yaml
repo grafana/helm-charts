@@ -7696,6 +7696,52 @@ entries:
   loki-stack:
   - apiVersion: v1
     appVersion: v2.1.0
+    created: "2021-01-03T21:48:27.777261225Z"
+    dependencies:
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.3.0
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.2.0
+    - condition: fluent-bit.enabled
+      name: fluent-bit
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.2.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~5.7.0
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~11.16.0
+    - condition: filebeat.enabled
+      name: filebeat
+      repository: https://helm.elastic.co
+      version: ~7.8.0
+    - condition: logstash.enabled
+      name: logstash
+      repository: https://helm.elastic.co
+      version: ~7.8.0
+    description: 'Loki: like Prometheus, but for logs.'
+    digest: 08eaa9cfed8323fd979d4c15f97dfa9139429b821d74dfcadfcdb847f2268e0e
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: loki-stack
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-stack-2.3.1/loki-stack-2.3.1.tgz
+    version: 2.3.1
+  - apiVersion: v1
+    appVersion: v2.1.0
     created: "2020-12-24T15:07:11.889802556Z"
     dependencies:
     - condition: loki.enabled
