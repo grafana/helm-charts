@@ -79,7 +79,7 @@ spec:
               containerPort: 9150
               protocol: TCP
           resources:
-            {{- toYaml .Values.memcachedIndexWrites.exporter.resources | nindent 12 }}
+            {{- toYaml .Values.memcachedExporter.exporter.resources | nindent 12 }}
         {{- end }}
       {{- with .Values.memcachedIndexWrites.affinity }}
       affinity:

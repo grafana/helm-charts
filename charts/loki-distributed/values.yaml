@@ -814,6 +814,8 @@ memcachedExporter:
     tag: v0.6.0
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Memcached Exporter Resource requests and limits
+  resources: {}
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled
@@ -872,9 +874,6 @@ memcachedFrontend:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-frontend
   resources: {}
-  # -- Resource requests and limits for memcached-index-writes exporter container
-  exporter:
-    resources: {}
   # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -915,9 +914,6 @@ memcachedIndexQueries:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-queries
   resources: {}
-  # -- Resource requests and limits for memcached-index-writes exporter container
-  exporter:
-    resources: {}
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
@@ -958,9 +954,6 @@ memcachedIndexWrites:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-writes
   resources: {}
-  # -- Resource requests and limits for memcached-index-writes exporter container
-  exporter:
-    resources: {}
   # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
