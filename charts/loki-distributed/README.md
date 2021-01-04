@@ -147,6 +147,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | memcachedFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-frontend pods |
 | memcachedFrontend.replicas | int | `1` | Number of replicas for memcached-frontend |
 | memcachedFrontend.resources | object | `{}` | Resource requests and limits for memcached-frontend |
+| memcachedFrontend.exporter.resources | object | `{}` | Resource requests and limits for memcached-index-writes exporter container |
 | memcachedFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-frontend to shutdown before it is killed |
 | memcachedFrontend.tolerations | list | `[]` | Tolerations for memcached-frontend pods |
 | memcachedIndexQueries.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string |
