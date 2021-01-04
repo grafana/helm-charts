@@ -171,6 +171,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | memcachedIndexWrites.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-index-writes pods |
 | memcachedIndexWrites.replicas | int | `1` | Number of replicas for memcached-index-writes |
 | memcachedIndexWrites.resources | object | `{}` | Resource requests and limits for memcached-index-writes |
+| memcachedIndexWrites.exporter.resources | object | `{}` | Resource requests and limits for memcached-index-writes exporter container |
 | memcachedIndexWrites.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-writes to shutdown before it is killed |
 | memcachedIndexWrites.tolerations | list | `[]` | Tolerations for memcached-index-writes pods |
 | nameOverride | string | `nil` | Overrides the chart's name |
