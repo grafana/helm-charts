@@ -159,6 +159,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | memcachedIndexQueries.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-index-queries pods |
 | memcachedIndexQueries.replicas | int | `1` | Number of replicas for memcached-index-queries |
 | memcachedIndexQueries.resources | object | `{}` | Resource requests and limits for memcached-index-queries |
+| memcachedIndexQueries.exporter.resources | object | `{}` | Resource requests and limits for memcached-index-writes exporter container |
 | memcachedIndexQueries.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-queries to shutdown before it is killed |
 | memcachedIndexQueries.tolerations | list | `[]` | Tolerations for memcached-index-queries pods |
 | memcachedIndexWrites.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string |

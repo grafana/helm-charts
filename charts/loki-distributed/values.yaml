@@ -912,6 +912,9 @@ memcachedIndexQueries:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-queries
   resources: {}
+  # -- Resource requests and limits for memcached-index-writes exporter container
+  exporter:
+    resources: {}
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
