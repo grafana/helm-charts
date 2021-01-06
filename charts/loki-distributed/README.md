@@ -26,6 +26,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
+| compactor.extraVolumeMounts | list | `[]` | Volume mounts to add to the compactor pods |
+| compactor.extraVolumes | list | `[]` | Volumes to add to the compactor pods |
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `loki.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `loki.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `loki.image.tag` |
@@ -92,6 +94,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
+| ingester.extraVolumeMounts | list | `[]` | Volume mounts to add to the ingester pods |
+| ingester.extraVolumes | list | `[]` | Volumes to add to the ingester pods |
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `loki.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
@@ -183,6 +187,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
+| querier.extraVolumeMounts | list | `[]` | Volume mounts to add to the querier pods |
+| querier.extraVolumes | list | `[]` | Volumes to add to the querier pods |
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `loki.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
@@ -216,6 +222,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | ruler.extraArgs | list | `[]` | Additional CLI args for the ruler |
 | ruler.extraEnv | list | `[]` | Environment variables to add to the ruler pods |
 | ruler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ruler pods |
+| ruler.extraVolumeMounts | list | `[]` | Volume mounts to add to the ruler pods |
+| ruler.extraVolumes | list | `[]` | Volumes to add to the ruler pods |
 | ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
@@ -245,6 +253,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |
 | tableManager.extraEnv | list | `[]` | Environment variables to add to the table-manager pods |
 | tableManager.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the table-manager pods |
+| tableManager.extraVolumeMounts | list | `[]` | Volume mounts to add to the table-manager pods |
+| tableManager.extraVolumes | list | `[]` | Volumes to add to the table-manager pods |
 | tableManager.image.registry | string | `nil` | The Docker registry for the table-manager image. Overrides `loki.image.registry` |
 | tableManager.image.repository | string | `nil` | Docker image repository for the table-manager image. Overrides `loki.image.repository` |
 | tableManager.image.tag | string | `nil` | Docker image tag for the table-manager image. Overrides `loki.image.tag` |
