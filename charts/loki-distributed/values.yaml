@@ -834,6 +834,8 @@ memcachedExporter:
     tag: v0.6.0
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Memcached Exporter resource requests and limits
+  resources: {}
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled
