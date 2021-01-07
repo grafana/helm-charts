@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distributor
+  name: {{ template "tempo.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "tempo.distributorLabels" . | nindent 4 }}
+  {{- with .Values.distributor.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  minReadySeconds: 10
+  replicas: {{ .Values.distributor.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      {{- include "tempo.distributorSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "tempo.distributorLabels" . | nindent 8 }}
+        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - args:
+        - -target=distributor
+        - -config.file=/conf/tempo.yaml
+        - -mem-ballast-size-mbs=1024
+        image: {{ include "tempo.distributorImage" . }}
+        imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+        name: distributor
+        ports:
+        - containerPort: 7946
+          name: http-memberlist
+          protocol: TCP
+        - containerPort: 3100
+          name: prom-metrics
+        - containerPort: 55678
+          name: opencensus
+        - containerPort: 14268
+          name: jaeger-http
+        resources:
+          {{- toYaml .Values.distributor.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /conf
+          name: tempo-conf
+      {{- with .Values.distributor.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.distributor.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.distributor.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - configMap:
+          name: {{ template "tempo.fullname" . }}
+        name: tempo-conf

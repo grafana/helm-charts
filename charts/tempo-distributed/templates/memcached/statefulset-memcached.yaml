@@ -1,0 +1,65 @@
+{{- if .Values.memcached.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "tempo.fullname" . }}-memcached
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.memcachedLabels" . | nindent 4 }}
+  {{- with .Values.memcached.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.memcached.replicas }}
+  selector:
+    matchLabels:
+      name: memcached
+  serviceName: memcached
+  template:
+    metadata:
+      labels:
+        name: memcached
+    spec:
+      containers:
+      - args:
+        - -m 1024
+        - -I 5m
+        - -c 1024
+        - -v
+        image: "{{ .Values.memcached.repository }}:{{ .Values.memcached.tag }}"
+        imagePullPolicy: {{ .Values.memcached.pullPolicy }}
+        name: memcached
+        ports:
+        - containerPort: 11211
+          name: client
+        resources:
+          limits:
+            memory: 1536Mi
+          requests:
+            cpu: 500m
+            memory: 1329Mi
+      - args:
+        - --memcached.address=localhost:11211
+        - --web.listen-address=0.0.0.0:9150
+        image: "{{ .Values.memcached.exporter.repository }}:{{ .Values.memcached.exporter.tag }}"
+        imagePullPolicy: {{ .Values.memcached.exporter.pullPolicy }}
+        name: exporter
+        ports:
+        - containerPort: 9150
+          name: http-metrics
+      {{- with .Values.memcached.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.memcached.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.memcached.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  updateStrategy:
+    type: RollingUpdate
+{{- end}}
