@@ -1,0 +1,122 @@
+{{- if .Values.networkPolicy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: namespace-only-{{ template "promtail.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "promtail.name" . }}
+    chart: {{ template "promtail.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  egress:
+    - to:
+        - podSelector: {}
+  ingress:
+    - from:
+        - podSelector: {}
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-dns-{{ template "promtail.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "promtail.name" . }}
+    chart: {{ template "promtail.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "promtail.name" . }}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+      to:
+        - namespaceSelector: {}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-k8s-api-{{ template "promtail.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "promtail.name" . }}
+    chart: {{ template "promtail.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "promtail.name" . }}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: {{ .Values.networkPolicy.k8sApi.port }}
+          protocol: TCP
+    {{- if len .Values.networkPolicy.k8sApi.cidrs }}
+      to:
+      {{- range $cidr := .Values.networkPolicy.k8sApi.cidrs }}
+        - ipBlock:
+            cidr: {{ $cidr }}
+      {{- end }}
+    {{- end }}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-metrics-{{ template "promtail.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "promtail.name" . }}
+    chart: {{ template "promtail.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "promtail.name" . }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - port: http-metrics
+          protocol: TCP
+    {{- if len .Values.networkPolicy.metrics.cidrs }}
+      from:
+      {{- range $cidr := .Values.networkPolicy.metrics.cidrs }}
+        - ipBlock:
+            cidr: {{ $cidr }}
+      {{- end }}
+      {{- if .Values.networkPolicy.metrics.namespaceSelectorLabels }}
+        - namespaceSelector:
+            matchLabels:
+              {{- range $key, $value := .Values.networkPolicy.metrics.namespaceSelectorLabels }}
+              {{ $key | quote }}: {{ $value | quote }}
+              {{- end }}
+          {{- if .Values.networkPolicy.metrics.podSelectorLabels }}
+          podSelector:
+            matchLabels:
+              {{- range $key, $value := .Values.networkPolicy.metrics.podSelectorLabels }}
+              {{ $key | quote }}: {{ $value | quote }}
+              {{- end }}
+          {{- end }}
+      {{- end }}
+    {{- end }}
+
+{{- end }}
