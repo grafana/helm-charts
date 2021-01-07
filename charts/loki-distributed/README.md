@@ -175,16 +175,16 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | memcachedIndexWrites.tolerations | list | `[]` | Tolerations for memcached-index-writes pods |
 | nameOverride | string | `nil` | Overrides the chart's name |
 | networkPolicy.alertmanager.namespaceSelectorLabels | object | `{}` | Specifies whether you want to limit egress to alertmanager port by namespaceSelectors |
-| networkPolicy.alertmanager.podSelectorLabels | object | `{}` | Specifies whether you want to limit egress to alertmanager port by podSelectors As this is cross-namespace communication, you also neeed the namespaceSelectorLabels |
+| networkPolicy.alertmanager.podSelectorLabels | object | `{}` | Specifies whether you want to limit egress to alertmanager port by podSelectors. As this is cross-namespace communication, you also need the namespaceSelectorLabels. |
 | networkPolicy.alertmanager.port | string | `nil` | Specify the alertmanager port used for alerting |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
-| networkPolicy.external_storage.cidrs | list | `[]` | Specifies whether you want to limit access to external storage with specific network CIDRs |
-| networkPolicy.external_storage.port | string | `nil` | Specify the port used for external storage, e.g. AWS S3 |
+| networkPolicy.externalStorage.cidrs | list | `[]` | Specifies whether you want to limit access to external storage with specific network CIDRs |
+| networkPolicy.externalStorage.port | string | `nil` | Specify the port used for external storage, e.g. AWS S3 |
 | networkPolicy.ingress.namespaceSelectorLabels | object | `{}` | Specifies whether you want to limit access to http ports by namespaceSelectors |
-| networkPolicy.ingress.podSelectorLabels | object | `{}` | Specifies whether you want to limit access to http ports by podSelectors As this is cross-namespace communication, you also neeed the namespaceSelectorLabels |
-| networkPolicy.metrics.cidrs | list | `[]` | Specifies whether you want to limit access to specific network CIDRs In case you use namespaceSelectorLabels, you also have to specify your kubelet networks here. The metrics ports are also used for probes. |
+| networkPolicy.ingress.podSelectorLabels | object | `{}` | Specifies whether you want to limit access to http ports by podSelectors. As this is cross-namespace communication, you also need the namespaceSelectorLabels. |
+| networkPolicy.metrics.cidrs | list | `[]` | Specifies whether you want to limit access to specific network CIDRs. In case you use namespaceSelectorLabels, you also have to specify your kubelet networks here. The metrics ports are also used for probes. |
 | networkPolicy.metrics.namespaceSelectorLabels | object | `{}` | Specifies whether you want to limit access to metrics ports by namespaceSelectors |
-| networkPolicy.metrics.podSelectorLabels | object | `{}` | Specifies whether you want to limit access to metrics ports by podSelectors As this is cross-namespace communication, you also neeed the namespaceSelectorLabels |
+| networkPolicy.metrics.podSelectorLabels | object | `{}` | Specifies whether you want to limit access to metrics ports by podSelectors. As this is cross-namespace communication, you also need the namespaceSelectorLabels. |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
 | prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |

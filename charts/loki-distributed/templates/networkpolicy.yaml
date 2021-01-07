@@ -3,8 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: namespace-only-{{ template "loki.name" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.name" . }}-namespace-only
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:
@@ -14,17 +13,16 @@ spec:
   podSelector: {}
   egress:
     - to:
-      - podSelector: {}
+        - podSelector: {}
   ingress:
     - from:
-      - podSelector: {}
+        - podSelector: {}
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: egress-dns-{{ template "loki.name" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.name" . }}-egress-dns
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:
@@ -32,20 +30,19 @@ spec:
     - Egress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "loki.name" . }}
+      app.kubernetes.io/name: {{ include "loki.name" . }}
   egress:
     - ports:
-      - port: 53
-        protocol: UDP
+        - port: 53
+          protocol: UDP
       to:
-      - namespaceSelector: {}
+        - namespaceSelector: {}
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-{{ template "loki.name" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.name" . }}-ingress
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:
@@ -53,11 +50,11 @@ spec:
     - Ingress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "loki.name" . }}
+      app.kubernetes.io/name: {{ include "loki.name" . }}
   ingress:
     - ports:
-      - port: http
-        protocol: TCP
+        - port: http
+          protocol: TCP
   {{- if .Values.networkPolicy.ingress.namespaceSelectorLabels }}
       from:
         - namespaceSelector:
@@ -78,7 +75,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-metrics-{{ template "loki.name" . }}
+  name: {{ include "loki.name" . }}-ingress-metrics
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
@@ -93,10 +90,11 @@ spec:
           - memcached-frontend
           - memcached-chunks
           - memcached-index-queries
+          - memcached-index-writes
       - key: app.kubernetes.io/name
         operator: In
         values:
-          - {{ template "loki.name" . }}
+          - {{ include "loki.name" . }}
   ingress:
     - ports:
         - port: http-metrics
@@ -128,8 +126,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: egress-alertmanager-{{ template "loki.name" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.name" . }}-egress-alertmanager
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:
@@ -159,13 +156,12 @@ spec:
   {{- end }}
 {{- end }}
 
-{{- if .Values.networkPolicy.external_storage.port }}
+{{- if .Values.networkPolicy.externalStorage.port }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: egress-external-storage-{{ template "loki.name" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.name" . }}-egress-external-storage
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:
@@ -173,14 +169,14 @@ spec:
     - Egress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "loki.name" . }}
+      app.kubernetes.io/name: {{ include "loki.name" . }}
   egress:
     - ports:
-        - port: {{ .Values.networkPolicy.external_storage.port }}
+        - port: {{ .Values.networkPolicy.externalStorage.port }}
           protocol: TCP
-  {{- if len .Values.networkPolicy.external_storage.cidrs }}
+  {{- if len .Values.networkPolicy.externalStorage.cidrs }}
       to:
-      {{- range $cidr := .Values.networkPolicy.external_storage.cidrs }}
+      {{- range $cidr := .Values.networkPolicy.externalStorage.cidrs }}
         - ipBlock:
             cidr: {{ $cidr }}
       {{- end }}
