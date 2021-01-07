@@ -994,7 +994,7 @@ networkPolicy:
     podSelectorLabels: {}
     # -- Specifies whether you want to limit access to http ports by namespaceSelectors
     namespaceSelectorLabels: {}
-  alertmanager: # in case Loki should send alerts
+  alertmanager:
     # -- Specify the alertmanager port used for alerting
     port:
     # -- Specifies whether you want to limit egress to alertmanager port by podSelectors
