@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.21.1](https://img.shields.io/badge/Version-0.21.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 0.21.2](https://img.shields.io/badge/Version-0.21.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -137,6 +137,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | memcachedExporter.image.registry | string | `"docker.io"` | The Docker registry for the Memcached Exporter |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.6.0"` | Memcached Exporter Docker image tag |
+| memcachedExporter.resources | object | `{}` | Memcached Exporter resource requests and limits |
 | memcachedFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedFrontend.enabled | bool | `false` | Specifies whether the Memcached frontend cache should be enabled |
 | memcachedFrontend.extraArgs | list | `[]` | Additional CLI args for memcached-frontend |
