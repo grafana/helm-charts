@@ -569,6 +569,8 @@ sidecar:
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
+    # value of label that the configmaps with dashboards are set to
+    labelValue: null
     # folder in the pod that should hold the collected dashboards (unless `defaultFolderName` is set)
     folder: /tmp/dashboards
     # The default folder name, it will create a subfolder under the `folder` and put dashboards in there instead
@@ -600,6 +602,8 @@ sidecar:
     enabled: false
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
+    # value of label that the configmaps with datasources are set to
+    labelValue: null
     # If specified, the sidecar will search for datasource config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
