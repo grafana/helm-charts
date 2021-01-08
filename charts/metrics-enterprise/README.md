@@ -634,16 +634,3 @@ To configure a local default storage class for k3d:
 $ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 $ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
-
-# Performing a release
-
-1. Update the `version` and `appVersion` fields in the `chart.yaml` file.
-2. Add the release archive to the docs directory
-
-```console
-$ make release
-$ git add -f docs
-```
-
-3. Create a release commit
-4. Create a release tag
