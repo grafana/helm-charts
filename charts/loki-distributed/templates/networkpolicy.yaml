@@ -30,7 +30,7 @@ spec:
     - Egress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "loki.name" . }}
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   egress:
     - ports:
         - port: 53
@@ -50,24 +50,18 @@ spec:
     - Ingress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "loki.name" . }}
+      {{- include "loki.gatewaySelectorLabels" . | nindent 6 }}
   ingress:
     - ports:
         - port: http
           protocol: TCP
-  {{- if .Values.networkPolicy.ingress.namespaceSelectorLabels }}
+  {{- if .Values.networkPolicy.ingress.namespaceSelector }}
       from:
         - namespaceSelector:
-            matchLabels:
-              {{- range $key, $value := .Values.networkPolicy.ingress.namespaceSelectorLabels }}
-              {{ $key | quote }}: {{ $value | quote }}
-              {{- end }}
-          {{- if .Values.networkPolicy.ingress.podSelectorLabels }}
+          {{- toYaml .Values.networkPolicy.ingress.namespaceSelector | nindent 12 }}
+          {{- if .Values.networkPolicy.ingress.podSelector }}
           podSelector:
-            matchLabels:
-              {{- range $key, $value := .Values.networkPolicy.ingress.podSelectorLabels }}
-              {{ $key | quote }}: {{ $value | quote }}
-              {{- end }}
+          {{- toYaml .Values.networkPolicy.ingress.podSelector | nindent 12 }}
           {{- end }}
   {{- end }}
 
@@ -83,18 +77,8 @@ spec:
   policyTypes:
     - Ingress
   podSelector:
-    matchExpressions:
-      - key: app.kubernetes.io/component
-        operator: In
-        values:
-          - memcached-frontend
-          - memcached-chunks
-          - memcached-index-queries
-          - memcached-index-writes
-      - key: app.kubernetes.io/name
-        operator: In
-        values:
-          - {{ include "loki.name" . }}
+    matchLabels:
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   ingress:
     - ports:
         - port: http-metrics
@@ -105,23 +89,17 @@ spec:
         - ipBlock:
             cidr: {{ $cidr }}
       {{- end }}
-      {{- if .Values.networkPolicy.metrics.namespaceSelectorLabels }}
+      {{- if .Values.networkPolicy.metrics.namespaceSelector }}
         - namespaceSelector:
-            matchLabels:
-              {{- range $key, $value := .Values.networkPolicy.metrics.namespaceSelectorLabels }}
-              {{ $key | quote }}: {{ $value | quote }}
-              {{- end }}
-          {{- if .Values.networkPolicy.metrics.podSelectorLabels }}
+          {{- toYaml .Values.networkPolicy.metrics.namespaceSelector | nindent 12 }}
+          {{- if .Values.networkPolicy.metrics.podSelector }}
           podSelector:
-            matchLabels:
-              {{- range $key, $value := .Values.networkPolicy.metrics.podSelectorLabels }}
-              {{ $key | quote }}: {{ $value | quote }}
-              {{- end }}
+          {{- toYaml .Values.networkPolicy.metrics.podSelector | nindent 12 }}
           {{- end }}
       {{- end }}
     {{- end }}
 
-{{- if .Values.networkPolicy.alertmanager.port }}
+{{- if .Values.ruler.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -134,24 +112,18 @@ spec:
     - Egress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: ruler
+      {{- include "loki.rulerSelectorLabels" . | nindent 6 }}
   egress:
     - ports:
         - port: {{ .Values.networkPolicy.alertmanager.port }}
           protocol: TCP
-  {{- if .Values.networkPolicy.alertmanager.namespaceSelectorLabels }}
+  {{- if .Values.networkPolicy.alertmanager.namespaceSelector }}
       to:
         - namespaceSelector:
-            matchLabels:
-              {{- range $key, $value := .Values.networkPolicy.alertmanager.namespaceSelectorLabels }}
-              {{ $key | quote }}: {{ $value | quote }}
-              {{- end }}
-          {{- if .Values.networkPolicy.alertmanager.podSelectorLabels }}
+          {{- toYaml .Values.networkPolicy.alertmanager.namespaceSelector | nindent 12 }}
+          {{- if .Values.networkPolicy.alertmanager.podSelector }}
           podSelector:
-            matchLabels:
-              {{- range $key, $value := .Values.networkPolicy.alertmanager.podSelectorLabels }}
-              {{ $key | quote }}: {{ $value | quote }}
-              {{- end }}
+          {{- toYaml .Values.networkPolicy.alertmanager.podSelector | nindent 12 }}
           {{- end }}
   {{- end }}
 {{- end }}
@@ -169,7 +141,7 @@ spec:
     - Egress
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "loki.name" . }}
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   egress:
     - ports:
         - port: {{ .Values.networkPolicy.externalStorage.port }}
