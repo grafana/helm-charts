@@ -222,17 +222,17 @@ networkPolicy:
   # -- Specifies whether Network Policies should be created
   enabled: false
   metrics:
-    # -- Specifies whether you want to limit access to metrics ports by podSelectors
-    # As this is cross-namespace communication, you also neeed the namespaceSelectorLabels
-    podSelectorLabels: {}
-    # -- Specifies whether you want to limit access to metrics ports by namespaceSelectors
-    namespaceSelectorLabels: {}
-    # -- Specifies whether you want to limit access to specific network CIDRs
-    # In case you use namespaceSelectorLabels, you also have to specify your kubelet networks here.
+    # -- Specifies the Pods which are allowed to access the metrics port.
+    # As this is cross-namespace communication, you also neeed the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespaces which are allowed to access the metrics port
+    namespaceSelector: {}
+    # -- Specifies specific network CIDRs which are allowed to access the metrics port.
+    # In case you use namespaceSelector, you also have to specify your kubelet networks here.
     # The metrics ports are also used for probes.
     cidrs: []
   k8sApi:
     # -- Specify the k8s API endpoint port
     port: 8443
-    # -- Specifies whether you want to limit access to specific network CIDRs
+    # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
