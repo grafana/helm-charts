@@ -1,0 +1,32 @@
+{{- if eq .Values.config.storage.engine "blocks" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "metrics_enterprise.fullname" . }}-store-gateway-headless
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-store-gateway
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- with .Values.store_gateway.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.store_gateway.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+    - port: {{ .Values.config.server.grpc_listen_port }}
+      protocol: TCP
+      name: grpclb
+      targetPort: grpc      
+  selector:
+    app: {{ template "metrics_enterprise.name" . }}-store-gateway
+    release: {{ .Release.Name }}
+{{- end -}}

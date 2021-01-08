@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    {{- toYaml .Values.gateway.annotations | nindent 4 }}
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-gateway
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  name: {{ template "metrics_enterprise.fullname" . }}-gateway
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.gateway.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "metrics_enterprise.name" . }}-gateway
+      release: {{ .Release.Name }}
+  strategy:
+    {{- toYaml .Values.gateway.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "metrics_enterprise.name" . }}-gateway
+        name: {{ template "metrics_enterprise.name" . }}-gateway
+        target: gateway
+        release: {{ .Release.Name }}
+        {{- with .Values.gateway.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.useExternalConfig }}
+        checksum/config: {{ .Values.externalConfigVersion }}
+        {{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end}}
+        {{- with .Values.gateway.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      {{- if .Values.gateway.priorityClassName }}
+      priorityClassName: {{ .Values.gateway.priorityClassName }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.gateway.securityContext | nindent 8 }}
+      initContainers:
+        {{- toYaml .Values.gateway.initContainers | nindent 8 }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "-target=gateway"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-admin
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            {{- end }}
+            {{- if .Values.gateway.useDefaultProxyURLs }}
+            - -gateway.proxy.default.url=http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.admin-api.url=http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.alertmanager.url=http://{{ template "metrics_enterprise.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.distributor.url=http://{{ template "metrics_enterprise.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.graphite.url=http://{{ template "metrics_enterprise.fullname" . }}-graphite.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.ingester.url=http://{{ template "metrics_enterprise.fullname" . }}-ingester.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.query-frontend.url=http://{{ template "metrics_enterprise.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.ruler.url=http://{{ template "metrics_enterprise.fullname" . }}-ruler.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.store-gateway.url=http://{{ template "metrics_enterprise.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            {{- end }}
+            {{- range $key, $value := .Values.gateway.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.gateway.extraVolumeMounts }}
+              {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12}}
+            {{- end }}
+            - name: config
+              mountPath: /etc/metrics-enterprise
+            - name: license
+              mountPath: /license
+            - name: storage
+              mountPath: "/data"
+              subPath: {{ .Values.gateway.persistence.subPath }}
+          ports:
+            - name: http-metrics
+              containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.gateway.resources | nindent 12 }}
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+            {{- if .Values.gateway.env }}
+            {{ toYaml .Values.gateway.env | nindent 12 }}
+            {{- end }}
+        {{- with .Values.gateway.extraContainers }}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+      nodeSelector:
+        {{- toYaml .Values.gateway.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.gateway.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.gateway.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
+      volumes:
+        - name: config
+          secret:
+          {{- if .Values.useExternalConfig }}
+            secretName: {{ .Values.externalConfigSecretName }}
+          {{- else }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
+          {{- end }}
+        {{- if .Values.gateway.extraVolumes }}
+        {{ toYaml .Values.gateway.extraVolumes | nindent 8}}
+        {{- end }}
+        - name: license
+          secret:
+            secretName: {{ template "metrics_enterprise.fullname" . }}-license
+        - name: storage
+          emptyDir: {}

@@ -1,0 +1,24 @@
+# Values that can be used for local single node cluster deployments.
+consul:
+  server:
+    replicas: 1
+    bootstrapExpect: 1
+
+minio:
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      memory: 1Gi
+
+memcached:
+  replicaCount: 1
+
+memcached-index-read:
+  replicaCount: 1
+
+memcached-metadata:
+  replicaCount: 1
+
+ingester:
+  replicas: 1

@@ -1,0 +1,27 @@
+{{- if ne .Values.config.storage.engine "blocks" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "metrics_enterprise.fullname" . }}-table-manager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-table-manager
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- with .Values.table_manager.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.table_manager.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app: {{ template "metrics_enterprise.name" . }}-table-manager
+    release: {{ .Release.Name }}
+{{- end -}}

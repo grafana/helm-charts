@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "metrics_enterprise.fullname" . }}-admin-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-admin-api
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- with .Values.admin_api.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.admin_api.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app: {{ template "metrics_enterprise.name" . }}-admin-api
+    release: {{ .Release.Name }}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "metrics_enterprise.fullname" . }}-distributor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-distributor
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- with .Values.distributor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.distributor.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app: {{ template "metrics_enterprise.name" . }}-distributor
+    release: {{ .Release.Name }}

@@ -1,0 +1,21 @@
+dependencies:
+- name: memcached
+  repository: https://charts.helm.sh/stable
+  version: 3.2.3
+- name: memcached
+  repository: https://charts.helm.sh/stable
+  version: 3.2.3
+- name: memcached
+  repository: https://charts.helm.sh/stable
+  version: 3.2.3
+- name: memcached
+  repository: https://charts.helm.sh/stable
+  version: 3.2.3
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.0
+- name: consul
+  repository: https://helm.releases.hashicorp.com
+  version: 0.25.0
+digest: sha256:e1c9cb0854420b59d82a34e53361436a0ebc389af56f8b07831aca85cb95716e
+generated: "2020-12-23T15:13:43.9944241-05:00"

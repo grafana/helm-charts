@@ -1,0 +1,161 @@
+{{- if eq .Values.config.storage.engine "blocks" -}}
+{{- if .Values.compactor.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "metrics_enterprise.fullname" . }}-compactor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-compactor
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    {{- toYaml .Values.compactor.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.compactor.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "metrics_enterprise.name" . }}-compactor
+      release: {{ .Release.Name }}
+  updateStrategy:
+    {{- toYaml .Values.compactor.strategy | nindent 4 }}
+  serviceName: {{ template "metrics_enterprise.fullname" . }}-compactor
+  {{- if .Values.compactor.persistentVolume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+        {{- if .Values.compactor.persistentVolume.annotations }}
+        annotations:
+          {{ toYaml .Values.compactor.persistentVolume.annotations | nindent 10 }}
+        {{- end }}
+      spec:
+        {{- if .Values.compactor.persistentVolume.storageClass }}
+        {{- if (eq "-" .Values.compactor.persistentVolume.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: "{{ .Values.compactor.persistentVolume.storageClass }}"
+        {{- end }}
+        {{- end }}
+        accessModes:
+          {{ toYaml .Values.compactor.persistentVolume.accessModes | nindent 10 }}
+        resources:
+          requests:
+            storage: "{{ .Values.compactor.persistentVolume.size }}"
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "metrics_enterprise.name" . }}-compactor
+        name: {{ template "metrics_enterprise.name" . }}-compactor
+        target: compactor
+        release: {{ .Release.Name }}
+        {{- with .Values.compactor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.useExternalConfig }}
+        checksum/config: {{ .Values.externalConfigVersion }}
+        {{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with .Values.compactor.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      {{- if .Values.compactor.priorityClassName }}
+      priorityClassName: {{ .Values.compactor.priorityClassName }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.compactor.securityContext | nindent 8 }}
+      initContainers:
+        {{- toYaml .Values.compactor.initContainers | nindent 8 }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      nodeSelector:
+        {{- toYaml .Values.compactor.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.compactor.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.compactor.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
+      volumes:
+        - name: config
+          secret:
+            {{- if .Values.useExternalConfig }}
+            secretName: {{ .Values.externalConfigSecretName }}
+            {{- else }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
+            {{- end }}
+        - name: license
+          secret:
+            secretName: {{ template "metrics_enterprise.fullname" . }}-license
+        {{- if not .Values.compactor.persistentVolume.enabled }}
+        - name: storage
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.compactor.extraVolumes }}
+        {{ toYaml .Values.compactor.extraVolumes | nindent 8 }}
+        {{- end }}
+      containers:
+        {{- if .Values.compactor.extraContainers }}
+        {{ toYaml .Values.compactor.extraContainers | nindent 8 }}
+        {{- end }}
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "-target=compactor"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-admin
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.secret-access-key=supersecret
+            - -blocks-storage.s3.insecure=true
+            {{- end }}
+            {{- range $key, $value := .Values.compactor.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.compactor.extraVolumeMounts }}
+            {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12}}
+            {{- end }}
+            - name: config
+              mountPath: /etc/metrics-enterprise
+            - name: license
+              mountPath: /license
+            - name: storage
+              mountPath: "/data"
+              {{- if .Values.compactor.persistentVolume.subPath }}
+              subPath: {{ .Values.compactor.persistentVolume.subPath }}
+              {{- end }}
+          ports:
+            - name: http-metrics
+              containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.compactor.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.compactor.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.compactor.resources | nindent 12 }}
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+            {{- if .Values.compactor.env }}
+              {{- toYaml .Values.compactor.env | nindent 12 }}
+            {{- end }}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,42 @@
+apiVersion: v2
+version: 1.0.0
+appVersion: v1.1.1
+description: 'Grafana Metrics Enterprise'
+engine: gotpl
+home: https://grafana.com/products/metrics-enterprise/
+icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+kubeVersion: ^1.10.0-0
+name: metrics-enterprise
+sources:
+- https://github.com/grafana/metrics-enterprise-helm-chart
+dependencies:
+  - name: memcached
+    alias: memcached
+    version: 3.2.3
+    repository: https://charts.helm.sh/stable
+    condition: memcached.enabled
+  - name: memcached
+    alias: memcached-index-read
+    version: 3.2.3
+    repository: https://charts.helm.sh/stable
+    condition: memcached-index-read.enabled
+  - name: memcached
+    alias: memcached-index-write
+    version: 3.2.3
+    repository: https://charts.helm.sh/stable
+    condition: memcached-index-write.enabled
+  - name: memcached
+    alias: memcached-metadata
+    version: 3.2.3
+    repository: https://charts.helm.sh/stable
+    condition: memcached-metadata.enabled
+  - name: minio
+    alias: minio
+    version: 8.0.0
+    repository: https://helm.min.io/
+    condition: minio.enabled
+  - name: consul
+    alias: consul
+    version: 0.25.0
+    repository: https://helm.releases.hashicorp.com
+    condition: consul.enabled
