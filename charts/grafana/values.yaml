@@ -76,7 +76,7 @@ securityContext:
   runAsGroup: 472
   fsGroup: 472
 
-securityContext:
+containerSecurityContext:
   {}
 
 extraConfigmapMounts: []
