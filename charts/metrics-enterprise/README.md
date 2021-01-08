@@ -67,16 +67,6 @@ To upgrade Grafana Metrics Enterprise use the following command:
 $ helm upgrade <cluster name>  metrics-enterprise/metrics-enterprise -f <values.yaml file>
 ```
 
-## Chart Requirements
-
-| Repository | Name | Version |
-|------------|------|---------|
-| https://kubernetes-charts.storage.googleapis.com/ | memcached | 3.2.3 |
-| https://kubernetes-charts.storage.googleapis.com/ | memcached | 3.2.3 |
-| https://kubernetes-charts.storage.googleapis.com/ | memcached | 3.2.3 |
-| https://helm.min.io/ | minio | 8.0.0 |
-| https://helm.releases.hashicorp.com | consul | 0.25.0 |
-
 ## Chart Values
 
 | Key | Type | Default | Description |
