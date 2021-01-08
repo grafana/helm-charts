@@ -38,20 +38,20 @@ To deploy the default configuration with enterprise features:
 
 ```console
 $ # Add the repository
-$ helm repo add metrics-enterprise https://grafana.github.io/metrics-enterprise-helm-chart
+$ helm repo add grafana https://grafana.github.io/helm-charts
 $ # Run bootstrapping job
-$ helm install <cluster name> metrics-enterprise/metrics-enterprise --set bootstrap=true
+$ helm install <cluster name> grafana/metrics-enterprise --set bootstrap=true
 $ # Deploy cluster components
-$ helm upgrade <cluster name> metrics-enterprise/metrics-enterprise --set bootstrap=false
+$ helm upgrade <cluster name> grafana/metrics-enterprise --set bootstrap=false
 ```
 
 Or if you do not wish to run with enterprise features:
 
 ```console
 $ # Add the repository
-$ helm repo add metrics-enterprise https://grafana.github.io/metrics-enterprise-helm-chart
+$ helm repo add grafana https://grafana.github.io/helm-charts
 $ # Deploy the cluster
-$ helm install <cluster name> metrics-enterprise/metrics-enterprise
+$ helm install <cluster name> grafana/metrics-enterprise
 ```
 
 As part of this chart many different pods and services are installed which all
@@ -64,7 +64,7 @@ chart.
 To upgrade Grafana Metrics Enterprise use the following command:
 
 ```console
-$ helm upgrade <cluster name>  metrics-enterprise/metrics-enterprise -f <values.yaml file>
+$ helm upgrade <cluster name>  grafana/metrics-enterprise -f <values.yaml file>
 ```
 
 ## Chart Values
