@@ -76,6 +76,8 @@ securityContext:
   runAsGroup: 472
   fsGroup: 472
 
+containerSecurityContext:
+  {}
 
 extraConfigmapMounts: []
   # - name: certs-configmap
