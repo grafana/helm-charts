@@ -1026,6 +1026,6 @@ networkPolicy:
     namespaceSelector: {}
   externalStorage:
     # -- Specify the port used for external storage, e.g. AWS S3
-    port: null
+    ports: []
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []

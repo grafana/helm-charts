@@ -128,7 +128,7 @@ spec:
   {{- end }}
 {{- end }}
 
-{{- if .Values.networkPolicy.externalStorage.port }}
+{{- if len .Values.networkPolicy.externalStorage.ports }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -144,8 +144,10 @@ spec:
       {{- include "loki.selectorLabels" . | nindent 6 }}
   egress:
     - ports:
-        - port: {{ .Values.networkPolicy.externalStorage.port }}
+      {{- range $port := .Values.networkPolicy.externalStorage.ports }}
+        - port: {{ $port }}
           protocol: TCP
+      {{- end }}
   {{- if len .Values.networkPolicy.externalStorage.cidrs }}
       to:
       {{- range $cidr := .Values.networkPolicy.externalStorage.cidrs }}
