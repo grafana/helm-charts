@@ -158,3 +158,32 @@ spec:
 {{- end }}
 
 {{- end }}
+
+{{- if .Values.networkPolicy.discovery.port }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "loki.name" . }}-egress-discovery
+  labels:
+    {{- include "loki.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      {{- include "loki.selectorLabels" . | nindent 6 }}
+  egress:
+    - ports:
+        - port: {{ .Values.networkPolicy.discovery.port }}
+          protocol: TCP
+  {{- if .Values.networkPolicy.discovery.namespaceSelector }}
+      to:
+        - namespaceSelector:
+          {{- toYaml .Values.networkPolicy.discovery.namespaceSelector | nindent 12 }}
+          {{- if .Values.networkPolicy.discovery.podSelector }}
+          podSelector:
+          {{- toYaml .Values.networkPolicy.discovery.podSelector | nindent 12 }}
+          {{- end }}
+  {{- end }}
+{{- end }}
