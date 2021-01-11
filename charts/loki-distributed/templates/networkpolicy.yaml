@@ -83,7 +83,7 @@ spec:
     - ports:
         - port: http-metrics
           protocol: TCP
-    {{- if len .Values.networkPolicy.metrics.cidrs }}
+    {{- if .Values.networkPolicy.metrics.cidrs }}
       from:
       {{- range $cidr := .Values.networkPolicy.metrics.cidrs }}
         - ipBlock:
@@ -128,7 +128,7 @@ spec:
   {{- end }}
 {{- end }}
 
-{{- if len .Values.networkPolicy.externalStorage.ports }}
+{{- if .Values.networkPolicy.externalStorage.ports }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -148,7 +148,7 @@ spec:
         - port: {{ $port }}
           protocol: TCP
       {{- end }}
-  {{- if len .Values.networkPolicy.externalStorage.cidrs }}
+  {{- if .Values.networkPolicy.externalStorage.cidrs }}
       to:
       {{- range $cidr := .Values.networkPolicy.externalStorage.cidrs }}
         - ipBlock:
