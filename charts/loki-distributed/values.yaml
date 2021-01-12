@@ -211,6 +211,10 @@ ingester:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the ingester pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the ingester pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the ingester pods
+  extraVolumes: []
   # -- Resource requests and limits for the ingester
   resources: {}
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
@@ -317,6 +321,10 @@ querier:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the querier pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the querier pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the querier pods
+  extraVolumes: []
   # -- Resource requests and limits for the querier
   resources: {}
   # -- Grace period to allow the querier to shutdown before it is killed
@@ -422,6 +430,10 @@ tableManager:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the table-manager pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the table-manager pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the table-manager pods
+  extraVolumes: []
   # -- Resource requests and limits for the table-manager
   resources: {}
   # -- Grace period to allow the table-manager to shutdown before it is killed
@@ -519,6 +531,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Annotations for the gateway service
+    annotations: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
@@ -637,6 +651,10 @@ compactor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the compactor pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the compactor pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the compactor pods
+  extraVolumes: []
   # -- Resource requests and limits for the compactor
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
@@ -680,6 +698,10 @@ ruler:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the ruler pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the ruler pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the ruler pods
+  extraVolumes: []
   # -- Resource requests and limits for the ruler
   resources: {}
   # -- Grace period to allow the ruler to shutdown before it is killed
@@ -818,6 +840,8 @@ memcachedExporter:
     tag: v0.6.0
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Memcached Exporter resource requests and limits
+  resources: {}
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled

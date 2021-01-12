@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.19.6](https://img.shields.io/badge/Version-0.19.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.22.0](https://img.shields.io/badge/Version-0.22.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -26,6 +26,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
+| compactor.extraVolumeMounts | list | `[]` | Volume mounts to add to the compactor pods |
+| compactor.extraVolumes | list | `[]` | Volumes to add to the compactor pods |
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `loki.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `loki.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `loki.image.tag` |
@@ -77,6 +79,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
+| gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
 | gateway.service.nodePort | string | `nil` | Node port if service type is NodePort |
@@ -91,6 +94,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
+| ingester.extraVolumeMounts | list | `[]` | Volume mounts to add to the ingester pods |
+| ingester.extraVolumes | list | `[]` | Volumes to add to the ingester pods |
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `loki.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
@@ -136,6 +141,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | memcachedExporter.image.registry | string | `"docker.io"` | The Docker registry for the Memcached Exporter |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.6.0"` | Memcached Exporter Docker image tag |
+| memcachedExporter.resources | object | `{}` | Memcached Exporter resource requests and limits |
 | memcachedFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedFrontend.enabled | bool | `false` | Specifies whether the Memcached frontend cache should be enabled |
 | memcachedFrontend.extraArgs | list | `[]` | Additional CLI args for memcached-frontend |
@@ -182,6 +188,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
+| querier.extraVolumeMounts | list | `[]` | Volume mounts to add to the querier pods |
+| querier.extraVolumes | list | `[]` | Volumes to add to the querier pods |
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `loki.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
@@ -215,6 +223,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | ruler.extraArgs | list | `[]` | Additional CLI args for the ruler |
 | ruler.extraEnv | list | `[]` | Environment variables to add to the ruler pods |
 | ruler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ruler pods |
+| ruler.extraVolumeMounts | list | `[]` | Volume mounts to add to the ruler pods |
+| ruler.extraVolumes | list | `[]` | Volumes to add to the ruler pods |
 | ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
@@ -244,6 +254,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |
 | tableManager.extraEnv | list | `[]` | Environment variables to add to the table-manager pods |
 | tableManager.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the table-manager pods |
+| tableManager.extraVolumeMounts | list | `[]` | Volume mounts to add to the table-manager pods |
+| tableManager.extraVolumes | list | `[]` | Volumes to add to the table-manager pods |
 | tableManager.image.registry | string | `nil` | The Docker registry for the table-manager image. Overrides `loki.image.registry` |
 | tableManager.image.repository | string | `nil` | Docker image repository for the table-manager image. Overrides `loki.image.repository` |
 | tableManager.image.tag | string | `nil` | Docker image tag for the table-manager image. Overrides `loki.image.tag` |
@@ -278,13 +290,28 @@ The other components are optional and must be explicitly enabled.
 
 ## Configuration
 
-This chart configures Loki in microservices mode. It has been tested to work with [boltdb-shipper](https://grafana.com/docs/loki/latest/operations/storage/boltdb-shipper/)
+This chart configures Loki in microservices mode.
+It has been tested to work with [boltdb-shipper](https://grafana.com/docs/loki/latest/operations/storage/boltdb-shipper/)
 and [memberlist](https://grafana.com/docs/loki/latest/configuration/#memberlist_config) while other storage and discovery options should work as well.
 However, the chart does not support setting up Consul or Etcd for discovery,
 and it is not intended to support these going forward.
 They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which ingester, distributor, querier, and ruler are part of.
+
+----
+
+**NOTE:**
+In its default configuration, the chart uses `boltdb-shipper` and `filesystem` as storage.
+The reason for this is that the chart can be validated and installed in a CI pipeline.
+However, this setup is not fully functional.
+Querying will not be possible (or limited to the ingesters' in-memory caches) because that would otherwise require shared storage between ingesters and queriers
+which the chart does not support and would require a volume that supports `ReadWriteMany` access mode anyways.
+The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/loki/latest/storage/.
+
+Alternatively, in order to quickly test Loki using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) can be used.
+
+----
 
 ### Directory and File Locations
 

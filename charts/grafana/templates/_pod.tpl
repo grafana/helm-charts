@@ -203,6 +203,10 @@ containers:
       - {{ . }}
     {{- end }}
   {{- end}}
+{{- if .Values.containerSecurityContext }}
+    securityContext:
+{{- toYaml .Values.containerSecurityContext | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: config
         mountPath: "/etc/grafana/grafana.ini"
