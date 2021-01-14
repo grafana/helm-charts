@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-shopt -s nullglob
 
 cat <<EOF
 # See https://github.com/scottrigby/prometheus-helm-charts/issues/12
