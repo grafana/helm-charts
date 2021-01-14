@@ -13,7 +13,7 @@ data:
 {{- range $key, $value := index .Values "grafana.ini" }}
     [{{ $key }}]
     {{- range $elem, $elemVal := $value }}
-    {{ $elem }} = {{ $elemVal }}
+  {{ tpl (toYaml $value | indent 4) $root }}
     {{- end }}
 {{- end }}
 
