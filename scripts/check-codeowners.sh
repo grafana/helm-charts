@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+shopt -s nullglob
 
 cat <<EOF
 # See https://github.com/scottrigby/prometheus-helm-charts/issues/12
@@ -11,7 +12,7 @@ cat <<EOF
 
 EOF
 
-for DIR in "./charts/*"
+for DIR in ./charts/*
 do
   FILE="$DIR/Chart.yaml"
   DIR="$(echo $DIR | sed 's/^\.//')"
