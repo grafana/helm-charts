@@ -7,5 +7,5 @@
 * @grafana/helm-charts-admins
 
 /charts/grafana/ @maorfr @rtluckie @torstenwalter @Xtigyro @zanhsieh
-/charts/loki-distributed @unguiculus
-/charts/loki-canary @unguiculus
+/charts/loki-distributed/ @unguiculus
+/charts/loki-canary/ @unguiculus
