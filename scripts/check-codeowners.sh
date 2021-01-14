@@ -15,7 +15,7 @@ EOF
 for DIR in ./charts/*
 do
   FILE="$DIR/Chart.yaml"
-  DIR="$(echo "$DIR" | sed 's/^\.//')"
+  DIR="$(echo "${DIR//^\.//}")"
   MAINTAINERS="$(yq e '.maintainers.[].name' "$FILE" | sed 's/^/@/' | sort --ignore-case)"
   echo "$DIR/ $MAINTAINERS"
 done
