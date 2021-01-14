@@ -11,7 +11,7 @@ cat <<EOF
 
 EOF
 
-for DIR in "$(ls -1 -d ./charts/*)"
+for DIR in $(ls -1 -d ./charts/*)
 do
   FILE="$DIR/Chart.yaml"
   DIR="$(echo $DIR | sed 's/^\.//')"
