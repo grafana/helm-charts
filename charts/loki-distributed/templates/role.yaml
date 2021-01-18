@@ -6,9 +6,13 @@ metadata:
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 rules:
-- apiGroups:      ['extensions']
-  resources:      ['podsecuritypolicies']
-  verbs:          ['use']
-  resourceNames:  [{{ include "loki.fullname" . }}]
+- apiGroups:      
+  - extensions
+  resources:      
+  - podsecuritypolicies
+  verbs:          
+  - use
+  resourceNames:  
+  - {{ include "loki.fullname" . }}
 {{- end }}
 
