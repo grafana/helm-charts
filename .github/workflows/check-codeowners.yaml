@@ -14,4 +14,4 @@ jobs:
           ./scripts/check-codeowners.sh > .github/CODEOWNERS
       - name: check CODEOWNERS for modifications
         run: |
-          git diff --exit-code || echo "::error::There is at least one codeowner mismatch."
+          git diff --exit-code || echo "::warning::There is at least one codeowner mismatch."
