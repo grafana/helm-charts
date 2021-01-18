@@ -372,7 +372,7 @@ config:
               - __meta_kubernetes_pod_controller_name
           - action: replace
             source_labels:
-            - __meta_kubernetes_pod_label_component
+              - __meta_kubernetes_pod_label_component
             target_label: component
           {{- toYaml .Values.config.snippets.common | nindent 4 }}
 
@@ -382,7 +382,7 @@ config:
   # @default -- See `values.yaml`
   file: |
     server:
-      log_level: debug
+      log_level: info
       http_listen_port: {{ .Values.config.serverPort }}
 
     client:
