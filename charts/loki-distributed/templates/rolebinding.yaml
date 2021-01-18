@@ -10,6 +10,6 @@ roleRef:
   kind: Role
   name: {{ include "loki.fullname" . }}
 subjects:
-- kind: ServiceAccount
-  name: {{ include "loki.serviceAccountName" . }}
+  - kind: ServiceAccount
+    name: {{ include "loki.serviceAccountName" . }}
 {{- end }}
