@@ -28,8 +28,8 @@ spec:
   fsGroup:
     rule: 'MustRunAs'
     ranges:
-    - min: 1
-      max: 65535
+      - min: 1
+        max: 65535
   readOnlyRootFilesystem: true
   requiredDropCapabilities:
     - ALL
