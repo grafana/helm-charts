@@ -16,5 +16,5 @@ do
   FILE="$DIR/Chart.yaml"
   DIR="${DIR//\./}"
   MAINTAINERS="$(yq e '.maintainers.[].name' "$FILE" | sed 's/^/@/' | sort --ignore-case)"
-  echo "$DIR/ $MAINTAINERS"
+  IFS=$'\n' MAINTAINERS=(${MAINTAINERS}) echo "$DIR/ $MAINTAINERS"
 done
