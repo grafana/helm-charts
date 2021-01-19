@@ -102,5 +102,5 @@ spec:
         - name: docker-entrypoint-d-override
           emptyDir: {}
         {{- if .Values.gateway.extraVolumes }}
-        {{- toYaml .Values.gateway.extraVolumes | nindent 8}}
+        {{- toYaml .Values.gateway.extraVolumes | nindent 8 }}
         {{- end }}
