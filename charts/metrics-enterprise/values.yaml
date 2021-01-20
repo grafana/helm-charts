@@ -38,6 +38,11 @@ externalConfigVersion: '0'
 license:
   contents: "NOTAVALIDLICENSE"
 
+tokengenJob:
+  extraArgs: []
+  env: []
+  annotations: {}
+
 config:
   auth_enabled: false
   cluster_name: CHANGEME
