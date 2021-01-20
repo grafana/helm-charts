@@ -30,8 +30,13 @@ serviceAccount:
   annotations: {}
 
 useExternalConfig: false
-externalConfigSecretName: 'secret-with-config.yaml'
+externalConfigSecretName: 'metrics-enterprise-config'
 externalConfigVersion: '0'
+
+# In order to use Grafana Metrics Enterprise features, you will need to provide the contents of your Grafana Metrics Enterprise license.
+# For example with the flag `--set-file 'license.contents=./license.jwt'`
+license:
+  contents: "NOTAVALIDLICENSE"
 
 config:
   auth_enabled: false

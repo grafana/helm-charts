@@ -4,18 +4,10 @@ Helm chart for deploying [Grafana Metrics Enterprise](https://grafana.com/produc
 
 ## Dependencies
 
-## Grafana Metrics Enterprise license file bootstrapping
+## Grafana Metrics Enterprise license
 
-In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide a license file to a bootstrap job.
-For more information, see the [Getting Started](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license) documentation.
-
-This Helm chart expects the license to be embedded in a Kubernetes secret with the name `{{ template "metrics_enterprise.fullname" . }}-license`.
-
-To create the secret from a local `license.jwt` file:
-
-```console
-$ kubectl create secret generic <cluster name>-metrics-enterprise-license --from-file=license.jwt --dry-run=client -o yaml | kubectl apply -f -
-```
+In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide the contents of a Grafana Metrics Enterprise license file as the value for the `license.contents` variable.
+To obtain a Grafana Metrics Enterprise license, refer to [Get a license](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license).
 
 ### Key-Value store
 
@@ -34,38 +26,20 @@ See [cortex documentation](https://cortexmetrics.io/docs/) for details on storag
 
 ## Installation
 
-To deploy the default configuration with enterprise features:
+To install the chart with licensed features enabled, using a local Grafana Metrics Enterprise license file called `license.jwt`:
 
 ```console
 $ # Add the repository
 $ helm repo add grafana https://grafana.github.io/helm-charts
-$ # Run bootstrapping job
-$ helm install <cluster name> grafana/metrics-enterprise --set bootstrap=true
-$ # Deploy cluster components
-$ helm upgrade <cluster name> grafana/metrics-enterprise --set bootstrap=false
-```
-
-Or if you do not wish to run with enterprise features:
-
-```console
-$ # Add the repository
-$ helm repo add grafana https://grafana.github.io/helm-charts
-$ # Deploy the cluster
-$ helm install <cluster name> grafana/metrics-enterprise
+$ helm repo update
+$ # Perform install
+$ helm install <cluster name> grafana/metrics-enterprise --set-file 'license.contents=./license.jwt'
 ```
 
 As part of this chart many different pods and services are installed which all
 have varying resource requirements. Please make sure that you have sufficient
 resources (CPU/memory) available in your cluster before installing Grafana Metrics Enterprise Helm
 chart.
-
-## Upgrades
-
-To upgrade Grafana Metrics Enterprise use the following command:
-
-```console
-$ helm upgrade <cluster name>  grafana/metrics-enterprise -f <values.yaml file>
-```
 
 ## Chart Values
 
@@ -347,6 +321,7 @@ $ helm upgrade <cluster name>  grafana/metrics-enterprise -f <values.yaml file>
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths[0] | string | `"/"` |  |
 | ingress.tls | list | `[]` |  |
+| license.contents | string | `"NOTAVALIDLICENSE"` | To enable licensed features, this should be set to the contents of your Grafana Metrics Enterprise license file. |
 | memcached-index-read.enabled | bool | `false` |  |
 | memcached-index-read.memcached.extraArgs[0] | string | `"-I 32m"` |  |
 | memcached-index-read.memcached.maxItemMemory | int | `3840` |  |
