@@ -1,3 +1,9 @@
+# The default values specified in this file are enough to deploy all of the
+# Grafana Metrics Enterprise microservices but are not suitable for production
+# load.
+# To configure the resources for production load, refer to the the small.yaml or
+# large.yaml values files.
+
 # Container image settings.
 # Since the image is unique for all microservices, so are image settings.
 image:
@@ -169,9 +175,6 @@ admin_api:
     initialDelaySeconds: 45
 
   resources:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
       cpu: 10m
       memory: 32Mi
@@ -187,27 +190,19 @@ alertmanager:
   replicas: 1
 
   statefulSet:
-    # If true, use a statefulset instead of a deployment for pod management.
-    # This is useful for using a persistent volume for storing silences between restarts
-    #
-    enabled: false
+    enabled: true
 
   service:
     annotations: {}
     labels: {}
 
   resources:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
       cpu: 10m
       memory: 32Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
-    # log.level: debug
 
   # Pod Labels
   podLabels: {}
@@ -229,7 +224,6 @@ alertmanager:
     # If true and alertmanager.statefulSet.enabled is true,
     # Alertmanager will create/use a Persistent Volume Claim
     # If false, use emptyDir
-    #
     enabled: true
 
     # Alertmanager data Persistent Volume Claim annotations
@@ -245,7 +239,7 @@ alertmanager:
 
     # Alertmanager data Persistent Volume size
     #
-    size: 2Gi
+    size: 1Gi
 
     # Subdirectory of Alertmanager data Persistent Volume to mount
     # Useful if the volume's root directory is not empty
@@ -336,16 +330,13 @@ alertmanager:
   env: []
 
 distributor:
-  replicas: 2
+  replicas: 1
 
   service:
     annotations: {}
     labels: {}
 
   resources:
-    limits:
-      cpu: 1
-      memory: 1Gi
     requests:
       cpu: 100m
       memory: 512Mi
@@ -452,9 +443,6 @@ gateway:
     initialDelaySeconds: 45
 
   resources:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
       cpu: 10m
       memory: 32Mi
@@ -467,7 +455,7 @@ gateway:
   terminationGracePeriodSeconds: 60
 
 ingester:
-  replicas: 3
+  replicas: 1
 
   statefulSet:
     # If true, use a statefulset instead of a deployment for pod management.
@@ -480,9 +468,6 @@ ingester:
     labels: {}
 
   resources:
-    limits:
-      cpu: 1
-      memory: 1Gi
     requests:
       cpu: 100m
       memory: 512Mi
@@ -531,17 +516,14 @@ ingester:
     # Ingester data Persistent Volume access modes
     # Must match those of existing PV or dynamic provisioner
     # Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-    #
     accessModes:
       - ReadWriteOnce
 
     # Ingester data Persistent Volume size
-    #
     size: 2Gi
 
     # Subdirectory of Ingester data Persistent Volume to mount
     # Useful if the volume's root directory is not empty
-    #
     subPath: ''
 
 
@@ -599,12 +581,9 @@ ruler:
     labels: {}
 
   resources:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
-      cpu: 10m
-      memory: 32Mi
+      cpu: 100m
+      memory: 128Mi
 
   # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
@@ -663,11 +642,8 @@ querier:
     labels: {}
 
   resources:
-    limits:
-      cpu: 1
-      memory: 1Gi
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 128Mi
 
   # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
@@ -732,19 +708,16 @@ querier:
   env: []
 
 query_frontend:
-  replicas: 2
+  replicas: 1
 
   service:
     annotations: {}
     labels: {}
 
   resources:
-    limits:
-      cpu: 1
-      memory: 256Mi
     requests:
-      cpu: 10m
-      memory: 32Mi
+      cpu: 100m
+      memory: 128Mi
 
   # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
@@ -815,9 +788,6 @@ store_gateway:
     labels: {}
 
   resources:
-    limits:
-      cpu: 1
-      memory: 1Gi
     requests:
       cpu: 100m
       memory: 512Mi
@@ -926,9 +896,6 @@ compactor:
     labels: {}
 
   resources:
-    limits:
-      cpu: 1
-      memory: 1Gi
     requests:
       cpu: 100m
       memory: 512Mi
@@ -1028,91 +995,77 @@ compactor:
   extraPorts: []
   env: []
 
-# Blocks/chunks chunk cache.
 memcached:
-  enabled: true
-  replicaCount: 2
-  pdbMinAvailable: 1
-  memcached:
-    maxItemMemory: 3840
-    extraArgs:
-      - -I 32m
-    threads: 32
-  resources:
-    requests:
-      memory: 1Gi
-      cpu: 10m
-    limits:
-      memory: 4Gi
-      cpu: 1
-  metrics:
-    enabled: true
-
-# Chunks index-write cache.
-memcached-index-write:
   enabled: false
-  replicaCount: 2
   memcached:
-    maxItemMemory: 3840
     extraArgs:
-      - -I 32m
-    threads: 32
-  resources:
-    requests:
-      memory: 1Gi
-      cpu: 10m
-    limits:
-      memory: 4Gi
-      cpu: 1
+      - -m 8192
+      - -I 1m
+      - -c 4096
   metrics:
     enabled: true
-
-# Blocks/chunks index read cache.
-memcached-index-read:
-  enabled: true
-  replicaCount: 2
-
-  memcached:
-    maxItemMemory: 3840
-    extraArgs:
-      - -I 32m
-    threads: 32
+  replicaCount: 1
   resources:
-    requests:
-      memory: 1Gi
-      cpu: 10m
     limits:
-      memory: 4Gi
-      cpu: 1
+      memory: 14745Mi # floor(1.5 * resources.requests.memory)
+    requests:
+      cpu: 500m
+      memory: 9830Mi # floor(1.2 * memcached configured limit (-m))
+
+memcached-frontend:
+  enabled: false
+  memcached:
+    extraArgs:
+      - -m 1024
+      - -I 10m
+      - -c 1024
   metrics:
     enabled: true
-# Blocks metadata cache.
-# https://cortexmetrics.io/docs/blocks-storage/querier/#metadata-cache.
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1842 # floor(1.5 * resources.requests.memory)
+    requests:
+      cpu: 500m
+      memory: 1228 # floor(1.2 * memcached configured limit (-m))
+
+memcached-index-queries:
+  enabled: false
+  memcached:
+    extraArgs:
+      - -m 2048
+      - -I 15m
+      - -c 1024
+  metrics:
+    enabled: true
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 3685Mi # floor(1.5 * resources.requests.memory)
+    requests:
+      cpu: 500m
+      memory: 2457Mi # floor(1.2 * memcached configured limit (-m))
+
 memcached-metadata:
-  enabled: true
-  replicaCount: 2
+  enabled: false
   memcached:
-    maxIteMmemory: 1
     extraArgs:
       - -m 512
-      - -I 32m
-    threads: 32
-  resources:
-    requests:
-      memory: 540Mi  # A little over the memcached configured limit (-m).
-      cpu: 10m
-    limits:
-      memory: 810Mi  # 1.5 * memory request
-      cpu: 1
+      - -I 1m
+      - -c 1024
   metrics:
     enabled: true
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 921Mi  # floor(1.5 * resources.requests.memory)
+    requests:
+      cpu: 500m
+      memory: 614Mi  # floor(1.2 * memcached configured limit (-m))
 
 minio:
   enabled: true
   accessKey: metrics-enterprise
-  secretKey: supersecret
-  persistence:
-    size: 25Gi
   buckets:
     - name: metrics-enterprise-tsdb
       policy: none
@@ -1123,8 +1076,22 @@ minio:
     - name: metrics-enterprise-ruler
       policy: none
       purge: false
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  secretKey: supersecret
 
 consul:
   enabled: true
   client:
     enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  server:
+    replicas: 1
+    bootstrapExpect: 1
