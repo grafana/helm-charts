@@ -233,6 +233,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
+| rbac.pspEnabled | bool | `true` | If enabled, a PodSecurityPolicy is created |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
 | ruler.directories | object | `{}` | Directories containing rules files |
 | ruler.enabled | bool | `false` | Specifies whether the ruler should be enabled |
