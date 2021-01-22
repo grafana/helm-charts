@@ -75,13 +75,12 @@ memcached:
   enabled: true
   replicaCount: 2
 
-memcached-frontend:
+memcached-queries:
   enabled: true
   replicaCount: 3
 
-memcached-index-queries:
+memcached-metadata:
   enabled: true
-  replicaCount: 3
 
 minio:
   enabled: false

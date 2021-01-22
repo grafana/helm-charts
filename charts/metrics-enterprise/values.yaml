@@ -999,9 +999,9 @@ memcached:
   enabled: false
   memcached:
     extraArgs:
-      - -m 8192
       - -I 1m
       - -c 4096
+    maxItemMemory: 8192
   metrics:
     enabled: true
   replicaCount: 1
@@ -1012,30 +1012,13 @@ memcached:
       cpu: 500m
       memory: 9830Mi # floor(1.2 * memcached configured limit (-m))
 
-memcached-frontend:
+memcached-queries:
   enabled: false
   memcached:
     extraArgs:
-      - -m 1024
-      - -I 10m
-      - -c 1024
-  metrics:
-    enabled: true
-  replicaCount: 1
-  resources:
-    limits:
-      memory: 1842 # floor(1.5 * resources.requests.memory)
-    requests:
-      cpu: 500m
-      memory: 1228 # floor(1.2 * memcached configured limit (-m))
-
-memcached-index-queries:
-  enabled: false
-  memcached:
-    extraArgs:
-      - -m 2048
       - -I 15m
       - -c 1024
+    maxItemMemory: 2048
   metrics:
     enabled: true
   replicaCount: 1
@@ -1050,9 +1033,9 @@ memcached-metadata:
   enabled: false
   memcached:
     extraArgs:
-      - -m 512
       - -I 1m
       - -c 1024
+    maxItemMemory: 512
   metrics:
     enabled: true
   replicaCount: 1

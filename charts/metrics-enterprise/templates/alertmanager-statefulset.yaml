@@ -114,7 +114,7 @@ spec:
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
-            - -cluster.peer={{ template "metrics-enterprise.fullname" $ }}-alertmanager-{{ $n }}.{{ template "metrics_enterprise.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc.cluster.local:{{ $clusterPort }}
+            - -cluster.peer={{ template "metrics_enterprise.fullname" $ }}-alertmanager-{{ $n }}.{{ template "metrics_enterprise.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc.cluster.local:{{ $clusterPort }}
             {{- end }}
             {{- end }}
             {{- if .Values.minio.enabled }}

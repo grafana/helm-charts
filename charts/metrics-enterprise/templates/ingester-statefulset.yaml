@@ -127,12 +127,6 @@ spec:
             - -blocks-storage.s3.secret-access-key=supersecret
             - -blocks-storage.s3.insecure=true
             {{- end }}
-            {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
-            {{- end }}
-            {{- if and (index .Values "memcached-index-write" "enabled") (eq .Values.config.storage.engine "chunks") }}
-            - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
-            {{- end }}
             {{- range $key, $value := .Values.ingester.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
