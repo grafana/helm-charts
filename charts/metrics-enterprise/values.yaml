@@ -1007,10 +1007,10 @@ memcached:
   replicaCount: 1
   resources:
     limits:
-      memory: 14745Mi # floor(1.5 * resources.requests.memory)
+      memory: 14745Mi  # floor(1.5 * resources.requests.memory)
     requests:
       cpu: 500m
-      memory: 9830Mi # floor(1.2 * memcached configured limit (-m))
+      memory: 9830Mi  # floor(1.2 * memcached configured limit (-m))
 
 memcached-queries:
   enabled: false
@@ -1024,10 +1024,10 @@ memcached-queries:
   replicaCount: 1
   resources:
     limits:
-      memory: 3685Mi # floor(1.5 * resources.requests.memory)
+      memory: 3685Mi  # floor(1.5 * resources.requests.memory)
     requests:
       cpu: 500m
-      memory: 2457Mi # floor(1.2 * memcached configured limit (-m))
+      memory: 2457Mi  # floor(1.2 * memcached configured limit (-m))
 
 memcached-metadata:
   enabled: false
