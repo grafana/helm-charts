@@ -159,7 +159,7 @@ serviceAccount:
   annotations: {}
 
 # RBAC configuration
-rbac: 
+rbac:
   # -- If enabled, a PodSecurityPolicy is created
   pspEnabled: true
 
