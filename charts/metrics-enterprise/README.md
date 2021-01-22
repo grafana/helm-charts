@@ -221,8 +221,6 @@ chart.
 | config.storage.engine | string | `"chunks"` |  |
 | config.storage.index\_queries\_cache\_config.memcached.expiration | string | `"1h"` |  |
 | config.storage.index\_queries\_cache\_config.memcached\_client.timeout | string | `"1s"` |  |
-| config.table\_manager.retention\_deletes\_enabled | bool | `false` |  |
-| config.table\_manager.retention\_period | string | `"0s"` |  |
 | distributor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
 | distributor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
 | distributor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"distributor"` |  |
@@ -553,45 +551,9 @@ chart.
 | store\_gateway.strategy.type | string | `"RollingUpdate"` |  |
 | store\_gateway.terminationGracePeriodSeconds | int | `240` |  |
 | store\_gateway.tolerations | list | `[]` |  |
-| table\_manager.affinity | object | `{}` |  |
-| table\_manager.annotations | object | `{}` |  |
-| table\_manager.env | list | `[]` |  |
-| table\_manager.extraArgs | object | `{}` |  |
-| table\_manager.extraContainers | list | `[]` |  |
-| table\_manager.extraPorts | list | `[]` |  |
-| table\_manager.extraVolumeMounts | list | `[]` |  |
-| table\_manager.extraVolumes | list | `[]` |  |
-| table\_manager.initContainers | list | `[]` |  |
-| table\_manager.livenessProbe.httpGet.path | string | `"/ready"` |  |
-| table\_manager.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
-| table\_manager.livenessProbe.initialDelaySeconds | int | `45` |  |
-| table\_manager.nodeSelector | object | `{}` |  |
-| table\_manager.persistence.subPath | string | `nil` |  |
-| table\_manager.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
-| table\_manager.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
-| table\_manager.podDisruptionBudget | object | `{}` |  |
-| table\_manager.podLabels | object | `{}` |  |
-| table\_manager.readinessProbe.httpGet.path | string | `"/ready"` |  |
-| table\_manager.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
-| table\_manager.readinessProbe.initialDelaySeconds | int | `45` |  |
-| table\_manager.replicas | int | `1` |  |
-| table\_manager.resources.limits.cpu | int | `1` |  |
-| table\_manager.resources.limits.memory | string | `"1Gi"` |  |
-| table\_manager.resources.requests.cpu | string | `"10m"` |  |
-| table\_manager.resources.requests.memory | string | `"32Mi"` |  |
-| table\_manager.securityContext | object | `{}` |  |
-| table\_manager.service.annotations | object | `{}` |  |
-| table\_manager.service.labels | object | `{}` |  |
-| table\_manager.strategy.rollingUpdate.maxSurge | int | `0` |  |
-| table\_manager.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
-| table\_manager.strategy.type | string | `"RollingUpdate"` |  |
-| table\_manager.terminationGracePeriodSeconds | int | `180` |  |
-| table\_manager.tolerations | list | `[]` |  |
 | useExternalConfig | bool | `false` |  |
 
 # Development
-
-For local development on single node clusters, the `local.yaml` values file can be used to deploy single replicas of the memcached and consul clusters.
 
 To configure a local default storage class for k3d:
 
