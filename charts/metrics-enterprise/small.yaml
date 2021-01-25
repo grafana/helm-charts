@@ -85,7 +85,7 @@ memcached-metadata:
 minio:
   enabled: false
 
-queriers:
+querier:
   replicas: 2
   resources:
     limits:
