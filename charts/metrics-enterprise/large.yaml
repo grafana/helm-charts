@@ -35,7 +35,8 @@ alertmanager:
     enabled: true
 
 compactor:
-  replicas: 1
+  persistentVolume:
+    size: 50Gi
   resources:
     limits:
       cpu: 1200m
@@ -45,14 +46,13 @@ compactor:
       memory: 1Gi
 
 consul:
-  enabled: true
-  client:
-    enabled: false
   resources:
-    limits:
     requests:
       cpu: 4
       memory: 4Gi
+  server:
+    replicas: 3
+    bootstrapExpect: 3
 
 distributor:
   replicas: 15
@@ -122,3 +122,11 @@ ruler:
       cpu: 1
       memory: 6Gi
 
+store_gateway:
+  persistentVolume:
+    size: 50Gi
+  replicas: 1
+  resources:
+    requests:
+      cpu: 1
+      memory: 6Gi
