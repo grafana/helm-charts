@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.23.1](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 0.23.2](https://img.shields.io/badge/Version-0.23.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -81,6 +81,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
 | gateway.podSecurityContext | object | `{"fsGroup":101,"runAsGroup":101,"runAsNonRoot":true,"runAsUser":101}` | The SecurityContext for gateway containers |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
+| gateway.readinessProbe.httpGet.path | string | `"/"` |  |
+| gateway.readinessProbe.httpGet.port | string | `"http"` |  |
+| gateway.readinessProbe.initialDelaySeconds | int | `15` |  |
+| gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
@@ -123,6 +127,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
+| loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| loki.readinessProbe.httpGet.port | string | `"http"` |  |
+| loki.readinessProbe.initialDelaySeconds | int | `30` |  |
+| loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
