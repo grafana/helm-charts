@@ -273,6 +273,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the distributor pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the distributor pods
+  extraVolumes: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
@@ -380,6 +384,10 @@ queryFrontend:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the query-frontend pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the query-frontend pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the query-frontend pods
+  extraVolumes: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
   # -- Grace period to allow the query-frontend to shutdown before it is killed

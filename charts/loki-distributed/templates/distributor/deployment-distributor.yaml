@@ -77,6 +77,9 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
+            {{- with .Values.distributor.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.distributor.resources | nindent 12 }}
       {{- with .Values.distributor.affinity }}
@@ -95,3 +98,6 @@ spec:
         - name: config
           configMap:
             name: {{ include "loki.fullname" . }}
+        {{- with .Values.distributor.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
