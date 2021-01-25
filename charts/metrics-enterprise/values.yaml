@@ -50,6 +50,7 @@ license:
   secretName: 'metrics-enterprise-license'
 
 tokengenJob:
+  enable: true
   extraArgs: []
   env: []
   annotations: {}

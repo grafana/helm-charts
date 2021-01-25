@@ -1,3 +1,4 @@
+{{ if .Values.tokengenJob.enable }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -23,7 +24,7 @@ spec:
       labels:
         app: {{ template "metrics_enterprise.name" . }}-tokengen
         name: {{ template "metrics_enterprise.name" . }}-tokengen
-        target: bootstrap
+        target: tokengen
         release: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
@@ -85,3 +86,4 @@ spec:
             secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
+{{- end }}
