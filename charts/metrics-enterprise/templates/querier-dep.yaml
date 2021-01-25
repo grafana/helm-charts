@@ -137,6 +137,6 @@ spec:
 {{- end }}
         - name: license
           secret:
-            secretName: {{ template "metrics_enterprise.fullname" . }}-license
+            secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}

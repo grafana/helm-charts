@@ -117,7 +117,7 @@ spec:
 {{- end }}
         - name: license
           secret:
-            secretName: {{ template "metrics_enterprise.fullname" . }}-license
+            secretName: {{ .Values.license.secretName }}
 {{- if .Values.query_frontend.extraVolumes }}
 {{ toYaml .Values.query_frontend.extraVolumes | indent 8}}
 {{- end }}
