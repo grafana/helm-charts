@@ -43,7 +43,9 @@ data:
         TenantID {{ .Values.config.tenantID }}
         BatchWait {{ .Values.config.batchWait }}
         BatchSize {{ int .Values.config.batchSize }}
+        {{- if .Values.config.labels }}
         Labels {{ .Values.config.labels }}
+        {{- end }}
         RemoveKeys {{ include "helm-toolkit.utils.joinListWithComma" .Values.config.removeKeys }}
         AutoKubernetesLabels {{ .Values.config.autoKubernetesLabels }}
         LabelMapPath /fluent-bit/etc/labelmap.json
