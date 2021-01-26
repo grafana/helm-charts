@@ -6,7 +6,7 @@ fullnameOverride: null
 
 initContainer:
   # -- Specifies whether the init container for setting inotify max user instances is to be enabled
-  enabled: true
+  enabled: false
   image:
     # -- The Docker registry for the init container
     registry: docker.io
