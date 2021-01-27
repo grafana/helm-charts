@@ -161,7 +161,7 @@ serviceAccount:
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: true
+  enabled: false
   # -- Alternative namespace for ServiceMonitor resources
   namespace: null
   # -- Namespace selector for ServiceMonitor resources
@@ -467,7 +467,7 @@ tableManager:
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
-            vabelSelector:
+            labelSelector:
               matchLabels:
                 {{- include "loki.tableManagerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
