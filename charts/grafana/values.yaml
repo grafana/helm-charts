@@ -644,6 +644,8 @@ imageRenderer:
     HTTP_HOST: "0.0.0.0"
     # RENDERING_ARGS: --disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
+  # image-renderer deployment serviceAccount
+  serviceAccountName: ""
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment Host Aliases
