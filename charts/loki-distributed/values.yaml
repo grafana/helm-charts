@@ -4,6 +4,10 @@ global:
     registry: null
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
+  # -- configures cluster domain ("cluster.local" by default)
+  clusterDomain: "cluster.local"
+  # -- configures DNS service name in kube-system
+  dnsService: "kube-dns"
 
 # -- Overrides the chart's name
 nameOverride: null
@@ -476,6 +480,10 @@ gateway:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the gateway pods
   extraEnvFrom: []
+  # -- Volumes to add to the gateway pods
+  extraVolumes: []
+  # -- Volume mounts to add to the gateway pods
+  extraVolumeMounts: []
   # -- The SecurityContext for gateway containers
   podSecurityContext:
     fsGroup: 101
@@ -579,7 +587,7 @@ gateway:
       access_log   /dev/stderr  main;
       sendfile     on;
       tcp_nopush   on;
-      resolver kube-dns.kube-system.svc.cluster.local;
+      resolver {{ .Values.global.dnsService }}.kube-system.svc.{{ .Values.global.clusterDomain }};
 
       server {
         listen             8080;
@@ -595,31 +603,31 @@ gateway:
         }
 
         location = /api/prom/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
 
         location = /api/prom/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
         }
 
         location ~ /api/prom/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
 
         location = /loki/api/v1/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
 
         location = /loki/api/v1/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
         }
 
         location ~ /loki/api/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
       }
     }
