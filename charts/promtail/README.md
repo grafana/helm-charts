@@ -75,13 +75,13 @@ The new release which will pick up again from the existing `positions.yaml`.
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
 | extraArgs | list | `[]` |  |
+| extraClientConfigs | object | empty | You can put here any keys that will be directly added to the config file's 'client' block. |
 | extraEnv | list | `[]` | Extra environment variables |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
 | extraPorts | object | `{}` | Configure additional ports and services. For each configured port, a corresponding service is created. See values.yaml for details |
+| extraScrapeConfigs | object | empty | You can put here any additional scrape configs you want to add to the config file. |
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
-| extra_client_configs | object | empty | You can put here any keys that will be directly added to the config file's 'client' block. |
-| extra_scrape_configs | object | empty | You can put here any additional scrape configs you want to add to the config file. |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |

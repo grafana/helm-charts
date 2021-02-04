@@ -216,11 +216,11 @@ podSecurityPolicy:
 
 # -- You can put here any keys that will be directly added to the config file's 'client' block.
 # @default -- empty
-extra_client_configs: {}
+extraClientConfigs: {}
 
 # -- You can put here any additional scrape configs you want to add to the config file.
 # @default -- empty
-extra_scrape_configs: {}
+extraScrapeConfigs: {}
 
 # -- Section for crafting Promtails config file. The only directly relevant value is `config.file`
 # which is a templated string that references the other values and snippets below this key.
@@ -439,11 +439,11 @@ config:
 
     client:
       url: {{ .Values.config.lokiAddress }}
-      {{- toYaml .Values.extra_client_configs | nindent 2 }}
+      {{- toYaml .Values.extraClientConfigs | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
 
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs $ | nindent 2 }}
-      {{- toYaml .Values.extra_scrape_configs | nindent 2 }}
+      {{- toYaml .Values.extraScrapeConfigs | nindent 2 }}
