@@ -158,6 +158,11 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
 
+# RBAC configuration
+rbac:
+  # -- If enabled, a PodSecurityPolicy is created
+  pspEnabled: false
+
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
