@@ -439,11 +439,11 @@ config:
 
     client:
       url: {{ .Values.config.lokiAddress }}
-      {{- toYaml .Values.extraClientConfigs | nindent 2 }}
+      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
 
     scrape_configs:
-      {{- tpl .Values.config.snippets.scrapeConfigs $ | nindent 2 }}
-      {{- toYaml .Values.extraScrapeConfigs | nindent 2 }}
+      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
+      {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
