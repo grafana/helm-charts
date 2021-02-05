@@ -1,26 +1,4 @@
 # Test values to limit the load during CI
-config:
-  auth_enabled: false
-  cluster_name: CHANGEME
-
-  admin_client:
-    storage:
-      type: s3
-
-  license:
-    path: "/license/license.jwt"
-
-  storage:
-    engine: blocks
-  blocks_storage:
-    backend: filesystem
-    tsdb:
-      dir: /data/tsdb
-    bucket_store:
-      sync_dir: /data/tsdb-sync
-    filesystem:
-      dir: "/data/store"
-
 alertmanager:
   persistentVolume:
     enabled: false
@@ -28,6 +6,33 @@ alertmanager:
 compactor:
   persistentVolume:
     enabled: false
+
+config:
+  alertmanager:
+    storage:
+      type: "local"
+      local:
+        path: "/data/configs"
+
+  blocks_storage:
+    backend: "filesystem"
+    tsdb:
+      dir: "/data/tsdb"
+    bucket_store:
+      sync_dir: "/data/tsdb-sync"
+    filesystem:
+      dir: "/data/store"
+
+  ruler:
+    storage:
+      type: "local"
+      local:
+        directory: "/data/rules"
+
+# Even though the admin-api requires an object store, it can be omitted because the admin-api
+# doesn't need to perform any actions against the store in the CI test.
+minio:
+  enabled: false
 
 ingester:
   persistentVolume:
