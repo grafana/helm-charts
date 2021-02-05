@@ -1,0 +1,25 @@
+# Test values to limit the load during CI
+config:
+  auth_enabled: false
+  cluster_name: CHANGEME
+
+  admin_client:
+    storage:
+      type: s3
+
+  license:
+    path: "/license/license.jwt"
+
+  storage:
+    engine: blocks
+  blocks_storage:
+    backend: filesystem
+    tsdb:
+      dir: /data/tsdb
+    bucket_store:
+      sync_dir: /data/tsdb-sync
+    filesystem:
+      dir: "/data/store"
+
+minio:
+  enabled: true
