@@ -29,10 +29,8 @@ config:
       local:
         directory: "/data/rules"
 
-# Even though the admin-api requires an object store, it can be omitted because the admin-api
-# doesn't need to perform any actions against the store in the CI test.
 minio:
-  enabled: false
+  enabled: true
 
 ingester:
   persistentVolume:
