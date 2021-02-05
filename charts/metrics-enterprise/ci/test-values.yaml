@@ -21,5 +21,18 @@ config:
     filesystem:
       dir: "/data/store"
 
-minio:
-  enabled: true
+alertmanager:
+  persistentVolume:
+    enabled: false
+
+compactor:
+  persistentVolume:
+    enabled: false
+
+ingester:
+  persistentVolume:
+    enabled: false
+
+store_gateway:
+  persistentVolume:
+    enabled: false
