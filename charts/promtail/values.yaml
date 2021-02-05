@@ -214,14 +214,6 @@ podSecurityPolicy:
   requiredDropCapabilities:
     - ALL
 
-# -- You can put here any keys that will be directly added to the config file's 'client' block.
-# @default -- empty
-extraClientConfigs: {}
-
-# -- You can put here any additional scrape configs you want to add to the config file.
-# @default -- empty
-extraScrapeConfigs: {}
-
 # -- Section for crafting Promtails config file. The only directly relevant value is `config.file`
 # which is a templated string that references the other values and snippets below this key.
 # @default -- See `values.yaml`
@@ -283,6 +275,14 @@ config:
     # If set to true, adds an additional label for the scrape job.
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
+
+    # -- You can put here any keys that will be directly added to the config file's 'client' block.
+    # @default -- empty
+    extraClientConfigs: {}
+    
+    # -- You can put here any additional scrape configs you want to add to the config file.
+    # @default -- empty
+    extraScrapeConfigs: {}
 
     scrapeConfigs: |
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
