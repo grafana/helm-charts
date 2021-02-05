@@ -264,6 +264,13 @@ config:
           - __meta_kubernetes_pod_uid
           - __meta_kubernetes_pod_container_name
         target_label: __path__
+      - action: replace
+        replacement: /var/log/pods/*$1/*.log
+        separator: /
+        source_labels:
+          - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
+          - __meta_kubernetes_pod_container_name
+        target_label: __path__
 
     # If set to true, adds an additional label for the scrape job.
     # This helps debug the Promtail config.
