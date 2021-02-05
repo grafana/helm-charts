@@ -62,13 +62,13 @@ spec:
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
           {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
             - -admin.client.s3.bucket-name=metrics-enterprise-admin
             - -admin.client.s3.access-key-id=metrics-enterprise
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             - -alertmanager.storage.type=s3
-            - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
             - -alertmanager.storage.s3.buckets=metrics-enterprise-ruler
             - -alertmanager.storage.s3.access-key-id=metrics-enterprise
             - -alertmanager.storage.s3.secret-access-key=supersecret

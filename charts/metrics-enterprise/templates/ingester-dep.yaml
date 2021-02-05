@@ -61,16 +61,16 @@ spec:
             - "-target=ingester"
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- if .Values.consul.enabled }}
-            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
             {{- end }}
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
             - -admin.client.s3.bucket-name=metrics-enterprise-admin
             - -admin.client.s3.access-key-id=metrics-enterprise
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
-            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
             - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
             - -blocks-storage.s3.access-key-id=metrics-enterprise
             - -blocks-storage.s3.secret-access-key=supersecret
