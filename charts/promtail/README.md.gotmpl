@@ -89,7 +89,7 @@ extraPorts:
 
 config:
   snippets:
-    extraScrapeConfigs:
+    extraScrapeConfigs: |
       # Add an additional scrape config for syslog
       - job_name: syslog
         syslog:
@@ -107,7 +107,7 @@ config:
 ```yaml
 config:
   snippets:
-    extraScrapeConfigs:
+    extraScrapeConfigs: |
       # Add an additional scrape config for syslog
       - job_name: journal
         journal:
@@ -178,7 +178,7 @@ header, you can use:
 ```yaml
 config:
   snippets:
-    extraClientConfigs:
+    extraClientConfigs: |
       basic_auth:
         username: loki
         password: secret
