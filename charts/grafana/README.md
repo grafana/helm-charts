@@ -320,35 +320,18 @@ If the parameter `sidecar.datasources.enabled` is set, an init container is depl
 pod. This container lists all secrets (or configmaps, though not recommended) in the cluster and
 filters out the ones with a label as defined in `sidecar.datasources.label`. The files defined in
 those secrets are written to a folder and accessed by grafana on startup. Using these yaml files,
-the data sources in grafana can be imported. The secrets must be created before `helm install` so
-that the datasources init container can list the secrets.
+the data sources in grafana can be imported. 
 
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
 data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
-Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
+Example values to add a datasource adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 
 ```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: sample-grafana-datasource
-  labels:
-     grafana_datasource: "1"
-type: Opaque
-stringData:
-  datasource.yaml: |-
-    # config file version
-    apiVersion: 1
-
-    # list of datasources that should be deleted from the database
-    deleteDatasources:
-      - name: Graphite
-        orgId: 1
-
-    # list of datasources to insert/update depending
-    # whats available in the database
-    datasources:
+datasources:
+ datasources.yaml:
+   apiVersion: 1
+   datasources:
       # <string, required> name of the datasource. Required
     - name: Graphite
       # <string, required> datasource type. Required
@@ -388,7 +371,6 @@ stringData:
       version: 1
       # <bool> allow users to edit datasources from the UI.
       editable: false
-
 ```
 
 ## Sidecar for notifiers
