@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 3.0.2](https://img.shields.io/badge/Version-3.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 3.0.5](https://img.shields.io/badge/Version-3.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -86,7 +86,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | image.repository | string | `"grafana/promtail"` | Docker image repository |
 | image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
-| initContainer.enabled | bool | `true` | Specifies whether the init container for setting inotify max user instances is to be enabled |
+| initContainer.enabled | bool | `false` | Specifies whether the init container for setting inotify max user instances is to be enabled |
 | initContainer.fsInotifyMaxUserInstances | int | `128` | The inotify max user instances to configure |
 | initContainer.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy for the init container image |
 | initContainer.image.registry | string | `"docker.io"` | The Docker registry for the init container |

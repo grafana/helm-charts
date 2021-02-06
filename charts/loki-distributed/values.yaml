@@ -4,6 +4,10 @@ global:
     registry: null
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
+  # -- configures cluster domain ("cluster.local" by default)
+  clusterDomain: "cluster.local"
+  # -- configures DNS service name in kube-system
+  dnsService: "kube-dns"
 
 # -- Overrides the chart's name
 nameOverride: null
@@ -15,6 +19,13 @@ fullnameOverride: null
 imagePullSecrets: []
 
 loki:
+  # Configures the readiness probe for all of the Loki pods
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 30
+    timeoutSeconds: 1
   image:
     # -- The Docker registry
     registry: docker.io
@@ -147,6 +158,11 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
 
+# RBAC configuration
+rbac:
+  # -- If enabled, a PodSecurityPolicy is created
+  pspEnabled: false
+
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
@@ -163,6 +179,10 @@ serviceMonitor:
   interval: null
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: http
+  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+  tlsConfig: null
 
 # Rules for the Prometheus Operator
 prometheusRule:
@@ -269,6 +289,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the distributor pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the distributor pods
+  extraVolumes: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
@@ -376,6 +400,10 @@ queryFrontend:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the query-frontend pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the query-frontend pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the query-frontend pods
+  extraVolumes: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
   # -- Grace period to allow the query-frontend to shutdown before it is killed
@@ -557,6 +585,13 @@ gateway:
     password: null
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
+  # Configures the readiness probe for the gateway
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 15
+    timeoutSeconds: 1
   # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
   # @default -- See values.yaml
   nginxConfig: |
@@ -583,7 +618,7 @@ gateway:
       access_log   /dev/stderr  main;
       sendfile     on;
       tcp_nopush   on;
-      resolver kube-dns.kube-system.svc.cluster.local;
+      resolver {{ .Values.global.dnsService }}.kube-system.svc.{{ .Values.global.clusterDomain }};
 
       server {
         listen             8080;
@@ -599,31 +634,31 @@ gateway:
         }
 
         location = /api/prom/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
 
         location = /api/prom/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
         }
 
         location ~ /api/prom/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
 
         location = /loki/api/v1/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
 
         location = /loki/api/v1/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
         }
 
         location ~ /loki/api/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
         }
       }
     }
