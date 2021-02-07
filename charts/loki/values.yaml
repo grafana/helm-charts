@@ -147,6 +147,20 @@ persistence:
   # subPath: ""
   # existingClaim:
 
+initChownData:
+  ## If false, data ownership will not be reset at startup
+  ## This allows the prometheus-server to be run with an arbitrary user
+  ##
+  enabled: true
+
+  ## initChownData container image
+  ##
+  image:
+    repository: busybox
+    tag: "1.31.1"
+    sha: ""
+    pullPolicy: IfNotPresent
+
 ## Pod Labels
 podLabels: {}
 
