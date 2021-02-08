@@ -431,7 +431,15 @@ volumes:
 # nothing
 {{- else }}
   - name: storage
+{{- if .Values.persistence.inMemory.enabled }}
+    emptyDir:
+      medium: Memory
+{{- if .Values.persistence.inMemory.sizeLimit }}
+      sizeLimit: {{ .Values.persistence.inMemory.sizeLimit }}
+{{- end -}}
+{{- else }}
     emptyDir: {}
+{{- end -}}
 {{- end -}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
