@@ -14,7 +14,7 @@ data:
     [{{ $key }}]
     {{- range $elem, $elemVal := $value }}
     {{ $elem }} : |
-  {{ tpl (toYaml $value | indent 4) }}
+  {{ tpl (toYaml $elemVal | indent 4) }}
     {{- end }}
 {{- end }}
 
