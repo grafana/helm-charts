@@ -276,6 +276,14 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
+    # -- You can put here any keys that will be directly added to the config file's 'client' block.
+    # @default -- empty
+    extraClientConfigs: ""
+
+    # -- You can put here any additional scrape configs you want to add to the config file.
+    # @default -- empty
+    extraScrapeConfigs: ""
+
     scrapeConfigs: |
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
 
@@ -438,9 +446,11 @@ config:
 
     client:
       url: {{ .Values.config.lokiAddress }}
+      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
 
     scrape_configs:
-      {{- tpl .Values.config.snippets.scrapeConfigs $ | nindent 2 }}
+      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
+      {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
