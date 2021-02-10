@@ -29,9 +29,6 @@ config:
       local:
         directory: "/data/rules"
 
-minio:
-  enabled: true
-
 ingester:
   persistentVolume:
     enabled: false
