@@ -1,6 +1,6 @@
 apiVersion: v2
 version: 1.0.0
-appVersion: v1.1.1
+appVersion: v1.1.2
 description: 'Grafana Metrics Enterprise'
 engine: gotpl
 home: https://grafana.com/products/metrics-enterprise/
@@ -27,7 +27,7 @@ dependencies:
     condition: memcached-metadata.enabled
   - name: minio
     alias: minio
-    version: 8.0.0
+    version: 8.0.9
     repository: https://helm.min.io/
     condition: minio.enabled
   - name: consul

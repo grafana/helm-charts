@@ -22,7 +22,8 @@ spec:
     metadata:
       labels:
         app: {{ template "metrics_enterprise.name" . }}-admin-api
-        name: {{ template "metrics_enterprise.name" . }}-admin-api
+        # The name label is important for cortex-mixin compatibility which expects certain names for services.
+        name: admin-api
         target: admin-api
         release: {{ .Release.Name }}
         {{- with .Values.admin_api.podLabels }}

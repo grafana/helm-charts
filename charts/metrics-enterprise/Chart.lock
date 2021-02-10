@@ -10,9 +10,9 @@ dependencies:
   version: 3.2.3
 - name: minio
   repository: https://helm.min.io/
-  version: 8.0.0
+  version: 8.0.9
 - name: consul
   repository: https://helm.releases.hashicorp.com
   version: 0.25.0
-digest: sha256:99e73e84c2b66b0535f352a7577ad05237194a0306cfa144d78cd189b4cb90fd
-generated: "2021-01-22T16:07:17.144468308Z"
+digest: sha256:cfdc37a4f69dde1f0e3280120b6fa41df27ad005ae1e5142874eac1637a70867
+generated: "2021-02-10T13:07:13.3667737Z"
