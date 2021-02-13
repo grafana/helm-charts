@@ -15,6 +15,7 @@ rules:
   resources:      ['podsecuritypolicies']
   verbs:          ['use']
   resourceNames:  [{{ template "loki.fullname" . }}]
+{{- else }}
+rules: []
 {{- end }}
 {{- end }}
-
