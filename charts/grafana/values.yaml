@@ -246,6 +246,17 @@ persistence:
   # subPath: ""
   # existingClaim:
 
+  ## If persistence is not enabled, this allows to mount the
+  ## local storage in-memory to improve performance
+  ##
+  inMemory:
+    enabled: false
+    ## The maximum usage on memory medium EmptyDir would be
+    ## the minimum value between the SizeLimit specified
+    ## here and the sum of memory limits of all containers in a pod
+    ##
+    # sizeLimit: 300Mi
+
 initChownData:
   ## If false, data ownership will not be reset at startup
   ## This allows the prometheus-server to be run with an arbitrary user

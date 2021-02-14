@@ -100,6 +100,8 @@ This version requires Helm >= 3.1.0.
 | `persistence.annotations`                 | PersistentVolumeClaim annotations             | `{}`                                                    |
 | `persistence.finalizers`                  | PersistentVolumeClaim finalizers              | `[ "kubernetes.io/pvc-protection" ]`                    |
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume      | `nil`                                                   |
+| `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
+| `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
 | `initChownData.image.repository`          | init-chown-data container image repository    | `busybox`                                               |
 | `initChownData.image.tag`                 | init-chown-data container image tag           | `1.31.1`                                                |
