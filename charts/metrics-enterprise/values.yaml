@@ -162,7 +162,6 @@ admin_api:
     prometheus.io/port: 'http-metrics'
 
   securityContext: {}
-  initContainers: []
 
   extraArgs: {}
 
@@ -1065,9 +1064,6 @@ minio:
     - name: metrics-enterprise-ruler
       policy: none
       purge: false
-  makeBucketJob:
-    annotations:
-      "helm.sh/hook-weight": "-100"
   persistence:
     size: 5Gi
   resources:

@@ -46,7 +46,24 @@ spec:
       securityContext:
         {{- toYaml .Values.admin_api.securityContext | nindent 8 }}
       initContainers:
-        {{- toYaml .Values.admin_api.initContainers | nindent 8 }}
+      {{- if .Values.minio.enabled }}
+        - name: minio-mc
+          image: "{{ .Values.minio.mcImage.repository }}:{{ .Values.minio.mcImage.tag }}"
+          imagePullPolicy: {{ .Values.minio.mcImage.pullPolicy }}
+          command: ["/bin/sh", "/config/initialize"]
+          env:
+            - name: MINIO_ENDPOINT
+              value: {{ .Release.Name }}-minio
+            - name: MINIO_PORT
+              value: {{ .Values.minio.service.port | quote }}
+          volumeMounts:
+            - name: minio-configuration
+              mountPath: /config
+          {{- if .Values.minio.tls.enabled }}
+            - name: cert-secret-volume-mc
+              mountPath: {{ .Values.minio.configPathmc }}certs
+          {{ end }}
+        {{- end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -124,3 +141,20 @@ spec:
             secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
+        {{- if .Values.minio.enabled }}
+        - name: minio-configuration
+          projected:
+            sources:
+            - configMap:
+                name: {{ .Release.Name }}-minio
+            - secret:
+                name: {{ .Release.Name }}-minio
+        {{- if .Values.minio.tls.enabled }}
+        - name: cert-secret-volume-mc
+          secret:
+            secretName: {{ .Values.minio.tls.certSecret }}
+            items:
+            - key: {{ .Values.minio.tls.publicCrt }}
+              path: CAs/public.crt
+        {{- end }}
+        {{- end }}
