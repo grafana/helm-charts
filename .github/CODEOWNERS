@@ -9,5 +9,5 @@
 /charts/grafana/ @maorfr @rtluckie @torstenwalter @Xtigyro @zanhsieh
 /charts/loki-distributed/ @unguiculus
 /charts/loki-canary/ @unguiculus
-/charts/tempo @joe-elliott @annanay25 @mdisibio @dgzlopes
-/charts/tempo-distributed @joe-elliott @annanay25 @mdisibio @dgzlopes
+/charts/tempo @swartz-k @joe-elliott @annanay25 @mdisibio @dgzlopes 
+/charts/tempo-distributed @swartz-k @joe-elliott @annanay25 @mdisibio @dgzlopes
