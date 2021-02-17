@@ -4,7 +4,8 @@ entries:
   - apiVersion: v1
     appVersion: v2.1.0
     created: "2020-12-24T15:07:11.404389629Z"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 9a097466affe1ae573e9ac8fd07c2c3921bd938b868e4b7a90764a42ca1fa5a8
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -21,7 +22,8 @@ entries:
   - apiVersion: v1
     appVersion: v2.0.0
     created: "2020-12-10T00:03:56.321725129Z"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: e78a4f6c38ee54acb7033b1bc22d7457b68ddcfd4c27228527782d3c81b45af9
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -38,7 +40,8 @@ entries:
   - apiVersion: v1
     appVersion: v2.0.0
     created: "2020-12-09T10:53:57.019682555+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: b63784926bb372d2cd8347a1cf0fd80a7415be0cbcbebbf6283d4bd170ec77b3
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -55,7 +58,8 @@ entries:
   - apiVersion: v1
     appVersion: v2.0.0
     created: "2020-12-09T10:53:57.018972552+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 513992598a1806878c3c8a277ba257c269b9cb0e0b33075a507e66d4f9ff3853
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -72,7 +76,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.6.0
     created: "2020-12-09T10:53:57.018176125+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: bfada1f33c3e870f3b5aba1b1f9457b5682f4d8743f1075b0045fe231e90898f
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -89,7 +94,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.6.0
     created: "2020-12-09T10:53:57.017467044+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: dc2046366e4d7112644f787eb8857e5c031f62828609895131d52135864d2347
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -106,7 +112,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.6.0
     created: "2020-12-09T10:53:57.016780213+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: debe699b95d13b9f63621e6d4562322be8dbfb4a61892dee41603627b5c7d8d3
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -123,7 +130,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.5.0
     created: "2020-12-09T10:53:57.016068591+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 2085ba47c72cf4beeff618b96f7813edd0e6bd336bd90b6e0b6bf9aab1470d48
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -140,7 +148,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.5.0
     created: "2020-12-09T10:53:57.015347613+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: dbf137c70c2d2947db1d4d51e2d0f3a5eff593acc26dba4614d5000feb8ed601
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -157,7 +166,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.5.0
     created: "2020-12-09T10:53:57.014649989+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 00b8b7c5f896e36163ea5c410e4d43c86aa98adaa0bef21a13c074fd1f1c1232
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -174,7 +184,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.5.0
     created: "2020-12-09T10:53:57.013944282+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: ce01a89b8545cddf1b80de6f39bed01c8f41ffc4e7330a1ed6f98cb10d3facd3
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -191,7 +202,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.5.0
     created: "2020-12-09T10:53:57.012565046+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 3c578c8e552ba8dd985f9435a0f3d3a2849181f66ae54c3dc0905bf602c53d69
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -208,7 +220,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.4.1
     created: "2020-12-09T10:53:57.011833892+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 69bf065e27c194afbb8c228ee509a82f92dc9221fb8929ce3c418505c3ab7e8a
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -225,7 +238,8 @@ entries:
   - apiVersion: v1
     appVersion: v1.4.1
     created: "2020-12-09T10:53:57.011122182+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 3f82d2d5fd99653efbc16428bc7c8ba8f8f3ce23d47cf6a64f0c8501d6d6bb27
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -242,7 +256,8 @@ entries:
   - apiVersion: v1
     appVersion: v0.0.1
     created: "2020-12-09T10:53:57.010415694+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: ed980766c1f08f92c70d803634ded53dc47e7bfbd5db1a6b564e864c5b99f1ed
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -259,7 +274,8 @@ entries:
   - apiVersion: v1
     appVersion: v0.0.1
     created: "2020-12-09T10:53:57.009273823+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 1c7989e0c47edf83f12404f346ad165a7186d450059045343339a448d9613fc2
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -276,7 +292,8 @@ entries:
   - apiVersion: v1
     appVersion: v0.0.1
     created: "2020-12-09T10:53:57.008495941+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: 0c094103864c5ea2e6ccf96c3558df4775b3558f193f1507958656a820084737
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -293,7 +310,8 @@ entries:
   - apiVersion: v1
     appVersion: v0.0.1
     created: "2020-12-09T10:53:57.007738071+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: f5489df54d92816141a02fa8f331fd962d9f63ed32558a5d96372df4c48f61c6
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -310,7 +328,8 @@ entries:
   - apiVersion: v1
     appVersion: v0.0.1
     created: "2020-12-09T10:53:57.007004163+01:00"
-    description: Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
     digest: d38f1dfb6d66fd9d9ea8342257747d29c472dc66fa332d01f291210fe57a5bbf
     home: https://grafana.com/loki
     icon: https://github.com/grafana/loki/raw/master/docs/logo.png
@@ -1598,7 +1617,8 @@ entries:
     appVersion: 7.1.1
     created: "2020-10-05T20:09:54.201022974+02:00"
     deprecated: true
-    description: DEPRECATED - The leading tool for querying and visualizing time series and metrics.
+    description: DEPRECATED - The leading tool for querying and visualizing time series
+      and metrics.
     digest: 1a72b59f6a2315438e3823bb08c19bf0a4d4cce00c6d3e5fe5aac03d526986e3
     home: https://grafana.net
     icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
@@ -11408,7 +11428,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-02-10T17:21:32.516211452Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: 120b67381e913fbde419fab1d8dc901d1b6d763341b5097dbde8f8a0ed8703b0
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -11428,7 +11449,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-02-05T14:23:08.309352592Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: 1860fc2bb1a14647d672a4f08f60b422ce1c0a93bf8a98a366151eb531857660
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -11448,7 +11470,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-01-26T15:33:25.927843396Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: 2141de8e5b323c92365d6699a89e72ff81dacf3ea39842ccfed1c9aa46a34f34
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -11468,7 +11491,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-01-25T17:04:56.111024457Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: fb16bc2bbbf0b9d21c2972f383c8fe7c87debd3d8093da7c87ed95c31e412ffb
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -11488,7 +11512,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-01-21T15:49:27.020013237Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: 3820c48ba28c6b647c0d57aee6a0ec45514f315d3f240d8236716c3aa22421ea
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -11508,7 +11533,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-01-19T13:12:44.907664791Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: 6167a459e49f3c1523a2b1cd7d66e09465b558ebeaa697dbefb4511353e6faaa
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -11528,7 +11554,8 @@ entries:
   - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-01-17T10:21:40.141465877Z"
-    description: Promtail is an agent which ships the contents of local logs to a Loki instance
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
     digest: f48b0fd095e1ab9c11b0bdb8ffd7eca1782cd1ee41c7b81e9f9ad0b96abddb40
     home: https://grafana.com/loki
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
@@ -12395,4 +12422,24 @@ entries:
     urls:
     - https://grafana.github.io/helm-charts/packages/promtail-0.6.0.tgz
     version: 0.6.0
-generated: "2020-12-09T10:53:57.006096877+01:00"
+  tempo:
+  - apiVersion: v2
+    appVersion: v0.5.0
+    created: "2021-02-17T21:46:08.665833+01:00"
+    description: Grafana Tempo Single Binary Mode
+    digest: 7fa2587b7134334538c90df1d18651d5e6de61fc7ddcc6fa8e61cfb58e71a691
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: Joe Elliott
+    - email: 9215868@gmail.com
+      name: Swartz K
+    name: tempo
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-0.5.0/tempo-0.5.0.tgz
+    version: 0.5.0
+generated: "2021-02-17T21:46:12.869301+01:00"
