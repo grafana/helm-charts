@@ -20,7 +20,6 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
@@ -122,15 +121,15 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null}}` | Overrides the chart's computed fullname fullnameOverride: tempo -- Overrides the chart's computed fullname |
+| tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1}}` | Overrides the chart's computed fullname fullnameOverride: tempo -- Overrides the chart's computed fullname |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 
 ## Components
 
-The chart supports the compontents shown in the following table.
-Ingester, distributor, querier, and query-frontend are always installed.
+The chart supports the components shown in the following table.
+Ingester, distributor, querier, query-frontend, and compactor are always installed.
 The other components are optional and must be explicitly enabled.
 
 | Component | Optional |
@@ -139,7 +138,7 @@ The other components are optional and must be explicitly enabled.
 | distributor | no |
 | querier | no |
 | query-frontend | no |
-| compactor | yes |
+| compactor | no |
 | memcached | yes |
 
 ## (Configuration)[https://grafana.com/docs/tempo/latest/configuration/]
@@ -152,14 +151,14 @@ The reason for this is that the chart can be validated and installed in a CI pip
 However, this setup is not fully functional.
 The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/tempo/latest/configuration/#storage.
 
-Alternatively, in order to quickly test Loki using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
+Alternatively, in order to quickly test Tempo using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
 
 ----
 
 ### Directory and File Locations
 
-* Volumes are mounted to `/var/loki`. The various directories Loki needs should be configured as subdirectories (e. g. `/var/loki/index`, `/var/loki/cache`). Loki will create the directories automatically.
-* The config file is mounted to `/etc/loki/config/config.yaml` and passed as CLI arg.
+* Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
+* The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
 
 ### Example configuration using S3 for storage
 
