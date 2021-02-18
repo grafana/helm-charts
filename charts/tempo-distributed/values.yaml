@@ -320,6 +320,7 @@ config: |
     lifecycler:
       ring:
         replication_factor: 1
+      tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
     join_members:
@@ -331,16 +332,12 @@ config: |
   storage:
     trace:
       backend: local
-      blocklist_poll: 0
+      blocklist_poll: 5m
       local:
         path: /var/tempo/traces
-      pool:
-        max_workers: 10
-        queue_depth: 100
       wal:
-        bloom_filter_false_positive: 0.01
-        index_downsample: 11
         path: /var/tempo/wal
+      cache: memcached
       memcached:
         consistent_hash: true
         host: {{ include "tempo.fullname" . }}-memcached
