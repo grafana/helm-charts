@@ -51,7 +51,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/tmp/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `nil` |  |
+| tempo.tag | string | `"0.6.0"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
