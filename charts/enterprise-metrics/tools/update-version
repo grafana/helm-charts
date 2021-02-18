@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Update references to Grafana Metrics Enterprise versions
+# Update references to Grafana Enterprise Metrics versions
 
 set -euf -o pipefail
 

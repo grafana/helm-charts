@@ -112,7 +112,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
             - -cluster.peer={{ template "metrics_enterprise.fullname" $ }}-alertmanager-{{ $n }}.{{ template "metrics_enterprise.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
@@ -121,14 +121,14 @@ spec:
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -admin.client.s3.bucket-name=metrics-enterprise-admin
-            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.bucket-name=enterprise-metrics-admin
+            - -admin.client.s3.access-key-id=enterprise-metrics
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             - -alertmanager.storage.type=s3
             - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -alertmanager.storage.s3.buckets=metrics-enterprise-ruler
-            - -alertmanager.storage.s3.access-key-id=metrics-enterprise
+            - -alertmanager.storage.s3.buckets=enterprise-metrics-ruler
+            - -alertmanager.storage.s3.access-key-id=enterprise-metrics
             - -alertmanager.storage.s3.secret-access-key=supersecret
             - -alertmanager.storage.s3.insecure=true
             - -alertmanager.storage.s3.force-path-style=true
@@ -141,7 +141,7 @@ spec:
             {{ toYaml .Values.alertmanager.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/metrics-enterprise
+              mountPath: /etc/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage

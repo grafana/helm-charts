@@ -1,5 +1,5 @@
-# These values configure the Grafana Metrics Enterprise cluster to
-# handle production ingestion of ~10M active series using the blocks
+# These values configure the Grafana Enterprise Metrics cluster to
+# handle production ingestion of ~1M active series using the blocks
 # storage engine.
 # Query requirements can vary dramatically depending on query rate and query
 # ranges. The values here satisfy a "usual" query load as seen from our
@@ -46,16 +46,18 @@ compactor:
       memory: 1Gi
 
 consul:
+  client:
+    enabled: false
   resources:
     requests:
-      cpu: 4
-      memory: 4Gi
+      cpu: 1
+      memory: 2Gi
   server:
     replicas: 3
     bootstrapExpect: 3
 
 distributor:
-  replicas: 15
+  replicas: 3
   resources:
     limits:
       memory: 4Gi
@@ -64,7 +66,7 @@ distributor:
       memory: 2Gi
 
 gateway:
-  replicas: 8
+  replicas: 3
   resources:
     requests:
       cpu: 1
@@ -73,7 +75,7 @@ gateway:
 ingester:
   persistentVolume:
     size: 50Gi
-  replicas: 25
+  replicas: 4
   resources:
     limits:
       memory: 25Gi
@@ -83,11 +85,11 @@ ingester:
 
 memcached:
   enabled: true
-  replicaCount: 32
+  replicaCount: 2
 
 memcached-queries:
   enabled: true
-  replicaCount: 10
+  replicaCount: 3
 
 memcached-metadata:
   enabled: true
@@ -96,7 +98,7 @@ minio:
   enabled: false
 
 querier:
-  replicas: 6
+  replicas: 2
   resources:
     limits:
       memory: 24Gi
@@ -105,7 +107,7 @@ querier:
       memory: 12Gi
 
 query_frontend:
-  replicas: 2
+  replicas: 1
   resources:
     limits:
       memory: 6Gi

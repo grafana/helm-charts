@@ -59,7 +59,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=querier"
-            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
             - "-querier.frontend-address={{ template "metrics_enterprise.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc:{{ .Values.query_frontend.service.grpc_port}}"
             {{- if .Values.consul.enabled }}
             - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
@@ -67,13 +67,13 @@ spec:
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -admin.client.s3.bucket-name=metrics-enterprise-admin
-            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.bucket-name=enterprise-metrics-admin
+            - -admin.client.s3.access-key-id=enterprise-metrics
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
-            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.bucket-name=enterprise-metrics-tsdb
+            - -blocks-storage.s3.access-key-id=enterprise-metrics
             - -blocks-storage.s3.secret-access-key=supersecret
             - -blocks-storage.s3.insecure=true
             {{- end }}
@@ -93,7 +93,7 @@ spec:
               {{ toYaml .Values.querier.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/metrics-enterprise
+              mountPath: /etc/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage

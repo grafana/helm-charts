@@ -43,7 +43,7 @@ Create the name of the service account
 {{- end -}}
 
 {{/*
-Create the app name of metrics-enterprise clients. Defaults to the same logic as "metrics-enterprise.fullname", and default client expects "prometheus".
+Create the app name of enterprise-metrics clients. Defaults to the same logic as "enterprise-metrics.fullname", and default client expects "prometheus".
 */}}
 {{- define "client.name" -}}
 {{- if .Values.client.name -}}

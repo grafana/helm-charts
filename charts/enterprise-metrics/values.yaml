@@ -1,5 +1,5 @@
 # The default values specified in this file are enough to deploy all of the
-# Grafana Metrics Enterprise microservices but are not suitable for production
+# Grafana Enterprise Metrics microservices but are not suitable for production
 # load.
 # To configure the resources for production load, refer to the the small.yaml or
 # large.yaml values files.
@@ -36,10 +36,10 @@ serviceAccount:
   annotations: {}
 
 useExternalConfig: false
-externalConfigSecretName: 'metrics-enterprise-config'
+externalConfigSecretName: 'enterprise-metrics-config'
 externalConfigVersion: '0'
 
-# In order to use Grafana Metrics Enterprise features, you will need to provide the contents of your Grafana Metrics Enterprise
+# In order to use Grafana Enterprise Metrics features, you will need to provide the contents of your Grafana Enterprise Metrics
 # license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
 # To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
 # To use your own Kubernetes Secret, `--set license.external=true`.
@@ -47,7 +47,7 @@ useExternalLicense: false
 license:
   contents: "NOTAVALIDLICENSE"
   external: false
-  secretName: 'metrics-enterprise-license'
+  secretName: 'enterprise-metrics-license'
 
 tokengenJob:
   enable: true
@@ -98,7 +98,6 @@ config:
       max_send_msg_size: 104857600
       use_gzip_compression: true
 
-  # See https://github.com/metrics-enterpriseproject/cortex/blob/master/docs/configuration/config-file-reference.md#storage_config
   storage:
     engine: blocks
   # This configures how the store-gateway synchronizes blocks stored in the bucket. It uses Minio by default for getting started (configured via flags) but this should be changed for production deployments.
@@ -114,7 +113,7 @@ config:
     pool:
       health_check_ingesters: true
   querier:
-    active_query_tracker_dir: /data/metrics-enterprise/querier
+    active_query_tracker_dir: /data/enterprise-metrics/querier
     query_ingesters_within: 12h
   query_range:
     split_queries_by_interval: 24h
@@ -294,13 +293,13 @@ alertmanager:
   terminationGracePeriodSeconds: 60
 
   initContainers: []
-  # Init containers to be added to the metrics-enterprise pod.
+  # Init containers to be added to the enterprise-metrics pod.
   # - name: my-init-container
   #   image: busybox:latest
   #   command: ['sh', '-c', 'echo hello']
 
   extraContainers: []
-  # Additional containers to be added to the metrics-enterprise pod.
+  # Additional containers to be added to the enterprise-metrics pod.
   # - name: reverse-proxy
   #   image: angelbarrera92/basic-auth-reverse-proxy:dev
   #   args:
@@ -316,22 +315,22 @@ alertmanager:
   #       mountPath: /etc/reverse-proxy-conf
 
   extraVolumes: []
-  # Additional volumes to the metrics-enterprise pod.
+  # Additional volumes to the enterprise-metrics pod.
   # - name: reverse-proxy-auth-config
   #   secret:
   #     secretName: reverse-proxy-auth-config
 
-  # Extra volume mounts that will be added to the metrics-enterprise container
+  # Extra volume mounts that will be added to the enterprise-metrics container
   extraVolumeMounts: []
 
   extraPorts: []
-  # Additional ports to the metrics-enterprise services. Useful to expose extra container ports.
+  # Additional ports to the enterprise-metrics services. Useful to expose extra container ports.
   # - port: 11811
   #   protocol: TCP
   #   name: http
   #   targetPort: http
 
-  # Extra env variables to pass to the metrics-enterprise container
+  # Extra env variables to pass to the enterprise-metrics container
   env: []
 
 distributor:
@@ -346,7 +345,7 @@ distributor:
       cpu: 100m
       memory: 512Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -477,7 +476,7 @@ ingester:
       cpu: 100m
       memory: 512Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs: {}
   # Pod Labels
   podLabels: {}
@@ -590,7 +589,7 @@ ruler:
       cpu: 100m
       memory: 128Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -651,7 +650,7 @@ querier:
       cpu: 100m
       memory: 128Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -724,7 +723,7 @@ query_frontend:
       cpu: 100m
       memory: 128Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -797,7 +796,7 @@ store_gateway:
       cpu: 100m
       memory: 512Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs: {}
 
   # Pod Labels
@@ -905,7 +904,7 @@ compactor:
       cpu: 100m
       memory: 512Mi
 
-  # Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
   extraArgs: {}
 
   # Pod Labels
@@ -1053,15 +1052,15 @@ memcached-metadata:
 
 minio:
   enabled: true
-  accessKey: metrics-enterprise
+  accessKey: enterprise-metrics
   buckets:
-    - name: metrics-enterprise-tsdb
+    - name: enterprise-metrics-tsdb
       policy: none
       purge: false
-    - name: metrics-enterprise-admin
+    - name: enterprise-metrics-admin
       policy: none
       purge: false
-    - name: metrics-enterprise-ruler
+    - name: enterprise-metrics-ruler
       policy: none
       purge: false
   persistence:

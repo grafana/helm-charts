@@ -1,14 +1,12 @@
 apiVersion: v2
 version: 1.0.0
 appVersion: v1.1.2
-description: 'Grafana Metrics Enterprise'
+description: 'Grafana Enterprise Metrics'
 engine: gotpl
-home: https://grafana.com/products/metrics-enterprise/
+home: https://grafana.com/products/enterprise/metrics
 icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
 kubeVersion: ^1.10.0-0
-name: metrics-enterprise
-sources:
-- https://github.com/grafana/metrics-enterprise-helm-chart
+name: enterprise-metrics
 dependencies:
   - name: memcached
     alias: memcached
