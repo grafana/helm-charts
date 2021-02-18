@@ -36,8 +36,10 @@ spec:
           containerPort: 9095
         - name: http-memberlist
           containerPort: 7946
-        - name: prom-metrics
+        - name: http
           containerPort: 3100
+        readinessProbe:
+          {{- toYaml .Values.tempo.readinessProbe | nindent 10 }}
         resources:
           {{- toYaml .Values.ingester.resources | nindent 10 }}
         volumeMounts:

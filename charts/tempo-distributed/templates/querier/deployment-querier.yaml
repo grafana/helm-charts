@@ -39,7 +39,7 @@ spec:
           name: http-memberlist
           protocol: TCP
         - containerPort: 3100
-          name: prom-metrics
+          name: http
         resources:
         {{- toYaml .Values.querier.resources | nindent 10 }}
         volumeMounts:

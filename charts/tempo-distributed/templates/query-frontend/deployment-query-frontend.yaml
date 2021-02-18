@@ -36,9 +36,9 @@ spec:
         name: query-frontend
         ports:
         - containerPort: 3100
-          name: prom-metrics
+          name: http
         - containerPort: 9095
-          name: grpc-metrics
+          name: grpc
         resources:
         {{- toYaml .Values.queryFrontend.resources | nindent 10 }}
         volumeMounts:

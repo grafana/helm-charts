@@ -36,7 +36,7 @@ spec:
         name: compactor
         ports:
         - containerPort: 3100
-          name: prom-metrics
+          name: http
         resources:
           {{- toYaml .Values.compactor.resources | nindent 10 }}
         volumeMounts:
