@@ -145,8 +145,6 @@ distributor:
   tolerations: []
 
 compactor:
-  # -- Specifies whether compactor should be enabled
-  enabled: false
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null

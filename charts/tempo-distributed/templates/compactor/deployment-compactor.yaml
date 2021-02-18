@@ -1,4 +1,3 @@
-{{- if .Values.compactor.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,4 +57,3 @@ spec:
       - configMap:
           name: {{ template "tempo.fullname" . }}
         name: tempo-conf
-{{- end}}
