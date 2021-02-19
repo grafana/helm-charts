@@ -561,8 +561,8 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: kiwigrid/k8s-sidecar
-    tag: 1.10.0
+    repository: quay.io/kiwigrid/k8s-sidecar
+    tag: 1.10.6
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
