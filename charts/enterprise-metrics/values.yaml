@@ -348,16 +348,14 @@ distributor:
   nodeSelector: {}
   affinity:
     podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchExpressions:
-                - key: target
-                  operator: In
-                  values:
-                    - distributor
-            topologyKey: 'kubernetes.io/hostname'
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target
+                operator: In
+                values:
+                  - distributor
+          topologyKey: 'kubernetes.io/hostname'
 
   annotations: {}
   persistence:
@@ -472,16 +470,14 @@ ingester:
   nodeSelector: {}
   affinity:
     podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchExpressions:
-                - key: target
-                  operator: In
-                  values:
-                    - ingester
-            topologyKey: 'kubernetes.io/hostname'
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target
+                operator: In
+                values:
+                  - ingester
+          topologyKey: 'kubernetes.io/hostname'
 
   annotations: {}
 
@@ -776,16 +772,14 @@ store_gateway:
   nodeSelector: {}
   affinity:
     podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchExpressions:
-                - key: target
-                  operator: In
-                  values:
-                    - store-gateway
-            topologyKey: 'kubernetes.io/hostname'
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target
+                operator: In
+                values:
+                  - store-gateway
+          topologyKey: 'kubernetes.io/hostname'
 
   annotations: {}
 
