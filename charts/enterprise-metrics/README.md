@@ -41,6 +41,53 @@ have varying resource requirements. Please make sure that you have sufficient
 resources (CPU/memory) available in your cluster before installing Grafana Enterprise Metrics Helm
 chart.
 
+### Scale values
+
+The default Helm chart values in the `values.yaml` file are configured to allow you to quickly test out Grafana Enterprise Metrics.
+Alternative values files are included to provide a more realistic configuration that should facilitate a certain level of ingest load.
+
+### Small
+
+The `small.yaml` values file configures the Grafana Enterprise Metrics cluster to
+handle production ingestion of ~1M active series using the blocks storage engine.
+Query requirements can vary dramatically depending on query rate and query
+ranges. The values here satisfy a "usual" query load as seen from our
+production clusters at this scale.
+It is important to ensure that you run no more than one ingester replica
+per node so that a single node failure does not cause data loss. Zone aware
+replication can be configured to ensure data replication spans availability
+zones. Refer to [Zone Aware Replication](https://cortexmetrics.io/docs/guides/zone-aware-replication/)
+for more information.
+Minio is no longer enabled and you are encouraged to use your cloud providers
+object storage service for production deployments.
+
+To deploy a cluster using `small.yaml` values file:
+
+```console
+$ helm install <cluster name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt' -f small.yaml
+```
+
+### Large
+
+The `large.yaml` values file configures the Grafana Enterprise Metrics cluster to
+handle production ingestion of ~10M active series using the blocks
+storage engine.
+Query requirements can vary dramatically depending on query rate and query
+ranges. The values here satisfy a "usual" query load as seen from our
+production clusters at this scale.
+It is important to ensure that you run no more than one ingester replica
+per node so that a single node failure does not cause data loss. Zone aware
+replication can be configured to ensure data replication spans availability
+zones. Refer to [Zone Aware Replication](https://cortexmetrics.io/docs/guides/zone-aware-replication/)
+for more information.
+Minio is no longer enabled and you are encouraged to use your cloud providers
+object storage service for production deployments.
+
+To deploy a cluster using the `large.yaml` values file:
+
+```console
+$ helm install <cluster name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt' -f large.yaml
+```
 
 # Development
 
