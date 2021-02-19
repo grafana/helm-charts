@@ -59,7 +59,7 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `7.0.3`                                                 |
+| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `7.4.2`                                                 |
 | `image.sha`                               | Image sha (optional)                          | `17cbd08b9515fda889ca959e9d72ee6f3327c8f1844a3336dfd952134f38e2fe` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
@@ -132,8 +132,8 @@ This version requires Helm >= 3.1.0.
 | `podAnnotations`                          | Pod annotations                               | `{}`                                                    |
 | `podLabels`                               | Pod labels                                    | `{}`                                                    |
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
-| `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                                  |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.10.0`                                                 |
+| `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.10.6`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
