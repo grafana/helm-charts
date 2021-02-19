@@ -7,7 +7,7 @@ chart-repos:
   - grafana=https://grafana.github.io/helm-charts
   - prometheus-community=https://prometheus-community.github.io/helm-charts
   - elastic=https://helm.elastic.co
-  - deprecreted-helm-stable=https://charts.helm.sh/stable
+  - deprecated-helm-stable=https://charts.helm.sh/stable
   - hashicorp=https://helm.releases.hashicorp.com
   - minio=https://helm.min.io
 helm-extra-args: --timeout 600s
