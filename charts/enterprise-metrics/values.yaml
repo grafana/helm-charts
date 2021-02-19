@@ -51,7 +51,7 @@ license:
 
 tokengenJob:
   enable: true
-  extraArgs: []
+  extraArgs: {}
   env: []
   annotations: {}
 
@@ -205,8 +205,7 @@ alertmanager:
       cpu: 10m
       memory: 32Mi
 
-  extraArgs:
-    {}
+  extraArgs: {}
 
   # Pod Labels
   podLabels: {}
@@ -346,9 +345,7 @@ distributor:
       memory: 512Mi
 
   # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
-  extraArgs:
-    {}
-    # log.level: debug
+  extraArgs: {}
 
   # Pod Labels
   podLabels: {}
@@ -590,8 +587,7 @@ ruler:
       memory: 128Mi
 
   # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
-  extraArgs:
-    {}
+  extraArgs: {}
     # log.level: debug
 
   # Pod Labels
@@ -651,9 +647,7 @@ querier:
       memory: 128Mi
 
   # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
-  extraArgs:
-    {}
-    # log.level: debug
+  extraArgs: {}
 
   # Pod Labels
   podLabels: {}
@@ -724,9 +718,7 @@ query_frontend:
       memory: 128Mi
 
   # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
-  extraArgs:
-    {}
-    # log.level: debug
+  extraArgs: {}
 
   # Pod Labels
   podLabels: {}
