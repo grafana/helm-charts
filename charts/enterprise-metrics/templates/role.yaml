@@ -3,7 +3,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ template "metrics_enterprise.fullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "metrics_enterprise.name" . }}
     chart: {{ template "metrics_enterprise.chart" . }}

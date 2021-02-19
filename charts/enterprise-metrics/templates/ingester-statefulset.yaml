@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "metrics_enterprise.fullname" . }}-ingester
-  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "metrics_enterprise.name" . }}-ingester
     chart: {{ template "metrics_enterprise.chart" . }}

@@ -9,7 +9,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   name: {{ template "metrics_enterprise.fullname" . }}-gateway
-  namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:

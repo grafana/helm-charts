@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "metrics_enterprise.fullname" . }}-alertmanager
-  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "metrics_enterprise.name" . }}-alertmanager
     chart: {{ template "metrics_enterprise.chart" . }}

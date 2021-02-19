@@ -9,7 +9,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   name: {{ template "metrics_enterprise.fullname" . }}-admin-api
-  namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.admin_api.replicas }}
   selector:

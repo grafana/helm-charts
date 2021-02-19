@@ -3,7 +3,6 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: {{ template "metrics_enterprise.fullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "metrics_enterprise.name" . }}
     chart: {{ template "metrics_enterprise.chart" . }}

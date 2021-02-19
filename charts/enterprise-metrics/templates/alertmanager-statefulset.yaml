@@ -4,8 +4,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "metrics_enterprise.fullname" . }}-alertmanager
-  namespace: {{ .Release.Namespace }}
-  labels:
+x  labels:
     app: {{ template "metrics_enterprise.name" . }}-alertmanager
     chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}

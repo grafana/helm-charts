@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "metrics_enterprise.fullname" . }}-ruler
-  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "metrics_enterprise.name" . }}-ruler
     chart: {{ template "metrics_enterprise.chart" . }}
