@@ -156,9 +156,7 @@ admin_api:
       maxUnavailable: 1
 
   podLabels: {}
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   securityContext: {}
 
@@ -211,9 +209,7 @@ alertmanager:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity: {}
@@ -351,9 +347,7 @@ distributor:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity:
@@ -420,9 +414,7 @@ gateway:
       maxUnavailable: 1
 
   podLabels: {}
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   securityContext: {}
   initContainers: []
@@ -479,9 +471,7 @@ ingester:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity:
@@ -594,9 +584,7 @@ ruler:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity: {}
@@ -653,9 +641,7 @@ querier:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity:
@@ -724,9 +710,7 @@ query_frontend:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity:
@@ -795,9 +779,7 @@ store_gateway:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity:
@@ -903,9 +885,7 @@ compactor:
   podLabels: {}
 
   # Pod Annotations
-  podAnnotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: 'http-metrics'
+  podAnnotations: {}
 
   nodeSelector: {}
   affinity:
