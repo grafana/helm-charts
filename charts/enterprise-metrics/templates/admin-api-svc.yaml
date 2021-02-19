@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-admin-api
+  name: {{ template "enterprise-metrics.fullname" . }}-admin-api
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-admin-api
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-admin-api
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- with .Values.admin_api.labels }}
@@ -20,5 +20,5 @@ spec:
       name: http-metrics
       targetPort: http-metrics
   selector:
-    app: {{ template "metrics_enterprise.name" . }}-admin-api
+    app: {{ template "enterprise-metrics.name" . }}-admin-api
     release: {{ .Release.Name }}

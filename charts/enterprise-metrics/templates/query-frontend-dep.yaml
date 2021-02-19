@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-query-frontend
+  name: {{ template "enterprise-metrics.fullname" . }}-query-frontend
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-query-frontend
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-query-frontend
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -13,14 +13,14 @@ spec:
   replicas: {{ .Values.query_frontend.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-query-frontend
+      app: {{ template "enterprise-metrics.name" . }}-query-frontend
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.query_frontend.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-query-frontend
+        app: {{ template "enterprise-metrics.name" . }}-query-frontend
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: query-frontend
         target: query-frontend
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
     {{- if .Values.query_frontend.priorityClassName }}
       priorityClassName: {{ .Values.query_frontend.priorityClassName }}
     {{- end }}
@@ -113,7 +113,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
         - name: license
           secret:

@@ -2,10 +2,10 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}
+  name: {{ template "enterprise-metrics.fullname" . }}
   labels:
-    app: {{ template "metrics_enterprise.name" . }}
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}
+    chart: {{ template "enterprise-metrics.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 {{- if .Values.rbac.pspEnabled }}
@@ -13,6 +13,6 @@ rules:
 - apiGroups:      ['extensions']
   resources:      ['podsecuritypolicies']
   verbs:          ['use']
-  resourceNames:  [{{ template "metrics_enterprise.fullname" . }}]
+  resourceNames:  [{{ template "enterprise-metrics.fullname" . }}]
 {{- end }}
 {{- end }}

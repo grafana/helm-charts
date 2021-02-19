@@ -3,10 +3,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-alertmanager
-x  labels:
-    app: {{ template "metrics_enterprise.name" . }}-alertmanager
-    chart: {{ template "metrics_enterprise.chart" . }}
+  name: {{ template "enterprise-metrics.fullname" . }}-alertmanager
+  labels:
+    app: {{ template "enterprise-metrics.name" . }}-alertmanager
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -15,11 +15,11 @@ spec:
   replicas: {{ .Values.alertmanager.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-alertmanager
+      app: {{ template "enterprise-metrics.name" . }}-alertmanager
       release: {{ .Release.Name }}
   updateStrategy:
     {{- toYaml .Values.alertmanager.statefulStrategy | nindent 4 }}          
-  serviceName: {{ template "metrics_enterprise.fullname" . }}-alertmanager
+  serviceName: {{ template "enterprise-metrics.fullname" . }}-alertmanager
   {{- if .Values.alertmanager.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -45,7 +45,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-alertmanager
+        app: {{ template "enterprise-metrics.name" . }}-alertmanager
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: alertmanager
         target: alertmanager
@@ -63,7 +63,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
       {{- if .Values.alertmanager.priorityClassName }}
       priorityClassName: {{ .Values.alertmanager.priorityClassName }}
       {{- end }}
@@ -90,7 +90,7 @@ spec:
             {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
             {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
             {{- end }}
         - name: license
           secret:
@@ -114,7 +114,7 @@ spec:
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
-            - -cluster.peer={{ template "metrics_enterprise.fullname" $ }}-alertmanager-{{ $n }}.{{ template "metrics_enterprise.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
+            - -cluster.peer={{ template "enterprise-metrics.fullname" $ }}-alertmanager-{{ $n }}.{{ template "enterprise-metrics.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
             {{- end }}
             {{- end }}
             {{- if .Values.minio.enabled }}

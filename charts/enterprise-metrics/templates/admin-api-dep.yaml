@@ -4,23 +4,23 @@ metadata:
   annotations:
     {{- toYaml .Values.admin_api.annotations | nindent 4 }}
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-admin-api
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-admin-api
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  name: {{ template "metrics_enterprise.fullname" . }}-admin-api
+  name: {{ template "enterprise-metrics.fullname" . }}-admin-api
 spec:
   replicas: {{ .Values.admin_api.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-admin-api
+      app: {{ template "enterprise-metrics.name" . }}-admin-api
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.admin_api.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-admin-api
+        app: {{ template "enterprise-metrics.name" . }}-admin-api
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: admin-api
         target: admin-api
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
       {{- if .Values.admin_api.priorityClassName }}
       priorityClassName: {{ .Values.admin_api.priorityClassName }}
       {{- end }}
@@ -130,7 +130,7 @@ spec:
           {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
           {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
           {{- end }}
         {{- if .Values.admin_api.extraVolumes }}
         {{ toYaml .Values.admin_api.extraVolumes | nindent 8}}

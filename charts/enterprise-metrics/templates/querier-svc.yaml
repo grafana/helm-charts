@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-querier
+  name: {{ template "enterprise-metrics.fullname" . }}-querier
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-querier
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-querier
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- with .Values.querier.labels }}
@@ -20,5 +20,5 @@ spec:
       name: http-metrics
       targetPort: http-metrics
   selector:
-    app: {{ template "metrics_enterprise.name" . }}-querier
+    app: {{ template "enterprise-metrics.name" . }}-querier
     release: {{ .Release.Name }}

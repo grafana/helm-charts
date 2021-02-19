@@ -2,10 +2,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-store-gateway
+  name: {{ template "enterprise-metrics.fullname" . }}-store-gateway
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-store-gateway
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-store-gateway
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -14,11 +14,11 @@ spec:
   replicas: {{ .Values.store_gateway.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-store-gateway
+      app: {{ template "enterprise-metrics.name" . }}-store-gateway
       release: {{ .Release.Name }}
   updateStrategy:
     {{- toYaml .Values.store_gateway.strategy | nindent 4 }}
-  serviceName: {{ template "metrics_enterprise.fullname" . }}-store-gateway
+  serviceName: {{ template "enterprise-metrics.fullname" . }}-store-gateway
   {{- if .Values.store_gateway.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -44,7 +44,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-store-gateway
+        app: {{ template "enterprise-metrics.name" . }}-store-gateway
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: store-gateway
         target: store-gateway
@@ -62,7 +62,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
       {{- if .Values.store_gateway.priorityClassName }}
       priorityClassName: {{ .Values.store_gateway.priorityClassName }}
       {{- end }}
@@ -89,7 +89,7 @@ spec:
             {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
             {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
             {{- end }}
         - name: license
           secret:

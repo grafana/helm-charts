@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-distributor
+  name: {{ template "enterprise-metrics.fullname" . }}-distributor
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-distributor
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-distributor
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- with .Values.distributor.labels }}
@@ -20,5 +20,5 @@ spec:
       name: http-metrics
       targetPort: http-metrics
   selector:
-    app: {{ template "metrics_enterprise.name" . }}-distributor
+    app: {{ template "enterprise-metrics.name" . }}-distributor
     release: {{ .Release.Name }}

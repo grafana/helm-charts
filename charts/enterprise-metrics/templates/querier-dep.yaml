@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-querier
+  name: {{ template "enterprise-metrics.fullname" . }}-querier
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-querier
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-querier
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -13,14 +13,14 @@ spec:
   replicas: {{ .Values.querier.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-querier
+      app: {{ template "enterprise-metrics.name" . }}-querier
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.querier.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-querier
+        app: {{ template "enterprise-metrics.name" . }}-querier
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: querier
         target: querier
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
     {{- if .Values.querier.priorityClassName }}
       priorityClassName: {{ .Values.querier.priorityClassName }}
     {{- end }}
@@ -59,7 +59,7 @@ spec:
           args:
             - "-target=querier"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            - "-querier.frontend-address={{ template "metrics_enterprise.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc:{{ .Values.query_frontend.service.grpc_port}}"
+            - "-querier.frontend-address={{ template "enterprise-metrics.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc:{{ .Values.query_frontend.service.grpc_port}}"
             {{- if .Values.consul.enabled }}
             - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
             {{- end }}
@@ -82,7 +82,7 @@ spec:
             - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").memcached.maxItemMemory }}
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.querier.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -130,7 +130,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
 {{- if .Values.querier.extraVolumes }}
 {{ toYaml .Values.querier.extraVolumes | indent 8}}

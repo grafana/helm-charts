@@ -2,15 +2,15 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}
+  name: {{ template "enterprise-metrics.fullname" . }}
   labels:
-    app: {{ template "metrics_enterprise.name" . }}
+    app: {{ template "enterprise-metrics.name" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ template "metrics_enterprise.chart" . }}
+    chart: {{ template "enterprise-metrics.chart" . }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}
+      app: {{ template "enterprise-metrics.name" . }}
 {{ toYaml .Values.podDisruptionBudget | indent 2 }}
 {{- end -}}

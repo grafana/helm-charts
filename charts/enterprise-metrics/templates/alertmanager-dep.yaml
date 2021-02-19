@@ -2,10 +2,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-alertmanager
+  name: {{ template "enterprise-metrics.fullname" . }}-alertmanager
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-alertmanager
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-alertmanager
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -14,14 +14,14 @@ spec:
   replicas: {{ .Values.alertmanager.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-alertmanager
+      app: {{ template "enterprise-metrics.name" . }}-alertmanager
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.alertmanager.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-alertmanager
+        app: {{ template "enterprise-metrics.name" . }}-alertmanager
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: alertmanager
         target: alertmanager
@@ -39,7 +39,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
     {{- if .Values.alertmanager.priorityClassName }}
       priorityClassName: {{ .Values.query_frontend.priorityClassName }}
     {{- end }}
@@ -121,7 +121,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
 {{- if .Values.alertmanager.extraVolumes }}
 {{ toYaml .Values.alertmanager.extraVolumes | indent 8}}

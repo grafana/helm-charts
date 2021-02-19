@@ -2,10 +2,10 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-tokengen
+  name: {{ template "enterprise-metrics.fullname" . }}-tokengen
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-tokengen
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-tokengen
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -21,13 +21,13 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-tokengen
+        app: {{ template "enterprise-metrics.name" . }}-tokengen
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: tokengen
         target: tokengen
         release: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
       {{- if .Values.tokengenJob.priorityClassName }}
       priorityClassName: {{ .Values.tokengenJob.priorityClassName }}
       {{- end }}
@@ -76,7 +76,7 @@ spec:
           {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
           {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
           {{- end }}
         {{- if .Values.tokengenJob.extraVolumes }}
         {{ toYaml .Values.tokengenJob.extraVolumes | nindent 8 }}

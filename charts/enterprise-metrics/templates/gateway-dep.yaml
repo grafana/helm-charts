@@ -4,23 +4,23 @@ metadata:
   annotations:
     {{- toYaml .Values.gateway.annotations | nindent 4 }}
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-gateway
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-gateway
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  name: {{ template "metrics_enterprise.fullname" . }}-gateway
+  name: {{ template "enterprise-metrics.fullname" . }}-gateway
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-gateway
+      app: {{ template "enterprise-metrics.name" . }}-gateway
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.gateway.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-gateway
+        app: {{ template "enterprise-metrics.name" . }}-gateway
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: gateway
         target: gateway
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
       {{- if .Values.gateway.priorityClassName }}
       priorityClassName: {{ .Values.gateway.priorityClassName }}
       {{- end }}
@@ -68,15 +68,15 @@ spec:
             - -admin.client.s3.insecure=true
             {{- end }}
             {{- if .Values.gateway.useDefaultProxyURLs }}
-            - -gateway.proxy.default.url=http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.admin-api.url=http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.alertmanager.url=http://{{ template "metrics_enterprise.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.distributor.url=http://{{ template "metrics_enterprise.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.graphite.url=http://{{ template "metrics_enterprise.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.ingester.url=http://{{ template "metrics_enterprise.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.query-frontend.url=http://{{ template "metrics_enterprise.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.ruler.url=http://{{ template "metrics_enterprise.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.store-gateway.url=http://{{ template "metrics_enterprise.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.default.url=http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.admin-api.url=http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.alertmanager.url=http://{{ template "enterprise-metrics.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.distributor.url=http://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.graphite.url=http://{{ template "enterprise-metrics.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.ingester.url=http://{{ template "enterprise-metrics.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.ruler.url=http://{{ template "enterprise-metrics.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.store-gateway.url=http://{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             {{- end }}
             {{- range $key, $value := .Values.gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -124,7 +124,7 @@ spec:
           {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
           {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
           {{- end }}
         {{- if .Values.gateway.extraVolumes }}
         {{ toYaml .Values.gateway.extraVolumes | nindent 8}}

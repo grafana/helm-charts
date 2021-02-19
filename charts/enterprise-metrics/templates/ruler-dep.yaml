@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}-ruler
+  name: {{ template "enterprise-metrics.fullname" . }}-ruler
   labels:
-    app: {{ template "metrics_enterprise.name" . }}-ruler
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}-ruler
+    chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -13,14 +13,14 @@ spec:
   replicas: {{ .Values.ruler.replicas }}
   selector:
     matchLabels:
-      app: {{ template "metrics_enterprise.name" . }}-ruler
+      app: {{ template "enterprise-metrics.name" . }}-ruler
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.ruler.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "metrics_enterprise.name" . }}-ruler
+        app: {{ template "enterprise-metrics.name" . }}-ruler
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: ruler
         target: ruler
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
     {{- if .Values.ruler.priorityClassName }}
       priorityClassName: {{ .Values.ruler.priorityClassName }}
     {{- end }}
@@ -87,9 +87,9 @@ spec:
            {{- end }}
             {{- if .Values.config.ruler.enable_alertmanager_discovery }}
             - "-ruler.alertmanager-discovery=true"
-            - "-ruler.alertmanager-url=http://_http-metrics._tcp.{{ template "metrics_enterprise.name" . }}-alertmanager-headless/api/prom/alertmanager/"
+            - "-ruler.alertmanager-url=http://_http-metrics._tcp.{{ template "enterprise-metrics.name" . }}-alertmanager-headless/api/prom/alertmanager/"
             {{- else }}
-            - "-ruler.alertmanager-url=http://{{ template "metrics_enterprise.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/"
+            - "-ruler.alertmanager-url=http://{{ template "enterprise-metrics.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/"
             {{- end }}
             {{- if index .Values "memcached-metadata" "enabled" }}
             - -blocks-storage.bucket-store.metadata-cache.backend=memcached
@@ -97,7 +97,7 @@ spec:
             - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").memcached.maxItemMemory }}
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -145,7 +145,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "metrics_enterprise.fullname" . }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
 {{- if .Values.ruler.extraVolumes }}
 {{ toYaml .Values.ruler.extraVolumes | indent 8}}

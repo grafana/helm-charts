@@ -2,17 +2,17 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ template "metrics_enterprise.fullname" . }}
+  name: {{ template "enterprise-metrics.fullname" . }}
   labels:
-    app: {{ template "metrics_enterprise.name" . }}
-    chart: {{ template "metrics_enterprise.chart" . }}
+    app: {{ template "enterprise-metrics.name" . }}
+    chart: {{ template "enterprise-metrics.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "metrics_enterprise.fullname" . }}
+  name: {{ template "enterprise-metrics.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "metrics_enterprise.serviceAccountName" . }}
+  name: {{ template "enterprise-metrics.serviceAccountName" . }}
 {{- end }}
