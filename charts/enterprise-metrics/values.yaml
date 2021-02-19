@@ -215,10 +215,6 @@ alertmanager:
   affinity: {}
   annotations: {}
 
-  # DEPRECATED: use persistentVolume.subPath instead
-  persistence:
-    subPath:
-
   persistentVolume:
     # If true and alertmanager.statefulSet.enabled is true,
     # Alertmanager will create/use a Persistent Volume Claim
@@ -488,10 +484,6 @@ ingester:
             topologyKey: 'kubernetes.io/hostname'
 
   annotations: {}
-
-  # DEPRECATED: use persistentVolume.subPath instead
-  persistence:
-    subPath:
 
   persistentVolume:
     # If true and ingester.statefulSet.enabled is true,

@@ -149,10 +149,6 @@ spec:
               {{- if .Values.alertmanager.persistentVolume.subPath }}
               subPath: {{ .Values.alertmanager.persistentVolume.subPath }}
               {{- else }}
-              {{- if .Values.alertmanager.persistence.subPath }}
-              ## DEPRECATED: use persistentVolume.subPath instead
-              subPath: {{ .Values.alertmanager.persistence.subPath }}
-              {{- end }}
               {{- end }}
           ports:
             - name: http-metrics

@@ -93,10 +93,6 @@ spec:
               {{- if .Values.ingester.persistentVolume.subPath }}
               subPath: {{ .Values.ingester.persistentVolume.subPath }}
               {{- else }}
-              {{- if .Values.ingester.persistence.subPath }}
-              ## DEPRECATED: use persistentVolume.subPath instead
-              subPath: {{ .Values.ingester.persistence.subPath }}
-              {{- end }}
               {{- end }}
           ports:
             - name: http-metrics
