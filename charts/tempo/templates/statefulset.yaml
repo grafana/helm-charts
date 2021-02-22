@@ -19,14 +19,21 @@ spec:
     metadata:
       labels:
         {{- include "tempo.selectorLabels" . | nindent 8 }}
-  {{- with .Values.podLabels }}
-    {{ toYaml . | indent 8 }}
-  {{- end }}
+        {{- with .Values.podLabels }}
+          {{ toYaml . | indent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - args:
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs={{ .Values.tempo.memBallastSizeMbs }}
+        {{- range $key, $value := .Values.tempo.extraArgs }}
+        - "-{{ $key }}={{ $value }}"
+        {{- end }}
         image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
         name: tempo
@@ -35,7 +42,14 @@ spec:
           name: prom-metrics
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
+        env:
+          {{- if .Values.tempo.extraEnv }}
+            {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
+          {{- end }}
         volumeMounts:
+        {{- if .Values.tempo.extraVolumeMounts }}
+          {{ toYaml .Values.tempo.extraVolumeMounts | nindent 12 }}
+        {{- end }}
         - mountPath: /conf
           name: tempo-conf
         {{- if .Values.persistence.enable }}
@@ -45,6 +59,9 @@ spec:
       - args:
         - --query.base-path=/
         - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
+        {{- range $key, $value := .Values.tempoQuery.extraArgs }}
+        - "-{{ $key }}={{ $value }}"
+        {{- end }}
         image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag }}
         imagePullPolicy: {{ .Values.tempoQuery.pullPolicy }}
         name: tempo-query
@@ -53,9 +70,16 @@ spec:
           name: jaeger-ui
         - containerPort: 16687
           name: jaeger-metrics
+        env:
+          {{- if .Values.tempoQuery.extraEnv }}
+            {{- toYaml .Values.tempoQuery.extraEnv | nindent 12 }}
+          {{- end }}
         resources:
           {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
         volumeMounts:
+        {{- if .Values.tempoQuery.extraVolumeMounts }}
+          {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 12 }}
+        {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
       volumes:

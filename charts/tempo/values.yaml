@@ -63,6 +63,16 @@ tempo:
           endpoint: 0.0.0.0:6831
         thrift_http:
           endpoint: 0.0.0.0:14268
+  ## Additional container arguments
+  extraArgs: {}
+  # -- Environment variables to add
+  extraEnv: []
+  # -- Volume mounts to add
+  extraVolumeMounts: []
+  # - name: extra-volume
+  #   mountPath: /mnt/volume
+  #   readOnly: true
+  #   existingClaim: volume-claim
 
 tempoQuery:
   repository: grafana/tempo-query
@@ -74,6 +84,16 @@ tempoQuery:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
+  ## Additional container arguments
+  extraArgs: {}
+  # -- Environment variables to add
+  extraEnv: []
+  # -- Volume mounts to add
+  extraVolumeMounts: []
+  # - name: extra-volume
+  #   mountPath: /mnt/volume
+  #   readOnly: true
+  #   existingClaim: volume-claim
 
 service:
   type: ClusterIP
@@ -87,16 +107,8 @@ persistence:
     - ReadWriteOnce
   size: 10Gi
 
-# -- Environment variables to add
-extraEnv: []
-# -- Environment variables from secrets or configmaps to add
-extraEnvFrom: []
-# -- Volume mounts to add
-extraVolumeMounts: []
-# - name: extra-volume
-#   mountPath: /mnt/volume
-#   readOnly: true
-#   existingClaim: volume-claim
+## Pod Annotations
+podAnnotations: []
 
 # -- Volumes to add
 extraVolumes: []
