@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.6.0](https://img.shields.io/badge/AppVersion-v0.6.0-informational?style=flat-square)
+![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.6.0](https://img.shields.io/badge/AppVersion-v0.6.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -22,9 +22,6 @@ Grafana Tempo Single Binary Mode
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| extraEnv | list | `[]` | Environment variables to add |
-| extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add |
-| extraVolumeMounts | list | `[]` | Volume mounts to add |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
@@ -32,11 +29,15 @@ Grafana Tempo Single Binary Mode
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"10Gi"` |  |
+| podAnnotations | list | `[]` |  |
 | replicas | int | `1` |  |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
 | tempo.authEnabled | bool | `false` |  |
+| tempo.extraArgs | object | `{}` |  |
+| tempo.extraEnv | list | `[]` | Environment variables to add |
+| tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.ingester | object | `{}` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
@@ -53,6 +54,9 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"0.6.0"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
+| tempoQuery.extraArgs | object | `{}` |  |
+| tempoQuery.extraEnv | list | `[]` | Environment variables to add |
+| tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.tag | string | `"latest"` |  |
