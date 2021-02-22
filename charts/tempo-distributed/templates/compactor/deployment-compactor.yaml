@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "tempo.compactorFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.compactorLabels" . | nindent 4 }}
+  {{- with .Values.compactor.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  minReadySeconds: 10
+  replicas: {{ .Values.compactor.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      {{- include "tempo.compactorSelectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        {{- include "tempo.compactorSelectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - args:
+        - -target=compactor
+        - -config.file=/conf/tempo.yaml
+        - -mem-ballast-size-mbs=1024
+        image: {{ include "tempo.compactorImage" . }}
+        imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+        name: compactor
+        ports:
+        - containerPort: 3100
+          name: http
+        resources:
+          {{- toYaml .Values.compactor.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /conf
+          name: tempo-conf
+      {{- with .Values.compactor.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.compactor.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.compactor.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - configMap:
+          name: {{ template "tempo.fullname" . }}
+        name: tempo-conf
