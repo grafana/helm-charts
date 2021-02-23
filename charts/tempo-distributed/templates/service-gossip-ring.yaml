@@ -8,9 +8,9 @@ metadata:
     {{- include "tempo.labels" . | nindent 4 }}
 spec:
   ports:
-  - name: gossip-ring
-    port: 7946
-    protocol: TCP
-    targetPort: http-memberlist
+    - name: gossip-ring
+      port: 7946
+      protocol: TCP
+      targetPort: http-memberlist
   selector:
     {{- include "tempo.gossipRing.selectorLabels" . | nindent 4 }}

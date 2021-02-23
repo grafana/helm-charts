@@ -11,15 +11,15 @@ metadata:
   {{- end }}
 spec:
   ports:
-  - name: http
-    port: 3100
-    targetPort: 3100
-  - name: grpc
-    port: 9095
-    protocol: TCP
-    targetPort: 9095
-  - name: tempo-query-jaeger-ui
-    port: 16686
-    targetPort: 16686
+    - name: http
+      port: 3100
+      targetPort: 3100
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
+    - name: tempo-query-jaeger-ui
+      port: 16686
+      targetPort: 16686
   selector:
     {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}

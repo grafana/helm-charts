@@ -26,21 +26,35 @@ spec:
         {{- include "tempo.compactorSelectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - args:
-        - -target=compactor
-        - -config.file=/conf/tempo.yaml
-        - -mem-ballast-size-mbs=1024
-        image: {{ include "tempo.compactorImage" . }}
-        imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
-        name: compactor
-        ports:
-        - containerPort: 3100
-          name: http
-        resources:
-          {{- toYaml .Values.compactor.resources | nindent 10 }}
-        volumeMounts:
-        - mountPath: /conf
-          name: tempo-conf
+        - args:
+            - -target=compactor
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+            {{- with .Values.compactor.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          image: {{ include "tempo.compactorImage" . }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+          name: compactor
+          ports:
+            - containerPort: 3100
+              name: http
+          {{- with .Values.compactor.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.compactor.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.compactor.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+            {{- with .Values.compactor.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       {{- with .Values.compactor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
@@ -54,6 +68,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-      - configMap:
-          name: {{ template "tempo.fullname" . }}
-        name: tempo-conf
+        - configMap:
+            name: {{ template "tempo.fullname" . }}
+          name: tempo-conf
+        {{- with .Values.compactor.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

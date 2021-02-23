@@ -24,33 +24,47 @@ spec:
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - args:
-        - -target=distributor
-        - -config.file=/conf/tempo.yaml
-        - -mem-ballast-size-mbs=1024
-        image: {{ include "tempo.distributorImage" . }}
-        imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
-        name: distributor
-        ports:
-        - containerPort: 7946
-          name: http-memberlist
-          protocol: TCP
-        - containerPort: 3100
-          name: http
-        - containerPort: 55678
-          name: opencensus
-        - containerPort: 14268
-          name: jaeger-http
-        readinessProbe:
-          {{- toYaml .Values.tempo.readinessProbe | nindent 10 }}
-        resources:
-          {{- toYaml .Values.distributor.resources | nindent 10 }}
-        volumeMounts:
-        - mountPath: /conf
-          name: tempo-conf
+        - args:
+            - -target=distributor
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+            {{- with .Values.distributor.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          image: {{ include "tempo.distributorImage" . }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+          name: distributor
+          ports:
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+            - containerPort: 3100
+              name: http
+            - containerPort: 55678
+              name: opencensus
+            - containerPort: 14268
+              name: jaeger-http
+          {{- with .Values.distributor.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.distributor.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.distributor.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+            {{- with .Values.distributor.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       {{- with .Values.distributor.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
       {{- end }}
       {{- with .Values.distributor.nodeSelector }}
       nodeSelector:
@@ -61,6 +75,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-      - configMap:
-          name: {{ template "tempo.fullname" . }}
-        name: tempo-conf
+        - configMap:
+            name: {{ template "tempo.fullname" . }}
+          name: tempo-conf
+        {{- with .Values.distributor.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

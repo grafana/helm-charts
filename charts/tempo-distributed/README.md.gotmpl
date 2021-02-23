@@ -16,8 +16,15 @@ Add the following repo to use the chart:
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
-{{ template "chart.valuesSection" . }}
+## Upgrading
 
+A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart Versions < 0.7.0
+
+The memcached default args are removed and should be provided manually. The settings for the `memcached.exporter` moved to `memcachedExporter`
+
+{{ template "chart.valuesSection" . }}
 
 ## Components
 
