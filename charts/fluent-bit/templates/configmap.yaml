@@ -32,6 +32,12 @@ data:
         Merge_Log On
         K8S-Logging.Exclude {{ .Values.config.k8sLoggingExclude }}
         K8S-Logging.Parser {{ .Values.config.k8sLoggingParser }}
+    {{- range $extraFilter := .Values.config.extraFilters }}
+    [FILTER]
+    {{- range $key,$value := $extraFilter }}
+        {{ $key }} {{ $value }}
+    {{- end }}
+    {{- end }}
     [Output]
         Name grafana-loki
         Match *

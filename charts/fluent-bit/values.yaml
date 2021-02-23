@@ -41,6 +41,12 @@ config:
   #   - Name: stdout
   #     Format: json
   #     json_date_format: time
+  # extraFilters: # Allow to define extra filters in addition to the one automatically created
+  #   - Name: nest
+  #     Match: "kube.*"
+  #     Operation: lift
+  #     Nested_under: kubernetes
+  #     Add_prefix: kube_
 
 affinity: {}
 
