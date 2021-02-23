@@ -37,9 +37,6 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
-| compactor.persistence.enabled | bool | `false` | Enable creating PVCs for the compactor |
-| compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
-| compactor.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
@@ -112,9 +109,6 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
-| querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
-| querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
-| querier.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.priorityClassName | string | `nil` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
