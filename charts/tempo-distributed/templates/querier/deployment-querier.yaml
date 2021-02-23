@@ -27,27 +27,41 @@ spec:
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - args:
-        - -target=querier
-        - -config.file=/conf/tempo.yaml
-        - -mem-ballast-size-mbs=1024
-        image: {{ include "tempo.querierImage" . }}
-        imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
-        name: querier
-        ports:
-        - containerPort: 7946
-          name: http-memberlist
-          protocol: TCP
-        - containerPort: 3100
-          name: http
-        resources:
-        {{- toYaml .Values.querier.resources | nindent 10 }}
-        volumeMounts:
-        - mountPath: /conf
-          name: tempo-conf
+        - args:
+            - -target=querier
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+            {{- with .Values.querier.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          image: {{ include "tempo.querierImage" . }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+          name: querier
+          ports:
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+            - containerPort: 3100
+              name: http
+          {{- with .Values.querier.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.querier.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.querier.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+            {{- with .Values.querier.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       {{- with .Values.querier.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
       {{- end }}
       {{- with .Values.querier.nodeSelector }}
       nodeSelector:
@@ -58,6 +72,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-      - configMap:
-          name: {{ template "tempo.fullname" . }}
-        name: tempo-conf
+        - configMap:
+            name: {{ template "tempo.fullname" . }}
+          name: tempo-conf
+        {{- with .Values.querier.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

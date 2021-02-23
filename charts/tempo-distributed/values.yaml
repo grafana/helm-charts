@@ -65,24 +65,28 @@ ingester:
   terminationGracePeriodSeconds: 300
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
-    # podAntiAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     - labelSelector:
-    #         matchLabels:
-    #           {{- include "tempo.ingesterSelectorLabels" . | nindent 10 }}
-    #       topologyKey: kubernetes.io/hostname
-    #   preferredDuringSchedulingIgnoredDuringExecution:
-    #     - weight: 100
-    #       podAffinityTerm:
-    #         labelSelector:
-    #           matchLabels:
-    #             {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
-    #         topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.ingesterSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
   tolerations: []
+  # -- Extra volumes for ingester pods
+  extraVolumeMounts: []
+  # -- Extra volumes for ingester deployment
+  extraVolumes: []
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -125,24 +129,28 @@ distributor:
   terminationGracePeriodSeconds: 30
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
-    # podAntiAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     - labelSelector:
-    #         matchLabels:
-    #           {{- include "tempo.distributorSelectorLabels" . | nindent 10 }}
-    #       topologyKey: kubernetes.io/hostname
-    #   preferredDuringSchedulingIgnoredDuringExecution:
-    #     - weight: 100
-    #       podAffinityTerm:
-    #         labelSelector:
-    #           matchLabels:
-    #             {{- include "tempo.distributorSelectorLabels" . | nindent 12 }}
-    #         topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.distributorSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.distributorSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
+  # -- Extra volumes for distributor pods
+  extraVolumeMounts: []
+  # -- Extra volumes for distributor deployment
+  extraVolumes: []
 
 compactor:
   image:
@@ -170,6 +178,10 @@ compactor:
   nodeSelector: {}
   # -- Tolerations for compactor pods
   tolerations: []
+  # -- Extra volumes for compactor pods
+  extraVolumeMounts: []
+  # -- Extra volumes for compactor deployment
+  extraVolumes: []
   persistence:
     # -- Enable creating PVCs for the compactor
     enabled: false
@@ -209,24 +221,28 @@ querier:
   terminationGracePeriodSeconds: 30
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
-    # podAntiAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     - labelSelector:
-    #         matchLabels:
-    #           {{- include "tempo.querierSelectorLabels" . | nindent 10 }}
-    #       topologyKey: kubernetes.io/hostname
-    #   preferredDuringSchedulingIgnoredDuringExecution:
-    #     - weight: 100
-    #       podAffinityTerm:
-    #         labelSelector:
-    #           matchLabels:
-    #             {{- include "tempo.querierSelectorLabels" . | nindent 12 }}
-    #         topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.querierSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.querierSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
   tolerations: []
+  # -- Extra volumes for querier pods
+  extraVolumeMounts: []
+  # -- Extra volumes for querier deployment
+  extraVolumes: []
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
@@ -251,6 +267,16 @@ queryFrontend:
       tag: null
     # -- Resource requests and limits for the query
     resources: {}
+    # -- Additional CLI args for tempo-query pods
+    extraArgs: []
+    # -- Environment variables to add to the tempo-query pods
+    extraEnv: []
+    # -- Environment variables from secrets or configmaps to add to the tempo-query pods
+    extraEnvFrom: []
+    # -- Extra volumes for tempo-query pods
+    extraVolumeMounts: []
+    # -- Extra volumes for tempo-query deployment
+    extraVolumes: []
     config: |
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
@@ -278,24 +304,28 @@ queryFrontend:
   terminationGracePeriodSeconds: 30
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
-    # podAntiAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     - labelSelector:
-    #         matchLabels:
-    #           {{- include "tempo.queryFrontendSelectorLabels" . | nindent 10 }}
-    #       topologyKey: kubernetes.io/hostname
-    #   preferredDuringSchedulingIgnoredDuringExecution:
-    #     - weight: 100
-    #       podAffinityTerm:
-    #         labelSelector:
-    #           matchLabels:
-    #             {{- include "tempo.queryFrontendSelectorLabels" . | nindent 12 }}
-    #         topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.queryFrontendSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.queryFrontendSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
   tolerations: []
+  # -- Extra volumes for query-frontend pods
+  extraVolumeMounts: []
+  # -- Extra volumes for query-frontend deployment
+  extraVolumes: []
 
 
 config: |
@@ -352,14 +382,52 @@ config: |
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
 memcached:
+  # -- Specified whether the memcached cachce shoudl be enabled
   enabled: true
   host: memcached
+  # Number of replicas for memchached
   replicas: 1
   servicte: memcached-client
+  # -- Memcached Docker image repository
   repository: memcached
+  # -- Memcached Docker image tag
   tag: 1.5.17-alpine
+  # -- Memcached Docker image pull policy
   pullPolicy: IfNotPresent
-  exporter:
+  # -- Additional CLI args for memcached
+  extraArgs: []
+  # -- Environment variables to add to memcached pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to memcached pods
+  extraEnvFrom: []
+  # -- Resource requests and limits for memcached
+  resources: {}
+  # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.memcachedSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+memcachedExporter:
+  # -- Specifies whether the Memcached Exporter should be enabled
+  enabled: false
+  image:
+    # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
+    # -- Memcached Exporter Docker image tag
     tag: v0.8.0
+    # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
+    # -- Memcached Exporter resource requests and limits
+  resources: {}
