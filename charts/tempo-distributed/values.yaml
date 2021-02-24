@@ -112,7 +112,12 @@ distributor:
   service:
     # -- Annotations for distributor service
     annotations: {}
+    # -- Type of service for the distributor
     type: ClusterIP
+    # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
+    loadBalancerIP: ""
+    # -- If type is LoadBalancer limit incoming traffic from IPs.
+    loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Annotations for distributor pods
@@ -266,6 +271,9 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
+  service:
+    # -- Annotations for queryFrontend service
+    annotations: {}
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Annotations for query-frontend pods

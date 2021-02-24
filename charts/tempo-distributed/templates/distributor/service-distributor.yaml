@@ -1,14 +1,14 @@
-apiVersion: v1
+  apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "tempo.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.distributorLabels" . | nindent 4 }}
-{{- with .Values.distributor.service.annotations }}
+  {{- with .Values.distributor.service.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.distributor.service.type }}
   ports:
@@ -44,5 +44,12 @@ spec:
       port: 55678
       protocol: TCP
       targetPort: 55678
+  {{- if .Values.distributor.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP  }}
+  {{- end }}
+  {{- with .Values.distributor.service.loadBalancerSourceRanges}}
+  loadBalancerSourceRanges:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     {{- include "tempo.distributorSelectorLabels" . | nindent 4 }}
