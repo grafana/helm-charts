@@ -88,20 +88,8 @@ extraPorts:
       loadBalancerIP: 123.234.123.234
 
 config:
-  file: |
-    server:
-      http_listen_port: {{"{{"}} .Values.config.serverPort {{"}}"}}
-
-    client:
-      url: {{"{{"}} .Values.config.lokiAddress {{"}}"}}
-
-    positions:
-      filename: /run/promtail/positions.yaml
-
-    scrape_configs:
-      # This reuses the existing default scrape configs
-      {{"{{"}}- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 {{"}}"}}
-
+  snippets:
+    extraScrapeConfigs: |
       # Add an additional scrape config for syslog
       - job_name: syslog
         syslog:
@@ -118,20 +106,8 @@ config:
 
 ```yaml
 config:
-  file: |
-    server:
-      http_listen_port: {{"{{"}} .Values.config.serverPort {{"}}"}}
-
-    client:
-      url: {{"{{"}} .Values.config.lokiAddress {{"}}"}}
-
-    positions:
-      filename: /run/promtail/positions.yaml
-
-    scrape_configs:
-      # This reuses the existing default scrape configs
-      {{"{{"}}- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 {{"}}"}}
-
+  snippets:
+    extraScrapeConfigs: |
       # Add an additional scrape config for syslog
       - job_name: journal
         journal:
@@ -191,4 +167,20 @@ config:
             grpc_listen_port: {{"{{"}} .Values.extraPorts.grpcPush.containerPort {{"}}"}}
           labels:
             pushserver: push1
+```
+
+### Extra client config options
+
+If you want to add additional options to the `client` section of promtail's config, please use
+the `extraClientConfigs` section. For example, to enable HTTP basic auth and include OrgID
+header, you can use:
+
+```yaml
+config:
+  snippets:
+    extraClientConfigs: |
+      basic_auth:
+        username: loki
+        password: secret
+      tenant_id: 1
 ```

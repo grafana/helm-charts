@@ -53,7 +53,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 7.3.5
+  tag: 7.4.2
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -245,6 +245,17 @@ persistence:
   # selectorLabels: {}
   # subPath: ""
   # existingClaim:
+
+  ## If persistence is not enabled, this allows to mount the
+  ## local storage in-memory to improve performance
+  ##
+  inMemory:
+    enabled: false
+    ## The maximum usage on memory medium EmptyDir would be
+    ## the minimum value between the SizeLimit specified
+    ## here and the sum of memory limits of all containers in a pod
+    ##
+    # sizeLimit: 300Mi
 
 initChownData:
   ## If false, data ownership will not be reset at startup
@@ -459,8 +470,10 @@ dashboards: {}
   #     datasource: Prometheus
   #   local-dashboard:
   #     url: https://example.com/repository/test.json
+  #     token: ''
   #   local-dashboard-base64:
   #     url: https://example.com/repository/test-b64.json
+  #     token: ''
   #     b64content: true
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
@@ -550,8 +563,8 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: kiwigrid/k8s-sidecar
-    tag: 1.1.0
+    repository: quay.io/kiwigrid/k8s-sidecar
+    tag: 1.10.6
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}

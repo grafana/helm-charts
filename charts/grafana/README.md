@@ -59,7 +59,7 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `7.0.3`                                                 |
+| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `7.4.2`                                                 |
 | `image.sha`                               | Image sha (optional)                          | `17cbd08b9515fda889ca959e9d72ee6f3327c8f1844a3336dfd952134f38e2fe` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
@@ -100,6 +100,8 @@ This version requires Helm >= 3.1.0.
 | `persistence.annotations`                 | PersistentVolumeClaim annotations             | `{}`                                                    |
 | `persistence.finalizers`                  | PersistentVolumeClaim finalizers              | `[ "kubernetes.io/pvc-protection" ]`                    |
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume      | `nil`                                                   |
+| `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
+| `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
 | `initChownData.image.repository`          | init-chown-data container image repository    | `busybox`                                               |
 | `initChownData.image.tag`                 | init-chown-data container image tag           | `1.31.1`                                                |
@@ -130,8 +132,8 @@ This version requires Helm >= 3.1.0.
 | `podAnnotations`                          | Pod annotations                               | `{}`                                                    |
 | `podLabels`                               | Pod labels                                    | `{}`                                                    |
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
-| `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                                  |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.1.0`                                                 |
+| `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.10.6`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -320,35 +322,18 @@ If the parameter `sidecar.datasources.enabled` is set, an init container is depl
 pod. This container lists all secrets (or configmaps, though not recommended) in the cluster and
 filters out the ones with a label as defined in `sidecar.datasources.label`. The files defined in
 those secrets are written to a folder and accessed by grafana on startup. Using these yaml files,
-the data sources in grafana can be imported. The secrets must be created before `helm install` so
-that the datasources init container can list the secrets.
+the data sources in grafana can be imported. 
 
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
 data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
-Example datasource config adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
+Example values to add a datasource adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 
 ```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: sample-grafana-datasource
-  labels:
-     grafana_datasource: "1"
-type: Opaque
-stringData:
-  datasource.yaml: |-
-    # config file version
-    apiVersion: 1
-
-    # list of datasources that should be deleted from the database
-    deleteDatasources:
-      - name: Graphite
-        orgId: 1
-
-    # list of datasources to insert/update depending
-    # whats available in the database
-    datasources:
+datasources:
+ datasources.yaml:
+   apiVersion: 1
+   datasources:
       # <string, required> name of the datasource. Required
     - name: Graphite
       # <string, required> datasource type. Required
@@ -388,7 +373,6 @@ stringData:
       version: 1
       # <bool> allow users to edit datasources from the UI.
       editable: false
-
 ```
 
 ## Sidecar for notifiers

@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 3.0.4](https://img.shields.io/badge/Version-3.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -71,6 +71,8 @@ The new release which will pick up again from the existing `positions.yaml`.
 | config.lokiAddress | string | `"http://loki-gateway/loki/api/v1/push"` | The Loki address to post logs to. Must be reference in `config.file` to configure `client.url`. See default config in `values.yaml` |
 | config.serverPort | int | `3101` | The port of the Promtail server Must be reference in `config.file` to configure `server.http_listen_port` See default config in `values.yaml` |
 | config.snippets | object | See `values.yaml` | A section of reusable snippets that can be reference in `config.file`. Custom snippets may be added in order to reduce redundancy. This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common. |
+| config.snippets.extraClientConfigs | string | empty | You can put here any keys that will be directly added to the config file's 'client' block. |
+| config.snippets.extraScrapeConfigs | string | empty | You can put here any additional scrape configs you want to add to the config file. |
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
@@ -146,20 +148,8 @@ extraPorts:
       loadBalancerIP: 123.234.123.234
 
 config:
-  file: |
-    server:
-      http_listen_port: {{ .Values.config.serverPort }}
-
-    client:
-      url: {{ .Values.config.lokiAddress }}
-
-    positions:
-      filename: /run/promtail/positions.yaml
-
-    scrape_configs:
-      # This reuses the existing default scrape configs
-      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
-
+  snippets:
+    extraScrapeConfigs: |
       # Add an additional scrape config for syslog
       - job_name: syslog
         syslog:
@@ -176,20 +166,8 @@ config:
 
 ```yaml
 config:
-  file: |
-    server:
-      http_listen_port: {{ .Values.config.serverPort }}
-
-    client:
-      url: {{ .Values.config.lokiAddress }}
-
-    positions:
-      filename: /run/promtail/positions.yaml
-
-    scrape_configs:
-      # This reuses the existing default scrape configs
-      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
-
+  snippets:
+    extraScrapeConfigs: |
       # Add an additional scrape config for syslog
       - job_name: journal
         journal:
@@ -249,4 +227,20 @@ config:
             grpc_listen_port: {{ .Values.extraPorts.grpcPush.containerPort }}
           labels:
             pushserver: push1
+```
+
+### Extra client config options
+
+If you want to add additional options to the `client` section of promtail's config, please use
+the `extraClientConfigs` section. For example, to enable HTTP basic auth and include OrgID
+header, you can use:
+
+```yaml
+config:
+  snippets:
+    extraClientConfigs: |
+      basic_auth:
+        username: loki
+        password: secret
+      tenant_id: 1
 ```

@@ -264,10 +264,25 @@ config:
           - __meta_kubernetes_pod_uid
           - __meta_kubernetes_pod_container_name
         target_label: __path__
+      - action: replace
+        replacement: /var/log/pods/*$1/*.log
+        separator: /
+        source_labels:
+          - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
+          - __meta_kubernetes_pod_container_name
+        target_label: __path__
 
     # If set to true, adds an additional label for the scrape job.
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
+
+    # -- You can put here any keys that will be directly added to the config file's 'client' block.
+    # @default -- empty
+    extraClientConfigs: ""
+
+    # -- You can put here any additional scrape configs you want to add to the config file.
+    # @default -- empty
+    extraScrapeConfigs: ""
 
     scrapeConfigs: |
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
@@ -431,9 +446,11 @@ config:
 
     client:
       url: {{ .Values.config.lokiAddress }}
+      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
 
     scrape_configs:
-      {{- tpl .Values.config.snippets.scrapeConfigs $ | nindent 2 }}
+      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
+      {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}

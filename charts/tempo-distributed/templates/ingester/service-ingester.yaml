@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "tempo.ingesterFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.ingesterLabels" . | nindent 4 }}
+spec:
+  ports:
+    - name: http
+      port: 3100
+      protocol: TCP
+      targetPort: 3100
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
+  selector:
+    {{- include "tempo.ingesterSelectorLabels" . | nindent 4 }}
