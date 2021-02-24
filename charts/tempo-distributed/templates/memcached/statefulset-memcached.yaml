@@ -46,7 +46,7 @@ spec:
         - args:
             - --memcached.address=localhost:11211
             - --web.listen-address=0.0.0.0:9150
-          image: "{{ .Values.memcachedExporter.repository }}:{{ .Values.memcachedExporter.tag }}"
+          image: "{{ .Values.memcachedExporter.image.repository }}:{{ .Values.memcachedExporter.image.tag }}"
           imagePullPolicy: {{ .Values.memcachedExporter.pullPolicy }}
           name: exporter
           ports:
