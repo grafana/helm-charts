@@ -47,15 +47,14 @@ The chart loki-stack contains a pre-configured Grafana, simply use `--set grafan
 To get the admin password for the Grafana pod, run the following command:
 
 ```bash
-kubectl get secret --namespace <YOUR-NAMESPACE> loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl get secret --namespace <YOUR-NAMESPACE> loki-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 To access the Grafana UI, run the following command:
 
 ```bash
-kubectl port-forward --namespace <YOUR-NAMESPACE> service/loki-grafana 3000:80
+kubectl port-forward --namespace <YOUR-NAMESPACE> service/loki-stack-grafana 3000:80
 ```
 
 Navigate to <http://localhost:3000> and login with `admin` and the password output above.
 Then follow the [instructions for adding the loki datasource](/docs/getting-started/grafana.md), using the URL `http://loki:3100/`.
-
