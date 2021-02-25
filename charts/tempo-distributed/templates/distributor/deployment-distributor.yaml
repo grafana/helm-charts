@@ -64,7 +64,7 @@ spec:
               name: zipkin
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.otlp }}
+            {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
             - containerPort: 55680
               name: otlp
               protocol: TCP

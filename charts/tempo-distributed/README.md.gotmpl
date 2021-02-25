@@ -34,6 +34,8 @@ traces:
   zipkin: true
 ```
 
+The distributor service is now called {{"{{"}}tempo.fullname{{"}}"}}-distributor. That could impact your ingestion towards this service.
+
 ### From Chart Versions < 0.7.0
 
 The memcached default args are removed and should be provided manually. The settings for the `memcached.exporter` moved to `memcachedExporter`

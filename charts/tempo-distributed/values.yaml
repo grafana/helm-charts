@@ -315,8 +315,6 @@ queryFrontend:
 
 traces:
   jaeger:
-    # -- Enable Tempo to ingest Jaeger traces. Enabling protocols from Jaeger is mandatory.
-    enabled: false
     # -- Enable Tempo to ingest Jaeger GRPC traces
     grpc: false
     # -- Enable Tempo to ingest Jaeger Thrift Binary traces
@@ -327,8 +325,11 @@ traces:
     thriftHttp: false
   # -- Enable Tempo to ingest Zipkin traces
   zipkin: false
-  # -- Enable Tempo to ingest Open Telementry traces
-  otlp: false
+  otlp:
+    # -- Enable Tempo to ingest Open Telementry HTTP traces
+    http: false
+    # -- Enable Tempo to ingest Open Telementry GRPC traces
+    grpc: false
   # -- Enable Tempo to ingest Open Census traces
   opencensus: false
 
@@ -342,7 +343,7 @@ config: |
         store: memberlist
   distributor:
     receivers:
-      {{ if .Values.traces.jaeger.enabled }}
+      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
         protocols:
           {{- if .Values.traces.jaeger.thriftCompact }}
@@ -366,13 +367,17 @@ config: |
       zipkin:
         endpoint: 0.0.0.0:9411
       {{- end }}
-      {{- if .Values.traces.otlp}}
+      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
       otlp:
         protocols:
+          {{- if .Values.traces.otlp.http }}
           http:
             endpoint: 0.0.0.0:55680
+          {{- end }}
+          {{- if .Values.traces.otlp.grpc }}
           grpc:
             endpoint: 0.0.0.0:55680
+          {{- end }}
       {{- end }}
       {{- if .Values.traces.opencensus}}
       opencensus:

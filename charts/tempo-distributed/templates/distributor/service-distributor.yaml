@@ -15,6 +15,10 @@ spec:
     - name: http
       port: 3100
       targetPort: http
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
     {{- if .Values.traces.jaeger.thriftCompact }}
     - name: distributor-jaeger-thrift-compact
       port: 6831
@@ -45,7 +49,7 @@ spec:
       protocol: TCP
       targetPort: zipkin
     {{- end }}
-    {{- if .Values.traces.otlp }}
+    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
     - name: distributor-otlp
       port: 55680
       protocol: TCP
