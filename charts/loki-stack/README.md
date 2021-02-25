@@ -36,7 +36,7 @@ helm upgrade --install loki grafana/loki-stack --set "key1=val1,key2=val2,..."
 ## Deploy Loki and Fluent Bit to your cluster
 
 ```bash
-helm upgrade --install loki loki/loki-stack \
+helm upgrade --install loki grafana/loki-stack \
     --set fluent-bit.enabled=true,promtail.enabled=false
 ```
 
