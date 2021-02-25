@@ -28,7 +28,6 @@ For example to enable Jaeger grpc thrift http and zipkin protocols:
 ```yaml
 traces:
   jaeger:
-    enabled: true
     grpc: true
     thriftHttp: true
   zipkin: true
