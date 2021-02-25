@@ -23,19 +23,19 @@ spec:
     - name: distributor-jaeger-thrift-compact
       port: 6831
       protocol: UDP
-      targetPort: jaeger-thrift-compact
+      targetPort: jaeger-compact
     {{- end }}
     {{- if .Values.traces.jaeger.thriftBinary }}
     - name: distributor-jaeger-thrift-binary
       port: 6832
       protocol: UDP
-      targetPort: jaeger-thrift-binary
+      targetPort: jaeger-binary
     {{- end }}
     {{- if .Values.traces.jaeger.thriftHttp }}
     - name: distributor-jaeger-thrift-http
       port: 14268
       protocol: TCP
-      targetPort: jaeger-thrift-http
+      targetPort: jaeger-http
     {{- end }}
     {{- if .Values.traces.jaeger.grpc }}
     - name: distributor-jaeger-grpc
