@@ -112,7 +112,12 @@ distributor:
   service:
     # -- Annotations for distributor service
     annotations: {}
+    # -- Type of service for the distributor
     type: ClusterIP
+    # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
+    loadBalancerIP: ""
+    # -- If type is LoadBalancer limit incoming traffic from IPs.
+    loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Annotations for distributor pods
@@ -266,6 +271,9 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
+  service:
+    # -- Annotations for queryFrontend service
+    annotations: {}
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Annotations for query-frontend pods
@@ -305,6 +313,25 @@ queryFrontend:
   # -- Extra volumes for query-frontend deployment
   extraVolumes: []
 
+traces:
+  jaeger:
+    # -- Enable Tempo to ingest Jaeger GRPC traces
+    grpc: false
+    # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+    thriftBinary: false
+    # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+    thriftCompact: false
+    # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+    thriftHttp: false
+  # -- Enable Tempo to ingest Zipkin traces
+  zipkin: false
+  otlp:
+    # -- Enable Tempo to ingest Open Telementry HTTP traces
+    http: false
+    # -- Enable Tempo to ingest Open Telementry GRPC traces
+    grpc: false
+  # -- Enable Tempo to ingest Open Census traces
+  opencensus: false
 
 config: |
   auth_enabled: false
@@ -316,16 +343,46 @@ config: |
         store: memberlist
   distributor:
     receivers:
+      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
         protocols:
-          grpc:
-            endpoint: 0.0.0.0:14250
-          thrift_binary:
-            endpoint: 0.0.0.0:6832
+          {{- if .Values.traces.jaeger.thriftCompact }}
           thrift_compact:
             endpoint: 0.0.0.0:6831
+          {{- end }}
+          {{- if .Values.traces.jaeger.thriftBinary }}
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          {{- end }}
+          {{- if .Values.traces.jaeger.thriftHttp }}
           thrift_http:
             endpoint: 0.0.0.0:14268
+          {{- end }}
+          {{- if .Values.traces.jaeger.grpc }}
+          grpc:
+            endpoint: 0.0.0.0:14250
+          {{- end }}
+      {{- end }}
+      {{- if .Values.traces.zipkin}}
+      zipkin:
+        endpoint: 0.0.0.0:9411
+      {{- end }}
+      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+      otlp:
+        protocols:
+          {{- if .Values.traces.otlp.http }}
+          http:
+            endpoint: 0.0.0.0:55680
+          {{- end }}
+          {{- if .Values.traces.otlp.grpc }}
+          grpc:
+            endpoint: 0.0.0.0:55680
+          {{- end }}
+      {{- end }}
+      {{- if .Values.traces.opencensus}}
+      opencensus:
+        endpoint: 0.0.0.0:55678
+      {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095

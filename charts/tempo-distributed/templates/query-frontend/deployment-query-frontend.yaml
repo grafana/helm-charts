@@ -75,7 +75,7 @@ spec:
               name: jaeger-metrics
           env:
             - name: JAEGER_AGENT_HOST
-              value: {{ template "tempo.fullname" . }}
+              value: {{ template "tempo.fullname" . }}-distributor
           {{- with .Values.queryFrontend.query.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

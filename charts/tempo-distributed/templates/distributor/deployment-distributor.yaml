@@ -1,8 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: distributor
-  name: {{ template "tempo.fullname" . }}
+  name: {{ template "tempo.fullname" . }}-distributor
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "tempo.distributorLabels" . | nindent 4 }}
@@ -40,10 +39,41 @@ spec:
               protocol: TCP
             - containerPort: 3100
               name: http
-            - containerPort: 55678
-              name: opencensus
+            {{- if .Values.traces.jaeger.thriftCompact }}
+            - containerPort: 6831
+              name: jaeger-compact
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.traces.jaeger.thriftBinary }}
+            - containerPort: 6832
+              name: jaeger-binary
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.traces.jaeger.thriftHttp }}
             - containerPort: 14268
               name: jaeger-http
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.jaeger.grpc }}
+            - containerPort: 14250
+              name: jaeger-grpc
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.zipkin }}
+            - containerPort: 9411
+              name: zipkin
+              protocol: TCP
+            {{- end }}
+            {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+            - containerPort: 55680
+              name: otlp
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.opencensus }}
+            - containerPort: 55678
+              name: opencensus
+              protocol: TCP
+            {{- end }}
           {{- with .Values.distributor.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

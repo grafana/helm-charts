@@ -5,9 +5,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
-  {{- with .Values.queryFrontend.annotations }}
+  {{- with .Values.queryFrontend.service.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+    {{ toYaml . | nindent 4 }}
   {{- end }}
 spec:
   ports:

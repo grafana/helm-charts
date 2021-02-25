@@ -20,6 +20,21 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 0.8.0
+
+By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+
+For example to enable Jaeger grpc thrift http and zipkin protocols:
+```yaml
+traces:
+  jaeger:
+    grpc: true
+    thriftHttp: true
+  zipkin: true
+```
+
+The distributor service is now called {{"{{"}}tempo.fullname{{"}}"}}-distributor. That could impact your ingestion towards this service.
+
 ### From Chart Versions < 0.7.0
 
 The memcached default args are removed and should be provided manually. The settings for the `memcached.exporter` moved to `memcachedExporter`

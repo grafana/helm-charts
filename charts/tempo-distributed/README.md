@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -19,6 +19,21 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 0.8.0
+
+By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+
+For example to enable Jaeger grpc thrift http and zipkin protocols:
+```yaml
+traces:
+  jaeger:
+    grpc: true
+    thriftHttp: true
+  zipkin: true
+```
+
+The distributor service is now called {{tempo.fullname}}-distributor. That could impact your ingestion towards this service.
 
 ### From Chart Versions < 0.7.0
 
@@ -42,7 +57,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
-| config | string | `"auth_enabled: false\ncompactor:\n  compaction:\n    block_retention: 48h\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  receivers:\n    jaeger:\n      protocols:\n        grpc:\n          endpoint: 0.0.0.0:14250\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        thrift_http:\n          endpoint: 0.0.0.0:14268\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}:9095\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n    tokens_file_path: /var/tempo/tokens.json\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  per_tenant_override_config: /conf/overrides.yaml\nserver:\n  http_listen_port: 3100\nstorage:\n  trace:\n    backend: local\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
+| config | string | `"auth_enabled: false\ncompactor:\n  compaction:\n    block_retention: 48h\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  receivers:\n    {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}\n    jaeger:\n      protocols:\n        {{- if .Values.traces.jaeger.thriftCompact }}\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftBinary }}\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftHttp }}\n        thrift_http:\n          endpoint: 0.0.0.0:14268\n        {{- end }}\n        {{- if .Values.traces.jaeger.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:14250\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.zipkin}}\n    zipkin:\n      endpoint: 0.0.0.0:9411\n    {{- end }}\n    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}\n    otlp:\n      protocols:\n        {{- if .Values.traces.otlp.http }}\n        http:\n          endpoint: 0.0.0.0:55680\n        {{- end }}\n        {{- if .Values.traces.otlp.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:55680\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.opencensus}}\n    opencensus:\n      endpoint: 0.0.0.0:55678\n    {{- end }}\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}:9095\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n    tokens_file_path: /var/tempo/tokens.json\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  per_tenant_override_config: /conf/overrides.yaml\nserver:\n  http_listen_port: 3100\nstorage:\n  trace:\n    backend: local\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
@@ -58,7 +73,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.service.annotations | object | `{}` | Annotations for distributor service |
-| distributor.service.type | string | `"ClusterIP"` |  |
+| distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
+| distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
@@ -139,6 +156,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.query.resources | object | `{}` | Resource requests and limits for the query |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
+| queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
@@ -149,6 +167,14 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| traces.jaeger.grpc | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
+| traces.jaeger.thriftBinary | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
+| traces.jaeger.thriftCompact | bool | `false` | Enable Tempo to ingest Jaeger Thrift Compact traces |
+| traces.jaeger.thriftHttp | bool | `false` | Enable Tempo to ingest Jaeger Thrift HTTP traces |
+| traces.opencensus | bool | `false` | Enable Tempo to ingest Open Census traces |
+| traces.otlp.grpc | bool | `false` | Enable Tempo to ingest Open Telementry GRPC traces |
+| traces.otlp.http | bool | `false` | Enable Tempo to ingest Open Telementry HTTP traces |
+| traces.zipkin | bool | `false` | Enable Tempo to ingest Zipkin traces |
 
 ## Components
 
