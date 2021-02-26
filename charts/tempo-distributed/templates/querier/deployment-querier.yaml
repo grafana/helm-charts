@@ -11,7 +11,7 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: 10
-  replicas: {{ .Values.queryFrontend.replicas }}
+  replicas: {{ .Values.querier.replicas }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
