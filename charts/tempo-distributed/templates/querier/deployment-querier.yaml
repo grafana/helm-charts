@@ -11,11 +11,11 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: 10
-  replicas: {{ .Values.queryFrontend.replicas }}
+  replicas: {{ .Values.querier.replicas }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.querierLabels" . | nindent 6 }}
+      {{- include "tempo.querierSelectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
