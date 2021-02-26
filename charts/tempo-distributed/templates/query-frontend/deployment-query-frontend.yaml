@@ -73,10 +73,8 @@ spec:
               name: jaeger-ui
             - containerPort: 16687
               name: jaeger-metrics
-          env:
-            - name: JAEGER_AGENT_HOST
-              value: {{ template "tempo.fullname" . }}-distributor
           {{- with .Values.queryFrontend.query.extraEnv }}
+          env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.queryFrontend.query.extraEnvFrom }}
