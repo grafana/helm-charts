@@ -15,7 +15,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.querierLabels" . | nindent 6 }}
+      {{- include "tempo.querierSelectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
