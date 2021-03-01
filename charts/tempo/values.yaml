@@ -18,10 +18,10 @@ tempo:
 
   updateStrategy: RollingUpdate
   resources: {}
-  #  limits:
+  #  requests:
   #    cpu: 1000m
   #    memory: 4Gi
-  #  requests:
+  #  limits:
   #    cpu: 2000m
   #    memory: 6Gi
 
@@ -94,6 +94,17 @@ tempoQuery:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
+
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  create: true
+  # -- The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+  # -- Image pull secrets for the service account
+  imagePullSecrets: []
+  # -- Annotations for the service account
+  annotations: {}
 
 service:
   type: ClusterIP
