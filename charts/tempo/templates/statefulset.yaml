@@ -27,6 +27,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
       - args:
         - -config.file=/conf/tempo.yaml
@@ -52,7 +53,7 @@ spec:
         {{- end }}
         - mountPath: /conf
           name: tempo-conf
-        {{- if .Values.persistence.enable }}
+        {{- if .Values.persistence.enabled }}
         - mountPath: /var/tempo
           name: storage
         {{- end }}
