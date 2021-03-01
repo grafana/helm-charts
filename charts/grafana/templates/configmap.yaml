@@ -16,7 +16,7 @@ data:
     {{- if kindIs "invalid" $elemVal }}
     {{ $elem }} =
     {{- else }}
-    {{ $elem }} = {{ printf "%v" $elemVal }}
+    {{ $elem }} = {{ tpl (toYaml $elemVal) $ }}
     {{- end }}
     {{- end }}
 {{- end }}
