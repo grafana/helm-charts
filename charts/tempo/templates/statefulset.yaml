@@ -96,17 +96,14 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: storage
-        annotations:
-          {{- toYaml .Values.persistence.annotations | nindent 8 }}
+        annotations: {{- toYaml .Values.persistence.annotations | nindent 10 }}
       spec:
-        accessModes:
-          {{- toYaml .Values.persistence.accessModes | nindent 8 }}
+        accessModes: {{- toYaml .Values.persistence.accessModes | nindent 10 }}
         resources:
           requests:
             storage: {{ .Values.persistence.size | quote }}
         storageClassName: {{ .Values.persistence.storageClassName }}
         {{- if .Values.persistence.selector }}
-        selector:
-          {{- toYaml .Values.persistence.selector | nindent 8 }}
+        selector: {{- toYaml .Values.persistence.selector | nindent 10 }}
         {{- end }}
   {{- end }}
