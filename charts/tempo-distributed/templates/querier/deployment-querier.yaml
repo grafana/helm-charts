@@ -26,6 +26,7 @@ spec:
         {{- include "tempo.querierLabels" . | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:
             - -target=querier
