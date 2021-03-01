@@ -70,3 +70,4 @@ spec:
   {{- end }}
   selector:
     {{- include "tempo.distributorSelectorLabels" . | nindent 4 }}
+
