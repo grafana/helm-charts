@@ -13,7 +13,11 @@ data:
 {{- range $key, $value := index .Values "grafana.ini" }}
     [{{ $key }}]
     {{- range $elem, $elemVal := $value }}
-    {{ $elem }} = {{ $elemVal }}
+    {{- if kindIs "invalid" $elemVal }}
+    {{ $elem }} =
+    {{- else }}
+    {{ $elem }} = {{ printf "%v" $elemVal }}
+    {{- end }}
     {{- end }}
 {{- end }}
 
