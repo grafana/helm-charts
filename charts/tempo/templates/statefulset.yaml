@@ -92,7 +92,7 @@ spec:
         name: tempo-conf
   updateStrategy:
     type: {{- toYaml .Values.tempo.updateStrategy | nindent 6 }}
-  {{- if .Values.persistence.enable }}
+  {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: storage
