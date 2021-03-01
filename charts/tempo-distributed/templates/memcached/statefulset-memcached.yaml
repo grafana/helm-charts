@@ -21,6 +21,7 @@ spec:
       labels:
         {{- include "tempo.memcachedLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - image: "{{ .Values.memcached.repository }}:{{ .Values.memcached.tag }}"
           imagePullPolicy: {{ .Values.memcached.pullPolicy }}

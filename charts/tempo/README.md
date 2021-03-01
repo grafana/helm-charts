@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.6.0](https://img.shields.io/badge/AppVersion-v0.6.0-informational?style=flat-square)
+![Version: 0.6.3](https://img.shields.io/badge/Version-0.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.6.0](https://img.shields.io/badge/AppVersion-v0.6.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -34,6 +34,10 @@ Grafana Tempo Single Binary Mode
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
+| serviceAccount.annotations | object | `{}` | Annotations for the service account |
+| serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
+| serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
+| serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | tempo.authEnabled | bool | `false` |  |
 | tempo.extraArgs | object | `{}` |  |
 | tempo.extraEnv | list | `[]` | Environment variables to add |

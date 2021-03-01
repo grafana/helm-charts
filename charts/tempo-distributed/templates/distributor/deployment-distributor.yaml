@@ -22,6 +22,7 @@ spec:
         {{- include "tempo.distributorLabels" . | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:
             - -target=distributor
