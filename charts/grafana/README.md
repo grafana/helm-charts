@@ -91,6 +91,7 @@ This version requires Helm >= 3.1.0.
 | `extraInitContainers`                     | Init containers to add to the grafana pod     | `{}`                                                    |
 | `extraContainers`                         | Sidecar containers to add to the grafana pod  | `{}`                                                    |
 | `extraContainerVolumes`                   | Volumes that can be mounted in sidecar containers | `[]`                                                |
+| `extraLabels`                             | Custom labels for all manifests               | `{}`                                                    |
 | `schedulerName`                           | Name of the k8s scheduler (other than default) | `nil`                                                  |
 | `persistence.enabled`                     | Use persistent volume to store data           | `false`                                                 |
 | `persistence.type`                        | Type of persistence (`pvc` or `statefulset`)  | `pvc`                                                   |

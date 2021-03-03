@@ -92,6 +92,9 @@ extraEmptyDirMounts: []
   #   mountPath: /etc/grafana/provisioning/notifiers
 
 
+# Apply extra labels to common labels.
+extraLabels: {}
+
 ## Assign a PriorityClassName to pods if set
 # priorityClassName:
 
