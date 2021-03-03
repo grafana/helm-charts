@@ -445,7 +445,7 @@ config:
       http_listen_port: {{ .Values.config.serverPort }}
 
     client:
-      url: {{ .Values.config.lokiAddress }}
+      url: {{ tpl .Values.config.lokiAddress . }}
       {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
 
     positions:
