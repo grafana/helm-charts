@@ -1,5 +1,44 @@
 apiVersion: v1
 entries:
+  enterprise-metrics:
+  - apiVersion: v2
+    appVersion: v1.1.2
+    created: "2021-03-03T20:08:58.502706749Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    - alias: consul
+      condition: consul.enabled
+      name: consul
+      repository: https://helm.releases.hashicorp.com
+      version: 0.25.0
+    description: Grafana Enterprise Metrics
+    digest: 7ec77e81d5af2476e30bcd88ca1593226265848a80746ea371d889a34f747e3b
+    home: https://grafana.com/products/enterprise/metrics
+    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+    kubeVersion: ^1.10.0-0
+    name: enterprise-metrics
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/enterprise-metrics-1.0.0/enterprise-metrics-1.0.0.tgz
+    version: 1.0.0
   fluent-bit:
   - apiVersion: v1
     appVersion: v2.1.0
@@ -11505,6 +11544,27 @@ entries:
   promtail:
   - apiVersion: v2
     appVersion: 2.1.0
+    created: "2021-03-03T20:08:58.687730882Z"
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
+    digest: ee8c747925e9f8fd8741b01de06d622fcb854dff84e00739ed7e7a88e9b13368
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    - name: unguiculus
+    name: promtail
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/promtail-3.2.0/promtail-3.2.0.tgz
+    version: 3.2.0
+  - apiVersion: v2
+    appVersion: 2.1.0
     created: "2021-02-10T17:21:32.516211452Z"
     description: Promtail is an agent which ships the contents of local logs to a
       Loki instance
@@ -12711,4 +12771,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-0.6.0/tempo-distributed-0.6.0.tgz
     version: 0.6.0
-generated: "2021-03-01T20:05:35.785509865Z"
+generated: "2021-03-03T20:08:58.69331892Z"
