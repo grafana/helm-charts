@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "tempo.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" . | nindent 4 }}
+data:
+  overrides.yaml: |
+    overrides:
+  tempo.yaml: |
+    auth_enabled: {{ .Values.tempo.authEnabled }}
+    compactor:
+      compaction:
+        compacted_block_retention: {{ .Values.tempo.retention }}
+    distributor:
+      receivers:
+        {{- toYaml .Values.tempo.receivers | nindent 8 }}
+    ingester:
+       {{- toYaml .Values.tempo.ingester | nindent 6 }}
+    server:
+      http_listen_port: {{ .Values.tempo.server.httpListenPort }}
+    storage:
+      {{- toYaml .Values.tempo.storage | nindent 6 }}

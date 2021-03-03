@@ -61,14 +61,13 @@ spec:
           securityContext:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /ready
-              port: http
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+            {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
+            {{- with .Values.tableManager.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.tableManager.resources | nindent 12 }}
       {{- with .Values.tableManager.affinity }}
@@ -87,4 +86,7 @@ spec:
         - name: config
           configMap:
             name: {{ include "loki.fullname" . }}
+        {{- with .Values.tableManager.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
 {{- end }}

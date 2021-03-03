@@ -5,10 +5,7 @@ kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-namespace-only
   labels:
-    app: {{ template "promtail.name" . }}
-    chart: {{ template "promtail.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "promtail.labels" . | nindent 4 }}
 spec:
   podSelector: {}
   policyTypes:
@@ -28,14 +25,11 @@ kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-egress-dns
   labels:
-    app: {{ template "promtail.name" . }}
-    chart: {{ template "promtail.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "promtail.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app: {{ template "promtail.name" . }}
+      {{- include "promtail.selectorLabels" . | nindent 6 }}
   policyTypes:
     - Egress
   egress:
@@ -49,16 +43,13 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ template "promtail.name" . }}-egress-k8s-api-
+  name: {{ template "promtail.name" . }}-egress-k8s-api
   labels:
-    app: {{ template "promtail.name" . }}
-    chart: {{ template "promtail.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "promtail.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app: {{ template "promtail.name" . }}
+      {{- include "promtail.selectorLabels" . | nindent 6 }}
   policyTypes:
     - Egress
   egress:
@@ -79,14 +70,11 @@ kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-ingress-metrics
   labels:
-    app: {{ template "promtail.name" . }}
-    chart: {{ template "promtail.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "promtail.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app: {{ template "promtail.name" . }}
+      {{- include "promtail.selectorLabels" . | nindent 6 }}
   policyTypes:
     - Ingress
   ingress:
@@ -109,4 +97,26 @@ spec:
       {{- end }}
     {{- end }}
 
+{{- end }}
+
+{{- if .Values.extraPorts }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "promtail.name" . }}-egress-extra-ports
+  labels:
+    {{- include "promtail.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "promtail.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+  {{- range $extraPortConfig := .Values.extraPorts }}
+        - port: {{ $extraPortConfig.containerPort }}
+          protocol: {{ $extraPortConfig.protocol }}
+  {{- end }}
 {{- end }}

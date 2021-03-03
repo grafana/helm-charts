@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "tempo.queryFrontendFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
+  {{- with .Values.queryFrontend.service.annotations }}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ports:
+    - name: http
+      port: 3100
+      targetPort: 3100
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
+    - name: tempo-query-jaeger-ui
+      port: 16686
+      targetPort: 16686
+  selector:
+    {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}

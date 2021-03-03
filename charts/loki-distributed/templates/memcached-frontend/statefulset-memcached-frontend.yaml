@@ -78,6 +78,8 @@ spec:
             - name: http-metrics
               containerPort: 9150
               protocol: TCP
+          resources:
+            {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
         {{- end }}
       {{- with .Values.memcachedFrontend.affinity }}
       affinity:

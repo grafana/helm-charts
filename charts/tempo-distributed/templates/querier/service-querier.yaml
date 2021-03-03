@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "tempo.querierFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.querierLabels" . | nindent 4 }}
+  {{- with .Values.querier.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  ports:
+    - name: http
+      port: 3100
+      protocol: TCP
+      targetPort: 3100
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
+  selector:
+    {{- include "tempo.querierSelectorLabels" . | nindent 4 }}

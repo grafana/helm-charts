@@ -53,11 +53,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+            {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
           securityContext:
             {{- toYaml .Values.gateway.containerSecurityContext | nindent 12 }}
           volumeMounts:
@@ -71,6 +67,9 @@ spec:
               mountPath: /tmp
             - name: docker-entrypoint-d-override
               mountPath: /docker-entrypoint.d
+            {{- if .Values.gateway.extraVolumeMounts }}
+            {{- toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.gateway.resources | nindent 12 }}
       {{- with .Values.gateway.affinity }}
@@ -98,3 +97,6 @@ spec:
           emptyDir: {}
         - name: docker-entrypoint-d-override
           emptyDir: {}
+        {{- if .Values.gateway.extraVolumes }}
+        {{- toYaml .Values.gateway.extraVolumes | nindent 8 }}
+        {{- end }}

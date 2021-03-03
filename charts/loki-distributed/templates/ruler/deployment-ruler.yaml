@@ -67,11 +67,7 @@ spec:
           securityContext:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /ready
-              port: http
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+            {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
@@ -82,6 +78,9 @@ spec:
             {{- range $dir, $_ := .Values.ruler.directories }}
             - name: {{ include "loki.rulerRulesDirName" $dir }}
               mountPath: /etc/loki/rules/{{ $dir }}
+            {{- end }}
+            {{- with .Values.ruler.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           resources:
             {{- toYaml .Values.ruler.resources | nindent 12 }}
@@ -110,4 +109,7 @@ spec:
           emptyDir: {}
         - name: data
           emptyDir: {}
+        {{- with .Values.ruler.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
 {{- end }}
