@@ -40,6 +40,9 @@ spec:
       {{- if .Values.imageRenderer.schedulerName }}
       schedulerName: "{{ .Values.imageRenderer.schedulerName }}"
       {{- end }}
+      {{- if .Values.imageRenderer.serviceAccountName }}
+      serviceAccountName: "{{ .Values.imageRenderer.serviceAccountName }}"
+      {{- end }}
       {{- if .Values.imageRenderer.securityContext }}
       securityContext:
       {{ toYaml .Values.imageRenderer.securityContext | indent 2 }}

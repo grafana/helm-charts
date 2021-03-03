@@ -2,4 +2,3 @@ charts/fluent-bit
 charts/grafana
 charts/loki
 charts/loki-stack
-charts/promtail

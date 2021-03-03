@@ -13,7 +13,11 @@ data:
 {{- range $key, $value := index .Values "grafana.ini" }}
     [{{ $key }}]
     {{- range $elem, $elemVal := $value }}
-    {{ $elem }} = {{ $elemVal }}
+    {{- if kindIs "invalid" $elemVal }}
+    {{ $elem }} =
+    {{- else }}
+    {{ $elem }} = {{ tpl (toYaml $elemVal) $ }}
+    {{- end }}
     {{- end }}
 {{- end }}
 
@@ -59,6 +63,9 @@ data:
     --max-time 60 \
       {{- if not $value.b64content }}
     -H "Accept: application/json" \
+        {{- if $value.token }}
+    -H "Authorization: token {{ $value.token }}" \
+        {{- end }}
     -H "Content-Type: application/json;charset=UTF-8" \
       {{ end }}
     {{- if $value.url -}}"{{ $value.url }}"{{- else -}}"https://grafana.com/api/dashboards/{{ $value.gnetId }}/revisions/{{- if $value.revision -}}{{ $value.revision }}{{- else -}}1{{- end -}}/download"{{- end -}}{{ if $value.datasource }} | sed '/-- .* --/! s/"datasource":.*,/"datasource": "{{ $value.datasource }}",/g'{{ end }}{{- if $value.b64content -}} | base64 -d {{- end -}} \

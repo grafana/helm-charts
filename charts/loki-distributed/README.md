@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 0.26.0](https://img.shields.io/badge/Version-0.26.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -44,6 +44,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
+| distributor.extraVolumeMounts | list | `[]` | Volume mounts to add to the distributor pods |
+| distributor.extraVolumes | list | `[]` | Volumes to add to the distributor pods |
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `loki.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `loki.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
@@ -64,6 +66,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
+| gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
+| gateway.extraVolumes | list | `[]` | Volumes to add to the gateway pods |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` | The gateway image pull policy |
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
@@ -77,6 +81,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
 | gateway.podSecurityContext | object | `{"fsGroup":101,"runAsGroup":101,"runAsNonRoot":true,"runAsUser":101}` | The SecurityContext for gateway containers |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
+| gateway.readinessProbe.httpGet.path | string | `"/"` |  |
+| gateway.readinessProbe.httpGet.port | string | `"http"` |  |
+| gateway.readinessProbe.initialDelaySeconds | int | `15` |  |
+| gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
@@ -87,6 +95,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
+| global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
+| global.dnsService | string | `"kube-dns"` | configures DNS service name in kube-system |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
@@ -117,6 +127,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
+| loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| loki.readinessProbe.httpGet.port | string | `"http"` |  |
+| loki.readinessProbe.initialDelaySeconds | int | `30` |  |
+| loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
@@ -221,6 +235,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
+| queryFrontend.extraVolumeMounts | list | `[]` | Volume mounts to add to the query-frontend pods |
+| queryFrontend.extraVolumes | list | `[]` | Volumes to add to the query-frontend pods |
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `loki.image.registry` |
 | queryFrontend.image.repository | string | `nil` | Docker image repository for the query-frontend image. Overrides `loki.image.repository` |
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `loki.image.tag` |
@@ -231,6 +247,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
+| rbac.pspEnabled | bool | `false` | If enabled, a PodSecurityPolicy is created |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
 | ruler.directories | object | `{}` | Directories containing rules files |
 | ruler.enabled | bool | `false` | Specifies whether the ruler should be enabled |
@@ -262,7 +279,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
+| serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
 | tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |
