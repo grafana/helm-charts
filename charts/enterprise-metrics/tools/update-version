@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Update references to Grafana Enterprise Metrics versions
+
+set -euf -o pipefail
+
+DRYRUN="${DRYRUN:-1}"
+SED=sed
+
+if [[ "${DRYRUN}" -eq 0 ]]; then
+    SED="${SED} -i"
+fi
+
+if [[ "${#@}" -ne 1 ]]; then
+    echo "Usage: $0 <version>"
+    echo "Example: $0 v1.0.2"
+fi
+
+${SED} -e "6s/tag: .*/tag: ${1}/" values.yaml
+${SED} -e "3s/appVersion: .*/appVersion: ${1}/" Chart.yaml

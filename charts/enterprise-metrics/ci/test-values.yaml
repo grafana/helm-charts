@@ -1,0 +1,38 @@
+# Test values to limit the load during CI
+alertmanager:
+  persistentVolume:
+    enabled: false
+
+compactor:
+  persistentVolume:
+    enabled: false
+
+config:
+  alertmanager:
+    storage:
+      type: "local"
+      local:
+        path: "/data/configs"
+
+  blocks_storage:
+    backend: "filesystem"
+    tsdb:
+      dir: "/data/tsdb"
+    bucket_store:
+      sync_dir: "/data/tsdb-sync"
+    filesystem:
+      dir: "/data/store"
+
+  ruler:
+    storage:
+      type: "local"
+      local:
+        directory: "/data/rules"
+
+ingester:
+  persistentVolume:
+    enabled: false
+
+store_gateway:
+  persistentVolume:
+    enabled: false
