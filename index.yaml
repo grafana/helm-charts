@@ -385,6 +385,32 @@ entries:
   grafana:
   - apiVersion: v2
     appVersion: 7.4.2
+    created: "2021-03-04T13:10:45.346307586Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 022b8f494d559fcc5d33c41f35f11e5ea14b5e340587c6bda15feec6582a2f54
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-6.4.6/grafana-6.4.6.tgz
+    version: 6.4.6
+  - apiVersion: v2
+    appVersion: 7.4.2
     created: "2021-03-01T06:49:24.261460206Z"
     description: The leading tool for querying and visualizing time series and metrics.
     digest: 107456a8b1820a7521f25c497e5444a8b09ead2102d962eefd7277391375c098
@@ -12771,4 +12797,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-0.6.0/tempo-distributed-0.6.0.tgz
     version: 0.6.0
-generated: "2021-03-03T20:08:58.69331892Z"
+generated: "2021-03-04T13:10:45.354950695Z"
