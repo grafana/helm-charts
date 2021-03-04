@@ -218,6 +218,10 @@ podSecurityPolicy:
 # which is a templated string that references the other values and snippets below this key.
 # @default -- See `values.yaml`
 config:
+  # -- The log level of the Promtail server
+  # Must be reference in `config.file` to configure `server.log_level`
+  # See default config in `values.yaml`
+  logLevel: info
   # -- The port of the Promtail server
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
@@ -441,7 +445,7 @@ config:
   # @default -- See `values.yaml`
   file: |
     server:
-      log_level: info
+      log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
 
     client:
