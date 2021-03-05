@@ -11,3 +11,4 @@
 /charts/loki-canary/ @unguiculus
 /charts/tempo @swartz-k @joe-elliott @annanay25 @mdisibio @dgzlopes 
 /charts/tempo-distributed @swartz-k @joe-elliott @annanay25 @mdisibio @dgzlopes
+/charts/metrics-enterprise/ @jdbaldry
