@@ -183,6 +183,7 @@ ingress:
   #     servicePort: use-annotation
   ## Or for k8s > 1.19
   # - path: /*
+  #   pathType: Prefix
   #   backend:
   #     service:
   #       name: ssl-redirect
