@@ -56,6 +56,11 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
 {{- end }}
+{{- if .Values.downloadDashboards.envFromSecret }}
+    envFrom:
+      - secretRef:
+          name: {{ tpl .Values.downloadDashboards.envFromSecret . }}
+{{- end }}
     volumeMounts:
       - name: config
         mountPath: "/etc/grafana/download_dashboards.sh"
