@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.26.0](https://img.shields.io/badge/Version-0.26.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 0.27.0](https://img.shields.io/badge/Version-0.27.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -22,11 +22,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| aws.bucketnames | string | `nil` | Used inside `loki.config` as value for `storage_config.aws.bucketnames` |
-| aws.s3_region | string | `nil` | Used inside `loki.config` as value for `storage_config.aws.s3` |
-| azure.account_key | string | `nil` | Used inside `loki.config` as value for `storage.azure.account_key` |
-| azure.account_name | string | `nil` | Used inside `loki.config` as value for `storage.azure.account_name` |
-| azure.container_name | string | `nil` | Used inside `loki.config` as value for `storage.azure.container_name` |
+| aws | object | `{}` | Keys `s3_region` and `bucketnames` will be used in `loki.config` at `storage_config.aws` |
+| azure | object | `{}` | Keys `account_key`, `account_name` and `container_name` will be used in `loki.config` at `storage_config.azure` |
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
@@ -287,7 +284,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
-| storage | string | `filesystem` | Will be used as value for multiple `shared_store` settings in `loki.config` |
+| storage | string | `"filesystem"` | Will be used as value for multiple `shared_store` settings in `loki.config` |
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
 | tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |

@@ -18,15 +18,15 @@ fullnameOverride: null
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
-# either s3 or azure supported at this point
+# -- Will be used as value for multiple `shared_store` settings in `loki.config`
 storage: filesystem
 
-# set these values if `storage` above is set to 's3'
+# -- Keys `s3_region` and `bucketnames` will be used in `loki.config` at `storage_config.aws`
 aws: {}
   # s3_region: s3://eu-west-1
   # bucketnames: my-bucket
 
-# set these values if `storage` above is set to 'azure'
+# -- Keys `account_key`, `account_name` and `container_name` will be used in `loki.config` at `storage_config.azure`
 azure: {}
   # # 'Storage account' name
   # account_name: my-account-name
