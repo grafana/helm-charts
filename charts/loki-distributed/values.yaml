@@ -18,6 +18,23 @@ fullnameOverride: null
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
+# either s3 or azure supported at this point
+storage: filesystem
+
+# set these values if `storage` above is set to 's3'
+aws: {}
+  # s3_region: s3://eu-west-1
+  # bucketnames: my-bucket
+
+# set these values if `storage` above is set to 'azure'
+azure: {}
+  # # 'Storage account' name
+  # account_name: my-account-name
+  # # 'Blob service' 'Container' name
+  # container_name: my-container-name
+  # # 'Storage account' 'Access key'
+  # account_key: my-account-key
+
 loki:
   # Configures the readiness probe for all of the Loki pods
   readinessProbe:
@@ -59,6 +76,7 @@ loki:
 
     server:
       http_listen_port: 3100
+      log_level: info
 
     distributor:
       ring:
@@ -70,7 +88,14 @@ loki:
         - {{ include "loki.fullname" . }}-memberlist
 
     ingester:
+      # Disable chunk transfer which is not possible with statefulsets
+      # and unnecessary for boltdb-shipper
+      max_transfer_retries: 0
+      chunk_idle_period: 1h
+      chunk_target_size: 1536000
+      max_chunk_age: 1h
       lifecycler:
+        join_after: 0s
         ring:
           kvstore:
             store: memberlist
@@ -85,21 +110,31 @@ loki:
       enforce_metric_name: false
       reject_old_samples: true
       reject_old_samples_max_age: 168h
+      ingestion_rate_mb: 10
+      ingestion_burst_size_mb: 20
+      max_concurrent_tail_requests: 20
       max_cache_freshness_per_query: 10m
 
     schema_config:
       configs:
         - from: 2020-09-07
           store: boltdb-shipper
-          object_store: filesystem
+          object_store: {{ .Values.storage }}
           schema: v11
           index:
             prefix: loki_index_
             period: 24h
 
     storage_config:
+      aws:
+        s3: {{ .Values.aws.s3_region }}
+        bucketnames: {{ .Values.aws.bucketnames }}
+      azure:
+        container_name: {{ .Values.azure.container_name }}
+        account_name: {{ .Values.azure.account_name }}
+        account_key: {{ .Values.azure.account_key }}
       boltdb_shipper:
-        shared_store: filesystem
+        shared_store: {{ .Values.storage }}
         active_index_directory: /var/loki/index
         cache_location: /var/loki/cache
         cache_ttl: 168h
@@ -133,7 +168,7 @@ loki:
       compress_responses: true
 
     compactor:
-      shared_store: filesystem
+      shared_store: {{ .Values.storage }}
 
     ruler:
       storage:
