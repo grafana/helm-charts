@@ -88,10 +88,6 @@ loki:
         - {{ include "loki.fullname" . }}-memberlist
 
     ingester:
-      # Disable chunk transfer which is not possible with statefulsets
-      # and unnecessary for boltdb-shipper
-      max_transfer_retries: 0
-      chunk_idle_period: 1h
       chunk_target_size: 1536000
       max_chunk_age: 1h
       lifecycler:
