@@ -13,19 +13,8 @@ extraPorts:
     containerPort: 3600
 
 config:
-  file: |
-    server:
-      http_listen_port: {{ .Values.config.serverPort }}
-
-    client:
-      url: {{ .Values.config.lokiAddress }}
-
-    positions:
-      filename: /run/promtail/positions.yaml
-
-    scrape_configs:
-      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
-
+  snippets:
+    extraScrapeConfigs: |
       - job_name: syslog
         syslog:
           listen_address: 0.0.0.0:{{ .Values.extraPorts.syslog.containerPort }}
