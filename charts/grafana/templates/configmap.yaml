@@ -5,6 +5,10 @@ metadata:
   namespace: {{ template "grafana.namespace" . }}
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
+{{- with .Values.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 data:
 {{- if .Values.plugins }}
   plugins: {{ join "," .Values.plugins }}
