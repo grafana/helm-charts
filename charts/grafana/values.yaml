@@ -106,6 +106,7 @@ downloadDashboardsImage:
 
 downloadDashboards:
   env: {}
+  envFromSecret: ""
   resources: {}
 
 ## Pod Annotations
