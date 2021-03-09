@@ -24,6 +24,8 @@ spec:
     metadata:
       labels:
         {{- include "tempo.compactorSelectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
