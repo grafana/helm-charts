@@ -270,8 +270,10 @@ config:
         target_label: __path__
       - action: replace
         replacement: /var/log/pods/*$1/*.log
+        regex: true/(.*)
         separator: /
         source_labels:
+          - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
           - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
           - __meta_kubernetes_pod_container_name
         target_label: __path__
