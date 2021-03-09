@@ -25,6 +25,8 @@ spec:
       labels:
         {{- include "tempo.querierLabels" . | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
