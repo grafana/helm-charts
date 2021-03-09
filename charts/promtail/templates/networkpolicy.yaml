@@ -97,8 +97,6 @@ spec:
       {{- end }}
     {{- end }}
 
-{{- end }}
-
 {{- if .Values.extraPorts }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -119,4 +117,5 @@ spec:
         - port: {{ $extraPortConfig.containerPort }}
           protocol: {{ $extraPortConfig.protocol }}
   {{- end }}
+{{- end }}
 {{- end }}
