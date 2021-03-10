@@ -1,0 +1,19 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+{{ template "chart.valuesSection" . }}
