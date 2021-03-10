@@ -23,7 +23,10 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.compactorSelectorLabels" . | nindent 8 }}
+        {{- include "tempo.compactorLabels" . | nindent 8 }}
+        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
@@ -40,6 +43,8 @@ spec:
           ports:
             - containerPort: 3100
               name: http
+            - containerPort: 7946
+              name: http-memberlist
           {{- with .Values.compactor.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
