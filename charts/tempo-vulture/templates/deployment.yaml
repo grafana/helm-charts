@@ -33,14 +33,6 @@ spec:
         - name: tempo-vulture
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: prom-metrics
-          readinessProbe:
-            httpGet:
-              path: /
-              port: prom-metrics
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.extraEnv }}
