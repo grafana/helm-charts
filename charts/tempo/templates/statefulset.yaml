@@ -41,6 +41,22 @@ spec:
         ports:
         - containerPort: 3100
           name: prom-metrics
+        - containerPort: 6831
+          name: jaeger-thrift-c
+          protocol: UDP
+        - containerPort: 6832
+          name: jaeger-thrift-b
+          protocol: UDP
+        - containerPort: 14268
+          name: jaeger-thrift-h
+        - containerPort: 14250
+          name: jaeger-grpc
+        - containerPort: 9411
+          name: zipkin
+        - containerPort: 55680
+          name: otlp
+        - containerPort: 55678
+          name: opencensus
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
         env:
