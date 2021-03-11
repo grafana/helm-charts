@@ -8014,6 +8014,24 @@ entries:
     version: 0.5.0
   loki-canary:
   - apiVersion: v2
+    appVersion: 2.2.0
+    created: "2021-03-11T15:25:53.559614056Z"
+    description: Helm chart for Grafana Loki Canary
+    digest: a4423878676fee17a70ee4135da2a097ac9dde65c22599e50f1d11c672421e49
+    home: https://github.com/grafana/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-canary
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.3.0/loki-canary-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 2.1.0
     created: "2020-12-24T15:07:11.594399289Z"
     description: Helm chart for Grafana Loki Canary
@@ -11717,27 +11735,6 @@ entries:
     version: 0.6.0
   promtail:
   - apiVersion: v2
-    appVersion: 2.2.0
-    created: "2021-03-11T15:25:31.276651871Z"
-    description: Promtail is an agent which ships the contents of local logs to a
-      Loki instance
-    digest: d9464897578a88972a6be21baa71e25f1060001c05d946784985f2be6a768ebd
-    home: https://grafana.com/loki
-    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
-    maintainers:
-    - email: lokiproject@googlegroups.com
-      name: Loki Maintainers
-    - name: unguiculus
-    name: promtail
-    sources:
-    - https://github.com/grafana/loki
-    - https://grafana.com/oss/loki/
-    - https://grafana.com/docs/loki/latest/
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/promtail-3.5.0/promtail-3.5.0.tgz
-    version: 3.5.0
-  - apiVersion: v2
     appVersion: 2.1.0
     created: "2021-03-11T06:17:41.336938003Z"
     description: Promtail is an agent which ships the contents of local logs to a
@@ -13107,4 +13104,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-0.6.0/tempo-distributed-0.6.0.tgz
     version: 0.6.0
-generated: "2021-03-11T15:25:31.283046814Z"
+generated: "2021-03-11T15:25:53.567215438Z"
