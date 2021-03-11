@@ -13,7 +13,7 @@ grafana:
     datasources:
       enabled: true
   image:
-    tag: 6.7.0
+    tag: 7.4.3
 
 prometheus:
   enabled: false
