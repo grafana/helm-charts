@@ -422,7 +422,7 @@ memcached:
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  servicte: memcached-client
+  service: memcached-client
   # -- Memcached Docker image repository
   repository: memcached
   # -- Memcached Docker image tag
