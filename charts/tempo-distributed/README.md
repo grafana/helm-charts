@@ -109,7 +109,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.replicas | int | `1` |  |
 | memcached.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
-| memcached.servicte | string | `"memcached-client"` |  |
+| memcached.service | string | `"memcached-client"` |  |
 | memcached.tag | string | `"1.5.17-alpine"` | Memcached Docker image tag |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
