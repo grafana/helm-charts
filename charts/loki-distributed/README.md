@@ -133,7 +133,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
-| memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
+| memcached.enabled | bool | `true` | Specifies whether the memcached should be enabled |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
 | memcached.image.registry | string | `"docker.io"` | The Docker registry for the memcached |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
