@@ -838,6 +838,8 @@ ruler:
     #           for: 2m
 
 memcached:
+  # -- Specifies whether the memcached should be enabled
+  enabled: true
   image:
     # -- The Docker registry for the memcached
     registry: docker.io
