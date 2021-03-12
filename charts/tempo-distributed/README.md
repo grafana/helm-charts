@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.8.5](https://img.shields.io/badge/Version-0.8.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
+![Version: 0.8.6](https://img.shields.io/badge/Version-0.8.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -100,7 +100,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
-| memcached.enabled | bool | `true` | Specified whether the memcached cachce shoudl be enabled |
+| memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
 | memcached.extraEnv | list | `[]` | Environment variables to add to memcached pods |
 | memcached.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached pods |
@@ -109,7 +109,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.replicas | int | `1` |  |
 | memcached.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
-| memcached.servicte | string | `"memcached-client"` |  |
+| memcached.service | string | `"memcached-client"` |  |
 | memcached.tag | string | `"1.5.17-alpine"` | Memcached Docker image tag |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
