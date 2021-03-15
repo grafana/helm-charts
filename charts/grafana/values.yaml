@@ -53,7 +53,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 7.4.2
+  tag: 7.4.3
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -582,7 +582,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.10.6
+    tag: 1.10.7
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -689,6 +689,8 @@ imageRenderer:
     # image-renderer service port used by both service and deployment
     port: 8081
     targetPort: 8081
+  # In case a sub_path is used this needs to be added to the image renderer callback
+  grafanaSubPath: ""
   # name of the image-renderer port on the pod
   podPortName: http
   # number of image-renderer replica sets to keep
