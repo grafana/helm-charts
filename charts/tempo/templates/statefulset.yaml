@@ -64,7 +64,7 @@ spec:
             {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
           {{- end }}
         volumeMounts:
-        {{- if .Values.tempo.extraVolumeMounts }}
+        {{- if .Values.tempo.extraVolumeMounts -}}
           {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
@@ -94,7 +94,7 @@ spec:
         resources:
           {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
         volumeMounts:
-        {{- if .Values.tempoQuery.extraVolumeMounts }}
+        {{- if .Values.tempoQuery.extraVolumeMounts -}}
           {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
