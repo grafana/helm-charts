@@ -65,7 +65,7 @@ spec:
           {{- end }}
         volumeMounts:
         {{- if .Values.tempo.extraVolumeMounts }}
-          {{ toYaml .Values.tempo.extraVolumeMounts | nindent 12 }}
+          {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
           name: tempo-conf
@@ -95,7 +95,7 @@ spec:
           {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
         volumeMounts:
         {{- if .Values.tempoQuery.extraVolumeMounts }}
-          {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 12 }}
+          {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
