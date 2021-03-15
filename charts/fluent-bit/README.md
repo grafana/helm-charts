@@ -72,6 +72,17 @@ helm delete my-release
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
+
+## Upgrading an existing Release to a new major version
+
+A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an
+incompatible breaking change needing manual actions.
+
+### To 3.0.0
+
+This version requires Helm >= 3.0.0. Changes the default ApiVersion of Helm to `v2`. Read more on migrating helm chart to `v2` [here](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/).
+
+
 ## Configuration
 
 The following tables lists the configurable parameters of the Fluent Bit chart and their default values.
