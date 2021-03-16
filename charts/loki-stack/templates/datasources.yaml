@@ -20,6 +20,13 @@ data:
       access: proxy
       url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
       version: 1
+{{- if .Values.loki.datasource.jsonData }}
+      jsonData:
+  {{- range $key, $value := .Values.loki.datasource.jsonData }}
+        {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}
+
 {{- end }}
 {{- if .Values.prometheus.enabled }}
     - name: Prometheus
@@ -27,5 +34,11 @@ data:
       access: proxy
       url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
       version: 1
+{{- if .Values.prometheus.datasource.jsonData }}
+      jsonData:
+  {{- range $key, $value := .Values.prometheus.datasource.jsonData }}
+        {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

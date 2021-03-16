@@ -1,5 +1,7 @@
 loki:
   enabled: true
+  datasource:
+    jsonData: {}
 
 promtail:
   enabled: true
@@ -17,6 +19,8 @@ grafana:
 
 prometheus:
   enabled: false
+  datasource:
+    jsonData: {}
 
 filebeat:
   enabled: false
