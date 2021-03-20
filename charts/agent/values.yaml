@@ -1,0 +1,11 @@
+# Configuration of the agent-logs chart
+agent-logs:
+  enabled: true
+
+# Configuration of the agent-metrics chart
+agent-metrics:
+  enabled: true
+
+# Configuration of the agent-traces chart
+agent-traces:
+  enabled: true
