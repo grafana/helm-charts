@@ -154,6 +154,10 @@ extraEnv: []
 # -- Extra environment variables from secrets or configmaps
 extraEnvFrom: []
 
+service:
+  # -- If enabled, Service resource for Promtail is created
+  enabled: false
+
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
