@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/instance: enterprise-metrics
+    app.kubernetes.io/managed-by: Helmraiser
+    app.kubernetes.io/name: memcached
+    app.kubernetes.io/version: 1.5.20
+    helm.sh/chart: memcached-3.2.3
+  name: enterprise-metrics-memcached
+  namespace: enterprise-metrics
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: enterprise-metrics
+      app.kubernetes.io/name: memcached
+  serviceName: enterprise-metrics-memcached
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: enterprise-metrics
+        app.kubernetes.io/name: memcached
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/instance: enterprise-metrics
+                app.kubernetes.io/name: memcached
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - command:
+        - memcached
+        - -m 8192
+        - -o
+        - modern
+        - -v
+        - -I 1m
+        - -c 4096
+        image: memcached:1.5.20
+        imagePullPolicy: ""
+        livenessProbe:
+          initialDelaySeconds: 30
+          tcpSocket:
+            port: memcache
+          timeoutSeconds: 5
+        name: enterprise-metrics-memcached
+        ports:
+        - containerPort: 11211
+          name: memcache
+        readinessProbe:
+          initialDelaySeconds: 5
+          tcpSocket:
+            port: memcache
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 14745Mi
+          requests:
+            cpu: 500m
+            memory: 9830Mi
+        securityContext:
+          runAsUser: 1001
+      - image: quay.io/prometheus/memcached-exporter:v0.6.0
+        imagePullPolicy: ""
+        name: metrics
+        ports:
+        - containerPort: 9150
+          name: metrics
+        resources: {}
+        securityContext:
+          runAsUser: 1001
+      securityContext:
+        fsGroup: 1001
+  updateStrategy:
+    type: RollingUpdate

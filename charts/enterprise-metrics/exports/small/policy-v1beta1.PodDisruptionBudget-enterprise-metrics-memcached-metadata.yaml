@@ -1,0 +1,20 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  annotations:
+    helm.sh/hook: post-upgrade, post-install
+    helm.sh/hook-delete-policy: before-hook-creation
+  labels:
+    app.kubernetes.io/instance: enterprise-metrics
+    app.kubernetes.io/managed-by: Helmraiser
+    app.kubernetes.io/name: memcached-metadata
+    app.kubernetes.io/version: 1.5.20
+    helm.sh/chart: memcached-metadata-3.2.3
+  name: enterprise-metrics-memcached-metadata
+  namespace: enterprise-metrics
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: enterprise-metrics
+      app.kubernetes.io/name: memcached-metadata

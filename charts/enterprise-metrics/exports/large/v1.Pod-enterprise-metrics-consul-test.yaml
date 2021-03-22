@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    helm.sh/hook: test-success
+  labels:
+    app: consul
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: consul-helm
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-consul-test
+  namespace: enterprise-metrics
+spec:
+  containers:
+  - command:
+    - /bin/sh
+    - -ec
+    - |
+      consul members | tee members.txt
+      if [ $(grep -c consul-server members.txt) != $(grep consul-server members.txt | grep -c alive) ]
+      then
+        echo "Failed because not all consul servers are available"
+        exit 1
+      fi
+    env:
+    - name: HOST_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    - name: CONSUL_HTTP_ADDR
+      value: http://$(HOST_IP):8500
+    image: consul:1.8.4
+    name: consul-test
+  restartPolicy: Never
