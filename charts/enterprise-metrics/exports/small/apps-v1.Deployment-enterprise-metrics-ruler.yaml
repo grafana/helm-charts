@@ -42,7 +42,7 @@ spec:
         - -ruler.alertmanager-url=http://enterprise-metrics-alertmanager.enterprise-metrics.svc:8080/api/prom/alertmanager/
         - -blocks-storage.bucket-store.metadata-cache.backend=memcached
         - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+enterprise-metrics-memcached-metadata.enterprise-metrics.svc:11211
-        - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size=512
+        - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size=1.048576e+06
         - -querier.store-gateway-addresses=dns+enterprise-metrics-store-gateway-headless.enterprise-metrics.svc:9095
         env: null
         image: grafana/metrics-enterprise:v1.1.2

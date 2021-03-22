@@ -5,8 +5,7 @@ metadata:
     app.kubernetes.io/instance: enterprise-metrics
     app.kubernetes.io/managed-by: Helmraiser
     app.kubernetes.io/name: memcached-metadata
-    app.kubernetes.io/version: 1.5.20
-    helm.sh/chart: memcached-metadata-3.2.3
+    helm.sh/chart: memcached-metadata-5.5.2
   name: enterprise-metrics-memcached-metadata
   namespace: enterprise-metrics
 spec:
@@ -18,61 +17,90 @@ spec:
   serviceName: enterprise-metrics-memcached-metadata
   template:
     metadata:
+      annotations:
+        prometheus.io/port: "9150"
+        prometheus.io/scrape: "true"
       labels:
         app.kubernetes.io/instance: enterprise-metrics
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: memcached-metadata
+        helm.sh/chart: memcached-metadata-5.5.2
     spec:
       affinity:
+        nodeAffinity: null
+        podAffinity: null
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                app.kubernetes.io/instance: enterprise-metrics
-                app.kubernetes.io/name: memcached-metadata
-            topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: enterprise-metrics
+                  app.kubernetes.io/name: memcached-metadata
+              namespaces:
+              - enterprise-metrics
+              topologyKey: kubernetes.io/hostname
+            weight: 1
       containers:
-      - command:
-        - memcached
+      - args:
         - -m 512
         - -o
         - modern
         - -v
         - -I 1m
         - -c 1024
-        image: memcached:1.5.20
-        imagePullPolicy: ""
+        image: docker.io/memcached:1.5.20
+        imagePullPolicy: IfNotPresent
         livenessProbe:
+          failureThreshold: 6
           initialDelaySeconds: 30
           tcpSocket:
             port: memcache
           timeoutSeconds: 5
-        name: enterprise-metrics-memcached-metadata
+        name: memcached
         ports:
         - containerPort: 11211
           name: memcache
         readinessProbe:
           initialDelaySeconds: 5
+          periodSeconds: 5
           tcpSocket:
             port: memcache
-          timeoutSeconds: 1
+          timeoutSeconds: 3
         resources:
           limits:
-            memory: 921Mi
+            memory: 614Mi
           requests:
             cpu: 500m
             memory: 614Mi
         securityContext:
-          runAsUser: 1001
-      - image: quay.io/prometheus/memcached-exporter:v0.6.0
-        imagePullPolicy: ""
+          readOnlyRootFilesystem: false
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+      - image: docker.io/quay.io/prometheus/memcached-exporter:v0.6.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
         name: metrics
         ports:
         - containerPort: 9150
           name: metrics
-        resources: {}
-        securityContext:
-          runAsUser: 1001
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        resources:
+          limits: {}
+          requests: {}
       securityContext:
         fsGroup: 1001
-  updateStrategy:
-    type: RollingUpdate
+        runAsUser: 1001
+      volumes:
+      - emptyDir: {}
+        name: tmp

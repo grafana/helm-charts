@@ -94,7 +94,7 @@ spec:
             {{- if index .Values "memcached-metadata" "enabled" }}
             - -blocks-storage.bucket-store.metadata-cache.backend=memcached
             - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-metadata.{{ .Release.Namespace }}.svc:11211
-            - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").memcached.maxItemMemory }}
+            - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").maxItemMemory }}
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
             - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
