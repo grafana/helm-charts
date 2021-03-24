@@ -63,6 +63,12 @@ config:
     storage:
       type: s3
 
+  compactor:
+    sharding_enabled: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+
   license:
     path: "/license/license.jwt"
 
@@ -75,11 +81,8 @@ config:
       ring:
         replication_factor: 1
         kvstore:
-          store: consul
-          prefix: 'collectors/'
-          consul:
-            http_client_timeout: '20s'
-            consistent_reads: true
+          store: memberlist
+
   limits:
     enforce_metric_name: false
     reject_old_samples: true
@@ -97,6 +100,9 @@ config:
       max_recv_msg_size: 104857600
       max_send_msg_size: 104857600
 
+  memberlist:
+    bind_port: 7946
+
   storage:
     engine: blocks
   # This configures how the store-gateway synchronizes blocks stored in the bucket. It uses Minio by default for getting started (configured via flags) but this should be changed for production deployments.
@@ -108,12 +114,17 @@ config:
       sync_dir: /data/tsdb-sync
 
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     shard_by_all_labels: true
     pool:
       health_check_ingesters: true
+
   querier:
     active_query_tracker_dir: /data/enterprise-metrics/querier
     query_ingesters_within: 12h
+
   query_range:
     split_queries_by_interval: 24h
     align_queries_with_step: true
@@ -124,9 +135,20 @@ config:
           expiration: 1h
         memcached_client:
           timeout: 1s
+
+  store_gateway:
+    sharding_enabled: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+
   ruler:
     enable_alertmanager_discovery: false
     enable_api: true
+    enable_sharding: true
+    ring:
+      kvstore:
+        store: memberlist
     rule_path: '/data'
 
   runtime_config:
@@ -136,6 +158,11 @@ config:
     data_dir: '/data'
     enable_api: true
     external_url: '/alertmanager'
+    sharding_enabled: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+
   frontend:
     log_queries_longer_than: 10s
     compress_responses: true
@@ -1085,7 +1112,7 @@ minio:
   secretKey: supersecret
 
 consul:
-  enabled: true
+  enabled: false
   client:
     enabled: false
   resources:

@@ -48,6 +48,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-compactor
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: compactor
+        gossip_ring_member: "true"
         target: compactor
         release: {{ .Release.Name }}
         {{- with .Values.compactor.podLabels }}
@@ -115,6 +116,7 @@ spec:
           args:
             - "-target=compactor"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000

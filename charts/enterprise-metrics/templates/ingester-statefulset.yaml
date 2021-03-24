@@ -47,6 +47,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-ingester
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: ingester
+        gossip_ring_member: "true"
         target: ingester
         release: {{ .Release.Name }}
         {{- with .Values.ingester.podLabels }}
@@ -114,6 +115,7 @@ spec:
           args:
             - "-target=ingester"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if .Values.consul.enabled }}
             - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
             {{- end }}
