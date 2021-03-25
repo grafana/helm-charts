@@ -5,7 +5,9 @@
 ***********************************************************************
 
 Installed components:
+{{- if .Values.gateway.enabled }}
 * gateway
+{{- end }}
 * ingester
 * distributor
 * querier
