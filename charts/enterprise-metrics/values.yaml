@@ -129,6 +129,10 @@ config:
     enable_alertmanager_discovery: false
     enable_api: true
     rule_path: '/data'
+
+  runtime_config:
+    file: /var/enterprise-metrics/runtime.yaml
+
   alertmanager:
     data_dir: '/data'
     enable_api: true
@@ -136,6 +140,9 @@ config:
   frontend:
     log_queries_longer_than: 10s
     compress_responses: true
+
+# runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
+runtimeConfig: {}
 
 rbac:
   create: true
