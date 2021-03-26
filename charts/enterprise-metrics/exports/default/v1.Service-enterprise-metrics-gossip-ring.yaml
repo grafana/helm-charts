@@ -2,20 +2,21 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: enterprise-metrics-ruler
+    app: enterprise-metrics-gossip-ring
     app.kubernetes.io/managed-by: Helmraiser
     chart: enterprise-metrics-1.2.0
     heritage: Helm
     release: enterprise-metrics
-  name: enterprise-metrics-ruler
+  name: enterprise-metrics-gossip-ring
   namespace: enterprise-metrics
 spec:
+  clusterIP: None
   ports:
-  - name: http-metrics
-    port: 8080
+  - name: gossip-ring
+    port: 7946
     protocol: TCP
-    targetPort: http-metrics
+    targetPort: 7946
+  publishNotReadyAddresses: true
   selector:
-    app: enterprise-metrics-ruler
-    release: enterprise-metrics
+    gossip_ring_member: "true"
   type: ClusterIP

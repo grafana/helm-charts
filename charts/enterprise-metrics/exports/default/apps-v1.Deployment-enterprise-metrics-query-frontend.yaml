@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-query-frontend
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.1.1
+    chart: enterprise-metrics-1.2.0
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-query-frontend
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 40d308ae13cce762761a06a9adfece7202095a44ad4692f22aefeb38b12d3db2
+        checksum/config: 9c2d760abd200c4e37d12544ca2e11926e4112c7cc4ba57a3fceeeb1c4118081
       labels:
         app: enterprise-metrics-query-frontend
         name: query-frontend

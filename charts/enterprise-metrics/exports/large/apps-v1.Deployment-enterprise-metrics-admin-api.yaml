@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-admin-api
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.1.1
+    chart: enterprise-metrics-1.2.0
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-admin-api
@@ -23,9 +23,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 40d308ae13cce762761a06a9adfece7202095a44ad4692f22aefeb38b12d3db2
+        checksum/config: 9c2d760abd200c4e37d12544ca2e11926e4112c7cc4ba57a3fceeeb1c4118081
       labels:
         app: enterprise-metrics-admin-api
+        gossip_ring_member: "true"
         name: admin-api
         release: enterprise-metrics
         target: admin-api
@@ -35,6 +36,7 @@ spec:
       - args:
         - -target=admin-api
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -memberlist.join=enterprise-metrics-gossip-ring
         env: null
         image: grafana/metrics-enterprise:v1.2.0
         imagePullPolicy: IfNotPresent
