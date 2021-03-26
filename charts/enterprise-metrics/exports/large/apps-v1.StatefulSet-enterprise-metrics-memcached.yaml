@@ -77,7 +77,7 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: tmp
-      - image: docker.io/quay.io/prometheus/memcached-exporter:v0.6.0
+      - image: quay.io/prometheus/memcached-exporter:v0.6.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

@@ -21,6 +21,7 @@
     "rbac.authorization.k8s.io-v1.RoleBinding-enterprise-metrics-consul-server.yaml": "environments/large/main.jsonnet",
     "rbac.authorization.k8s.io-v1.RoleBinding-enterprise-metrics.yaml": "environments/large/main.jsonnet",
     "v1.ConfigMap-enterprise-metrics-consul-server-config.yaml": "environments/large/main.jsonnet",
+    "v1.ConfigMap-enterprise-metrics-runtime.yaml": "environments/large/main.jsonnet",
     "v1.Pod-enterprise-metrics-consul-test.yaml": "environments/large/main.jsonnet",
     "v1.Secret-enterprise-metrics-license.yaml": "environments/large/main.jsonnet",
     "v1.Secret-enterprise-metrics.yaml": "environments/large/main.jsonnet",

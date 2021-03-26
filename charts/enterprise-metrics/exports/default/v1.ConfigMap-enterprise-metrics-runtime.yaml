@@ -1,13 +1,15 @@
 apiVersion: v1
 data:
-  license.jwt: Tk9UQVZBTElETElDRU5TRQ==
-kind: Secret
+  runtime.yaml: |2
+
+    {}
+kind: ConfigMap
 metadata:
   labels:
-    app: enterprise-metrics-license
+    app: enterprise-metrics
     app.kubernetes.io/managed-by: Helmraiser
     chart: enterprise-metrics-1.1.1
     heritage: Helm
     release: enterprise-metrics
-  name: enterprise-metrics-license
+  name: enterprise-metrics-runtime
   namespace: enterprise-metrics
