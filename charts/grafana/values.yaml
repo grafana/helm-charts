@@ -639,9 +639,9 @@ sidecar:
     folder: /tmp/dashboards
     # The default folder name, it will create a subfolder under the `folder` and put dashboards in there instead
     defaultFolderName: null
-    # If specified, the sidecar will search for dashboard config-maps inside this namespace.
+    # Namespaces list. If specified, the sidecar will search for config-maps/secrets inside these namespaces.
     # Otherwise the namespace in which the sidecar is running will be used.
-    # It's also possible to specify ALL to search in all namespaces
+    # It's also possible to specify ALL to search in all namespaces.
     searchNamespace: null
     # search in configmap, secret or both
     resource: both
