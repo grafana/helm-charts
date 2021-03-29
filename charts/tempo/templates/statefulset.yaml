@@ -54,7 +54,11 @@ spec:
         - containerPort: 9411
           name: zipkin
         - containerPort: 55680
-          name: otlp
+          name: otlp-legacy
+        - containerPort: 4317
+          name: otlp-grpc
+        - containerPort: 55681
+          name: otlp-http
         - containerPort: 55678
           name: opencensus
         resources:
