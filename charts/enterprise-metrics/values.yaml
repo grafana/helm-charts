@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.1.2
+  tag: v1.2.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -96,7 +96,6 @@ config:
     grpc_client_config:
       max_recv_msg_size: 104857600
       max_send_msg_size: 104857600
-      use_gzip_compression: true
 
   storage:
     engine: blocks
