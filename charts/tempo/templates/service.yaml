@@ -58,10 +58,18 @@ spec:
     port: 9411
     protocol: TCP
     targetPort: 9411
-  - name: tempo-otlp
+  - name: tempo-otlp-legacy
     port: 55680
     protocol: TCP
     targetPort: 55680
+  - name: tempo-otlp-http
+    port: 55681
+    protocol: TCP
+    targetPort: 55681
+  - name: tempo-otlp-grpc
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
   - name: tempo-opencensus
     port: 55678
     protocol: TCP
