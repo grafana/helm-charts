@@ -10,8 +10,12 @@ Grafana Tempo Single Binary Mode
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Joe Elliott | number101010@gmail.com |  |
-| Swartz K | 9215868@gmail.com |  |
+| joe-elliott | number101010@gmail.com |  |
+| swartz-k | 9215868@gmail.com |  |
+| annanay25 |  |  |
+| mdisibio |  |  |
+| dgzlopes |  |  |
+| mapno |  |  |
 
 ## Source Code
 
