@@ -372,11 +372,11 @@ config: |
         protocols:
           {{- if .Values.traces.otlp.http }}
           http:
-            endpoint: 0.0.0.0:55680
+            endpoint: 0.0.0.0:55681
           {{- end }}
           {{- if .Values.traces.otlp.grpc }}
           grpc:
-            endpoint: 0.0.0.0:55680
+            endpoint: 0.0.0.0:4317
           {{- end }}
       {{- end }}
       {{- if .Values.traces.opencensus}}
