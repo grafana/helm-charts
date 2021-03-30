@@ -20,6 +20,12 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 0.9.0
+
+This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
+
+Please delete the deployments and statefulsets before executing this upgrade.
+
 ### From Chart versions < 0.8.0
 
 By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
