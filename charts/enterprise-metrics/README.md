@@ -33,7 +33,7 @@ $ # Add the repository
 $ helm repo add grafana https://grafana.github.io/helm-charts
 $ helm repo update
 $ # Perform install
-$ helm install <cluster name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt'
+$ helm install <helm deployment name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt'
 ```
 
 As part of this chart many different pods and services are installed which all
@@ -64,7 +64,7 @@ object storage service for production deployments.
 To deploy a cluster using `small.yaml` values file:
 
 ```console
-$ helm install <cluster name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt' -f small.yaml
+$ helm install <helm deployment name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt' -f small.yaml
 ```
 
 ### Large
@@ -86,7 +86,7 @@ object storage service for production deployments.
 To deploy a cluster using the `large.yaml` values file:
 
 ```console
-$ helm install <cluster name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt' -f large.yaml
+$ helm install <helm deployment name> grafana/enterprise-metrics --set-file 'license.contents=./license.jwt' -f large.yaml
 ```
 
 # Development
