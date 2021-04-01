@@ -24,7 +24,25 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
 
-Please delete the deployments and statefulsets before executing this upgrade.
+Due to the label changes, an existing installation cannot be upgraded without manual interaction. There are basically two options:
+
+Option 1
+Uninstall the old release and re-install the new one. There will be no data loss, as the collectors/agents can cache for a short period.
+
+Option 2
+Add new selector labels to the existing pods. This option will make your pods also temporarely unavailable, option 1 is faster:
+
+```
+kubectl label pod -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> app.kubernetes.io/component=<component> --overwrite
+```
+
+Perform a non-cascading deletion of the Deployments and Statefulsets which will keep the pods running:
+
+```
+kubectl delete <deployment/statefulset> -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> --cascade=false
+```
+
+Perform a regular Helm upgrade on the existing release. The new Deployment/Statefulset will pick up the existing pods and perform a rolling upgrade.
 
 ### From Chart versions < 0.8.0
 
