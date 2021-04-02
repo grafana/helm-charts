@@ -479,8 +479,15 @@ volumes:
 {{- end }}
 {{- range .Values.extraVolumeMounts }}
   - name: {{ .name }}
+    {{- if .existingClaim }}
     persistentVolumeClaim:
       claimName: {{ .existingClaim }}
+    {{- else if .hostPath }}
+    hostPath:
+      path: {{ .hostPath }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
 {{- end }}
 {{- range .Values.extraEmptyDirMounts }}
   - name: {{ .name }}
