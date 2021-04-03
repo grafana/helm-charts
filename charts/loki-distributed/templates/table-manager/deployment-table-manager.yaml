@@ -34,7 +34,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.tableManager.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: loki-table-manager
           image: {{ include "loki.tableManagerImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

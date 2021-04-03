@@ -37,7 +37,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: loki-query-frontend
           image: {{ include "loki.queryFrontendImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

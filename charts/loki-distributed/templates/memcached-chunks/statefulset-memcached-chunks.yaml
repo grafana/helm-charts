@@ -39,7 +39,7 @@ spec:
         {{- toYaml .Values.memcached.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.memcachedChunks.terminationGracePeriodSeconds }}
       containers:
-        - name: memcached
+        - name: memcached-chunks
           image: {{ include "loki.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
           {{- with .Values.memcachedChunks.extraArgs }}
