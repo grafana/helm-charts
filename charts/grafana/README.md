@@ -242,12 +242,19 @@ ingress:
 
 ### Example of extraVolumeMounts
 
+Volume can be type persistentVolumeClaim or hostPath but not both at same time.
+If none existingClaim or hostPath argument is givent then type is emptyDir.
+
 ```yaml
 - extraVolumeMounts:
   - name: plugins
     mountPath: /var/lib/grafana/plugins
     subPath: configs/grafana/plugins
     existingClaim: existing-grafana-claim
+    readOnly: false
+  - name: dashboards
+    mountPath: /var/lib/grafana/dashboards
+    hostPath: /usr/shared/grafana/dashboards
     readOnly: false
 ```
 
