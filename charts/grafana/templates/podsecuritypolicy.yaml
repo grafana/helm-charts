@@ -17,19 +17,8 @@ spec:
   privileged: false
   allowPrivilegeEscalation: false
   requiredDropCapabilities:
-    # Default set from Docker, without DAC_OVERRIDE or CHOWN
-    - FOWNER
-    - FSETID
-    - KILL
-    - SETGID
-    - SETUID
-    - SETPCAP
-    - NET_BIND_SERVICE
-    - NET_RAW
-    - SYS_CHROOT
-    - MKNOD
-    - AUDIT_WRITE
-    - SETFCAP
+    # Default set from Docker, with DAC_OVERRIDE and CHOWN
+      - ALL
   volumes:
     - 'configMap'
     - 'emptyDir'
@@ -42,12 +31,20 @@ spec:
   hostIPC: false
   hostPID: false
   runAsUser:
-    rule: 'RunAsAny'
+    rule: 'MustRunAsNonRoot'
   seLinux:
     rule: 'RunAsAny'
   supplementalGroups:
-    rule: 'RunAsAny'
+    rule: 'MustRunAs'
+    ranges:
+      # Forbid adding the root group.
+      - min: 1
+        max: 65535
   fsGroup:
-    rule: 'RunAsAny'
+    rule: 'MustRunAs'
+    ranges:
+      # Forbid adding the root group.
+      - min: 1
+        max: 65535
   readOnlyRootFilesystem: false
 {{- end }}
