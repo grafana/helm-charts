@@ -688,6 +688,8 @@ imageRenderer:
   # image-renderer deployment priority class
   priorityClassName: ''
   service:
+    # Enable the image-renderer service
+    enabled: true
     # image-renderer service port name
     portName: 'http'
     # image-renderer service port used by both service and deployment

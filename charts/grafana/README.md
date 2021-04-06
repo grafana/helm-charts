@@ -215,6 +215,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
+| `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
 | `imageRenderer.service.portName`           | image-renderer service port name                                                   | `'http'`                         |
 | `imageRenderer.service.port`               | image-renderer service port used by both service and deployment                    | `8081`                           |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |
