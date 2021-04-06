@@ -125,6 +125,7 @@ podPortName: grafana
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
 service:
+  enabled: true
   type: ClusterIP
   port: 80
   targetPort: 3000
