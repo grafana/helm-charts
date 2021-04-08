@@ -1,0 +1,20 @@
+apiVersion: v2
+name: tempo
+description: Grafana Tempo Single Binary Mode
+type: application
+version: 0.6.8
+appVersion: v0.6.0
+engine: gotpl
+home: https://grafana.net
+icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+sources:
+  - https://github.com/grafana/tempo
+maintainers:
+  - name: joe-elliott
+    email: number101010@gmail.com
+  - name: swartz-k
+    email: 9215868@gmail.com
+  - name: annanay25
+  - name: mdisibio
+  - name: dgzlopes
+  - name: mapno
