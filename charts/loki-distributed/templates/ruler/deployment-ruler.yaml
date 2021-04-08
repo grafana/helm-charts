@@ -67,11 +67,7 @@ spec:
           securityContext:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /ready
-              port: http
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+            {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
