@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "tempo.querierFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" . | nindent 4 }}
+  {{- with .Values.querier.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  minReadySeconds: 10
+  replicas: {{ .Values.querier.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      {{- include "tempo.querierSelectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        {{- include "tempo.querierLabels" . | nindent 8 }}
+        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.querier.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      containers:
+        - args:
+            - -target=querier
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+            {{- with .Values.querier.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          image: {{ include "tempo.querierImage" . }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+          name: querier
+          ports:
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+            - containerPort: 3100
+              name: http
+          {{- with .Values.querier.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.querier.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.querier.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+            {{- with .Values.querier.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- with .Values.querier.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.querier.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.querier.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - configMap:
+            name: {{ template "tempo.fullname" . }}
+          name: tempo-conf
+        {{- with .Values.querier.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

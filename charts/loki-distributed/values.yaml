@@ -4,6 +4,10 @@ global:
     registry: null
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
+  # -- configures cluster domain ("cluster.local" by default)
+  clusterDomain: "cluster.local"
+  # -- configures DNS service name in kube-system
+  dnsService: "kube-dns"
 
 # -- Overrides the chart's name
 nameOverride: null
@@ -15,6 +19,13 @@ fullnameOverride: null
 imagePullSecrets: []
 
 loki:
+  # Configures the readiness probe for all of the Loki pods
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 30
+    timeoutSeconds: 1
   image:
     # -- The Docker registry
     registry: docker.io
@@ -147,6 +158,11 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
 
+# RBAC configuration
+rbac:
+  # -- If enabled, a PodSecurityPolicy is created
+  pspEnabled: false
+
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
@@ -163,6 +179,10 @@ serviceMonitor:
   interval: null
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: http
+  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+  tlsConfig: null
 
 # Rules for the Prometheus Operator
 prometheusRule:
@@ -269,6 +289,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the distributor pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the distributor pods
+  extraVolumes: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
@@ -376,6 +400,10 @@ queryFrontend:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the query-frontend pods
   extraEnvFrom: []
+  # -- Volume mounts to add to the query-frontend pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the query-frontend pods
+  extraVolumes: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
   # -- Grace period to allow the query-frontend to shutdown before it is killed
@@ -455,6 +483,8 @@ tableManager:
 
 # Configuration for the gateway
 gateway:
+  # -- Specifies whether the gateway should be enabled
+  enabled: true
   # -- Number of replicas for the gateway
   replicas: 1
   image:
@@ -476,6 +506,10 @@ gateway:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the gateway pods
   extraEnvFrom: []
+  # -- Volumes to add to the gateway pods
+  extraVolumes: []
+  # -- Volume mounts to add to the gateway pods
+  extraVolumeMounts: []
   # -- The SecurityContext for gateway containers
   podSecurityContext:
     fsGroup: 101
@@ -551,78 +585,106 @@ gateway:
     username: null
     # -- The basic auth password for the gateway
     password: null
+    # -- Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function.
+    # The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes
+    # high CPU load.
+    htpasswd: >-
+      {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
-  # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
-  # @default -- See values.yaml
-  nginxConfig: |
-    worker_processes  5;  ## Default: 1
-    error_log  /dev/stderr;
-    pid        /tmp/nginx.pid;
-    worker_rlimit_nofile 8192;
+  # Configures the readiness probe for the gateway
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 15
+    timeoutSeconds: 1
+  nginxConfig:
+    # -- NGINX log format
+    logFormat: |-
+      main '$remote_addr - $remote_user [$time_local]  $status '
+              '"$request" $body_bytes_sent "$http_referer" '
+              '"$http_user_agent" "$http_x_forwarded_for"';
+    # -- Allows appending custom configuration to the server block
+    serverSnippet: ""
+    # -- Allows appending custom configuration to the http block
+    httpSnippet: ""
+    # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
+    # @default -- See values.yaml
+    file: |
+      worker_processes  5;  ## Default: 1
+      error_log  /dev/stderr;
+      pid        /tmp/nginx.pid;
+      worker_rlimit_nofile 8192;
 
-    events {
-      worker_connections  4096;  ## Default: 1024
-    }
+      events {
+        worker_connections  4096;  ## Default: 1024
+      }
 
-    http {
-      client_body_temp_path /tmp/client_temp;
-      proxy_temp_path       /tmp/proxy_temp_path;
-      fastcgi_temp_path     /tmp/fastcgi_temp;
-      uwsgi_temp_path       /tmp/uwsgi_temp;
-      scgi_temp_path        /tmp/scgi_temp;
+      http {
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path       /tmp/proxy_temp_path;
+        fastcgi_temp_path     /tmp/fastcgi_temp;
+        uwsgi_temp_path       /tmp/uwsgi_temp;
+        scgi_temp_path        /tmp/scgi_temp;
 
-      default_type application/octet-stream;
-      log_format   main '$remote_addr - $remote_user [$time_local]  $status '
-        '"$request" $body_bytes_sent "$http_referer" '
-        '"$http_user_agent" "$http_x_forwarded_for"';
-      access_log   /dev/stderr  main;
-      sendfile     on;
-      tcp_nopush   on;
-      resolver kube-dns.kube-system.svc.cluster.local;
+        default_type application/octet-stream;
+        log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+        access_log   /dev/stderr  main;
+        sendfile     on;
+        tcp_nopush   on;
+        resolver {{ .Values.global.dnsService }}.kube-system.svc.{{ .Values.global.clusterDomain }};
 
-      server {
-        listen             8080;
-
-        {{- if .Values.gateway.basicAuth.enabled }}
-        auth_basic           "Loki";
-        auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+        {{- with .Values.gateway.nginxConfig.httpSnippet }}
+        {{ . | nindent 2 }}
         {{- end }}
 
-        location = / {
-          return 200 'OK';
-          auth_basic off;
-        }
+        server {
+          listen             8080;
 
-        location = /api/prom/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
-        }
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Loki";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
 
-        location = /api/prom/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-        }
+          location = / {
+            return 200 'OK';
+            auth_basic off;
+          }
 
-        location ~ /api/prom/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
-        }
+          location = /api/prom/push {
+            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
 
-        location = /loki/api/v1/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
-        }
+          location = /api/prom/tail {
+            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
 
-        location = /loki/api/v1/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-        }
+          location ~ /api/prom/.* {
+            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
 
-        location ~ /loki/api/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:3100$request_uri;
+          location = /loki/api/v1/push {
+            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /loki/api/v1/tail {
+            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
+
+          location ~ /loki/api/.* {
+            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
         }
       }
-    }
 
 # Configuration for the compactor
 compactor:
@@ -996,3 +1058,44 @@ memcachedIndexWrites:
   nodeSelector: {}
   # -- Tolerations for memcached-index-writes pods
   tolerations: []
+
+networkPolicy:
+  # -- Specifies whether Network Policies should be created
+  enabled: false
+  metrics:
+    # -- Specifies the Pods which are allowed to access the metrics port.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespaces which are allowed to access the metrics port
+    namespaceSelector: {}
+    # -- Specifies specific network CIDRs which are allowed to access the metrics port.
+    # In case you use namespaceSelector, you also have to specify your kubelet networks here.
+    # The metrics ports are also used for probes.
+    cidrs: []
+  ingress:
+    # -- Specifies the Pods which are allowed to access the http port.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespaces which are allowed to access the http port
+    namespaceSelector: {}
+  alertmanager:
+    # -- Specify the alertmanager port used for alerting
+    port: 9093
+    # -- Specifies the alertmanager Pods.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespace the alertmanager is running in
+    namespaceSelector: {}
+  externalStorage:
+    # -- Specify the port used for external storage, e.g. AWS S3
+    ports: []
+    # -- Specifies specific network CIDRs you want to limit access to
+    cidrs: []
+  discovery:
+    # -- Specify the port used for discovery
+    port: null
+    # -- Specifies the Pods labels used for discovery.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespace the discovery Pods are running in
+    namespaceSelector: {}

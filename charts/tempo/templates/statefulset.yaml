@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "tempo.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "tempo.selectorLabels" . | nindent 6 }}
+  serviceName: {{ template "tempo.fullname" . }}-headless
+  template:
+    metadata:
+      labels:
+        {{- include "tempo.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+          {{ toYaml . | indent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      containers:
+      - args:
+        - -config.file=/conf/tempo.yaml
+        - -mem-ballast-size-mbs={{ .Values.tempo.memBallastSizeMbs }}
+        {{- range $key, $value := .Values.tempo.extraArgs }}
+        - "-{{ $key }}={{ $value }}"
+        {{- end }}
+        image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag }}
+        imagePullPolicy: {{ .Values.tempo.pullPolicy }}
+        name: tempo
+        ports:
+        - containerPort: 3100
+          name: prom-metrics
+        - containerPort: 6831
+          name: jaeger-thrift-c
+          protocol: UDP
+        - containerPort: 6832
+          name: jaeger-thrift-b
+          protocol: UDP
+        - containerPort: 14268
+          name: jaeger-thrift-h
+        - containerPort: 14250
+          name: jaeger-grpc
+        - containerPort: 9411
+          name: zipkin
+        - containerPort: 55680
+          name: otlp-legacy
+        - containerPort: 4317
+          name: otlp-grpc
+        - containerPort: 55681
+          name: otlp-http
+        - containerPort: 55678
+          name: opencensus
+        resources:
+          {{- toYaml .Values.tempo.resources | nindent 10 }}
+        env:
+          {{- if .Values.tempo.extraEnv }}
+            {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
+          {{- end }}
+        volumeMounts:
+        {{- if .Values.tempo.extraVolumeMounts -}}
+          {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}
+        {{- end }}
+        - mountPath: /conf
+          name: tempo-conf
+        {{- if .Values.persistence.enabled }}
+        - mountPath: /var/tempo
+          name: storage
+        {{- end }}
+      - args:
+        - --query.base-path=/
+        - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
+        {{- range $key, $value := .Values.tempoQuery.extraArgs }}
+        - "-{{ $key }}={{ $value }}"
+        {{- end }}
+        image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag }}
+        imagePullPolicy: {{ .Values.tempoQuery.pullPolicy }}
+        name: tempo-query
+        ports:
+        - containerPort: 16686
+          name: jaeger-ui
+        - containerPort: 16687
+          name: jaeger-metrics
+        env:
+          {{- if .Values.tempoQuery.extraEnv }}
+            {{- toYaml .Values.tempoQuery.extraEnv | nindent 12 }}
+          {{- end }}
+        resources:
+          {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
+        volumeMounts:
+        {{- if .Values.tempoQuery.extraVolumeMounts -}}
+          {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 8 }}
+        {{- end }}
+        - mountPath: /conf
+          name: tempo-query-conf
+      volumes:
+      {{- if .Values.extraVolumes -}}
+        {{ toYaml .Values.extraVolumes | nindent 6 }}
+      {{- end }}
+      - configMap:
+          name: {{ template "tempo.name" . }}-query
+        name: tempo-query-conf
+      - configMap:
+          name: {{ template "tempo.name" . }}
+        name: tempo-conf
+  updateStrategy:
+    type: {{- toYaml .Values.tempo.updateStrategy | nindent 6 }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+        annotations: {{- toYaml .Values.persistence.annotations | nindent 10 }}
+      spec:
+        accessModes: {{- toYaml .Values.persistence.accessModes | nindent 10 }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+        storageClassName: {{ .Values.persistence.storageClassName }}
+        {{- if .Values.persistence.selector }}
+        selector: {{- toYaml .Values.persistence.selector | nindent 10 }}
+        {{- end }}
+  {{- end }}
