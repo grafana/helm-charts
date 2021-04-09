@@ -208,7 +208,7 @@ prometheusRule:
 # Configuration for the ingester
 ingester:
   # -- Number of replicas for the ingester
-  replicas: 1
+  replicas: 2
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
