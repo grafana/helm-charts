@@ -732,6 +732,13 @@ compactor:
     storageClass: null
   serviceAccount:
     create: false
+    # -- The name of the ServiceAccount to use for the compactor.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the compactor service account
+    imagePullSecrets: []
+    # -- Annotations for the compactor service account
+    annotations: {}
 
 # Configuration for the ruler
 ruler:
