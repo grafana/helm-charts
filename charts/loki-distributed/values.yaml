@@ -730,6 +730,8 @@ compactor:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+  serviceAccount:
+    create: false
 
 # Configuration for the ruler
 ruler:
