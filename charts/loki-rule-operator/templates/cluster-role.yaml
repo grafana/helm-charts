@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "loki-rule-operator.fullname" . }}
+  labels:
+    {{- include "loki-rule-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups: ["logging.opsgy.com"]
+  resources:
+  - globallokirules
+  - lokirules
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["logging.opsgy.com"]
+  resources:
+  - globallokirules/status
+  - lokirules/status
+  verbs: ["patch"]

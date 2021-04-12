@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "loki-rule-operator.fullname" . }}
+  labels:
+    {{- include "loki-rule-operator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      {{- include "loki-rule-operator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "loki-rule-operator.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "loki-rule-operator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+        {{- if .Values.admissionWebhooks.enabled }}
+        - -enable-webhook
+        {{- end }}
+        - -rules-configmap={{ .Values.loki.rulesConfigMap.namespace | default .Release.Namespace }}/{{ .Values.loki.rulesConfigMap.name }}
+
+        ports:
+        - name: https
+          containerPort: 9443
+          protocol: TCP
+        - name: metrics
+          containerPort: 8080
+          protocol: TCP
+        - name: health
+          containerPort: 8081
+          protocol: TCP
+
+        # Health checks
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: health
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: health
+          failureThreshold: 20
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+        volumeMounts:
+        - name: tls-secret
+          mountPath: /tmp/k8s-webhook-server/serving-certs
+
+      volumes:
+      - name: tls-secret
+        secret:
+          secretName: loki-rule-operator
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
