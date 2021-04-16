@@ -1,0 +1,104 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "this.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "this.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.annotations | nindent 4 }}
+spec:
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      {{- include "this.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "this.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - args:
+            - -config.file=/etc/agent/agent.yaml
+            {{- with .Values.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          command:
+            - /bin/agent
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: agent
+          ports:
+            - containerPort: 8080
+              name: http-metrics
+            - containerPort: 6831
+              name: thrift-compact
+              protocol: UDP
+            - containerPort: 6832
+              name: thrift-binary
+              protocol: UDP
+            - containerPort: 14268
+              name: thrift-http
+            - containerPort: 14250
+              name: thrift-grpc
+            - containerPort: 9411
+              name: zipkin
+            - containerPort: 55680
+              name: otlp
+            - containerPort: 55678
+              name: opencensus
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/agent
+              name: agent-config
+            {{- if .Values.secret.mount }}
+            - mountPath: /var/run/secrets/grafana.com/agent
+              name: agent-secrets
+              readOnly: true
+            {{- end }}
+            {{- if .Values.extraVolumeMounts }}
+              {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+      serviceAccount: {{ include "this.serviceAccountName" . }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      volumes:
+        - configMap:
+            name: {{ include "this.fullname" . }}
+          name: agent-config
+        {{- if .Values.secret.mount }}
+        - secret:
+            secretName: {{ include "this.fullname" . }}
+          name: agent-secrets
+        {{- end }}
+        {{- if .Values.extraVolumes }}{{ "\n" }}
+          {{- toYaml .Values.extraVolumes | indent 8 }}
+        {{- end }}
+  updateStrategy:
+    type: RollingUpdate
+{{- end }}

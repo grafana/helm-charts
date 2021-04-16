@@ -1,0 +1,173 @@
+# Whether this chart is enabled
+# (useful when this chart is used as a dependency from another chart)
+enabled: true
+
+# DaemonSet annotations
+annotations: {}
+
+# Pod annotations
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: http-metrics
+
+# Image configuration for the Agent container
+image:
+  repository: grafana/agent
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion
+  tag: ""
+
+# Additional command arguments for the Agent container
+extraArgs: []
+
+# Additional volumes for the Pod
+extraVolumes: []
+
+# Additional volume mounts for the Agent container
+extraVolumeMounts: []
+
+# Environment variables for the Agent container
+env: []
+
+# Readiness probe for the Agent container
+readinessProbe:
+  httpGet:
+    path: /-/ready
+    port: http-metrics
+
+# Liveness probe for the Agent container
+livenessProbe:
+  httpGet:
+    path: /-/healthy
+    port: http-metrics
+
+# Resources for the Agent container
+resources: {}
+
+# Security context for the Agent container
+securityContext: {}
+
+# Pod node selector
+nodeSelector: {}
+
+# Pod affinity
+affinity: {}
+
+# Pod tolerations
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+
+# Whether to create Cluster Role and Cluster Role Binding
+rbac:
+  create: true
+
+# Creation of the Sercret used by the Pod
+secret:
+  create: true
+  mount: true
+  annotations: {}
+  data:
+    password: ""
+
+# Creation of the Service Account used by the Pod
+serviceAccount:
+  create: true
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  annotations: {}
+
+# Service annotations
+service:
+  annotations: {}
+
+# Grafana Cloud connection
+accessConfig:
+  url: tempo-us-central1.grafana.net:443
+  username: ""
+  # Path under which the secret.data.password is mounted in the container
+  password_file: /var/run/secrets/grafana.com/agent/password
+
+# Allow to extend the bellow Agent configuration
+extraConfig: {}
+extraServiceConfig: []
+extraDefaultConfigConfig: []
+extraDefaultScrapeConfig: []
+
+# Agent configuration
+config:
+  agent: |
+    server:
+      http_listen_port: 8080
+      log_level: info
+    tempo:
+      configs:
+        - name: default
+          push_config:
+            endpoint: {{ .Values.accessConfig.url }}
+            {{- if .Values.accessConfig.username }}
+            basic_auth:
+              username: {{ .Values.accessConfig.username }}
+              password_file: {{ .Values.accessConfig.password_file }}
+            {{- end }}
+            batch:
+              send_batch_size: 1000
+              timeout: 5s
+            retry_on_failure:
+              enabled: false
+          receivers:
+            jaeger:
+              protocols:
+                grpc: null
+                thrift_binary: null
+                thrift_compact: null
+                thrift_http: null
+              remote_sampling:
+                insecure: true
+                strategy_file: /etc/agent/strategies.json
+            opencensus: null
+            otlp:
+              protocols:
+                grpc: null
+                http: null
+            zipkin: null
+          scrape_configs:
+            - job_name: kubernetes-pods
+              kubernetes_sd_configs:
+                - role: pod
+              relabel_configs:
+                - action: replace
+                  source_labels:
+                    - __meta_kubernetes_namespace
+                  target_label: namespace
+                - action: replace
+                  source_labels:
+                    - __meta_kubernetes_pod_name
+                  target_label: pod
+                - action: replace
+                  source_labels:
+                    - __meta_kubernetes_pod_container_name
+                  target_label: container
+              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false
+            {{- with .Values.extraDefaultScrapeConfig }}
+            {{- toYaml . | nindent 8 }}
+            {{- end }}
+        {{- with .Values.extraDefaultConfigConfig }}
+        {{- toYaml . | nindent 4 }}
+        {{- end }}
+      {{- with .Values.extraServiceConfig }}
+      {{- toYaml . | nindent 2 }}
+      {{- end }}
+    {{- with .Values.extraConfig }}{{ "\n" }}
+    {{- toYaml . }}
+    {{- end }}
+  strategies: |
+    {
+      "default_strategy": {
+        "param": 0.001,
+        "type": "probabilistic"
+      }
+    }
