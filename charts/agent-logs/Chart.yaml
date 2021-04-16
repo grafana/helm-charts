@@ -1,0 +1,14 @@
+apiVersion: v2
+name: agent-logs
+version: 0.1.0
+appVersion: v0.13.0
+kubeVersion: "^1.16.0-0"
+description: Grafana Agent - Logs
+home: https://grafana.com/docs/grafana-cloud/agent/
+icon: https://github.com/grafana/agent/raw/main/docs/assets/logo_and_name.png
+sources:
+  - https://github.com/grafana/agent
+maintainers:
+  - name: Jiri Tyr
+    email: jiri.tyr@gmail.com
+engine: gotpl

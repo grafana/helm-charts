@@ -1,3 +1,4 @@
+charts/agent-logs
 charts/fluent-bit
 charts/grafana
 charts/loki
