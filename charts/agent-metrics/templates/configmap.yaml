@@ -1,0 +1,12 @@
+{{- if and .Values.enabled .Values.config.agent }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "this.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "this.labels" . | nindent 4 }}
+data:
+  agent.yaml: |
+    {{- tpl .Values.config.agent . | nindent 4}}
+{{- end }}

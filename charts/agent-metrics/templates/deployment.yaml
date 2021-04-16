@@ -1,0 +1,86 @@
+{{- if and .Values.enabled .Values.config.agentDeployment }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "this.fullnameDeployment" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "this.labelsDeployment" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.annotations | nindent 4 }}
+spec:
+  minReadySeconds: 10
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      {{- include "this.selectorLabelsDeployment" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "this.labelsDeployment" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-deployment.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - args:
+            - -config.file=/etc/agent/agent.yaml
+            - -prometheus.wal-directory=/tmp/agent/data
+            {{- with .Values.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          command:
+            - /bin/agent
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: agent
+          ports:
+            - containerPort: 8080
+              name: http-metrics
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/agent
+              name: agent-config
+            {{- if .Values.secret.mount }}
+            - mountPath: /var/run/secrets/grafana.com/agent
+              name: agent-secrets
+              readOnly: true
+            {{- end }}
+            {{- if .Values.extraVolumeMounts }}
+              {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+      serviceAccount: {{ include "this.serviceAccountName" . }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      volumes:
+        - configMap:
+            name: {{ include "this.fullnameDeployment" . }}
+          name: agent-config
+        {{- if .Values.secret.mount }}
+        - secret:
+            secretName: {{ include "this.fullname" . }}
+          name: agent-secrets
+        {{- end }}
+        {{- if .Values.extraVolumes }}{{ "\n" }}
+          {{- toYaml .Values.extraVolumes | indent 8 }}
+        {{- end }}
+{{- end }}
