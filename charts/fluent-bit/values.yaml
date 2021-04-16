@@ -21,6 +21,7 @@ config:
     - stream
   autoKubernetesLabels: false
   labels: '{job="fluent-bit"}'
+  containerParser: docker
   labelMap:
     kubernetes:
       namespace_name: namespace

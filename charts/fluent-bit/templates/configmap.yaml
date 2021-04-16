@@ -22,7 +22,7 @@ data:
         Name           tail
         Tag            kube.*
         Path           /var/log/containers/*.log
-        Parser         docker
+        Parser         {{ .Values.config.containerParser }}
         DB             /run/fluent-bit/flb_kube.db
         Mem_Buf_Limit  {{ .Values.config.memBufLimit }}
     [FILTER]
