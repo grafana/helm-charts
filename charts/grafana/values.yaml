@@ -53,7 +53,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 7.4.3
+  tag: 7.5.3
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -401,10 +401,14 @@ extraSecretMounts: []
 ## Additional grafana server volume mounts
 # Defines additional volume mounts.
 extraVolumeMounts: []
-  # - name: extra-volume
-  #   mountPath: /mnt/volume
+  # - name: extra-volume-0
+  #   mountPath: /mnt/volume0
   #   readOnly: true
   #   existingClaim: volume-claim
+  # - name: extra-volume-1
+  #   mountPath: /mnt/volume1
+  #   readOnly: true
+  #   hostPath: /usr/shared/
 
 ## Pass the plugins you want installed as a list.
 ##

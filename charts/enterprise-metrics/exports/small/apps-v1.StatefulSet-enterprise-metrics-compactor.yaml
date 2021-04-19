@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: enterprise-metrics-compactor
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.0.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-compactor
+  namespace: enterprise-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise-metrics-compactor
+      release: enterprise-metrics
+  serviceName: enterprise-metrics-compactor
+  template:
+    metadata:
+      annotations:
+        checksum/config: 76b402316e5b8f8299fb5ec9a5af6fe04e463ca9c56a0b4674615b926727dee2
+      labels:
+        app: enterprise-metrics-compactor
+        name: compactor
+        release: enterprise-metrics
+        target: compactor
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                  - compactor
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - -target=compactor
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        env: null
+        image: grafana/metrics-enterprise:v1.1.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 20
+          httpGet:
+            path: /ready
+            port: http-metrics
+            scheme: HTTP
+          initialDelaySeconds: 180
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 60
+        resources:
+          limits:
+            cpu: 1200m
+            memory: 2Gi
+          requests:
+            cpu: 1
+            memory: 1Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 240
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi

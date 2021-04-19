@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: consul
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: consul-helm
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-consul-server
+  namespace: enterprise-metrics
+rules: []

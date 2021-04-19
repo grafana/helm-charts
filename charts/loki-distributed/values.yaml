@@ -480,6 +480,8 @@ tableManager:
 
 # Configuration for the gateway
 gateway:
+  # -- Specifies whether the gateway should be enabled
+  enabled: true
   # -- Number of replicas for the gateway
   replicas: 1
   image:
@@ -580,6 +582,11 @@ gateway:
     username: null
     # -- The basic auth password for the gateway
     password: null
+    # -- Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function.
+    # The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes
+    # high CPU load.
+    htpasswd: >-
+      {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
   # Configures the readiness probe for the gateway
@@ -589,76 +596,92 @@ gateway:
       port: http
     initialDelaySeconds: 15
     timeoutSeconds: 1
-  # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
-  # @default -- See values.yaml
-  nginxConfig: |
-    worker_processes  5;  ## Default: 1
-    error_log  /dev/stderr;
-    pid        /tmp/nginx.pid;
-    worker_rlimit_nofile 8192;
+  nginxConfig:
+    # -- NGINX log format
+    logFormat: |-
+      main '$remote_addr - $remote_user [$time_local]  $status '
+              '"$request" $body_bytes_sent "$http_referer" '
+              '"$http_user_agent" "$http_x_forwarded_for"';
+    # -- Allows appending custom configuration to the server block
+    serverSnippet: ""
+    # -- Allows appending custom configuration to the http block
+    httpSnippet: ""
+    # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
+    # @default -- See values.yaml
+    file: |
+      worker_processes  5;  ## Default: 1
+      error_log  /dev/stderr;
+      pid        /tmp/nginx.pid;
+      worker_rlimit_nofile 8192;
 
-    events {
-      worker_connections  4096;  ## Default: 1024
-    }
+      events {
+        worker_connections  4096;  ## Default: 1024
+      }
 
-    http {
-      client_body_temp_path /tmp/client_temp;
-      proxy_temp_path       /tmp/proxy_temp_path;
-      fastcgi_temp_path     /tmp/fastcgi_temp;
-      uwsgi_temp_path       /tmp/uwsgi_temp;
-      scgi_temp_path        /tmp/scgi_temp;
+      http {
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path       /tmp/proxy_temp_path;
+        fastcgi_temp_path     /tmp/fastcgi_temp;
+        uwsgi_temp_path       /tmp/uwsgi_temp;
+        scgi_temp_path        /tmp/scgi_temp;
 
-      default_type application/octet-stream;
-      log_format   main '$remote_addr - $remote_user [$time_local]  $status '
-        '"$request" $body_bytes_sent "$http_referer" '
-        '"$http_user_agent" "$http_x_forwarded_for"';
-      access_log   /dev/stderr  main;
-      sendfile     on;
-      tcp_nopush   on;
-      resolver {{ .Values.global.dnsService }}.kube-system.svc.{{ .Values.global.clusterDomain }};
+        default_type application/octet-stream;
+        log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+        access_log   /dev/stderr  main;
+        sendfile     on;
+        tcp_nopush   on;
+        resolver {{ .Values.global.dnsService }}.kube-system.svc.{{ .Values.global.clusterDomain }};
 
-      server {
-        listen             8080;
-
-        {{- if .Values.gateway.basicAuth.enabled }}
-        auth_basic           "Loki";
-        auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+        {{- with .Values.gateway.nginxConfig.httpSnippet }}
+        {{ . | nindent 2 }}
         {{- end }}
 
-        location = / {
-          return 200 'OK';
-          auth_basic off;
-        }
+        server {
+          listen             8080;
 
-        location = /api/prom/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
-        }
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Loki";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
 
-        location = /api/prom/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-        }
+          location = / {
+            return 200 'OK';
+            auth_basic off;
+          }
 
-        location ~ /api/prom/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
-        }
+          location = /api/prom/push {
+            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
 
-        location = /loki/api/v1/push {
-          proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
-        }
+          location = /api/prom/tail {
+            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
 
-        location = /loki/api/v1/tail {
-          proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-        }
+          location ~ /api/prom/.* {
+            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
 
-        location ~ /loki/api/.* {
-          proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          location = /loki/api/v1/push {
+            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /loki/api/v1/tail {
+            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
+
+          location ~ /loki/api/.* {
+            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
         }
       }
-    }
 
 # Configuration for the compactor
 compactor:
