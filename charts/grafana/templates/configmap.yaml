@@ -19,8 +19,10 @@ data:
     {{- range $elem, $elemVal := $value }}
     {{- if kindIs "invalid" $elemVal }}
     {{ $elem }} =
+    {{- else if kindIs "string" $elemVal }}
+    {{ $elem }} = {{ tpl $elemVal $ }}
     {{- else }}
-    {{ $elem }} = {{ tpl (toYaml $elemVal) $ }}
+    {{ $elem }} = {{ $elemVal }}
     {{- end }}
     {{- end }}
 {{- end }}
