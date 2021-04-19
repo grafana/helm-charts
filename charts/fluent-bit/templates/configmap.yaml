@@ -44,6 +44,13 @@ data:
         BatchWait {{ .Values.config.batchWait }}
         BatchSize {{ int .Values.config.batchSize }}
         Labels {{ .Values.config.labels }}
+        {{- if .Values.config.dque.enabled }}
+        Buffer true
+        BufferType {{ .Values.config.dque.bufferType }}
+        DqueDir {{ .Values.config.dque.dir }}
+        DqueName {{ .Values.config.dque.name }}
+        DqueSegmentSize {{ .Values.config.dque.segmentSize }}
+        {{- end }}
         RemoveKeys {{ include "helm-toolkit.utils.joinListWithComma" .Values.config.removeKeys }}
         AutoKubernetesLabels {{ .Values.config.autoKubernetesLabels }}
         LabelMapPath /fluent-bit/etc/labelmap.json
@@ -70,4 +77,3 @@ data:
 
   labelmap.json: |-
     {{- .Values.config.labelMap | toPrettyJson | nindent 4}}
-
