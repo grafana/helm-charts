@@ -85,6 +85,11 @@ For more details, read the [Fluent Bit documentation](../../../cmd/fluent-bit/RE
 | `loki.serviceScheme`     | The scheme of the Loki service.                                                                    | `http`                           |
 | `loki.user`              | The http basic auth username to access the Loki service.                                           |                                  |
 | `loki.password`          | The http basic auth password to access the Loki service.                                           |                                  |
+| `config.dque`            | Turn on Buffering using dque see [Official Fluent Bit output Plugin documentation](https://grafana.com/docs/loki/latest/clients/fluentbit/)                                                                     |           `false`                     |
+| `config.dque.bufferType` | dque                                                                                               | `dque`                           |
+| `config.dque.dir`        | dque data dir                                                                                      |`/tmp/flb-storage/buffer`         |
+| `config.dque.name`       | dque name                                                                                          | `loki.0`                         |
+| `config.dque.segmentSize`| dque Seqent size                                                                                   | `500`                            |
 | `config.port`            | the Fluent Bit port to listen. (This is mainly used to serve metrics)                              | `2020`                           |
 | `config.tenantID`        | The tenantID used by default to push logs to Loki                                                  | `''`                             |
 | `config.batchWait`       | Time to wait before send a log batch to Loki, full or not. (unit: secs)                            | `1`                              |

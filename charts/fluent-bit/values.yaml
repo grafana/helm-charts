@@ -7,6 +7,12 @@ loki:
   # user: user
   # password: pass
 config:
+  dque:
+    enabled: false   # set this to true to turn on dque https://grafana.com/docs/loki/latest/clients/fluentbit/
+    bufferType: dque
+    dir: /tmp/flb-storage/buffer
+    name: loki.0
+    segmentSize: 500
   port: 2020
   tenantID: '""'
   batchWait: 1
