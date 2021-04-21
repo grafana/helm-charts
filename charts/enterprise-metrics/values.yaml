@@ -959,54 +959,103 @@ compactor:
 
 memcached:
   enabled: false
-  memcached:
-    extraArgs:
-      - -I 1m
-      - -c 4096
-    maxItemMemory: 8192
+  architecture: high-availability
+  arguments:
+    - -m 8192
+    - -o
+    - modern
+    - -v
+    - -I 1m
+    - -c 4096
+  image:
+    repository: memcached
+    tag: 1.5.20
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
+  # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
+  # It is a string to avoid https://github.com/helm/helm/issues/1707.
+  maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
   metrics:
     enabled: true
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
   replicaCount: 1
   resources:
     limits:
-      memory: 14745Mi  # floor(1.5 * resources.requests.memory)
+      # memory limits should match requests
+      memory: 9830Mi
     requests:
       cpu: 500m
-      memory: 9830Mi  # floor(1.2 * memcached configured limit (-m))
+      # memory requests should be exceed memcached -m flag
+      memory: 9830Mi  # (floor (* 1.2 8192))
 
 memcached-queries:
   enabled: false
-  memcached:
-    extraArgs:
-      - -I 15m
-      - -c 1024
-    maxItemMemory: 2048
+  architecture: high-availability
+  arguments:
+    - -m 2048
+    - -o
+    - modern
+    - -v
+    - -I 15m
+    - -c 1024
+  image:
+    repository: memcached
+    tag: 1.5.20
+  # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
+  # It is a string to avoid https://github.com/helm/helm/issues/1707.
+  maxItemMemory: '15728640'  # (* 15 (* 1024 1024))
   metrics:
     enabled: true
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
   replicaCount: 1
   resources:
     limits:
-      memory: 3685Mi  # floor(1.5 * resources.requests.memory)
+      # memory limits should match requests
+      memory: 2457Mi
     requests:
       cpu: 500m
-      memory: 2457Mi  # floor(1.2 * memcached configured limit (-m))
+      # memory requests should be exceed memcached -m flag
+      memory: 2457Mi  # (floor (* 1.2 2048))
 
 memcached-metadata:
   enabled: false
-  memcached:
-    extraArgs:
-      - -I 1m
-      - -c 1024
-    maxItemMemory: 512
+  architecture: high-availability
+  arguments:
+    - -m 512
+    - -o
+    - modern
+    - -v
+    - -I 1m
+    - -c 1024
+  image:
+    repository: memcached
+    tag: 1.5.20
+  # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
+  # It is a string to avoid https://github.com/helm/helm/issues/1707.
+  maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
   metrics:
     enabled: true
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
   replicaCount: 1
   resources:
     limits:
-      memory: 921Mi  # floor(1.5 * resources.requests.memory)
+      # memory limits should match requests
+      memory: 614Mi
     requests:
       cpu: 500m
-      memory: 614Mi  # floor(1.2 * memcached configured limit (-m))
+      # memory requests should be exceed memcached -m flag
+      memory: 614Mi  # (floor (* 1.2 512))
 
 minio:
   enabled: true

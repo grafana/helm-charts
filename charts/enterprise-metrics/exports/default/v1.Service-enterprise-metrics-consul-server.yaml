@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  labels:
+    app: consul
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: consul-helm
+    component: server
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-consul-server
+  namespace: enterprise-metrics
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 8500
+    targetPort: 8500
+  - name: serflan-tcp
+    port: 8301
+    protocol: TCP
+    targetPort: 8301
+  - name: serflan-udp
+    port: 8301
+    protocol: UDP
+    targetPort: 8301
+  - name: serfwan-tcp
+    port: 8302
+    protocol: TCP
+    targetPort: 8302
+  - name: serfwan-udp
+    port: 8302
+    protocol: UDP
+    targetPort: 8302
+  - name: server
+    port: 8300
+    targetPort: 8300
+  - name: dns-tcp
+    port: 8600
+    protocol: TCP
+    targetPort: dns-tcp
+  - name: dns-udp
+    port: 8600
+    protocol: UDP
+    targetPort: dns-udp
+  publishNotReadyAddresses: true
+  selector:
+    app: consul
+    component: server
+    release: enterprise-metrics
