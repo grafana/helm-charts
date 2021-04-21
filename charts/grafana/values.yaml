@@ -125,6 +125,7 @@ podPortName: grafana
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
 service:
+  enabled: true
   type: ClusterIP
   port: 80
   targetPort: 3000
@@ -688,6 +689,8 @@ imageRenderer:
   # image-renderer deployment priority class
   priorityClassName: ''
   service:
+    # Enable the image-renderer service
+    enabled: true
     # image-renderer service port name
     portName: 'http'
     # image-renderer service port used by both service and deployment
