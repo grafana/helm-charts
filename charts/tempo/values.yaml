@@ -46,7 +46,7 @@ tempo:
     trace:
       backend: local
       local:
-        path: /tmp/tempo/traces
+        path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
   # this configuration will listen on all ports and protocols that tempo is capable of.
