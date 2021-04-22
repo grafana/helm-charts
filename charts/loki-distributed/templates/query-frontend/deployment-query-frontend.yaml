@@ -28,6 +28,9 @@ spec:
         {{- include "loki.queryFrontendSelectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      {{- with .Values.queryFrontend.restartPolicy }}
+      restartPolicy: {{ . }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

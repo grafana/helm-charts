@@ -295,6 +295,8 @@ distributor:
   extraVolumes: []
   # -- Resource requests and limits for the distributor
   resources: {}
+  # -- Restart Policy for the pod
+  restartPolicy: null
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
@@ -406,6 +408,8 @@ queryFrontend:
   extraVolumes: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
+  # -- Restart Policy for the pod
+  restartPolicy: null
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -458,6 +462,8 @@ tableManager:
   extraVolumes: []
   # -- Resource requests and limits for the table-manager
   resources: {}
+  # -- Restart Policy for the pod
+  restartPolicy: null
   # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
@@ -525,6 +531,8 @@ gateway:
     allowPrivilegeEscalation: false
   # -- Resource requests and limits for the gateway
   resources: {}
+  # -- Restart Policy for the pod
+  restartPolicy: null
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -713,6 +721,8 @@ compactor:
   extraVolumes: []
   # -- Resource requests and limits for the compactor
   resources: {}
+  # -- Restart Policy for the pod
+  restartPolicy: null
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -760,6 +770,8 @@ ruler:
   extraVolumes: []
   # -- Resource requests and limits for the ruler
   resources: {}
+  # -- Restart Policy for the pod
+  restartPolicy: null
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string

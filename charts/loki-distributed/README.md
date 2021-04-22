@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.28.0](https://img.shields.io/badge/Version-0.28.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.29.0](https://img.shields.io/badge/Version-0.29.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -38,6 +38,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
+| compactor.restartPolicy | string | `nil` | Restart Policy for the pod |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
@@ -54,6 +55,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | distributor.priorityClassName | string | `nil` | The name of the PriorityClass for distributor pods |
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
+| distributor.restartPolicy | string | `nil` | Restart Policy for the pod |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
@@ -92,6 +94,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
+| gateway.restartPolicy | string | `nil` | Restart Policy for the pod |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
@@ -250,6 +253,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
+| queryFrontend.restartPolicy | string | `nil` | Restart Policy for the pod |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | rbac.pspEnabled | bool | `false` | If enabled, a PodSecurityPolicy is created |
@@ -272,6 +276,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | ruler.priorityClassName | string | `nil` | The name of the PriorityClass for ruler pods |
 | ruler.replicas | int | `1` | Number of replicas for the ruler |
 | ruler.resources | object | `{}` | Resource requests and limits for the ruler |
+| ruler.restartPolicy | string | `nil` | Restart Policy for the pod |
 | ruler.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ruler to shutdown before it is killed |
 | ruler.tolerations | list | `[]` | Tolerations for ruler pods |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
@@ -302,6 +307,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | tableManager.priorityClassName | string | `nil` | The name of the PriorityClass for table-manager pods |
 | tableManager.replicas | int | `1` | Number of replicas for the table-manager |
 | tableManager.resources | object | `{}` | Resource requests and limits for the table-manager |
+| tableManager.restartPolicy | string | `nil` | Restart Policy for the pod |
 | tableManager.terminationGracePeriodSeconds | int | `30` | Grace period to allow the table-manager to shutdown before it is killed |
 | tableManager.tolerations | list | `[]` | Tolerations for table-manager pods |
 

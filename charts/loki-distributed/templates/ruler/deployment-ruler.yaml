@@ -32,6 +32,9 @@ spec:
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
+      {{- with .Values.ruler.restartPolicy }}
+      restartPolicy: {{ . }}
+      {{- end }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}

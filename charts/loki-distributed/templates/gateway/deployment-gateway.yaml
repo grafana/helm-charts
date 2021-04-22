@@ -29,6 +29,9 @@ spec:
         {{- include "loki.gatewaySelectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      {{- with .Values.gateway.restartPolicy }}
+      restartPolicy: {{ . }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

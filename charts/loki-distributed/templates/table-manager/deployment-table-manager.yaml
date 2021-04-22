@@ -25,6 +25,9 @@ spec:
         {{- include "loki.tableManagerSelectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      {{- with .Values.tableManager.restartPolicy }}
+      restartPolicy: {{ . }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
