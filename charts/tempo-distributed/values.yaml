@@ -342,6 +342,9 @@ config: |
       kvstore:
         store: memberlist
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     receivers:
       {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
@@ -390,6 +393,8 @@ config: |
     lifecycler:
       ring:
         replication_factor: 1
+        kvstore:
+          store: memberlist
       tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
