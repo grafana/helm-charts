@@ -58,7 +58,7 @@ Grafana Tempo Single Binary Mode
 | tempo.retention | string | `"24h"` |  |
 | tempo.server.httpListenPort | int | `3100` |  |
 | tempo.storage.trace.backend | string | `"local"` |  |
-| tempo.storage.trace.local.path | string | `"/tmp/tempo/traces"` |  |
+| tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"0.6.0"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
