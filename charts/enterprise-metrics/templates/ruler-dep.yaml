@@ -23,6 +23,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-ruler
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: ruler
+        gossip_ring_member: "true"
         target: ruler
         release: {{ .Release.Name }}
         {{- with .Values.ruler.podLabels }}

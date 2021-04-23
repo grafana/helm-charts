@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-ruler
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.1.1
+    chart: enterprise-metrics-1.2.0
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-ruler
@@ -23,9 +23,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 40d308ae13cce762761a06a9adfece7202095a44ad4692f22aefeb38b12d3db2
+        checksum/config: 9c2d760abd200c4e37d12544ca2e11926e4112c7cc4ba57a3fceeeb1c4118081
       labels:
         app: enterprise-metrics-ruler
+        gossip_ring_member: "true"
         name: ruler
         release: enterprise-metrics
         target: ruler
@@ -35,10 +36,6 @@ spec:
       - args:
         - -target=ruler
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
-        - -consul.hostname=enterprise-metrics-consul-server.enterprise-metrics.svc:8500
-        - -ruler.ring.store=consul
-        - -ruler.ring.consul.hostname=enterprise-metrics-consul-server.enterprise-metrics.svc:8500
-        - -ruler.enable-sharding=true
         - -admin.client.backend-type=s3
         - -admin.client.s3.endpoint=enterprise-metrics-minio.enterprise-metrics.svc:9000
         - -admin.client.s3.bucket-name=enterprise-metrics-admin
