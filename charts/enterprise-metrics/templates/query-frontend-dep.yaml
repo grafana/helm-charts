@@ -74,6 +74,8 @@ spec:
             {{- if .Values.query_frontend.extraVolumeMounts }}
               {{ toYaml .Values.query_frontend.extraVolumeMounts | nindent 12}}
             {{- end }}
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: config
@@ -115,6 +117,9 @@ spec:
 {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
         - name: license
           secret:
             secretName: {{ .Values.license.secretName }}

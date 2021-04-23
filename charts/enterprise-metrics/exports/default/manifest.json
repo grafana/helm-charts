@@ -23,6 +23,7 @@
     "rbac.authorization.k8s.io-v1.RoleBinding-enterprise-metrics.yaml": "environments/default/main.jsonnet",
     "v1.ConfigMap-enterprise-metrics-consul-server-config.yaml": "environments/default/main.jsonnet",
     "v1.ConfigMap-enterprise-metrics-minio.yaml": "environments/default/main.jsonnet",
+    "v1.ConfigMap-enterprise-metrics-runtime.yaml": "environments/default/main.jsonnet",
     "v1.PersistentVolumeClaim-enterprise-metrics-minio.yaml": "environments/default/main.jsonnet",
     "v1.Pod-enterprise-metrics-consul-test.yaml": "environments/default/main.jsonnet",
     "v1.Secret-enterprise-metrics-license.yaml": "environments/default/main.jsonnet",

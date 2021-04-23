@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-distributor
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.0.0
+    chart: enterprise-metrics-1.1.1
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-distributor
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 76b402316e5b8f8299fb5ec9a5af6fe04e463ca9c56a0b4674615b926727dee2
+        checksum/config: 40d308ae13cce762761a06a9adfece7202095a44ad4692f22aefeb38b12d3db2
       labels:
         app: enterprise-metrics-distributor
         name: distributor
@@ -52,7 +52,7 @@ spec:
         - -admin.client.s3.secret-access-key=supersecret
         - -admin.client.s3.insecure=true
         env: null
-        image: grafana/metrics-enterprise:v1.1.2
+        image: grafana/metrics-enterprise:v1.2.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -78,6 +78,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/enterprise-metrics
           name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
         - mountPath: /license
           name: license
         - mountPath: /data
@@ -93,6 +95,9 @@ spec:
       - name: config
         secret:
           secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
       - name: license
         secret:
           secretName: enterprise-metrics-license
