@@ -19,7 +19,7 @@ Entries should include a reference to the Pull Request that introduced the chang
   > **Warning:** Existing clusters should first be upgraded to `v1.1.1` and use that version for migration before upgrading to `v1.2.0`.
   To upgrade to using memberlist:
   1. Ensure you are running the `v1.1.1` version of the chart.
-  2. Deploy runtime `multi_kv_config` to use the Consul as a primary and memberlist as the secondary key-value store.
+  2. Deploy runtime `multi_kv_config` to use Consul as a primary and memberlist as the secondary key-value store.
      The values for such a change can be found in the [`multi-kv-consul-primary-values.yaml`](./multi-kv-consul-primary-values.yaml).
   3. Verify the configuration is in use by querying the [Configuration](https://cortexmetrics.io/docs/api/#configuration) HTTP API endpoint.
   4. Deploy runtime `multi_kv_config` to use memberlist as the primary and Consul as the secondary key-value store.
