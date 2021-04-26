@@ -3,6 +3,44 @@ entries:
   enterprise-metrics:
   - apiVersion: v2
     appVersion: v1.2.0
+    created: "2021-04-26T01:35:35.959335134Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    - alias: consul
+      condition: consul.enabled
+      name: consul
+      repository: https://helm.releases.hashicorp.com
+      version: 0.25.0
+    description: Grafana Enterprise Metrics
+    digest: 2f3dc2b09f321ff16bfa197f9ce03227e6a24b6992b793012a534452b18a0209
+    home: https://grafana.com/products/enterprise/metrics
+    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+    kubeVersion: ^1.10.0-0
+    name: enterprise-metrics
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/enterprise-metrics-1.2.0/enterprise-metrics-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: v1.2.0
     created: "2021-04-23T12:45:54.448085844Z"
     dependencies:
     - alias: memcached
@@ -459,6 +497,32 @@ entries:
     - https://grafana.github.io/helm-charts/packages/fluent-bit-0.0.1.tgz
     version: 0.0.1
   grafana:
+  - apiVersion: v2
+    appVersion: 7.5.3
+    created: "2021-04-26T01:35:36.066948238Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: a0bcc8f60d4638180c156aa478efec613e570be06202acf846e28f40e9d9f2ed
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-6.8.1/grafana-6.8.1.tgz
+    version: 6.8.1
   - apiVersion: v2
     appVersion: 7.5.3
     created: "2021-04-21T05:33:06.809962912Z"
@@ -13751,4 +13815,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-0.6.0/tempo-distributed-0.6.0.tgz
     version: 0.6.0
-generated: "2021-04-23T12:45:54.454366994Z"
+generated: "2021-04-26T01:35:36.076091735Z"
