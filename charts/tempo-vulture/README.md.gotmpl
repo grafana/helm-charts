@@ -16,4 +16,15 @@ Add the following repo to use the chart:
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
+## Vulture
+
+Vulture only works with Jaeger GRPC, so make sure 14250 is open on your distributor. You don't need to specify the port in the distributor url.
+
+Example configuration:
+```yaml
+tempoAddress:
+    push: http://tempo-tempo-distributed-distributor
+    query: http://tempo-tempo-distributed-query-frontend:3100
+```
+
 {{ template "chart.valuesSection" . }}

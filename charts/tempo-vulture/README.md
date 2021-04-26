@@ -1,6 +1,6 @@
 # tempo-vulture
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.0](https://img.shields.io/badge/AppVersion-0.7.0-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
 
@@ -14,6 +14,17 @@ Add the following repo to use the chart:
 
 ```console
 helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+## Vulture
+
+Vulture only works with Jaeger GRPC, so make sure 14250 is open on your distributor. You don't need to specify the port in the distributor url.
+
+Example configuration:
+```yaml
+tempoAddress:
+    push: http://tempo-tempo-distributed-distributor
+    query: http://tempo-tempo-distributed-query-frontend:3100
 ```
 
 ## Values
@@ -46,6 +57,6 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor:3100 |
+| tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor |
 | tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
 | tolerations | list | `[]` | Tolerations for vulture pods |
