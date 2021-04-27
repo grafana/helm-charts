@@ -96,7 +96,7 @@ initContainers:
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
-        value: "both"
+        value: {{ quote .Values.sidecar.datasources.resource }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -131,7 +131,7 @@ initContainers:
       - name: FOLDER
         value: "/etc/grafana/provisioning/notifiers"
       - name: RESOURCE
-        value: "both"
+        value: {{ quote .Values.sidecar.notifiers.resource }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -180,7 +180,7 @@ containers:
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
-        value: "both"
+        value: {{ quote .Values.sidecar.dashboards.resource }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"

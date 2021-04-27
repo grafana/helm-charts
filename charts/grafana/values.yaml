@@ -615,6 +615,8 @@ sidecar:
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
+    # search in configmap, secret or both
+    resource: both
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
     # You can use this parameter together with `provider.foldersFromFilesStructure`to annotate configmaps and create folder structure.
     folderAnnotation: null
@@ -644,6 +646,8 @@ sidecar:
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
+    # search in configmap, secret or both
+    resource: both
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
@@ -652,6 +656,8 @@ sidecar:
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
+    # search in configmap, secret or both
+    resource: both
 
 ## Override the deployment namespace
 ##
