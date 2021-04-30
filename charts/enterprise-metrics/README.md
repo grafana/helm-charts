@@ -15,8 +15,6 @@ Grafana Enterprise Metrics requires an externally provided key-value store, such
 
 Both services can be installed alongside Grafana Enterprise Metrics, for example using helm charts available [here](https://github.com/bitnami/charts/tree/master/bitnami/etcd) and [here](https://github.com/helm/charts/tree/master/stable/consul).
 
-For convenient first time set up, consul is deployed in the default configuration.
-
 ### Storage
 
 Grafana Enterprise Metrics requires an object storage backend to store metrics and indexes.
