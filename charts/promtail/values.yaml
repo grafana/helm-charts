@@ -178,6 +178,8 @@ extraPorts: {}
 #    name: tcp-syslog
 #    containerPort: 1514
 #    protocol: TCP
+#    # -- hostPort definition will ensure that you can send logs from host to promtail pod
+#    #hostPort: 31514
 #    service:
 #      type: ClusterIP
 #      clusterIP: null
