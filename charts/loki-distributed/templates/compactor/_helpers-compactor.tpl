@@ -38,3 +38,14 @@ compactor priority class name
 priorityClassName: {{ $pcn }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the name of the compactor service account
+*/}}
+{{- define "loki.compactorServiceAccountName" -}}
+{{- if .Values.compactor.serviceAccount.create -}}
+    {{ default (print (include "loki.serviceAccountName" .) "-compactor") .Values.compactor.serviceAccount.name }}
+{{- else -}}
+    {{ default (include "loki.serviceAccountName" .) .Values.compactor.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
