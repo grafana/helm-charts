@@ -14,7 +14,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 1.3.1
 
-* [BUGFIX] Use non-depracted alertmanager flags for cluster peers. #441
+* [BUGFIX] Use non-deprecated alertmanager flags for cluster peers. #441
 * [BUGFIX] Make store-gateway Service not headless. #441
 
 ## 1.3.0
