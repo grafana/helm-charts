@@ -98,7 +98,7 @@ spec:
             - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").maxItemMemory }}
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
