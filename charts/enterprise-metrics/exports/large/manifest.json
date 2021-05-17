@@ -36,6 +36,6 @@
     "v1.Service-enterprise-metrics-query-frontend-headless.yaml": "environments/large/main.jsonnet",
     "v1.Service-enterprise-metrics-query-frontend.yaml": "environments/large/main.jsonnet",
     "v1.Service-enterprise-metrics-ruler.yaml": "environments/large/main.jsonnet",
-    "v1.Service-enterprise-metrics-store-gateway-headless.yaml": "environments/large/main.jsonnet",
+    "v1.Service-enterprise-metrics-store-gateway.yaml": "environments/large/main.jsonnet",
     "v1.ServiceAccount-enterprise-metrics.yaml": "environments/large/main.jsonnet"
 }
