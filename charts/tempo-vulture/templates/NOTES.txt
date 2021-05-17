@@ -1,0 +1,5 @@
+***********************************************************************
+ Welcome to Grafana Tempo Vulture
+ Chart version: {{ .Chart.Version }}
+ Tempo version: {{ .Chart.AppVersion }}
+***********************************************************************
