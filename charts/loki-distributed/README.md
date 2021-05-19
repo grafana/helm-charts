@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.29.0](https://img.shields.io/badge/Version-0.29.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.30.0](https://img.shields.io/badge/Version-0.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -105,7 +105,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
-| global.dnsService | string | `"kube-dns"` | configures DNS service name in kube-system |
+| global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
+| global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |

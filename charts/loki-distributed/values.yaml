@@ -6,8 +6,10 @@ global:
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
   clusterDomain: "cluster.local"
-  # -- configures DNS service name in kube-system
+  # -- configures DNS service name
   dnsService: "kube-dns"
+  # -- configures DNS service namespace
+  dnsNamespace: "kube-system"
 
 # -- Overrides the chart's name
 nameOverride: null
@@ -633,7 +635,7 @@ gateway:
         access_log   /dev/stderr  main;
         sendfile     on;
         tcp_nopush   on;
-        resolver {{ .Values.global.dnsService }}.kube-system.svc.{{ .Values.global.clusterDomain }};
+        resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
 
         {{- with .Values.gateway.nginxConfig.httpSnippet }}
         {{ . | nindent 2 }}
