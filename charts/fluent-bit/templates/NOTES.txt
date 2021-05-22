@@ -4,10 +4,6 @@ Please use the official fluent-bit chart
 
 https://github.com/fluent/helm-charts
 
-and the official loki output
-
-https://docs.fluentbit.io/manual/pipeline/outputs/loki
-
 !WARNING! !WARNING! !WARNING! !WARNING! !WARNING!
 
 Verify the application is working by running these commands:
