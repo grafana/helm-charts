@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.30.0](https://img.shields.io/badge/Version-0.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.31.0](https://img.shields.io/badge/Version-0.31.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -16,6 +16,21 @@ Add the following repo to use the chart:
 
 ```console
 helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+## Upgrading
+
+### Upgrading an existing Release to a new major version
+
+Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.30.x to 0.31.0
+This version updates the `podManagementPolicy` of running the Loki components as `StatefulSet`'s to `Parallel` instead of the default `OrderedReady` in order to allow better scalability for Loki e.g. in case the pods weren't terminated gracefully. This change requires a manual action deleting the existing StatefulSets before upgrading with Helm.
+```bash
+# Delete the Ingesters StatefulSets
+kubectl delete statefulset RELEASE_NAME-loki-distributed-ingester -n LOKI_NAMESPACE --cascade=orphan
+# Delete the Queriers StatefulSets
+kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPACE --cascade=orphan
 ```
 
 ## Values
