@@ -421,6 +421,10 @@ config: |
         service: memcached-client
         timeout: 500ms
 
+# Set ingestion overrides
+overrides: |
+  overrides: {}
+
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
 memcached:
