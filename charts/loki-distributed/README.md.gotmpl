@@ -33,7 +33,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 {{ template "chart.valuesSection" . }}
 
-
 ## Components
 
 The chart supports the compontents shown in the following table.
@@ -54,7 +53,6 @@ The other components are optional.
 | memcached-frontend |  ✅ |  ❎ |
 | memcached-index-queries |  ✅ |  ❎ |
 | memcached-index-writes |  ✅ |  ❎ |
-
 
 ## Configuration
 
@@ -195,7 +193,6 @@ and automatically proxies requests to the correct Loki components (distributor, 
 The gateway must be enabled if an Ingress is required, since the Ingress exposes the gateway only.
 If the gateway is enabled, Grafana and log shipping agents, such as Promtail, should be configured to use the gateway.
 If NetworkPolicies are enabled, they are more restrictive if the gateway is enabled.
-
 
 ## Metrics
 
