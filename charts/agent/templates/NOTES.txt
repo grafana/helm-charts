@@ -1,0 +1,5 @@
+***********************************************************************
+ Welcome to Grafana Agent
+ Chart version: {{ .Chart.Version }}
+ Agent version: {{ .Values.image.tag | default .Chart.AppVersion }}
+***********************************************************************

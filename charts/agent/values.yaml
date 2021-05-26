@@ -1,0 +1,671 @@
+# -- Overrides the chart's name
+nameOverride: null
+
+# -- Overrides the chart's computed fullname
+fullnameOverride: null
+
+image:
+  # -- The Docker registry
+  registry: docker.io
+  # -- Docker image repository
+  repository: grafana/agent
+  # -- Overrides the image tag whose default is the chart's appVersion
+  tag: null
+  # -- Docker image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Image pull secrets for Docker images
+imagePullSecrets: []
+
+# -- Annotations for the SaemonSet
+annotations: {}
+
+# -- The update strategy for the DaemonSet
+updateStrategy:
+  type: RollingUpdate
+
+# -- Pod labels
+podLabels: {}
+
+# -- Pod annotations
+podAnnotations: {}
+#  prometheus.io/scrape: "true"
+#  prometheus.io/port: "http-metrics"
+
+# -- The name of the PriorityClass
+priorityClassName: null
+
+# -- Resource requests and limits
+resources: {}
+#  limits:
+#    cpu: 200m
+#    memory: 128Mi
+#  requests:
+#    cpu: 100m
+#    memory: 128Mi
+
+# -- The security context for pods
+podSecurityContext: {}
+
+# -- The security context for container
+containerSecurityContext:
+  privileged: true
+  runAsUser: 0
+
+rbac:
+  # -- Specifies whether RBAC resources are to be created
+  create: true
+  # -- Specifies whether a PodSecurityPolicy is to be created
+  pspEnabled: false
+
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  create: true
+  # -- The name of the ServiceAccount to use.
+  # If not set and `create` is true, a name is generated using the fullname template
+  name: null
+  # -- Image pull secrets for the service account
+  imagePullSecrets: []
+  # -- Annotations for the service account
+  annotations: {}
+
+# -- Node selector for pods
+nodeSelector: {}
+
+# -- Affinity configuration for pods
+affinity: {}
+
+# -- Tolerations for pods. By default, pods will be scheduled on master nodes.
+tolerations:
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+
+# -- Default volumes that are mounted into pods. In most cases, these should not be changed.
+# Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.
+# @default -- See `values.yaml`
+defaultVolumes:
+  - name: etcmachineid
+    hostPath:
+      path: /etc/machine-id
+
+# -- Default volume mounts. Corresponds to `volumes`.
+# @default -- See `values.yaml`
+defaultVolumeMounts:
+  - name: etcmachineid
+    mountPath: /etc/machine-id
+    readOnly: true
+
+# Extra volumes to be added in addition to those specified under `defaultVolumes`.
+extraVolumes: []
+
+# Extra volume mounts together. Corresponds to `extraVolumes`.
+extraVolumeMounts: []
+
+# Extra args for the Promtail container.
+extraArgs: []
+# -- Example:
+# -- extraArgs:
+# --   - -prometheus.wal-directory=/tmp/agent/data
+
+# -- Extra environment variables
+extraEnv: []
+
+# -- Extra environment variables from secrets or configmaps
+extraEnvFrom: []
+
+# -- Section for configuring the server part of the agent
+# @default -- See `values.yaml`
+agentServerConfig: |
+  log_level: info
+
+# -- Section for configuring the integrations part of the agent
+# @default -- See `values.yaml`
+integrationsConfig: |
+  agent:
+    enabled: true
+
+prometheusDaemonSet:
+  # -- Enable metrics collection in daemonset mode
+  enabled: true
+  # -- Credentials of the remote endpoint
+  basicAuth: {}
+    # username: 
+    # password: 
+  # -- Remote write URL:
+  remoteWriteURL: http://localhost/api/prom/push
+  # -- Add the X-Scope-OrgID header to the requests, usefull when using multitenant cortex feature
+  tenant: ""
+  # -- Section for configuring the prometheus daemonset part of the agent
+  # @default -- See `values.yaml`
+  config: |
+    configs:
+      - host_filter: true
+        name: agent
+        global:
+          remote_write:
+            - url: {{ .Values.prometheusDaemonSet.remoteWriteURL }}
+              {{- if .Values.prometheusDaemonSet.basicAuth }}
+              basic_auth:
+                  password: {{ .Values.prometheusDaemonSet.basicAuth.password }}
+                  username: {{ .Values.prometheusDaemonSet.basicAuth.username }}
+              {{- end }}
+              {{- if .Values.prometheusDaemonSet.tenant }}
+              headers:
+                "X-Scope-OrgID": {{ .Values.prometheusDaemonSet.tenant }}
+              {{- end }}
+        scrape_configs:
+          - job_name: kubernetes-pods
+            kubernetes_sd_configs:
+              - role: pod
+            relabel_configs:
+              - action: drop
+                regex: "false"
+                source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+              - action: keep
+                regex: .*-metrics
+                source_labels:
+                  - __meta_kubernetes_pod_container_port_name
+              - action: replace
+                regex: (https?)
+                replacement: $1
+                source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                replacement: $1
+                source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: (.+?)(\:\d+)?;(\d+)
+                replacement: $1:$3
+                source_labels:
+                  - __address__
+                  - __meta_kubernetes_pod_annotation_prometheus_io_port
+                target_label: __address__
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __meta_kubernetes_pod_label_name
+              - action: replace
+                replacement: $1
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_namespace
+                  - __meta_kubernetes_pod_label_name
+                target_label: job
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+              - action: replace
+                separator: ':'
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                  - __meta_kubernetes_pod_container_name
+                  - __meta_kubernetes_pod_container_port_name
+                target_label: instance
+              - action: labelmap
+                regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+                replacement: __param_$1
+              - action: drop
+                regex: Succeeded|Failed
+                source_labels:
+                  - __meta_kubernetes_pod_phase
+          - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+            job_name: kube-system/kubelet
+            kubernetes_sd_configs:
+              - role: node
+            relabel_configs:
+              - replacement: kubernetes.default.svc.cluster.local:443
+                target_label: __address__
+              - replacement: https
+                target_label: __scheme__
+              - regex: (.+)
+                replacement: /api/v1/nodes/${1}/proxy/metrics
+                source_labels:
+                  - __meta_kubernetes_node_name
+                target_label: __metrics_path__
+            tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false
+          - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+            job_name: kube-system/cadvisor
+            kubernetes_sd_configs:
+              - role: node
+            metric_relabel_configs:
+              - action: drop
+                regex: container_([a-z_]+);
+                source_labels:
+                  - __name__
+                  - image
+              - action: drop
+                regex: container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)
+                source_labels:
+                  - __name__
+            relabel_configs:
+              - replacement: kubernetes.default.svc.cluster.local:443
+                target_label: __address__
+              - regex: (.+)
+                replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+                source_labels:
+                  - __meta_kubernetes_node_name
+                target_label: __metrics_path__
+            scheme: https
+            tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false
+    global:
+        scrape_interval: 15s
+    wal_directory: /var/lib/agent/data
+
+prometheusDeployment:
+  # -- Enable metrics collection in deployment mode
+  enabled: true
+  # -- Credentials of the remote endpoint
+  basicAuth: {}
+    # username: 
+    # password: 
+  # -- Remote write URL:
+  remoteWriteURL: http://localhost/api/prom/push
+  # -- Add the X-Scope-OrgID header to the requests, usefull when using multitenant cortex feature
+  tenant: ""
+  # -- Section for configuring the prometheus deployment part of the agent
+  # @default -- See `values.yaml`
+  config: |
+    configs:
+      - host_filter: false
+        name: agent
+        global:
+          remote_write:
+            - url: {{ .Values.prometheusDeployment.remoteWriteURL }}
+              {{- if .Values.prometheusDeployment.basicAuth }}
+              basic_auth:
+                  password: {{ .Values.prometheusDeployment.basicAuth.password }}
+                  username: {{ .Values.prometheusDeployment.basicAuth.username }}
+              {{- end }}
+              {{- if .Values.prometheusDeployment.tenant }}
+              headers:
+                "X-Scope-OrgID": {{ .Values.prometheusDeployment.tenant }}
+              {{- end }}
+        scrape_configs:
+          - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+            job_name: default/kubernetes
+            kubernetes_sd_configs:
+              - role: endpoints
+            metric_relabel_configs:
+              - action: keep
+                regex: workqueue_queue_duration_seconds_bucket|process_cpu_seconds_total|process_resident_memory_bytes|workqueue_depth|rest_client_request_duration_seconds_bucket|workqueue_adds_total|up|rest_client_requests_total|apiserver_request_total|go_goroutines
+                source_labels:
+                  - __name__
+            relabel_configs:
+              - action: keep
+                regex: apiserver
+                source_labels:
+                  - __meta_kubernetes_service_label_component
+            scheme: https
+            tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false
+                server_name: kubernetes
+    global:
+        scrape_interval: 15s
+    wal_directory: /var/lib/agent/data
+
+loki:
+  # -- Enable metrics collection in daemonset mode.
+  # automatically mount /var/log and /var/lib/docker/containers to the pod when enabled
+  enabled: true
+  # -- Credentials of the remote endpoint
+  basicAuth: {}
+    # username: 
+    # password: 
+  # -- Remote Push URL:
+  pushURL: http://localhost/loki/api/v1/push
+  # -- Add the tenant option to the requests, usefull when using multitenant loki feature
+  tenant: ""
+  # -- Section for configuring the loki part of the agent
+  # @default -- See `values.yaml`
+  config: |
+    configs:
+      - clients:
+          - url: {{ .Values.loki.pushURL }}
+            {{- if .Values.loki.basicAuth }}
+            basic_auth:
+                password: {{ .Values.loki.basicAuth.password }}
+                username: {{ .Values.loki.basicAuth.username }}
+            {{- end }}
+            {{- if .Values.loki.tenant }}
+            tenant_id: {{ .Values.loki.tenant }}
+            {{- end }}
+        name: default
+        scrape_configs:
+          - job_name: kubernetes-pods-name
+            kubernetes_sd_configs:
+              - role: pod
+            pipeline_stages:
+              - docker: {}
+            relabel_configs:
+              - source_labels:
+                  - __meta_kubernetes_pod_label_name
+                target_label: __service__
+              - source_labels:
+                  - __meta_kubernetes_pod_node_name
+                target_label: __host__
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __service__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                replacement: $1
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_namespace
+                  - __service__
+                target_label: job
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+              - replacement: /var/log/pods/*$1/*.log
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_pod_uid
+                  - __meta_kubernetes_pod_container_name
+                target_label: __path__
+          - job_name: kubernetes-pods-app
+            kubernetes_sd_configs:
+              - role: pod
+            pipeline_stages:
+              - docker: {}
+            relabel_configs:
+              - action: drop
+                regex: .+
+                source_labels:
+                  - __meta_kubernetes_pod_label_name
+              - source_labels:
+                  - __meta_kubernetes_pod_label_app
+                target_label: __service__
+              - source_labels:
+                  - __meta_kubernetes_pod_node_name
+                target_label: __host__
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __service__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                replacement: $1
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_namespace
+                  - __service__
+                target_label: job
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+              - replacement: /var/log/pods/*$1/*.log
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_pod_uid
+                  - __meta_kubernetes_pod_container_name
+                target_label: __path__
+          - job_name: kubernetes-pods-direct-controllers
+            kubernetes_sd_configs:
+              - role: pod
+            pipeline_stages:
+              - docker: {}
+            relabel_configs:
+              - action: drop
+                regex: .+
+                separator: ""
+                source_labels:
+                  - __meta_kubernetes_pod_label_name
+                  - __meta_kubernetes_pod_label_app
+              - action: drop
+                regex: '[0-9a-z-.]+-[0-9a-f]{8,10}'
+                source_labels:
+                  - __meta_kubernetes_pod_controller_name
+              - source_labels:
+                  - __meta_kubernetes_pod_controller_name
+                target_label: __service__
+              - source_labels:
+                  - __meta_kubernetes_pod_node_name
+                target_label: __host__
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __service__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                replacement: $1
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_namespace
+                  - __service__
+                target_label: job
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+              - replacement: /var/log/pods/*$1/*.log
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_pod_uid
+                  - __meta_kubernetes_pod_container_name
+                target_label: __path__
+          - job_name: kubernetes-pods-indirect-controller
+            kubernetes_sd_configs:
+              - role: pod
+            pipeline_stages:
+              - docker: {}
+            relabel_configs:
+              - action: drop
+                regex: .+
+                separator: ""
+                source_labels:
+                  - __meta_kubernetes_pod_label_name
+                  - __meta_kubernetes_pod_label_app
+              - action: keep
+                regex: '[0-9a-z-.]+-[0-9a-f]{8,10}'
+                source_labels:
+                  - __meta_kubernetes_pod_controller_name
+              - action: replace
+                regex: ([0-9a-z-.]+)-[0-9a-f]{8,10}
+                source_labels:
+                  - __meta_kubernetes_pod_controller_name
+                target_label: __service__
+              - source_labels:
+                  - __meta_kubernetes_pod_node_name
+                target_label: __host__
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __service__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                replacement: $1
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_namespace
+                  - __service__
+                target_label: job
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+              - replacement: /var/log/pods/*$1/*.log
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_pod_uid
+                  - __meta_kubernetes_pod_container_name
+                target_label: __path__
+          - job_name: kubernetes-pods-static
+            kubernetes_sd_configs:
+              - role: pod
+            pipeline_stages:
+              - docker: {}
+            relabel_configs:
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __meta_kubernetes_pod_annotation_kubernetes_io_config_mirror
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_label_component
+                target_label: __service__
+              - source_labels:
+                  - __meta_kubernetes_pod_node_name
+                target_label: __host__
+              - action: drop
+                regex: ""
+                source_labels:
+                  - __service__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - action: replace
+                replacement: $1
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_namespace
+                  - __service__
+                target_label: job
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+              - replacement: /var/log/pods/*$1/*.log
+                separator: /
+                source_labels:
+                  - __meta_kubernetes_pod_annotation_kubernetes_io_config_mirror
+                  - __meta_kubernetes_pod_container_name
+                target_label: __path__
+    positions_directory: /tmp/positions
+
+tempo:
+  # -- Enable trace collection in daemonset mode
+  enabled: true
+  # -- Credentials of the remote endpoint
+  basicAuth: {}
+    # username: 
+    # password: 
+  # -- Remote write URL:
+  remoteWriteURL: http://localhost
+  # -- Add the X-Scope-OrgID header to the requests, usefull when using multitenant tempo feature
+  tenant: ""
+  # -- Section for configuring the tempo daemonset part of the agent
+  # @default -- See `values.yaml`
+  config: |
+    configs:
+      - remote_write:
+          - endpoint: {{ .Values.tempo.remoteWriteURL }}
+            insecure: true
+            {{- if .Values.tempo.basicAuth }}
+            basic_auth:
+                password: {{ .Values.tempo.basicAuth.password }}
+                username: {{ .Values.tempo.basicAuth.username }}
+            {{- end }}
+            {{- if .Values.tempo.tenant }}
+            headers:
+              "X-Scope-OrgID": {{ .Values.tempo.tenant }}
+            {{- end }}
+            retry_on_failure:
+                enabled: false
+        batch:
+            send_batch_size: 1000
+            timeout: 5s
+        name: default
+        receivers:
+            jaeger:
+                protocols:
+                    grpc: null
+                    thrift_binary: null
+                    thrift_compact: null
+                    thrift_http: null
+                remote_sampling:
+                    insecure: true
+                    strategy_file: /etc/agent/strategies.json
+            opencensus: null
+            otlp:
+                protocols:
+                    grpc: null
+                    http: null
+            zipkin: null
+        scrape_configs:
+          - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+            job_name: kubernetes-pods
+            kubernetes_sd_configs:
+              - role: pod
+            relabel_configs:
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_name
+                target_label: pod
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_container_name
+                target_label: container
+            tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false

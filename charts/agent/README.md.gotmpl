@@ -1,0 +1,65 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+## Upgrading
+
+A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+{{ template "chart.valuesSection" . }}
+
+## Configuration
+
+The config file for the Agent must be configured as string.
+This is necessary because the contents are passed through the `tpl` function.
+With this, the file can be templated and assembled from reusable YAML snippets.
+See `values.yaml´ for details.
+
+### node\_exporter
+
+If you want to use the `node\_exporter` integration, please add it to the `integrationsConfig`
+section and also include the following changes:
+```yaml
+integrationsConfig: |
+  agent:
+    enabled: true
+  node_exporter:
+    enabled: true
+    rootfs_path: /host/root
+    sysfs_path: /host/sys
+    procfs_path: /host/procfs
+extraVolumes:
+  - hostPath:
+      path: /
+    name: rootfs
+  - hostPath:
+      path: /sys
+    name: sysfs
+  - hostPath:
+      path: /proc
+    name: procfs
+extraVolumeMounts:
+  - mountPath: /host/root
+    name: rootfs
+    readOnly: true
+  - mountPath: /host/sys
+    name: sysfs
+    readOnly: true
+  - mountPath: /host/proc
+    name: procfs
+    readOnly: true
+```
