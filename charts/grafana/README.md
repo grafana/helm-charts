@@ -63,6 +63,7 @@ This version requires Helm >= 3.1.0.
 | `image.sha`                               | Image sha (optional)                          | `2b56f6106ddc376bb46d974230d530754bf65a640dfbc5245191d72d3b49efc6` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
+| `service.enabled`                         | Enable grafana service                        | `true`                                                  |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
@@ -157,13 +158,16 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.folderAnnotation`     | The annotation the sidecar will look for in configmaps to override the destination folder for files | `nil`                                                  |
 | `sidecar.dashboards.defaultFolderName`    | The default folder name, it will create a subfolder under the `sidecar.dashboards.folder` and put dashboards in there instead | `nil`                                |
 | `sidecar.dashboards.searchNamespace`      | If specified, the sidecar will search for dashboard config-maps inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                                |
+| `sidecar.dashboards.resource`             | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
 | `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
-| `sidecar.datasources.labelValue`                | Label value that config maps with datasources should have to be added | `nil`                                |
+| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `nil`                                |
 | `sidecar.datasources.searchNamespace`     | If specified, the sidecar will search for datasources config-maps inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                               |
+| `sidecar.datasources.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.notifiers.enabled`               | Enables the cluster wide search for notifiers and adds/updates/deletes them in grafana | `false`        |
 | `sidecar.notifiers.label`                 | Label that config maps with notifiers should have to be added | `grafana_notifier`                               |
 | `sidecar.notifiers.searchNamespace`       | If specified, the sidecar will search for notifiers config-maps (or secrets) inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                               |
+| `sidecar.notifiers.resource`              | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `smtp.existingSecret`                     | The name of an existing secret containing the SMTP credentials. | `""`                                  |
 | `smtp.userKey`                            | The key in the existing SMTP secret containing the username. | `"user"`                                 |
 | `smtp.passwordKey`                        | The key in the existing SMTP secret containing the password. | `"password"`                             |
@@ -215,6 +219,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
+| `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
 | `imageRenderer.service.portName`           | image-renderer service port name                                                   | `'http'`                         |
 | `imageRenderer.service.port`               | image-renderer service port used by both service and deployment                    | `8081`                           |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |

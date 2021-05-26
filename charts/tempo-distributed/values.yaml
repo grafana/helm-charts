@@ -274,6 +274,8 @@ queryFrontend:
   service:
     # -- Annotations for queryFrontend service
     annotations: {}
+    # -- Type of service for the queryFrontend
+    type: ClusterIP
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Annotations for query-frontend pods
@@ -342,6 +344,9 @@ config: |
       kvstore:
         store: memberlist
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     receivers:
       {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
@@ -390,6 +395,8 @@ config: |
     lifecycler:
       ring:
         replication_factor: 1
+        kvstore:
+          store: memberlist
       tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
@@ -413,6 +420,10 @@ config: |
         host: {{ include "tempo.fullname" . }}-memcached
         service: memcached-client
         timeout: 500ms
+
+# Set ingestion overrides
+overrides: |
+  overrides: {}
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service

@@ -23,6 +23,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-ruler
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: ruler
+        gossip_ring_member: "true"
         target: ruler
         release: {{ .Release.Name }}
         {{- with .Values.ruler.podLabels }}
@@ -97,7 +98,7 @@ spec:
             - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").maxItemMemory }}
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -108,6 +109,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage
@@ -147,6 +150,9 @@ spec:
 {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
 {{- if .Values.ruler.extraVolumes }}
 {{ toYaml .Values.ruler.extraVolumes | indent 8}}
 {{- end }}
