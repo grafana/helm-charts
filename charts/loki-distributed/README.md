@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.31.1](https://img.shields.io/badge/Version-0.31.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.32.0](https://img.shields.io/badge/Version-0.32.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -146,6 +146,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
+| loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |

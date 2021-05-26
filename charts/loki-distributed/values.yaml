@@ -54,6 +54,8 @@ loki:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
+  existingSecretForConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
