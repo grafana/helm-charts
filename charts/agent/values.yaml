@@ -130,8 +130,8 @@ prometheusDaemonSet:
   enabled: true
   # -- Credentials of the remote endpoint
   basicAuth: {}
-    # username: 
-    # password: 
+    # username:
+    # password:
   # -- Remote write URL:
   remoteWriteURL: http://localhost/api/prom/push
   # -- Add the X-Scope-OrgID header to the requests, usefull when using multitenant cortex feature
@@ -275,8 +275,8 @@ prometheusDeployment:
   enabled: true
   # -- Credentials of the remote endpoint
   basicAuth: {}
-    # username: 
-    # password: 
+    # username:
+    # password:
   # -- Remote write URL:
   remoteWriteURL: http://localhost/api/prom/push
   # -- Add the X-Scope-OrgID header to the requests, usefull when using multitenant cortex feature
@@ -329,8 +329,8 @@ loki:
   enabled: true
   # -- Credentials of the remote endpoint
   basicAuth: {}
-    # username: 
-    # password: 
+    # username:
+    # password:
   # -- Remote Push URL:
   pushURL: http://localhost/loki/api/v1/push
   # -- Add the tenant option to the requests, usefull when using multitenant loki feature
@@ -604,8 +604,8 @@ tempo:
   enabled: true
   # -- Credentials of the remote endpoint
   basicAuth: {}
-    # username: 
-    # password: 
+    # username:
+    # password:
   # -- Remote write URL:
   remoteWriteURL: http://localhost
   # -- Add the X-Scope-OrgID header to the requests, usefull when using multitenant tempo feature
