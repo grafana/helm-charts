@@ -1,0 +1,34 @@
+{{- if (.Capabilities.APIVersions.Has "security.openshift.io/v1") -}}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: {{ include "promtail.fullname" . }}
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: false
+allowedCapabilities: null
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: null
+readOnlyRootFilesystem: true
+requiredDropCapabilities: 
+- ALL
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+users:
+- {{ printf "system:serviceaccount:%s:%s" .Release.Namespace  (include "promtail.serviceAccountName" $)}}
+volumes:
+- 'configMap'
+- 'secret'
+- 'hostPath'
+{{- end }}
