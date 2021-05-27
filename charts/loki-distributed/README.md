@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.32.0](https://img.shields.io/badge/Version-0.32.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.32.0](https://img.shields.io/badge/Version-0.32.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.1](https://img.shields.io/badge/AppVersion-2.2.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -463,6 +463,7 @@ loki:
     frontend:
       log_queries_longer_than: 5s
       compress_responses: true
+      tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 ```
 
 Because the config file is templated, it is also possible to e.g. externalize S3 bucket names:
