@@ -390,7 +390,7 @@ config: |
       {{- end }}
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
   ingester:
     lifecycler:
       ring:
