@@ -98,9 +98,9 @@ spec:
       {{- end }}
       volumes:
         - name: config
-          {{- if .Values.loki.existingSecretForConfig -}}
+          {{- if .Values.loki.existingSecretForConfig }}
           secret:
-            secretName: {{- .Values.loki.existingSecretForConfig }}
+            secretName: {{ .Values.loki.existingSecretForConfig }}
           {{- else }}
           configMap:
             name: {{ include "loki.fullname" . }}
