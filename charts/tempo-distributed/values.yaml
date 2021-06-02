@@ -408,7 +408,19 @@ config: |
     http_listen_port: 3100
   storage:
     trace:
-      backend: local
+      backend: {{.Values.storage.trace.backend}}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.trace.backend "s3"}}
+      s3:
+        {{- toYaml .Values.storage.trace.s3 | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.trace.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.trace.azure | nindent 6}}
+      {{- end}}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -420,6 +432,20 @@ config: |
         host: {{ include "tempo.fullname" . }}-memcached
         service: memcached-client
         timeout: 500ms
+
+# To configure a different storage backend instead of local storage:
+# storage:
+#   trace:
+#     backend: azure
+#     azure:
+#       container-name:
+#       storage-account-name:
+#       storage-account-key:
+# -- the supported storage backends are gcs, s3 and azure
+# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
+storage:
+  trace:
+    backend: local
 
 # Set ingestion overrides
 overrides: |
