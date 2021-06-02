@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "loki.tableManagerLabels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.tableManager.replicas }}
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
