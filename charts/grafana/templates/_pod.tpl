@@ -96,7 +96,7 @@ initContainers:
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
-        value: "both"
+        value: {{ quote .Values.sidecar.datasources.resource }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -131,7 +131,7 @@ initContainers:
       - name: FOLDER
         value: "/etc/grafana/provisioning/notifiers"
       - name: RESOURCE
-        value: "both"
+        value: {{ quote .Values.sidecar.notifiers.resource }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -180,7 +180,7 @@ containers:
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
-        value: "both"
+        value: {{ quote .Values.sidecar.dashboards.resource }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -313,14 +313,14 @@ containers:
         containerPort: 3000
         protocol: TCP
     env:
-      {{- if not .Values.env.GF_SECURITY_ADMIN_USER }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: GF_SECURITY_ADMIN_USER
         valueFrom:
           secretKeyRef:
             name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.userKey | default "admin-user" }}
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: GF_SECURITY_ADMIN_PASSWORD
         valueFrom:
           secretKeyRef:
@@ -352,6 +352,14 @@ containers:
       - name: GF_RENDERING_CALLBACK_URL
         value: http://{{ template "grafana.fullname" . }}.{{ template "grafana.namespace" . }}:{{ .Values.service.port }}/{{ .Values.imageRenderer.grafanaSubPath }}
       {{ end }}
+      - name: GF_PATHS_DATA
+        value: {{ (get .Values "grafana.ini").paths.data }}
+      - name: GF_PATHS_LOGS
+        value: {{ (get .Values "grafana.ini").paths.logs }}
+      - name: GF_PATHS_PLUGINS
+        value: {{ (get .Values "grafana.ini").paths.plugins }}
+      - name: GF_PATHS_PROVISIONING
+        value: {{ (get .Values "grafana.ini").paths.provisioning }}
     {{- range $key, $value := .Values.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
@@ -479,8 +487,15 @@ volumes:
 {{- end }}
 {{- range .Values.extraVolumeMounts }}
   - name: {{ .name }}
+    {{- if .existingClaim }}
     persistentVolumeClaim:
       claimName: {{ .existingClaim }}
+    {{- else if .hostPath }}
+    hostPath:
+      path: {{ .hostPath }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
 {{- end }}
 {{- range .Values.extraEmptyDirMounts }}
   - name: {{ .name }}

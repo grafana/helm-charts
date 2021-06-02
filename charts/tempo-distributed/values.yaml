@@ -274,6 +274,8 @@ queryFrontend:
   service:
     # -- Annotations for queryFrontend service
     annotations: {}
+    # -- Type of service for the queryFrontend
+    type: ClusterIP
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Annotations for query-frontend pods
@@ -342,6 +344,9 @@ config: |
       kvstore:
         store: memberlist
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     receivers:
       {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
@@ -372,11 +377,11 @@ config: |
         protocols:
           {{- if .Values.traces.otlp.http }}
           http:
-            endpoint: 0.0.0.0:55680
+            endpoint: 0.0.0.0:55681
           {{- end }}
           {{- if .Values.traces.otlp.grpc }}
           grpc:
-            endpoint: 0.0.0.0:55680
+            endpoint: 0.0.0.0:4317
           {{- end }}
       {{- end }}
       {{- if .Values.traces.opencensus}}
@@ -385,11 +390,13 @@ config: |
       {{- end }}
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
   ingester:
     lifecycler:
       ring:
         replication_factor: 1
+        kvstore:
+          store: memberlist
       tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
@@ -414,15 +421,19 @@ config: |
         service: memcached-client
         timeout: 500ms
 
+# Set ingestion overrides
+overrides: |
+  overrides: {}
+
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
 memcached:
-  # -- Specified whether the memcached cachce shoudl be enabled
+  # -- Specified whether the memcached cachce should be enabled
   enabled: true
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  servicte: memcached-client
+  service: memcached-client
   # -- Memcached Docker image repository
   repository: memcached
   # -- Memcached Docker image tag

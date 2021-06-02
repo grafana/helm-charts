@@ -1,0 +1,13 @@
+---
+config:
+  distributor:
+    ring:
+      kvstore:
+        store: multi
+        consul:
+          http_client_timeout: '20s'
+          consistent_reads: true
+        multi:
+          mirror_enabled: true
+          primary: consul
+          secondary: memberlist

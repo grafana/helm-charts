@@ -23,6 +23,9 @@ spec:
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.distributor.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
@@ -67,9 +70,14 @@ spec:
               name: zipkin
               protocol: TCP
             {{- end }}
-            {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
-            - containerPort: 55680
-              name: otlp
+            {{- if .Values.traces.otlp.http }}
+            - containerPort: 55681
+              name: otlp-http
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.otlp.grpc }}
+            - containerPort: 4317
+              name: otlp-grpc
               protocol: TCP
             {{- end }}
             {{- if .Values.traces.opencensus }}

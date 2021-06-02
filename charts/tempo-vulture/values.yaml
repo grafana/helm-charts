@@ -1,0 +1,70 @@
+# -- Overrides the chart's name
+nameOverride: ""
+# -- Overrides the chart's computed fullname
+fullnameOverride: ""
+# -- Image pull secrets for Docker images
+imagePullSecrets: []
+
+image:
+  # -- Docker image repository
+  repository: docker.io/grafana/tempo-vulture
+  # -- Overrides the image tag whose default is the chart's appVersion
+  tag: ""
+  # -- Docker image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Number of replicas of Tempo Vulture
+replicas: 1
+# -- Common annotations for all pods
+podAnnotations: {}
+# -- Common annotations for the deployment and service
+annotations: {}
+# -- The number of old ReplicaSets to retain to allow rollback
+revisionHistoryLimit: 10
+# -- Additional CLI args for the vulture
+extraArgs: []
+# -- Environment variables to add to the vulture pods
+extraEnv: []
+# -- Environment variables from secrets or configmaps to add to the vulture pods
+extraEnvFrom: []
+# -- Resource requests and limits for the vulture
+resources: {}
+# -- Node selector for vulture pods
+nodeSelector: {}
+# -- Tolerations for vulture pods
+tolerations: []
+
+
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  create: true
+  # -- The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+  # -- Image pull secrets for the service account
+  imagePullSecrets: []
+  # -- Annotations for the service account
+  annotations: {}
+
+# ServiceMonitor configuration
+serviceMonitor:
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for ServiceMonitor resources
+  namespace: null
+  # -- Namespace selector for ServiceMonitor resources
+  namespaceSelector: {}
+  # -- ServiceMonitor annotations
+  annotations: {}
+  # -- Additional ServiceMonitor labels
+  labels: {}
+  # -- ServiceMonitor scrape interval
+  interval: null
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+
+tempoAddress:
+  # -- the url towards your Tempo distributor, e.g. http://distributor
+  push:
+  # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
+  query:

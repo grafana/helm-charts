@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.1.2
+  tag: v1.3.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -63,6 +63,12 @@ config:
     storage:
       type: s3
 
+  compactor:
+    sharding_enabled: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+
   license:
     path: "/license/license.jwt"
 
@@ -75,11 +81,8 @@ config:
       ring:
         replication_factor: 1
         kvstore:
-          store: consul
-          prefix: 'collectors/'
-          consul:
-            http_client_timeout: '20s'
-            consistent_reads: true
+          store: memberlist
+
   limits:
     enforce_metric_name: false
     reject_old_samples: true
@@ -96,7 +99,9 @@ config:
     grpc_client_config:
       max_recv_msg_size: 104857600
       max_send_msg_size: 104857600
-      use_gzip_compression: true
+
+  memberlist:
+    bind_port: 7946
 
   storage:
     engine: blocks
@@ -109,12 +114,17 @@ config:
       sync_dir: /data/tsdb-sync
 
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     shard_by_all_labels: true
     pool:
       health_check_ingesters: true
+
   querier:
     active_query_tracker_dir: /data/enterprise-metrics/querier
     query_ingesters_within: 12h
+
   query_range:
     split_queries_by_interval: 24h
     align_queries_with_step: true
@@ -125,17 +135,40 @@ config:
           expiration: 1h
         memcached_client:
           timeout: 1s
+
+  store_gateway:
+    sharding_enabled: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+
   ruler:
     enable_alertmanager_discovery: false
     enable_api: true
+    enable_sharding: true
+    ring:
+      kvstore:
+        store: memberlist
     rule_path: '/data'
+
+  runtime_config:
+    file: /var/enterprise-metrics/runtime.yaml
+
   alertmanager:
     data_dir: '/data'
     enable_api: true
     external_url: '/alertmanager'
+    sharding_enabled: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+
   frontend:
     log_queries_longer_than: 10s
     compress_responses: true
+
+# runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
+runtimeConfig: {}
 
 rbac:
   create: true
@@ -959,54 +992,103 @@ compactor:
 
 memcached:
   enabled: false
-  memcached:
-    extraArgs:
-      - -I 1m
-      - -c 4096
-    maxItemMemory: 8192
+  architecture: high-availability
+  arguments:
+    - -m 8192
+    - -o
+    - modern
+    - -v
+    - -I 1m
+    - -c 4096
+  image:
+    repository: memcached
+    tag: 1.5.20
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
+  # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
+  # It is a string to avoid https://github.com/helm/helm/issues/1707.
+  maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
   metrics:
     enabled: true
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
   replicaCount: 1
   resources:
     limits:
-      memory: 14745Mi  # floor(1.5 * resources.requests.memory)
+      # memory limits should match requests
+      memory: 9830Mi
     requests:
       cpu: 500m
-      memory: 9830Mi  # floor(1.2 * memcached configured limit (-m))
+      # memory requests should be exceed memcached -m flag
+      memory: 9830Mi  # (floor (* 1.2 8192))
 
 memcached-queries:
   enabled: false
-  memcached:
-    extraArgs:
-      - -I 15m
-      - -c 1024
-    maxItemMemory: 2048
+  architecture: high-availability
+  arguments:
+    - -m 2048
+    - -o
+    - modern
+    - -v
+    - -I 15m
+    - -c 1024
+  image:
+    repository: memcached
+    tag: 1.5.20
+  # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
+  # It is a string to avoid https://github.com/helm/helm/issues/1707.
+  maxItemMemory: '15728640'  # (* 15 (* 1024 1024))
   metrics:
     enabled: true
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
   replicaCount: 1
   resources:
     limits:
-      memory: 3685Mi  # floor(1.5 * resources.requests.memory)
+      # memory limits should match requests
+      memory: 2457Mi
     requests:
       cpu: 500m
-      memory: 2457Mi  # floor(1.2 * memcached configured limit (-m))
+      # memory requests should be exceed memcached -m flag
+      memory: 2457Mi  # (floor (* 1.2 2048))
 
 memcached-metadata:
   enabled: false
-  memcached:
-    extraArgs:
-      - -I 1m
-      - -c 1024
-    maxItemMemory: 512
+  architecture: high-availability
+  arguments:
+    - -m 512
+    - -o
+    - modern
+    - -v
+    - -I 1m
+    - -c 1024
+  image:
+    repository: memcached
+    tag: 1.5.20
+  # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
+  # It is a string to avoid https://github.com/helm/helm/issues/1707.
+  maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
   metrics:
     enabled: true
+    image:
+      registry: quay.io
+      repository: prometheus/memcached-exporter
+      tag: v0.6.0
   replicaCount: 1
   resources:
     limits:
-      memory: 921Mi  # floor(1.5 * resources.requests.memory)
+      # memory limits should match requests
+      memory: 614Mi
     requests:
       cpu: 500m
-      memory: 614Mi  # floor(1.2 * memcached configured limit (-m))
+      # memory requests should be exceed memcached -m flag
+      memory: 614Mi  # (floor (* 1.2 512))
 
 minio:
   enabled: true
@@ -1030,7 +1112,7 @@ minio:
   secretKey: supersecret
 
 consul:
-  enabled: true
+  enabled: false
   client:
     enabled: false
   resources:

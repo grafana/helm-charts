@@ -10,7 +10,7 @@ querier common labels
 */}}
 {{- define "tempo.querierLabels" -}}
 {{ include "tempo.labels" . }}
-app.kubernetes.io/component: {{ include "tempo.name" . }}-querier
+app.kubernetes.io/component: querier
 {{- end }}
 
 {{/*
@@ -18,7 +18,7 @@ querier selector labels
 */}}
 {{- define "tempo.querierSelectorLabels" -}}
 {{ include "tempo.selectorLabels" . }}
-app.kubernetes.io/component: {{ include "tempo.name" . }}-querier
+app.kubernetes.io/component: querier
 {{- end }}
 
 {{/*

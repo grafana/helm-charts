@@ -49,11 +49,21 @@ spec:
       protocol: TCP
       targetPort: zipkin
     {{- end }}
-    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
-    - name: distributor-otlp
+    {{- if .Values.traces.otlp.http }}
+    - name: distributor-otlp-http
+      port: 55681
+      protocol: TCP
+      targetPort: otlp-http
+    {{- end }}
+    {{- if .Values.traces.otlp.grpc }}
+    - name: distributor-otlp-grpc
+      port: 4317
+      protocol: TCP
+      targetPort: otlp-grpc
+    - name: distributor-otlp-legacy
       port: 55680
       protocol: TCP
-      targetPort: otlp
+      targetPort: otlp-grpc
     {{- end }}
     {{- if .Values.traces.opencensus }}
     - name: distributor-opencensus
