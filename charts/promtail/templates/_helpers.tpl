@@ -38,8 +38,13 @@ helm.sh/chart: {{ include "promtail.chart" . }}
 {{ include "promtail.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/component: logging
 {{- end }}
+app.kubernetes.io/part-of: {{ template "promtail.name" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.customLabels}}
+{{ toYaml .Values.customLabels }}
+{{- end }}
 {{- end }}
 
 {{/*
