@@ -1003,10 +1003,6 @@ memcached:
   image:
     repository: memcached
     tag: 1.5.20
-    image:
-      registry: quay.io
-      repository: prometheus/memcached-exporter
-      tag: v0.6.0
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
