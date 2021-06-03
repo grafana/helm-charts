@@ -104,13 +104,12 @@ Alternatively, in order to quickly test Tempo using the filestore, the [single b
 
 ```yaml
 config: |
-  auth_enabled: false
-    compactor:
-      compaction:
-        block_retention: 48h
-      ring:
-        kvstore:
-          store: memberlist
+  compactor:
+    compaction:
+      block_retention: 48h
+    ring:
+      kvstore:
+        store: memberlist
     distributor:
       receivers:
         jaeger:
