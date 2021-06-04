@@ -89,24 +89,14 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
 
+    {{- if .Values.loki.schemaConfig}}
     schema_config:
-      configs:
-        - from: 2020-09-07
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
-
+      {{- toYaml .Values.loki.schemaConfig | nindent 2}}
+    {{- end}}
+    {{- if .Values.loki.storageConfig}}
     storage_config:
-      boltdb_shipper:
-        shared_store: filesystem
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/cache
-        cache_ttl: 168h
-      filesystem:
-        directory: /var/loki/chunks
+      {{- toYaml .Values.loki.storageConfig | nindent 2}}
+    {{- end}}
 
     chunk_store_config:
       max_look_back_period: 0s
@@ -149,6 +139,30 @@ loki:
       rule_path: /tmp/loki/scratch
       alertmanager_url: https://alertmanager.xx
       external_url: https://alertmanager.xx
+
+  schemaConfig:
+    configs:
+      - from: 2020-09-07
+        store: boltdb-shipper
+        object_store: filesystem
+        schema: v11
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  storageConfig:
+    boltdb_shipper:
+      shared_store: filesystem
+      active_index_directory: /var/loki/index
+      cache_location: /var/loki/cache
+      cache_ttl: 168h
+    filesystem:
+      directory: /var/loki/chunks
+# -- uncomment to configure each storage
+#    azure: {}
+#    gcs: {}
+#    s3: {}
+#    boltdb: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
