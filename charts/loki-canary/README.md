@@ -34,11 +34,11 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | image.repository | string | `"docker.io/grafana/loki-canary"` | Docker image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
-| priorityClassName | string | `nil` | The name of the PriorityClass for the canary pods |
 | lokiAddress | string | `nil` | The Loki server URL:Port, e.g. loki:3100 |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node selector for canary pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
+| priorityClassName | string | `nil` | The name of the PriorityClass for pods |
 | resources | object | `{}` | Resource requests and limits for the canary |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
