@@ -321,7 +321,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | tableManager.nodeSelector | object | `{}` | Node selector for table-manager pods |
 | tableManager.podAnnotations | object | `{}` | Annotations for table-manager pods |
 | tableManager.priorityClassName | string | `nil` | The name of the PriorityClass for table-manager pods |
-| tableManager.replicas | int | `1` | Number of replicas for the table-manager |
 | tableManager.resources | object | `{}` | Resource requests and limits for the table-manager |
 | tableManager.terminationGracePeriodSeconds | int | `30` | Grace period to allow the table-manager to shutdown before it is killed |
 | tableManager.tolerations | list | `[]` | Tolerations for table-manager pods |
