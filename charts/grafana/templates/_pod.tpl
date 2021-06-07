@@ -352,6 +352,14 @@ containers:
       - name: GF_RENDERING_CALLBACK_URL
         value: http://{{ template "grafana.fullname" . }}.{{ template "grafana.namespace" . }}:{{ .Values.service.port }}/{{ .Values.imageRenderer.grafanaSubPath }}
       {{ end }}
+      - name: GF_PATHS_DATA
+        value: {{ (get .Values "grafana.ini").paths.data }}
+      - name: GF_PATHS_LOGS
+        value: {{ (get .Values "grafana.ini").paths.logs }}
+      - name: GF_PATHS_PLUGINS
+        value: {{ (get .Values "grafana.ini").paths.plugins }}
+      - name: GF_PATHS_PROVISIONING
+        value: {{ (get .Values "grafana.ini").paths.provisioning }}
     {{- range $key, $value := .Values.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:

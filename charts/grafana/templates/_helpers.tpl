@@ -114,3 +114,16 @@ Return the appropriate apiVersion for rbac.
 {{- print "rbac.authorization.k8s.io/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "grafana.password" -}}
+{{- $secret := (lookup "v1" "Secret" (include "grafana.namespace" .) (include "grafana.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "admin-password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
