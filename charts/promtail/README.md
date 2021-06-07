@@ -89,12 +89,11 @@ The new release which will pick up again from the existing `positions.yaml`.
 | image.repository | string | `"grafana/promtail"` | Docker image repository |
 | image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
-| initContainer.enabled | bool | `false` | Specifies whether the init container for setting inotify max user instances is to be enabled |
-| initContainer.fsInotifyMaxUserInstances | int | `128` | The inotify max user instances to configure |
-| initContainer.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy for the init container image |
-| initContainer.image.registry | string | `"docker.io"` | The Docker registry for the init container |
-| initContainer.image.repository | string | `"busybox"` | Docker image repository for the init container |
-| initContainer.image.tag | float | `1.33` | Docker tag for the init container |
+| initContainers[0].command | list | `["sh","-c","sysctl -w fs.inotify.max_user_instances=128"]` | The inotify max user instances to configure |
+| initContainers[0].image | string | `"docker.io/busybox:1.33"` | Docker registry, image and tag for the init container image |
+| initContainers[0].imagePullPolicy | string | `"IfNotPresent"` | Docker image pull policy for the init container image |
+| initContainers[0].name | string | `"init"` |  |
+| initContainers[0].securityContext.privileged | bool | `true` |  |
 | livenessProbe | object | `{}` | Liveness probe |
 | nameOverride | string | `nil` | Overrides the chart's name |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
