@@ -5,7 +5,8 @@ nameOverride: null
 fullnameOverride: null
 
 initContainers:
-  - # -- Docker registry, image and tag for the init container image
+  - name: init
+    # -- Docker registry, image and tag for the init container image
     image: docker.io/busybox:1.33
     # -- Docker image pull policy for the init container image
     imagePullPolicy: IfNotPresent
