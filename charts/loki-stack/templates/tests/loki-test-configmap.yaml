@@ -1,3 +1,4 @@
+{{- if .Values.loki.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -50,3 +51,4 @@ data:
       jq -e '.streams[].entries[].line == "foobar"'
     }
 
+{{- end }}
