@@ -54,6 +54,8 @@ loki:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
+  existingSecretForConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -439,8 +441,6 @@ queryFrontend:
 tableManager:
   # -- Specifies whether the table-manager should be enabled
   enabled: false
-  # -- Number of replicas for the table-manager
-  replicas: 1
   image:
     # -- The Docker registry for the table-manager image. Overrides `loki.image.registry`
     registry: null

@@ -108,9 +108,12 @@ nodeSelector: {}
 # -- Affinity configuration for pods
 affinity: {}
 
-# -- Tolerations for pods. By default, pods will be scheduled on master nodes.
+# -- Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes.
 tolerations:
   - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/control-plane
     operator: Exists
     effect: NoSchedule
 
