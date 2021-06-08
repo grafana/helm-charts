@@ -84,8 +84,13 @@ spec:
       {{- end }}
       volumes:
         - name: config
+          {{- if .Values.loki.existingSecretForConfig }}
+          secret:
+            secretName: {{ .Values.loki.existingSecretForConfig }}
+          {{- else }}
           configMap:
             name: {{ include "loki.fullname" . }}
+          {{- end }}
         {{- with .Values.tableManager.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
