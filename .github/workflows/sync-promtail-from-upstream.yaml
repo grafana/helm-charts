@@ -1,0 +1,24 @@
+name: Sync promtail from upstream
+
+on:
+  # schedule:
+  #   - cron: '*/5 7-20 * * *'
+
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  sync-promtail-app-repository:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Sync promtail from upstream
+        uses: giantswarm/subtree-util@dev
+        with:
+          target_github_token: ${{ secrets.ARCHITECT_BOT_GITHUB_REPO_SYNC_TOKEN }}
+          target_repository: giantswarm/promtail-app
+          target_path: helm/promtail
+          source_tag_wildcard: "promtail-*"
+          source_path: charts/promtail
