@@ -4,7 +4,7 @@ metadata:
   name: {{ include "loki.ingesterFullname" . }}
   labels:
     {{- include "loki.ingesterLabels" . | nindent 4 }}
-    {{- with .Values.ingestor.serviceLabels }}
+    {{- with .Values.ingester.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
