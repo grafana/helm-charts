@@ -5,10 +5,10 @@ promtail:
   enabled: true
 
 fluent-bit:
-  enabled: false
+  enabled: true
 
 grafana:
-  enabled: false
+  enabled: true
   sidecar:
     datasources:
       enabled: true
@@ -16,10 +16,10 @@ grafana:
     tag: 7.5.0
 
 prometheus:
-  enabled: false
+  enabled: true
 
 filebeat:
-  enabled: false
+  enabled: true
   filebeatConfig:
     filebeat.yml: |
       # logging.level: debug
@@ -37,7 +37,7 @@ filebeat:
         hosts: ["logstash-loki:5044"]
 
 logstash:
-  enabled: false
+  enabled: true
   image: grafana/logstash-output-loki
   imageTag: 1.0.1
   filters:
