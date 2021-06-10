@@ -111,49 +111,49 @@ config: |
     ring:
       kvstore:
         store: memberlist
-    distributor:
-      receivers:
-        jaeger:
-          protocols:
-            grpc:
-              endpoint: 0.0.0.0:14250
-            thrift_binary:
-              endpoint: 0.0.0.0:6832
-            thrift_compact:
-              endpoint: 0.0.0.0:6831
-            thrift_http:
-              endpoint: 0.0.0.0:14268
-    querier:
-      frontend_worker:
-        frontend_address: {{"{{"}} include "tempo.queryFrontendFullname" . {{"}}"}}:9095
-    ingester:
-      lifecycler:
-        ring:
-          replication_factor: 1
-    memberlist:
-      abort_if_cluster_join_fails: false
-      join_members:
-        - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
-    overrides:
-      per_tenant_override_config: /conf/overrides.yaml
-    server:
-      http_listen_port: 3100
-    storage:
-      trace:       
-        backend: s3
-        s3:
-          access_key: tempo
-          bucket: tempo
-          endpoint: minio:9000
-          insecure: true
-          secret_key: supersecret
-        pool:
-          queue_depth: 2000
-        wal:
-          path: /var/tempo/wal
-        memcached:
-          consistent_hash: true
-          host: a-tempo-distributed-memcached
-          service: memcached-client
-          timeout: 500ms
+  distributor:
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          thrift_compact:
+            endpoint: 0.0.0.0:6831
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+  querier:
+    frontend_worker:
+      frontend_address: {{"{{"}} include "tempo.queryFrontendFullname" . {{"}}"}}:9095
+  ingester:
+    lifecycler:
+      ring:
+        replication_factor: 1
+  memberlist:
+    abort_if_cluster_join_fails: false
+    join_members:
+      - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
+  overrides:
+    per_tenant_override_config: /conf/overrides.yaml
+  server:
+    http_listen_port: 3100
+  storage:
+    trace:
+      backend: s3
+      s3:
+        access_key: tempo
+        bucket: tempo
+        endpoint: minio:9000
+        insecure: true
+        secret_key: supersecret
+      pool:
+        queue_depth: 2000
+      wal:
+        path: /var/tempo/wal
+      memcached:
+        consistent_hash: true
+        host: a-tempo-distributed-memcached
+        service: memcached-client
+        timeout: 500ms
 ```
