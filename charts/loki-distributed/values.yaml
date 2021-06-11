@@ -228,6 +228,8 @@ ingester:
   priorityClassName: null
   # -- Annotations for ingester pods
   podAnnotations: {}
+  # -- Labels for ingestor service
+  serviceLabels: {}
   # -- Additional CLI args for the ingester
   extraArgs: []
   # -- Environment variables to add to the ingester pods
@@ -291,6 +293,8 @@ distributor:
   priorityClassName: null
   # -- Annotations for distributor pods
   podAnnotations: {}
+  # -- Labels for distributor service
+  serviceLabels: {}
   # -- Additional CLI args for the distributor
   extraArgs: []
   # -- Environment variables to add to the distributor pods
@@ -341,6 +345,8 @@ querier:
   priorityClassName: null
   # -- Annotations for querier pods
   podAnnotations: {}
+  # -- Labels for querier service
+  serviceLabels: {}
   # -- Additional CLI args for the querier
   extraArgs: []
   # -- Environment variables to add to the querier pods
@@ -402,6 +408,8 @@ queryFrontend:
   priorityClassName: null
   # -- Annotations for query-frontend pods
   podAnnotations: {}
+  # -- Labels for query-frontend service
+  serviceLabels: {}
   # -- Additional CLI args for the query-frontend
   extraArgs: []
   # -- Environment variables to add to the query-frontend pods
@@ -452,6 +460,8 @@ tableManager:
   priorityClassName: null
   # -- Annotations for table-manager pods
   podAnnotations: {}
+  # -- Labels for table-manager service
+  serviceLabels: {}
   # -- Additional CLI args for the table-manager
   extraArgs: []
   # -- Environment variables to add to the table-manager pods
@@ -571,6 +581,8 @@ gateway:
     loadBalancerIP: null
     # -- Annotations for the gateway service
     annotations: {}
+    # -- Labels for gateway service
+    labels: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
@@ -711,6 +723,8 @@ compactor:
   priorityClassName: null
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Labels for compactor service
+  serviceLabels: {}
   # -- Additional CLI args for the compactor
   extraArgs: []
   # -- Environment variables to add to the compactor pods
@@ -768,6 +782,8 @@ ruler:
   priorityClassName: null
   # -- Annotations for ruler pods
   podAnnotations: {}
+  # -- Labels for ruler service
+  serviceLabels: {}
   # -- Additional CLI args for the ruler
   extraArgs: []
   # -- Environment variables to add to the ruler pods
@@ -928,6 +944,8 @@ memcachedChunks:
   priorityClassName: null
   # -- Annotations for memcached-chunks pods
   podAnnotations: {}
+  # -- Labels for memcached-chunks service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-chunks
   extraArgs: []
   # -- Environment variables to add to memcached-chunks pods
@@ -968,6 +986,8 @@ memcachedFrontend:
   priorityClassName: null
   # -- Annotations for memcached-frontend pods
   podAnnotations: {}
+  # -- Labels for memcached-frontend service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-frontend
   extraArgs: []
   # -- Environment variables to add to memcached-frontend pods
@@ -1008,6 +1028,8 @@ memcachedIndexQueries:
   priorityClassName: null
   # -- Annotations for memcached-index-queries pods
   podAnnotations: {}
+  # -- Labels for memcached-index-queries service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-index-queries
   extraArgs: []
   # -- Environment variables to add to memcached-index-queries pods
@@ -1048,6 +1070,8 @@ memcachedIndexWrites:
   priorityClassName: null
   # -- Annotations for memcached-index-writes pods
   podAnnotations: {}
+  # -- Labels for memcached-index-writes service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-index-writes
   extraArgs: []
   # -- Environment variables to add to memcached-index-writes pods

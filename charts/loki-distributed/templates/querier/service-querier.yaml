@@ -4,6 +4,9 @@ metadata:
   name: {{ include "loki.querierFullname" . }}
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
+    {{- with .Values.querier.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: ClusterIP
   ports:

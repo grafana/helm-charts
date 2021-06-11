@@ -5,6 +5,9 @@ metadata:
   name: {{ include "loki.memcachedIndexWritesFullname" . }}
   labels:
     {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 4 }}
+    {{- with .Values.memcachedIndexWrites.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: ClusterIP
   clusterIP: None
