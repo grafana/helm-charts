@@ -4,6 +4,9 @@ metadata:
   name: {{ include "loki.distributorFullname" . }}
   labels:
     {{- include "loki.distributorLabels" . | nindent 4 }}
+    {{- with .Values.distributor.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: ClusterIP
   ports:

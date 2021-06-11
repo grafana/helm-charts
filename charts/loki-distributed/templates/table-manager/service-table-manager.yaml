@@ -5,6 +5,9 @@ metadata:
   name: {{ include "loki.fullname" . }}-table-manager
   labels:
     {{- include "loki.labels" . | nindent 4 }}
+    {{- with .Values.tableManager.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
     app.kubernetes.io/component: table-manager
 spec:
   type: ClusterIP
