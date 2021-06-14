@@ -1,4 +1,4 @@
-name: Sync promtail from upstream
+name: Sync loki from upstream
 
 on:
   # schedule:
@@ -8,17 +8,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync-promtail-app-repository:
+  sync-loki-app-repository:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Sync promtail from upstream
+      - name: Sync loki from upstream
         uses: giantswarm/subtree-util@v0.1.1
         with:
           target_github_token: ${{ secrets.ARCHITECT_BOT_GITHUB_REPO_SYNC_TOKEN }}
-          target_repository: giantswarm/promtail-app
-          target_path: helm/promtail
-          source_tag_wildcard: "promtail-*"
-          source_path: charts/promtail
+          target_repository: giantswarm/loki-app
+          target_path: helm/loki
+          source_tag_wildcard: "loki-distributed-*"
+          source_path: charts/loki-distributed
