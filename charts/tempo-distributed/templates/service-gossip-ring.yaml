@@ -7,6 +7,8 @@ metadata:
     app.kubernetes.io/component: {{ template "tempo.gossipRing.name" . }}
     {{- include "tempo.labels" . | nindent 4 }}
 spec:
+  type: ClusterIP
+  clusterIP: None
   ports:
     - name: gossip-ring
       port: 7946
