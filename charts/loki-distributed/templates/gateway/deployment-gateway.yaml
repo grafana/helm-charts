@@ -7,10 +7,10 @@ metadata:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.gateway.replicas }}
+{{- with .Values.gateway.deploymentStrategy }}
   strategy:
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
+{{ toYaml . | trim | indent 4 }}
+{{- end }}
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
