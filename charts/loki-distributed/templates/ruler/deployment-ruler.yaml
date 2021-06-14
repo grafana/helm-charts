@@ -113,7 +113,12 @@ spec:
         - name: tmp
           emptyDir: {}
         - name: data
+          {{- if .Values.ruler.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: data-{{ include "loki.rulerFullname" . }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         {{- with .Values.ruler.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
