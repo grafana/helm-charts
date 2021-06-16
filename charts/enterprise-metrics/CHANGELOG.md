@@ -12,6 +12,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.3.2
+
+* [FEATURE] Chart memcached dependencies are now at the latest release. This includes the memcached and the related exporter. #467
+
 ## 1.3.1
 
 * [BUGFIX] Use non-deprecated alertmanager flags for cluster peers. #441

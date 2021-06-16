@@ -69,7 +69,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 7.5.5
+  tag: 8.0.1
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -532,7 +532,7 @@ dashboardsConfigMaps: {}
 ##
 grafana.ini:
   paths:
-    data: /var/lib/grafana/data
+    data: /var/lib/grafana/
     logs: /var/log/grafana
     plugins: /var/lib/grafana/plugins
     provisioning: /etc/grafana/provisioning
