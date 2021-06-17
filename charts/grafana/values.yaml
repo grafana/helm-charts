@@ -188,7 +188,7 @@ ingress:
   labels: {}
   path: /
 
-  # pathType is only for k8s > 1.19
+  # pathType is only for k8s >= 1.1=
   pathType: Prefix
 
   hosts:
