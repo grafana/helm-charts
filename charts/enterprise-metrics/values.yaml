@@ -57,7 +57,7 @@ tokengenJob:
 
 config:
   auth_enabled: false
-  cluster_name: CHANGEME
+  cluster_name: "{{ .Release.Name }}"
 
   admin_client:
     storage:
