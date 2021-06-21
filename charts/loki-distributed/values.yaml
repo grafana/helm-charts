@@ -162,6 +162,8 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: true
 
 # RBAC configuration
 rbac:
@@ -764,6 +766,8 @@ compactor:
     imagePullSecrets: []
     # -- Annotations for the compactor service account
     annotations: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
 
 # Configuration for the ruler
 ruler:
