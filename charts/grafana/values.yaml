@@ -382,6 +382,10 @@ envFromSecret: ""
 ## This can be useful for auth tokens, etc
 envRenderSecret: {}
 
+# Inject Kubernetes services as environment variables.
+# See https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#environment-variables
+enableServiceLinks: true
+
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
 extraSecretMounts: []
