@@ -116,6 +116,7 @@ This version requires Helm >= 3.1.0.
 | `envValueFrom`                            | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details.  | `{}` |
 | `envFromSecret`                           | Name of a Kubernetes secret (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `""` |
 | `envRenderSecret`                         | Sensible environment variables passed to pods and stored as secret | `{}`                               |
+| `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
 | `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts | `[]`                                                |

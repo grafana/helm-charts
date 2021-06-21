@@ -159,6 +159,7 @@ imagePullSecrets:
   - name: {{ . }}
 {{- end}}
 {{- end }}
+enableServiceLinks: {{ .Values.enableServiceLinks }}
 containers:
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ template "grafana.name" . }}-sc-dashboard
