@@ -8058,6 +8058,23 @@ entries:
   loki:
   - apiVersion: v1
     appVersion: v2.2.0
+    created: "2021-06-22T19:27:42.545572672Z"
+    description: 'Loki: like Prometheus, but for logs.'
+    digest: b539f3dbde2ce70fcadfda2324b1fe35fc89536e6f443d77aad09c859b290bc5
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: loki
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-2.5.1/loki-2.5.1.tgz
+    version: 2.5.1
+  - apiVersion: v1
+    appVersion: v2.2.0
     created: "2021-03-11T16:04:17.471827182Z"
     description: 'Loki: like Prometheus, but for logs.'
     digest: 5f1d8c8fc418d49aeb83a04597b3236667719e46c97690f4158ea1e6b17b3650
@@ -15072,4 +15089,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2021-06-22T01:00:55.08159126Z"
+generated: "2021-06-22T19:27:42.553434859Z"
