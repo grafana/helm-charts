@@ -142,6 +142,7 @@ loki:
       alertmanager_url: https://alertmanager.xx
       external_url: https://alertmanager.xx
 
+# -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
       - from: 2020-09-07
@@ -152,6 +153,7 @@ loki:
           prefix: loki_index_
           period: 24h
 
+# -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
   storageConfig:
     boltdb_shipper:
       shared_store: filesystem
@@ -161,10 +163,10 @@ loki:
     filesystem:
       directory: /var/loki/chunks
 # -- Uncomment to configure each storage individually
-#    azure: {}
-#    gcs: {}
-#    s3: {}
-#    boltdb: {}
+#   azure: {}
+#   gcs: {}
+#   s3: {}
+#   boltdb: {}
 
 
 serviceAccount:
