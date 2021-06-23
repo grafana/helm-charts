@@ -1,6 +1,6 @@
 # loki-canary
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 
@@ -42,6 +42,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | resources | object | `{}` | Resource requests and limits for the canary |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
+| serviceAccount.automountServiceAccountToken | bool | `true` | Set this toggle to false to opt out of automounting API credentials for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
