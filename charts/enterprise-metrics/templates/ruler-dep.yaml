@@ -120,6 +120,9 @@ spec:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
               protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              protocol: TCP
           livenessProbe:
             {{- toYaml .Values.ruler.livenessProbe | nindent 12 }}
           readinessProbe:
