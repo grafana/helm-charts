@@ -12,6 +12,11 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.3.5
+
+* [CHANGE] The GRPC port on the query-frontend and store-gateway Kubernetes Services have been changed to match the naming of all other services. #523
+* [FEATURE] Expose GRPC port on all GEM services. #523
+
 ## 1.3.4
 
 * [BUGFIX] Removed symlinks from chart to fix Rancher repository imports. #504
