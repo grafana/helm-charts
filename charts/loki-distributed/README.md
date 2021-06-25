@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.34.3](https://img.shields.io/badge/Version-0.34.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.1](https://img.shields.io/badge/AppVersion-2.2.1-informational?style=flat-square)
+![Version: 0.36.0](https://img.shields.io/badge/Version-0.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.1](https://img.shields.io/badge/AppVersion-2.2.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,23 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.34.x to 0.35.0
+This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
+```yaml
+gateway:
+  ingress:
+    enabled: true
+    # Newly added optional property
+    ingressClassName: nginx
+    hosts:
+      - host: gateway.loki.example.com
+        paths:
+          # New data structure introduced
+          - path: /
+            # Newly added optional property
+            pathType: Prefix
+```
 
 ### From 0.30.x to 0.31.0
 This version updates the `podManagementPolicy` of running the Loki components as `StatefulSet`'s to `Parallel` instead of the default `OrderedReady` in order to allow better scalability for Loki e.g. in case the pods weren't terminated gracefully. This change requires a manual action deleting the existing StatefulSets before upgrading with Helm.
@@ -97,9 +114,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
-| gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
+| gateway.ingress.annotations | object | `{}` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 ingressClassName: nginx -- Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
-| gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":["/"]}]` | Hosts configuration for the gateway ingress |
+| gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |

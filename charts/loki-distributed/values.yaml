@@ -606,13 +606,17 @@ gateway:
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: nginx
     # -- Annotations for the gateway ingress
     annotations: {}
     # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.loki.example.com
         paths:
-          - /
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
     # -- TLS configuration for the gateway ingress
     tls:
       - secretName: loki-gateway-tls
