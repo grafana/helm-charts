@@ -1,8 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: distributor
-  name: {{ template "tempo.fullname" . }}
+  name: {{ template "tempo.fullname" . }}-distributor
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "tempo.distributorLabels" . | nindent 4 }}
@@ -22,7 +21,13 @@ spec:
       labels:
         {{- include "tempo.distributorLabels" . | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.distributor.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:
             - -target=distributor
@@ -40,10 +45,46 @@ spec:
               protocol: TCP
             - containerPort: 3100
               name: http
-            - containerPort: 55678
-              name: opencensus
+            {{- if .Values.traces.jaeger.thriftCompact }}
+            - containerPort: 6831
+              name: jaeger-compact
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.traces.jaeger.thriftBinary }}
+            - containerPort: 6832
+              name: jaeger-binary
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.traces.jaeger.thriftHttp }}
             - containerPort: 14268
               name: jaeger-http
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.jaeger.grpc }}
+            - containerPort: 14250
+              name: jaeger-grpc
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.zipkin }}
+            - containerPort: 9411
+              name: zipkin
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.otlp.http }}
+            - containerPort: 55681
+              name: otlp-http
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.otlp.grpc }}
+            - containerPort: 4317
+              name: otlp-grpc
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.opencensus }}
+            - containerPort: 55678
+              name: opencensus
+              protocol: TCP
+            {{- end }}
           {{- with .Values.distributor.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

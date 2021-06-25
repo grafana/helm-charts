@@ -11,9 +11,9 @@ spec:
   - name: memcached-client
     port: 11211
     targetPort: 11211
-  - name: exporter-http-metrics
+  - name: http-metrics
     port: 9150
-    targetPort: 9150
+    targetPort: http-metrics
   selector:
     {{- include "tempo.memcachedSelectorLabels" . | nindent 4 }}
 {{- end}}

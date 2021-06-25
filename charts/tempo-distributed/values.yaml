@@ -112,7 +112,12 @@ distributor:
   service:
     # -- Annotations for distributor service
     annotations: {}
+    # -- Type of service for the distributor
     type: ClusterIP
+    # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
+    loadBalancerIP: ""
+    # -- If type is LoadBalancer limit incoming traffic from IPs.
+    loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Annotations for distributor pods
@@ -266,6 +271,11 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
+  service:
+    # -- Annotations for queryFrontend service
+    annotations: {}
+    # -- Type of service for the queryFrontend
+    type: ClusterIP
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Annotations for query-frontend pods
@@ -305,9 +315,28 @@ queryFrontend:
   # -- Extra volumes for query-frontend deployment
   extraVolumes: []
 
+traces:
+  jaeger:
+    # -- Enable Tempo to ingest Jaeger GRPC traces
+    grpc: false
+    # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+    thriftBinary: false
+    # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+    thriftCompact: false
+    # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+    thriftHttp: false
+  # -- Enable Tempo to ingest Zipkin traces
+  zipkin: false
+  otlp:
+    # -- Enable Tempo to ingest Open Telementry HTTP traces
+    http: false
+    # -- Enable Tempo to ingest Open Telementry GRPC traces
+    grpc: false
+  # -- Enable Tempo to ingest Open Census traces
+  opencensus: false
 
 config: |
-  auth_enabled: false
+  multitenancy_enabled: false
   compactor:
     compaction:
       block_retention: 48h
@@ -315,24 +344,59 @@ config: |
       kvstore:
         store: memberlist
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     receivers:
+      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
         protocols:
-          grpc:
-            endpoint: 0.0.0.0:14250
-          thrift_binary:
-            endpoint: 0.0.0.0:6832
+          {{- if .Values.traces.jaeger.thriftCompact }}
           thrift_compact:
             endpoint: 0.0.0.0:6831
+          {{- end }}
+          {{- if .Values.traces.jaeger.thriftBinary }}
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          {{- end }}
+          {{- if .Values.traces.jaeger.thriftHttp }}
           thrift_http:
             endpoint: 0.0.0.0:14268
+          {{- end }}
+          {{- if .Values.traces.jaeger.grpc }}
+          grpc:
+            endpoint: 0.0.0.0:14250
+          {{- end }}
+      {{- end }}
+      {{- if .Values.traces.zipkin}}
+      zipkin:
+        endpoint: 0.0.0.0:9411
+      {{- end }}
+      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+      otlp:
+        protocols:
+          {{- if .Values.traces.otlp.http }}
+          http:
+            endpoint: 0.0.0.0:55681
+          {{- end }}
+          {{- if .Values.traces.otlp.grpc }}
+          grpc:
+            endpoint: 0.0.0.0:4317
+          {{- end }}
+      {{- end }}
+      {{- if .Values.traces.opencensus}}
+      opencensus:
+        endpoint: 0.0.0.0:55678
+      {{- end }}
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
   ingester:
     lifecycler:
       ring:
         replication_factor: 1
+        kvstore:
+          store: memberlist
       tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
@@ -344,7 +408,19 @@ config: |
     http_listen_port: 3100
   storage:
     trace:
-      backend: local
+      backend: {{.Values.storage.trace.backend}}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.trace.backend "s3"}}
+      s3:
+        {{- toYaml .Values.storage.trace.s3 | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.trace.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.trace.azure | nindent 6}}
+      {{- end}}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -357,15 +433,33 @@ config: |
         service: memcached-client
         timeout: 500ms
 
+# To configure a different storage backend instead of local storage:
+# storage:
+#   trace:
+#     backend: azure
+#     azure:
+#       container-name:
+#       storage-account-name:
+#       storage-account-key:
+# -- the supported storage backends are gcs, s3 and azure
+# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
+storage:
+  trace:
+    backend: local
+
+# Set ingestion overrides
+overrides: |
+  overrides: {}
+
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
 memcached:
-  # -- Specified whether the memcached cachce shoudl be enabled
+  # -- Specified whether the memcached cachce should be enabled
   enabled: true
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  servicte: memcached-client
+  service: memcached-client
   # -- Memcached Docker image repository
   repository: memcached
   # -- Memcached Docker image tag
@@ -409,3 +503,24 @@ memcachedExporter:
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
   resources: {}
+
+# ServiceMonitor configuration
+serviceMonitor:
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for ServiceMonitor resources
+  namespace: null
+  # -- Namespace selector for ServiceMonitor resources
+  namespaceSelector: {}
+  # -- ServiceMonitor annotations
+  annotations: {}
+  # -- Additional ServiceMonitor labels
+  labels: {}
+  # -- ServiceMonitor scrape interval
+  interval: null
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: http
+  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+  tlsConfig: null

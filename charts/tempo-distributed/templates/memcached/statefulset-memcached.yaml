@@ -14,13 +14,14 @@ spec:
   replicas: {{ .Values.memcached.replicas }}
   selector:
     matchLabels:
-      name: memcached
+      {{- include "tempo.memcachedSelectorLabels" . | nindent 6 }}
   serviceName: memcached
   template:
     metadata:
       labels:
-        name: memcached
+        {{- include "tempo.memcachedLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - image: "{{ .Values.memcached.repository }}:{{ .Values.memcached.tag }}"
           imagePullPolicy: {{ .Values.memcached.pullPolicy }}

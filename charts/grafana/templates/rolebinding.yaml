@@ -1,5 +1,5 @@
 {{- if .Values.rbac.create -}}
-apiVersion: {{ template "rbac.apiVersion" . }}
+apiVersion: {{ template "grafana.rbac.apiVersion" . }}
 kind: RoleBinding
 metadata:
   name: {{ template "grafana.fullname" . }}

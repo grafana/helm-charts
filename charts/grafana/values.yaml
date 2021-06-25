@@ -22,6 +22,22 @@ serviceAccount:
 
 replicas: 1
 
+## Create HorizontalPodAutoscaler object for deployment type
+#
+autoscaling:
+  enabled: false
+#   minReplicas: 1
+#   maxReplicas: 10
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       targetAverageUtilization: 60
+#   - type: Resource
+#     resource:
+#       name: memory
+#       targetAverageUtilization: 60
+
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 podDisruptionBudget: {}
@@ -53,7 +69,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 7.4.2
+  tag: 8.0.3
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -92,6 +108,9 @@ extraEmptyDirMounts: []
   #   mountPath: /etc/grafana/provisioning/notifiers
 
 
+# Apply extra labels to common labels.
+extraLabels: {}
+
 ## Assign a PriorityClassName to pods if set
 # priorityClassName:
 
@@ -103,6 +122,7 @@ downloadDashboardsImage:
 
 downloadDashboards:
   env: {}
+  envFromSecret: ""
   resources: {}
 
 ## Pod Annotations
@@ -121,6 +141,7 @@ podPortName: grafana
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
 service:
+  enabled: true
   type: ClusterIP
   port: 80
   targetPort: 3000
@@ -166,6 +187,10 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   labels: {}
   path: /
+
+  # pathType is only for k8s >= 1.1=
+  pathType: Prefix
+
   hosts:
     - chart-example.local
   ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
@@ -174,6 +199,16 @@ ingress:
   #   backend:
   #     serviceName: ssl-redirect
   #     servicePort: use-annotation
+  ## Or for k8s > 1.19
+  # - path: /*
+  #   pathType: Prefix
+  #   backend:
+  #     service:
+  #       name: ssl-redirect
+  #       port:
+  #         name: service
+
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -347,6 +382,10 @@ envFromSecret: ""
 ## This can be useful for auth tokens, etc
 envRenderSecret: {}
 
+# Inject Kubernetes services as environment variables.
+# See https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#environment-variables
+enableServiceLinks: true
+
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
 extraSecretMounts: []
@@ -383,10 +422,14 @@ extraSecretMounts: []
 ## Additional grafana server volume mounts
 # Defines additional volume mounts.
 extraVolumeMounts: []
-  # - name: extra-volume
-  #   mountPath: /mnt/volume
+  # - name: extra-volume-0
+  #   mountPath: /mnt/volume0
   #   readOnly: true
   #   existingClaim: volume-claim
+  # - name: extra-volume-1
+  #   mountPath: /mnt/volume1
+  #   readOnly: true
+  #   hostPath: /usr/shared/
 
 ## Pass the plugins you want installed as a list.
 ##
@@ -407,13 +450,13 @@ datasources: {}
 #      access: proxy
 #      isDefault: true
 #    - name: CloudWatch
-#        type: cloudwatch
-#        access: proxy
-#        uid: cloudwatch
-#        editable: false
-#        jsonData:
-#          authType: credentials
-#          defaultRegion: us-east-1
+#      type: cloudwatch
+#      access: proxy
+#      uid: cloudwatch
+#      editable: false
+#      jsonData:
+#        authType: default
+#        defaultRegion: us-east-1
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
@@ -493,7 +536,7 @@ dashboardsConfigMaps: {}
 ##
 grafana.ini:
   paths:
-    data: /var/lib/grafana/data
+    data: /var/lib/grafana/
     logs: /var/log/grafana
     plugins: /var/lib/grafana/plugins
     provisioning: /etc/grafana/provisioning
@@ -564,7 +607,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.10.6
+    tag: 1.12.2
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -592,6 +635,8 @@ sidecar:
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
+    # search in configmap, secret or both
+    resource: both
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
     # You can use this parameter together with `provider.foldersFromFilesStructure`to annotate configmaps and create folder structure.
     folderAnnotation: null
@@ -621,6 +666,8 @@ sidecar:
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
+    # search in configmap, secret or both
+    resource: both
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
@@ -629,6 +676,8 @@ sidecar:
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
+    # search in configmap, secret or both
+    resource: both
 
 ## Override the deployment namespace
 ##
@@ -666,11 +715,15 @@ imageRenderer:
   # image-renderer deployment priority class
   priorityClassName: ''
   service:
+    # Enable the image-renderer service
+    enabled: true
     # image-renderer service port name
     portName: 'http'
     # image-renderer service port used by both service and deployment
     port: 8081
     targetPort: 8081
+  # In case a sub_path is used this needs to be added to the image renderer callback
+  grafanaSubPath: ""
   # name of the image-renderer port on the pod
   podPortName: http
   # number of image-renderer replica sets to keep

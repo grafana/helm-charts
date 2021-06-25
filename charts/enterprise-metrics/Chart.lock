@@ -1,0 +1,18 @@
+dependencies:
+- name: memcached
+  repository: https://charts.bitnami.com/bitnami
+  version: 5.5.2
+- name: memcached
+  repository: https://charts.bitnami.com/bitnami
+  version: 5.5.2
+- name: memcached
+  repository: https://charts.bitnami.com/bitnami
+  version: 5.5.2
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.9
+- name: consul
+  repository: https://helm.releases.hashicorp.com
+  version: 0.25.0
+digest: sha256:c9c729462e364f64e476603ece88e30288f66662b337ac35bbde7dc8eba95719
+generated: "2021-03-22T17:15:44.263441129Z"

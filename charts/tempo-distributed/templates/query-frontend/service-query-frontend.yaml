@@ -5,11 +5,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
-  {{- with .Values.queryFrontend.annotations }}
+  {{- with .Values.queryFrontend.service.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+    {{ toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  type: {{ .Values.queryFrontend.service.type }}
   ports:
     - name: http
       port: 3100
@@ -21,5 +22,8 @@ spec:
     - name: tempo-query-jaeger-ui
       port: 16686
       targetPort: 16686
+    - name: tempo-query-metrics
+      port: 16687
+      targetPort: jaeger-metrics
   selector:
     {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}

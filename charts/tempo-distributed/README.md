@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
+![Version: 0.9.12](https://img.shields.io/badge/Version-0.9.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.1](https://img.shields.io/badge/AppVersion-1.0.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -19,6 +19,45 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 0.9.0
+
+This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
+
+Due to the label changes, an existing installation cannot be upgraded without manual interaction. There are basically two options:
+
+Option 1
+Uninstall the old release and re-install the new one. There will be no data loss, as the collectors/agents can cache for a short period.
+
+Option 2
+Add new selector labels to the existing pods. This option will make your pods also temporarely unavailable, option 1 is faster:
+
+```
+kubectl label pod -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> app.kubernetes.io/component=<component> --overwrite
+```
+
+Perform a non-cascading deletion of the Deployments and Statefulsets which will keep the pods running:
+
+```
+kubectl delete <deployment/statefulset> -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> --cascade=false
+```
+
+Perform a regular Helm upgrade on the existing release. The new Deployment/Statefulset will pick up the existing pods and perform a rolling upgrade.
+
+### From Chart versions < 0.8.0
+
+By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+
+For example to enable Jaeger grpc thrift http and zipkin protocols:
+```yaml
+traces:
+  jaeger:
+    grpc: true
+    thriftHttp: true
+  zipkin: true
+```
+
+The distributor service is now called {{tempo.fullname}}-distributor. That could impact your ingestion towards this service.
 
 ### From Chart Versions < 0.7.0
 
@@ -42,7 +81,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
-| config | string | `"auth_enabled: false\ncompactor:\n  compaction:\n    block_retention: 48h\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  receivers:\n    jaeger:\n      protocols:\n        grpc:\n          endpoint: 0.0.0.0:14250\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        thrift_http:\n          endpoint: 0.0.0.0:14268\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}:9095\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n    tokens_file_path: /var/tempo/tokens.json\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  per_tenant_override_config: /conf/overrides.yaml\nserver:\n  http_listen_port: 3100\nstorage:\n  trace:\n    backend: local\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
+| config | string | `"multitenancy_enabled: false\ncompactor:\n  compaction:\n    block_retention: 48h\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  ring:\n    kvstore:\n      store: memberlist\n  receivers:\n    {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}\n    jaeger:\n      protocols:\n        {{- if .Values.traces.jaeger.thriftCompact }}\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftBinary }}\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftHttp }}\n        thrift_http:\n          endpoint: 0.0.0.0:14268\n        {{- end }}\n        {{- if .Values.traces.jaeger.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:14250\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.zipkin}}\n    zipkin:\n      endpoint: 0.0.0.0:9411\n    {{- end }}\n    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}\n    otlp:\n      protocols:\n        {{- if .Values.traces.otlp.http }}\n        http:\n          endpoint: 0.0.0.0:55681\n        {{- end }}\n        {{- if .Values.traces.otlp.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:4317\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.opencensus}}\n    opencensus:\n      endpoint: 0.0.0.0:55678\n    {{- end }}\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}-discovery:9095\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n      kvstore:\n        store: memberlist\n    tokens_file_path: /var/tempo/tokens.json\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  per_tenant_override_config: /conf/overrides.yaml\nserver:\n  http_listen_port: 3100\nstorage:\n  trace:\n    backend: {{.Values.storage.trace.backend}}\n    {{- if eq .Values.storage.trace.backend \"gcs\"}}\n    gcs:\n      {{- toYaml .Values.storage.trace.gcs | nindent 6}}\n    {{- end}}\n    {{- if eq .Values.storage.trace.backend \"s3\"}}\n    s3:\n      {{- toYaml .Values.storage.trace.s3 | nindent 6}}\n    {{- end}}\n    {{- if eq .Values.storage.trace.backend \"azure\"}}\n    azure:\n      {{- toYaml .Values.storage.trace.azure | nindent 6}}\n    {{- end}}\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
@@ -58,7 +97,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.service.annotations | object | `{}` | Annotations for distributor service |
-| distributor.service.type | string | `"ClusterIP"` |  |
+| distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
+| distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
@@ -83,7 +124,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
-| memcached.enabled | bool | `true` | Specified whether the memcached cachce shoudl be enabled |
+| memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
 | memcached.extraEnv | list | `[]` | Environment variables to add to memcached pods |
 | memcached.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached pods |
@@ -92,13 +133,14 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.replicas | int | `1` |  |
 | memcached.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
-| memcached.servicte | string | `"memcached-client"` |  |
+| memcached.service | string | `"memcached-client"` |  |
 | memcached.tag | string | `"1.5.17-alpine"` | Memcached Docker image tag |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
+| overrides | string | `"overrides: {}\n"` |  |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
@@ -139,16 +181,36 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.query.resources | object | `{}` | Resource requests and limits for the query |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
+| queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
+| queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| serviceMonitor.annotations | object | `{}` | ServiceMonitor annotations |
+| serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
+| serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
+| serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
+| serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
+| serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
+| serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
+| serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
+| storage.trace.backend | string | `"local"` |  |
 | tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1}}` | Overrides the chart's computed fullname fullnameOverride: tempo -- Overrides the chart's computed fullname |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| traces.jaeger.grpc | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
+| traces.jaeger.thriftBinary | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
+| traces.jaeger.thriftCompact | bool | `false` | Enable Tempo to ingest Jaeger Thrift Compact traces |
+| traces.jaeger.thriftHttp | bool | `false` | Enable Tempo to ingest Jaeger Thrift HTTP traces |
+| traces.opencensus | bool | `false` | Enable Tempo to ingest Open Census traces |
+| traces.otlp.grpc | bool | `false` | Enable Tempo to ingest Open Telementry GRPC traces |
+| traces.otlp.http | bool | `false` | Enable Tempo to ingest Open Telementry HTTP traces |
+| traces.zipkin | bool | `false` | Enable Tempo to ingest Zipkin traces |
 
 ## Components
 
@@ -188,56 +250,56 @@ Alternatively, in order to quickly test Tempo using the filestore, the [single b
 
 ```yaml
 config: |
-  auth_enabled: false
-    compactor:
-      compaction:
-        block_retention: 48h
+  multitenancy_enabled: false
+  compactor:
+    compaction:
+      block_retention: 48h
+    ring:
+      kvstore:
+        store: memberlist
+  distributor:
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          thrift_compact:
+            endpoint: 0.0.0.0:6831
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+  querier:
+    frontend_worker:
+      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+  ingester:
+    lifecycler:
       ring:
-        kvstore:
-          store: memberlist
-    distributor:
-      receivers:
-        jaeger:
-          protocols:
-            grpc:
-              endpoint: 0.0.0.0:14250
-            thrift_binary:
-              endpoint: 0.0.0.0:6832
-            thrift_compact:
-              endpoint: 0.0.0.0:6831
-            thrift_http:
-              endpoint: 0.0.0.0:14268
-    querier:
-      frontend_worker:
-        frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
-    ingester:
-      lifecycler:
-        ring:
-          replication_factor: 1
-    memberlist:
-      abort_if_cluster_join_fails: false
-      join_members:
-        - {{ include "tempo.fullname" . }}-memberlist
-    overrides:
-      per_tenant_override_config: /conf/overrides.yaml
-    server:
-      http_listen_port: 3100
-    storage:
-      trace:      
-        backend: s3
-        s3:
-          access_key: tempo
-          bucket: tempo
-          endpoint: minio:9000
-          insecure: true
-          secret_key: supersecret
-        pool:
-          queue_depth: 2000
-        wal:
-          path: /var/tempo/wal
-        memcached:
-          consistent_hash: true
-          host: a-tempo-distributed-memcached
-          service: memcached-client
-          timeout: 500ms
+        replication_factor: 1
+  memberlist:
+    abort_if_cluster_join_fails: false
+    join_members:
+      - {{ include "tempo.fullname" . }}-memberlist
+  overrides:
+    per_tenant_override_config: /conf/overrides.yaml
+  server:
+    http_listen_port: 3100
+  storage:
+    trace:
+      backend: s3
+      s3:
+        access_key: tempo
+        bucket: tempo
+        endpoint: minio:9000
+        insecure: true
+        secret_key: supersecret
+      pool:
+        queue_depth: 2000
+      wal:
+        path: /var/tempo/wal
+      memcached:
+        consistent_hash: true
+        host: a-tempo-distributed-memcached
+        service: memcached-client
+        timeout: 500ms
 ```
