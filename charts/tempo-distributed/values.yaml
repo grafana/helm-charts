@@ -274,6 +274,8 @@ queryFrontend:
   service:
     # -- Annotations for queryFrontend service
     annotations: {}
+    # -- Type of service for the queryFrontend
+    type: ClusterIP
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Annotations for query-frontend pods
@@ -334,7 +336,7 @@ traces:
   opencensus: false
 
 config: |
-  auth_enabled: false
+  multitenancy_enabled: false
   compactor:
     compaction:
       block_retention: 48h
@@ -342,6 +344,9 @@ config: |
       kvstore:
         store: memberlist
   distributor:
+    ring:
+      kvstore:
+        store: memberlist
     receivers:
       {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
@@ -385,11 +390,13 @@ config: |
       {{- end }}
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
   ingester:
     lifecycler:
       ring:
         replication_factor: 1
+        kvstore:
+          store: memberlist
       tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
@@ -401,7 +408,19 @@ config: |
     http_listen_port: 3100
   storage:
     trace:
-      backend: local
+      backend: {{.Values.storage.trace.backend}}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.trace.backend "s3"}}
+      s3:
+        {{- toYaml .Values.storage.trace.s3 | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.trace.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.trace.azure | nindent 6}}
+      {{- end}}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -413,6 +432,24 @@ config: |
         host: {{ include "tempo.fullname" . }}-memcached
         service: memcached-client
         timeout: 500ms
+
+# To configure a different storage backend instead of local storage:
+# storage:
+#   trace:
+#     backend: azure
+#     azure:
+#       container-name:
+#       storage-account-name:
+#       storage-account-key:
+# -- the supported storage backends are gcs, s3 and azure
+# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
+storage:
+  trace:
+    backend: local
+
+# Set ingestion overrides
+overrides: |
+  overrides: {}
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service

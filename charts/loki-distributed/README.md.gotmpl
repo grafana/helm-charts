@@ -16,8 +16,39 @@ Add the following repo to use the chart:
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
-{{ template "chart.valuesSection" . }}
+## Upgrading
 
+### Upgrading an existing Release to a new major version
+
+Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.34.x to 0.35.0
+This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
+```yaml
+gateway:
+  ingress:
+    enabled: true
+    # Newly added optional property
+    ingressClassName: nginx
+    hosts:
+      - host: gateway.loki.example.com
+        paths:
+          # New data structure introduced
+          - path: /
+            # Newly added optional property
+            pathType: Prefix
+```
+
+### From 0.30.x to 0.31.0
+This version updates the `podManagementPolicy` of running the Loki components as `StatefulSet`'s to `Parallel` instead of the default `OrderedReady` in order to allow better scalability for Loki e.g. in case the pods weren't terminated gracefully. This change requires a manual action deleting the existing StatefulSets before upgrading with Helm.
+```bash
+# Delete the Ingesters StatefulSets
+kubectl delete statefulset RELEASE_NAME-loki-distributed-ingester -n LOKI_NAMESPACE --cascade=orphan
+# Delete the Queriers StatefulSets
+kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPACE --cascade=orphan
+```
+
+{{ template "chart.valuesSection" . }}
 
 ## Components
 
@@ -39,7 +70,6 @@ The other components are optional.
 | memcached-frontend |  ✅ |  ❎ |
 | memcached-index-queries |  ✅ |  ❎ |
 | memcached-index-writes |  ✅ |  ❎ |
-
 
 ## Configuration
 
@@ -156,6 +186,7 @@ loki:
     frontend:
       log_queries_longer_than: 5s
       compress_responses: true
+      tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 ```
 
 Because the config file is templated, it is also possible to e.g. externalize S3 bucket names:
@@ -180,7 +211,6 @@ and automatically proxies requests to the correct Loki components (distributor, 
 The gateway must be enabled if an Ingress is required, since the Ingress exposes the gateway only.
 If the gateway is enabled, Grafana and log shipping agents, such as Promtail, should be configured to use the gateway.
 If NetworkPolicies are enabled, they are more restrictive if the gateway is enabled.
-
 
 ## Metrics
 

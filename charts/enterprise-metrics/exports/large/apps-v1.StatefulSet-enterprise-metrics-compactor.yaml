@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-compactor
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.0.0
+    chart: enterprise-metrics-1.3.5
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-compactor
@@ -19,9 +19,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 76b402316e5b8f8299fb5ec9a5af6fe04e463ca9c56a0b4674615b926727dee2
+        checksum/config: da1f272c4baddd5bdf360098be394654ab50b68959fd411efc8ede384a5baab1
       labels:
         app: enterprise-metrics-compactor
+        gossip_ring_member: "true"
         name: compactor
         release: enterprise-metrics
         target: compactor
@@ -42,8 +43,9 @@ spec:
       - args:
         - -target=compactor
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -memberlist.join=enterprise-metrics-gossip-ring
         env: null
-        image: grafana/metrics-enterprise:v1.1.2
+        image: grafana/metrics-enterprise:v1.3.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 20
@@ -59,6 +61,9 @@ spec:
         ports:
         - containerPort: 8080
           name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
           protocol: TCP
         readinessProbe:
           httpGet:
@@ -77,6 +82,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/enterprise-metrics
           name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
         - mountPath: /license
           name: license
         - mountPath: /data
@@ -91,6 +98,9 @@ spec:
       - name: config
         secret:
           secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
       - name: license
         secret:
           secretName: enterprise-metrics-license

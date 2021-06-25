@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-ruler
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.0.0
+    chart: enterprise-metrics-1.3.5
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-ruler
@@ -23,9 +23,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 76b402316e5b8f8299fb5ec9a5af6fe04e463ca9c56a0b4674615b926727dee2
+        checksum/config: da1f272c4baddd5bdf360098be394654ab50b68959fd411efc8ede384a5baab1
       labels:
         app: enterprise-metrics-ruler
+        gossip_ring_member: "true"
         name: ruler
         release: enterprise-metrics
         target: ruler
@@ -35,10 +36,6 @@ spec:
       - args:
         - -target=ruler
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
-        - -consul.hostname=enterprise-metrics-consul-server.enterprise-metrics.svc:8500
-        - -ruler.ring.store=consul
-        - -ruler.ring.consul.hostname=enterprise-metrics-consul-server.enterprise-metrics.svc:8500
-        - -ruler.enable-sharding=true
         - -admin.client.backend-type=s3
         - -admin.client.s3.endpoint=enterprise-metrics-minio.enterprise-metrics.svc:9000
         - -admin.client.s3.bucket-name=enterprise-metrics-admin
@@ -58,9 +55,9 @@ spec:
         - -ruler.storage.s3.insecure=true
         - -ruler.storage.s3.force-path-style=true
         - -ruler.alertmanager-url=http://enterprise-metrics-alertmanager.enterprise-metrics.svc:8080/api/prom/alertmanager/
-        - -querier.store-gateway-addresses=dns+enterprise-metrics-store-gateway-headless.enterprise-metrics.svc:9095
+        - -querier.store-gateway-addresses=dns+enterprise-metrics-store-gateway.enterprise-metrics.svc:9095
         env: null
-        image: grafana/metrics-enterprise:v1.1.2
+        image: grafana/metrics-enterprise:v1.3.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -71,6 +68,9 @@ spec:
         ports:
         - containerPort: 8080
           name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
           protocol: TCP
         readinessProbe:
           httpGet:
@@ -86,6 +86,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/enterprise-metrics
           name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
         - mountPath: /license
           name: license
         - mountPath: /data
@@ -101,6 +103,9 @@ spec:
       - name: config
         secret:
           secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
       - name: license
         secret:
           secretName: enterprise-metrics-license

@@ -7,7 +7,7 @@ fullnameOverride: ""
 replicas: 1
 tempo:
   repository: grafana/tempo
-  tag: 0.6.0
+  tag: 1.0.1
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -46,7 +46,7 @@ tempo:
     trace:
       backend: local
       local:
-        path: /tmp/tempo/traces
+        path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
   # this configuration will listen on all ports and protocols that tempo is capable of.
@@ -76,7 +76,7 @@ tempo:
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 0.6.0
+  tag: 1.0.1
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.

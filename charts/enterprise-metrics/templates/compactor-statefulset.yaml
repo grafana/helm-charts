@@ -48,6 +48,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-compactor
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: compactor
+        gossip_ring_member: "true"
         target: compactor
         release: {{ .Release.Name }}
         {{- with .Values.compactor.podLabels }}
@@ -92,6 +93,9 @@ spec:
             {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
             {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
         - name: license
           secret:
             secretName: {{ .Values.license.secretName }}
@@ -112,6 +116,7 @@ spec:
           args:
             - "-target=compactor"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -134,6 +139,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage
@@ -144,6 +151,9 @@ spec:
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.compactor.livenessProbe | nindent 12 }}

@@ -87,6 +87,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage
@@ -126,6 +128,9 @@ spec:
           {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
           {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
         {{- if .Values.gateway.extraVolumes }}
         {{ toYaml .Values.gateway.extraVolumes | nindent 8}}
         {{- end }}

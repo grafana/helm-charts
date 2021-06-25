@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
+![Version: 0.9.12](https://img.shields.io/badge/Version-0.9.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.1](https://img.shields.io/badge/AppVersion-1.0.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -81,7 +81,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
-| config | string | `"auth_enabled: false\ncompactor:\n  compaction:\n    block_retention: 48h\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  receivers:\n    {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}\n    jaeger:\n      protocols:\n        {{- if .Values.traces.jaeger.thriftCompact }}\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftBinary }}\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftHttp }}\n        thrift_http:\n          endpoint: 0.0.0.0:14268\n        {{- end }}\n        {{- if .Values.traces.jaeger.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:14250\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.zipkin}}\n    zipkin:\n      endpoint: 0.0.0.0:9411\n    {{- end }}\n    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}\n    otlp:\n      protocols:\n        {{- if .Values.traces.otlp.http }}\n        http:\n          endpoint: 0.0.0.0:55681\n        {{- end }}\n        {{- if .Values.traces.otlp.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:4317\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.opencensus}}\n    opencensus:\n      endpoint: 0.0.0.0:55678\n    {{- end }}\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}:9095\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n    tokens_file_path: /var/tempo/tokens.json\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  per_tenant_override_config: /conf/overrides.yaml\nserver:\n  http_listen_port: 3100\nstorage:\n  trace:\n    backend: local\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
+| config | string | `"multitenancy_enabled: false\ncompactor:\n  compaction:\n    block_retention: 48h\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  ring:\n    kvstore:\n      store: memberlist\n  receivers:\n    {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}\n    jaeger:\n      protocols:\n        {{- if .Values.traces.jaeger.thriftCompact }}\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftBinary }}\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftHttp }}\n        thrift_http:\n          endpoint: 0.0.0.0:14268\n        {{- end }}\n        {{- if .Values.traces.jaeger.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:14250\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.zipkin}}\n    zipkin:\n      endpoint: 0.0.0.0:9411\n    {{- end }}\n    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}\n    otlp:\n      protocols:\n        {{- if .Values.traces.otlp.http }}\n        http:\n          endpoint: 0.0.0.0:55681\n        {{- end }}\n        {{- if .Values.traces.otlp.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:4317\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.opencensus}}\n    opencensus:\n      endpoint: 0.0.0.0:55678\n    {{- end }}\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}-discovery:9095\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n      kvstore:\n        store: memberlist\n    tokens_file_path: /var/tempo/tokens.json\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  per_tenant_override_config: /conf/overrides.yaml\nserver:\n  http_listen_port: 3100\nstorage:\n  trace:\n    backend: {{.Values.storage.trace.backend}}\n    {{- if eq .Values.storage.trace.backend \"gcs\"}}\n    gcs:\n      {{- toYaml .Values.storage.trace.gcs | nindent 6}}\n    {{- end}}\n    {{- if eq .Values.storage.trace.backend \"s3\"}}\n    s3:\n      {{- toYaml .Values.storage.trace.s3 | nindent 6}}\n    {{- end}}\n    {{- if eq .Values.storage.trace.backend \"azure\"}}\n    azure:\n      {{- toYaml .Values.storage.trace.azure | nindent 6}}\n    {{- end}}\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
@@ -140,6 +140,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
+| overrides | string | `"overrides: {}\n"` |  |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
@@ -181,6 +182,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
+| queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
@@ -196,6 +198,7 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
+| storage.trace.backend | string | `"local"` |  |
 | tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1}}` | Overrides the chart's computed fullname fullnameOverride: tempo -- Overrides the chart's computed fullname |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
@@ -247,56 +250,56 @@ Alternatively, in order to quickly test Tempo using the filestore, the [single b
 
 ```yaml
 config: |
-  auth_enabled: false
-    compactor:
-      compaction:
-        block_retention: 48h
+  multitenancy_enabled: false
+  compactor:
+    compaction:
+      block_retention: 48h
+    ring:
+      kvstore:
+        store: memberlist
+  distributor:
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          thrift_compact:
+            endpoint: 0.0.0.0:6831
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+  querier:
+    frontend_worker:
+      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+  ingester:
+    lifecycler:
       ring:
-        kvstore:
-          store: memberlist
-    distributor:
-      receivers:
-        jaeger:
-          protocols:
-            grpc:
-              endpoint: 0.0.0.0:14250
-            thrift_binary:
-              endpoint: 0.0.0.0:6832
-            thrift_compact:
-              endpoint: 0.0.0.0:6831
-            thrift_http:
-              endpoint: 0.0.0.0:14268
-    querier:
-      frontend_worker:
-        frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
-    ingester:
-      lifecycler:
-        ring:
-          replication_factor: 1
-    memberlist:
-      abort_if_cluster_join_fails: false
-      join_members:
-        - {{ include "tempo.fullname" . }}-memberlist
-    overrides:
-      per_tenant_override_config: /conf/overrides.yaml
-    server:
-      http_listen_port: 3100
-    storage:
-      trace:      
-        backend: s3
-        s3:
-          access_key: tempo
-          bucket: tempo
-          endpoint: minio:9000
-          insecure: true
-          secret_key: supersecret
-        pool:
-          queue_depth: 2000
-        wal:
-          path: /var/tempo/wal
-        memcached:
-          consistent_hash: true
-          host: a-tempo-distributed-memcached
-          service: memcached-client
-          timeout: 500ms
+        replication_factor: 1
+  memberlist:
+    abort_if_cluster_join_fails: false
+    join_members:
+      - {{ include "tempo.fullname" . }}-memberlist
+  overrides:
+    per_tenant_override_config: /conf/overrides.yaml
+  server:
+    http_listen_port: 3100
+  storage:
+    trace:
+      backend: s3
+      s3:
+        access_key: tempo
+        bucket: tempo
+        endpoint: minio:9000
+        insecure: true
+        secret_key: supersecret
+      pool:
+        queue_depth: 2000
+      wal:
+        path: /var/tempo/wal
+      memcached:
+        consistent_hash: true
+        host: a-tempo-distributed-memcached
+        service: memcached-client
+        timeout: 500ms
 ```

@@ -23,6 +23,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-distributor
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: distributor
+        gossip_ring_member: "true"
         target: distributor
         release: {{ .Release.Name }}
         {{- with .Values.distributor.podLabels }}
@@ -59,6 +60,7 @@ spec:
           args:
             - "-target=distributor"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
           {{- if .Values.consul.enabled }}
             - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
           {{- end }}
@@ -79,6 +81,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage
@@ -87,6 +91,9 @@ spec:
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.distributor.livenessProbe | nindent 12 }}
@@ -118,6 +125,9 @@ spec:
 {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
 {{- if .Values.distributor.extraVolumes }}
 {{ toYaml .Values.distributor.extraVolumes | indent 8}}
 {{- end }}
