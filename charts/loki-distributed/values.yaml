@@ -598,7 +598,8 @@ gateway:
       - host: gateway.loki.example.com
         paths:
           - path: /
-            # pathType: ImplementationSpecific
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
     # -- TLS configuration for the gateway ingress
     tls:
       - secretName: loki-gateway-tls
