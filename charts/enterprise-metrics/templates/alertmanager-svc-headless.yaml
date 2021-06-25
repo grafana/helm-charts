@@ -21,6 +21,10 @@ spec:
     - port: {{ .Values.config.server.http_listen_port }}
       protocol: TCP
       name: http-metrics
+    - port: {{ .Values.config.server.grpc_listen_port }}
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
     - port: {{ $clusterPort }}
       protocol: TCP
       name: cluster
