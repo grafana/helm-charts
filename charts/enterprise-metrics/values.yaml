@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.2.0
+  tag: v1.3.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -57,7 +57,7 @@ tokengenJob:
 
 config:
   auth_enabled: false
-  cluster_name: CHANGEME
+  cluster_name: "{{ .Release.Name }}"
 
   admin_client:
     storage:
@@ -1002,11 +1002,7 @@ memcached:
     - -c 4096
   image:
     repository: memcached
-    tag: 1.5.20
-    image:
-      registry: quay.io
-      repository: prometheus/memcached-exporter
-      tag: v0.6.0
+    tag: 1.6.9
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
@@ -1015,7 +1011,7 @@ memcached:
     image:
       registry: quay.io
       repository: prometheus/memcached-exporter
-      tag: v0.6.0
+      tag: v0.9.0
   replicaCount: 1
   resources:
     limits:
@@ -1038,7 +1034,7 @@ memcached-queries:
     - -c 1024
   image:
     repository: memcached
-    tag: 1.5.20
+    tag: 1.6.9
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '15728640'  # (* 15 (* 1024 1024))
@@ -1047,7 +1043,7 @@ memcached-queries:
     image:
       registry: quay.io
       repository: prometheus/memcached-exporter
-      tag: v0.6.0
+      tag: v0.9.0
   replicaCount: 1
   resources:
     limits:
@@ -1070,7 +1066,7 @@ memcached-metadata:
     - -c 1024
   image:
     repository: memcached
-    tag: 1.5.20
+    tag: 1.6.9
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
@@ -1079,7 +1075,7 @@ memcached-metadata:
     image:
       registry: quay.io
       repository: prometheus/memcached-exporter
-      tag: v0.6.0
+      tag: v0.9.0
   replicaCount: 1
   resources:
     limits:

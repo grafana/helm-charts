@@ -3,3 +3,4 @@
 .vscode
 .project
 .settings
+/charts/enterprise-metrics/vendor/tanka-util

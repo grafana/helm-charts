@@ -198,6 +198,7 @@ serviceAccount:
   create: true
   name:
   annotations: {}
+  automountServiceAccountToken: true
 
 terminationGracePeriodSeconds: 4800
 

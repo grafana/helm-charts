@@ -9,14 +9,6 @@ Helm chart for deploying [Grafana Enterprise Metrics](https://grafana.com/enterp
 In order to use the enterprise features of Grafana Enterprise Metrics, you need to provide the contents of a Grafana Enterprise Metrics license file as the value for the `license.contents` variable.
 To obtain a Grafana Enterprise Metrics license, refer to [Get a license](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license).
 
-### Key-Value store
-
-Grafana Enterprise Metrics requires an externally provided key-value store, such as [etcd](https://etcd.io/) or [Consul](https://www.consul.io/).
-
-Both services can be installed alongside Grafana Enterprise Metrics, for example using helm charts available [here](https://github.com/bitnami/charts/tree/master/bitnami/etcd) and [here](https://github.com/helm/charts/tree/master/stable/consul).
-
-For convenient first time set up, consul is deployed in the default configuration.
-
 ### Storage
 
 Grafana Enterprise Metrics requires an object storage backend to store metrics and indexes.
@@ -97,3 +89,18 @@ To configure a local default storage class for k3d:
 $ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 $ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
+
+# Contributing/Releasing
+
+All changes require a bump to the chart version, as this enforced by CI. All changes to the chart itself should also have a corresponding CHANGELOG entry.
+
+When making a change and organizing a release, first ensure your changes are encapuslated in a meaningful commit.
+In a separate commit, increase the chart version in the `Chart.yaml` file and add a CHANGELOG entry in the `CHANGELOG.md` file under the new version.
+
+In a third commit, create an export of the manifests with:
+
+```console
+$ make exports
+```
+
+Finally, push your changes and open up a Pull Request with the prefix `[enterprise-metrics]`.

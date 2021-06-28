@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-alertmanager
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.2.0
+    chart: enterprise-metrics-1.3.5
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-alertmanager
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 9c2d760abd200c4e37d12544ca2e11926e4112c7cc4ba57a3fceeeb1c4118081
+        checksum/config: da1f272c4baddd5bdf360098be394654ab50b68959fd411efc8ede384a5baab1
       labels:
         app: enterprise-metrics-alertmanager
         gossip_ring_member: "true"
@@ -33,11 +33,11 @@ spec:
         - -target=alertmanager
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
         - -memberlist.join=enterprise-metrics-gossip-ring
-        - -cluster.peer=enterprise-metrics-alertmanager-0.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
-        - -cluster.peer=enterprise-metrics-alertmanager-1.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
-        - -cluster.peer=enterprise-metrics-alertmanager-2.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
+        - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-0.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
+        - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-1.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
+        - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-2.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
         env: null
-        image: grafana/metrics-enterprise:v1.2.0
+        image: grafana/metrics-enterprise:v1.3.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -48,6 +48,9 @@ spec:
         ports:
         - containerPort: 8080
           name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
           protocol: TCP
         readinessProbe:
           httpGet:

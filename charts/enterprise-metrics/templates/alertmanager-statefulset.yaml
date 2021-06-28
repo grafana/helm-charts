@@ -119,7 +119,7 @@ spec:
             - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
-            - -cluster.peer={{ template "enterprise-metrics.fullname" $ }}-alertmanager-{{ $n }}.{{ template "enterprise-metrics.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
+            - -alertmanager.cluster.peers={{ template "enterprise-metrics.fullname" $ }}-alertmanager-{{ $n }}.{{ template "enterprise-metrics.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
             {{- end }}
             {{- end }}
             {{- if .Values.minio.enabled }}
@@ -159,6 +159,9 @@ spec:
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.alertmanager.livenessProbe | nindent 12 }}

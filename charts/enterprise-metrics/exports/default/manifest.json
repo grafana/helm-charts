@@ -35,7 +35,7 @@
     "v1.Service-enterprise-metrics-query-frontend-headless.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-query-frontend.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-ruler.yaml": "environments/default/main.jsonnet",
-    "v1.Service-enterprise-metrics-store-gateway-headless.yaml": "environments/default/main.jsonnet",
+    "v1.Service-enterprise-metrics-store-gateway.yaml": "environments/default/main.jsonnet",
     "v1.ServiceAccount-enterprise-metrics-minio-update-prometheus-secret.yaml": "environments/default/main.jsonnet",
     "v1.ServiceAccount-enterprise-metrics-minio.yaml": "environments/default/main.jsonnet",
     "v1.ServiceAccount-enterprise-metrics.yaml": "environments/default/main.jsonnet"

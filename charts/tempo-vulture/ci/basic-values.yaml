@@ -1,0 +1,3 @@
+tempoAddress:
+  push: http://distributor
+  query: http://query-frontend:3100
