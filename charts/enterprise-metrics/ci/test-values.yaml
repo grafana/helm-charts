@@ -7,27 +7,6 @@ compactor:
   persistentVolume:
     enabled: false
 
-config:
-  alertmanager_storage:
-    backend: "local"
-    local:
-      path: "/data/configs"
-
-  blocks_storage:
-    backend: "filesystem"
-    tsdb:
-      dir: "/data/tsdb"
-    bucket_store:
-      sync_dir: "/data/tsdb-sync"
-    filesystem:
-      dir: "/data/store"
-
-  ruler:
-    storage:
-      type: "local"
-      local:
-        directory: "/data/rules"
-
 ingester:
   persistentVolume:
     enabled: false
