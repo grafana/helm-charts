@@ -8,11 +8,10 @@ compactor:
     enabled: false
 
 config:
-  alertmanager:
-    storage:
-      type: "local"
-      local:
-        path: "/data/configs"
+  alertmanager_storage:
+    backend: "local"
+    local:
+      path: "/data/configs"
 
   blocks_storage:
     backend: "filesystem"

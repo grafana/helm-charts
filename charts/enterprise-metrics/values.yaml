@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.3.0
+  tag: v1.4.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -63,6 +63,9 @@ config:
     storage:
       type: s3
 
+  api:
+    response_compression_enabled: true
+
   compactor:
     sharding_enabled: true
     sharding_ring:
@@ -82,6 +85,11 @@ config:
         replication_factor: 1
         kvstore:
           store: memberlist
+
+  instrumentation:
+    enabled: true
+    distributor_client:
+      address: 'dns://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
 
   limits:
     enforce_metric_name: false
@@ -165,7 +173,6 @@ config:
 
   frontend:
     log_queries_longer_than: 10s
-    compress_responses: true
 
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
