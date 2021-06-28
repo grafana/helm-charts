@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-querier
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.3.5
+    chart: enterprise-metrics-1.4.0
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-querier
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: da1f272c4baddd5bdf360098be394654ab50b68959fd411efc8ede384a5baab1
+        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
       labels:
         app: enterprise-metrics-querier
         gossip_ring_member: "true"
@@ -62,7 +62,7 @@ spec:
         - -blocks-storage.s3.insecure=true
         - -querier.store-gateway-addresses=dns+enterprise-metrics-store-gateway.enterprise-metrics.svc:9095
         env: null
-        image: grafana/metrics-enterprise:v1.3.0
+        image: grafana/metrics-enterprise:v1.4.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
