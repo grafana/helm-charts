@@ -25,6 +25,7 @@ data:
         Parser         docker
         DB             /run/fluent-bit/flb_kube.db
         Mem_Buf_Limit  {{ .Values.config.memBufLimit }}
+    {{- (tpl .Values.config.inputs $) | nindent 4 }}
     [FILTER]
         Name           kubernetes
         Match          kube.*
@@ -32,6 +33,7 @@ data:
         Merge_Log On
         K8S-Logging.Exclude {{ .Values.config.k8sLoggingExclude }}
         K8S-Logging.Parser {{ .Values.config.k8sLoggingParser }}
+    {{- (tpl .Values.config.filters $) | nindent 4 }}
     [Output]
         Name grafana-loki
         Match *
@@ -49,24 +51,14 @@ data:
         LabelMapPath /fluent-bit/etc/labelmap.json
         LineFormat {{ .Values.config.lineFormat }}
         LogLevel {{ .Values.config.loglevel }}
-    {{- range $extraOutput := .Values.config.extraOutputs }}
-    [OUTPUT]
-    {{- range $key,$value := $extraOutput }}
-        {{ $key }} {{ $value }}
-    {{- end }}
-    {{- end }}
+    {{- (tpl .Values.config.outputs $) | nindent 4 }}
   parsers.conf: |-
     [PARSER]
         Name        docker
         Format      json
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
-    {{- range $parser:= .Values.config.parsers }}
-    [PARSER]
-    {{- range $key,$value := $parser }}
-        {{ $key }} {{ $value }}
-    {{- end }}
-    {{- end }}
+    {{- (tpl .Values.config.parsers $) | nindent 4 }}
 
   labelmap.json: |-
     {{- .Values.config.labelMap | toPrettyJson | nindent 4}}

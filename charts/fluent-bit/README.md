@@ -100,8 +100,10 @@ For more details, read the [Fluent Bit documentation](../../../cmd/fluent-bit/RE
 | `config.labels`          | A set of labels to send for every log                                                              | `'{job="fluent-bit"}'`           |
 | `config.autoKubernetesLabels` | If set to true, it will add all Kubernetes labels to Loki labels                                   | `false`                          |
 | `config.labelMap`        | Mapping of labels from a record. See [Fluent Bit documentation](../../../cmd/fluent-bit/README.md) |                                  |
-| `config.parsers`         | Definition of extras fluent bit parsers. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/filter/parser). The format is a sequence of mappings where each key is the same as the one in the [PARSER] section of parsers.conf file       | `[]`                            |
-| `config.extraOutputs`    | Definition of extras fluent bit outputs. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/outputs/). The format is a sequence of mappings where each key is the same as the one in the [OUTPUT]                                | `[]`                            |
+| `config.inputs`          | Definition of extra fluent bit inputs. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/inputs).   | |
+| `config.parsers`         | Definition of extra fluent bit parsers. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/parsers). | |
+| `config.filters`         | Definition of extra fluent bit filters. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/filters). | |
+| `config.outputs`         | Definition of extra fluent bit outputs. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/outputs). | |
 | `affinity`               | [affinity][affinity] settings for pod assignment                                                   | `{}`                             |
 | `annotations`            | Annotations to add to Kubernetes resources.                                                        | `{}`                             |
 | `deploymentStrategy`     | The deployment strategy to use with the daemonset                                                  | `RollingUpdate`                  |

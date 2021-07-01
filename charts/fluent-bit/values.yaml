@@ -31,16 +31,57 @@ config:
       container_name: container
       pod_name: instance
     stream: stream
-  # parsers: # Allow to define custom parsers. The key here is the same as the one in the [PARSER] section of parsers.conf file.
-  #  - Name: json
-  #    Format: json
-  #    Time_Key: time
-  #    Time_Format: "%d/%b/%Y:%H:%M:%S %z"
-
-  # extraOutputs: # Allow to define extra outputs in addition to the one automatically created
-  #   - Name: stdout
-  #     Format: json
-  #     json_date_format: time
+#  Custom inputs
+#  ## https://docs.fluentbit.io/manual/pipeline/inputs
+  inputs: |
+#      [INPUT]
+#          Name tail
+#          Path /var/log/containers/*.log
+#          Parser docker
+#          Tag custom.*
+#          Mem_Buf_Limit 5MB
+#          Skip_Long_Lines On
+#      [INPUT]
+#          Name systemd
+#          Tag host.*
+#          Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+#          Read_From_Tail On
+#  Custom filters
+#  ## https://docs.fluentbit.io/manual/pipeline/filters
+  filters: |
+#      [FILTER]
+#          Name geoip2
+#          Match netty.accessLog
+#          Database /opt/geoip/GeoLite2-City.mmdb
+#          Lookup_key ip.remoteAddress
+#          Record ip.country     ip.remoteAddress %{country.names.en}
+#          Record ip.countryIso  ip.remoteAddress %{country.iso_code}
+#          Record ip.city        ip.remoteAddress %{city.names.en}
+#          Record ip.latitude    ip.remoteAddress %{location.latitude}
+#          Record ip.longitude   ip.remoteAddress %{location.longitude}
+#  Custom outputs
+#  ## https://docs.fluentbit.io/manual/pipeline/outputs
+  outputs: |
+#      [OUTPUT]
+#          Name es
+#          Match kube.*
+#          Host elasticsearch-master
+#          Logstash_Format On
+#          Retry_Limit False
+#      [OUTPUT]
+#          Name es
+#          Match host.*
+#          Host elasticsearch-master
+#          Logstash_Format On
+#          Logstash_Prefix node
+#          Retry_Limit False
+#  Custom parsers
+#  ## https://docs.fluentbit.io/manual/pipeline/parsers
+  parsers: |
+#      [PARSER]
+#          Name json_no_time
+#          Format json
+#          Time_Keep Off
 
 affinity: {}
 
