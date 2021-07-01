@@ -227,7 +227,7 @@ The other components are optional and must be explicitly enabled.
 | compactor | no |
 | memcached | yes |
 
-## (Configuration)[https://grafana.com/docs/tempo/latest/configuration/]
+## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
 
