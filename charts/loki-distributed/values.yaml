@@ -680,6 +680,11 @@ gateway:
             auth_basic off;
           }
 
+          location = /ready {
+            return 200 'OK';
+            auth_basic off;
+          }
+
           location = /api/prom/push {
             proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
