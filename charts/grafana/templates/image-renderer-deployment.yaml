@@ -45,11 +45,11 @@ spec:
       {{- end }}
       {{- if .Values.imageRenderer.securityContext }}
       securityContext:
-      {{ toYaml .Values.imageRenderer.securityContext | indent 2 }}
+        {{- toYaml .Values.imageRenderer.securityContext | nindent 8 }}
       {{- end }}
       {{- if .Values.imageRenderer.hostAliases }}
       hostAliases:
-      {{ toYaml .Values.imageRenderer.hostAliases | indent 2 }}
+        {{- toYaml .Values.imageRenderer.hostAliases | nindent 8 }}
       {{- end }}
       {{- if .Values.imageRenderer.priorityClassName }}
       priorityClassName: {{ .Values.imageRenderer.priorityClassName }}
