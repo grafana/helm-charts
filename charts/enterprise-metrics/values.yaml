@@ -168,7 +168,6 @@ config:
 
   frontend:
     log_queries_longer_than: 10s
-    compress_responses: true
 
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
