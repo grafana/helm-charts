@@ -260,7 +260,8 @@ queryFrontend:
     extraVolumeMounts: []
     # -- Extra volumes for tempo-query deployment
     extraVolumes: []
-    config: |
+    # -- query-frontend configuration: https://grafana.com/docs/tempo/latest/configuration/#query-frontend
+    config:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
@@ -315,27 +316,8 @@ queryFrontend:
   # -- Extra volumes for query-frontend deployment
   extraVolumes: []
 
-traces:
-  jaeger:
-    # -- Enable Tempo to ingest Jaeger GRPC traces
-    grpc: false
-    # -- Enable Tempo to ingest Jaeger Thrift Binary traces
-    thriftBinary: false
-    # -- Enable Tempo to ingest Jaeger Thrift Compact traces
-    thriftCompact: false
-    # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
-    thriftHttp: false
-  # -- Enable Tempo to ingest Zipkin traces
-  zipkin: false
-  otlp:
-    # -- Enable Tempo to ingest Open Telementry HTTP traces
-    http: false
-    # -- Enable Tempo to ingest Open Telementry GRPC traces
-    grpc: false
-  # -- Enable Tempo to ingest Open Census traces
-  opencensus: false
-
-config: |
+# -- Configuration for Tempo: https://grafana.com/docs/tempo/latest/configuration
+config:
   multitenancy_enabled: false
   compactor:
     compaction:
@@ -347,50 +329,31 @@ config: |
     ring:
       kvstore:
         store: memberlist
+    # Enable / disable receivers for Tempo
     receivers:
-      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
       jaeger:
         protocols:
-          {{- if .Values.traces.jaeger.thriftCompact }}
           thrift_compact:
             endpoint: 0.0.0.0:6831
-          {{- end }}
-          {{- if .Values.traces.jaeger.thriftBinary }}
-          thrift_binary:
-            endpoint: 0.0.0.0:6832
-          {{- end }}
-          {{- if .Values.traces.jaeger.thriftHttp }}
-          thrift_http:
-            endpoint: 0.0.0.0:14268
-          {{- end }}
-          {{- if .Values.traces.jaeger.grpc }}
-          grpc:
-            endpoint: 0.0.0.0:14250
-          {{- end }}
-      {{- end }}
-      {{- if .Values.traces.zipkin}}
-      zipkin:
-        endpoint: 0.0.0.0:9411
-      {{- end }}
-      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+          # thrift_binary:
+          #   endpoint: 0.0.0.0:6832
+          # thrift_http:
+          #   endpoint: 0.0.0.0:14268
+          # grpc:
+          #   endpoint: 0.0.0.0:14250
+      zipkin: {}
+      # endpoint: 0.0.0.0:9411
       otlp:
-        protocols:
-          {{- if .Values.traces.otlp.http }}
-          http:
-            endpoint: 0.0.0.0:55681
-          {{- end }}
-          {{- if .Values.traces.otlp.grpc }}
-          grpc:
-            endpoint: 0.0.0.0:4317
-          {{- end }}
-      {{- end }}
-      {{- if .Values.traces.opencensus}}
-      opencensus:
-        endpoint: 0.0.0.0:55678
-      {{- end }}
+        protocols: {}
+      #     http:
+      #       endpoint: 0.0.0.0:55681
+      #     grpc:
+      #       endpoint: 0.0.0.0:4317
+      # opencensus:
+      #   endpoint: 0.0.0.0:55678
   querier:
-    frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
+    frontend_worker: {}
+    # frontend_address: tempo-distributed-discovery:9095
   ingester:
     lifecycler:
       ring:
@@ -400,56 +363,69 @@ config: |
       tokens_file_path: /var/tempo/tokens.json
   memberlist:
     abort_if_cluster_join_fails: false
-    join_members:
-      - {{ include "tempo.fullname" . }}-gossip-ring
+    join_members: []
+    ## add here the service name of the memberlist
+    ## if using memberlist discovery, eg:
+    #  - tempo-distributed-gossip-ring
   overrides:
     per_tenant_override_config: /conf/overrides.yaml
   server:
     http_listen_port: 3100
+  # To configure a different storage backend instead of local storage:
+  # storage:
+  #   trace:
+  #     backend: azure
+  #     azure:
+  #       container-name:
+  #       storage-account-name:
+  #       storage-account-key:
+  # -- the supported storage backends are gcs, s3 and azure
+  # -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
   storage:
     trace:
-      backend: {{.Values.storage.trace.backend}}
-      {{- if eq .Values.storage.trace.backend "gcs"}}
-      gcs:
-        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
-      {{- end}}
-      {{- if eq .Values.storage.trace.backend "s3"}}
-      s3:
-        {{- toYaml .Values.storage.trace.s3 | nindent 6}}
-      {{- end}}
-      {{- if eq .Values.storage.trace.backend "azure"}}
-      azure:
-        {{- toYaml .Values.storage.trace.azure | nindent 6}}
-      {{- end}}
+      backend: local
+      # azure:
+      # gcs:
+      # s3:
+      #   bucket:
+      #   endpoint:
+      #   region:
+      #   access_key:
+      #   secret_key:
+      #   insecure:
+      #   forcepathstyle:
+      #   hedge_requests_at:
       blocklist_poll: 5m
-      local:
-        path: /var/tempo/traces
-      wal:
-        path: /var/tempo/wal
+      blocklist_poll_concurrency: 50
       cache: memcached
+      background_cache: {}
+        # writeback_goroutines: 10
+        # writeback_buffer: 10000
       memcached:
         consistent_hash: true
-        host: {{ include "tempo.fullname" . }}-memcached
+        host: tempo-distributed-memcached
         service: memcached-client
         timeout: 500ms
+      # redis: {}
+      pool:
+        max_workers: 30
+        queue_depth: 10000
+      wal:
+        path: /var/tempo/wal
+      block:
+        bloom_filter_false_positive: .05
+        index_downsample_bytes: 1MB
+        encoding: gzip
+      local:
+        path: /var/tempo/traces
 
-# To configure a different storage backend instead of local storage:
-# storage:
-#   trace:
-#     backend: azure
-#     azure:
-#       container-name:
-#       storage-account-name:
-#       storage-account-key:
-# -- the supported storage backends are gcs, s3 and azure
-# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
-storage:
-  trace:
-    backend: local
-
-# Set ingestion overrides
-overrides: |
-  overrides: {}
+# Set per-tenant overrides: https://github.com/grafana/tempo/blob/b3159d65c182fd187761afd9abbacb0c55bddb9e/docs/tempo/website/configuration/ingestion-limit.md#tenant-specific-overrides
+# Example:
+#
+# overrides:
+#   '*':
+#     max_traces_per_user: 0
+overrides: null
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service

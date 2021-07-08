@@ -6,9 +6,47 @@ metadata:
   labels:
     {{- include "tempo.distributorLabels" . | nindent 4 }}
 data:
+  {{- with .Values.queryFrontend.query.config }}
   tempo-query.yaml: |
-    {{- tpl .Values.queryFrontend.query.config . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.overrides }}
   overrides.yaml: |
-    {{- tpl .Values.overrides . | nindent 4 }}
+    overrides:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
   tempo.yaml: |
-    {{- tpl .Values.config . | nindent 4 }}
+    multitenancy_enabled: {{ .Values.config.multitenancy_enabled }}
+    {{- with .Values.config.compactor }}
+    compactor:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.config.distributor }}
+    distributor:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    querier:
+      frontend_worker:
+        {{- if .Values.config.querier.frontend_worker.frontend_address }}
+        frontend_address: {{ .Values.config.querier.frontend_worker.frontend_address }}
+        {{- else }}
+        frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
+        {{- end }}
+    {{- with .Values.config.ingester }}
+    ingester:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    memberlist:
+      abort_if_cluster_join_fails: {{ .Values.config.memberlist.abort_if_cluster_join_fails }}
+      join_members:
+      {{- range .Values.config.memberlist.join_members }}
+        - {{ . }}
+      {{- end }}
+    {{- with .Values.config.overrides }}
+    overrides:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.config.storage }}
+    storage:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
