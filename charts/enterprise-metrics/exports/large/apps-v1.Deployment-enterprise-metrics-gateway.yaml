@@ -35,6 +35,8 @@ spec:
       - args:
         - -target=gateway
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -instrumentation.enabled=true
+        - -instrumentation.distributor-client.address=dns:///enterprise-metrics-distributor.enterprise-metrics.svc:9095
         - -gateway.proxy.default.url=http://enterprise-metrics-admin-api.enterprise-metrics.svc:8080
         - -gateway.proxy.admin-api.url=http://enterprise-metrics-admin-api.enterprise-metrics.svc:8080
         - -gateway.proxy.alertmanager.url=http://enterprise-metrics-alertmanager.enterprise-metrics.svc:8080

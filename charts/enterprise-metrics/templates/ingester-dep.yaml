@@ -60,6 +60,10 @@ spec:
           args:
             - "-target=ingester"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
+            {{- if .Values.selfMonitoring.enabled }}
+            - "-instrumentation.enabled=true"
+            - "-instrumentation.distributor-client.address=dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}"
+            {{- end }}
             {{- if .Values.consul.enabled }}
             - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
             {{- end }}

@@ -59,6 +59,10 @@ spec:
           args:
             - "-target=query-frontend"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
+            {{- if .Values.selfMonitoring.enabled }}
+            - "-instrumentation.enabled=true"
+            - "-instrumentation.distributor-client.address=dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}"
+            {{- end }}
           {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000

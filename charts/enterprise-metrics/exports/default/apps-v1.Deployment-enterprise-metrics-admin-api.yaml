@@ -37,6 +37,8 @@ spec:
         - -target=admin-api
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
         - -memberlist.join=enterprise-metrics-gossip-ring
+        - -instrumentation.enabled=true
+        - -instrumentation.distributor-client.address=dns:///enterprise-metrics-distributor.enterprise-metrics.svc:9095
         - -admin.client.backend-type=s3
         - -admin.client.s3.endpoint=enterprise-metrics-minio.enterprise-metrics.svc:9000
         - -admin.client.s3.bucket-name=enterprise-metrics-admin

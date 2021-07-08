@@ -12,6 +12,9 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+* [FEATURE] Enable the new self-monitoring feature which has been added in GEM v1.4.0. #555
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.4.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v141----june-29th-2021). #555
+
 ## 1.3.5
 
 * [CHANGE] The GRPC port on the query-frontend and store-gateway Kubernetes Services have been changed to match the naming of all other services. #523

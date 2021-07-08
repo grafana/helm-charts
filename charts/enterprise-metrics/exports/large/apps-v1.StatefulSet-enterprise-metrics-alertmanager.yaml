@@ -33,6 +33,8 @@ spec:
         - -target=alertmanager
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
         - -memberlist.join=enterprise-metrics-gossip-ring
+        - -instrumentation.enabled=true
+        - -instrumentation.distributor-client.address=dns:///enterprise-metrics-distributor.enterprise-metrics.svc:9095
         - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-0.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
         - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-1.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
         - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-2.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094

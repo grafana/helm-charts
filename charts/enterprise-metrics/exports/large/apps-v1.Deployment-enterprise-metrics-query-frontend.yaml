@@ -46,6 +46,8 @@ spec:
       - args:
         - -target=query-frontend
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -instrumentation.enabled=true
+        - -instrumentation.distributor-client.address=dns:///enterprise-metrics-distributor.enterprise-metrics.svc:9095
         env: null
         image: grafana/metrics-enterprise:v1.3.0
         imagePullPolicy: IfNotPresent
