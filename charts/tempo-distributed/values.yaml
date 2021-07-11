@@ -241,7 +241,7 @@ querier:
 # Configuration for the query-frontend
 queryFrontend:
   query:
-    enabled: false # required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
+    enabled: true # required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
     image:
       # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
       registry: null
