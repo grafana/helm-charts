@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-alertmanager
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.3.1
+    chart: enterprise-metrics-1.3.5
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-alertmanager
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 74c5ba5569cc04ab4f311648cc74459bebf069068ec259d073cdc680749e6684
+        checksum/config: da1f272c4baddd5bdf360098be394654ab50b68959fd411efc8ede384a5baab1
       labels:
         app: enterprise-metrics-alertmanager
         gossip_ring_member: "true"
@@ -48,6 +48,9 @@ spec:
         ports:
         - containerPort: 8080
           name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
           protocol: TCP
         readinessProbe:
           httpGet:

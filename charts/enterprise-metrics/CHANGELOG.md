@@ -12,6 +12,23 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.3.5
+
+* [CHANGE] The GRPC port on the query-frontend and store-gateway Kubernetes Services have been changed to match the naming of all other services. #523
+* [FEATURE] Expose GRPC port on all GEM services. #523
+
+## 1.3.4
+
+* [BUGFIX] Removed symlinks from chart to fix Rancher repository imports. #504
+
+## 1.3.3
+
+* [FEATURE] The GEM config now uses the `{{ .Release.Name }}` variable as the default value for `cluster_name` which removes the need to additionally override this setting during an initial install. #500
+
+## 1.3.2
+
+* [FEATURE] Chart memcached dependencies are now at the latest release. This includes the memcached and the related exporter. #467
+
 ## 1.3.1
 
 * [BUGFIX] Use non-deprecated alertmanager flags for cluster peers. #441

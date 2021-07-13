@@ -54,6 +54,8 @@ loki:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
+  existingSecretForConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -160,6 +162,8 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: true
 
 # RBAC configuration
 rbac:
@@ -226,6 +230,8 @@ ingester:
   priorityClassName: null
   # -- Annotations for ingester pods
   podAnnotations: {}
+  # -- Labels for ingestor service
+  serviceLabels: {}
   # -- Additional CLI args for the ingester
   extraArgs: []
   # -- Environment variables to add to the ingester pods
@@ -289,6 +295,8 @@ distributor:
   priorityClassName: null
   # -- Annotations for distributor pods
   podAnnotations: {}
+  # -- Labels for distributor service
+  serviceLabels: {}
   # -- Additional CLI args for the distributor
   extraArgs: []
   # -- Environment variables to add to the distributor pods
@@ -339,6 +347,8 @@ querier:
   priorityClassName: null
   # -- Annotations for querier pods
   podAnnotations: {}
+  # -- Labels for querier service
+  serviceLabels: {}
   # -- Additional CLI args for the querier
   extraArgs: []
   # -- Environment variables to add to the querier pods
@@ -400,6 +410,8 @@ queryFrontend:
   priorityClassName: null
   # -- Annotations for query-frontend pods
   podAnnotations: {}
+  # -- Labels for query-frontend service
+  serviceLabels: {}
   # -- Additional CLI args for the query-frontend
   extraArgs: []
   # -- Environment variables to add to the query-frontend pods
@@ -439,8 +451,6 @@ queryFrontend:
 tableManager:
   # -- Specifies whether the table-manager should be enabled
   enabled: false
-  # -- Number of replicas for the table-manager
-  replicas: 1
   image:
     # -- The Docker registry for the table-manager image. Overrides `loki.image.registry`
     registry: null
@@ -452,6 +462,8 @@ tableManager:
   priorityClassName: null
   # -- Annotations for table-manager pods
   podAnnotations: {}
+  # -- Labels for table-manager service
+  serviceLabels: {}
   # -- Additional CLI args for the table-manager
   extraArgs: []
   # -- Environment variables to add to the table-manager pods
@@ -493,6 +505,10 @@ gateway:
   enabled: true
   # -- Number of replicas for the gateway
   replicas: 1
+  # -- See `kubectl explain deployment.spec.strategy` for more
+  # -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  deploymentStrategy:
+    type: RollingUpdate
   image:
     # -- The Docker registry for the gateway image
     registry: docker.io
@@ -567,17 +583,23 @@ gateway:
     loadBalancerIP: null
     # -- Annotations for the gateway service
     annotations: {}
+    # -- Labels for gateway service
+    labels: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: nginx
     # -- Annotations for the gateway ingress
     annotations: {}
     # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.loki.example.com
         paths:
-          - /
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
     # -- TLS configuration for the gateway ingress
     tls:
       - secretName: loki-gateway-tls
@@ -707,6 +729,8 @@ compactor:
   priorityClassName: null
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Labels for compactor service
+  serviceLabels: {}
   # -- Additional CLI args for the compactor
   extraArgs: []
   # -- Environment variables to add to the compactor pods
@@ -746,6 +770,8 @@ compactor:
     imagePullSecrets: []
     # -- Annotations for the compactor service account
     annotations: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
 
 # Configuration for the ruler
 ruler:
@@ -764,6 +790,8 @@ ruler:
   priorityClassName: null
   # -- Annotations for ruler pods
   podAnnotations: {}
+  # -- Labels for ruler service
+  serviceLabels: {}
   # -- Additional CLI args for the ruler
   extraArgs: []
   # -- Environment variables to add to the ruler pods
@@ -924,6 +952,8 @@ memcachedChunks:
   priorityClassName: null
   # -- Annotations for memcached-chunks pods
   podAnnotations: {}
+  # -- Labels for memcached-chunks service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-chunks
   extraArgs: []
   # -- Environment variables to add to memcached-chunks pods
@@ -964,6 +994,8 @@ memcachedFrontend:
   priorityClassName: null
   # -- Annotations for memcached-frontend pods
   podAnnotations: {}
+  # -- Labels for memcached-frontend service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-frontend
   extraArgs: []
   # -- Environment variables to add to memcached-frontend pods
@@ -1004,6 +1036,8 @@ memcachedIndexQueries:
   priorityClassName: null
   # -- Annotations for memcached-index-queries pods
   podAnnotations: {}
+  # -- Labels for memcached-index-queries service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-index-queries
   extraArgs: []
   # -- Environment variables to add to memcached-index-queries pods
@@ -1044,6 +1078,8 @@ memcachedIndexWrites:
   priorityClassName: null
   # -- Annotations for memcached-index-writes pods
   podAnnotations: {}
+  # -- Labels for memcached-index-writes service
+  serviceLabels: {}
   # -- Additional CLI args for memcached-index-writes
   extraArgs: []
   # -- Environment variables to add to memcached-index-writes pods
