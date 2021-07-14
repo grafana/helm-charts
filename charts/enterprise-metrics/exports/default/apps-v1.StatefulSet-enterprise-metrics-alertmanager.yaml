@@ -46,7 +46,7 @@ spec:
         - -alertmanager-storage.s3.secret-access-key=supersecret
         - -alertmanager-storage.s3.insecure=true
         env: null
-        image: grafana/metrics-enterprise:v1.4.0
+        image: grafana/metrics-enterprise:v1.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

@@ -52,7 +52,7 @@ spec:
         - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+enterprise-metrics-memcached-metadata.enterprise-metrics.svc:11211
         - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size=1048576
         env: null
-        image: grafana/metrics-enterprise:v1.4.0
+        image: grafana/metrics-enterprise:v1.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 20

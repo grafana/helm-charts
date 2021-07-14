@@ -45,7 +45,7 @@ spec:
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
         - -memberlist.join=enterprise-metrics-gossip-ring
         env: null
-        image: grafana/metrics-enterprise:v1.4.0
+        image: grafana/metrics-enterprise:v1.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 20

@@ -45,7 +45,7 @@ spec:
         - -gateway.proxy.ruler.url=http://enterprise-metrics-ruler.enterprise-metrics.svc:8080
         - -gateway.proxy.store-gateway.url=http://enterprise-metrics-store-gateway.enterprise-metrics.svc:8080
         env: null
-        image: grafana/metrics-enterprise:v1.4.0
+        image: grafana/metrics-enterprise:v1.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
