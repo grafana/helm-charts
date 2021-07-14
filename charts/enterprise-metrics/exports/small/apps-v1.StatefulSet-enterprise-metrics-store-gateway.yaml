@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-store-gateway
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.4.0
+    chart: enterprise-metrics-1.4.2
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-store-gateway
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
+        checksum/config: 8a591145042707dd55bbbef78a69677076cdf271f4931a4907a2c3882228f6ca
       labels:
         app: enterprise-metrics-store-gateway
         gossip_ring_member: "true"
