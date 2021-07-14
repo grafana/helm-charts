@@ -16,7 +16,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 * [CHANGE] Use updated querier response compression configuration, changed in 1.4.0. #524
 * [CHANGE] Use updated alertmanager storage configuration, changed in 1.4.0. #524
-* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.4.0](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v140----june-28th-2021). #524
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.4.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v141----june-29th-2021). #524
 * [FEATURE] Enable [GEM self-monitoring](https://grafana.com/docs/metrics-enterprise/latest/self-monitoring/). #524
 
 ## 1.3.5
