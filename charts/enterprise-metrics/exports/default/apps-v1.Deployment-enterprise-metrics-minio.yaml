@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: minio
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: minio-8.0.9
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-minio
+  namespace: enterprise-metrics
+spec:
+  selector:
+    matchLabels:
+      app: minio
+      release: enterprise-metrics
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: e3aaae66dd9e59f719313257fcc8dc72b8f9c46f65284bcb27e80e5fc00dca2d
+        checksum/secrets: 7bc6746c52c8c0eb9b78f91bed2d3f8cfa21de7d0599131149e2a55b439d9252
+      labels:
+        app: minio
+        release: enterprise-metrics
+      name: enterprise-metrics-minio
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -ce
+        - /usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server /export
+        env:
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: accesskey
+              name: enterprise-metrics-minio
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secretkey
+              name: enterprise-metrics-minio
+        image: minio/minio:RELEASE.2020-12-03T05-49-24Z
+        imagePullPolicy: IfNotPresent
+        name: minio
+        ports:
+        - containerPort: 9000
+          name: http
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /export
+          name: export
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      serviceAccountName: enterprise-metrics-minio
+      volumes:
+      - name: export
+        persistentVolumeClaim:
+          claimName: enterprise-metrics-minio
+      - name: minio-user
+        secret:
+          secretName: enterprise-metrics-minio

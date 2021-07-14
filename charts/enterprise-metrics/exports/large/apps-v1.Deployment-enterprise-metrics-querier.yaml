@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: enterprise-metrics-querier
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-querier
+  namespace: enterprise-metrics
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: enterprise-metrics-querier
+      release: enterprise-metrics
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
+      labels:
+        app: enterprise-metrics-querier
+        gossip_ring_member: "true"
+        name: querier
+        release: enterprise-metrics
+        target: querier
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                  - querier
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - -target=querier
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -querier.frontend-address=enterprise-metrics-query-frontend-headless.enterprise-metrics.svc:9095
+        - -memberlist.join=enterprise-metrics-gossip-ring
+        - -blocks-storage.bucket-store.metadata-cache.backend=memcached
+        - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+enterprise-metrics-memcached-metadata.enterprise-metrics.svc:11211
+        - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size=1048576
+        - -querier.store-gateway-addresses=dns+enterprise-metrics-store-gateway.enterprise-metrics.svc:9095
+        env: null
+        image: grafana/metrics-enterprise:v1.4.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        resources:
+          limits:
+            memory: 24Gi
+          requests:
+            cpu: 1
+            memory: 12Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+          subPath: null
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 180
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+      - emptyDir: {}
+        name: storage

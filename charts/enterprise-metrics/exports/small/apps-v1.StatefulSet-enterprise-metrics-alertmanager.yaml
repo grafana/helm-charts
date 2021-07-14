@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: enterprise-metrics-alertmanager
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-alertmanager
+  namespace: enterprise-metrics
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: enterprise-metrics-alertmanager
+      release: enterprise-metrics
+  serviceName: enterprise-metrics-alertmanager
+  template:
+    metadata:
+      annotations:
+        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
+      labels:
+        app: enterprise-metrics-alertmanager
+        gossip_ring_member: "true"
+        name: alertmanager
+        release: enterprise-metrics
+        target: alertmanager
+    spec:
+      affinity: {}
+      containers:
+      - args:
+        - -target=alertmanager
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -memberlist.join=enterprise-metrics-gossip-ring
+        - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-0.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
+        - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-1.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
+        - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-2.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
+        env: null
+        image: grafana/metrics-enterprise:v1.4.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        resources:
+          limits:
+            memory: 8Gi
+          requests:
+            cpu: 300m
+            memory: 6Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 60
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi

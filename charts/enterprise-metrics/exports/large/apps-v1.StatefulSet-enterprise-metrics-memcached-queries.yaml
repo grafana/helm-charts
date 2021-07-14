@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/instance: enterprise-metrics
+    app.kubernetes.io/managed-by: Helmraiser
+    app.kubernetes.io/name: memcached-queries
+    helm.sh/chart: memcached-queries-5.5.2
+  name: enterprise-metrics-memcached-queries
+  namespace: enterprise-metrics
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: enterprise-metrics
+      app.kubernetes.io/name: memcached-queries
+  serviceName: enterprise-metrics-memcached-queries
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "9150"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/instance: enterprise-metrics
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: memcached-queries
+        helm.sh/chart: memcached-queries-5.5.2
+    spec:
+      affinity:
+        nodeAffinity: null
+        podAffinity: null
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: enterprise-metrics
+                  app.kubernetes.io/name: memcached-queries
+              namespaces:
+              - enterprise-metrics
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - args:
+        - -m 2048
+        - -o
+        - modern
+        - -v
+        - -I 15m
+        - -c 1024
+        image: docker.io/memcached:1.6.9
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          tcpSocket:
+            port: memcache
+          timeoutSeconds: 5
+        name: memcached
+        ports:
+        - containerPort: 11211
+          name: memcache
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          tcpSocket:
+            port: memcache
+          timeoutSeconds: 3
+        resources:
+          limits:
+            memory: 2457Mi
+          requests:
+            cpu: 500m
+            memory: 2457Mi
+        securityContext:
+          readOnlyRootFilesystem: false
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+      - image: quay.io/prometheus/memcached-exporter:v0.9.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        name: metrics
+        ports:
+        - containerPort: 9150
+          name: metrics
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        resources:
+          limits: {}
+          requests: {}
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+      volumes:
+      - emptyDir: {}
+        name: tmp

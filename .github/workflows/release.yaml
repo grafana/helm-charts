@@ -22,7 +22,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.4.1
+          version: v3.5.2
 
       - name: Prepare GPG key
         run: |
@@ -41,9 +41,12 @@ jobs:
           helm repo add elastic https://helm.elastic.co
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo add prometheus https://prometheus-community.github.io/helm-charts
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm repo add minio https://helm.min.io
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.1.0
+        uses: helm/chart-releaser-action@v1.2.0
         with:
           charts_dir: charts
           config: cr.yaml

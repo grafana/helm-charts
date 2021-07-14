@@ -7,7 +7,7 @@ fullnameOverride: ""
 replicas: 1
 tempo:
   repository: grafana/tempo
-  tag: 0.5.0
+  tag: 1.0.1
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -18,10 +18,10 @@ tempo:
 
   updateStrategy: RollingUpdate
   resources: {}
-  #  limits:
+  #  requests:
   #    cpu: 1000m
   #    memory: 4Gi
-  #  requests:
+  #  limits:
   #    cpu: 2000m
   #    memory: 6Gi
 
@@ -46,7 +46,7 @@ tempo:
     trace:
       backend: local
       local:
-        path: /tmp/tempo/traces
+        path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
   # this configuration will listen on all ports and protocols that tempo is capable of.
@@ -63,10 +63,20 @@ tempo:
           endpoint: 0.0.0.0:6831
         thrift_http:
           endpoint: 0.0.0.0:14268
+  ## Additional container arguments
+  extraArgs: {}
+  # -- Environment variables to add
+  extraEnv: []
+  # -- Volume mounts to add
+  extraVolumeMounts: []
+  # - name: extra-volume
+  #   mountPath: /mnt/volume
+  #   readOnly: true
+  #   existingClaim: volume-claim
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: latest
+  tag: 1.0.1
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -74,6 +84,27 @@ tempoQuery:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
+  ## Additional container arguments
+  extraArgs: {}
+  # -- Environment variables to add
+  extraEnv: []
+  # -- Volume mounts to add
+  extraVolumeMounts: []
+  # - name: extra-volume
+  #   mountPath: /mnt/volume
+  #   readOnly: true
+  #   existingClaim: volume-claim
+
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  create: true
+  # -- The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+  # -- Image pull secrets for the service account
+  imagePullSecrets: []
+  # -- Annotations for the service account
+  annotations: {}
 
 service:
   type: ClusterIP
@@ -87,16 +118,8 @@ persistence:
     - ReadWriteOnce
   size: 10Gi
 
-# -- Environment variables to add
-extraEnv: []
-# -- Environment variables from secrets or configmaps to add
-extraEnvFrom: []
-# -- Volume mounts to add
-extraVolumeMounts: []
-# - name: extra-volume
-#   mountPath: /mnt/volume
-#   readOnly: true
-#   existingClaim: volume-claim
+## Pod Annotations
+podAnnotations: []
 
 # -- Volumes to add
 extraVolumes: []

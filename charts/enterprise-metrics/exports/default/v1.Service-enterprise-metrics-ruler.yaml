@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: enterprise-metrics-ruler
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-ruler
+  namespace: enterprise-metrics
+spec:
+  ports:
+  - name: http-metrics
+    port: 8080
+    protocol: TCP
+    targetPort: http-metrics
+  selector:
+    app: enterprise-metrics-ruler
+    release: enterprise-metrics
+  type: ClusterIP

@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: post-install
+  labels:
+    app: enterprise-metrics-tokengen
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-tokengen
+  namespace: enterprise-metrics
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  selector: null
+  template:
+    metadata:
+      labels:
+        app: enterprise-metrics-tokengen
+        name: tokengen
+        release: enterprise-metrics
+        target: tokengen
+    spec:
+      containers:
+      - args:
+        - -target=tokengen
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        env: null
+        image: grafana/metrics-enterprise:v1.4.1
+        imagePullPolicy: IfNotPresent
+        name: enterprise-metrics
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /license
+          name: license
+      restartPolicy: OnFailure
+      securityContext: null
+      serviceAccountName: enterprise-metrics
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+      - emptyDir: {}
+        name: storage

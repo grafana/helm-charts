@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: enterprise-metrics-distributor
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-distributor
+  namespace: enterprise-metrics
+spec:
+  ports:
+  - name: http-metrics
+    port: 8080
+    protocol: TCP
+    targetPort: http-metrics
+  - name: grpc
+    port: 9095
+    protocol: TCP
+    targetPort: grpc
+  selector:
+    app: enterprise-metrics-distributor
+    release: enterprise-metrics
+  type: ClusterIP

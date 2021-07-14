@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "tempo.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.distributorLabels" . | nindent 4 }}
+data:
+  tempo-query.yaml: |
+    {{- tpl .Values.queryFrontend.query.config . | nindent 4 }}
+  overrides.yaml: |
+    {{- tpl .Values.overrides . | nindent 4 }}
+  tempo.yaml: |
+    {{- tpl .Values.config . | nindent 4 }}

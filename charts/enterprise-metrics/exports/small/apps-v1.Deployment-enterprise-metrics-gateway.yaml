@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: enterprise-metrics-gateway
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-gateway
+  namespace: enterprise-metrics
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: enterprise-metrics-gateway
+      release: enterprise-metrics
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
+      labels:
+        app: enterprise-metrics-gateway
+        name: gateway
+        release: enterprise-metrics
+        target: gateway
+    spec:
+      affinity: {}
+      containers:
+      - args:
+        - -target=gateway
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -gateway.proxy.default.url=http://enterprise-metrics-admin-api.enterprise-metrics.svc:8080
+        - -gateway.proxy.admin-api.url=http://enterprise-metrics-admin-api.enterprise-metrics.svc:8080
+        - -gateway.proxy.alertmanager.url=http://enterprise-metrics-alertmanager.enterprise-metrics.svc:8080
+        - -gateway.proxy.distributor.url=http://enterprise-metrics-distributor.enterprise-metrics.svc:8080
+        - -gateway.proxy.graphite.url=http://enterprise-metrics-graphite.enterprise-metrics.svc:8080
+        - -gateway.proxy.ingester.url=http://enterprise-metrics-ingester.enterprise-metrics.svc:8080
+        - -gateway.proxy.query-frontend.url=http://enterprise-metrics-query-frontend.enterprise-metrics.svc:8080
+        - -gateway.proxy.ruler.url=http://enterprise-metrics-ruler.enterprise-metrics.svc:8080
+        - -gateway.proxy.store-gateway.url=http://enterprise-metrics-store-gateway.enterprise-metrics.svc:8080
+        env: null
+        image: grafana/metrics-enterprise:v1.4.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        resources:
+          requests:
+            cpu: 1
+            memory: 384Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+          subPath: null
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 60
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+      - emptyDir: {}
+        name: storage

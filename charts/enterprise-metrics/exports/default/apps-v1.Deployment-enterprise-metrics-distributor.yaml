@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: enterprise-metrics-distributor
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.4.0
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-distributor
+  namespace: enterprise-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise-metrics-distributor
+      release: enterprise-metrics
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
+      labels:
+        app: enterprise-metrics-distributor
+        gossip_ring_member: "true"
+        name: distributor
+        release: enterprise-metrics
+        target: distributor
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: target
+                operator: In
+                values:
+                - distributor
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - args:
+        - -target=distributor
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -memberlist.join=enterprise-metrics-gossip-ring
+        - -admin.client.backend-type=s3
+        - -admin.client.s3.endpoint=enterprise-metrics-minio.enterprise-metrics.svc:9000
+        - -admin.client.s3.bucket-name=enterprise-metrics-admin
+        - -admin.client.s3.access-key-id=enterprise-metrics
+        - -admin.client.s3.secret-access-key=supersecret
+        - -admin.client.s3.insecure=true
+        env: null
+        image: grafana/metrics-enterprise:v1.4.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 45
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+          subPath: null
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 60
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+      - emptyDir: {}
+        name: storage

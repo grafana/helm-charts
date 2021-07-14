@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "tempo.ingesterFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.ingesterLabels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.ingester.replicas }}
+  selector:
+    matchLabels:
+      {{- include "tempo.ingesterSelectorLabels" . | nindent 6}}
+  serviceName: ingester
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "tempo.ingesterLabels" . | nindent 8 }}
+        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.ingester.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      containers:
+        - args:
+            - -target=ingester
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+            {{- with .Values.ingester.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          image: {{ include "tempo.ingesterImage" . }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+          name: ingester
+          ports:
+            - name: grpc
+              containerPort: 9095
+            - name: http-memberlist
+              containerPort: 7946
+            - name: http
+              containerPort: 3100
+          {{- with .Values.ingester.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ingester.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.ingester.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+            - mountPath: /var/tempo
+              name: data
+            {{- with .Values.ingester.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- with .Values.ingester.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ingester.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ingester.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - configMap:
+            name: {{ template "tempo.fullname" . }}
+          name: tempo-conf
+        {{- with .Values.ingester.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+  {{- if not .Values.ingester.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+  {{- else }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.ingester.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.ingester.persistence.size | quote }}
+  {{- end }}

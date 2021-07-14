@@ -1,0 +1,159 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+## Upgrading
+
+A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 0.9.0
+
+This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
+
+Due to the label changes, an existing installation cannot be upgraded without manual interaction. There are basically two options:
+
+Option 1
+Uninstall the old release and re-install the new one. There will be no data loss, as the collectors/agents can cache for a short period.
+
+Option 2
+Add new selector labels to the existing pods. This option will make your pods also temporarely unavailable, option 1 is faster:
+
+```
+kubectl label pod -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> app.kubernetes.io/component=<component> --overwrite
+```
+
+Perform a non-cascading deletion of the Deployments and Statefulsets which will keep the pods running:
+
+```
+kubectl delete <deployment/statefulset> -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> --cascade=false
+```
+
+Perform a regular Helm upgrade on the existing release. The new Deployment/Statefulset will pick up the existing pods and perform a rolling upgrade.
+
+### From Chart versions < 0.8.0
+
+By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+
+For example to enable Jaeger grpc thrift http and zipkin protocols:
+```yaml
+traces:
+  jaeger:
+    grpc: true
+    thriftHttp: true
+  zipkin: true
+```
+
+The distributor service is now called {{"{{"}}tempo.fullname{{"}}"}}-distributor. That could impact your ingestion towards this service.
+
+### From Chart Versions < 0.7.0
+
+The memcached default args are removed and should be provided manually. The settings for the `memcached.exporter` moved to `memcachedExporter`
+
+{{ template "chart.valuesSection" . }}
+
+## Components
+
+The chart supports the components shown in the following table.
+Ingester, distributor, querier, query-frontend, and compactor are always installed.
+The other components are optional and must be explicitly enabled.
+
+| Component | Optional |
+| --- | --- |
+| ingester | no |
+| distributor | no |
+| querier | no |
+| query-frontend | no |
+| compactor | no |
+| memcached | yes |
+
+
+## (Configuration)[https://grafana.com/docs/tempo/latest/configuration/]
+
+This chart configures Tempo in microservices mode.
+
+**NOTE:**
+In its default configuration, the chart uses `local` filesystem as storage.
+The reason for this is that the chart can be validated and installed in a CI pipeline.
+However, this setup is not fully functional.
+The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/tempo/latest/configuration/#storage.
+
+Alternatively, in order to quickly test Tempo using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
+
+----
+
+### Directory and File Locations
+
+* Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
+* The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
+
+### Example configuration using S3 for storage
+
+```yaml
+config: |
+  multitenancy_enabled: false
+  compactor:
+    compaction:
+      block_retention: 48h
+    ring:
+      kvstore:
+        store: memberlist
+  distributor:
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          thrift_compact:
+            endpoint: 0.0.0.0:6831
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+  querier:
+    frontend_worker:
+      frontend_address: {{"{{"}} include "tempo.queryFrontendFullname" . {{"}}"}}:9095
+  ingester:
+    lifecycler:
+      ring:
+        replication_factor: 1
+  memberlist:
+    abort_if_cluster_join_fails: false
+    join_members:
+      - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
+  overrides:
+    per_tenant_override_config: /conf/overrides.yaml
+  server:
+    http_listen_port: 3100
+  storage:
+    trace:
+      backend: s3
+      s3:
+        access_key: tempo
+        bucket: tempo
+        endpoint: minio:9000
+        insecure: true
+        secret_key: supersecret
+      pool:
+        queue_depth: 2000
+      wal:
+        path: /var/tempo/wal
+      memcached:
+        consistent_hash: true
+        host: a-tempo-distributed-memcached
+        service: memcached-client
+        timeout: 500ms
+```

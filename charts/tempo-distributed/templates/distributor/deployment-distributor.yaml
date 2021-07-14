@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "tempo.fullname" . }}-distributor
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "tempo.distributorLabels" . | nindent 4 }}
+  {{- with .Values.distributor.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  minReadySeconds: 10
+  replicas: {{ .Values.distributor.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      {{- include "tempo.distributorSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "tempo.distributorLabels" . | nindent 8 }}
+        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.distributor.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      containers:
+        - args:
+            - -target=distributor
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+            {{- with .Values.distributor.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          image: {{ include "tempo.distributorImage" . }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
+          name: distributor
+          ports:
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+            - containerPort: 3100
+              name: http
+            {{- if .Values.traces.jaeger.thriftCompact }}
+            - containerPort: 6831
+              name: jaeger-compact
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.traces.jaeger.thriftBinary }}
+            - containerPort: 6832
+              name: jaeger-binary
+              protocol: UDP
+            {{- end }}
+            {{- if .Values.traces.jaeger.thriftHttp }}
+            - containerPort: 14268
+              name: jaeger-http
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.jaeger.grpc }}
+            - containerPort: 14250
+              name: jaeger-grpc
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.zipkin }}
+            - containerPort: 9411
+              name: zipkin
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.otlp.http }}
+            - containerPort: 55681
+              name: otlp-http
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.otlp.grpc }}
+            - containerPort: 4317
+              name: otlp-grpc
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.traces.opencensus }}
+            - containerPort: 55678
+              name: opencensus
+              protocol: TCP
+            {{- end }}
+          {{- with .Values.distributor.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.distributor.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.distributor.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+            {{- with .Values.distributor.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- with .Values.distributor.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.distributor.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.distributor.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - configMap:
+            name: {{ template "tempo.fullname" . }}
+          name: tempo-conf
+        {{- with .Values.distributor.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

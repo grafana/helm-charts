@@ -109,9 +109,12 @@ nodeSelector: {}
 # -- Affinity configuration for pods
 affinity: {}
 
-# -- Tolerations for pods. By default, pods will be scheduled on master nodes.
+# -- Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes.
 tolerations:
   - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/control-plane
     operator: Exists
     effect: NoSchedule
 
@@ -218,6 +221,10 @@ podSecurityPolicy:
 # which is a templated string that references the other values and snippets below this key.
 # @default -- See `values.yaml`
 config:
+  # -- The log level of the Promtail server
+  # Must be reference in `config.file` to configure `server.log_level`
+  # See default config in `values.yaml`
+  logLevel: info
   # -- The port of the Promtail server
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
@@ -266,8 +273,10 @@ config:
         target_label: __path__
       - action: replace
         replacement: /var/log/pods/*$1/*.log
+        regex: true/(.*)
         separator: /
         source_labels:
+          - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
           - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
           - __meta_kubernetes_pod_container_name
         target_label: __path__
@@ -441,11 +450,11 @@ config:
   # @default -- See `values.yaml`
   file: |
     server:
-      log_level: info
+      log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
 
     client:
-      url: {{ .Values.config.lokiAddress }}
+      url: {{ tpl .Values.config.lokiAddress . }}
       {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
 
     positions:
@@ -454,3 +463,22 @@ config:
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
       {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
+
+networkPolicy:
+  # -- Specifies whether Network Policies should be created
+  enabled: false
+  metrics:
+    # -- Specifies the Pods which are allowed to access the metrics port.
+    # As this is cross-namespace communication, you also neeed the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespaces which are allowed to access the metrics port
+    namespaceSelector: {}
+    # -- Specifies specific network CIDRs which are allowed to access the metrics port.
+    # In case you use namespaceSelector, you also have to specify your kubelet networks here.
+    # The metrics ports are also used for probes.
+    cidrs: []
+  k8sApi:
+    # -- Specify the k8s API endpoint port
+    port: 8443
+    # -- Specifies specific network CIDRs you want to limit access to
+    cidrs: []

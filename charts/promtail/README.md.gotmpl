@@ -149,6 +149,7 @@ extraPorts:
 config:
   file: |
     server:
+      log_level: {{"{{"}} .Values.config.logLevel {{"}}"}}
       http_listen_port: {{"{{"}} .Values.config.serverPort {{"}}"}}
 
     client:
