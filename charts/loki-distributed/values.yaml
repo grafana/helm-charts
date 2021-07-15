@@ -623,7 +623,7 @@ gateway:
   # Configures the readiness probe for the gateway
   readinessProbe:
     httpGet:
-      path: /
+      path: /ready
       port: http
     initialDelaySeconds: 15
     timeoutSeconds: 1
@@ -674,11 +674,6 @@ gateway:
           auth_basic           "Loki";
           auth_basic_user_file /etc/nginx/secrets/.htpasswd;
           {{- end }}
-
-          location = / {
-            return 200 'OK';
-            auth_basic off;
-          }
 
           location = /ready {
             return 200 'OK';
