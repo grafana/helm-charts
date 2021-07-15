@@ -19,11 +19,5 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
-    - name: tempo-query-jaeger-ui
-      port: 16686
-      targetPort: 16686
-    - name: tempo-query-metrics
-      port: 16687
-      targetPort: jaeger-metrics
   selector:
     {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}
