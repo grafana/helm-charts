@@ -170,7 +170,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.query.config | string | `"backend: 127.0.0.1:3100\n"` |  |
-| queryFrontend.query.enabled | bool | `true` |  |
+| queryFrontend.query.enabled | bool | `true` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
 | queryFrontend.query.extraArgs | list | `[]` | Additional CLI args for tempo-query pods |
 | queryFrontend.query.extraEnv | list | `[]` | Environment variables to add to the tempo-query pods |
 | queryFrontend.query.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the tempo-query pods |
