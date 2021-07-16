@@ -206,7 +206,7 @@ ingress:
   #     service:
   #       name: ssl-redirect
   #       port:
-  #         name: service
+  #         name: use-annotation
 
 
   tls: []
