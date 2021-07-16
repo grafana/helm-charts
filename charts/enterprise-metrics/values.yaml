@@ -89,7 +89,7 @@ config:
   instrumentation:
     enabled: true
     distributor_client:
-      address: 'dns://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
+      address: 'dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
 
   limits:
     enforce_metric_name: false
