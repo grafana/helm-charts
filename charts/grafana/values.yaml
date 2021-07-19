@@ -19,6 +19,7 @@ serviceAccount:
   nameTest:
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
+  autoMount: false
 
 replicas: 1
 
