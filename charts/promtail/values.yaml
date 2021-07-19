@@ -32,7 +32,7 @@ image:
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
-# -- Annotations for the SaemonSet
+# -- Annotations for the DaemonSet
 annotations: {}
 
 # -- The update strategy for the DaemonSet
