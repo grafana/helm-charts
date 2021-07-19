@@ -4,6 +4,11 @@ nameOverride: null
 # -- Overrides the chart's computed fullname
 fullnameOverride: null
 
+## Labels to apply to all resources
+##
+customLabels: {}
+  # stack: logging
+
 initContainer:
   # -- Specifies whether the init container for setting inotify max user instances is to be enabled
   enabled: false
