@@ -6,9 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "loki.name" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-    chart: {{ template "loki.chart" . }}
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:

@@ -7,9 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "loki.name" . }}
-    chart: {{ template "loki.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "loki.labels" . | nindent 4 }}
 data:
   {{ template "loki.fullname" . }}-alerting-rules.yaml: |-
     groups:

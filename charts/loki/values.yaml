@@ -10,6 +10,11 @@ image:
   # pullSecrets:
   #   - myRegistryKeySecretName
 
+## Labels to apply to all resources
+##
+customLabels: {}
+  # stack: logging
+
 ingress:
   enabled: false
   annotations: {}
