@@ -103,6 +103,18 @@ spec:
         {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
+      {{- with .Values.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
       {{- if .Values.extraVolumes -}}
         {{ toYaml .Values.extraVolumes | nindent 6 }}
