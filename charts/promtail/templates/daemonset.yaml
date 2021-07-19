@@ -31,17 +31,8 @@ spec:
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
-      {{- if .Values.initContainer.enabled }}
-      initContainers:
-        - name: init
-          image: "{{ .Values.initContainer.image.registry }}/{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
-          imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
-          command:
-            - sh
-            - -c
-            - sysctl -w fs.inotify.max_user_instances={{ .Values.initContainer.fsInotifyMaxUserInstances }}
-          securityContext:
-            privileged: true
+      {{- if .Values.initContainers }}
+      initContainers: {{ toYaml .Values.initContainers | nindent 8}}
       {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
