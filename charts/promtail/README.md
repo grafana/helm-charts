@@ -60,6 +60,14 @@ The new release which will pick up again from the existing `positions.yaml`.
 * Perform a regular Helm upgrade on the existing release.
   The new DaemonSet will pick up the existing pods and perform a rolling upgrade.
 
+## How to use
+This promtail chart sends logs to the loki gateway (a microservice in the loki-distributed chart) by default. To send logs to loki directly you can configure it with values like so: (replace *\<namespace\>* with your namespace)
+```
+config:
+    lokiAddress: "http://loki.<namespace>.svc:3100/loki/api/v1/push"
+```
+Other than that it should work out of the box. Enjoy!
+
 ## Values
 
 | Key | Type | Default | Description |
