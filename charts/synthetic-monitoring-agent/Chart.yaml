@@ -1,0 +1,15 @@
+apiVersion: v2
+appVersion: v0.0.11-0-ge6ef64c
+description: Blackbox Exporter agent which executes checks for the Grafana Cloud Synthetic Monitoring service.
+engine: gotpl
+home: https://grafana.net
+icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+kubeVersion: ^1.16.0-0
+maintainers:
+  - name: sc250024
+    email: scott.crooks@gmail.com
+name: synthetic-monitoring-agent
+sources:
+  - https://github.com/grafana/synthetic-monitoring-agent
+type: application
+version: 0.1.0

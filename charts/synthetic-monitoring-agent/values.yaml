@@ -1,0 +1,73 @@
+# Default values for synthetic-monitoring-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+agent:
+  # -- **REQUIRED** API token from Grafana Cloud.
+  apiToken: ""
+  # -- Default server endpoint for receiving synthetic monitoring checks.
+  apiServerAddress: "synthetic-monitoring-grpc.grafana.net:443"
+  # -- Enable / disable debug logging on the agent.
+  debug: false
+  # -- Enable / disable verbose logging on the agent.
+  verbose: false
+
+# -- Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`.
+replicaCount: 1
+
+image:
+  # -- Base repository for Docker image.
+  repository: docker.io/grafana/synthetic-monitoring-agent
+  # -- Image pull policy.
+  pullPolicy: IfNotPresent
+  # -- Image tag; overrides the image tag whose default is the chart `appVersion`.
+  tag: ""
+
+# -- Docker registry secret names as an array.
+imagePullSecrets: []
+# -- Override the name of the chart.
+nameOverride: ""
+# -- Override the fullname of the chart.
+fullnameOverride: ""
+
+# -- Annotations to add to each pod.
+podAnnotations: {}
+
+# -- Security context on the Pod level.
+podSecurityContext:
+  fsGroup: 65534
+
+# -- Security context for the container level.
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534
+
+# -- Default resources to apply.
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+# -- Autoscaling settings for the HPA.
+autoscaling:
+  enabled: false
+  maxReplicas: 100
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# -- Node labels for pod assignment.
+nodeSelector: {}
+
+# -- List of node taints to tolerate.
+tolerations: []
+
+# -- Node affinity for pod assignment.
+affinity: {}
