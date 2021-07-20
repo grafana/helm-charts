@@ -12,6 +12,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.1
+
+* [BUGFIX] Fixed DNS address of distributor client for self-monitoring. #569
+
 ## 1.4.0
 
 * [CHANGE] Use updated querier response compression configuration, changed in 1.4.0. #524
