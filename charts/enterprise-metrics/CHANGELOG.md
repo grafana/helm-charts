@@ -15,8 +15,8 @@ Entries should include a reference to the Pull Request that introduced the chang
 ## 1.4.1
 
 * [CHANGE] The compactor data directory configuration has been corrected to `/data`.
-  > **Warning:** Existing clusters will need to follow an upgrade procedure.
-  > TODO(jdb): document
+  > **Note:** The compactor is stateless and no data stored in the existing data directory needs to be moved in order to facilitate this upgrade.
+  > For more information, refer to the [Cortex Compactor documentation](https://cortexmetrics.io/docs/blocks-storage/compactor/).
 * [BUGFIX] Fixed DNS address of distributor client for self-monitoring. #569
 
 ## 1.4.0
