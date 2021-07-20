@@ -67,6 +67,7 @@ config:
     response_compression_enabled: true
 
   compactor:
+    data_dir: "/data"
     sharding_enabled: true
     sharding_ring:
       kvstore:
