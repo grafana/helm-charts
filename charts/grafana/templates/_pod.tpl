@@ -151,8 +151,8 @@ initContainers:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
-{{- if .Values.extraInitContainers }}
-{{ toYaml .Values.extraInitContainers | indent 2 }}
+{{- if .Values.initContainers }}
+{{ toYaml .Values.initContainers | indent 2 }}
 {{- end }}
 {{- if .Values.image.pullSecrets }}
 imagePullSecrets:
@@ -387,8 +387,8 @@ containers:
 {{ toYaml .Values.readinessProbe | indent 6 }}
     resources:
 {{ toYaml .Values.resources | indent 6 }}
-{{- with .Values.extraContainers }}
-{{ tpl . $ | indent 2 }}
+{{- if .Values.containers }}
+{{ toYaml .Values.containers | indent 2 }}
 {{- end }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
