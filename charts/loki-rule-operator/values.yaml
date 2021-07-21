@@ -1,0 +1,90 @@
+# Default values for loki-rule-operator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of replica
+replicaCount: 1
+
+image:
+  # -- The Docker registry for the image
+  repository: eu.gcr.io/opsgy-com/loki-rule-operator
+  # -- The pull policy
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# -- Image pull secrets for Docker images
+imagePullSecrets: []
+# -- Overrides the chart's name
+nameOverride: ""
+# -- Overrides the chart's computed fullname
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "loki-rule-operator"
+
+# -- Annotations for pod
+podAnnotations: {}
+
+# -- The SecurityContext for pod
+podSecurityContext:
+  fsGroup: 2000
+  runAsUser: 10000
+
+# -- The SecurityContext for the containers
+securityContext:
+  readOnlyRootFilesystem: true
+
+# -- Service configuration
+service:
+  # -- Type of service
+  type: ClusterIP
+  # -- Port of the service
+  port: 443
+
+# -- Resource requests and limits
+resources: {}
+#  limits:
+#    memory: 50Mi
+#    cpu: 50m
+#  requests:
+#    memory: 50Mi
+#    cpu: 50m
+
+loki:
+  rulesConfigMap:
+    # -- Name of the loki configmap storing the rules
+    name: loki-rules
+    # -- Namespace where the loki rules configmap reside in
+    namespace: ""
+
+admissionWebhooks:
+  # -- Enable admission webhooks to validate CRDs
+  enabled: true
+  # -- Additionnal annotations for the admission webhook
+  annotations: {}
+
+certManager:
+  # -- Enable the creation of a Certificate for cert-manager. This is only useful if admissionWebhooks.enabled is true
+  enabled: true
+  # Group of the issuer
+  group: cert-manager.io
+  # -- Kind of issuer to use
+  kind: ClusterIssuer
+  # -- Name of the issuer
+  issuerName: selfsigned
+
+# -- Node selector for the pod
+nodeSelector: {}
+
+# -- Toleration for the pod
+tolerations: []
+
+# -- Affinity for the pod
+affinity: {}

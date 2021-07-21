@@ -1,0 +1,8 @@
+apiVersion: v2
+name: loki-rule-operator
+description: Install CRDs to handle Loki rules
+type: application
+sources:
+  - https://github.com/opsgy/loki-rule-operator
+version: 1.0.0
+appVersion: v0.5.0

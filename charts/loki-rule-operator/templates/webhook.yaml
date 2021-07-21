@@ -1,0 +1,37 @@
+{{- if .Values.admissionWebhooks.enabled -}}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "loki-rule-operator.fullname" . }}
+  labels:
+    {{- include "loki-rule-operator.labels" . | nindent 4 }}
+  {{- if .Values.certManager.enabled }}
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "loki-rule-operator.fullname" . }}
+    {{- with .Values.admissionWebhooks.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{ else }}
+    {{- with .Values.admissionWebhooks.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+webhooks:
+- name: loki-rule.logging.opsgy.com
+  admissionReviewVersions:
+  - v1
+  - v1beta1
+  rules:
+    - operations: ["CREATE","UPDATE"]
+      apiGroups: ["logging.opsgy.com"]
+      apiVersions: ["v1", "v1beta1"]
+      resources: ["lokirules"]
+  clientConfig:
+    service:
+      name: {{ include "loki-rule-operator.fullname" . }}
+      namespace: {{ .Release.Namespace }}
+      path: /validate-logging-opsgy-com-v1beta1-lokirule
+      port: {{ .Values.service.port }}
+  sideEffects: None
+{{- end }}

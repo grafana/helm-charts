@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "loki-rule-operator.fullname" . }}
+  namespace: {{ .Values.loki.rulesConfigMap.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "loki-rule-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "loki-rule-operator.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "loki-rule-operator.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
