@@ -19,43 +19,43 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
-    {{- if .Values.traces.jaeger.thriftCompact }}
+    {{- if .Values.config.distributor.receivers.jaeger.protocols.thriftCompact }}
     - name: distributor-jaeger-thrift-compact
       port: 6831
       protocol: UDP
       targetPort: jaeger-compact
     {{- end }}
-    {{- if .Values.traces.jaeger.thriftBinary }}
+    {{- if .Values.config.distributor.receivers.jaeger.protocols.thriftBinary }}
     - name: distributor-jaeger-thrift-binary
       port: 6832
       protocol: UDP
       targetPort: jaeger-binary
     {{- end }}
-    {{- if .Values.traces.jaeger.thriftHttp }}
+    {{- if .Values.config.distributor.receivers.jaeger.protocols.thriftHttp }}
     - name: distributor-jaeger-thrift-http
       port: 14268
       protocol: TCP
       targetPort: jaeger-http
     {{- end }}
-    {{- if .Values.traces.jaeger.grpc }}
+    {{- if .Values.config.distributor.receivers.jaeger.protocols.grpc }}
     - name: distributor-jaeger-grpc
       port: 14250
       protocol: TCP
       targetPort: jaeger-grpc
     {{- end }}
-    {{- if .Values.traces.zipkin }}
+    {{- if .Values.config.distributor.receivers.zipkin }}
     - name: distributor-zipkin
       port: 9411
       protocol: TCP
       targetPort: zipkin
     {{- end }}
-    {{- if .Values.traces.otlp.http }}
+    {{- if .Values.config.distributor.receivers.otlp.protocols.http }}
     - name: distributor-otlp-http
       port: 55681
       protocol: TCP
       targetPort: otlp-http
     {{- end }}
-    {{- if .Values.traces.otlp.grpc }}
+    {{- if .Values.config.distributor.receivers.otlp.protocols.grpc }}
     - name: distributor-otlp-grpc
       port: 4317
       protocol: TCP
@@ -65,16 +65,16 @@ spec:
       protocol: TCP
       targetPort: otlp-grpc
     {{- end }}
-    {{- if .Values.traces.opencensus }}
+    {{- if .Values.config.distributor.receivers.opencensus }}
     - name: distributor-opencensus
       port: 55678
       protocol: TCP
       targetPort: opencensus
     {{- end }}
   {{- if .Values.distributor.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP  }}
+  loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP }}
   {{- end }}
-  {{- with .Values.distributor.service.loadBalancerSourceRanges}}
+  {{- with .Values.distributor.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{ toYaml . | nindent 4 }}
   {{- end }}
