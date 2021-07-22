@@ -89,6 +89,9 @@ spec:
             - name: {{ .name | default $key }}
               containerPort: {{ $values.containerPort }}
               protocol: {{ $values.protocol | default "TCP" }}
+              {{- if $values.hostPort }}
+              hostPort: {{ $values.hostPort }}
+              {{- end }}
             {{- end }}
           securityContext:
             {{- toYaml .Values.containerSecurityContext | nindent 12 }}
