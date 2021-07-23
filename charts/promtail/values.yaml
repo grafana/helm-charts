@@ -86,6 +86,10 @@ containerSecurityContext:
       - ALL
   allowPrivilegeEscalation: false
 
+# -- SecurityContextConstraint for OpenShift
+securityContextConstraints:
+  enabled: false
+  
 rbac:
   # -- Specifies whether RBAC resources are to be created
   create: true
