@@ -271,6 +271,10 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
+    # -- SubPath property specifies a sub-path inside the referenced volume instead of its root.
+    subPath: null
+    # -- ExistingClaim specifies a persistentVolumeClaim that already exists. 
+    existingClaim: null
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -386,6 +390,10 @@ querier:
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
+    # -- SubPath property specifies a sub-path inside the referenced volume instead of its root.
+    subPath: null
+    # -- ExistingClaim specifies a persistentVolumeClaim that already exists. 
+    existingClaim: null
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -752,6 +760,10 @@ compactor:
   persistence:
     # -- Enable creating PVCs for the compactor
     enabled: false
+    # -- SubPath property specifies a sub-path inside the referenced volume instead of its root.
+    subPath: null
+    # -- ExistingClaim specifies a persistentVolumeClaim that already exists. 
+    existingClaim: null
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -829,6 +841,10 @@ ruler:
   persistence:
     # -- Enable creating PVCs for the ruler
     enabled: false
+    # -- SubPath property specifies a sub-path inside the referenced volume instead of its root.
+    subPath: null
+    # -- ExistingClaim specifies a persistentVolumeClaim that already exists. 
+    existingClaim: null
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.

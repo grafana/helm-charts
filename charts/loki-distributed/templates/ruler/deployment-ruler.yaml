@@ -73,6 +73,7 @@ spec:
               mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
+              subPath: {{ .Values.ruler.persistence.subPath}}
             - name: tmp
               mountPath: /tmp/loki
             {{- range $dir, $_ := .Values.ruler.directories }}
@@ -113,11 +114,14 @@ spec:
         - name: tmp
           emptyDir: {}
         - name: data
-          {{- if .Values.ruler.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: data-{{ include "loki.rulerFullname" . }}
-          {{- else }}
+          {{- if not .Values.ruler.persistence.enabled }}
           emptyDir: {}
+          {{- else if .Values.ruler.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.ruler.persistence.existingClaim }}
+          {{- else }}
+          persistentVolumeClaim:
+            claimName: data-{{ include "loki.compactorFullname" . }}
           {{- end }}
         {{- with .Values.ruler.extraVolumes }}
         {{- toYaml . | nindent 8 }}

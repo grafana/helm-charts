@@ -67,6 +67,7 @@ spec:
               mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
+              subPath: {{ .Values.compactor.persistence.subPath}}
             {{- with .Values.compactor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -90,11 +91,14 @@ spec:
             name: {{ include "loki.fullname" . }}
           {{- end }}
         - name: data
-          {{- if .Values.compactor.persistence.enabled }}
+          {{- if not .Values.compactor.persistence.enabled }}
+          emptyDir: {}
+          {{- else if .Values.compactor.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.compactor.persistence.existingClaim }}
+          {{- else }}
           persistentVolumeClaim:
             claimName: data-{{ include "loki.compactorFullname" . }}
-          {{- else }}
-          emptyDir: {}
           {{- end }}
         {{- with .Values.compactor.extraVolumes }}
         {{- toYaml . | nindent 8 }}

@@ -76,6 +76,7 @@ spec:
               mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
+              subPath: {{ .Values.querier.persistence.subPath}}
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -108,6 +109,10 @@ spec:
   {{- if not .Values.querier.persistence.enabled }}
         - name: data
           emptyDir: {}
+  {{- else if .Values.querier.persistence.existingClaim }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.querier.persistence.existingClaim }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:
