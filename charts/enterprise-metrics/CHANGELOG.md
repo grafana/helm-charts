@@ -12,11 +12,15 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
-## 1.4.1
+## 1.4.2
 
-* [CHANGE] The compactor data directory configuration has been corrected to `/data`.
+* [CHANGE] The compactor data directory configuration has been corrected to `/data`. #562
   > **Note:** The compactor is stateless and no data stored in the existing data directory needs to be moved in order to facilitate this upgrade.
   > For more information, refer to the [Cortex Compactor documentation](https://cortexmetrics.io/docs/blocks-storage/compactor/).
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.4.2](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v142----jul-21st-2021) #562
+
+## 1.4.1
+
 * [BUGFIX] Fixed DNS address of distributor client for self-monitoring. #569
 
 ## 1.4.0
