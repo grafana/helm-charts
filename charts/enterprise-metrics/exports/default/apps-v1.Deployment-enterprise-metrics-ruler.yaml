@@ -57,7 +57,7 @@ spec:
         - -ruler.alertmanager-url=http://enterprise-metrics-alertmanager.enterprise-metrics.svc:8080/api/prom/alertmanager/
         - -querier.store-gateway-addresses=dns+enterprise-metrics-store-gateway.enterprise-metrics.svc:9095
         env: null
-        image: grafana/metrics-enterprise:v1.4.1
+        image: grafana/metrics-enterprise:v1.4.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

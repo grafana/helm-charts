@@ -29,7 +29,7 @@ spec:
         - -target=tokengen
         - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
         env: null
-        image: grafana/metrics-enterprise:v1.4.1
+        image: grafana/metrics-enterprise:v1.4.2
         imagePullPolicy: IfNotPresent
         name: enterprise-metrics
         volumeMounts:

@@ -37,7 +37,7 @@ spec:
         - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-1.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
         - -alertmanager.cluster.peers=enterprise-metrics-alertmanager-2.enterprise-metrics-alertmanager-headless.enterprise-metrics.svc:9094
         env: null
-        image: grafana/metrics-enterprise:v1.4.1
+        image: grafana/metrics-enterprise:v1.4.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
