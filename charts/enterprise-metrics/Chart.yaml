@@ -1,6 +1,6 @@
 apiVersion: v2
 version: 1.4.2
-appVersion: v1.4.1
+appVersion: v1.4.2
 description: 'Grafana Enterprise Metrics'
 engine: gotpl
 home: https://grafana.com/products/enterprise/metrics
