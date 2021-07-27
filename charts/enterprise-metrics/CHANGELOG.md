@@ -12,6 +12,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.6
+
+* [FEATURE] Run an instance of the GEM overrides-exporter by default. #590
+
 ## 1.4.5
 
 * [BUGFIX] Add `memberlist.join` configuration to the ruler. #618
