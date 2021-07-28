@@ -67,13 +67,12 @@ spec:
             - -admin.client.s3.access-key-id=enterprise-metrics
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
-            - -alertmanager.storage.type=s3
-            - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -alertmanager.storage.s3.buckets=enterprise-metrics-ruler
-            - -alertmanager.storage.s3.access-key-id=enterprise-metrics
-            - -alertmanager.storage.s3.secret-access-key=supersecret
-            - -alertmanager.storage.s3.insecure=true
-            - -alertmanager.storage.s3.force-path-style=true
+            - -alertmanager-storage.backend=s3
+            - -alertmanager-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -alertmanager-storage.s3.bucket-name=enterprise-metrics-ruler
+            - -alertmanager-storage.s3.access-key-id=enterprise-metrics
+            - -alertmanager-storage.s3.secret-access-key=supersecret
+            - -alertmanager-storage.s3.insecure=true
           {{- end }}
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"

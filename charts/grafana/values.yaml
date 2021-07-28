@@ -19,6 +19,7 @@ serviceAccount:
   nameTest:
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
+  autoMount: true
 
 replicas: 1
 
@@ -206,7 +207,7 @@ ingress:
   #     service:
   #       name: ssl-redirect
   #       port:
-  #         name: service
+  #         name: use-annotation
 
 
   tls: []
