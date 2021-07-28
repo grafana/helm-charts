@@ -928,6 +928,7 @@ memcached:
         - ALL
     allowPrivilegeEscalation: false
 
+
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
@@ -955,7 +956,8 @@ memcachedChunks:
   # -- Labels for memcached-chunks service
   serviceLabels: {}
   # -- Additional CLI args for memcached-chunks
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-chunks pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-chunks pods
@@ -997,7 +999,8 @@ memcachedFrontend:
   # -- Labels for memcached-frontend service
   serviceLabels: {}
   # -- Additional CLI args for memcached-frontend
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-frontend pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-frontend pods
@@ -1039,7 +1042,8 @@ memcachedIndexQueries:
   # -- Labels for memcached-index-queries service
   serviceLabels: {}
   # -- Additional CLI args for memcached-index-queries
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-index-queries pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-index-queries pods
@@ -1081,7 +1085,8 @@ memcachedIndexWrites:
   # -- Labels for memcached-index-writes service
   serviceLabels: {}
   # -- Additional CLI args for memcached-index-writes
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-index-writes pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-index-writes pods

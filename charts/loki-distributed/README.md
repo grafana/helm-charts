@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.35.0](https://img.shields.io/badge/Version-0.35.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.1](https://img.shields.io/badge/AppVersion-2.2.1-informational?style=flat-square)
+![Version: 0.35.2](https://img.shields.io/badge/Version-0.35.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.1](https://img.shields.io/badge/AppVersion-2.2.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -103,6 +103,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
+| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | See `kubectl explain deployment.spec.strategy` for more -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
 | gateway.enabled | bool | `true` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
@@ -113,10 +114,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
-| gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
+| gateway.ingress.annotations | object | `{}` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 ingressClassName: nginx -- Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
-| gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path": "/"}]}]` | Hosts configuration for the gateway ingress |
-| gateway.ingress.ingressClassName | string | `nil` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 |
+| gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
@@ -164,7 +164,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `1` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
-| ingestor.serviceLabels | object | `{}` | Labels for ingestor service |
+| ingester.serviceLabels | object | `{}` | Labels for ingestor service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | loki.config | string | See values.yaml | Config file contents for Loki |
@@ -189,7 +189,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcached.podSecurityContext | object | `{"fsGroup":11211,"runAsGroup":11211,"runAsNonRoot":true,"runAsUser":11211}` | The SecurityContext for memcached pods |
 | memcachedChunks.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedChunks.enabled | bool | `false` | Specifies whether the Memcached chunks cache should be enabled |
-| memcachedChunks.extraArgs | list | `[]` | Additional CLI args for memcached-chunks |
+| memcachedChunks.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-chunks |
 | memcachedChunks.extraEnv | list | `[]` | Environment variables to add to memcached-chunks pods |
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
@@ -208,7 +208,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedExporter.resources | object | `{}` | Memcached Exporter resource requests and limits |
 | memcachedFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedFrontend.enabled | bool | `false` | Specifies whether the Memcached frontend cache should be enabled |
-| memcachedFrontend.extraArgs | list | `[]` | Additional CLI args for memcached-frontend |
+| memcachedFrontend.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-frontend |
 | memcachedFrontend.extraEnv | list | `[]` | Environment variables to add to memcached-frontend pods |
 | memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
 | memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
@@ -221,7 +221,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedFrontend.tolerations | list | `[]` | Tolerations for memcached-frontend pods |
 | memcachedIndexQueries.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexQueries.enabled | bool | `false` | Specifies whether the Memcached index queries cache should be enabled |
-| memcachedIndexQueries.extraArgs | list | `[]` | Additional CLI args for memcached-index-queries |
+| memcachedIndexQueries.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-index-queries |
 | memcachedIndexQueries.extraEnv | list | `[]` | Environment variables to add to memcached-index-queries pods |
 | memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
 | memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
@@ -234,7 +234,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexQueries.tolerations | list | `[]` | Tolerations for memcached-index-queries pods |
 | memcachedIndexWrites.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexWrites.enabled | bool | `false` | Specifies whether the Memcached index writes cache should be enabled |
-| memcachedIndexWrites.extraArgs | list | `[]` | Additional CLI args for memcached-index-writes |
+| memcachedIndexWrites.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-index-writes |
 | memcachedIndexWrites.extraEnv | list | `[]` | Environment variables to add to memcached-index-writes pods |
 | memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
 | memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
