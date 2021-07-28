@@ -1,0 +1,35 @@
+apiVersion: v2
+version: 1.1.0
+appVersion: v1.1.0
+description: 'Grafana Enterprise Logs'
+engine: gotpl
+home: https://grafana.com/products/enterprise/logs
+icon: https://grafana.com/static/img/menu/enterprise-logs.svg
+kubeVersion: ^1.10.0-0
+name: enterprise-logs
+dependencies:
+  - name: memcached
+    alias: memcached
+    version: 5.5.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: memcached.enabled
+  - name: memcached
+    alias: memcached-queries
+    version: 5.5.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: memcached-queries.enabled
+  - name: memcached
+    alias: memcached-metadata
+    version: 5.5.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: memcached-metadata.enabled
+  - name: minio
+    alias: minio
+    version: 8.0.9
+    repository: https://helm.min.io/
+    condition: minio.enabled
+  - name: consul
+    alias: consul
+    version: 0.25.0
+    repository: https://helm.releases.hashicorp.com
+    condition: consul.enabled

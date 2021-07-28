@@ -1,0 +1,9 @@
+.git
+.envrc
+nix
+shell.nix
+vendor
+lib
+environments
+releases
+docs
