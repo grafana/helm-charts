@@ -1,0 +1,101 @@
+# These values configure the Grafana Enterprise Logs cluster to
+# handle production ingestion of ~11MiB/s
+
+# Query requirements can vary dramatically depending on query rate and query
+# ranges. The values here satisfy a "usual" query load as seen from our
+# production clusters at this scale.
+
+
+admin_api:
+  replicas: 3
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+compactor:
+  replicas: 1
+  persistentVolume:
+    size: 100Gi
+  resources:
+    limits:
+      cpu: 4
+      memory: 2Gi
+    requests:
+      cpu: 2
+      memory: 1Gi
+
+distributor:
+  replicas: 3
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 0.5
+      memory: 500Mi
+
+gateway:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 1
+      memory: 384Mi
+
+ingester:
+  persistentVolume:
+    size: 50Gi
+  replicas: 4
+  resources:
+    limits:
+      cpu: 2
+      memory: 14Gi
+    requests:
+      cpu: 1
+      memory: 7Gi
+
+memcached:
+  enabled: true
+  replicaCount: 2
+
+memcached-queries:
+  enabled: true
+  replicaCount: 3
+
+memcached-metadata:
+  enabled: true
+
+minio:
+  enabled: false
+
+querier:
+  replicas: 8
+  resources:
+    limits:
+      cpu: 7
+      memory: 16Gi
+    requests:
+      cpu: 4
+      memory: 6Gi
+
+query_frontend:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 3
+      memory: 10Gi
+    requests:
+      cpu: 2
+      memory: 5Gi
+
+ruler:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 7
+      memory: 16Gi
+    requests:
+      cpu: 2
+      memory: 6Gi
