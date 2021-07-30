@@ -12,6 +12,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.3
+
+* [ENHANCEMENT] Added values files for installations that require setting resource limits. #583
+
 ## 1.4.2
 
 * [CHANGE] The compactor data directory configuration has been corrected to `/data`. #562
