@@ -1,0 +1,24 @@
+{{/*
+compactor fullname
+*/}}
+{{- define "enterprise-logs.compactorFullname" -}}
+{{ include "enterprise-logs.fullname" . }}-compactor
+{{- end }}
+
+{{/*
+compactor common labels
+*/}}
+{{- define "enterprise-logs.compactorLabels" -}}
+{{ include "enterprise-logs.labels" . }}
+app.kubernetes.io/component: compactor
+target: compactor
+{{- end }}
+
+{{/*
+compactor selector labels
+*/}}
+{{- define "enterprise-logs.compactorSelectorLabels" -}}
+{{ include "enterprise-logs.selectorLabels" . }}
+app.kubernetes.io/component: compactor
+target: compactor
+{{- end }}

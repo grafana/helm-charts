@@ -1,0 +1,17 @@
+apiVersion: "v2"
+name: "enterprise-logs"
+type: application
+version: "0.1.0"
+appVersion: "v1.1.0"
+kubeVersion: "^1.10.0-0"
+description: "Grafana Enterprise Logs"
+home: "https://grafana.com/products/enterprise/logs/"
+dependencies:
+- name: loki-distributed
+  version: ^0.35.2
+  repository: https://grafana.github.io/helm-charts
+- name: minio
+  alias: minio
+  version: 8.0.9
+  repository: https://helm.min.io/
+  condition: minio.enabled
