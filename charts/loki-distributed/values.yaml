@@ -58,7 +58,7 @@ loki:
   existingSecretForConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
-  config: |
+  config:
     auth_enabled: false
 
     server:
@@ -71,7 +71,7 @@ loki:
 
     memberlist:
       join_members:
-        - {{ include "loki.fullname" . }}-memberlist
+        - '{{ include "loki.fullname" . }}-memberlist'
 
     ingester:
       lifecycler:
@@ -130,7 +130,7 @@ loki:
             validity: 24h
 
     frontend_worker:
-      frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
+      frontend_address: '{{ include "loki.queryFrontendFullname" . }}:9095'
 
     frontend:
       log_queries_longer_than: 5s

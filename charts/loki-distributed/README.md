@@ -167,7 +167,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.serviceLabels | object | `{}` | Labels for ingestor service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
-| loki.config | string | See values.yaml | Config file contents for Loki |
+| loki.config | object | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
@@ -411,14 +411,9 @@ Alternatively, in order to quickly test Loki using the filestore, the [single bi
 
 ### Example configuration using memberlist, boltdb-shipper, and S3 for storage
 
-Note that `loki.config` must be configured as string.
-That's required because it is passed through the `tpl` function in order to support templating.
-This means that a complete configuration needs to be supplied to the charts which is a good thing anyways.
-Also, this allows using a separate YAML file which can be passed in using `--set-file loki.config=/path/to/config.yaml`.
-
 ```yaml
 loki:
-  config: |
+  config:
     auth_enabled: false
 
     server:
@@ -501,7 +496,7 @@ Because the config file is templated, it is also possible to e.g. externalize S3
 
 ```yaml
 loki:
-  config: |
+  config:
     storage_config:
       aws:
         s3: s3://eu-central-1
@@ -578,7 +573,7 @@ memcachedChunks:
       memory: 3Gi
 
 loki:
-  config: |
+  config:
     chunk_store_config:
       chunk_cache_config:
         memcached:
@@ -597,7 +592,7 @@ memcachedFrontend:
   enabled: true
 
 loki:
-  config: |
+  config:
     query_range:
       cache_results: true
       results_cache:
@@ -618,7 +613,7 @@ memcachedIndexQueries:
   enabled: true
 
 loki:
-  config: |
+  config:
     storage_config:
       index_queries_cache_config:
         memcached:
@@ -639,7 +634,7 @@ memcachedIndexWrite:
   enabled: true
 
 loki:
-  config: |
+  config:
     chunk_store_config:
       write_dedupe_cache_config:
         memcached:
@@ -662,7 +657,7 @@ compactor:
   enabled: true
 
 loki:
-  config: |
+  config:
     compactor:
       shared_store: s3
 ```
