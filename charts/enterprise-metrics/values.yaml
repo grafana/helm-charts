@@ -206,11 +206,6 @@ admin_api:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -291,11 +286,6 @@ alertmanager:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -402,11 +392,6 @@ distributor:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -459,11 +444,6 @@ gateway:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -556,16 +536,6 @@ ingester:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -621,11 +591,6 @@ ruler:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -690,11 +655,6 @@ querier:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -759,11 +719,6 @@ query_frontend:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -860,16 +815,6 @@ store_gateway:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -966,16 +911,6 @@ compactor:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
