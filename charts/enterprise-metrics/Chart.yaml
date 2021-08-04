@@ -1,5 +1,5 @@
 apiVersion: v2
-version: 1.4.3
+version: 1.4.4
 appVersion: v1.4.2
 description: 'Grafana Enterprise Metrics'
 engine: gotpl
