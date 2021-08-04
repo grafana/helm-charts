@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-admin-api
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.4.3
+    chart: enterprise-metrics-1.4.4
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-admin-api
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 434c92b03ccf1c245b5dedb36537e504ad5e9d81d8a06a3d52a099120a93e971
+        checksum/config: 03de6b95c20694aa7dff4cafe198d5c24585af0f4978295ea7a6b85657c431c0
       labels:
         app: enterprise-metrics-admin-api
         gossip_ring_member: "true"
@@ -40,11 +40,7 @@ spec:
         env: null
         image: grafana/metrics-enterprise:v1.4.2
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          httpGet:
-            path: /ready
-            port: http-metrics
-          initialDelaySeconds: 45
+        livenessProbe: null
         name: enterprise-metrics
         ports:
         - containerPort: 8080
