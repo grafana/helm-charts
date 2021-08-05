@@ -7,15 +7,158 @@ serviceAccount:
 gel:
   # specify settings for both Gateway and Admin API here
   image: grafana/enterprise-logs:v1.1.0
+  imagePullPolicy: null
+  podAnnotations: []
+  imagePullSecrets: null
+  podSecurityContext: null
+  containerSecurityContext: null
+  config: |
+    auth:
+      type: enterprise
+
+    target: all
+
+    server:
+      http_listen_port: 3100
+
+    cluster_name: enterprise-logs-test-fixture
+
+    license:
+      path: /etc/ge-logs/license/license.jwt
+
+    ingester:
+      lifecycler:
+        ring:
+          kvstore:
+            store: memberlist
+          replication_factor: 1
+
+    memberlist:
+      abort_if_cluster_join_fails: false
+      bind_port: 7946
+      join_members:
+        - ge-logs-discovery
+
+    admin_client:
+      storage:
+        type: s3
+        s3:
+          endpoint: minio:9000
+          bucket_name: grafana-logs-admin
+          access_key_id: minio
+          secret_access_key: minio123
+          insecure: true
+
+
+
+    storage_config:
+      aws:
+        s3: http://minio:minio123@minio:9000
+        bucketnames: grafana-logs-data
+        s3forcepathstyle: true
+      boltdb_shipper:
+        active_index_directory: /data/boltdb-shipper-active
+        cache_location: /data/boltdb-shipper-cache
+        cache_ttl: 24h
+        shared_store: s3
+
+    schema_config:
+      configs:
+        - from: 2021-01-01
+          store: boltdb-shipper
+          object_store: aws
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+
+    compactor:
+      working_directory: /data/boltdb-shipper-compactor
+      shared_store: s3
 
 gateway:
   # specify Gateway settings here
 
 adminApi:
   # specify Admin API settings here
+  replicas: 1
+  podAnnotations: []
+  terminationGracePeriodSeconds: null
+  extraArgs: null
+  extraEnv: null
+  extraEnvFrom: null
+  extraVolumes: null
+  extraVolumeMounts: null
+  resources: null
+  affinity: null
+  nodeSelector: null
+  tolerations: null
 
 loki-distributed:
   loki:
     image:
       repository: grafana/enterprise-logs
       tag: v1.1.0
+    config: |
+      auth:
+      type: enterprise
+
+      target: all
+
+      server:
+        http_listen_port: 3100
+
+      cluster_name: enterprise-logs-test-fixture
+
+      license:
+        path: /etc/ge-logs/license/license.jwt
+
+      ingester:
+        lifecycler:
+          ring:
+            kvstore:
+              store: memberlist
+            replication_factor: 1
+
+      memberlist:
+        abort_if_cluster_join_fails: false
+        bind_port: 7946
+        join_members:
+          - ge-logs-discovery
+
+      admin_client:
+        storage:
+          type: s3
+          s3:
+            endpoint: minio:9000
+            bucket_name: grafana-logs-admin
+            access_key_id: minio
+            secret_access_key: minio123
+            insecure: true
+
+
+
+      storage_config:
+        aws:
+          s3: http://minio:minio123@minio:9000
+          bucketnames: grafana-logs-data
+          s3forcepathstyle: true
+        boltdb_shipper:
+          active_index_directory: /data/boltdb-shipper-active
+          cache_location: /data/boltdb-shipper-cache
+          cache_ttl: 24h
+          shared_store: s3
+
+      schema_config:
+        configs:
+          - from: 2021-01-01
+            store: boltdb-shipper
+            object_store: aws
+            schema: v11
+            index:
+              prefix: index_
+              period: 24h
+
+      compactor:
+        working_directory: /data/boltdb-shipper-compactor
+        shared_store: s3

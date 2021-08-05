@@ -1,48 +1,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "loki.queryFrontendFullname" . }}
+  name: {{ include "gel.adminApiFullname" . }}
   labels:
-    {{- include "loki.queryFrontendLabels" . | nindent 4 }}
+    {{- include "gel.adminApiLabels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.queryFrontend.replicas }}
+  replicas: {{ .Values.adminApi.replicas }}
   strategy:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
-  revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
-      {{- include "loki.queryFrontendSelectorLabels" . | nindent 6 }}
+      {{- include "gel.adminApiSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- with .Values.loki.podAnnotations }}
+        {{- with .Values.gel.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.queryFrontend.podAnnotations }}
+        {{- with .Values.adminApi.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.queryFrontendSelectorLabels" . | nindent 8 }}
+        {{- include "gel.adminApiSelectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "loki.serviceAccountName" . }}
-      {{- with .Values.imagePullSecrets }}
+      serviceAccountName: {{ include "gel.serviceAccountName" . }}
+      {{- with .Values.gel.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
+        {{- toYaml .Values.gel.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.adminApi.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: {{ include "loki.queryFrontendImage" . }}
-          imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          image: {{ include "gel.adminApiImage" . }}
+          imagePullPolicy: {{ .Values.gel.imagePullPolicy }}
           args:
             - -config.file=/etc/loki/config/config.yaml
-            - -target=query-frontend
-            {{- with .Values.queryFrontend.extraArgs }}
+            - -target=admin-api
+            {{- with .Values.adminApi.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
@@ -52,45 +51,45 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
-          {{- with .Values.queryFrontend.extraEnv }}
+          {{- with .Values.adminApi.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.queryFrontend.extraEnvFrom }}
+          {{- with .Values.adminApi.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
-            {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
+            {{- toYaml .Values.gel.containerSecurityContext | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
-            {{- with .Values.queryFrontend.extraVolumeMounts }}
+            {{- with .Values.adminApi.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           resources:
-            {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
-      {{- with .Values.queryFrontend.affinity }}
+            {{- toYaml .Values.adminApi.resources | nindent 12 }}
+      {{- with .Values.adminApi.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.queryFrontend.nodeSelector }}
+      {{- with .Values.adminApi.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.queryFrontend.tolerations }}
+      {{- with .Values.adminApi.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
         - name: config
-          {{- if .Values.loki.existingSecretForConfig }}
+          {{- if .Values.gel.existingSecretForConfig }}
           secret:
-            secretName: {{ .Values.loki.existingSecretForConfig }}
+            secretName: {{ .Values.gel.existingSecretForConfig }}
           {{- else }}
           configMap:
-            name: {{ include "loki.fullname" . }}
+            name: {{ include "gel.fullname" . }}
           {{- end }}
-        {{- with .Values.queryFrontend.extraVolumes }}
+        {{- with .Values.adminApi.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
