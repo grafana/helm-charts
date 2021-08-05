@@ -54,10 +54,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "gel.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "gel.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.gel.serviceAccount.create -}}
+    {{ default (include "gel.fullname" .) .Values.gel.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+    {{ default "default" .Values.gel.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
