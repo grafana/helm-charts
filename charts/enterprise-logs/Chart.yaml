@@ -15,4 +15,3 @@ dependencies:
 - name: "loki-distributed"
   repository: "https://grafana.github.io/helm-charts"
   version: "^0.35.2"
-  alias: enterprise-logs
