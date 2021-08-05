@@ -12,6 +12,7 @@ gel:
   imagePullSecrets: null
   podSecurityContext: null
   containerSecurityContext: null
+  existingSecretForConfig: null
   config: |
     auth:
       type: enterprise

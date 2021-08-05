@@ -1,11 +1,11 @@
-{{- if not .Values.existingSecretForConfig -}}
+{{- if not .Values.gel.existingSecretForConfig -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "enterprise-logs.fullname" . }}
+  name: {{ include "gel.fullname" . }}
   labels:
-    {{- include "enterprise-logs.labels" . | nindent 4 }}
+    {{- include "gel.labels" . | nindent 4 }}
 data:
   config.yaml: |
-    {{- tpl .Values.enterprise-logs.config . | nindent 4 }}
+    {{- tpl .Values.gel.config . | nindent 4 }}
 {{- end -}}
