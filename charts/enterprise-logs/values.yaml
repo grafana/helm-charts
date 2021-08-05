@@ -1,5 +1,8 @@
+gel:
+  # specify settings for both Gateway and Admin API here
+
 gateway:
-  # specify GEL gateway settings here
+  # specify Gateway settings here
 
 adminApi:
   # specify Admin API settings here
