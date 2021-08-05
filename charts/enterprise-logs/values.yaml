@@ -1,7 +1,26 @@
 nameOverride: null
 fullnameOverride: null
 
-
+minio:
+  enabled: true
+  accessKey: enterprise-logs
+  buckets:
+    - name: enterprise-logs-tsdb
+      policy: none
+      purge: false
+    - name: enterprise-logs-admin
+      policy: none
+      purge: false
+    - name: enterprise-logs-ruler
+      policy: none
+      purge: false
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  secretKey: supersecret
 
 gel:
   # specify settings for both Gateway and Admin API here

@@ -15,3 +15,8 @@ dependencies:
 - name: "loki-distributed"
   repository: "https://grafana.github.io/helm-charts"
   version: "^0.35.2"
+- name: minio
+  alias: minio
+  version: 8.0.9
+  repository: https://helm.min.io/
+  condition: minio.enabled
