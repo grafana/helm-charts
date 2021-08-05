@@ -94,6 +94,7 @@ adminApi:
   affinity: null
   nodeSelector: null
   tolerations: null
+  serviceLabels: null
 
 loki-distributed:
   loki:
