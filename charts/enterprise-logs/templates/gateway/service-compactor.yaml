@@ -1,4 +1,3 @@
-{{- if and .Values.compactor.enabled .Values.compactor.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,4 +18,3 @@ spec:
   selector:
     {{- include "loki.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: compactor
-{{- end }}
