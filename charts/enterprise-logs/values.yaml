@@ -6,6 +6,7 @@ serviceAccount:
 
 gel:
   # specify settings for both Gateway and Admin API here
+  image: grafana/enterprise-logs:v1.1.0
 
 gateway:
   # specify Gateway settings here

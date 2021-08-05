@@ -1,40 +1,22 @@
 {{/*
-query-frontend fullname
+admin-api fullname
 */}}
-{{- define "loki.queryFrontendFullname" -}}
-{{ include "loki.fullname" . }}-query-frontend
+{{- define "gel.adminApiFullname" -}}
+{{ include "gel.fullname" . }}-admin-api
 {{- end }}
 
 {{/*
-query-frontend common labels
+admin-api common labels
 */}}
-{{- define "loki.queryFrontendLabels" -}}
-{{ include "loki.labels" . }}
-app.kubernetes.io/component: query-frontend
+{{- define "gel.adminApiLabels" -}}
+{{ include "gel.labels" . }}
+app.kubernetes.io/component: admin-api
 {{- end }}
 
 {{/*
-query-frontend selector labels
+admin-api selector labels
 */}}
-{{- define "loki.queryFrontendSelectorLabels" -}}
-{{ include "loki.selectorLabels" . }}
-app.kubernetes.io/component: query-frontend
-{{- end }}
-
-{{/*
-query-frontend image
-*/}}
-{{- define "loki.queryFrontendImage" -}}
-{{- $dict := dict "loki" .Values.loki.image "service" .Values.queryFrontend.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
-{{- include "loki.lokiImage" $dict -}}
-{{- end }}
-
-{{/*
-query-frontend priority class name
-*/}}
-{{- define "loki.queryFrontendPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.queryFrontend.priorityClassName -}}
-{{- if $pcn }}
-priorityClassName: {{ $pcn }}
-{{- end }}
+{{- define "gel.adminApiSelectorLabels" -}}
+{{ include "gel.selectorLabels" . }}
+app.kubernetes.io/component: admin-api
 {{- end }}
