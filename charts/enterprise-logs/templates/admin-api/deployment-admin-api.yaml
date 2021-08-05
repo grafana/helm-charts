@@ -36,7 +36,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.adminApi.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: {{ include "gel.adminApiImage" . }}
+          image: {{ .Values.gel.image }}
           imagePullPolicy: {{ .Values.gel.imagePullPolicy }}
           args:
             - -config.file=/etc/loki/config/config.yaml
