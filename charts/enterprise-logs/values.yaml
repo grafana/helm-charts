@@ -1,3 +1,9 @@
+nameOverride: null
+fullNameOverride: null
+serviceAccount:
+  create: false
+  name: null
+
 gel:
   # specify settings for both Gateway and Admin API here
 
