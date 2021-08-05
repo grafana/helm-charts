@@ -31,6 +31,14 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Selector labels
+*/}}
+{{- define "enterprise-logs.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "enterprise-logs.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "enterprise-logs.labels" -}}
@@ -42,10 +50,3 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
-{{/*
-Selector labels
-*/}}
-{{- define "enterprise-logs.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "enterprise-logs.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
