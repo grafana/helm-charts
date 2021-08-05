@@ -1,0 +1,16 @@
+global:
+  enterpriseLogsImage: null
+  existingSecretForConfig: ""
+  config: |
+    null
+
+
+gateway:
+  # specify GEL gateway settings here
+
+adminApi:
+  # specify Admin API settings here
+
+loki-distributed:
+  loki:
+    # specify any loki overrides here
