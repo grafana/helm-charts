@@ -127,9 +127,7 @@ loki-distributed:
       tag: v1.1.0
     config: |
       auth:
-      type: enterprise
-
-      target: all
+        type: enterprise
 
       server:
         http_listen_port: 3100
