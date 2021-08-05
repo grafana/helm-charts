@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "loki.name" -}}
+{{- define "gel.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "loki.fullname" -}}
+{{- define "gel.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "loki.chart" -}}
+{{- define "gel.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "loki.labels" -}}
-helm.sh/chart: {{ include "loki.chart" . }}
-{{ include "loki.selectorLabels" . }}
+{{- define "gel.labels" -}}
+helm.sh/chart: {{ include "gel.chart" . }}
+{{ include "gel.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "loki.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "loki.name" . }}
+{{- define "gel.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "gel.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "loki.serviceAccountName" -}}
+{{- define "gel.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "loki.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "gel.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
@@ -64,7 +64,7 @@ Create the name of the service account to use
 {{/*
 Return the appropriate apiVersion for ingress.
 */}}
-{{- define "loki.ingress.apiVersion" -}}
+{{- define "gel.ingress.apiVersion" -}}
   {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) -}}
       {{- print "networking.k8s.io/v1" -}}
   {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
@@ -77,20 +77,20 @@ Return the appropriate apiVersion for ingress.
 {{/*
 Return if ingress is stable.
 */}}
-{{- define "loki.ingress.isStable" -}}
-  {{- eq (include "loki.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+{{- define "gel.ingress.isStable" -}}
+  {{- eq (include "gel.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
 {{- end -}}
 
 {{/*
 Return if ingress supports ingressClassName.
 */}}
-{{- define "loki.ingress.supportsIngressClassName" -}}
-  {{- or (eq (include "loki.ingress.isStable" .) "true") (and (eq (include "loki.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- define "gel.ingress.supportsIngressClassName" -}}
+  {{- or (eq (include "gel.ingress.isStable" .) "true") (and (eq (include "gel.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
 {{- end -}}
 
 {{/*
 Return if ingress supports pathType.
 */}}
-{{- define "loki.ingress.supportsPathType" -}}
-  {{- or (eq (include "loki.ingress.isStable" .) "true") (and (eq (include "loki.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
+{{- define "gel.ingress.supportsPathType" -}}
+  {{- or (eq (include "gel.ingress.isStable" .) "true") (and (eq (include "gel.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
 {{- end -}}
