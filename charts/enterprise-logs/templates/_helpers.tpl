@@ -62,41 +62,6 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Docker image name for Loki
-*/}}
-{{- define "loki.lokiImage" -}}
-{{- $registry := coalesce .global.registry .service.registry .loki.registry -}}
-{{- $repository := coalesce .service.repository .loki.repository -}}
-{{- $tag := coalesce .service.tag .loki.tag .defaultVersion | toString -}}
-{{- printf "%s/%s:%s" $registry $repository $tag -}}
-{{- end -}}
-
-{{/*
-Docker image name
-*/}}
-{{- define "loki.image" -}}
-{{- $registry := coalesce .global.registry .service.registry -}}
-{{- $tag := .service.tag | toString -}}
-{{- printf "%s/%s:%s" $registry .service.repository (.service.tag | toString) -}}
-{{- end -}}
-
-{{/*
-Memcached Docker image
-*/}}
-{{- define "loki.memcachedImage" -}}
-{{- $dict := dict "service" .Values.memcached.image "global" .Values.global.image -}}
-{{- include "loki.image" $dict -}}
-{{- end }}
-
-{{/*
-Memcached Exporter Docker image
-*/}}
-{{- define "loki.memcachedExporterImage" -}}
-{{- $dict := dict "service" .Values.memcachedExporter.image "global" .Values.global.image -}}
-{{- include "loki.image" $dict -}}
-{{- end }}
-
-{{/*
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "loki.ingress.apiVersion" -}}
