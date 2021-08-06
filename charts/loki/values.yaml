@@ -270,4 +270,5 @@ alerting_groups: []
 #  - name: example
 #    rules:
 #    - alert: HighThroughputLogStreams
-#      expr: sum by(container) (rate({job=~"loki-
+#      expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
+#      for: 2m
