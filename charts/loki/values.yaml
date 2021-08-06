@@ -1,6 +1,6 @@
 image:
   repository: grafana/loki
-  tag: 2.2.1
+  tag: 2.3.0
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -270,5 +270,4 @@ alerting_groups: []
 #  - name: example
 #    rules:
 #    - alert: HighThroughputLogStreams
-#      expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
-#      for: 2m
+#      expr: sum by(container) (rate({job=~"loki-
