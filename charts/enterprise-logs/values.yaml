@@ -44,9 +44,6 @@ gel:
       drop:
         - ALL
     allowPrivilegeEscalation: false
-  serviceAccount:
-    create: true
-    name: null
   existingSecretForConfig: ""
 
 gateway:
@@ -84,6 +81,8 @@ adminApi:
 lokidistributed:
   gateway:
     enabled: false
+  compactor:
+    enabled: true
   loki:
     image:
       repository: grafana/enterprise-logs
