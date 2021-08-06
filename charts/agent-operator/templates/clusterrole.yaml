@@ -1,0 +1,81 @@
+{{- if .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "this.fullname" . }}
+  labels:
+    app: {{ template "this.name" . }}
+    chart: {{ template "this.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+  - apiGroups:
+      - monitoring.grafana.com
+    resources:
+      - grafana-agents
+      - prometheus-instances
+      - logs-instances
+      - podlogs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - monitoring.grafana.com
+    resources:
+      - grafana-agents/finalizers
+      - prometheus-instances/finalizers
+      - logs-instances/finalizers
+      - podlogs/finalizers
+    verbs:
+      - "*"
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - podmonitors
+      - probes
+      - servicemonitors
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+      - secrets/finalizers
+      - services
+      - services/finalizers
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - "apps"
+    resources:
+      - statefulsets
+      - statefulsets/finalizers
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+{{- with .Values.rbac.extraClusterRoleRules }}
+{{ toYaml . | indent 2 }}
+{{- end}}
+{{- end -}}
