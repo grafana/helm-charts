@@ -51,17 +51,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "gel.serviceAccountName" -}}
-{{- if .Values.gel.serviceAccount.create -}}
-    {{ default (include "gel.fullname" .) .Values.gel.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.gel.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "gel.ingress.apiVersion" -}}

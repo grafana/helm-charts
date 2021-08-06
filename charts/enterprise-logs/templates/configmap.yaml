@@ -7,5 +7,5 @@ metadata:
     {{- include "gel.labels" . | nindent 4 }}
 data:
   config.yaml: |
-    {{- tpl .Values.loki-distributed.loki.config . | nindent 4 }}
+    {{- tpl .Values.lokidistributed.loki.config . | nindent 4 }}
 {{- end -}}

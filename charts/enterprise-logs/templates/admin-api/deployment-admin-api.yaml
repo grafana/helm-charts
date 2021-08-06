@@ -26,7 +26,6 @@ spec:
       labels:
         {{- include "gel.adminApiSelectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "gel.serviceAccountName" . }}
       {{- with .Values.gel.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -62,6 +61,8 @@ spec:
           securityContext:
             {{- toYaml .Values.gel.containerSecurityContext | nindent 12 }}
           volumeMounts:
+            - name: license
+              mountPath: /license
             - name: config
               mountPath: /etc/loki/config
             {{- with .Values.adminApi.extraVolumeMounts }}
@@ -82,6 +83,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
         - name: config
           {{- if .Values.gel.existingSecretForConfig }}
           secret:
