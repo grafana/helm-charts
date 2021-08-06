@@ -1,0 +1,58 @@
+apiVersion: monitoring.grafana.com/v1alpha1
+kind: GrafanaAgent
+metadata:
+  name: {{ include "this.fullname" . }}
+  labels:
+    {{- include "this.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.annotations | nindent 4 }}
+spec:
+  podMetadata:
+    annotations:
+      {{- toYaml .Values.podAnnotations | nindent 6 }}
+  image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+  {{- with .Values.image.pullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  securityContext:
+    {{- toYaml .Values.securityContext | nindent 4 }}
+  serviceAccountName: {{ include "this.serviceAccountName" . }}
+  logLevel: {{ .Values.logLevel }}
+  {{- if .Values.prometheus.create }}
+  prometheus:
+    instanceSelector:
+      matchLabels:
+        {{- toYaml .Values.prometheus.instanceSelectorMatchLabels | nindent 8 }}
+      matchExpressions:
+        {{- toYaml .Values.prometheus.instanceSelectorMatchExpressions | nindent 8 }}
+    replicas: {{ .Values.prometheus.replicas }}
+    {{- with .Values.prometheus.extras }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  resources:
+    {{- toYaml .Values.resources | nindent 4 }}
+  {{- with .Values.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.volumes }}
+  volumes:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.volumeMounts }}
+  volumeMounts:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.extras }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}

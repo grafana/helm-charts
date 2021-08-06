@@ -1,0 +1,77 @@
+# GrafanaAgent annotations
+annotations: {}
+
+# Pod annotations
+podAnnotations: {}
+
+# Image configuration for the Agent container
+image:
+  repository: grafana/agent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  pullSecrets: []
+
+# Creation of the Service Account used by the Pod
+serviceAccount:
+  create: true
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # Annotations to add to the service account
+  annotations: {}
+
+# Resources for the Agent container
+resources: {}
+
+# Whether to create Cluster Role and Cluster Role Binding
+rbac:
+  create: true
+  # Use an existing ClusterRole/Role
+  # useExistingRole: name-of-some-(cluster)role
+  extraClusterRoleRules: []
+  # - apiGroups: []
+  #   resources: []
+  #   verbs: []
+
+# Security context for the Agent container
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Pod node selector
+nodeSelector: {}
+
+# Pod tolerations
+tolerations: []
+
+# Pod affinity
+affinity: {}
+
+# Log level
+logLevel: info
+
+# Prometheus configuration
+prometheus:
+  create: true
+  instanceSelectorMatchLabels:
+    agent: grafana-agent
+  instanceSelectorMatchExpressions: []
+    # - key: agent
+    #   operator: In
+    #   values:
+    #     - grafana-agent
+  replicas: 1
+  # extras:
+  #   replicaExternalLabelName: something
+
+# Volumes for GrafanaAgent
+volumes: []
+
+# Volume mounts for GrafanaAgent
+volumeMounts: []
+
+# Extra GrafanaAgent configuration
+extras: {}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: agent
+description: A Helm chart for Grafana Agent
+type: application
+version: 0.2.5
+appVersion: v0.18.2
