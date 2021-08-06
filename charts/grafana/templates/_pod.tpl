@@ -208,6 +208,8 @@ containers:
   - name: {{ .Chart.Name }}
     {{- if .Values.image.sha }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@sha256:{{ .Values.image.sha }}"
+    {{- else if .Values.image.noTag }}
+    image: "{{ .Values.image.repository }}"
     {{- else }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
     {{- end }}
