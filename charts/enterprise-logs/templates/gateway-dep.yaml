@@ -58,7 +58,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=gateway"
-            - "-config.file=/etc/enterprise-logs/enterprise-logs.yaml"
+            - "-config.file=/etc/loki/config/config.yaml"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -83,7 +83,7 @@ spec:
               {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/enterprise-logs
+              mountPath: /etc/loki/config
             - name: runtime-config
               mountPath: /var/enterprise-logs
             - name: license

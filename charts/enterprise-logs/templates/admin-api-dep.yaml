@@ -76,7 +76,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=admin-api"
-            - "-config.file=/etc/enterprise-logs/enterprise-logs.yaml"
+            - "-config.file=/etc/loki/config/config.yaml"
             - "-memberlist.join={{ template "enterprise-logs.fullname" . }}-gossip-ring"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
@@ -94,7 +94,7 @@ spec:
               {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/enterprise-logs
+              mountPath: /etc/loki/config
             - name: runtime-config
               mountPath: /var/enterprise-logs
             - name: license
