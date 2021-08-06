@@ -95,8 +95,6 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/loki/config
-            - name: runtime-config
-              mountPath: /var/enterprise-logs
             - name: license
               mountPath: /license
             - name: storage
@@ -139,9 +137,6 @@ spec:
           {{- else }}
             secretName: {{ template "enterprise-logs.fullname" . }}
           {{- end }}
-        - name: runtime-config
-          configMap:
-            name: {{ template "enterprise-logs.fullname" . }}-runtime
         {{- if .Values.admin_api.extraVolumes }}
         {{ toYaml .Values.admin_api.extraVolumes | nindent 8}}
         {{- end }}
