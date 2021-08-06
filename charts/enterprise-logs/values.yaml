@@ -43,69 +43,6 @@ gel:
     create: true
     name: null
   existingSecretForConfig: ""
-  config: |
-    auth:
-      type: enterprise
-
-    target: all
-
-    server:
-      http_listen_port: 3100
-
-    cluster_name: enterprise-logs-test-fixture
-
-    license:
-      path: /etc/ge-logs/license/license.jwt
-
-    ingester:
-      lifecycler:
-        ring:
-          kvstore:
-            store: memberlist
-          replication_factor: 1
-
-    memberlist:
-      abort_if_cluster_join_fails: false
-      bind_port: 7946
-      join_members:
-        - ge-logs-discovery
-
-    admin_client:
-      storage:
-        type: s3
-        s3:
-          endpoint: minio:9000
-          bucket_name: grafana-logs-admin
-          access_key_id: minio
-          secret_access_key: minio123
-          insecure: true
-
-
-
-    storage_config:
-      aws:
-        s3: http://minio:minio123@minio:9000
-        bucketnames: grafana-logs-data
-        s3forcepathstyle: true
-      boltdb_shipper:
-        active_index_directory: /data/boltdb-shipper-active
-        cache_location: /data/boltdb-shipper-cache
-        cache_ttl: 24h
-        shared_store: s3
-
-    schema_config:
-      configs:
-        - from: 2021-01-01
-          store: boltdb-shipper
-          object_store: aws
-          schema: v11
-          index:
-            prefix: index_
-            period: 24h
-
-    compactor:
-      working_directory: /data/boltdb-shipper-compactor
-      shared_store: s3
 
 gateway:
   # specify Gateway settings here
@@ -144,6 +81,7 @@ loki-distributed:
     image:
       repository: grafana/enterprise-logs
       tag: v1.1.0
+    # this config is also used for Admin API and Gateway. I can't tell the subchart to look in gel so I'm telling gel to look here
     config: |
       auth:
         type: enterprise
