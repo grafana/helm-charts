@@ -39,6 +39,9 @@ spec:
         - name: loki
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.compactor.command }}
+          command: [{{ coalesce .Values.compactor.command .Values.loki.command | quote }}]
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=compactor
