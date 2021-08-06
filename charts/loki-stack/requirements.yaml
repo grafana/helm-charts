@@ -2,18 +2,18 @@ dependencies:
 - name: "loki"
   condition: loki.enabled
   repository: "https://grafana.github.io/helm-charts"
-  version: "^2.3.0"
+  version: "^2.6.0"
 - name: "promtail"
   condition: promtail.enabled
   repository: "https://grafana.github.io/helm-charts"
-  version: "^2.2.0"
+  version: "^3.7.0"
 - name: "fluent-bit"
   condition: fluent-bit.enabled
   repository: "https://grafana.github.io/helm-charts"
   version: "^2.2.0"
 - name: "grafana"
   condition: grafana.enabled
-  version: "~5.7.0"
+  version: "~6.15.0"
   repository:  "https://grafana.github.io/helm-charts"
 - name: "prometheus"
   condition: prometheus.enabled
