@@ -70,13 +70,10 @@ spec:
             {{- if .Values.gateway.useDefaultProxyURLs }}
             - -gateway.proxy.default.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.admin-api.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.alertmanager.url=http://{{ template "enterprise-logs.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.distributor.url=http://{{ template "enterprise-logs.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.graphite.url=http://{{ template "enterprise-logs.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.ingester.url=http://{{ template "enterprise-logs.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-logs.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.ruler.url=http://{{ template "enterprise-logs.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.store-gateway.url=http://{{ template "enterprise-logs.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             {{- end }}
             {{- range $key, $value := .Values.gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
