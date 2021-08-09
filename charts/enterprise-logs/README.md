@@ -1,2 +1,0 @@
-TODO:
-1. Really need to get the loki-distributed chart to read config from `Values.global.config` if it's there. It's currently reading from `Values.loki.config` which means I have to define the config file twice in values.yaml
