@@ -163,6 +163,114 @@ gateway:
   tolerations: []
   terminationGracePeriodSeconds: 60
 
+
+compactor:
+  enabled: true
+  replicas: 1
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - compactor
+            topologyKey: 'kubernetes.io/hostname'
+
+  annotations: {}
+
+  persistentVolume:
+    # If true compactor will create/use a Persistent Volume Claim
+    # If false, use emptyDir
+    #
+    enabled: true
+
+    # compactor data Persistent Volume Claim annotations
+    #
+    annotations: {}
+
+    # compactor data Persistent Volume access modes
+    # Must match those of existing PV or dynamic provisioner
+    # Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    #
+    accessModes:
+      - ReadWriteOnce
+
+    # compactor data Persistent Volume size
+    #
+    size: 2Gi
+
+    # Subdirectory of compactor data Persistent Volume to mount
+    # Useful if the volume's root directory is not empty
+    #
+    subPath: ''
+
+
+    # compactor data Persistent Volume Storage Class
+    # If defined, storageClassName: <storageClass>
+    # If set to "-", storageClassName: "", which disables dynamic provisioning
+    # If undefined (the default) or set to null, no storageClassName spec is
+    #   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    #   GKE, AWS & OpenStack)
+    #
+    # storageClass: "-"
+
+  livenessProbe:
+    failureThreshold: 20  # 10 minutes failure threshold
+    httpGet:
+      path: /ready
+      port: http-metrics
+      scheme: HTTP
+    initialDelaySeconds: 180
+    periodSeconds: 30
+    successThreshold: 1
+    timeoutSeconds: 1
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+
+  terminationGracePeriodSeconds: 240
+
+  tolerations: []
+  podDisruptionBudget: {}
+  initContainers: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraPorts: []
+  env: []
+
+
 minio:
   enabled: true
   accessKey: enterprise-logs
@@ -209,7 +317,7 @@ lokidistributed:
 
       compactor:
         shared_store: s3
-        working_directory: /var/boltdb-shipper-compactor
+        working_directory: /data/boltdb-shipper-compactor
 
 
       license:
@@ -290,7 +398,7 @@ lokidistributed:
         ring:
           kvstore:
             store: memberlist
-        rule_path: '/data'
+        rule_path: '/var/loki'
 
       frontend:
         log_queries_longer_than: 10s
