@@ -1,4 +1,4 @@
-apiVersion: "v1"
+apiVersion: "v2"
 name: enterprise-logs
 version: 0.1.0
 appVersion: v2.2.1
