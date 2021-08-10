@@ -151,7 +151,6 @@ gateway:
 
 
 compactor:
-  enabled: true
   replicas: 1
 
   service:
