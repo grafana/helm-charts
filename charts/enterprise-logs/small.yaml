@@ -28,17 +28,6 @@ compactor:
       cpu: 2
       memory: 1Gi
 
-consul:
-  client:
-    enabled: false
-  resources:
-    requests:
-      cpu: 1
-      memory: 2Gi
-  server:
-    replicas: 3
-    bootstrapExpect: 3
-
 distributor:
   replicas: 3
   resources:
