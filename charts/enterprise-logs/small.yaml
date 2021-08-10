@@ -1,5 +1,5 @@
 # These values configure the Grafana Enterprise Logs cluster to
-# handle production ingestion of ~11.31MiB/s
+# handle production ingestion of ~11MiB/s
 
 # Query requirements can vary dramatically depending on query rate and query
 # ranges. The values here satisfy a "usual" query load as seen from our
