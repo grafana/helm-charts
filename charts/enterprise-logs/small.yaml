@@ -99,12 +99,3 @@ ruler:
     requests:
       cpu: 2
       memory: 6Gi
-
-store_gateway:
-  persistentVolume:
-    size: 50Gi
-  replicas: 1
-  resources:
-    requests:
-      cpu: 1
-      memory: 6Gi
