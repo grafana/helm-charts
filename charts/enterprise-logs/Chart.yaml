@@ -5,12 +5,6 @@ appVersion: v2.2.1
 kubeVersion: "^1.10.0-0"
 description: "Grafana Enterprise Logs"
 home: https://grafana.com/products/enterprise/logs/
-icon: https://grafana.com/docs/loki/latest/logo_and_name.png
-sources:
-- https://github.com/grafana/loki
-maintainers:
-- name: tbd
-  email: tbd
 dependencies:
 - name: "loki-distributed"
   repository: "https://grafana.github.io/helm-charts"
