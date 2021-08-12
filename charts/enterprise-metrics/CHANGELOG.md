@@ -12,6 +12,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.5
+
+* [BUGFIX] Add `memberlist.join` configuration to the ruler. #618
+
 ## 1.4.4
 
 * [CHANGE] Removed livenessProbe configuration as it can often be more detrimental than having none. Users can still configure livenessProbes with the per App configuration hooks. #594
