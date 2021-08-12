@@ -293,6 +293,9 @@ config:
     # @default -- empty
     extraScrapeConfigs: ""
 
+    # -- You can put here any additional relabel_configs to "kubernetes-pods" job
+    extraRelabelConfigs: []
+
     scrapeConfigs: |
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
       - job_name: kubernetes-pods
@@ -325,6 +328,9 @@ config:
             target_label: scrape_job
           {{- end }}
           {{- toYaml .Values.config.snippets.common | nindent 4 }}
+          {{- with .Values.config.snippets.extraRelabelConfigs }}
+          {{- toYaml . | nindent 4 }}
+          {{- end }}
 
   # -- Config file contents for Promtail.
   # Must be configured as string.
