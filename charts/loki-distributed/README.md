@@ -509,7 +509,7 @@ loki:
 ```
 
 ```console
-helm upgrade loki --install -f values.yaml --set bucketnames=my-loki-bucket
+helm upgrade loki-distributed --install -f values.yaml --set bucketnames=my-loki-bucket
 ```
 
 ## Gateway
