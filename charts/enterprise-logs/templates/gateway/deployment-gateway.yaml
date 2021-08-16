@@ -118,14 +118,14 @@ spec:
           {{- if .Values.useExternalConfig }}
             name: {{ .Values.externalConfigName }}
           {{- else }}
-            name: {{ template "enterprise-logs.fullname" . }}-config
+            name: enterprise-logs-config
           {{- end }}
         - name: license
           secret:
           {{- if .Values.useExternalLicense }}
             secretName: {{ .Values.externalLicenseName }}
           {{- else }}
-            secretName: {{ template "enterprise-logs.fullname" . }}-license
+            secretName: enterprise-logs-license
           {{- end }}
         - name: storage
           emptyDir: {}
