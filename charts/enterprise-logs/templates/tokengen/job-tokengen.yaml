@@ -1,16 +1,16 @@
-{{ if .Values.tokengenJob.enable }}
+{{ if .Values.tokengen.enable }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "enterprise-logs.fullname" . }}-tokengen
+  name: {{ template "enterprise-logs.tokengenFullname" . }}
   labels:
-    app: {{ template "enterprise-logs.name" . }}-tokengen
-    chart: {{ template "enterprise-logs.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "enterprise-logs.tokengenLabels" . | nindent 4 }}
+    {{- with .Values.tokengen.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
-    {{- if .Values.tokengenJob.annotations }}
-    {{- toYaml .Values.tokengenJob.annotations | nindent 4 }}
+    {{- with .Values.tokengen.annotations }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
     "helm.sh/hook": post-install
 spec:
@@ -21,17 +21,26 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-logs.name" . }}-tokengen
-        name: tokengen
-        target: tokengen
-        release: {{ .Release.Name }}
+        {{- include "enterprise-logs.tokengenSelectorLabels" . | nindent 8 }}
+        {{- with .Values.tokengen.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.useExternalConfig }}
+        checksum/config: {{ .Values.externalConfigVersion }}
+        {{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- end}}
+        {{- with .Values.tokengen.annotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ template "enterprise-logs.serviceAccountName" . }}
-      {{- if .Values.tokengenJob.priorityClassName }}
-      priorityClassName: {{ .Values.tokengenJob.priorityClassName }}
+      {{- if .Values.tokengen.priorityClassName }}
+      priorityClassName: {{ .Values.tokengen.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.tokengenJob.securityContext | nindent 8 }}
+        {{- toYaml .Values.tokengen.securityContext | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -53,36 +62,40 @@ spec:
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             {{- end }}
-            {{- range $key, $value := .Values.tokengenJob.extraArgs }}
+            {{- range $key, $value := .Values.tokengen.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.tokengenJob.extraVolumeMounts }}
-              {{ toYaml .Values.tokengenJob.extraVolumeMounts | nindent 12 }}
+            {{- if .Values.tokengen.extraVolumeMounts }}
+              {{ toYaml .Values.tokengen.extraVolumeMounts | nindent 12 }}
             {{- end }}
             - name: config
               mountPath: /etc/loki/config
             - name: license
               mountPath: /etc/enterprise-logs/license
           env:
-            {{- if .Values.tokengenJob.env }}
-              {{ toYaml .Values.tokengenJob.env | nindent 12 }}
+            {{- if .Values.tokengen.env }}
+              {{ toYaml .Values.tokengen.env | nindent 12 }}
             {{- end }}
       restartPolicy: OnFailure
       volumes:
         - name: config
-          secret:
+          configMap:
           {{- if .Values.useExternalConfig }}
-            secretName: {{ .Values.externalConfigSecretName }}
+            name: {{ .Values.externalConfigName }}
+          {{- else }}
+            name: {{ template "enterprise-logs.fullname" . }}
+          {{- end }}
+        - name: license
+          secret:
+          {{- if .Values.useExternalLicense }}
+            secretName: {{ .Values.externalLicenseName }}
           {{- else }}
             secretName: {{ template "enterprise-logs.fullname" . }}
           {{- end }}
-        {{- if .Values.tokengenJob.extraVolumes }}
-        {{ toYaml .Values.tokengenJob.extraVolumes | nindent 8 }}
-        {{- end }}
-        - name: license
-          secret:
-            secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
+        {{- if .Values.tokengen.extraVolumes }}
+        {{ toYaml .Values.tokengen.extraVolumes | nindent 8 }}
+        {{- end }}
 {{- end }}

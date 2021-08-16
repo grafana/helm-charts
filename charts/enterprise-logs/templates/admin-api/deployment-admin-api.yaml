@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "enterprise-logs.fullname" . }}-admin-api
+  name: {{ template "enterprise-logs.adminApiFullname" . }}
   labels:
-    {{- include "enterprise-logs.labels" . | nindent 4 }}
+    {{- include "enterprise-logs.adminApiLabels" . | nindent 4 }}
     {{- with .Values.adminApi.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -15,18 +15,15 @@ spec:
   replicas: {{ .Values.adminApi.replicas }}
   selector:
     matchLabels:
-      {{- include "enterprise-logs.selectorLabels" . | nindent 6 }}
+      {{- include "enterprise-logs.adminApiSelectorLabels" . | nindent 6 }}
   strategy:
     {{- toYaml .Values.adminApi.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-logs.name" . }}-admin-api
-        name: admin-api
+        {{- include "enterprise-logs.adminApiSelectorLabels" . | nindent 8 }}
         gossip_ring_member: "true"
-        target: admin-api
-        release: {{ .Release.Name }}
-        {{- with .Values.adminApi.podLabels }}
+        {{- with .Values.adminApi.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -35,7 +32,7 @@ spec:
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end}}
-        {{- with .Values.adminApi.podAnnotations }}
+        {{- with .Values.adminApi.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:

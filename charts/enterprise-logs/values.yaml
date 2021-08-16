@@ -135,7 +135,7 @@ config:
   runtimeConfig: {}
 
 # -- Configuration for `tokengen` target
-tokengenJob:
+tokengen:
   # -- Weather the job should be part of the deployment
   enable: true
   # -- Additional CLI arguments for the `tokengen` target
@@ -146,6 +146,10 @@ tokengenJob:
   labels: {}
   # -- Additional annotations for the `tokengen` Job
   annotations: {}
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
 
 # -- Configuration for the `admin-api` target
 adminApi:

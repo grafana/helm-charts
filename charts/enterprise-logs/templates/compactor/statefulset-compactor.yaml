@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "enterprise-logs.fullname" . }}-compactor
+  name: {{ template "enterprise-logs.compactorFullname" . }}
   labels:
     {{- include "enterprise-logs.labels" . | nindent 4 }}
     {{- with .Values.compactor.labels }}
@@ -15,10 +15,10 @@ spec:
   replicas: {{ .Values.compactor.replicas }}
   selector:
     matchLabels:
-      {{- include "enterprise-logs.selectorLabels" . | nindent 6 }}
+      {{- include "enterprise-logs.compactorSelectorLabels" . | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.compactor.strategy | nindent 4 }}
-  serviceName: {{ template "enterprise-logs.fullname" . }}-compactor
+  serviceName: {{ template "enterprise-logs.compactorFullname" . }}
   {{- if .Values.compactor.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -44,13 +44,9 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-logs.name" . }}-compactor
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: compactor
+        {{- include "enterprise-logs.compactorSelectorLabels" . | nindent 8 }}
         gossip_ring_member: "true"
-        target: compactor
-        release: {{ .Release.Name }}
-        {{- with .Values.compactor.podLabels }}
+        {{- with .Values.compactor.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -59,7 +55,7 @@ spec:
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
-        {{- with .Values.compactor.podAnnotations }}
+        {{- with .Values.compactor.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:

@@ -99,5 +99,5 @@ HTTP listen port
 gRPC listen port
 */}}
 {{- define "enterprise-logs.grpc-listen-port" -}}
-{{- print .Values.config.server.grcp_listen_port -}}
+{{- print .Values.config.server.grpc_listen_port -}}
 {{- end -}}
