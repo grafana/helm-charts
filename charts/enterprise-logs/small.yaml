@@ -6,7 +6,7 @@
 # production clusters at this scale.
 
 
-admin_api:
+adminApi:
   replicas: 3
   resources:
     limits:

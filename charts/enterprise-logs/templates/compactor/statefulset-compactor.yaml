@@ -3,18 +3,19 @@ kind: StatefulSet
 metadata:
   name: {{ template "enterprise-logs.fullname" . }}-compactor
   labels:
-    app: {{ template "enterprise-logs.name" . }}-compactor
-    chart: {{ template "enterprise-logs.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "enterprise-logs.labels" . | nindent 4 }}
+    {{- with .Values.compactor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
-    {{- toYaml .Values.compactor.annotations | nindent 4 }}
+    {{- with .Values.compactor.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.compactor.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-logs.name" . }}-compactor
-      release: {{ .Release.Name }}
+      {{- include "enterprise-logs.selectorLabels" . | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.compactor.strategy | nindent 4 }}
   serviceName: {{ template "enterprise-logs.fullname" . }}-compactor
@@ -56,7 +57,7 @@ spec:
         {{- if .Values.useExternalConfig }}
         checksum/config: {{ .Values.externalConfigVersion }}
         {{- else }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
         {{- with .Values.compactor.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -85,21 +86,23 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
       volumes:
         - name: config
-          secret:
-            {{- if .Values.useExternalConfig }}
-            secretName: {{ .Values.externalConfigSecretName }}
-            {{- else }}
-            secretName: {{ template "enterprise-logs.fullname" . }}
-            {{- end }}
+          configMap:
+          {{- if .Values.useExternalConfig }}
+            name: {{ .Values.externalConfigName }}
+          {{- else }}
+            name: {{ template "enterprise-logs.fullname" . }}
+          {{- end }}
         - name: license
           secret:
-            secretName: {{ .Values.license.secretName }}
-        {{- if not .Values.compactor.persistentVolume.enabled }}
+          {{- if .Values.useExternalLicense }}
+            secretName: {{ .Values.externalLicenseName }}
+          {{- else }}
+            secretName: {{ template "enterprise-logs.fullname" . }}
+          {{- end }}
         - name: storage
           emptyDir: {}
-        {{- end }}
-        {{- if .Values.compactor.extraVolumes }}
-        {{ toYaml .Values.compactor.extraVolumes | nindent 8 }}
+        {{- if .Values.gateway.extraVolumes }}
+        {{ toYaml .Values.gateway.extraVolumes | nindent 8 }}
         {{- end }}
       containers:
         {{- if .Values.compactor.extraContainers }}
@@ -109,9 +112,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "-target=compactor"
-            - "-config.file=/etc/loki/config/config.yaml"
-            - "-memberlist.join={{ template "enterprise-logs.fullname" . }}-gossip-ring"
+            - -target=compactor
+            - -config.file=/etc/loki/config/config.yaml
+            - -memberlist.join={{ template "enterprise-logs.fullname" . }}-gossip-ring
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -124,24 +127,22 @@ spec:
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.compactor.extraVolumeMounts }}
-            {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12}}
-            {{- end }}
             - name: config
               mountPath: /etc/loki/config
             - name: license
-              mountPath: /license
+              mountPath: /etc/enterprise-logs/license
             - name: storage
-              mountPath: "/data"
-              {{- if .Values.compactor.persistentVolume.subPath }}
-              subPath: {{ .Values.compactor.persistentVolume.subPath }}
-              {{- end }}
+              mountPath: /data
+              subPath: {{ .Values.gateway.persistence.subPath }}
+            {{- if .Values.gateway.extraVolumeMounts }}
+            {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
+            {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: {{ template "enterprise-logs.http-listen-port" . }}
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: {{ template "enterprise-logs.grpc-listen-port" . }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.compactor.livenessProbe | nindent 12 }}
@@ -153,5 +154,5 @@ spec:
             readOnlyRootFilesystem: true
           env:
             {{- if .Values.compactor.env }}
-              {{- toYaml .Values.compactor.env | nindent 12 }}
+            {{- toYaml .Values.compactor.env | nindent 12 }}
             {{- end }}

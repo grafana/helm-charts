@@ -4,10 +4,7 @@ kind: RoleBinding
 metadata:
   name: {{ template "enterprise-logs.fullname" . }}
   labels:
-    app: {{ template "enterprise-logs.name" . }}
-    chart: {{ template "enterprise-logs.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    {{- include "enterprise-logs.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

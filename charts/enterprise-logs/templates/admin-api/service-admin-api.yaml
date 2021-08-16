@@ -3,26 +3,24 @@ kind: Service
 metadata:
   name: {{ template "enterprise-logs.fullname" . }}-admin-api
   labels:
-    app: {{ template "enterprise-logs.name" . }}-admin-api
-    chart: {{ template "enterprise-logs.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    {{- with .Values.admin_api.labels }}
+    {{- include "enterprise-logs.labels" . | nindent 4 }}
+    {{- with .Values.adminApi.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    {{- toYaml .Values.admin_api.annotations | nindent 4 }}
+    {{- with .Values.adminApi.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.config.server.http_listen_port }}
+    - port: {{ template "enterprise-logs.http-listen-port" . }}
       protocol: TCP
       name: http-metrics
       targetPort: http-metrics
-    - port: {{ .Values.config.server.grpc_listen_port }}
+    - port: {{ template "enterprise-logs.grpc-listen-port" . }}
       protocol: TCP
       name: grpc
       targetPort: grpc
   selector:
-    app: {{ template "enterprise-logs.name" . }}-admin-api
-    release: {{ .Release.Name }}
+    {{- include "enterprise-logs.selectorLabels" . | nindent 4 }}

@@ -1,20 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    {{- toYaml .Values.gateway.annotations | nindent 4 }}
-  labels:
-    app: {{ template "enterprise-logs.name" . }}-gateway
-    chart: {{ template "enterprise-logs.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
   name: {{ template "enterprise-logs.fullname" . }}-gateway
+  labels:
+    {{- include "enterprise-logs.labels" . | nindent 4 }}
+    {{- with .Values.gateway.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.gateway.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-logs.name" . }}-gateway
-      release: {{ .Release.Name }}
+      {{- include "enterprise-logs.selectorLabels" . | nindent 6 }}
   strategy:
     {{- toYaml .Values.gateway.strategy | nindent 4 }}
   template:
@@ -32,7 +33,7 @@ spec:
         {{- if .Values.useExternalConfig }}
         checksum/config: {{ .Values.externalConfigVersion }}
         {{- else }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end}}
         {{- with .Values.gateway.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -57,8 +58,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "-target=gateway"
-            - "-config.file=/etc/loki/config/config.yaml"
+            - -target=gateway
+            - -config.file=/etc/loki/config/config.yaml
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -68,30 +69,30 @@ spec:
             - -admin.client.s3.insecure=true
             {{- end }}
             {{- if .Values.gateway.useDefaultProxyURLs }}
-            - -gateway.proxy.default.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.admin-api.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.distributor.url=http://{{ template "enterprise-logs.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.ingester.url=http://{{ template "enterprise-logs.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-logs.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.ruler.url=http://{{ template "enterprise-logs.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.default.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ template "enterprise-logs.http-listen-port" . }}
+            - -gateway.proxy.admin-api.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ template "enterprise-logs.http-listen-port" . }}
+            - -gateway.proxy.distributor.url=http://{{ template "enterprise-logs.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ template "enterprise-logs.http-listen-port" . }}
+            - -gateway.proxy.ingester.url=http://{{ template "enterprise-logs.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ template "enterprise-logs.http-listen-port" . }}
+            - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-logs.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ template "enterprise-logs.http-listen-port" . }}
+            - -gateway.proxy.ruler.url=http://{{ template "enterprise-logs.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ template "enterprise-logs.http-listen-port" . }}
             {{- end }}
             {{- range $key, $value := .Values.gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.gateway.extraVolumeMounts }}
-              {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12}}
-            {{- end }}
             - name: config
               mountPath: /etc/loki/config
             - name: license
-              mountPath: /license
+              mountPath: /etc/enterprise-logs/license
             - name: storage
-              mountPath: "/data"
+              mountPath: /data
               subPath: {{ .Values.gateway.persistence.subPath }}
+            {{- if .Values.gateway.extraVolumeMounts }}
+            {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
+            {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: {{ template "enterprise-logs.http-listen-port" . }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
@@ -117,17 +118,21 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       volumes:
         - name: config
-          secret:
+          configMap:
           {{- if .Values.useExternalConfig }}
-            secretName: {{ .Values.externalConfigSecretName }}
+            name: {{ .Values.externalConfigName }}
+          {{- else }}
+            name: {{ template "enterprise-logs.fullname" . }}
+          {{- end }}
+        - name: license
+          secret:
+          {{- if .Values.useExternalLicense }}
+            secretName: {{ .Values.externalLicenseName }}
           {{- else }}
             secretName: {{ template "enterprise-logs.fullname" . }}
           {{- end }}
-        {{- if .Values.gateway.extraVolumes }}
-        {{ toYaml .Values.gateway.extraVolumes | nindent 8}}
-        {{- end }}
-        - name: license
-          secret:
-            secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
+        {{- if .Values.gateway.extraVolumes }}
+        {{ toYaml .Values.gateway.extraVolumes | nindent 8 }}
+        {{- end }}

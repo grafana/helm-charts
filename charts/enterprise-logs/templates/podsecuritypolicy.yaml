@@ -4,10 +4,7 @@ kind: PodSecurityPolicy
 metadata:
   name: {{ template "enterprise-logs.fullname" . }}
   labels:
-    app: {{ template "enterprise-logs.name" . }}
-    chart: {{ template "enterprise-logs.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    {{- include "enterprise-logs.labels" . | nindent 4 }}
 spec:
   privileged: false
   allowPrivilegeEscalation: false

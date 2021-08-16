@@ -27,11 +27,31 @@ If release name contains chart name it will be used as a full name.
 Create chart name and version as used by the chart label.
 */}}
 {{- define "enterprise-logs.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{/*
-Create the name of the service account
+Common labels
+*/}}
+{{- define "enterprise-logs.labels" -}}
+helm.sh/chart: {{ include "enterprise-logs.chart" . }}
+{{ include "enterprise-logs.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "enterprise-logs.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "enterprise-logs.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
 */}}
 {{- define "enterprise-logs.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
@@ -39,6 +59,13 @@ Create the name of the service account
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Docker image name
+*/}}
+{{- define "enterprise-logs.image" -}}
+{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | toString) -}}
 {{- end -}}
 
 {{/*
@@ -57,4 +84,20 @@ Create the app name of enterprise-logs clients. Defaults to the same logic as "e
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
+
+
+{{/*
+HTTP listen port
+*/}}
+{{- define "enterprise-logs.http-listen-port" -}}
+{{- print .Values.config.server.http_listen_port -}}
+{{- end -}}
+
+
+{{/*
+gRPC listen port
+*/}}
+{{- define "enterprise-logs.grpc-listen-port" -}}
+{{- print .Values.config.server.grcp_listen_port -}}
 {{- end -}}

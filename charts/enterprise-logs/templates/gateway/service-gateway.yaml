@@ -3,22 +3,19 @@ kind: Service
 metadata:
   name: {{ template "enterprise-logs.fullname" . }}-gateway
   labels:
-    app: {{ template "enterprise-logs.name" . }}-gateway
-    chart: {{ template "enterprise-logs.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    {{- with .Values.gateway.labels }}
+    {{- with .Values.gateway.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    {{- toYaml .Values.gateway.annotations | nindent 4 }}
+    {{- with .Values.gateway.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.config.server.http_listen_port }}
+    - port: {{ template "enterprise-logs.http-listen-port" . }}
       protocol: TCP
       name: http-metrics
       targetPort: http-metrics
   selector:
-    app: {{ template "enterprise-logs.name" . }}-gateway
-    release: {{ .Release.Name }}
+    {{- include "enterprise-logs.selectorLabels" . | nindent 4 }}

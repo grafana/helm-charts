@@ -1,22 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    {{- toYaml .Values.admin_api.annotations | nindent 4 }}
-  labels:
-    app: {{ template "enterprise-logs.name" . }}-admin-api
-    chart: {{ template "enterprise-logs.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
   name: {{ template "enterprise-logs.fullname" . }}-admin-api
+  labels:
+    {{- include "enterprise-logs.labels" . | nindent 4 }}
+    {{- with .Values.adminApi.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.adminApi.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  replicas: {{ .Values.admin_api.replicas }}
+  replicas: {{ .Values.adminApi.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-logs.name" . }}-admin-api
-      release: {{ .Release.Name }}
+      {{- include "enterprise-logs.selectorLabels" . | nindent 6 }}
   strategy:
-    {{- toYaml .Values.admin_api.strategy | nindent 4 }}
+    {{- toYaml .Values.adminApi.strategy | nindent 4 }}
   template:
     metadata:
       labels:
@@ -25,25 +26,25 @@ spec:
         gossip_ring_member: "true"
         target: admin-api
         release: {{ .Release.Name }}
-        {{- with .Values.admin_api.podLabels }}
+        {{- with .Values.adminApi.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
         {{- if .Values.useExternalConfig }}
         checksum/config: {{ .Values.externalConfigVersion }}
         {{- else }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end}}
-        {{- with .Values.admin_api.podAnnotations }}
+        {{- with .Values.adminApi.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       serviceAccountName: {{ template "enterprise-logs.serviceAccountName" . }}
-      {{- if .Values.admin_api.priorityClassName }}
-      priorityClassName: {{ .Values.admin_api.priorityClassName }}
+      {{- if .Values.adminApi.priorityClassName }}
+      priorityClassName: {{ .Values.adminApi.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.admin_api.securityContext | nindent 8 }}
+        {{- toYaml .Values.adminApi.securityContext | nindent 8 }}
       initContainers:
       {{- if .Values.minio.enabled }}
         - name: minio-mc
@@ -74,9 +75,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "-target=admin-api"
-            - "-config.file=/etc/loki/config/config.yaml"
-            - "-memberlist.join={{ template "enterprise-logs.fullname" . }}-gossip-ring"
+            - -target=admin-api
+            - -config.file=/etc/loki/config/config.yaml
+            - -memberlist.join={{ template "enterprise-logs.fullname" . }}-gossip-ring
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -85,65 +86,69 @@ spec:
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             {{- end }}
-            {{- range $key, $value := .Values.admin_api.extraArgs }}
+            {{- range $key, $value := .Values.adminApi.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.admin_api.extraVolumeMounts }}
-              {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
-            {{- end }}
             - name: config
               mountPath: /etc/loki/config
             - name: license
-              mountPath: /license
+              mountPath: /etc/enterprise-logs/license
             - name: storage
-              mountPath: "/data"
-              subPath: {{ .Values.admin_api.persistence.subPath }}
+              mountPath: /data
+              subPath: {{ .Values.adminApi.persistence.subPath }}
+            {{- if .Values.adminApi.extraVolumeMounts }}
+            {{ toYaml .Values.adminApi.extraVolumeMounts | nindent 12 }}
+            {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: {{ template "enterprise-logs.http-listen-port" . }}
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: {{ template "enterprise-logs.grpc-listen-port" . }}
               protocol: TCP
           livenessProbe:
-            {{- toYaml .Values.admin_api.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.adminApi.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml .Values.admin_api.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.adminApi.readinessProbe | nindent 12 }}
           resources:
-            {{- toYaml .Values.admin_api.resources | nindent 12 }}
+            {{- toYaml .Values.adminApi.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
           env:
-            {{- if .Values.admin_api.env }}
-            {{ toYaml .Values.admin_api.env | nindent 12 }}
+            {{- if .Values.adminApi.env }}
+            {{ toYaml .Values.adminApi.env | nindent 12 }}
             {{- end }}
-        {{- with .Values.admin_api.extraContainers }}
+        {{- with .Values.adminApi.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
       nodeSelector:
-        {{- toYaml .Values.admin_api.nodeSelector | nindent 8 }}
+        {{- toYaml .Values.adminApi.nodeSelector | nindent 8 }}
       affinity:
-        {{- toYaml .Values.admin_api.affinity | nindent 8 }}
+        {{- toYaml .Values.adminApi.affinity | nindent 8 }}
       tolerations:
-        {{- toYaml .Values.admin_api.tolerations | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.admin_api.terminationGracePeriodSeconds }}
+        {{- toYaml .Values.adminApi.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.adminApi.terminationGracePeriodSeconds }}
       volumes:
         - name: config
-          secret:
+          configMap:
           {{- if .Values.useExternalConfig }}
-            secretName: {{ .Values.externalConfigSecretName }}
+            name: {{ .Values.externalConfigName }}
+          {{- else }}
+            name: {{ template "enterprise-logs.fullname" . }}
+          {{- end }}
+        - name: license
+          secret:
+          {{- if .Values.useExternalLicense }}
+            secretName: {{ .Values.externalLicenseName }}
           {{- else }}
             secretName: {{ template "enterprise-logs.fullname" . }}
           {{- end }}
-        {{- if .Values.admin_api.extraVolumes }}
-        {{ toYaml .Values.admin_api.extraVolumes | nindent 8}}
-        {{- end }}
-        - name: license
-          secret:
-            secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
+        {{- if .Values.adminApi.extraVolumes }}
+        {{ toYaml .Values.adminApi.extraVolumes | nindent 8 }}
+        {{- end }}
         {{- if .Values.minio.enabled }}
         - name: minio-configuration
           projected:
