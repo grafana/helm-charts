@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "loki.memcachedIndexWritesFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.memcachedIndexWritesLabels" . | nindent 4 }}
 spec:
