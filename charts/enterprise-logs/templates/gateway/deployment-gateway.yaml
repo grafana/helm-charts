@@ -29,7 +29,7 @@ spec:
         {{- if .Values.useExternalConfig }}
         checksum/config: {{ .Values.externalConfigVersion }}
         {{- else }}
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret-config.yaml") . | sha256sum }}
         {{- end}}
         {{- with .Values.gateway.annotations }}
         {{- toYaml . | nindent 8 }}
@@ -114,11 +114,11 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       volumes:
         - name: config
-          configMap:
+          secret:
           {{- if .Values.useExternalConfig }}
-            name: {{ .Values.externalConfigName }}
+            secretName: {{ .Values.externalConfigName }}
           {{- else }}
-            name: enterprise-logs-config
+            secretName: enterprise-logs-config
           {{- end }}
         - name: license
           secret:
