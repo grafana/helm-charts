@@ -12,6 +12,13 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.7
+
+* [CHANGE] Enabled enterprise authentication by default.
+  > **Breaking:** This change can cause losing access to the GEM cluster in case `auth.type` has not
+  > been set explicitly.
+  > This is a security related change and therefore released in a patch release.
+
 ## 1.4.6
 
 * [FEATURE] Run an instance of the GEM overrides-exporter by default. #590

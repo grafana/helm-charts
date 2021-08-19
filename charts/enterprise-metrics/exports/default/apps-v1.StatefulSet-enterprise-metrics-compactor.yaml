@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-compactor
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.4.6
+    chart: enterprise-metrics-1.4.7
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-compactor
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: e53c0b4bdbf02c7eb5f7b990b87d9f3f59f5b7b86c9aa66e8ef71a7eed5674a9
+        checksum/config: 5954bc6bdc5b148cde58a7ca888aeb612d512e980448816e556067b43ccc9cfc
       labels:
         app: enterprise-metrics-compactor
         gossip_ring_member: "true"

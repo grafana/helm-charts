@@ -56,7 +56,10 @@ tokengenJob:
   annotations: {}
 
 config:
-  auth_enabled: false
+  auth_enabled: true
+  auth:
+    type: enterprise
+
   cluster_name: "{{ .Release.Name }}"
 
   admin_client:
