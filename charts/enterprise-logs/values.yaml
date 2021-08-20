@@ -61,6 +61,12 @@ config:
   admin_client:
     storage:
       type: s3
+      s3:
+        endpoint: "{{ .Release.Name }}-minio:9000"
+        bucket_name: enterprise-logs-admin
+        secret_access_key: supersecret
+        access_key_id: enterprise-logs
+        insecure: true
   compactor:
     shared_store: s3
     working_directory: /data/boltdb-shipper-compactor
@@ -82,7 +88,7 @@ config:
     abort_if_cluster_join_fails: false
     bind_port: 7946
     join_members:
-      - "{{ .Release.Name }}-enterprise-logs-memberlist"
+      - "{{ .Release.Name }}-memberlist"
   distributor:
     ring:
       kvstore:
@@ -110,8 +116,10 @@ config:
           period: 24h
   storage_config:
     aws:
-      s3: "http://enterprise-logs:supersecret@{{ .Release.Name }}-minio:9000"
+      endpoint: "{{ .Release.Name }}-minio:9000"
       bucketnames: enterprise-logs-tsdb
+      access_key_id: enterprise-logs
+      secret_access_key: supersecret
       s3forcepathstyle: true
       insecure: true
     boltdb_shipper:
@@ -120,6 +128,15 @@ config:
       cache_ttl: 24h
       shared_store: s3
   ruler:
+    storage:
+      type: s3
+      s3:
+        endpoint: "{{ .Release.Name }}-minio:9000"
+        bucketnames: enterprise-logs-ruler
+        access_key_id: enterprise-logs
+        secret_access_key: supersecret
+        s3forcepathstyle: true
+        insecure: true
     enable_alertmanager_discovery: false
     enable_api: true
     enable_sharding: true
