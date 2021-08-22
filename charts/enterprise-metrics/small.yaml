@@ -97,6 +97,15 @@ memcached-metadata:
 minio:
   enabled: false
 
+overrides_exporter:
+  replicas: 1
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
 querier:
   replicas: 2
   resources:

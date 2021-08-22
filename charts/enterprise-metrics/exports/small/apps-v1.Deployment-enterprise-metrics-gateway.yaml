@@ -4,7 +4,7 @@ metadata:
   labels:
     app: enterprise-metrics-gateway
     app.kubernetes.io/managed-by: Helmraiser
-    chart: enterprise-metrics-1.4.0
+    chart: enterprise-metrics-1.4.7
     heritage: Helm
     release: enterprise-metrics
   name: enterprise-metrics-gateway
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 85e8945bcb38fa7988fc9d58b7a0bd2b2db5640b9c1acd6649bf1d6826de4c5c
+        checksum/config: 5954bc6bdc5b148cde58a7ca888aeb612d512e980448816e556067b43ccc9cfc
       labels:
         app: enterprise-metrics-gateway
         name: gateway
@@ -45,13 +45,9 @@ spec:
         - -gateway.proxy.ruler.url=http://enterprise-metrics-ruler.enterprise-metrics.svc:8080
         - -gateway.proxy.store-gateway.url=http://enterprise-metrics-store-gateway.enterprise-metrics.svc:8080
         env: null
-        image: grafana/metrics-enterprise:v1.4.1
+        image: grafana/metrics-enterprise:v1.4.2
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          httpGet:
-            path: /ready
-            port: http-metrics
-          initialDelaySeconds: 45
+        livenessProbe: null
         name: enterprise-metrics
         ports:
         - containerPort: 8080

@@ -19,6 +19,7 @@ serviceAccount:
   nameTest:
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
+  autoMount: true
 
 replicas: 1
 
@@ -69,7 +70,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.0.5
+  tag: 8.1.0
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -206,7 +207,7 @@ ingress:
   #     service:
   #       name: ssl-redirect
   #       port:
-  #         name: service
+  #         name: use-annotation
 
 
   tls: []
@@ -607,7 +608,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.12.2
+    tag: 1.12.3
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}

@@ -1,11 +1,9 @@
-{{- if .Values.gateway.enabled }}
+{{- if .Values.gateway.enabled -}}
 {{- if .Values.gateway.ingress.enabled -}}
-{{- $newAPI := .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
-{{- if $newAPI -}}
-apiVersion: networking.k8s.io/v1
-{{- else }}
-apiVersion: networking.k8s.io/v1beta1
-{{- end }}
+{{- $ingressApiIsStable := eq (include "loki.ingress.isStable" .) "true" -}}
+{{- $ingressSupportsIngressClassName := eq (include "loki.ingress.supportsIngressClassName" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "loki.ingress.supportsPathType" .) "true" -}}
+apiVersion: {{ include "loki.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ include "loki.gatewayFullname" . }}
@@ -16,11 +14,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if $newAPI }}
-  {{- if .Values.gateway.ingress.ingressClassName }}
+  {{- if and $ingressSupportsIngressClassName .Values.gateway.ingress.ingressClassName }}
   ingressClassName: {{ .Values.gateway.ingress.ingressClassName }}
-  {{- end }}
-  {{- end }}
+  {{- end -}}
   {{- if .Values.gateway.ingress.tls }}
   tls:
     {{- range .Values.gateway.ingress.tls }}
@@ -40,11 +36,11 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            {{- if $newAPI }}
+            {{- if $ingressSupportsPathType }}
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- if $newAPI }}
+              {{- if $ingressApiIsStable }}
               service:
                 name: {{ include "loki.gatewayFullname" $ }}
                 port:

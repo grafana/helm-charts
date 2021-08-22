@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.4.1
+  tag: v1.4.2
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -56,7 +56,10 @@ tokengenJob:
   annotations: {}
 
 config:
-  auth_enabled: false
+  auth_enabled: true
+  auth:
+    type: enterprise
+
   cluster_name: "{{ .Release.Name }}"
 
   admin_client:
@@ -67,6 +70,7 @@ config:
     response_compression_enabled: true
 
   compactor:
+    data_dir: "/data"
     sharding_enabled: true
     sharding_ring:
       kvstore:
@@ -89,7 +93,7 @@ config:
   instrumentation:
     enabled: true
     distributor_client:
-      address: 'dns://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
+      address: 'dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
 
   limits:
     enforce_metric_name: false
@@ -205,11 +209,6 @@ admin_api:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -290,11 +289,6 @@ alertmanager:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -401,11 +395,6 @@ distributor:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -458,11 +447,6 @@ gateway:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -555,16 +539,6 @@ ingester:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -591,6 +565,54 @@ ingester:
   extraVolumeMounts: []
   extraPorts: []
   env: []
+
+overrides_exporter:
+  replicas: 1
+
+  annotations: {}
+
+  service:
+    annotations: {}
+    labels: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  securityContext: {}
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  extraContainers: []
+  extraVolumes: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  terminationGracePeriodSeconds: 60
 
 ruler:
   replicas: 1
@@ -620,11 +642,6 @@ ruler:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -689,11 +706,6 @@ querier:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -758,11 +770,6 @@ query_frontend:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -859,16 +866,6 @@ store_gateway:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -965,16 +962,6 @@ compactor:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
