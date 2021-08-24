@@ -21,6 +21,7 @@ main() {
     num_changed=$(wc -l <<< "$changed")
 
     if ((num_changed > 1)); then
+        echo $changed
         echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
         exit 1
     fi
