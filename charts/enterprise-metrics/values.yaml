@@ -42,7 +42,10 @@ tokengenJob:
   annotations: {}
 
 config:
-  auth_enabled: false
+  auth_enabled: true
+  auth:
+    type: enterprise
+
   cluster_name: "{{ .Release.Name }}"
 
   admin_client:
@@ -548,6 +551,54 @@ ingester:
   extraVolumeMounts: []
   extraPorts: []
   env: []
+
+overrides_exporter:
+  replicas: 1
+
+  annotations: {}
+
+  service:
+    annotations: {}
+    labels: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  securityContext: {}
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  extraContainers: []
+  extraVolumes: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  terminationGracePeriodSeconds: 60
 
 ruler:
   replicas: 1

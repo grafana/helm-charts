@@ -608,7 +608,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.12.2
+    tag: 1.12.3
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}

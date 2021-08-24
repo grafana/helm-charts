@@ -12,6 +12,21 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.7
+
+* [CHANGE] Enabled enterprise authentication by default.
+  > **Breaking:** This change can cause losing access to the GEM cluster in case `auth.type` has not
+  > been set explicitly.
+  > This is a security related change and therefore released in a patch release.
+
+## 1.4.6
+
+* [FEATURE] Run an instance of the GEM overrides-exporter by default. #590
+
+## 1.4.5
+
+* [BUGFIX] Add `memberlist.join` configuration to the ruler. #618
+
 ## 1.4.4
 
 * [CHANGE] Removed livenessProbe configuration as it can often be more detrimental than having none. Users can still configure livenessProbes with the per App configuration hooks. #594
