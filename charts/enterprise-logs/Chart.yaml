@@ -1,7 +1,7 @@
 apiVersion: "v2"
 name: "enterprise-logs"
 type: application
-version: "0.1.0"
+version: "1.0.0"
 appVersion: "v1.1.0"
 kubeVersion: "^1.10.0-0"
 description: "Grafana Enterprise Logs"
