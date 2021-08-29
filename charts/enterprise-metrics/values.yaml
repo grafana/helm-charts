@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.4.2
+  tag: v1.5.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -56,7 +56,10 @@ tokengenJob:
   annotations: {}
 
 config:
-  auth_enabled: false
+  auth_enabled: true
+  auth:
+    type: enterprise
+
   cluster_name: "{{ .Release.Name }}"
 
   admin_client:
