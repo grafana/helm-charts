@@ -63,7 +63,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `loki.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `loki.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `loki.image.tag` |
-| compactor.command | string | `nil` | Overrides the image command for compactor container |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.persistence.enabled | bool | `false` | Enable creating PVCs for the compactor |
 | compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -88,7 +87,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `loki.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `loki.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
-| distributor.command | string | `nil` | Overrides the image command for distributor container |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.priorityClassName | string | `nil` | The name of the PriorityClass for distributor pods |
@@ -158,7 +156,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `loki.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
-| ingester.command | string | `nil` | Overrides the image command for ingester container |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -177,7 +174,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
-| loki.command | string | `nil` | Overrides the image command for all loki pods (except gateway) |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
 | loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
@@ -278,7 +274,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `loki.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
-| querier.command | string | `nil` | Overrides the image command for querier container |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
 | querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -299,7 +294,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `loki.image.registry` |
 | queryFrontend.image.repository | string | `nil` | Docker image repository for the query-frontend image. Overrides `loki.image.repository` |
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `loki.image.tag` |
-| queryFrontend.command | string | `nil` | Overrides the image command for query-frontend container |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
@@ -320,7 +314,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
-| ruler.command | string | `nil` | Overrides the image command for ruler container |
 | ruler.nodeSelector | object | `{}` | Node selector for ruler pods |
 | ruler.persistence.enabled | bool | `false` | Enable creating PVCs for the ruler |
 | ruler.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -357,7 +350,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | tableManager.image.registry | string | `nil` | The Docker registry for the table-manager image. Overrides `loki.image.registry` |
 | tableManager.image.repository | string | `nil` | Docker image repository for the table-manager image. Overrides `loki.image.repository` |
 | tableManager.image.tag | string | `nil` | Docker image tag for the table-manager image. Overrides `loki.image.tag` |
-| tableManager.command | string | `nil` | Overrides the image command for table-manager container |
 | tableManager.nodeSelector | object | `{}` | Node selector for table-manager pods |
 | tableManager.podAnnotations | object | `{}` | Annotations for table-manager pods |
 | tableManager.priorityClassName | string | `nil` | The name of the PriorityClass for table-manager pods |
