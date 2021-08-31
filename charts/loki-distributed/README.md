@@ -11,8 +11,6 @@ Helm chart for Grafana Loki in microservices mode
 * <https://grafana.com/oss/loki/>
 * <https://grafana.com/docs/loki/latest/>
 
-
-
 ## Chart Repo
 
 Add the following repo to use the chart:
