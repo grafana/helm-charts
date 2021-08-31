@@ -59,3 +59,18 @@ Create the app name of loki clients. Defaults to the same logic as "loki.fullnam
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common Labels
+*/}}
+{{- define "loki.commonLabels" -}}
+app: {{ template "loki.name" . }}
+app.kubernetes.io/name: {{ include "loki.name" . }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+chart: {{ template "loki.chart" . }}
+release: {{ .Release.Name }}
+heritage: {{ .Release.Service }}
+{{- end }}

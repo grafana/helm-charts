@@ -51,6 +51,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Pod labels MERGE version key in a major release as .spec.selector is immutable
+*/}}
+{{- define "promtail.podLabels" -}}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+
+{{/*
 Create the name of the service account
 */}}
 {{- define "promtail.serviceAccountName" -}}

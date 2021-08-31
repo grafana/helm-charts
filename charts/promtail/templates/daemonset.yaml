@@ -19,6 +19,7 @@ spec:
     metadata:
       labels:
         {{- include "promtail.selectorLabels" . | nindent 8 }}
+        {{- include "promtail.podLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

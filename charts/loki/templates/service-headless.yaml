@@ -4,10 +4,7 @@ metadata:
   name: {{ template "loki.fullname" . }}-headless
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "loki.name" . }}
-    chart: {{ template "loki.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "loki.commonLabels" . | nindent 4 }}
     variant: headless
 spec:
   clusterIP: None
