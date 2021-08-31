@@ -1,0 +1,15 @@
+{{- if .Values.indexGateway.enabled }}
+{{- if gt (int .Values.indexGateway.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.indexGatewayFullname" . }}
+  labels:
+    {{- include "loki.indexGatewayLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}
+{{- end }}

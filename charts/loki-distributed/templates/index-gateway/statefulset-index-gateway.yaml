@@ -1,23 +1,20 @@
-{{- if not .Values.indexGateway.enabled }}
+{{- if .Values.indexGateway.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "loki.querierFullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.indexGatewayFullname" . }}
   labels:
-    {{- include "loki.querierLabels" . | nindent 4 }}
-    app.kubernetes.io/part-of: memberlist
+    {{- include "loki.indexGatewayLabels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.querier.replicas }}
-  podManagementPolicy: Parallel
+  replicas: {{ .Values.indexGateway.replicas }}
   updateStrategy:
     rollingUpdate:
       partition: 0
-  serviceName: {{ include "loki.querierFullname" . }}-headless
+  serviceName: {{ include "loki.indexGatewayFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
-      {{- include "loki.querierSelectorLabels" . | nindent 6 }}
+      {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -25,30 +22,29 @@ spec:
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.querier.podAnnotations }}
+        {{- with .Values.indexGateway.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.querierSelectorLabels" . | nindent 8 }}
-        app.kubernetes.io/part-of: memberlist
+        {{- include "loki.indexGatewaySelectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- include "loki.querierPriorityClassName" . | nindent 6 }}
+      {{- include "loki.indexGatewayPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.indexGateway.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: {{ include "loki.querierImage" . }}
+          image: {{ include "loki.indexGatewayImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
             - -config.file=/etc/loki/config/config.yaml
-            - -target=querier
-            {{- with .Values.querier.extraArgs }}
+            - -target=index-gateway
+            {{- with .Values.indexGateway.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
@@ -58,14 +54,11 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
-            - name: http-memberlist
-              containerPort: 7946
-              protocol: TCP
-          {{- with .Values.querier.extraEnv }}
+          {{- with .Values.indexGateway.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.querier.extraEnvFrom }}
+          {{- with .Values.indexGateway.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -78,20 +71,20 @@ spec:
               mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
-            {{- with .Values.querier.extraVolumeMounts }}
+            {{- with .Values.indexGateway.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           resources:
-            {{- toYaml .Values.querier.resources | nindent 12 }}
-      {{- with .Values.querier.affinity }}
+            {{- toYaml .Values.indexGateway.resources | nindent 12 }}
+      {{- with .Values.indexGateway.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.querier.nodeSelector }}
+      {{- with .Values.indexGateway.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.querier.tolerations }}
+      {{- with .Values.indexGateway.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -104,10 +97,10 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
-        {{- with .Values.querier.extraVolumes }}
+        {{- with .Values.indexGateway.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-  {{- if not .Values.querier.persistence.enabled }}
+  {{- if not .Values.indexGateway.persistence.enabled }}
         - name: data
           emptyDir: {}
   {{- else }}
@@ -117,11 +110,11 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.querier.persistence.storageClass }}
+        {{- with .Values.indexGateway.persistence.storageClass }}
         storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
         resources:
           requests:
-            storage: {{ .Values.querier.persistence.size | quote }}
+            storage: {{ .Values.indexGateway.persistence.size | quote }}
   {{- end }}
 {{- end }}

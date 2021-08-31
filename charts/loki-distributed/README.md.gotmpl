@@ -22,6 +22,13 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
+### From 0.36.x to 0.37.0
+This version uses the Loki `index-gateway` component by default; which lets the Queriers run as `Deployment`s and not `StatefulSet`s and hence save some potential block storage costs associated with the queriers Persistent Volumes. If this behavior is not desired, make sure to set the following property:
+```yaml
+indexGateway:
+  enabled: false
+```
+
 ### From 0.34.x to 0.35.0
 This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
 ```yaml
@@ -164,6 +171,8 @@ loki:
         active_index_directory: /var/loki/index
         shared_store: s3
         cache_location: /var/loki/cache
+        index_gateway_client:
+          server_address: dns:///{{"{{"}} include "loki.indexGatewayFullname" . {{"}}"}}:9095
 
     query_range:
       # make queries more cache-able by aligning them with their step intervals
