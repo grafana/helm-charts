@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ga-operator.fullname" . }}
+  labels:
+    app.kubernetes.io/component: operator
+{{ include "ga-operator.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "ga-operator.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "ga-operator.name" . }}
+{{ include "ga-operator.labels" . | indent 8 }}
+    spec:
+      serviceAccountName: {{ template "ga-operator.operator.serviceAccountName" . }}
+      containers:
+      - name: {{ include "ga-operator.name" . }}
+        image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag }}"
+        imagePullPolicy: {{ .Values.operator.image.pullPolicy }}

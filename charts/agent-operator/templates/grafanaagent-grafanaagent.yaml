@@ -1,0 +1,20 @@
+apiVersion: monitoring.grafana.com/v1alpha1
+kind: GrafanaAgent
+metadata:
+  name: {{ include "ga-operator.fullname" . }}-agent
+  labels:
+    app.kubernetes.io/component: grafanaAgent
+{{ include "ga-operator.labels" . | indent 4 }}
+spec:
+  image: "{{ .Values.grafanaAgent.image.repository }}:{{ .Values.grafanaAgent.image.tag }}"
+  logLevel: {{ .Values.grafanaAgent.logLevel }}
+  serviceAccountName: {{ template "ga-operator.grafanaAgent.serviceAccountName" . }}
+{{- if .Values.grafanaAgent.metrics.enabled }}
+  prometheus:
+    replicas: {{ .Values.grafanaAgent.metrics.replicas }}
+    shards: {{ .Values.grafanaAgent.metrics.shards }}
+    instanceSelector:
+      matchLabels:
+        app.kubernetes.io/component: metricsInstance
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
