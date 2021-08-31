@@ -490,10 +490,10 @@ Include in the `extraSecretMounts` configuration flag:
 ```yaml
 - extraSecretMounts:
   - name: auth-generic-oauth-secret-mount
-     secretName: auth-generic-oauth-secret
-     defaultMode: 0440
-     mountPath: /etc/secrets/auth_generic_oauth
-     readOnly: true
+    secretName: auth-generic-oauth-secret
+    defaultMode: 0440
+    mountPath: /etc/secrets/auth_generic_oauth
+    readOnly: true
 ```
 
 ### extraSecretMounts using a Container Storage Interface (CSI) provider
