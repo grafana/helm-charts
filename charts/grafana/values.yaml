@@ -706,7 +706,7 @@ imageRenderer:
   # extra environment variables
   env:
     HTTP_HOST: "0.0.0.0"
-    # RENDERING_ARGS: --disable-gpu,--window-size=1280x758
+    # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
