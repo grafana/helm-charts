@@ -1,6 +1,7 @@
 # loki-distributed
 
-![Version: 0.37.0](https://img.shields.io/badge/Version-0.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+
+![Version: 0.37.1](https://img.shields.io/badge/Version-0.37.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square) 
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -9,6 +10,8 @@ Helm chart for Grafana Loki in microservices mode
 * <https://github.com/grafana/loki>
 * <https://grafana.com/oss/loki/>
 * <https://grafana.com/docs/loki/latest/>
+
+
 
 ## Chart Repo
 
@@ -23,6 +26,13 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.36.x to 0.37.0
+This version uses the Loki `index-gateway` component by default; which lets the Queriers run as `Deployment`s and not `StatefulSet`s and hence save some potential block storage costs associated with the queriers Persistent Volumes. If this behavior is not desired, make sure to set the following property:
+```yaml
+indexGateway:
+  enabled: false
+```
 
 ### From 0.34.x to 0.35.0
 This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
@@ -147,6 +157,27 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
+| indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| indexGateway.enabled | bool | `true` | Specifies whether the index-gateway should be enabled |
+| indexGateway.extraArgs | list | `[]` | Additional CLI args for the index-gateway |
+| indexGateway.extraEnv | list | `[]` | Environment variables to add to the index-gateway pods |
+| indexGateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the index-gateway pods |
+| indexGateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the index-gateway pods |
+| indexGateway.extraVolumes | list | `[]` | Volumes to add to the index-gateway pods |
+| indexGateway.image.registry | string | `nil` | The Docker registry for the index-gateway image. Overrides `loki.image.registry` |
+| indexGateway.image.repository | string | `nil` | Docker image repository for the index-gateway image. Overrides `loki.image.repository` |
+| indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
+| indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
+| indexGateway.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
+| indexGateway.persistence.size | string | `"10Gi"` | Size of persistent disk |
+| indexGateway.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| indexGateway.podAnnotations | object | `{}` | Annotations for index-gateway pods |
+| indexGateway.priorityClassName | string | `nil` | The name of the PriorityClass for index-gateway pods |
+| indexGateway.replicas | int | `1` | Number of replicas for the index-gateway |
+| indexGateway.resources | object | `{}` | Resource requests and limits for the index-gateway |
+| indexGateway.serviceLabels | object | `{}` | Labels for index-gateway service |
+| indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
+| indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
@@ -472,6 +503,8 @@ loki:
         active_index_directory: /var/loki/index
         shared_store: s3
         cache_location: /var/loki/cache
+        index_gateway_client:
+          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
 
     query_range:
       # make queries more cache-able by aligning them with their step intervals
