@@ -23,11 +23,6 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
-{{/* Fullname suffixed with grafanaAgent */}}
-{{- define "ga-operator.grafanaAgent.fullname" -}}
-{{- printf "%s-agent" (include "ga-operator.fullname" .) -}}
-{{- end }}
-
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -51,26 +46,10 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "ga-operator.operator.serviceAccountName" -}}
-{{- if .Values.operator.serviceAccount.create }}
-{{- default (include "ga-operator.fullname" .) .Values.operator.serviceAccount.name }}
+{{- define "ga-operator.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "ga-operator.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.operator.serviceAccount.name }}
+{{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "ga-operator.grafanaAgent.serviceAccountName" -}}
-{{- if .Values.grafanaAgent.serviceAccount.create }}
-{{- default (include "ga-operator.grafanaAgent.fullname" .) .Values.grafanaAgent.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.grafanaAgent.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{- define "ga-operator.grafanaAgent.metricsInstance.apiKeySecretName" -}}
-{{- $secretName := printf "%s-metrics" (include "ga-operator.fullname" .) -}}
-{{- default $secretName .Values.grafanaAgent.metrics.existingSecret | quote -}}
-{{- end -}}

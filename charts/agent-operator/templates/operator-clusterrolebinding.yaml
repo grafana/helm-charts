@@ -1,4 +1,4 @@
-{{- if .Values.operator.rbac.create -}}
+{{- if .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -12,6 +12,6 @@ roleRef:
   name: {{ include "ga-operator.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "ga-operator.operator.serviceAccountName" . }}
+  name: {{ template "ga-operator.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end -}}
