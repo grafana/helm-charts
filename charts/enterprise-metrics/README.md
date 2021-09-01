@@ -90,6 +90,12 @@ $ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisio
 $ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
+To install the chart with the values used in CI tests:
+
+```console
+$ helm install test ./ --values ./ci/test-values.yaml
+```
+
 # Contributing/Releasing
 
 All changes require a bump to the chart version, as this enforced by CI. All changes to the chart itself should also have a corresponding CHANGELOG entry.

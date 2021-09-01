@@ -12,6 +12,47 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Unreleased
 
+## 1.4.7
+
+* [CHANGE] Enabled enterprise authentication by default.
+  > **Breaking:** This change can cause losing access to the GEM cluster in case `auth.type` has not
+  > been set explicitly.
+  > This is a security related change and therefore released in a patch release.
+
+## 1.4.6
+
+* [FEATURE] Run an instance of the GEM overrides-exporter by default. #590
+
+## 1.4.5
+
+* [BUGFIX] Add `memberlist.join` configuration to the ruler. #618
+
+## 1.4.4
+
+* [CHANGE] Removed livenessProbe configuration as it can often be more detrimental than having none. Users can still configure livenessProbes with the per App configuration hooks. #594
+
+## 1.4.3
+
+* [ENHANCEMENT] Added values files for installations that require setting resource limits. #583
+
+## 1.4.2
+
+* [CHANGE] The compactor data directory configuration has been corrected to `/data`. #562
+  > **Note:** The compactor is stateless and no data stored in the existing data directory needs to be moved in order to facilitate this upgrade.
+  > For more information, refer to the [Cortex Compactor documentation](https://cortexmetrics.io/docs/blocks-storage/compactor/).
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.4.2](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v142----jul-21st-2021) #562
+
+## 1.4.1
+
+* [BUGFIX] Fixed DNS address of distributor client for self-monitoring. #569
+
+## 1.4.0
+
+* [CHANGE] Use updated querier response compression configuration, changed in 1.4.0. #524
+* [CHANGE] Use updated alertmanager storage configuration, changed in 1.4.0. #524
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.4.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v141----june-29th-2021). #524
+* [FEATURE] Enable [GEM self-monitoring](https://grafana.com/docs/metrics-enterprise/latest/self-monitoring/). #524
+
 ## 1.3.5
 
 * [CHANGE] The GRPC port on the query-frontend and store-gateway Kubernetes Services have been changed to match the naming of all other services. #523

@@ -14,23 +14,24 @@
 admin_api:
   replicas: 3
   resources:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
-      cpu: 10m
-      memory: 64Mi
+      cpu: 1
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 256Mi
 
 alertmanager:
   persistentVolume:
     enabled: true
   replicas: 3
   resources:
-    limits:
-      memory: 8Gi
     requests:
-      cpu: 300m
-      memory: 6Gi
+      cpu: 1
+      memory: 8Gi
+    limits:
+      cpu: 1
+      memory: 8Gi
   statefulset:
     enabled: true
 
@@ -38,12 +39,12 @@ compactor:
   persistentVolume:
     size: 50Gi
   resources:
-    limits:
-      cpu: 1200m
-      memory: 2Gi
     requests:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 2Gi
+    limits:
+      cpu: 2
+      memory: 2Gi
 
 consul:
   client:
@@ -59,16 +60,20 @@ consul:
 distributor:
   replicas: 3
   resources:
-    limits:
-      memory: 4Gi
     requests:
       cpu: 2
-      memory: 2Gi
+      memory: 4Gi
+    limits:
+      cpu: 2
+      memory: 4Gi
 
 gateway:
   replicas: 3
   resources:
     requests:
+      cpu: 1
+      memory: 384Mi
+    limits:
       cpu: 1
       memory: 384Mi
 
@@ -77,9 +82,10 @@ ingester:
     size: 50Gi
   replicas: 4
   resources:
-    limits:
-      memory: 25Gi
     requests:
+      cpu: 4
+      memory: 15Gi
+    limits:
       cpu: 4
       memory: 15Gi
 
@@ -101,35 +107,39 @@ overrides_exporter:
   replicas: 1
   resources:
     limits:
+      cpu: 1
       memory: 256Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 1
+      memory: 256Mi
 
 querier:
   replicas: 2
   resources:
-    limits:
-      memory: 24Gi
     requests:
+      cpu: 1
+      memory: 12Gi
+    limits:
       cpu: 1
       memory: 12Gi
 
 query_frontend:
   replicas: 1
   resources:
-    limits:
-      memory: 6Gi
     requests:
       cpu: 2
-      memory: 2Gi
+      memory: 6Gi
+    limits:
+      cpu: 2
+      memory: 6Gi
 
 ruler:
   replicas: 2
   resources:
-    limits:
-      memory: 16Gi
     requests:
+      cpu: 1
+      memory: 6Gi
+    limits:
       cpu: 1
       memory: 6Gi
 
@@ -139,5 +149,8 @@ store_gateway:
   replicas: 1
   resources:
     requests:
+      cpu: 1
+      memory: 6Gi
+    limits:
       cpu: 1
       memory: 6Gi

@@ -64,6 +64,7 @@ spec:
             {{- with .Values.queryFrontend.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- if .Values.queryFrontend.query.enabled }}
         - args:
             - --query.base-path=/
             - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
@@ -95,6 +96,7 @@ spec:
             {{- with .Values.queryFrontend.query.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+      {{- end}}
       {{- with .Values.queryFrontend.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
