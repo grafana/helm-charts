@@ -10,14 +10,14 @@ podAnnotations: {}
 
 podSecurityContext: {}
 
-imagePullSecrets: []
-
 rbac:
   create: true
 
 serviceAccount:
   create: true
   name:
+
+imagePullSecrets: []
 
 image:
   registry: docker.io
