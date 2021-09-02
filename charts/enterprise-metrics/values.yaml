@@ -1100,15 +1100,3 @@ minio:
       cpu: 100m
       memory: 128Mi
   secretKey: supersecret
-
-consul:
-  enabled: false
-  client:
-    enabled: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  server:
-    replicas: 1
-    bootstrapExpect: 1
