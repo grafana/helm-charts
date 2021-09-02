@@ -10,7 +10,9 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
-## Unreleased
+## 1.5.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.5.0](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v150----august-24th-2021). #641
 
 ## 1.4.7
 
