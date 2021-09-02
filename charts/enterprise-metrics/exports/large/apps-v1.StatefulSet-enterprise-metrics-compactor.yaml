@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: enterprise-metrics-compactor
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.5.1
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-compactor
+  namespace: enterprise-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise-metrics-compactor
+      release: enterprise-metrics
+  serviceName: enterprise-metrics-compactor
+  template:
+    metadata:
+      annotations:
+        checksum/config: e9403ebeabc03f30ca901621b6637055d4fc042c66ca0655723cd468300f216d
+      labels:
+        app: enterprise-metrics-compactor
+        gossip_ring_member: "true"
+        name: compactor
+        release: enterprise-metrics
+        target: compactor
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                  - compactor
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - -target=compactor
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -memberlist.join=enterprise-metrics-gossip-ring
+        env: null
+        image: grafana/metrics-enterprise:v1.5.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe: null
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 60
+        resources:
+          limits:
+            cpu: 1200m
+            memory: 2Gi
+          requests:
+            cpu: 1
+            memory: 1Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 240
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi

@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: enterprise-metrics-ingester
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: enterprise-metrics-1.5.1
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-ingester
+  namespace: enterprise-metrics
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: enterprise-metrics-ingester
+      release: enterprise-metrics
+  serviceName: enterprise-metrics-ingester
+  template:
+    metadata:
+      annotations:
+        checksum/config: e9403ebeabc03f30ca901621b6637055d4fc042c66ca0655723cd468300f216d
+      labels:
+        app: enterprise-metrics-ingester
+        gossip_ring_member: "true"
+        name: ingester
+        release: enterprise-metrics
+        target: ingester
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: target
+                operator: In
+                values:
+                - ingester
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - args:
+        - -target=ingester
+        - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+        - -memberlist.join=enterprise-metrics-gossip-ring
+        env: null
+        image: grafana/metrics-enterprise:v1.5.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe: null
+        name: enterprise-metrics
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 60
+        resources:
+          limits:
+            memory: 25Gi
+          requests:
+            cpu: 4
+            memory: 15Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/enterprise-metrics
+          name: config
+        - mountPath: /var/enterprise-metrics
+          name: runtime-config
+        - mountPath: /license
+          name: license
+        - mountPath: /data
+          name: storage
+      initContainers: []
+      nodeSelector: {}
+      securityContext: {}
+      serviceAccountName: enterprise-metrics
+      terminationGracePeriodSeconds: 240
+      tolerations: []
+      volumes:
+      - name: config
+        secret:
+          secretName: enterprise-metrics
+      - configMap:
+          name: enterprise-metrics-runtime
+        name: runtime-config
+      - name: license
+        secret:
+          secretName: enterprise-metrics-license
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
