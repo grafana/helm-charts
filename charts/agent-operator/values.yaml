@@ -22,7 +22,7 @@ serviceAccount:
 image:
   registry: docker.io
   repository: grafana/agent-operator
-  tag: v0.16.1
+  tag: v0.18.2
   pullPolicy: IfNotPresent
 
 resources: {}
