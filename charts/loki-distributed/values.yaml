@@ -911,7 +911,7 @@ ruler:
 # Configuration for the index-gateway
 indexGateway:
   # -- Specifies whether the index-gateway should be enabled
-  enabled: true
+  enabled: false
   # -- Number of replicas for the index-gateway
   replicas: 1
   image:

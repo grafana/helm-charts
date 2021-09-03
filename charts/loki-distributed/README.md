@@ -25,13 +25,6 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
-### From 0.36.x to 0.37.0
-This version uses the Loki `index-gateway` component by default; which lets the Queriers run as `Deployment`s and not `StatefulSet`s and hence save some potential block storage costs associated with the queriers Persistent Volumes. If this behavior is not desired, make sure to set the following property:
-```yaml
-indexGateway:
-  enabled: false
-```
-
 ### From 0.34.x to 0.35.0
 This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
 ```yaml
@@ -156,7 +149,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
-| indexGateway.enabled | bool | `true` | Specifies whether the index-gateway should be enabled |
+| indexGateway.enabled | bool | `false` | Specifies whether the index-gateway should be enabled |
 | indexGateway.extraArgs | list | `[]` | Additional CLI args for the index-gateway |
 | indexGateway.extraEnv | list | `[]` | Environment variables to add to the index-gateway pods |
 | indexGateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the index-gateway pods |
