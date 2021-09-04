@@ -260,19 +260,25 @@ containers:
 {{- end }}
 {{- end }}
 {{- if .Values.datasources }}
+{{- range (keys .Values.datasources | sortAlpha) }}
       - name: config
-        mountPath: "/etc/grafana/provisioning/datasources/datasources.yaml"
-        subPath: datasources.yaml
+        mountPath: "/etc/grafana/provisioning/datasources/{{ . }}"
+        subPath: {{ . | quote }}
+{{- end }}
 {{- end }}
 {{- if .Values.notifiers }}
+{{- range (keys .Values.notifiers | sortAlpha) }}
       - name: config
-        mountPath: "/etc/grafana/provisioning/notifiers/notifiers.yaml"
-        subPath: notifiers.yaml
+        mountPath: "/etc/grafana/provisioning/notifiers/{{ . }}"
+        subPath: {{ . | quote }}
+{{- end }}
 {{- end }}
 {{- if .Values.dashboardProviders }}
+{{- range (keys .Values.dashboardProviders | sortAlpha) }}
       - name: config
-        mountPath: "/etc/grafana/provisioning/dashboards/dashboardproviders.yaml"
-        subPath: dashboardproviders.yaml
+        mountPath: "/etc/grafana/provisioning/dashboards/{{ . }}"
+        subPath: {{ . | quote }}
+{{- end }}
 {{- end }}
 {{- if .Values.sidecar.dashboards.enabled }}
       - name: sc-dashboard-volume
