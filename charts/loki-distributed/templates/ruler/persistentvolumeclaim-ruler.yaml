@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-{{ include "loki.rulerFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.rulerLabels" . | nindent 4 }}
 spec:

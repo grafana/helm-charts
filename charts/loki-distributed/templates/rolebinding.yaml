@@ -3,6 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "loki.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 roleRef:
@@ -12,4 +13,5 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ include "loki.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
 {{- end }}
