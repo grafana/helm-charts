@@ -164,6 +164,8 @@ loki:
         active_index_directory: /var/loki/index
         shared_store: s3
         cache_location: /var/loki/cache
+        index_gateway_client:
+          server_address: dns:///{{"{{"}} include "loki.indexGatewayFullname" . {{"}}"}}:9095
 
     query_range:
       # make queries more cache-able by aligning them with their step intervals

@@ -107,6 +107,10 @@ loki:
         active_index_directory: /var/loki/index
         cache_location: /var/loki/cache
         cache_ttl: 168h
+        {{- if .Values.indexGateway.enabled }}
+        index_gateway_client:
+          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
+        {{- end }}
       filesystem:
         directory: /var/loki/chunks
 
@@ -903,6 +907,71 @@ ruler:
     #         - alert: HighThroughputLogStreams
     #           expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
     #           for: 2m
+
+# Configuration for the index-gateway
+indexGateway:
+  # -- Specifies whether the index-gateway should be enabled
+  enabled: false
+  # -- Number of replicas for the index-gateway
+  replicas: 1
+  image:
+    # -- The Docker registry for the index-gateway image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the index-gateway image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the index-gateway image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for index-gateway pods
+  priorityClassName: null
+  # -- Annotations for index-gateway pods
+  podAnnotations: {}
+  # -- Labels for index-gateway service
+  serviceLabels: {}
+  # -- Additional CLI args for the index-gateway
+  extraArgs: []
+  # -- Environment variables to add to the index-gateway pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the index-gateway pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the index-gateway pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the index-gateway pods
+  extraVolumes: []
+  # -- Resource requests and limits for the index-gateway
+  resources: {}
+  # -- Grace period to allow the index-gateway to shutdown before it is killed.
+  terminationGracePeriodSeconds: 300
+  # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.indexGatewaySelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.indexGatewaySelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for index-gateway pods
+  nodeSelector: {}
+  # -- Tolerations for index-gateway pods
+  tolerations: []
+  persistence:
+    # -- Enable creating PVCs which is required when using boltdb-shipper
+    enabled: false
+    # -- Size of persistent disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcached:
   image:

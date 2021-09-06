@@ -1,19 +1,13 @@
-{{- if not .Values.indexGateway.enabled }}
+{{- if .Values.indexGateway.enabled }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "loki.querierFullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.querier.replicas }}
-  podManagementPolicy: Parallel
-  updateStrategy:
-    rollingUpdate:
-      partition: 0
-  serviceName: {{ include "loki.querierFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -107,21 +101,6 @@ spec:
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-  {{- if not .Values.querier.persistence.enabled }}
         - name: data
           emptyDir: {}
-  {{- else }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- with .Values.querier.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.querier.persistence.size | quote }}
-  {{- end }}
 {{- end }}

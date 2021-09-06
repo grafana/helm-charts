@@ -1,11 +1,10 @@
-{{- if not .Values.indexGateway.enabled }}
+{{- if .Values.indexGateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "loki.querierFullname" . }}-headless
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "loki.indexGatewayFullname" . }}-headless
   labels:
-    {{- include "loki.querierSelectorLabels" . | nindent 4 }}
+    {{- include "loki.indexGatewaySelectorLabels" . | nindent 4 }}
 spec:
   type: ClusterIP
   clusterIP: None
@@ -19,5 +18,5 @@ spec:
       targetPort: grpc
       protocol: TCP
   selector:
-    {{- include "loki.querierSelectorLabels" . | nindent 4 }}
+    {{- include "loki.indexGatewaySelectorLabels" . | nindent 4 }}
 {{- end }}
