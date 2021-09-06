@@ -5,7 +5,9 @@ metadata:
   labels:
     {{- include "loki.queryFrontendLabels" . | nindent 4 }}
 spec:
+{{- if not .Values.queryFrontend.autoscaling.enabled }}
   replicas: {{ .Values.queryFrontend.replicas }}
+{{- end }}
   strategy:
     rollingUpdate:
       maxSurge: 0

@@ -7,7 +7,13 @@ metadata:
     {{- include "loki.querierLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
+{{- if not .Values.querier.autoscaling.enabled }}
   replicas: {{ .Values.querier.replicas }}
+{{- end }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
