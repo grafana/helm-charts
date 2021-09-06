@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "loki.compactorFullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.compactorLabels" . | nindent 4 }}
 spec:
