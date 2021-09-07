@@ -377,15 +377,21 @@ containers:
       - name: "{{ tpl $key $ }}"
         value: "{{ tpl (print $value) $ }}"
 {{- end }}
-    {{- if .Values.envFromSecret }}
+    {{- if or .Values.envFromSecret (or .Values.envRenderSecret .Values.envFromSecrets) }}
     envFrom:
+    {{- if .Values.envFromSecret }}
       - secretRef:
           name: {{ tpl .Values.envFromSecret . }}
     {{- end }}
     {{- if .Values.envRenderSecret }}
-    envFrom:
       - secretRef:
           name: {{ template "grafana.fullname" . }}-env
+    {{- end }}
+    {{- range .Values.envFromSecrets }}
+      - secretRef:
+          name: {{ .name }}
+          optional: {{ .optional | default false }}
+    {{- end }}
     {{- end }}
     livenessProbe:
 {{ toYaml .Values.livenessProbe | indent 6 }}

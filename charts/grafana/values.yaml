@@ -384,6 +384,12 @@ envFromSecret: ""
 ## This can be useful for auth tokens, etc
 envRenderSecret: {}
 
+## The names of secrets in the same kubernetes namespace which contain values to be added to the environment
+## Each entry should contain a name key, and can optionally specify whether the secret must be defined with an optional key.
+envFromSecrets: []
+## - name: secret-name
+##   optional: true
+
 # Inject Kubernetes services as environment variables.
 # See https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#environment-variables
 enableServiceLinks: true
