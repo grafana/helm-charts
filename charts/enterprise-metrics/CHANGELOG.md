@@ -10,6 +10,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.5.2
+
+* [CHANGE] Removed all references to Consul in the yaml files since GEM will be focused on deploying with memberlist. Deleted the multi-kv-consul-primary-values.yaml and multi-kv-memberlist-primary-values.yaml files since they assume you're running Consul as your primary or second kvstore. #674
+
 ## 1.5.1
 
 * [BUGFIX] Unused `ingress` configuration section removed from `values.yaml`. #658
