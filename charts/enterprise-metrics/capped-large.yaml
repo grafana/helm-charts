@@ -46,15 +46,6 @@ compactor:
       cpu: 2
       memory: 2Gi
 
-consul:
-  resources:
-    requests:
-      cpu: 4
-      memory: 4Gi
-  server:
-    replicas: 3
-    bootstrapExpect: 3
-
 distributor:
   replicas: 15
   resources:
