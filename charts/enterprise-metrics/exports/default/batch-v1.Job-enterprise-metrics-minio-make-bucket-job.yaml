@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+  labels:
+    app: minio-make-bucket-job
+    app.kubernetes.io/managed-by: Helmraiser
+    chart: minio-8.0.9
+    heritage: Helm
+    release: enterprise-metrics
+  name: enterprise-metrics-minio-make-bucket-job
+  namespace: enterprise-metrics
+spec:
+  template:
+    metadata:
+      labels:
+        app: minio-job
+        release: enterprise-metrics
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - /config/initialize
+        env:
+        - name: MINIO_ENDPOINT
+          value: enterprise-metrics-minio
+        - name: MINIO_PORT
+          value: "9000"
+        image: minio/mc:RELEASE.2020-11-25T23-04-07Z
+        imagePullPolicy: IfNotPresent
+        name: minio-mc
+        resources:
+          requests:
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /config
+          name: minio-configuration
+      restartPolicy: OnFailure
+      serviceAccountName: enterprise-metrics-minio
+      volumes:
+      - name: minio-configuration
+        projected:
+          sources:
+          - configMap:
+              name: enterprise-metrics-minio
+          - secret:
+              name: enterprise-metrics-minio
