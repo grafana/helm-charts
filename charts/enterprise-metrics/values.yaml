@@ -48,6 +48,13 @@ config:
 
   cluster_name: "{{ .Release.Name }}"
 
+  admin_api:
+    leader_election:
+      enabled: true
+      ring:
+        kvstore:
+          store: "memberlist"
+
   admin_client:
     storage:
       type: s3
