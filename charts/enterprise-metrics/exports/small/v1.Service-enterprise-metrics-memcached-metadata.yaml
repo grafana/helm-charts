@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: enterprise-metrics
+    app.kubernetes.io/managed-by: Helmraiser
+    app.kubernetes.io/name: memcached-metadata
+    helm.sh/chart: memcached-metadata-5.5.2
+  name: enterprise-metrics-memcached-metadata
+  namespace: enterprise-metrics
+spec:
+  clusterIP: None
+  ports:
+  - name: memcache
+    nodePort: null
+    port: 11211
+    targetPort: memcache
+  selector:
+    app.kubernetes.io/instance: enterprise-metrics
+    app.kubernetes.io/name: memcached-metadata
+  type: ClusterIP
