@@ -4,3 +4,7 @@ description: A Helm chart for the Grafana Agent Operator
 type: application
 version: 0.1.0
 appVersion: "0.18.2"
+home: https://grafana.com/docs/agent/latest/
+icon: https://github.com/grafana/agent/blob/main/docs/assets/logo_and_name.png?raw=true
+sources:
+  - https://github.com/grafana/agent/tree/main/pkg/operator

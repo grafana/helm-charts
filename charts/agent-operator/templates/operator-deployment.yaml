@@ -35,7 +35,7 @@ spec:
       - name: {{ include "ga-operator.name" . }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- with .Values.imagePullSecrets }}
+        {{- with .Values.image.pullSecrets }}
         imagePullSecrets:
         {{- toYaml . | nindent 4 }}
         {{- end }}

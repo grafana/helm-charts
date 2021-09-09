@@ -1,12 +1,16 @@
-# Grafana Agent Operator
+# grafana-agent-operator
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.18.2](https://img.shields.io/badge/AppVersion-0.18.2-informational?style=flat-square)
 
-Helm Chart for the [Grafana Agent Operator](https://grafana.com/docs/agent/latest/operator/).
+A Helm chart for the Grafana Agent Operator
+
+## Source Code
+
+* <https://github.com/grafana/agent/tree/main/pkg/operator>
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
-To learn how to deploy these resources, please see [Get started with Grafana Agent Operator](https://grafana.com/docs/agent/latest/operator/getting-started/). 
+To learn how to deploy these resources, please see [Get started with Grafana Agent Operator](https://grafana.com/docs/agent/latest/operator/getting-started/).
 
 ## CRDs
 
@@ -48,20 +52,20 @@ incompatible breaking change needing manual actions.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` |  |
-| annotations | object | `{}` |  |
+| affinity | object | `{}` | Pod affinity configuration |
+| annotations | object | `{}` | Annotations for the Deployment |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
-| imagePullSecrets | list | `[]` |  |
-| image.registry | string | `"docker.io"` | |
-| image.repository | string | `"grafana/agent-operator"` | |
-| image.tag | string | `"v0.18.2"` | |
-| image.pullPolicy | string | `"IfNotPresent"` | | 
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Image pull secrets |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"grafana/agent-operator"` | Image repo |
+| image.tag | string | `"v0.18.2"` | Image tag |
 | nameOverride | string | `""` | Overrides the chart's name |
-| nodeSelector | object | `{}` |  |
-| podAnnotations | list | `[]` |  |
-| rbac.create | bool | `true` | Specifies whether ClusterRole and ClusterRoleBinding should be created |
-| resources | object | `{}` | Specifies any limits or requests |
-| serviceAccount.annotations | object | `{}` | Annotations for the service account |
-| serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
-| serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| tolerations | list | `[]` |  |
+| nodeSelector | object | `{}` | nodeSelector configuration |
+| podAnnotations | object | `{}` | Annotations for the Deployment Pods |
+| podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
+| rbac | object | `{"create":true}` | Toggle to create ClusterRole and ClusterRoleBinding |
+| resources | object | `{}` | Resource limits and requests config |
+| serviceAccount.create | bool | `true` | Toggle to create ServiceAccount |
+| serviceAccount.name | string | `nil` | Service account name |
+| tolerations | list | `[]` | Tolerations applied to Pods |
