@@ -6,7 +6,9 @@ metadata:
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
 spec:
+{{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicas }}
+{{- end }}
 {{- with .Values.gateway.deploymentStrategy }}
   strategy:
 {{ toYaml . | trim | indent 4 }}
