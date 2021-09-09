@@ -30,7 +30,7 @@ _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation
 To install the chart with the release name `my-release`:
 
 ```console
-helm install my-release grafana/ga-operator
+helm install my-release grafana/grafana-agent-operator
 ```
 
 ## Uninstalling the Chart
