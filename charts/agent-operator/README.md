@@ -1,6 +1,6 @@
 # Grafana Agent Operator Helm Chart
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: v0.18.2](https://img.shields.io/badge/AppVersion-v0.18.2-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![AppVersion: v0.18.2](https://img.shields.io/badge/AppVersion-v0.18.2-informational?style=flat-square)
 
 This Helm chart allows to deploy the Grafana Agent Operator.
 
@@ -43,7 +43,6 @@ END
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `1` | Number of replicas to run |
 | annotations | object | `{}` | Deployment annotations. |
 | podAnnotations | object | `{}` | Pod annotations. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy. |
@@ -60,9 +59,5 @@ END
 | podSecurityContext | object | `{}` | Security context for the Agent Pod. |
 | securityContext | object | `{}` | Security context for the Agent container. |
 | nodeSelector | object | `{}` | Pod node selector. |
-| autoscaling.enabled | bool | `false` | Whether the HPA is enabled or not. |
-| autoscaling.minReplicas | int | `1` | Minimal number of repliocas to de-scale to. |
-| autoscaling.maxReplicas | int | `100` | Maximum number of replicas to scale to. |
-| targetCPUUtilizationPercentage | int | `80` | Target CPU untilization percentage which triggers the autoscaling. |
 | tolerations | list | `[]` | List of Pod tolerations. |
 | affinity | object | `{}` | Pod affinity. |

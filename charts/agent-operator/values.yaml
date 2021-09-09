@@ -1,6 +1,3 @@
-# Number of replicas to run
-replicaCount: 1
-
 # Deployment annotations
 annotations: {}
 
@@ -51,14 +48,6 @@ securityContext: {}
 
 # Pod node selector
 nodeSelector: {}
-
-# Horizontal Pod Autoscaling (HPA)
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 # Pod tolerations
 tolerations: []
