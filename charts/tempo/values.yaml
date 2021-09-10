@@ -120,7 +120,7 @@ persistence:
   size: 10Gi
 
 ## Pod Annotations
-podAnnotations: []
+podAnnotations: {}
 
 # -- Volumes to add
 extraVolumes: []
