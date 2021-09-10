@@ -11,6 +11,7 @@ spec:
     annotations:
       {{- toYaml .Values.podAnnotations | nindent 6 }}
   image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- with .Values.image.pullSecrets }}
   imagePullSecrets:
     {{- toYaml . | nindent 4 }}
