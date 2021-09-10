@@ -1,4 +1,3 @@
-charts/agent-operator
 charts/fluent-bit
 charts/grafana
 charts/loki

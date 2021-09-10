@@ -1,0 +1,32 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Chart Repo
+
+```shell
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+_See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
+
+## Deploy Grafana Agent Operator
+
+This kind of deployment uses configuration specified at the time of deployment.
+
+```shell
+cat <<END | helm upgrade --create-namespace --namespace grafana --values - --install agent-operator grafana/agent-operator
+# Keep the resource names simple
+fullnameOverride: grafana-agent-operator
+END
+```
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "chart.maintainersSection" . }}

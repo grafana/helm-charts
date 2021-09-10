@@ -1,43 +1,48 @@
-# Deployment annotations
+# -- Deployment annotations
 annotations: {}
 
-# Pod annotations
+# -- Pod annotations
 podAnnotations: {}
 
 # Image configuration for the Agent container
 image:
+  # -- Image repository and name
   repository: grafana/agent-operator
-  # Overrides the image tag whose default is the chart appVersion.
+  # -- Overrides the image tag whose default is the chart `appVersion`
   tag: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
+  # -- List of image pull secrets
   pullSecrets: []
 
 # Creation of the Service Account used by the Pod
 serviceAccount:
+  # -- Whether to create the Service Account used by the Pod
   create: true
-  # If not set and create is true, a name is generated using the fullname template
+  # -- If not set and `create` is `true`, a name is generated using the fullname template
   name: ""
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
 
-# Resources for the Agent container
+# -- Resources for the Agent container
 resources: {}
 
-# Whether to create Cluster Role and Cluster Role Binding
 rbac:
+  # -- Whether to create Cluster Role and Cluster Role Binding
   create: true
-  # Use an existing ClusterRole/Role
-  # useExistingRole: name-of-some-(cluster)role
+  # -- (string) Use an existing ClusterRole/Role
+  useExistingRole:
+  # -- Extra ClusterRole rules
   extraClusterRoleRules: []
   # - apiGroups: []
   #   resources: []
   #   verbs: []
 
-# Security context for the Agent pod
+# -- Security context for the Agent pod
 podSecurityContext: {}
   # fsGroup: 2000
 
-# Security context for the Agent container
+# -- Security context for the Agent container
 securityContext: {}
   # capabilities:
   #   drop:
@@ -46,11 +51,11 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# Pod node selector
+# -- Pod node selector
 nodeSelector: {}
 
-# Pod tolerations
+# -- Pod tolerations
 tolerations: []
 
-# Pod affinity
+# -- Pod affinity
 affinity: {}
