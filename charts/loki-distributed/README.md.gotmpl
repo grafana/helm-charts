@@ -52,7 +52,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 ## Components
 
-The chart supports the compontents shown in the following table.
+The chart supports the components shown in the following table.
 Ingester, distributor, querier, and query-frontend are always installed.
 The other components are optional.
 
@@ -64,8 +64,9 @@ The other components are optional.
 | querier |  ❎ | n/a |
 | query-frontend |  ❎ | n/a |
 | table-manager |  ✅ |  ❎ |
-| compactor |  ✅ | n/a |  ❎ |
-| ruler |  ✅ | n/a |  ❎ |
+| compactor |  ✅ |  ❎ |
+| ruler |  ✅ |  ❎ |
+| index-gateway |  ✅ |  ❎ |
 | memcached-chunks |  ✅ |  ❎ |
 | memcached-frontend |  ✅ |  ❎ |
 | memcached-index-queries |  ✅ |  ❎ |
@@ -164,6 +165,8 @@ loki:
         active_index_directory: /var/loki/index
         shared_store: s3
         cache_location: /var/loki/cache
+        index_gateway_client:
+          server_address: dns:///{{"{{"}} include "loki.indexGatewayFullname" . {{"}}"}}:9095
 
     query_range:
       # make queries more cache-able by aligning them with their step intervals

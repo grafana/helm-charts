@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.36.0](https://img.shields.io/badge/Version-0.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 0.37.3](https://img.shields.io/badge/Version-0.37.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -79,6 +79,11 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
+| distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
+| distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
+| distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
+| distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
+| distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
@@ -97,6 +102,11 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
+| gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
+| gateway.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the gateway |
+| gateway.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the gateway |
+| gateway.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the gateway |
 | gateway.basicAuth.enabled | bool | `false` | Enables basic authentication for the gateway |
 | gateway.basicAuth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' |
 | gateway.basicAuth.htpasswd | string | `"{{ htpasswd (required \"'gateway.basicAuth.username' is required\" .Values.gateway.basicAuth.username) (required \"'gateway.basicAuth.password' is required\" .Values.gateway.basicAuth.password) }}"` | Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function. The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes high CPU load. |
@@ -147,6 +157,27 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
+| indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| indexGateway.enabled | bool | `false` | Specifies whether the index-gateway should be enabled |
+| indexGateway.extraArgs | list | `[]` | Additional CLI args for the index-gateway |
+| indexGateway.extraEnv | list | `[]` | Environment variables to add to the index-gateway pods |
+| indexGateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the index-gateway pods |
+| indexGateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the index-gateway pods |
+| indexGateway.extraVolumes | list | `[]` | Volumes to add to the index-gateway pods |
+| indexGateway.image.registry | string | `nil` | The Docker registry for the index-gateway image. Overrides `loki.image.registry` |
+| indexGateway.image.repository | string | `nil` | Docker image repository for the index-gateway image. Overrides `loki.image.repository` |
+| indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
+| indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
+| indexGateway.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
+| indexGateway.persistence.size | string | `"10Gi"` | Size of persistent disk |
+| indexGateway.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| indexGateway.podAnnotations | object | `{}` | Annotations for index-gateway pods |
+| indexGateway.priorityClassName | string | `nil` | The name of the PriorityClass for index-gateway pods |
+| indexGateway.replicas | int | `1` | Number of replicas for the index-gateway |
+| indexGateway.resources | object | `{}` | Resource requests and limits for the index-gateway |
+| indexGateway.serviceLabels | object | `{}` | Labels for index-gateway service |
+| indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
+| indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
@@ -266,6 +297,11 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true` |
+| querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
+| querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
+| querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |
+| querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
@@ -286,6 +322,11 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
+| queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
+| queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
+| queryFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the query-frontend |
+| queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
@@ -360,7 +401,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 ## Components
 
-The chart supports the compontents shown in the following table.
+The chart supports the components shown in the following table.
 Ingester, distributor, querier, and query-frontend are always installed.
 The other components are optional.
 
@@ -372,8 +413,9 @@ The other components are optional.
 | querier |  ❎ | n/a |
 | query-frontend |  ❎ | n/a |
 | table-manager |  ✅ |  ❎ |
-| compactor |  ✅ | n/a |  ❎ |
-| ruler |  ✅ | n/a |  ❎ |
+| compactor |  ✅ |  ❎ |
+| ruler |  ✅ |  ❎ |
+| index-gateway |  ✅ |  ❎ |
 | memcached-chunks |  ✅ |  ❎ |
 | memcached-frontend |  ✅ |  ❎ |
 | memcached-index-queries |  ✅ |  ❎ |
@@ -472,6 +514,8 @@ loki:
         active_index_directory: /var/loki/index
         shared_store: s3
         cache_location: /var/loki/cache
+        index_gateway_client:
+          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
 
     query_range:
       # make queries more cache-able by aligning them with their step intervals
