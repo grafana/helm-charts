@@ -9,6 +9,10 @@
 # defined in enterprise-logs chart
 adminApi:
   replicas: 3
+  extraArgs: {
+    "admin-api.leader-election.enabled": "true",
+    "admin-api.leader-election.ring.store": "memberlist",
+  }
   resources:
     limits:
       cpu: 200m
