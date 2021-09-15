@@ -35,7 +35,6 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "loki.serviceAccountName" . }}
       {{- if .Values.tokengen.priorityClassName }}
       priorityClassName: {{ .Values.tokengen.priorityClassName }}
       {{- end }}
@@ -47,7 +46,7 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      containers:
+      initContainers:
         - name: enterprise-logs
           image: {{ template "enterprise-logs.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -62,6 +61,7 @@ spec:
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             {{- end }}
+            - -tokengen.token-file=/shared/admin-token
             {{- range $key, $value := .Values.tokengen.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
@@ -69,6 +69,8 @@ spec:
             {{- if .Values.tokengen.extraVolumeMounts }}
               {{ toYaml .Values.tokengen.extraVolumeMounts | nindent 12 }}
             {{- end }}
+            - name: shared
+              mountPath: /shared
             - name: config
               mountPath: /etc/loki/config
             - name: license
@@ -77,7 +79,27 @@ spec:
             {{- if .Values.tokengen.env }}
               {{ toYaml .Values.tokengen.env | nindent 12 }}
             {{- end }}
+      containers:
+        - name: create-secret
+          image: bitnami/kubectl
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/bash
+            - -euc
+            - kubectl create secret generic gel-admin-token --from-file=token=/shared/admin-token --from-literal=grafana-token="$(base64 <(echo :$(cat /shared/admin-token)))"
+          volumeMounts:
+            {{- if .Values.tokengen.extraVolumeMounts }}
+              {{ toYaml .Values.tokengen.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+            - name: shared
+              mountPath: /shared
+            - name: config
+              mountPath: /etc/loki/config
+            - name: license
+              mountPath: /etc/enterprise-logs/license
       restartPolicy: OnFailure
+      serviceAccount: {{ template "enterprise-logs.tokengenFullname" . }}
+      serviceAccountName: {{ template "enterprise-logs.tokengenFullname" . }}
       volumes:
         - name: config
           secret:
@@ -93,7 +115,7 @@ spec:
           {{- else }}
             secretName: enterprise-logs-license
           {{- end }}
-        - name: storage
+        - name: shared
           emptyDir: {}
         {{- if .Values.tokengen.extraVolumes }}
         {{ toYaml .Values.tokengen.extraVolumes | nindent 8 }}

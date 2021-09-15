@@ -179,7 +179,7 @@ config:
 
 # -- Configuration for `tokengen` target
 tokengen:
-  # -- Weather the job should be part of the deployment
+  # -- Whether the job should be part of the deployment
   enable: true
   # -- Additional CLI arguments for the `tokengen` target
   extraArgs: {}
@@ -193,6 +193,10 @@ tokengen:
   extraVolumes: []
   # -- Additional volume mounts for Pods
   extraVolumeMounts: []
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    fsGroup: 10001
 
 # -- Configuration for the `admin-api` target
 adminApi:
