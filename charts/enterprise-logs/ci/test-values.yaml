@@ -5,20 +5,23 @@ compactor:
 
 loki-distributed:
   ingester:
-    persistentVolume:
+    persistence:
       enabled: false
   distributor:
-    persistentVolume:
+    persistence:
       enabled: false
   ruler:
-    persistentVolume:
+    persistence:
       enabled: false
   querier:
-    persistentVolume:
+    persistence:
       enabled: false
   queryFrontend:
-    persistentVolume:
+    persistence:
+      enabled: false
+  indexGateway:
+    persistence:
       enabled: false
   tableManager:
-    persistentVolume:
+    persistence:
       enabled: false

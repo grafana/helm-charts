@@ -106,6 +106,18 @@ loki-distributed:
         cpu: 2
         memory: 6Gi
 
+  # -target=index-gateway
+  # defined in loki-distributed chart
+  indexGateway:
+    replicas: 3
+    resources:
+      limits:
+        cpu: 4
+        memory: 4Gi
+      requests:
+        cpu: 2
+        memory: 2Gi
+
   # memcached configuration is part of the loki-distributed chart
   memcached:
     enabled: true

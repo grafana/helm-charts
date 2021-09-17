@@ -14,6 +14,7 @@ Entries should include a reference to the pull request that introduced the chang
 ## Unreleased
 
 * [CHANGE] Updated `loki-distributed` chart dependency to `^0.37.3`. #684
+* [ENHANCEMENT] Enabled deployment of `index-gateway`. #684
 
 ## 1.0.0
 
