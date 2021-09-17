@@ -22,6 +22,3 @@ loki-distributed:
   indexGateway:
     persistence:
       enabled: false
-  tableManager:
-    persistence:
-      enabled: false

@@ -459,6 +459,10 @@ loki-distributed:
   gateway:
     enabled: false
 
+  # -- Table manager is not needed because we use boltdb-shipper and compactor
+  tableManager:
+    enabled: false
+
   # -- Configuration for the `ruler` target
   ruler:
     enabled: true
@@ -514,19 +518,6 @@ loki-distributed:
 
   # -- Configuration for the `query-frontend` target
   queryFrontend:
-    enabled: true
-    extraVolumes:
-      # -- Create license volume from license secret
-      - name: license
-        secret:
-          secretName: enterprise-logs-license
-    extraVolumeMounts:
-      # -- Mount the license volume
-      - name: license
-        mountPath: /etc/enterprise-logs/license
-
-  # -- Configuration for the `table-manager` target
-  tableManager:
     enabled: true
     extraVolumes:
       # -- Create license volume from license secret
