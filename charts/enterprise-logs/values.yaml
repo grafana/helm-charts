@@ -515,6 +515,8 @@ loki-distributed:
       # -- Mount the license volume
       - name: license
         mountPath: /etc/enterprise-logs/license
+    persistence:
+      enabled: true
 
   # -- Configuration for the `query-frontend` target
   queryFrontend:

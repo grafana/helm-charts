@@ -14,8 +14,9 @@ Entries should include a reference to the pull request that introduced the chang
 ## Unreleased
 
 * [CHANGE] Updated `loki-distributed` chart dependency to `^0.37.3`. #684
-* [ENHANCEMENT] Enabled deployment of `index-gateway`. #684
 * [CHANGE] Removed table manager deployment, because GEL uses boltdb-shipper and compactor. #684
+* [ENHANCEMENT] Enabled deployment of `index-gateway`. #684
+* [ENHANCEMENT] Enabled persistent volume for `querier` service. #684
 
 ## 1.0.0
 
