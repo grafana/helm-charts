@@ -296,7 +296,7 @@ persistence:
 
 initChownData:
   ## If false, data ownership will not be reset at startup
-  ## This allows the prometheus-server to be run with an arbitrary user
+  ## This allows grafana to be run with an arbitrary user
   ##
   enabled: true
 
