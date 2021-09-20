@@ -195,8 +195,10 @@ tokengen:
   extraVolumes: []
   # -- Additional volume mounts for Pods
   extraVolumeMounts: []
+  # -- Run containers as user `enterprise-logs(uid=10001)`
   securityContext:
     runAsNonRoot: true
+    runAsGroup: 10001
     runAsUser: 10001
     fsGroup: 10001
 
@@ -210,14 +212,18 @@ adminApi:
   labels: {}
   # -- Additional annotations for the `admin-api` Deployment
   annotations: {}
-
+  # -- Additional labels and annotations for the `admin-api` Service
   service:
-    # -- Additional labels for the `admin-api` Service
     labels: {}
-    # -- Additional annotations for the `admin-api` Service
     annotations: {}
+  # -- Run container as user `enterprise-logs(uid=10001)`
+  # `fsGroup` must not be specified, because these security options are applied
+  # on container level not on Pod level.
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
 
-  securityContext: {}
   strategy:
     type: RollingUpdate
 
@@ -269,17 +275,20 @@ gateway:
   labels: {}
   # -- Additional annotations for the `gateway` Pod
   annotations: {}
-
+  # -- Additional labels and annotations for the `gateway` Service
   service:
-    # -- Additional labels for the `gateway` Service
     labels: {}
-    # -- Additional annotations for the `gateway` Service
     annotations: {}
+  # -- Run container as user `enterprise-logs(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+    fsGroup: 10001
 
   # If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
 
-  securityContext: {}
   strategy:
     type: RollingUpdate
 
@@ -332,14 +341,17 @@ compactor:
   labels: {}
   # -- Additional annotations for the `compactor` Pod
   annotations: {}
-
+  # -- Additional labels and annotations for the `compactor` Service
   service:
-    # -- Additional labels for the `compactor` Service
     labels: {}
-    # -- Additional annotations for the `compactor` Service
     annotations: {}
+  # -- Run containers as user `enterprise-logs(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+    fsGroup: 10001
 
-  securityContext: {}
   strategy:
     type: RollingUpdate
 
@@ -449,7 +461,7 @@ loki-distributed:
   # RBAC configuration
   rbac:
     # -- If enabled, a PodSecurityPolicy is created
-    pspEnabled: false
+    pspEnabled: true
 
   # -- Compactor is defined in parent chart
   compactor:
