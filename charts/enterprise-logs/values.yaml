@@ -158,6 +158,8 @@ config:
       cache_location: /var/loki/cache
       cache_ttl: 24h
       shared_store: s3
+      index_gateway_client:
+        server_address: "dns:///{{ include \"loki.indexGatewayFullname\" . }}:9095"
 
   ruler:
     storage:
@@ -457,6 +459,10 @@ loki-distributed:
   gateway:
     enabled: false
 
+  # -- Table manager is not needed because we use boltdb-shipper and compactor
+  tableManager:
+    enabled: false
+
   # -- Configuration for the `ruler` target
   ruler:
     enabled: true
@@ -509,6 +515,8 @@ loki-distributed:
       # -- Mount the license volume
       - name: license
         mountPath: /etc/enterprise-logs/license
+    persistence:
+      enabled: true
 
   # -- Configuration for the `query-frontend` target
   queryFrontend:
@@ -523,8 +531,8 @@ loki-distributed:
       - name: license
         mountPath: /etc/enterprise-logs/license
 
-  # -- Configuration for the `table-manager` target
-  tableManager:
+  # -- Configuration for the `index-gateway` target
+  indexGateway:
     enabled: true
     extraVolumes:
       # -- Create license volume from license secret
@@ -535,6 +543,8 @@ loki-distributed:
       # -- Mount the license volume
       - name: license
         mountPath: /etc/enterprise-logs/license
+    persistence:
+      enabled: true
 
   loki:
     config: null
