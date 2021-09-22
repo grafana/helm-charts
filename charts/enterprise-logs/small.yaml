@@ -139,10 +139,6 @@ loki-distributed:
     enabled: true
     replicas: 1
 
-  memcachedIndexWrites:
-    enabled: true
-    replicas: 1
-
 # Disable minio dependency
 minio:
   enabled: false
