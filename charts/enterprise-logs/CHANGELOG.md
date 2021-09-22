@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.1.1
+
+- [BUGFIX] Ensure that Pods run as non-root user `enterprise-logs` (`uid=10001,gid=10001`). #690
+
 ## 1.1.0
 
 * [CHANGE] Updated `loki-distributed` chart dependency to `^0.37.3`. #684
