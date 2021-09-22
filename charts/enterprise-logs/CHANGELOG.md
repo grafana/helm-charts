@@ -11,7 +11,7 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
-## Unreleased
+## 1.2.0
 
 - [CHANGE] Removed unused deployment of `memcached-index-writes` StatefulSet when using `small.yaml` values file.
 
