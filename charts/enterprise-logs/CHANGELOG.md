@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.2.0
+
+- [CHANGE] Removed unused deployment of `memcached-index-writes` StatefulSet when using `small.yaml` values file.
+
 ## 1.1.1
 
 - [BUGFIX] Ensure that Pods run as non-root user `enterprise-logs` (`uid=10001,gid=10001`). #690
