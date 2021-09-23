@@ -22,3 +22,5 @@ data:
       http_listen_port: {{ .Values.tempo.server.httpListenPort }}
     storage:
       {{- toYaml .Values.tempo.storage | nindent 6 }}
+    overrides:
+      {{- toYaml .Values.tempo.overrides | nindent 6 }}

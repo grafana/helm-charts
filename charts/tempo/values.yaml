@@ -64,6 +64,14 @@ tempo:
         thrift_http:
           endpoint: 0.0.0.0:14268
     opencensus:
+  
+  # The overrides config for ingestion-limit
+  overrides:
+    # ingestion_burst_size_bytes: 20_000_000
+    # ingestion_rate_limit_bytes: 15_000_000
+    # max_bytes_per_trace:        5_000_000
+    # max_traces_per_user:        10_000
+
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
