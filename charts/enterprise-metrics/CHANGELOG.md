@@ -10,6 +10,13 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.5.3
+
+* [BUGFIX] This change does not affect single replica deployments of the
+  admin-api but does fix the potential for an inconsistent state when
+  running with multiple replicas of the admin-api and experiencing
+  parallel writes for the same objects. #675
+
 ## 1.5.2
 
 * [CHANGE] Removed all references to Consul in the yaml files since GEM will be focused on deploying with memberlist. Deleted the multi-kv-consul-primary-values.yaml and multi-kv-memberlist-primary-values.yaml files since they assume you're running Consul as your primary or second kvstore. #674

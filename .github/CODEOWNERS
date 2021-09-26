@@ -12,5 +12,6 @@
 /charts/promtail/ @unguiculus @Whyeasy
 /charts/tempo/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k
 /charts/tempo-distributed/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k
-/charts/enterprise-metrics/ @jdbaldry
+/charts/enterprise-metrics/ @jdbaldry @chaudum
+/charts/enterprise-logs/ @jdbaldry @chaudum
 /charts/tempo-vulture/ @Whyeasy @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio

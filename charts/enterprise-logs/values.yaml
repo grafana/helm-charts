@@ -1,0 +1,594 @@
+# -----------------------------------------
+# Configuration for `enterprise-logs` chart
+# -----------------------------------------
+
+# -- Overrides the chart's name
+nameOverride: null
+
+# -- Overrides the chart's computed fullname
+fullnameOverride: null
+
+# -- Definition of the Docker image for Grafana Enterprise Logs
+# If any of these values are changed, then they also need to be reflected in
+# `loki-distributed.loki.image`
+image:
+  # -- The container registry to use
+  registry: docker.io
+  # -- The image repository to use
+  repository: grafana/enterprise-logs
+  # -- The version of Grafana Enterprise Logs
+  tag: v1.1.0
+  # -- Defines the policy how and when images are pulled
+  pullPolicy: IfNotPresent
+  # -- Additional image pull secrets
+  pullSecrets: []
+
+# -- Definition of the ServiceAccount for containers
+# Any additional configuration of the ServiceAccount has to be done in
+# `loki-distributed.serviceAccount`.
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  # If this value is changed to `false`, it also needs to be reflected in
+  # `loki-distributed.serviceAccount.create`.
+  create: true
+
+# -- External config.yaml
+# A GEL configuration file may be provided as Kubernetes Secret outside of this Helm chart.
+useExternalConfig: false
+externalConfigName: enterprise-logs-config
+externalConfigVersion: "0"
+
+# -- External license.jwt
+# A GEL license file may be provided as Kubernetes Secret outside of this Helm chart.
+useExternalLicense: false
+externalLicenseName: enterprise-logs-license
+externalLicenseVersion: "0"
+
+# -- Grafana Enterprise Logs license
+# In order to use Grafana Enterprise Logs features, you will need to provide
+# the contents of your Grafana Enterprise Logs license, either by providing the
+# contents of the license.jwt, or the name Kubernetes Secret that contains your
+# license.jwt.
+# To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
+license:
+  contents: "NOTAVALIDLICENSE"
+
+# -- Grafana Enterprise Logs configuration file
+config:
+  auth:
+    type: enterprise
+  auth_enabled: true
+
+  license:
+    path: "/etc/enterprise-logs/license/license.jwt"
+  cluster_name: "{{ .Release.Name }}"
+
+  server:
+    http_listen_port: 3100
+    grpc_listen_port: 9095
+
+  admin_client:
+    storage:
+      type: s3
+      s3:
+        endpoint: "{{ include \"loki.fullname\" . }}-minio:9000"
+        bucket_name: enterprise-logs-admin
+        secret_access_key: supersecret
+        access_key_id: enterprise-logs
+        insecure: true
+
+  compactor:
+    shared_store: s3
+    working_directory: /data/boltdb-shipper-compactor
+
+  distributor:
+    ring:
+      kvstore:
+        store: memberlist
+
+  ingester:
+    lifecycler:
+      num_tokens: 512
+      ring:
+        replication_factor: 3
+        kvstore:
+          store: memberlist
+    chunk_idle_period: 30m
+    chunk_block_size: 262144
+    chunk_encoding: snappy
+    chunk_retain_period: 1m
+
+  ingester_client:
+    grpc_client_config:
+      max_recv_msg_size: 104857600
+      max_send_msg_size: 104857600
+
+  limits_config:
+    enforce_metric_name: false
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h
+    max_cache_freshness_per_query: 10m
+
+  frontend:
+    log_queries_longer_than: 10s
+    compress_responses: true
+    tail_proxy_url: "http://{{ include \"loki.querierFullname\" . }}:3100"
+
+  frontend_worker:
+    frontend_address: "{{ include \"loki.queryFrontendFullname\" . }}:9095"
+
+  memberlist:
+    join_members:
+      - "{{ include \"loki.fullname\" . }}-memberlist"
+
+  querier:
+    query_ingesters_within: 12h
+
+  query_range:
+    split_queries_by_interval: 24h
+    align_queries_with_step: true
+    cache_results: true
+    results_cache:
+      cache:
+        memcached:
+          expiration: 1h
+        memcached_client:
+          timeout: 1s
+
+  schema_config:
+    configs:
+      - from: 2021-01-01
+        store: boltdb-shipper
+        object_store: aws
+        schema: v11
+        index:
+          prefix: index_
+          period: 24h
+
+  storage_config:
+    aws:
+      endpoint: "{{ include \"loki.fullname\" . }}-minio:9000"
+      bucketnames: enterprise-logs-tsdb
+      access_key_id: enterprise-logs
+      secret_access_key: supersecret
+      s3forcepathstyle: true
+      insecure: true
+    boltdb_shipper:
+      active_index_directory: /var/loki/index
+      cache_location: /var/loki/cache
+      cache_ttl: 24h
+      shared_store: s3
+      index_gateway_client:
+        server_address: "dns:///{{ include \"loki.indexGatewayFullname\" . }}:9095"
+
+  ruler:
+    storage:
+      type: s3
+      s3:
+        endpoint: "{{ include \"loki.fullname\" . }}-minio:9000"
+        bucketnames: enterprise-logs-ruler
+        access_key_id: enterprise-logs
+        secret_access_key: supersecret
+        s3forcepathstyle: true
+        insecure: true
+    enable_alertmanager_discovery: false
+    enable_api: true
+    enable_sharding: true
+    ring:
+      kvstore:
+        store: memberlist
+    rule_path: /var/loki
+
+# -- Configuration for `tokengen` target
+tokengen:
+  # -- Whether the job should be part of the deployment
+  enable: true
+  # -- Additional CLI arguments for the `tokengen` target
+  extraArgs: {}
+  # -- Additional Kubernetes environment
+  env: []
+  # -- Additional labels for the `tokengen` Job
+  labels: {}
+  # -- Additional annotations for the `tokengen` Job
+  annotations: {}
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
+  # -- Run containers as user `enterprise-logs(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+    fsGroup: 10001
+
+# -- Configuration for the `admin-api` target
+adminApi:
+  # -- Define the amount of instances
+  replicas: 1
+  # -- Additional CLI arguments for the `admin-api` target
+  extraArgs: {}
+  # -- Additional labels for the `admin-api` Deployment
+  labels: {}
+  # -- Additional annotations for the `admin-api` Deployment
+  annotations: {}
+  # -- Additional labels and annotations for the `admin-api` Service
+  service:
+    labels: {}
+    annotations: {}
+  # -- Run container as user `enterprise-logs(uid=10001)`
+  # `fsGroup` must not be specified, because these security options are applied
+  # on container level not on Pod level.
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+
+  strategy:
+    type: RollingUpdate
+
+  env: []
+
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  # -- Request and limit Kubernetes resources
+  # -- Values are defined in small.yaml and large.yaml
+  resources: {}
+
+  initContainers: []
+  extraContainers: []
+
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
+
+  # -- Affinity for admin-api Pods
+  affinity: {}
+  # -- Node selector for admin-api Pods
+  nodeSelector: {}
+  # -- Tolerations for admin-api Pods
+  tolerations: []
+  # -- Grace period to allow the admin-api to shutdown before it is killed
+  terminationGracePeriodSeconds: 60
+
+# -- Configuration for the `gateway` target
+gateway:
+  # -- Define the amount of instances
+  replicas: 1
+  # -- Additional CLI arguments for the `gateway` target
+  extraArgs: {}
+  # -- Additional labels for the `gateway` Pod
+  labels: {}
+  # -- Additional annotations for the `gateway` Pod
+  annotations: {}
+  # -- Additional labels and annotations for the `gateway` Service
+  service:
+    labels: {}
+    annotations: {}
+  # -- Run container as user `enterprise-logs(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+    fsGroup: 10001
+
+  # If you want to use your own proxy URLs, set this to false.
+  useDefaultProxyURLs: true
+
+  strategy:
+    type: RollingUpdate
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  # -- Request and limit Kubernetes resources
+  # -- Values are defined in small.yaml and large.yaml
+  resources: {}
+
+  env: []
+
+  persistence:
+    subPath:
+
+  initContainers: []
+  extraContainers: []
+
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
+
+  # -- Affinity for gateway Pods
+  affinity: {}
+  # -- Node selector for gateway Pods
+  nodeSelector: {}
+  # -- Tolerations for gateway Pods
+  tolerations: []
+  # -- Grace period to allow the gateway to shutdown before it is killed
+  terminationGracePeriodSeconds: 60
+
+
+# -- Configuration for the `compactor` target
+compactor:
+  # -- Define the amount of instances
+  replicas: 1
+  # -- Additional CLI arguments for the `compactor` target
+  extraArgs: {}
+  # -- Additional labels for the `compactor` Pod
+  labels: {}
+  # -- Additional annotations for the `compactor` Pod
+  annotations: {}
+  # -- Additional labels and annotations for the `compactor` Service
+  service:
+    labels: {}
+    annotations: {}
+  # -- Run containers as user `enterprise-logs(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+    fsGroup: 10001
+
+  strategy:
+    type: RollingUpdate
+
+  # -- Request and limit Kubernetes resources
+  # -- Values are defined in small.yaml and large.yaml
+  resources: {}
+
+  persistentVolume:
+    # If true compactor will create/use a Persistent Volume Claim
+    # If false, use emptyDir
+    #
+    enabled: true
+    # compactor data Persistent Volume Claim annotations
+    #
+    annotations: {}
+    # compactor data Persistent Volume access modes
+    # Must match those of existing PV or dynamic provisioner
+    # Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    #
+    accessModes:
+      - ReadWriteOnce
+    # compactor data Persistent Volume size
+    #
+    size: 2Gi
+    # Subdirectory of compactor data Persistent Volume to mount
+    # Useful if the volume's root directory is not empty
+    #
+    subPath: ''
+    # compactor data Persistent Volume Storage Class
+    # If defined, storageClassName: <storageClass>
+    # If set to "-", storageClassName: "", which disables dynamic provisioning
+    # If undefined (the default) or set to null, no storageClassName spec is
+    #   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    #   GKE, AWS & OpenStack)
+    #
+    # storageClass: "-"
+
+  livenessProbe:
+    failureThreshold: 20  # 10 minutes failure threshold
+    httpGet:
+      path: /ready
+      port: http-metrics
+      scheme: HTTP
+    initialDelaySeconds: 180
+    periodSeconds: 30
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+
+  env: []
+
+  initContainers: []
+  extraContainers: []
+
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
+
+  # -- Affinity for compactor Pods
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - compactor
+            topologyKey: 'kubernetes.io/hostname'
+  # -- Node selector for compactor Pods
+  nodeSelector: {}
+  # -- Tolerations for compactor Pods
+  tolerations: []
+  # -- Grace period to allow the compactor to shutdown before it is killed
+  terminationGracePeriodSeconds: 300
+
+
+# ------------------------------------------------
+# Configuration for `loki-distributed` child chart
+# ------------------------------------------------
+loki-distributed:
+  # -- In order to have consistent Pod names for both pods from the enterprise-logs and loki-distributed chart, we override the name of the child chart to match the name of the parent chart.
+  nameOverride: enterprise-logs
+
+  # -- Definition of the ServiceAccount for containers
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: true
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
+  # RBAC configuration
+  rbac:
+    # -- If enabled, a PodSecurityPolicy is created
+    pspEnabled: true
+
+  # -- Compactor is defined in parent chart
+  compactor:
+    enabled: false
+
+  # -- Gateway is defined in parent chart
+  gateway:
+    enabled: false
+
+  # -- Table manager is not needed because we use boltdb-shipper and compactor
+  tableManager:
+    enabled: false
+
+  # -- Configuration for the `ruler` target
+  ruler:
+    enabled: true
+    extraVolumes:
+      # -- Create license volume from license secret
+      - name: license
+        secret:
+          secretName: enterprise-logs-license
+    extraVolumeMounts:
+      # -- Mount the license volume
+      - name: license
+        mountPath: /etc/enterprise-logs/license
+
+  # -- Configuration for the `ingester` target
+  ingester:
+    enabled: true
+    extraVolumes:
+      # -- Create license volume from license secret
+      - name: license
+        secret:
+          secretName: enterprise-logs-license
+    extraVolumeMounts:
+      # -- Mount the license volume
+      - name: license
+        mountPath: /etc/enterprise-logs/license
+    replicas: 3
+
+  # -- Configuration for the `distributor` target
+  distributor:
+    enabled: true
+    extraVolumes:
+      # -- Create license volume from license secret
+      - name: license
+        secret:
+          secretName: enterprise-logs-license
+    extraVolumeMounts:
+      # -- Mount the license volume
+      - name: license
+        mountPath: /etc/enterprise-logs/license
+
+  # -- Configuration for the `querier` target
+  querier:
+    enabled: true
+    extraVolumes:
+      # -- Create license volume from license secret
+      - name: license
+        secret:
+          secretName: enterprise-logs-license
+    extraVolumeMounts:
+      # -- Mount the license volume
+      - name: license
+        mountPath: /etc/enterprise-logs/license
+    persistence:
+      enabled: true
+
+  # -- Configuration for the `query-frontend` target
+  queryFrontend:
+    enabled: true
+    extraVolumes:
+      # -- Create license volume from license secret
+      - name: license
+        secret:
+          secretName: enterprise-logs-license
+    extraVolumeMounts:
+      # -- Mount the license volume
+      - name: license
+        mountPath: /etc/enterprise-logs/license
+
+  # -- Configuration for the `index-gateway` target
+  indexGateway:
+    enabled: true
+    extraVolumes:
+      # -- Create license volume from license secret
+      - name: license
+        secret:
+          secretName: enterprise-logs-license
+    extraVolumeMounts:
+      # -- Mount the license volume
+      - name: license
+        mountPath: /etc/enterprise-logs/license
+    persistence:
+      enabled: true
+
+  loki:
+    config: null
+    existingSecretForConfig: enterprise-logs-config
+    image:
+      registry: docker.io
+      repository: grafana/enterprise-logs
+      tag: v1.1.0
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+
+# -------------------------------------
+# Configuration for `minio` child chart
+# -------------------------------------
+minio:
+  enabled: true
+  accessKey: enterprise-logs
+  secretKey: supersecret
+  buckets:
+    - name: enterprise-logs-tsdb
+      policy: none
+      purge: false
+    - name: enterprise-logs-admin
+      policy: none
+      purge: false
+    - name: enterprise-logs-ruler
+      policy: none
+      purge: false
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi

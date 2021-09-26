@@ -3,3 +3,4 @@ charts/grafana
 charts/loki
 charts/loki-stack
 charts/enterprise-metrics
+charts/enterprise-logs
