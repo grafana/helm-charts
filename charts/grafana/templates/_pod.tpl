@@ -104,7 +104,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.datasources.searchNamespace }}"
+        value: "{{ .Values.sidecar.datasources.searchNamespace | join "," }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -139,7 +139,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.notifiers.searchNamespace }}"
+        value: "{{ .Values.sidecar.notifiers.searchNamespace | join "," }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -189,7 +189,7 @@ containers:
       {{- end }}
       {{- if .Values.sidecar.dashboards.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.dashboards.searchNamespace }}"
+        value: "{{ .Values.sidecar.dashboards.searchNamespace | join "," }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
