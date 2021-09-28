@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tempo.fullname" . }}-distributor
+  name: {{ include "tempo.distributorFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "tempo.distributorLabels" . | nindent 4 }}
