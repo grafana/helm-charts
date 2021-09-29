@@ -55,7 +55,7 @@ spec:
         {{- if .Values.useExternalConfig }}
         checksum/config: {{ .Values.externalConfigVersion }}
         {{- else }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret-config.yaml") . | sha256sum }}
         {{- end}}
         {{- with .Values.alertmanager.podAnnotations }}
         {{- toYaml . | nindent 8 }}
