@@ -1,31 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: {{ template "enterprise-metrics.gatewayFullname" . }}
   annotations:
-    {{- toYaml .Values.gateway.annotations | nindent 4 }}
+    {{- with .Values.gateway.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-gateway
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  name: {{ template "enterprise-metrics.fullname" . }}-gateway
+    {{- include "enterprise-metrics.gatewayLabels" . | nindent 4 }}
+    {{- with .Values.gateway.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-gateway
-      release: {{ .Release.Name }}
+      {{- include "enterprise-metrics.gatewaySelectorLabels" . | nindent 6 }}
   strategy:
     {{- toYaml .Values.gateway.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-gateway
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: gateway
-        target: gateway
-        release: {{ .Release.Name }}
-        {{- with .Values.gateway.podLabels }}
+        {{- include "enterprise-metrics.gatewaySelectorLabels" . | nindent 8 }}
+        {{- with .Values.gateway.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -54,7 +51,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ template "enterprise-metrics.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=gateway"
