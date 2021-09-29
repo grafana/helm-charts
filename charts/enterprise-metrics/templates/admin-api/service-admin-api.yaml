@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "enterprise-metrics.adminApiFullname" . }}
+  labels:
+    {{- include "enterprise-metrics.adminApiLabels" . | nindent 4 }}
+    {{- with .Values.adminApi.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.adminApi.service.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+    - port: {{ .Values.config.server.grpc_listen_port }}
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  selector:
+    {{- include "enterprise-metrics.adminApiSelectorLabels" . | nindent 4 }}
