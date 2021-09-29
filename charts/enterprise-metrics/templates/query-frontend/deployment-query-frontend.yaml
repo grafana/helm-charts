@@ -40,7 +40,7 @@ spec:
       priorityClassName: {{ .Values.queryFrontend.priorityClassName }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.queryFrontend.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.queryFrontend.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -92,6 +92,7 @@ spec:
             {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.queryFrontend.securityContext | nindent 12 }}
           env:
             {{- if .Values.queryFrontend.env }}
               {{- toYaml .Values.queryFrontend.env | nindent 12 }}

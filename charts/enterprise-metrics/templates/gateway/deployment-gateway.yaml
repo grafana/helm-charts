@@ -40,7 +40,7 @@ spec:
       priorityClassName: {{ .Values.gateway.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.gateway.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.gateway.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -104,6 +104,7 @@ spec:
             {{- toYaml .Values.gateway.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.gateway.securityContext | nindent 12 }}
           env:
             {{- if .Values.gateway.env }}
             {{ toYaml .Values.gateway.env | nindent 12 }}

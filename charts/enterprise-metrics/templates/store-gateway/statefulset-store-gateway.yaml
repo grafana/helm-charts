@@ -64,7 +64,7 @@ spec:
       priorityClassName: {{ .Values.storeGateway.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.storeGateway.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.storeGateway.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -173,6 +173,7 @@ spec:
             {{- toYaml .Values.storeGateway.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.storeGateway.securityContext | nindent 12 }}
           env:
             {{- if .Values.storeGateway.env }}
               {{- toYaml .Values.storeGateway.env | nindent 12 }}

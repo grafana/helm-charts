@@ -41,7 +41,7 @@ spec:
       priorityClassName: {{ .Values.querier.priorityClassName }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.querier.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.querier.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -111,6 +111,7 @@ spec:
             {{- toYaml .Values.querier.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.querier.securityContext | nindent 12 }}
           env:
             {{- if .Values.querier.env }}
               {{- toYaml .Values.querier.env | nindent 12 }}

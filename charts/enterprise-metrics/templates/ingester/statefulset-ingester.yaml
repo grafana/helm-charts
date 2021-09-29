@@ -64,7 +64,7 @@ spec:
       priorityClassName: {{ .Values.ingester.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.ingester.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.ingester.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -159,6 +159,7 @@ spec:
             {{- toYaml .Values.ingester.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.ingester.securityContext | nindent 12 }}
           env:
             {{- if .Values.ingester.env }}
               {{- toYaml .Values.ingester.env | nindent 12 }}

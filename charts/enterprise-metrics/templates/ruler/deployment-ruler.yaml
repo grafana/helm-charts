@@ -41,7 +41,7 @@ spec:
       priorityClassName: {{ .Values.ruler.priorityClassName }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.ruler.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.ruler.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -123,6 +123,7 @@ spec:
             {{- toYaml .Values.ruler.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.ruler.securityContext | nindent 12 }}
           env:
             {{- if .Values.ruler.env }}
               {{- toYaml .Values.ruler.env | nindent 12 }}

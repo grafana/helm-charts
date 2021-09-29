@@ -45,9 +45,7 @@ spec:
       {{- end }}
       {{- end }}
       securityContext:
-        {{ with .Values.tokengen.securityContext }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        fsGroup: 10001
       initContainers:
         {{- with .Values.tokengen.initContainers }}
         {{- toYaml . | nindent 8 }}
@@ -85,6 +83,10 @@ spec:
           env:
             {{- if .Values.tokengen.env }}
               {{ toYaml .Values.tokengen.env | nindent 12 }}
+            {{- end }}
+          securityContext:
+            {{ with .Values.tokengen.securityContext }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
       containers:
         - name: create-secret

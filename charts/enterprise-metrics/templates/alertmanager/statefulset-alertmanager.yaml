@@ -66,7 +66,7 @@ spec:
       priorityClassName: {{ .Values.alertmanager.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.alertmanager.securityContext | nindent 8 }}
+        fsGroup: 10001
       initContainers:
         {{- toYaml .Values.alertmanager.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -167,6 +167,7 @@ spec:
             {{- toYaml .Values.alertmanager.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.alertmanager.securityContext | nindent 12 }}
           env:
             {{- if .Values.alertmanager.env }}
               {{- toYaml .Values.alertmanager.env | nindent 12 }}

@@ -40,7 +40,7 @@ spec:
       priorityClassName: {{ .Values.overridesExporter.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.overridesExporter.securityContext | nindent 8 }}
+        fsGroup: 10001
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -95,6 +95,7 @@ spec:
             {{- toYaml .Values.overridesExporter.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
+            {{- toYaml .Values.overridesExporter.securityContext | nindent 12 }}
           env:
             {{- if .Values.overridesExporter.env }}
             {{ toYaml .Values.overridesExporter.env | nindent 12 }}
