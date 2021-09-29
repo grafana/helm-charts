@@ -29,11 +29,10 @@ externalConfigVersion: '0'
 # In order to use Grafana Enterprise Metrics features, you will need to provide the contents of your Grafana Enterprise Metrics
 # license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
 # To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
-# To use your own Kubernetes Secret, `--set license.external=true`.
+# To use your own Kubernetes Secret, `--set useExternaLicense=true`.
 useExternalLicense: false
 license:
   contents: "NOTAVALIDLICENSE"
-  external: false
   secretName: 'enterprise-metrics-license'
 
 # -- Configuration for `tokengen` target
