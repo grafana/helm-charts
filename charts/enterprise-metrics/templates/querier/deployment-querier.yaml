@@ -1,40 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "enterprise-metrics.fullname" . }}-querier
-  labels:
-    app: {{ template "enterprise-metrics.name" . }}-querier
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  name: {{ template "enterprise-metrics.querierFullname" . }}
   annotations:
-    {{- toYaml .Values.querier.annotations | nindent 4 }}
+    {{- with .Values.querier.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  labels:
+    {{- include "enterprise-metrics.querierLabels" . | nindent 4 }}
+    {{- with .Values.querier.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.querier.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-querier
-      release: {{ .Release.Name }}
+      {{- include "enterprise-metrics.querierSelectorLabels" . | nindent 6 }}
   strategy:
     {{- toYaml .Values.querier.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-querier
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: querier
-        gossip_ring_member: "true"
-        target: querier
-        release: {{ .Release.Name }}
-        {{- with .Values.querier.podLabels }}
+        app.kubernetes.io/part-of: memberlist
+        {{- include "enterprise-metrics.querierSelectorLabels" . | nindent 8 }}
+        {{- with .Values.querier.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-{{- if .Values.useExternalConfig }}
+        {{- if .Values.useExternalConfig }}
         checksum/config: {{ .Values.externalConfigVersion }}
-{{- else }}
+        {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-{{- end}}
+        {{- end}}
         {{- with .Values.querier.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -55,7 +52,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ template "enterprise-metrics.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=querier"
