@@ -1,25 +1,25 @@
-{{- if eq .Values.config.storage.engine "blocks" -}}
 {{- if .Values.compactor.enabled -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "enterprise-metrics.fullname" . }}-compactor
+  name: {{ template "enterprise-metrics.compactorFullname" . }}
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-compactor
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "enterprise-metrics.labels" . | nindent 4 }}
+    {{- with .Values.compactor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
-    {{- toYaml .Values.compactor.annotations | nindent 4 }}
+    {{- with .Values.compactor.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.compactor.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-compactor
-      release: {{ .Release.Name }}
+      {{- include "enterprise-metrics.compactorSelectorLabels" . | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.compactor.strategy | nindent 4 }}
-  serviceName: {{ template "enterprise-metrics.fullname" . }}-compactor
+  serviceName: {{ template "enterprise-metrics.compactorFullname" . }}
   {{- if .Values.compactor.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -45,13 +45,9 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-compactor
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: compactor
-        gossip_ring_member: "true"
-        target: compactor
-        release: {{ .Release.Name }}
-        {{- with .Values.compactor.podLabels }}
+        app.kubernetes.io/part-of: memberlist
+        {{- include "enterprise-metrics.compactorSelectorLabels" . | nindent 8 }}
+        {{- with .Values.compactor.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -60,7 +56,7 @@ spec:
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- with .Values.compactor.podAnnotations }}
+        {{- with .Values.compactor.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -111,7 +107,7 @@ spec:
         {{ toYaml .Values.compactor.extraContainers | nindent 8 }}
         {{- end }}
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ template "enterprise-metrics.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=compactor"
@@ -167,5 +163,4 @@ spec:
             {{- if .Values.compactor.env }}
               {{- toYaml .Values.compactor.env | nindent 12 }}
             {{- end }}
-{{- end -}}
 {{- end -}}
