@@ -36,12 +36,30 @@ license:
   external: false
   secretName: 'enterprise-metrics-license'
 
-tokengenJob:
+# -- Configuration for `tokengen` target
+tokengen:
+  # -- Whether the job should be part of the deployment
   enable: true
+  # -- Additional CLI arguments for the `tokengen` target
   extraArgs: {}
+  # -- Additional Kubernetes environment
   env: []
+  # -- Additional initContainers for the `tokengen` Job
+  initContainer: []
+  # -- Additional labels for the `tokengen` Job
+  labels: {}
+  # -- Additional annotations for the `tokengen` Job
   annotations: {}
   initContainers: []
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
+  # -- Run containers as user `enterprise-metrics(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
 
 config:
   auth_enabled: true

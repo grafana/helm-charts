@@ -1,0 +1,125 @@
+{{ if .Values.tokengen.enable }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "enterprise-metrics.tokengenFullname" . }}
+  labels:
+    {{- include "enterprise-metrics.tokengenLabels" . | nindent 4 }}
+    {{- with .Values.tokengen.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.tokengen.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    "helm.sh/hook": post-install
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  selector:
+  template:
+    metadata:
+      labels:
+        {{- include "enterprise-metrics.tokengenSelectorLabels" . | nindent 8 }}
+        {{- with .Values.tokengen.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.useExternalConfig }}
+        checksum/config: {{ .Values.externalConfigVersion }}
+        {{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end}}
+        {{- with .Values.tokengen.annotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.tokengen.priorityClassName }}
+      priorityClassName: {{ .Values.tokengen.priorityClassName }}
+      {{- end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      securityContext:
+        {{ with .Values.tokengen.securityContext }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      initContainers:
+        {{- with .Values.tokengen.initContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: enterprise-metrics
+          image: "{{ template "enterprise-metrics.image" . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
+            - -target=tokengen
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -admin.client.s3.bucket-name=enterprise-metrics-admin
+            - -admin.client.s3.access-key-id=enterprise-metrics
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            {{- end }}
+            - -tokengen.token-file=/shared/admin-token
+            {{- range $key, $value := .Values.tokengen.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.tokengen.extraVolumeMounts }}
+              {{ toYaml .Values.tokengen.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+            - name: shared
+              mountPath: /shared
+            - name: config
+              mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
+            - name: license
+              mountPath: /etc/enterprise-metrics/license
+          env:
+            {{- if .Values.tokengen.env }}
+              {{ toYaml .Values.tokengen.env | nindent 12 }}
+            {{- end }}
+      containers:
+        - name: create-secret
+          image: bitnami/kubectl
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/bash
+            - -euc
+            - kubectl create secret generic gem-admin-token --from-file=token=/shared/admin-token --from-literal=grafana-token="$(base64 <(echo :$(cat /shared/admin-token)))"
+          volumeMounts:
+            {{- if .Values.tokengen.extraVolumeMounts }}
+              {{ toYaml .Values.tokengen.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+            - name: shared
+              mountPath: /shared
+      restartPolicy: OnFailure
+      serviceAccount: {{ template "enterprise-metrics.tokengenFullname" . }}
+      serviceAccountName: {{ template "enterprise-metrics.tokengenFullname" . }}
+      volumes:
+        - name: config
+          secret:
+          {{- if .Values.useExternalConfig }}
+            secretName: {{ .Values.externalConfigSecretName }}
+          {{- else }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
+          {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
+        {{- if .Values.tokengen.extraVolumes }}
+        {{ toYaml .Values.tokengen.extraVolumes | nindent 8}}
+        {{- end }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        - name: shared
+          emptyDir: {}
+{{- end }}
