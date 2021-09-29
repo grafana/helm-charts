@@ -115,7 +115,7 @@ spec:
           args:
             - "-target=store-gateway"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-memberlist"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000

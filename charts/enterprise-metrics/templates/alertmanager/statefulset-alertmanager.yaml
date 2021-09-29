@@ -113,7 +113,7 @@ spec:
           args:
             - "-target=alertmanager"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-memberlist"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
             - -alertmanager.cluster.peers={{ template "enterprise-metrics.alertmanagerFullname" }}-{{ $n }}.{{ template "enterprise-metrics.alertmanagerFullname" $ }}-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "enterprise-metrics.fullname" . }}-memberlist
+  labels:
+    {{- include "enterprise-metrics.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: memberlist
+      port: {{ .Values.config.memberlist.bind_port }}
+      protocol: TCP
+      targetPort: {{ .Values.config.memberlist.bind_port }}
+  publishNotReadyAddresses: true
+  selector:
+    {{- include "enterprise-metrics.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/part-of: memberlist
