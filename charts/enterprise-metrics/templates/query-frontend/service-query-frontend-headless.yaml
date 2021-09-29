@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "enterprise-metrics.queryFrontendFullname" . }}-headless
+  labels:
+    {{- include "enterprise-metrics.queryFrontendLabels" . | nindent 4 }}
+    {{- with .Values.queryFrontend.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.queryFrontend.service.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+    - port: {{ .Values.config.server.grpc_listen_port }}
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  publishNotReadyAddresses: true
+  selector:
+    {{- include "enterprise-metrics.queryFrontendSelectorLabels" . | nindent 4 }}

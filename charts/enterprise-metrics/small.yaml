@@ -113,7 +113,7 @@ querier:
       cpu: 1
       memory: 12Gi
 
-query_frontend:
+queryFrontend:
   replicas: 1
   resources:
     limits:
