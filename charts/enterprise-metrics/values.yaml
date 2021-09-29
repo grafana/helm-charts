@@ -936,7 +936,6 @@ storeGateway:
   env: []
 
 compactor:
-  enabled: true
   replicas: 1
 
   service:
