@@ -10,6 +10,26 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.0
+
+- [CHANGE] The Kubernetes Deployment for the Alertmanager has been removed. A StatefulSet should be used instead.
+- [CHANGE] The Kubernetes Deployment for ingesters has been removed. A StatefulSet should be used instead.
+- [CHANGE] All Kubernetes resources are labelled with best practice Kubernetes labels.
+- [CHANGE] All microservice values are camelCased to be more consistent with Helm chart best practice. For example, `admin_api` has become `adminApi`.
+- [CHANGE] Pod label `{ "gossip_ring_member": "true" }` has been replaced with `{ "app.kubernetes.io/part-of": "memberlist" }`.
+  The latter is an established Kubernetes label.
+- [CHANGE] The tokengenJob has been renamed to tokengen for consistency.
+- [CHANGE] `license.external` has been replaced by `useExternalLicense` for consistency with the enterprise-logs Helm chart.
+- [CHANGE] All GEM containers now run as a non-root (UID 10001) user.
+- [CHANGE] All microservice securityContexts are applied on a container not Pod level.
+  For example, `adminApi.securityContext` affects only the admin-api container securityContext and not the admin-api Pod securityContext.
+- [BUGFIX] Service annotations have been moved to a the `service` field of the microservice configuration.
+- [CHANGE] Compactor is now a required part of the deployment.
+  To modify the admin-api Service annotations, use `adminApi.service.annotations`.
+- [BUGFIX] serviceAccountName template has been defined.
+- [BUGFIX] Blocks storage logic has been removed. All clusters should be running blocks storage.
+- [BUGFIX] The overrides-exporter is no longer part of the memberlist Service.
+
 ## 1.6.0
 
 * [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.5.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v151----september-21st-2021). #729
