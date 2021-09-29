@@ -101,7 +101,7 @@ memcached-metadata:
 minio:
   enabled: false
 
-overrides_exporter:
+overridesExporter:
   replicas: 1
   resources:
     limits:

@@ -563,7 +563,7 @@ ingester:
   extraPorts: []
   env: []
 
-overrides_exporter:
+overridesExporter:
   replicas: 1
 
   annotations: {}

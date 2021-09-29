@@ -1,32 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: {{ template "enterprise-metrics.overridesExporterFullname" . }}
   annotations:
-    {{- toYaml .Values.overrides_exporter.annotations | nindent 4 }}
+    {{- with .Values.overridesExporter.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-overrides-exporter
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  name: {{ template "enterprise-metrics.fullname" . }}-overrides-exporter
+    {{- include "enterprise-metrics.overridesExporterLabels" . | nindent 4 }}
+    {{- with .Values.overridesExporter.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  replicas: {{ .Values.overrides_exporter.replicas }}
+  replicas: {{ .Values.overridesExporter.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-overrides-exporter
-      release: {{ .Release.Name }}
+      {{- include "enterprise-metrics.overridesExporterSelectorLabels" . | nindent 6 }}
   strategy:
-    {{- toYaml .Values.overrides_exporter.strategy | nindent 4 }}
+    {{- toYaml .Values.overridesExporter.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-overrides-exporter
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: overrides-exporter
-        gossip_ring_member: "true"
-        target: overrides-exporter
-        release: {{ .Release.Name }}
-        {{- with .Values.overrides_exporter.podLabels }}
+        {{- include "enterprise-metrics.overridesExporterSelectorLabels" . | nindent 8 }}
+        {{- with .Values.overridesExporter.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -35,16 +31,16 @@ spec:
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end}}
-        {{- with .Values.overrides_exporter.podAnnotations }}
+        {{- with .Values.overridesExporter.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
-      {{- if .Values.overrides_exporter.priorityClassName }}
-      priorityClassName: {{ .Values.overrides_exporter.priorityClassName }}
+      {{- if .Values.overridesExporter.priorityClassName }}
+      priorityClassName: {{ .Values.overridesExporter.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.overrides_exporter.securityContext | nindent 8 }}
+        {{- toYaml .Values.overridesExporter.securityContext | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -52,10 +48,10 @@ spec:
       {{- end }}
       {{- end }}
       initContainers:
-        {{- toYaml .Values.overrides_exporter.initContainers | nindent 8 }}
+        {{- toYaml .Values.overridesExporter.initContainers | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ template "enterprise-metrics.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=overrides-exporter"
@@ -68,12 +64,12 @@ spec:
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
             {{- end }}
-            {{- range $key, $value := .Values.overrides_exporter.extraArgs }}
+            {{- range $key, $value := .Values.overridesExporter.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.overrides_exporter.extraVolumeMounts }}
-              {{ toYaml .Values.overrides_exporter.extraVolumeMounts | nindent 12}}
+            {{- if .Values.overridesExporter.extraVolumeMounts }}
+              {{ toYaml .Values.overridesExporter.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
@@ -83,7 +79,7 @@ spec:
               mountPath: /license
             - name: storage
               mountPath: "/data"
-              subPath: {{ .Values.overrides_exporter.persistence.subPath }}
+              subPath: {{ .Values.overridesExporter.persistence.subPath }}
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
@@ -92,27 +88,27 @@ spec:
               containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
-            {{- toYaml .Values.overrides_exporter.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.overridesExporter.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml .Values.overrides_exporter.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.overridesExporter.readinessProbe | nindent 12 }}
           resources:
-            {{- toYaml .Values.overrides_exporter.resources | nindent 12 }}
+            {{- toYaml .Values.overridesExporter.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
           env:
-            {{- if .Values.overrides_exporter.env }}
-            {{ toYaml .Values.overrides_exporter.env | nindent 12 }}
+            {{- if .Values.overridesExporter.env }}
+            {{ toYaml .Values.overridesExporter.env | nindent 12 }}
             {{- end }}
-        {{- with .Values.overrides_exporter.extraContainers }}
+        {{- with .Values.overridesExporter.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
       nodeSelector:
-        {{- toYaml .Values.overrides_exporter.nodeSelector | nindent 8 }}
+        {{- toYaml .Values.overridesExporter.nodeSelector | nindent 8 }}
       affinity:
-        {{- toYaml .Values.overrides_exporter.affinity | nindent 8 }}
+        {{- toYaml .Values.overridesExporter.affinity | nindent 8 }}
       tolerations:
-        {{- toYaml .Values.overrides_exporter.tolerations | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.overrides_exporter.terminationGracePeriodSeconds }}
+        {{- toYaml .Values.overridesExporter.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.overridesExporter.terminationGracePeriodSeconds }}
       volumes:
         - name: config
           secret:
@@ -124,8 +120,8 @@ spec:
         - name: runtime-config
           configMap:
             name: {{ template "enterprise-metrics.fullname" . }}-runtime
-        {{- if .Values.overrides_exporter.extraVolumes }}
-        {{ toYaml .Values.overrides_exporter.extraVolumes | nindent 8}}
+        {{- if .Values.overridesExporter.extraVolumes }}
+        {{ toYaml .Values.overridesExporter.extraVolumes | nindent 8}}
         {{- end }}
         - name: license
           secret:
