@@ -63,6 +63,8 @@ spec:
           readinessProbe:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: config
               mountPath: /etc/loki/config
             - name: data
@@ -81,6 +83,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: config
           {{- if .Values.loki.existingSecretForConfig }}
           secret:
