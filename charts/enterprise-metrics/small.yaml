@@ -131,7 +131,7 @@ ruler:
       cpu: 1
       memory: 6Gi
 
-store_gateway:
+storeGateway:
   persistentVolume:
     size: 50Gi
   replicas: 1

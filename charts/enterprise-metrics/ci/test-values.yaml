@@ -11,6 +11,6 @@ ingester:
   persistentVolume:
     enabled: false
 
-store_gateway:
+storeGateway:
   persistentVolume:
     enabled: false

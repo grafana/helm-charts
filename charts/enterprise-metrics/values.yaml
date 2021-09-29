@@ -794,7 +794,7 @@ queryFrontend:
   extraPorts: []
   env: []
 
-store_gateway:
+storeGateway:
   replicas: 1
 
   service:

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "enterprise-metrics.storeGatewayFullname" . }}
+  labels:
+    {{- include "enterprise-metrics.storeGatewayLabels" . | nindent 4 }}
+    {{- with .Values.storeGateway.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.storeGateway.service.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.config.server.http_listen_port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+    - port: {{ .Values.config.server.grpc_listen_port }}
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  selector:
+    {{- include "enterprise-metrics.storeGatewaySelectorLabels" . | nindent 4 }}

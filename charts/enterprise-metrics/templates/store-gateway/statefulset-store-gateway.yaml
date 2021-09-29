@@ -1,56 +1,52 @@
-{{- if eq .Values.config.storage.engine "blocks" -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "enterprise-metrics.fullname" . }}-store-gateway
+  name: {{ template "enterprise-metrics.storeGatewayFullname" . }}
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-store-gateway
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "enterprise-metrics.labels" . | nindent 4 }}
+    {{- with .Values.storeGateway.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
-    {{- toYaml .Values.store_gateway.annotations | nindent 4 }}
+    {{- with .Values.storeGateway.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  replicas: {{ .Values.store_gateway.replicas }}
+  replicas: {{ .Values.storeGateway.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-store-gateway
-      release: {{ .Release.Name }}
+      {{- include "enterprise-metrics.storeGatewaySelectorLabels" . | nindent 6 }}
   updateStrategy:
-    {{- toYaml .Values.store_gateway.strategy | nindent 4 }}
-  serviceName: {{ template "enterprise-metrics.fullname" . }}-store-gateway
-  {{- if .Values.store_gateway.persistentVolume.enabled }}
+    {{- toYaml .Values.storeGateway.strategy | nindent 4 }}
+  serviceName: {{ template "enterprise-metrics.storeGatewayFullname" . }}
+  {{- if .Values.storeGateway.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: storage
-        {{- if .Values.store_gateway.persistentVolume.annotations }}
+        {{- if .Values.storeGateway.persistentVolume.annotations }}
         annotations:
-          {{ toYaml .Values.store_gateway.persistentVolume.annotations | nindent 10 }}
+          {{ toYaml .Values.storeGateway.persistentVolume.annotations | nindent 10 }}
         {{- end }}
       spec:
-        {{- if .Values.store_gateway.persistentVolume.storageClass }}
-        {{- if (eq "-" .Values.store_gateway.persistentVolume.storageClass) }}
+        {{- if .Values.storeGateway.persistentVolume.storageClass }}
+        {{- if (eq "-" .Values.storeGateway.persistentVolume.storageClass) }}
         storageClassName: ""
         {{- else }}
-        storageClassName: "{{ .Values.store_gateway.persistentVolume.storageClass }}"
+        storageClassName: "{{ .Values.storeGateway.persistentVolume.storageClass }}"
         {{- end }}
         {{- end }}
         accessModes:
-          {{ toYaml .Values.store_gateway.persistentVolume.accessModes | nindent 10 }}
+          {{ toYaml .Values.storeGateway.persistentVolume.accessModes | nindent 10 }}
         resources:
           requests:
-            storage: "{{ .Values.store_gateway.persistentVolume.size }}"
+            storage: "{{ .Values.storeGateway.persistentVolume.size }}"
   {{- end }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-store-gateway
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: store-gateway
-        gossip_ring_member: "true"
-        target: store-gateway
-        release: {{ .Release.Name }}
-        {{- with .Values.store_gateway.podLabels }}
+        app.kubernetes.io/part-of: memberlist
+        {{- include "enterprise-metrics.storeGatewaySelectorLabels" . | nindent 8 }}
+        {{- with .Values.storeGateway.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -59,18 +55,18 @@ spec:
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- with .Values.store_gateway.podAnnotations }}
+        {{- with .Values.storeGateway.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
-      {{- if .Values.store_gateway.priorityClassName }}
-      priorityClassName: {{ .Values.store_gateway.priorityClassName }}
+      {{- if .Values.storeGateway.priorityClassName }}
+      priorityClassName: {{ .Values.storeGateway.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.store_gateway.securityContext | nindent 8 }}
+        {{- toYaml .Values.storeGateway.securityContext | nindent 8 }}
       initContainers:
-        {{- toYaml .Values.store_gateway.initContainers | nindent 8 }}
+        {{- toYaml .Values.storeGateway.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -78,12 +74,12 @@ spec:
       {{- end }}
       {{- end }}
       nodeSelector:
-        {{- toYaml .Values.store_gateway.nodeSelector | nindent 8 }}
+        {{- toYaml .Values.storeGateway.nodeSelector | nindent 8 }}
       affinity:
-        {{- toYaml .Values.store_gateway.affinity | nindent 8 }}
+        {{- toYaml .Values.storeGateway.affinity | nindent 8 }}
       tolerations:
-        {{- toYaml .Values.store_gateway.tolerations | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.store_gateway.terminationGracePeriodSeconds }}
+        {{- toYaml .Values.storeGateway.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.storeGateway.terminationGracePeriodSeconds }}
       volumes:
         - name: config
           secret:
@@ -98,19 +94,19 @@ spec:
         - name: license
           secret:
             secretName: {{ .Values.license.secretName }}
-        {{- if not .Values.store_gateway.persistentVolume.enabled }}
+        {{- if not .Values.storeGateway.persistentVolume.enabled }}
         - name: storage
           emptyDir: {}
         {{- end }}
-        {{- if .Values.store_gateway.extraVolumes }}
-        {{ toYaml .Values.store_gateway.extraVolumes | nindent 8 }}
+        {{- if .Values.storeGateway.extraVolumes }}
+        {{ toYaml .Values.storeGateway.extraVolumes | nindent 8 }}
         {{- end }}
       containers:
-        {{- if .Values.store_gateway.extraContainers }}
-        {{ toYaml .Values.store_gateway.extraContainers | nindent 8 }}
+        {{- if .Values.storeGateway.extraContainers }}
+        {{ toYaml .Values.storeGateway.extraContainers | nindent 8 }}
         {{- end }}
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ template "enterprise-metrics.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=store-gateway"
@@ -144,12 +140,12 @@ spec:
             - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-metadata.{{ .Release.Namespace }}.svc:11211
             - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").maxItemMemory }}
             {{- end }}
-            {{- range $key, $value := .Values.store_gateway.extraArgs }}
+            {{- range $key, $value := .Values.storeGateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.store_gateway.extraVolumeMounts }}
-            {{ toYaml .Values.store_gateway.extraVolumeMounts | nindent 12}}
+            {{- if .Values.storeGateway.extraVolumeMounts }}
+            {{ toYaml .Values.storeGateway.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
@@ -159,8 +155,8 @@ spec:
               mountPath: /license
             - name: storage
               mountPath: "/data"
-              {{- if .Values.store_gateway.persistentVolume.subPath }}
-              subPath: {{ .Values.store_gateway.persistentVolume.subPath }}             
+              {{- if .Values.storeGateway.persistentVolume.subPath }}
+              subPath: {{ .Values.storeGateway.persistentVolume.subPath }}
               {{- end }}
           ports:
             - name: http-metrics
@@ -168,17 +164,16 @@ spec:
               protocol: TCP
             - name: grpc
               containerPort: {{ .Values.config.server.grpc_listen_port }}
-              protocol: TCP            
+              protocol: TCP
           livenessProbe:
-            {{- toYaml .Values.store_gateway.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.storeGateway.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml .Values.store_gateway.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.storeGateway.readinessProbe | nindent 12 }}
           resources:
-            {{- toYaml .Values.store_gateway.resources | nindent 12 }}
+            {{- toYaml .Values.storeGateway.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
           env:
-            {{- if .Values.store_gateway.env }}
-              {{- toYaml .Values.store_gateway.env | nindent 12 }}
+            {{- if .Values.storeGateway.env }}
+              {{- toYaml .Values.storeGateway.env | nindent 12 }}
             {{- end }}
-{{- end -}}
