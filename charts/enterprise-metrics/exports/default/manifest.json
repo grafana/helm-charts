@@ -27,6 +27,7 @@
     "v1.Service-enterprise-metrics-admin-api.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-alertmanager-headless.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-alertmanager.yaml": "environments/default/main.jsonnet",
+    "v1.Service-enterprise-metrics-compactor.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-distributor.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-gateway.yaml": "environments/default/main.jsonnet",
     "v1.Service-enterprise-metrics-gossip-ring.yaml": "environments/default/main.jsonnet",

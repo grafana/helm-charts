@@ -23,6 +23,7 @@
     "v1.Service-enterprise-metrics-admin-api.yaml": "environments/small/main.jsonnet",
     "v1.Service-enterprise-metrics-alertmanager-headless.yaml": "environments/small/main.jsonnet",
     "v1.Service-enterprise-metrics-alertmanager.yaml": "environments/small/main.jsonnet",
+    "v1.Service-enterprise-metrics-compactor.yaml": "environments/small/main.jsonnet",
     "v1.Service-enterprise-metrics-distributor.yaml": "environments/small/main.jsonnet",
     "v1.Service-enterprise-metrics-gateway.yaml": "environments/small/main.jsonnet",
     "v1.Service-enterprise-metrics-gossip-ring.yaml": "environments/small/main.jsonnet",
