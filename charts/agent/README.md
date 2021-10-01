@@ -1,6 +1,6 @@
 # agent
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.18.3](https://img.shields.io/badge/AppVersion-v0.18.3-informational?style=flat-square)
+![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.19.0](https://img.shields.io/badge/AppVersion-v0.19.0-informational?style=flat-square)
 
 A Helm chart for Grafana Agent
 
@@ -37,18 +37,21 @@ END
 | affinity | object | `{}` | Pod affinity |
 | annotations | object | `{}` | GrafanaAgent annotations |
 | extras | object | `{}` | Extra GrafanaAgent configuration |
-| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | List of image pull secrets |
 | image.repository | string | `"grafana/agent"` | Image repository and name |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart `appVersion` |
 | logLevel | string | `"info"` | Log level |
+| logs.create | bool | `true` | Whether to configure logs Agent. |
+| logs.extras | object | `{}` | Extra settings for logs-specific pods |
+| logs.instanceSelectorMatchExpressions | list | `[]` | LogsInstance selector based on expression matching |
+| logs.instanceSelectorMatchLabels.agent | string | `"grafana-agent"` |  |
+| metrics.create | bool | `true` | Whether to configure metrics Agent. |
+| metrics.extras | object | `{}` | Extra settings for metrics-specific pods |
+| metrics.instanceSelectorMatchExpressions | list | `[]` | PrometheusInstance selector based on expression matching |
+| metrics.instanceSelectorMatchLabels.agent | string | `"grafana-agent"` |  |
+| metrics.replicas | int | `1` | Number of replicas of each shard to deploy for metrics pods |
 | nodeSelector | object | `{}` | Pod node selector |
 | podAnnotations | object | `{}` | Pod annotations |
-| prometheus.create | bool | `true` | Whether to configure prometheus Agent. |
-| prometheus.extras | object | `{}` | Extra settings for Prometheus-specific pods |
-| prometheus.instanceSelectorMatchExpressions | list | `[]` | PrometheusInstance selector based on expression matching |
-| prometheus.instanceSelectorMatchLabels | object | `{"agent":"grafana-agent"}` | PrometheusInstance selector based on label matching |
-| prometheus.replicas | int | `1` |  |
 | rbac.create | bool | `true` | Whether to create Cluster Role and Cluster Role Binding |
 | rbac.extraClusterRoleRules | list | `[]` | Extra ClusterRole rules |
 | rbac.useExistingRole | string | `nil` | Use an existing ClusterRole/Role |

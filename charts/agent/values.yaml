@@ -10,8 +10,6 @@ image:
   repository: grafana/agent
   # -- Overrides the image tag whose default is the chart `appVersion`
   tag: ""
-  # -- Image pull policy
-  pullPolicy: IfNotPresent
   # -- List of image pull secrets
   pullSecrets: []
 
@@ -59,10 +57,15 @@ affinity: {}
 # -- Log level
 logLevel: info
 
-# Prometheus configuration
-prometheus:
-  # -- Whether to configure prometheus Agent.
+# Metrics configuration
+metrics:
+  # -- Whether to configure metrics Agent.
   create: true
+  # -- Number of replicas of each shard to deploy for metrics pods
+  replicas: 1
+  # -- Extra settings for metrics-specific pods
+  extras: {}
+  #  replicaExternalLabelName: something
   # -- PrometheusInstance selector based on label matching
   instanceSelectorMatchLabels:
     agent: grafana-agent
@@ -72,11 +75,23 @@ prometheus:
     #   operator: In
     #   values:
     #     - grafana-agent
-  # -- Number of replicas of each shard to deploy for metrics pods
-  replicas: 1
-  # -- Extra settings for Prometheus-specific pods
+
+# Logs configuration
+logs:
+  # -- Whether to configure logs Agent.
+  create: true
+  # -- Extra settings for logs-specific pods
   extras: {}
-  #  replicaExternalLabelName: something
+  #  logsExternalLabelName: something
+  # -- LogsInstance selector based on label matching
+  instanceSelectorMatchLabels:
+    agent: grafana-agent
+  # -- LogsInstance selector based on expression matching
+  instanceSelectorMatchExpressions: []
+    # - key: agent
+    #   operator: In
+    #   values:
+    #     - grafana-agent
 
 # -- Volumes for GrafanaAgent
 volumes: []

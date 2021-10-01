@@ -11,7 +11,6 @@ spec:
     annotations:
       {{- toYaml .Values.podAnnotations | nindent 6 }}
   image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-  imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- with .Values.image.pullSecrets }}
   imagePullSecrets:
     {{- toYaml . | nindent 4 }}
@@ -20,15 +19,26 @@ spec:
     {{- toYaml .Values.securityContext | nindent 4 }}
   serviceAccountName: {{ include "this.serviceAccountName" . }}
   logLevel: {{ .Values.logLevel }}
-  {{- if .Values.prometheus.create }}
-  prometheus:
+  {{- if .Values.metrics.create }}
+  metrics:
     instanceSelector:
       matchLabels:
-        {{- toYaml .Values.prometheus.instanceSelectorMatchLabels | nindent 8 }}
+        {{- toYaml .Values.metrics.instanceSelectorMatchLabels | nindent 8 }}
       matchExpressions:
-        {{- toYaml .Values.prometheus.instanceSelectorMatchExpressions | nindent 8 }}
-    replicas: {{ .Values.prometheus.replicas }}
-    {{- with .Values.prometheus.extras }}
+        {{- toYaml .Values.metrics.instanceSelectorMatchExpressions | nindent 8 }}
+    replicas: {{ .Values.metrics.replicas }}
+    {{- with .Values.metrics.extras }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.logs.create }}
+  logs:
+    instanceSelector:
+      matchLabels:
+        {{- toYaml .Values.logs.instanceSelectorMatchLabels | nindent 8 }}
+      matchExpressions:
+        {{- toYaml .Values.logs.instanceSelectorMatchExpressions | nindent 8 }}
+    {{- with .Values.logs.extras }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
