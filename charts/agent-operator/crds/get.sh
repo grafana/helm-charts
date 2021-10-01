@@ -17,11 +17,11 @@ CRDS='
 monitoring.coreos.com_podmonitors.yaml
 monitoring.coreos.com_probes.yaml
 monitoring.coreos.com_servicemonitors.yaml
-monitoring.grafana.com_grafana-agents.yaml
-monitoring.grafana.com_prometheus-instances.yaml
+monitoring.grafana.com_grafanaagents.yaml
+monitoring.grafana.com_logsinstances.yaml
+monitoring.grafana.com_metricsinstances.yaml
+monitoring.grafana.com_podlogs.yaml
 '
-# monitoring.grafana.com_logsinstances.yaml
-# monitoring.grafana.com_podlogs.yaml
 
 for CRD in $CRDS; do
     curl -o "$BASE_DIR/$CRD" "https://raw.githubusercontent.com/grafana/agent/$VERSION/production/operator/crds/$CRD"

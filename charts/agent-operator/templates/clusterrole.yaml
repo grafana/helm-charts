@@ -12,9 +12,9 @@ rules:
   - apiGroups:
       - monitoring.grafana.com
     resources:
-      - grafana-agents
-      - prometheus-instances
-      - logs-instances
+      - grafanaagents
+      - metricsinstances
+      - logsinstances
       - podlogs
     verbs:
       - get
@@ -23,9 +23,9 @@ rules:
   - apiGroups:
       - monitoring.grafana.com
     resources:
-      - grafana-agents/finalizers
-      - prometheus-instances/finalizers
-      - logs-instances/finalizers
+      - grafanaagents/finalizers
+      - metricsinstances/finalizers
+      - logsinstances/finalizers
       - podlogs/finalizers
     verbs:
       - "*"
@@ -50,6 +50,8 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - configmaps
+      - configmaps/finalizers
       - secrets
       - secrets/finalizers
       - services
@@ -65,6 +67,8 @@ rules:
   - apiGroups:
       - "apps"
     resources:
+      - daemonsets
+      - daemonsets/finalizers
       - statefulsets
       - statefulsets/finalizers
     verbs:
