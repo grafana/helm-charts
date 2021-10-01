@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.18.2](https://img.shields.io/badge/AppVersion-0.18.2-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.19.0](https://img.shields.io/badge/AppVersion-0.19.0-informational?style=flat-square)
 
 A Helm chart for the Grafana Agent Operator
 
@@ -59,7 +59,7 @@ incompatible breaking change needing manual actions.
 | image.pullSecrets | list | `[]` | Image pull secrets |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"grafana/agent-operator"` | Image repo |
-| image.tag | string | `"v0.18.2"` | Image tag |
+| image.tag | string | `"v0.19.0"` | Image tag |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |

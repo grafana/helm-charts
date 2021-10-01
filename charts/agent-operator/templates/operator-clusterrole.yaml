@@ -9,8 +9,8 @@ metadata:
 rules:
 - apiGroups: [monitoring.grafana.com]
   resources:
-  - grafana-agents
-  - prometheus-instances
+  - grafanaagents
+  - metricsinstances
   verbs: [get, list, watch]
 - apiGroups: [monitoring.coreos.com]
   resources:
