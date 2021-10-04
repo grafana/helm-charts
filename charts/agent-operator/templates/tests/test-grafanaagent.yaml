@@ -95,6 +95,16 @@ spec:
 
 ---
 
+apiVersion: monitoring.grafana.com/v1alpha1
+kind: MetricsInstance
+metadata:
+  name: primary-test
+  labels:
+    agent: grafana-agent-test
+spec:
+
+---
+
 apiVersion: v1
 kind: Pod
 metadata:
@@ -113,4 +123,4 @@ spec:
   - name: sleep
     image: busybox
     command: ['sleep', '60']
-  restartPolicy: Never 
+  restartPolicy: Never
