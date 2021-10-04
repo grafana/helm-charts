@@ -79,22 +79,6 @@ subjects:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: grafana-agent-test-svc
-  annotations:
-    "helm.sh/hook": test
-spec:
-    ports:
-    - name: web
-      port: 8080
-    selector:
-        app.kubernetes.io/instance: grafana-agent-test
-        app.kubernetes.io/name: grafana-agent
-
----
-
 apiVersion: monitoring.grafana.com/v1alpha1
 kind: MetricsInstance
 metadata:
@@ -117,7 +101,7 @@ spec:
   - name: busybox
     image: busybox
     command: ['wget']
-    args:  ['grafana-agent-test-svc:8080/-/healthy']
+    args:  ['grafana-agent-operated:8080/-/healthy']
   # Wait for GrafanaAgent CR
   initContainers:
   - name: sleep

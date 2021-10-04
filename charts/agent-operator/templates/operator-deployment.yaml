@@ -13,8 +13,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "ga-operator.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "ga-operator.labels" . | indent 6 }}
   template:
     metadata:
       labels:
@@ -24,9 +23,7 @@ spec:
 {{ toYaml . | indent 6 }}
 {{- end }}
     spec:
-      {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ template "ga-operator.serviceAccountName" . }}
-      {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
       {{- toYaml . | nindent 8 }}

@@ -10,11 +10,11 @@ A Helm chart for the Grafana Agent Operator
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
-To learn how to deploy these resources, please see [Get started with Grafana Agent Operator](https://grafana.com/docs/agent/latest/operator/getting-started/).
+To learn how to deploy these resources, please see Grafana's [Agent Operator getting started guide](https://grafana.com/docs/agent/latest/operator/getting-started/).
 
 ## CRDs
 
-The CRDs are synced from the Grafana Agent [GitHub repo](https://github.com/grafana/agent/tree/main/production/operator/crds). To learn more about how Helm manages CRDs, please see [Custom Resource Definitions](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) from the Helm docs.
+The CRDs are synced into this chart manually (for now) from the Grafana Agent [GitHub repo](https://github.com/grafana/agent/tree/main/production/operator/crds). To learn more about how Helm manages CRDs, please see [Custom Resource Definitions](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) from the Helm docs.
 
 ## Get Repo Info
 
@@ -46,7 +46,8 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading an existing Release to a new major version
 
 A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an
-incompatible breaking change needing manual actions.
+incompatible breaking change needing manual actions. Until this chart's version reaches `v1.0`, 
+there are no promises of backwards compatibility.
 
 ## Values
 
