@@ -2,11 +2,11 @@
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.19.0](https://img.shields.io/badge/AppVersion-0.19.0-informational?style=flat-square)
 
-A Helm chart for the Grafana Agent Operator
+A Helm chart for Grafana Agent Operator
 
 ## Source Code
 
-* <https://github.com/grafana/agent/tree/main/pkg/operator>
+* <https://github.com/grafana/agent/tree/v0.19.0/pkg/operator>
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
@@ -45,9 +45,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Upgrading an existing Release to a new major version
 
-A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an
-incompatible breaking change needing manual actions. Until this chart's version reaches `v1.0`, 
-there are no promises of backwards compatibility.
+A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an incompatible breaking change needing manual actions. Until this chart's version reaches `v1.0`, there are no promises of backwards compatibility.
 
 ## Values
 
