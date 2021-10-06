@@ -10,6 +10,14 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.6.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.5.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v151----september-21st-2021). #729
+* [CHANGE] Production values set the ingester replication factor to three to avoid data loss.
+The resource calculations of these values already factored in this replication factor but did not apply it in the configuration.
+If you have not reduced the compute resources in these values then this change should have no impact besides increased resilience to ingester failure.
+If you have reduced the compute resources, consider increasing them back to the recommended values before installing this version. #729
+
 ## 1.5.6
 
 * [BUGFIX] YAML exports are no longer included as part of the Helm chart. #726
