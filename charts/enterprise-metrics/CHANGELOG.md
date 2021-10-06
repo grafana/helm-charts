@@ -10,6 +10,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.5.6
+
+* [BUGFIX] YAML exports are no longer included as part of the Helm chart. #726
+
 ## 1.5.5
 
 * [BUGFIX] Ensure all PodSpecs have configurable initContainers. #708
