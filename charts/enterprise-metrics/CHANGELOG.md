@@ -10,10 +10,13 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.5.5
+
+* [BUGFIX] Ensure all PodSpecs have configurable initContainers. #708
+
 ## 1.5.4
 
-* [BUGFIX] Adds a `Service` resource for the Compactor Pods and adds Compactor to the default set of gateway proxy URLs. In previous chart versions the Compactor would not show up in the GEM plugin "Ring Health" tab because the gateway did not know how to reach Compactor.
-
+* [BUGFIX] Adds a `Service` resource for the Compactor Pods and adds Compactor to the default set of gateway proxy URLs. In previous chart versions the Compactor would not show up in the GEM plugin "Ring Health" tab because the gateway did not know how to reach Compactor. #714
 
 ## 1.5.3
 
