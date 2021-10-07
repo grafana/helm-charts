@@ -345,8 +345,6 @@ traces:
 config: |
   multitenancy_enabled: false
   compactor:
-    compaction:
-      block_retention: 48h
     ring:
       kvstore:
         store: memberlist
