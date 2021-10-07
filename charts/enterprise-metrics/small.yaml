@@ -1,6 +1,6 @@
 # These values configure the Grafana Enterprise Metrics cluster to
 # handle production ingestion of ~1M active series using the blocks
-# storage engine.
+# storage engine scraped with a 15s interval.
 # Query requirements can vary dramatically depending on query rate and query
 # ranges. The values here satisfy a "usual" query load as seen from our
 # production clusters at this scale.
