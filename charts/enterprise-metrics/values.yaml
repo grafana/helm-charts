@@ -40,6 +40,7 @@ tokengenJob:
   extraArgs: {}
   env: []
   annotations: {}
+  initContainers: []
 
 config:
   auth_enabled: true
@@ -185,6 +186,8 @@ admin_api:
   service:
     annotations: {}
     labels: {}
+
+  initContainers: []
 
   strategy:
     type: RollingUpdate
@@ -563,6 +566,8 @@ overrides_exporter:
   replicas: 1
 
   annotations: {}
+
+  initContainers: []
 
   service:
     annotations: {}
