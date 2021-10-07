@@ -543,7 +543,7 @@ gateway:
   # -- Number of replicas for the gateway
   replicas: 1
   # -- Enable logging of 2xx and 3xx HTTP requests
-  verboseLogging: false
+  verboseLogging: true
   autoscaling:
     # -- Enable autoscaling for the gateway
     enabled: false
