@@ -192,6 +192,10 @@ compactor:
   extraVolumeMounts: []
   # -- Extra volumes for compactor deployment
   extraVolumes: []
+  config:
+    compaction:
+      # -- Duration to keep blocks
+      block_retention: 48h
 
 # Configuration for the querier
 querier:
@@ -346,7 +350,7 @@ config: |
   multitenancy_enabled: false
   compactor:
     compaction:
-      block_retention: 48h
+      block_retention: {{ .Values.compactor.config.compaction.block_retention }}
     ring:
       kvstore:
         store: memberlist
