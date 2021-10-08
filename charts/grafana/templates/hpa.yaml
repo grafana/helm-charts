@@ -11,7 +11,7 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: Deployment
+    kind: {{ if eq .Values.persistence.type "pvc" }}Deployment{{ else }}StatefulSet{{ end }}
     name: {{ template "grafana.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
