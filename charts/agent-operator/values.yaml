@@ -1,0 +1,48 @@
+# -- Overrides the chart's name
+nameOverride: ""
+
+# -- Overrides the chart's computed fullname
+fullnameOverride: ""
+
+# -- Annotations for the Deployment
+annotations: {}
+
+# -- Annotations for the Deployment Pods
+podAnnotations: {}
+
+# -- Pod security context (runAsUser, etc.)
+podSecurityContext: {}
+
+# -- Toggle to create ClusterRole and ClusterRoleBinding
+rbac:
+  create: true
+
+serviceAccount:
+  # -- Toggle to create ServiceAccount
+  create: true
+  # -- Service account name
+  name:
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repo
+  repository: grafana/agent-operator
+  # -- Image tag
+  tag: v0.19.0
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image pull secrets
+  pullSecrets: []
+
+# -- Resource limits and requests config
+resources: {}
+
+# -- nodeSelector configuration
+nodeSelector: {}
+
+# -- Tolerations applied to Pods
+tolerations: []
+
+# -- Pod affinity configuration
+affinity: {}
