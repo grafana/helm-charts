@@ -35,6 +35,9 @@ spec:
   - name: tempo-prom-metrics
     port: 3100
     targetPort: 3100
+  - name: jaeger-metrics
+    port: 16687
+    targetPort: 16687
   - name: tempo-query-jaeger-ui
     port: 16686
     targetPort: 16686

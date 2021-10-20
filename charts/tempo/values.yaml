@@ -112,6 +112,13 @@ service:
   annotations: {}
   labels: {}
 
+serviceMonitor:
+  enabled: false
+  interval: ""
+  additionalLabels: {}
+  annotations: {}
+  # scrapeTimeout: 10s
+
 persistence:
   enabled: false
   # storageClassName: local-path
