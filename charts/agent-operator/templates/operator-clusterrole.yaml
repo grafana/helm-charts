@@ -9,15 +9,21 @@ metadata:
 rules:
 - apiGroups: [monitoring.grafana.com]
   resources:
+  - grafana-agents
   - grafanaagents
-  - metricsinstances
+  - logs-instances
   - logsinstances
+  - metrics-instances
+  - metricsinstances
+  - pod-logs
   - podlogs
   verbs: [get, list, watch]
 - apiGroups: [monitoring.coreos.com]
   resources:
+  - pod-monitors
   - podmonitors
   - probes
+  - service-monitors
   - servicemonitors
   verbs: [get, list, watch]
 - apiGroups: [""]
