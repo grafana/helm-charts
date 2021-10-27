@@ -109,6 +109,12 @@ nodeSelector: {}
 # -- Affinity configuration for pods
 affinity: {}
 
+# -- Specifies whether to use host networking
+hostNetwork: false
+
+# -- Specifies pod dns policy
+dnsPolicy: ClusterFirst
+
 # -- Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes.
 tolerations:
   - key: node-role.kubernetes.io/master

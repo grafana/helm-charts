@@ -105,6 +105,8 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
