@@ -59,8 +59,8 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.0.3`                                                 |
-| `image.sha`                               | Image sha (optional)                          | `80c6d6ac633ba5ab3f722976fb1d9a138f87ca6a9934fcd26a5fc28cbde7dbfa` |
+| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.2.2`                                                 |
+| `image.sha`                               | Image sha (optional)                          | `7f4be45518fd94dcbb0d5926d26eb5aaca86af0950a8e97cb90e166185730c42` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
