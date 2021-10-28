@@ -33,7 +33,7 @@ spec:
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs={{ .Values.tempo.memBallastSizeMbs }}
         {{- range $key, $value := .Values.tempo.extraArgs }}
-        - "-{{ $key }}={{ $value }}"
+        - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
         image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
@@ -81,7 +81,7 @@ spec:
         - --query.base-path=/
         - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
         {{- range $key, $value := .Values.tempoQuery.extraArgs }}
-        - "-{{ $key }}={{ $value }}"
+        - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
         image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag }}
         imagePullPolicy: {{ .Values.tempoQuery.pullPolicy }}
