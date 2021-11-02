@@ -40,6 +40,10 @@ spec:
         resources:
         {{- toYaml . | nindent 10 }}
         {{- end }}
+        args:
+          {{- if .Values.kubeletService.enabled }}
+          - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ template "ga-operator.fullname" . }}-kubelet
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}
