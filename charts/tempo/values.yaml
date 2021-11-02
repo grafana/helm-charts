@@ -136,6 +136,9 @@ persistence:
 ## Pod Annotations
 podAnnotations: {}
 
+## Pod (extra) Labels
+podLabels: {}
+
 # -- Volumes to add
 extraVolumes: []
 

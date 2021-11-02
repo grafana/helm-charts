@@ -20,7 +20,7 @@ spec:
       labels:
         {{- include "tempo.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
-          {{ toYaml . | indent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
         {{- with .Values.podAnnotations }}
