@@ -35,11 +35,11 @@ image:
   # -- Image pull secrets
   pullSecrets: []
 
-# -- If true, Agent Operator will create and maintain a service for scraping kubelets
+# -- If both are set, Agent Operator will create and maintain a service for scraping kubelets
 # -- https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets
 kubeletService:
-  enabled: true
   namespace: default
+  serviceName: kubelet
 
 # -- Resource limits and requests config
 resources: {}
