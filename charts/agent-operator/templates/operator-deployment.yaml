@@ -40,6 +40,10 @@ spec:
         resources:
         {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
+        args:
+          - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ .Values.kubeletService.serviceName }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}

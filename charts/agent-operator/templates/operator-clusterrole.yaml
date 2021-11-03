@@ -23,12 +23,14 @@ rules:
 - apiGroups: [""]
   resources:
   - namespaces
+  - nodes
   verbs: [get, list, watch]
 - apiGroups: [""]
   resources:
   - secrets
   - services
   - configmaps
+  - endpoints
   verbs: [get, list, watch, create, update, patch, delete]
 - apiGroups: ["apps"]
   resources:
