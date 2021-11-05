@@ -1,6 +1,6 @@
 image:
   repository: grafana/loki
-  tag: 2.3.0
+  tag: 2.4.0
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -51,6 +51,8 @@ config:
     chunk_block_size: 262144
     chunk_retain_period: 1m
     max_transfer_retries: 0
+    wal:
+      dir: /data/loki/wal
     lifecycler:
       ring:
         kvstore:
