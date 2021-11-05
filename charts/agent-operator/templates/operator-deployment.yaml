@@ -20,7 +20,7 @@ spec:
 {{ include "ga-operator.labels" . | indent 8 }}
 {{- with .Values.podAnnotations }}
       annotations:
-{{ toYaml . | indent 6 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
     spec:
       serviceAccountName: {{ template "ga-operator.serviceAccountName" . }}
