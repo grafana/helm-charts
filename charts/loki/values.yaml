@@ -51,6 +51,8 @@ config:
     chunk_block_size: 262144
     chunk_retain_period: 1m
     max_transfer_retries: 0
+    wal:
+      dir: /data/loki/wal
     lifecycler:
       ring:
         kvstore:
@@ -97,8 +99,6 @@ config:
   compactor:
     working_directory: /data/loki/boltdb-shipper-compactor
     shared_store: filesystem
-  wal:
-    dir: /data/loki/wal
 # Needed for Alerting: https://grafana.com/docs/loki/latest/alerting/
 # This is just a simple example, for more details: https://grafana.com/docs/loki/latest/configuration/#ruler_config
 #  ruler:
