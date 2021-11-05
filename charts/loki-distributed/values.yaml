@@ -144,6 +144,9 @@ loki:
     compactor:
       shared_store: filesystem
 
+    wal:
+      dir: /var/loki/wal
+
     ruler:
       storage:
         type: local
