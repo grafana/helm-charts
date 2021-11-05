@@ -97,6 +97,8 @@ config:
   compactor:
     working_directory: /data/loki/boltdb-shipper-compactor
     shared_store: filesystem
+  wal:
+    dir: /data/loki/wal
 # Needed for Alerting: https://grafana.com/docs/loki/latest/alerting/
 # This is just a simple example, for more details: https://grafana.com/docs/loki/latest/configuration/#ruler_config
 #  ruler:
