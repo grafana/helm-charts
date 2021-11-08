@@ -17480,4 +17480,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-08 11:57:55.95288396Z"
+generated: "2021-11-08T11:57:55.95288396Z"
