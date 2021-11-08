@@ -9586,23 +9586,6 @@ entries:
     version: 0.1.0
   loki:
   - apiVersion: v1
-    appVersion: v2.4.1
-    created: "2021-11-08T13:32:17.019974445Z"
-    description: 'Loki: like Prometheus, but for logs.'
-    digest: 94c9f9adf0a7edbc7efe37d04bfc8d4777ec2c857879b320fc4cb07e7116425a
-    home: https://grafana.com/loki
-    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
-    kubeVersion: ^1.10.0-0
-    maintainers:
-    - email: lokiproject@googlegroups.com
-      name: Loki Maintainers
-    name: loki
-    sources:
-    - https://github.com/grafana/loki
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/loki-2.8.1/loki-2.8.1.tgz
-    version: 2.8.1
-  - apiVersion: v1
     appVersion: v2.4.0
     created: "2021-11-05T22:40:38.686236759Z"
     description: 'Loki: like Prometheus, but for logs.'
@@ -10692,6 +10675,24 @@ entries:
     version: 0.5.0
   loki-canary:
   - apiVersion: v2
+    appVersion: 2.4.1
+    created: "2021-11-08T13:32:59.058381653Z"
+    description: Helm chart for Grafana Loki Canary
+    digest: 872f7d296161c2f51e6d15e24f822f30b85e27c148c17f7b83aefba7e5cfcf94
+    home: https://github.com/grafana/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-canary
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.5.1/loki-canary-0.5.1.tgz
+    version: 0.5.1
+  - apiVersion: v2
     appVersion: 2.4.0
     created: "2021-11-05T22:29:34.498961459Z"
     description: Helm chart for Grafana Loki Canary
@@ -10854,24 +10855,6 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.1.2/loki-canary-0.1.2.tgz
     version: 0.1.2
   loki-distributed:
-  - apiVersion: v2
-    appVersion: 2.4.1
-    created: "2021-11-08T13:30:25.335668343Z"
-    description: Helm chart for Grafana Loki in microservices mode
-    digest: 97cbfeb78701e265864249e31d302541d22c222b8f51a9f1335585288c6eab7a
-    home: https://grafana.github.io/helm-charts
-    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
-    maintainers:
-    - name: unguiculus
-    name: loki-distributed
-    sources:
-    - https://github.com/grafana/loki
-    - https://grafana.com/oss/loki/
-    - https://grafana.com/docs/loki/latest/
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.39.1/loki-distributed-0.39.1.tgz
-    version: 0.39.1
   - apiVersion: v2
     appVersion: 2.4.0
     created: "2021-11-05T23:39:33.992756889Z"
@@ -15127,6 +15110,27 @@ entries:
     version: 0.6.0
   promtail:
   - apiVersion: v2
+    appVersion: 2.4.1
+    created: "2021-11-08T13:31:33.699164832Z"
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
+    digest: d86d241916b39d82038dc7bcc6bca26623141da08e55d228b10cec4feac5e4e3
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    - name: unguiculus
+    name: promtail
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/promtail-3.9.1/promtail-3.9.1.tgz
+    version: 3.9.1
+  - apiVersion: v2
     appVersion: 2.4.0
     created: "2021-11-05T22:29:12.836484473Z"
     description: Promtail is an agent which ships the contents of local logs to a
@@ -17515,4 +17519,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-08T13:32:17.028113539Z"
+generated: "2021-11-08T13:32:59.066847125Z"
