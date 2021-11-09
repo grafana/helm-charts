@@ -71,7 +71,7 @@ spec:
               subPath: {{ .Values.persistence.subPath }}
             {{- if gt (len .Values.alerting_groups) 0 }}
             - name: scratch
-              mountPath: /tmp/scratch
+              mountPath: /tmp
             - name: rules
               mountPath: /rules
             {{- end }}
