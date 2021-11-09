@@ -22,6 +22,14 @@ app.kubernetes.io/component: gateway
 {{- end }}
 
 {{/*
+gateway auth secret name
+*/}}
+{{- define "tempo.gatewayAuthSecret" -}}
+{{ .Values.gateway.basicAuth.existingSecret | default (include "tempo.gatewayFullname" . ) }}
+{{- end }}
+
+
+{{/*
 gateway image
 */}}
 {{- define "tempo.gatewayImage" -}}

@@ -7,7 +7,7 @@ fullnameOverride: ""
 replicas: 1
 tempo:
   repository: grafana/tempo
-  tag: 1.1.0
+  tag: 1.2.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -64,6 +64,13 @@ tempo:
         thrift_http:
           endpoint: 0.0.0.0:14268
     opencensus:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "0.0.0.0:4317"
+        http:
+          endpoint: "0.0.0.0:4318"
+
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -112,6 +119,13 @@ service:
   annotations: {}
   labels: {}
 
+serviceMonitor:
+  enabled: false
+  interval: ""
+  additionalLabels: {}
+  annotations: {}
+  # scrapeTimeout: 10s
+
 persistence:
   enabled: false
   # storageClassName: local-path
@@ -121,6 +135,9 @@ persistence:
 
 ## Pod Annotations
 podAnnotations: {}
+
+## Pod (extra) Labels
+podLabels: {}
 
 # -- Volumes to add
 extraVolumes: []

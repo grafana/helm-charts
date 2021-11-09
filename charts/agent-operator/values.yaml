@@ -29,11 +29,17 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.19.0
+  tag: v0.20.0
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets
   pullSecrets: []
+
+# -- If both are set, Agent Operator will create and maintain a service for scraping kubelets
+# -- https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets
+kubeletService:
+  namespace: default
+  serviceName: kubelet
 
 # -- Resource limits and requests config
 resources: {}
