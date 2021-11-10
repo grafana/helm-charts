@@ -9594,13 +9594,13 @@ entries:
     icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
     kubeVersion: ^1.10.0-0
     maintainers:
-      - email: lokiproject@googlegroups.com
-        name: Loki Maintainers
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
     name: loki
     sources:
-      - https://github.com/grafana/loki
+    - https://github.com/grafana/loki
     urls:
-      - https://github.com/grafana/helm-charts/releases/download/loki-2.8.1/loki-2.8.1.tgz
+    - https://github.com/grafana/helm-charts/releases/download/loki-2.8.1/loki-2.8.1.tgz
     version: 2.8.1
   - apiVersion: v1
     appVersion: v2.4.0
@@ -16477,6 +16477,29 @@ entries:
   tempo:
   - apiVersion: v2
     appVersion: 1.2.0
+    created: "2021-11-10T18:33:03.256850476Z"
+    description: Grafana Tempo Single Binary Mode
+    digest: 19ab7f7985c7ed930a754bc5412a39f90305b5cc6fa8160aa888cd937a93bc20
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: dgzlopes
+    - name: mapno
+    name: tempo
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-0.10.0/tempo-0.10.0.tgz
+    version: 0.10.0
+  - apiVersion: v2
+    appVersion: 1.2.0
     created: "2021-11-05T17:12:35.734962377Z"
     description: Grafana Tempo Single Binary Mode
     digest: f0f2fc1c2d87486808c88ae83c5b763c4db7f018926e6dc1f994f3dc25abc040
@@ -17572,4 +17595,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-09T00:23:10.458460013Z"
+generated: "2021-11-10T18:33:03.265285205Z"
