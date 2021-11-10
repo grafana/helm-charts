@@ -27,6 +27,8 @@ tempo:
 
   memBallastSizeMbs: 1024
   authEnabled: false
+  # -- If true, enables Tempo's native search
+  searchEnabled: false
   ingester: {}
   retention: 24h
   server:

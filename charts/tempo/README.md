@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.2.0](https://img.shields.io/badge/AppVersion-1.2.0-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.2.0](https://img.shields.io/badge/AppVersion-1.2.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -51,6 +51,7 @@ Grafana Tempo Single Binary Mode
 | tempo.repository | string | `"grafana/tempo"` |  |
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |
+| tempo.searchEnabled | bool | `false` | If true, enables Tempo's native search |
 | tempo.server.httpListenPort | int | `3100` |  |
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
