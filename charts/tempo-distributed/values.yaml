@@ -327,6 +327,7 @@ queryFrontend:
   extraVolumes: []
 
 search:
+  # -- Enable Tempo search
   enabled: false
 
 traces:
