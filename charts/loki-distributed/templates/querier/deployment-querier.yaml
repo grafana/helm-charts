@@ -76,8 +76,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
-            - name: data
-              mountPath: /var/loki
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -107,6 +105,4 @@ spec:
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        - name: data
-          emptyDir: {}
 {{- end }}
