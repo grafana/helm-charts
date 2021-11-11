@@ -326,6 +326,10 @@ queryFrontend:
   # -- Extra volumes for query-frontend deployment
   extraVolumes: []
 
+search:
+  # -- Enable Tempo search
+  enabled: false
+
 traces:
   jaeger:
     # -- Enable Tempo to ingest Jaeger GRPC traces
@@ -348,6 +352,7 @@ traces:
 
 config: |
   multitenancy_enabled: false
+  search_enabled: {{ .Values.search.enabled }}
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
