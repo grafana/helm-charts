@@ -103,12 +103,6 @@ extraConfigmapMounts: []
   #   configMap: certs-configmap
   #   readOnly: true
 
-
-extraEmptyDirMounts: []
-  # - name: provisioning-notifiers
-  #   mountPath: /etc/grafana/provisioning/notifiers
-
-
 # Apply extra labels to common labels.
 extraLabels: {}
 

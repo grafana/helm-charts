@@ -309,10 +309,6 @@ containers:
         subPath: {{ .subPath | default "" }}
         readOnly: {{ .readOnly }}
     {{- end }}
-    {{- range .Values.extraEmptyDirMounts }}
-      - name: {{ .name }}
-        mountPath: {{ .mountPath }}
-    {{- end }}
     ports:
       - name: {{ .Values.service.portName }}
         containerPort: {{ .Values.service.port }}
@@ -511,10 +507,6 @@ volumes:
     emptyDir: {}
     {{- end }}
 {{- end }}
-{{- range .Values.extraEmptyDirMounts }}
-  - name: {{ .name }}
-    emptyDir: {}
-{{- end -}}
 {{- if .Values.extraContainerVolumes }}
 {{ toYaml .Values.extraContainerVolumes | indent 2 }}
 {{- end }}

@@ -120,7 +120,6 @@ This version requires Helm >= 3.1.0.
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
 | `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts | `[]`                                                |
-| `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
 | `plugins`                                 | Plugins to be loaded along with Grafana       | `[]`                                                    |
 | `datasources`                             | Configure grafana datasources (passed through tpl) | `{}`                                               |
 | `notifiers`                               | Configure grafana notifiers                   | `{}`                                                    |
