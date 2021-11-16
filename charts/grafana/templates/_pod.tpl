@@ -87,7 +87,7 @@ initContainers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
       - name: METHOD
-        value: LIST
+        value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.datasources.label }}"
       {{- if .Values.sidecar.datasources.labelValue }}
