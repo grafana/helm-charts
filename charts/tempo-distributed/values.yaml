@@ -5,11 +5,11 @@ global:
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
-  clusterDomain: 'cluster.local'
+  clusterDomain: "cluster.local"
   # -- configures DNS service name
-  dnsService: 'kube-dns'
+  dnsService: "kube-dns"
   # -- configures DNS service namespace
-  dnsNamespace: 'kube-system'
+  dnsNamespace: "kube-system"
 # -- Overrides the chart's computed fullname
 # fullnameOverride: tempo
 tempo:
@@ -118,7 +118,7 @@ distributor:
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
-    loadBalancerIP: ''
+    loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
@@ -667,9 +667,9 @@ gateway:
               '"$request" $body_bytes_sent "$http_referer" '
               '"$http_user_agent" "$http_x_forwarded_for"';
     # -- Allows appending custom configuration to the server block
-    serverSnippet: ''
+    serverSnippet: ""
     # -- Allows appending custom configuration to the http block
-    httpSnippet: ''
+    httpSnippet: ""
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
