@@ -55,10 +55,10 @@ spec:
             - -target=tokengen
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -admin.client.s3.endpoint={{ template "enterprise-logs.minio" . }}
             - -admin.client.s3.bucket-name=enterprise-logs-admin
-            - -admin.client.s3.access-key-id=enterprise-logs
-            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.access-key-id={{ .Values.minio.accessKey }}
+            - -admin.client.s3.secret-access-key={{ .Values.minio.secretKey }}
             - -admin.client.s3.insecure=true
             {{- end }}
             - -tokengen.token-file=/shared/admin-token

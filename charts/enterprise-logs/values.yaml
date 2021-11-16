@@ -17,7 +17,7 @@ image:
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: v1.1.0
+  tag: v1.2.0
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
@@ -71,7 +71,7 @@ config:
     storage:
       type: s3
       s3:
-        endpoint: "{{ include \"loki.fullname\" . }}-minio:9000"
+        endpoint: "{{ include \"enterprise-logs.minio\" . }}"
         bucket_name: enterprise-logs-admin
         secret_access_key: supersecret
         access_key_id: enterprise-logs
@@ -147,7 +147,7 @@ config:
 
   storage_config:
     aws:
-      endpoint: "{{ include \"loki.fullname\" . }}-minio:9000"
+      endpoint: "{{ include \"enterprise-logs.minio\" . }}"
       bucketnames: enterprise-logs-tsdb
       access_key_id: enterprise-logs
       secret_access_key: supersecret
@@ -165,7 +165,7 @@ config:
     storage:
       type: s3
       s3:
-        endpoint: "{{ include \"loki.fullname\" . }}-minio:9000"
+        endpoint: "{{ include \"enterprise-logs.minio\" . }}"
         bucketnames: enterprise-logs-ruler
         access_key_id: enterprise-logs
         secret_access_key: supersecret
