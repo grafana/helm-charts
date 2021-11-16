@@ -5,11 +5,11 @@ global:
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
-  clusterDomain: "cluster.local"
+  clusterDomain: 'cluster.local'
   # -- configures DNS service name
-  dnsService: "kube-dns"
+  dnsService: 'kube-dns'
   # -- configures DNS service namespace
-  dnsNamespace: "kube-system"
+  dnsNamespace: 'kube-system'
 # -- Overrides the chart's computed fullname
 # fullnameOverride: tempo
 tempo:
@@ -28,7 +28,6 @@ tempo:
     initialDelaySeconds: 30
     timeoutSeconds: 1
 
-
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -39,7 +38,6 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
-
 
 # Configuration for the ingester
 ingester:
@@ -120,7 +118,7 @@ distributor:
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
-    loadBalancerIP: ""
+    loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
@@ -421,7 +419,7 @@ config: |
   overrides:
     per_tenant_override_config: /conf/overrides.yaml
   server:
-    http_listen_port: 3100
+    {{- toYaml .Values.server | nindent 4}}
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
@@ -448,6 +446,13 @@ config: |
         host: {{ include "tempo.fullname" . }}-memcached
         service: memcached-client
         timeout: 500ms
+
+# Set Tempo server configuration
+# Refers to https://grafana.com/docs/tempo/latest/configuration/#server
+server:
+  http_listen_port: 3100
+  log_level: info
+  log_format: logfmt
 
 # To configure a different storage backend instead of local storage:
 # storage:
@@ -662,9 +667,9 @@ gateway:
               '"$request" $body_bytes_sent "$http_referer" '
               '"$http_user_agent" "$http_x_forwarded_for"';
     # -- Allows appending custom configuration to the server block
-    serverSnippet: ""
+    serverSnippet: ''
     # -- Allows appending custom configuration to the http block
-    httpSnippet: ""
+    httpSnippet: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
