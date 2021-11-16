@@ -11,7 +11,7 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
-## Unreleased
+## 1.2.1
 
 - [BUGFIX] Fixed the dev cluster MinIO endpoints in the default configuration. #826
 
