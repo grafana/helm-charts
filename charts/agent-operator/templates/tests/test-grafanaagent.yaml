@@ -85,7 +85,7 @@ metadata:
   name: primary-test
   labels:
     agent: grafana-agent-test
-spec:
+spec: {}
 
 ---
 
