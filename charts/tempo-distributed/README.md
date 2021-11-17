@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.11.2](https://img.shields.io/badge/Version-0.11.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.2.1](https://img.shields.io/badge/AppVersion-1.2.1-informational?style=flat-square)
+![Version: 0.11.3](https://img.shields.io/badge/Version-0.11.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.2.1](https://img.shields.io/badge/AppVersion-1.2.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -79,6 +79,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
+| compactor.replicas | int | `1` | Number of replicas for the compactor |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
