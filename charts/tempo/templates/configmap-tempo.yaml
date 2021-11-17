@@ -18,8 +18,8 @@ data:
       receivers:
         {{- toYaml .Values.tempo.receivers | nindent 8 }}
     ingester:
-       {{- toYaml .Values.tempo.ingester | nindent 6 }}
+      {{- toYaml .Values.tempo.ingester | nindent 6 }}
     server:
-      http_listen_port: {{ .Values.tempo.server.httpListenPort }}
+      {{- toYaml .Values.tempo.server | nindent 6 }}
     storage:
       {{- toYaml .Values.tempo.storage | nindent 6 }}

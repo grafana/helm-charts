@@ -31,8 +31,12 @@ tempo:
   searchEnabled: false
   ingester: {}
   retention: 24h
+
+  # Tempo server configuration
+  # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
   server:
-    httpListenPort: 3100
+    # -- HTTP server listen port
+    http_listen_port: 3100
   # tempo storage backend
   # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
   ## Use s3 for example
