@@ -28,7 +28,6 @@ tempo:
     initialDelaySeconds: 30
     timeoutSeconds: 1
 
-
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -39,7 +38,6 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
-
 
 # Configuration for the ingester
 ingester:
@@ -421,7 +419,7 @@ config: |
   overrides:
     per_tenant_override_config: /conf/overrides.yaml
   server:
-    http_listen_port: 3100
+    {{- toYaml .Values.server | nindent 4}}
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
@@ -448,6 +446,17 @@ config: |
         host: {{ include "tempo.fullname" . }}-memcached
         service: memcached-client
         timeout: 500ms
+
+# Set Tempo server configuration
+# Refers to https://grafana.com/docs/tempo/latest/configuration/#server
+server:
+  # --  HTTP server listen host
+  http_listen_port: 3100
+
+  # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
+  log_level: info
+  # -- Log format. Can be set to logfmt (default) or json.
+  log_format: logfmt
 
 # To configure a different storage backend instead of local storage:
 # storage:
