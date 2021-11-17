@@ -1,8 +1,8 @@
 # -- Overrides the chart's name
-nameOverride: ''
+nameOverride: ""
 
 # -- Overrides the chart's computed fullname
-fullnameOverride: ''
+fullnameOverride: ""
 
 replicas: 1
 tempo:
@@ -35,6 +35,7 @@ tempo:
   # Tempo server configuration
   # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
   server:
+    # -- HTTP server listen port
     http_listen_port: 3100
   # tempo storage backend
   # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
@@ -72,9 +73,9 @@ tempo:
     otlp:
       protocols:
         grpc:
-          endpoint: '0.0.0.0:4317'
+          endpoint: "0.0.0.0:4317"
         http:
-          endpoint: '0.0.0.0:4318'
+          endpoint: "0.0.0.0:4318"
 
   ## Additional container arguments
   extraArgs: {}
@@ -126,7 +127,7 @@ service:
 
 serviceMonitor:
   enabled: false
-  interval: ''
+  interval: ""
   additionalLabels: {}
   annotations: {}
   # scrapeTimeout: 10s
