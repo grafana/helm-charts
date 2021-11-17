@@ -450,8 +450,12 @@ config: |
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
 server:
+  # --  HTTP server listen host
   http_listen_port: 3100
+
+  # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
   log_level: info
+  # -- Log format. Can be set to logfmt (default) or json.
   log_format: logfmt
 
 # To configure a different storage backend instead of local storage:
