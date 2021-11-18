@@ -6,6 +6,7 @@ metadata:
     app: grafana-agent-test
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
 spec:
   image: "{{ .Values.image.registry }}/grafana/agent:{{ .Values.image.tag }}"
   logLevel: info
@@ -23,6 +24,7 @@ metadata:
   name: grafana-agent-test-sa
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
 
 ---
 
@@ -32,6 +34,7 @@ metadata:
   name: grafana-agent-test-cr
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
 rules:
 - apiGroups:
   - ""
@@ -68,6 +71,7 @@ metadata:
   name: grafana-agent-test-crb
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -96,6 +100,7 @@ metadata:
   annotations:
     "helm.sh/hook": test
     "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
 spec:
   containers:
   - name: busybox
