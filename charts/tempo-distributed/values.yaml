@@ -341,12 +341,14 @@ traces:
   # -- Enable Tempo to ingest Zipkin traces
   zipkin: false
   otlp:
-    # -- Enable Tempo to ingest Open Telementry HTTP traces
+    # -- Enable Tempo to ingest Open Telemetry HTTP traces
     http: false
-    # -- Enable Tempo to ingest Open Telementry GRPC traces
+    # -- Enable Tempo to ingest Open Telemetry GRPC traces
     grpc: false
   # -- Enable Tempo to ingest Open Census traces
   opencensus: false
+  # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
+  kafka: {}
 
 config: |
   multitenancy_enabled: false
@@ -398,9 +400,13 @@ config: |
             endpoint: 0.0.0.0:4317
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.opencensus}}
+      {{- if .Values.traces.opencensus }}
       opencensus:
         endpoint: 0.0.0.0:55678
+      {{- end }}
+      {{- if .Values.traces.kafka }}
+      kafka:
+        {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
   querier:
     frontend_worker:
