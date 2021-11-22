@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## Unreleased
+
+- [BUGFIX] Fixed error in template rendering when MinIO is disabled.
+
 ## 1.3.0
 
 - [CHANGE] Bump GEL version to v1.2.0
