@@ -11,7 +11,7 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
-## Unreleased
+## 1.3.1
 
 - [BUGFIX] Fixed error in template rendering when MinIO is disabled.
 
