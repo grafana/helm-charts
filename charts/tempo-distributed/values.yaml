@@ -425,7 +425,9 @@ config: |
   overrides:
     per_tenant_override_config: /conf/overrides.yaml
   server:
-    {{- toYaml .Values.server | nindent 4}}
+    http_listen_port: {{ .Values.server.httpListenPort }}
+    log_level: {{ .Values.server.logLevel }}
+    log_format: {{ .Values.server.logFormat }}
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
@@ -457,12 +459,13 @@ config: |
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
 server:
   # --  HTTP server listen host
-  http_listen_port: 3100
+  httpListenPort: 3100
 
   # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
-  log_level: info
+  logLevel: info
+
   # -- Log format. Can be set to logfmt (default) or json.
-  log_format: logfmt
+  logFormat: logfmt
 
 # To configure a different storage backend instead of local storage:
 # storage:
