@@ -11,6 +11,14 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.3.1
+
+- [BUGFIX] Fixed error in template rendering when MinIO is disabled.
+
+## 1.3.0
+
+- [CHANGE] Bump GEL version to v1.2.0
+
 ## 1.2.1
 
 - [BUGFIX] Fixed the dev cluster MinIO endpoints in the default configuration. #826
