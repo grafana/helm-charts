@@ -314,9 +314,6 @@ containers:
         mountPath: {{ .mountPath }}
     {{- end }}
     ports:
-      - name: {{ .Values.service.portName }}
-        containerPort: {{ .Values.service.port }}
-        protocol: TCP
       - name: {{ .Values.podPortName }}
         containerPort: 3000
         protocol: TCP
