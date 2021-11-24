@@ -80,6 +80,9 @@ spec:
               mountPath: /license
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: storage
+              mountPath: /data
+              subPath: {{ .Values.query_frontend.persistence.subPath }}
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
@@ -126,3 +129,5 @@ spec:
 {{- if .Values.query_frontend.extraVolumes }}
 {{ toYaml .Values.query_frontend.extraVolumes | indent 8}}
 {{- end }}
+        - name: storage
+          emptyDir: {}
