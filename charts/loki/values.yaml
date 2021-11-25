@@ -83,6 +83,7 @@ config:
         period: 24h
   server:
     http_listen_port: 3100
+    memberlist_gossip_port: 7946
   storage_config:
     boltdb_shipper:
       active_index_directory: /data/loki/boltdb-shipper-active

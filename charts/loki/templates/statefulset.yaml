@@ -79,6 +79,9 @@ spec:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
               protocol: TCP
+            - name: http-memberlist
+              containerPort: {{ .Values.config.server.memberlist_gossip_port }}
+              protocol: TCP
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

@@ -16,6 +16,10 @@ spec:
       protocol: TCP
       name: http-metrics
       targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.config.server.memberlist_gossip_port }}
+      protocol: TCP
+      name: http-memberlist
+      targetPort: http-memberlist
 {{- if .Values.extraPorts }}
 {{ toYaml .Values.extraPorts | indent 4}}
 {{- end }}
