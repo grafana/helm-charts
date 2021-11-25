@@ -220,6 +220,9 @@ containers:
     volumeMounts:
       - name: sc-dashboard-volume
         mountPath: {{ .Values.sidecar.dashboards.folder | quote }}
+      {{- if .Values.sidecar.dashboards.extraMounts }}
+      {{- toYaml .Values.sidecar.dashboards.extraMounts | trim | nindent 6}}
+      {{- end }}
 {{- end}}
   - name: {{ .Chart.Name }}
     {{- if .Values.image.sha }}
