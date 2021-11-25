@@ -83,6 +83,12 @@ spec:
             {{- if eq .Values.config.storage.engine "blocks" }}
             - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
+            {{- if eq .Values.graphite.enabled }}
+            - -graphite.enabled=true
+            - -graphite.querier.graphite-fallback=https://graphite
+            - -graphite.querier.remote-read-enabled=true
+            - -graphite.querier.query-address=TODO
+            {{- end }}
           {{- range $key, $value := .Values.querier.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
