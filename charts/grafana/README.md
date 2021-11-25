@@ -159,6 +159,7 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.folderAnnotation`     | The annotation the sidecar will look for in configmaps to override the destination folder for files | `nil`                                                  |
 | `sidecar.dashboards.defaultFolderName`    | The default folder name, it will create a subfolder under the `sidecar.dashboards.folder` and put dashboards in there instead | `nil`                                |
 | `sidecar.dashboards.searchNamespace`      | Namespaces list. If specified, the sidecar will search for dashboards config-maps  inside these namespaces.Otherwise the namespace in which the sidecar is running will be used.It's also possible to specify ALL to search in all namespaces. | `nil`                                |
+| `sidecar.dashboards.script`               | Absolute path to shell script to execute after a configmap got reloaded. | `nil`                                |
 | `sidecar.dashboards.resource`             | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
 | `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
