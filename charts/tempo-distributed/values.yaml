@@ -393,7 +393,7 @@ config: |
         protocols:
           {{- if .Values.traces.otlp.http }}
           http:
-            endpoint: 0.0.0.0:55681
+            endpoint: 0.0.0.0:4318
           {{- end }}
           {{- if .Values.traces.otlp.grpc }}
           grpc:
@@ -735,7 +735,7 @@ gateway:
           }
 
           location = /otlp/v1/traces {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:55681/v1/traces;
+            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
           }
 
           location ^~ /api {

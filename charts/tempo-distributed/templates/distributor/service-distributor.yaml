@@ -51,7 +51,7 @@ spec:
     {{- end }}
     {{- if .Values.traces.otlp.http }}
     - name: distributor-otlp-http
-      port: 55681
+      port: 4318
       protocol: TCP
       targetPort: otlp-http
     {{- end }}
