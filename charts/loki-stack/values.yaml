@@ -1,5 +1,6 @@
 loki:
   enabled: true
+  isDefault: true
 
 promtail:
   enabled: true
@@ -17,6 +18,7 @@ grafana:
 
 prometheus:
   enabled: false
+  isDefault: false
 
 filebeat:
   enabled: false
