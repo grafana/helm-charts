@@ -199,6 +199,10 @@ containers:
       - name: FOLDER_ANNOTATION
         value: "{{ .Values.sidecar.dashboards.folderAnnotation }}"
       {{- end }}
+      {{- if .Values.sidecar.dashboards.script }}
+      - name: SCRIPT
+        value: "{{ .Values.sidecar.dashboards.script }}"
+      {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
     volumeMounts:
