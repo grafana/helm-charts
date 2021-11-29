@@ -11,7 +11,7 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
-## Unreleased
+## 1.3.2
 
 - [BUGFIX] Fixed issue that caused GEL version not to be updated in the templates of the loki-distributed child chart. #863
 
