@@ -9,15 +9,17 @@ nameOverride: null
 fullnameOverride: null
 
 # -- Definition of the Docker image for Grafana Enterprise Logs
-# If any of these values are changed, then they also need to be reflected in
-# `loki-distributed.loki.image`
-image:
+# If the image block is overwritten in a custom values file, it is also
+# required to update the values in the `loki-distributed.loki.image` block.
+# This can be done by copying the values, or like here, by using an anchor and
+# a pointer.
+image: &image
   # -- The container registry to use
   registry: docker.io
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: v1.2.0
+  tag: v1.1.0
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
@@ -561,12 +563,7 @@ loki-distributed:
   loki:
     config: null
     existingSecretForConfig: enterprise-logs-config
-    image:
-      registry: docker.io
-      repository: grafana/enterprise-logs
-      tag: v1.1.0
-      pullPolicy: IfNotPresent
-      pullSecrets: []
+    image: *image
 
 
 # -------------------------------------
