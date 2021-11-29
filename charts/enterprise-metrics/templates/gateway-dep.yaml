@@ -72,7 +72,7 @@ spec:
             - -gateway.proxy.admin-api.url=http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.alertmanager.url=http://{{ template "enterprise-metrics.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.distributor.url=http://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.graphite.url=http://{{ template "enterprise-metrics.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.graphite.url=http://{{ template "enterprise-metrics.fullname" . }}-graphite-querier.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.ingester.url=http://{{ template "enterprise-metrics.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.ruler.url=http://{{ template "enterprise-metrics.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}

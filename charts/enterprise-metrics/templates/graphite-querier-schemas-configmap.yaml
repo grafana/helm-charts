@@ -1,0 +1,22 @@
+{{- if .Values.graphite.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "enterprise-metrics.fullname" . }}-graphite-schemas
+  labels:
+    app: {{ template "enterprise-metrics.name" . }}
+    chart: {{ template "enterprise-metrics.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  storage-schemas.conf: |
+    [default]
+    pattern = .*
+    intervals = 0:1s
+    retentions = 10s:8d,10min:1y
+  storage-aggregations.conf: |
+    [default]
+    aggregationMethod = avg
+    pattern = .*
+    xFilesFactor = 0.1
+{{- end -}}

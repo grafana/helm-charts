@@ -1096,5 +1096,119 @@ minio:
       memory: 128Mi
   secretKey: supersecret
 
-  graphite:
-    enabled: false
+graphite:
+  # If true, enables graphite querier and graphite writer functionality.
+  # Read more in https://grafana.com/docs/metrics-enterprise/latest/graphite/
+  enabled: true # TODO(jesus.vazquez) Set to false before merge, also propagate config to small.yaml and large.yaml
+
+graphite_querier:
+  replicas: 2
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Additional Grafana Enterprise Metrics container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - graphite-querier
+            topologyKey: 'kubernetes.io/hostname'
+
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 180
+
+  tolerations: []
+  podDisruptionBudget: {}
+  initContainers: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraPorts: []
+
+graphite_web:
+  replicas: 1
+
+  image:
+    repository: docker.io/raintank/graphite-mt
+    tag: 8-7ebde4c60
+    pullPolicy: IfNotPresent
+
+  service:
+    annotations: {}
+    labels: {}
+
+  deployment:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+  extraEnvVars: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target
+                operator: In
+                values:
+                  - graphite-web
+          topologyKey: 'kubernetes.io/hostname'
+
+  strategy:
+    type: RollingUpdate
+
+  terminationGracePeriodSeconds: 30
+
+  tolerations: []
+  podDisruptionBudget: {}

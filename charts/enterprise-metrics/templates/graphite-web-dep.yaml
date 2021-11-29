@@ -1,0 +1,72 @@
+{{- if .Values.graphite.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "enterprise-metrics.fullname" . }}-graphite-web
+  labels:
+    app: {{ template "enterprise-metrics.fullname" . }}-graphite-web
+    chart: {{ template "enterprise-metrics.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    {{- toYaml .Values.graphite_web.deployment.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.graphite_web.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "enterprise-metrics.fullname" . }}-graphite-web
+      release: {{ .Release.Name }}
+  strategy:
+    {{- toYaml .Values.graphite_web.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "enterprise-metrics.fullname" . }}-graphite-web
+        target: {{ template "enterprise-metrics.fullname" . }}-graphite-web
+        release: {{ .Release.Name }}
+        {{- with .Values.graphite_web.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+      {{- with .Values.graphite_web.podAnnotations }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
+      containers:
+        - name: graphite-web
+          image: "{{ .Values.graphite_web.image.repository }}:{{ .Values.graphite_web.image.tag }}"
+          imagePullPolicy: {{ .Values.graphite_web.image.pullPolicy }}
+          env:
+            - name: GRAPHITE_CLUSTER_SERVERS
+              {{- if .Values.gateway.useDefaultProxyURLs }}
+              value: {{ template "enterprise-metrics.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/graphite
+              {{- else }}
+              value: {{ template "enterprise-metrics.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/graphite
+              {{- end }}
+            - name: GRAPHITE_ENFORCE_INPUT_VALIDATION
+              value: "true"
+            - name: GRAPHITE_POOL_WORKERS
+              value: "1"
+            - name: GRAPHITE_POOL_WORKERS_PER_BACKEND
+              value: "16"
+            - name: GRAPHITE_USE_WORKER_POOL
+              value: "false"
+            {{- range $key, $value := .Values.graphite_web.extraEnvVars }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.graphite_web.resources | nindent 12 }}
+      nodeSelector:
+        {{- toYaml .Values.graphite_web.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.graphite_web.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.graphite_web.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.graphite_web.terminationGracePeriodSeconds }}
+{{- end -}}

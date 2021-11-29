@@ -1,32 +1,33 @@
+{{- if .Values.graphite.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "enterprise-metrics.fullname" . }}-querier
+  name: {{ template "enterprise-metrics.fullname" . }}-graphite-querier
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-querier
+    app: {{ template "enterprise-metrics.name" . }}-graphite-querier
     chart: {{ template "enterprise-metrics.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    {{- toYaml .Values.querier.annotations | nindent 4 }}
+    {{- toYaml .Values.graphite_querier.annotations | nindent 4 }}
 spec:
-  replicas: {{ .Values.querier.replicas }}
+  replicas: {{ .Values.graphite_querier.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-querier
+      app: {{ template "enterprise-metrics.name" . }}-graphite-querier
       release: {{ .Release.Name }}
   strategy:
-    {{- toYaml .Values.querier.strategy | nindent 4 }}
+    {{- toYaml .Values.graphite_querier.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-querier
+        app: {{ template "enterprise-metrics.name" . }}-graphite-querier
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: querier
+        name: graphite-querier
         gossip_ring_member: "true"
         target: querier
         release: {{ .Release.Name }}
-        {{- with .Values.querier.podLabels }}
+        {{- with .Values.graphite_querier.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -35,18 +36,18 @@ spec:
 {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
 {{- end}}
-        {{- with .Values.querier.podAnnotations }}
+        {{- with .Values.graphite_querier.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
-    {{- if .Values.querier.priorityClassName }}
-      priorityClassName: {{ .Values.querier.priorityClassName }}
+    {{- if .Values.graphite_querier.priorityClassName }}
+      priorityClassName: {{ .Values.graphite_querier.priorityClassName }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.querier.securityContext | nindent 8 }}
+        {{- toYaml .Values.graphite_querier.securityContext | nindent 8 }}
       initContainers:
-        {{- toYaml .Values.querier.initContainers | nindent 8 }}
+        {{- toYaml .Values.graphite_querier.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -58,10 +59,14 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "-target=querier"
-            - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            - "-querier.frontend-address={{ template "enterprise-metrics.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}"
-            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
+            - -target=graphite-querier
+            - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml # TODO(jesus.vazquez) Remove when metrics enterprise v1.6.2 is released
+            - -graphite.enabled=true
+            - -graphite.querier.remote-read-enabled=true
+            - -graphite.querier.query-address=http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/api/prom
+            - -graphite.querier.graphite-fallback=http://{{ template "enterprise-metrics.fullname" . }}-graphite-web.{{ .Release.Namespace}}.svc:{{ .Values.config.server.http_listen_port }}
+            - -graphite.querier.schemas.default-storage-schemas-file=/etc/graphite-proxy/storage-schemas.conf
+            - -graphite.querier.schemas.default-storage-aggregations-file=/etc/graphite-proxy/storage-aggregations.conf
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -75,20 +80,12 @@ spec:
             - -blocks-storage.s3.secret-access-key=supersecret
             - -blocks-storage.s3.insecure=true
             {{- end }}
-            {{- if index .Values "memcached-metadata" "enabled" }}
-            - -blocks-storage.bucket-store.metadata-cache.backend=memcached
-            - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-metadata.{{ .Release.Namespace }}.svc:11211
-            - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").maxItemMemory }}
-            {{- end }}
-            {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
-            {{- end }}
-          {{- range $key, $value := .Values.querier.extraArgs }}
+          {{- range $key, $value := .Values.graphite_querier.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
           volumeMounts:
-            {{- if .Values.querier.extraVolumeMounts }}
-              {{ toYaml .Values.querier.extraVolumeMounts | nindent 12}}
+            {{- if .Values.graphite_querier.extraVolumeMounts }}
+              {{ toYaml .Values.graphite_querier.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
@@ -100,7 +97,7 @@ spec:
               mountPath: /license
             - name: storage
               mountPath: "/data"
-              subPath: {{ .Values.querier.persistence.subPath }}
+              subPath: {{ .Values.graphite_querier.persistence.subPath }}
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
@@ -109,27 +106,27 @@ spec:
               containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
-            {{- toYaml .Values.querier.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.graphite_querier.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml .Values.querier.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.graphite_querier.readinessProbe | nindent 12 }}
           resources:
-            {{- toYaml .Values.querier.resources | nindent 12 }}
+            {{- toYaml .Values.graphite_querier.resources | nindent 12 }}
           securityContext:
             readOnlyRootFilesystem: true
           env:
-            {{- if .Values.querier.env }}
-              {{- toYaml .Values.querier.env | nindent 12 }}
+            {{- if .Values.graphite_querier.env }}
+              {{- toYaml .Values.graphite_querier.env | nindent 12 }}
             {{- end }}
-{{- if .Values.querier.extraContainers }}
-{{ toYaml .Values.querier.extraContainers | indent 8}}
+{{- if .Values.graphite_querier.extraContainers }}
+{{ toYaml .Values.graphite_querier.extraContainers | indent 8}}
 {{- end }}
       nodeSelector:
-        {{- toYaml .Values.querier.nodeSelector | nindent 8 }}
+        {{- toYaml .Values.graphite_querier.nodeSelector | nindent 8 }}
       affinity:
-        {{- toYaml .Values.querier.affinity | nindent 8 }}
+        {{- toYaml .Values.graphite_querier.affinity | nindent 8 }}
       tolerations:
-        {{- toYaml .Values.querier.tolerations | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
+        {{- toYaml .Values.graphite_querier.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.graphite_querier.terminationGracePeriodSeconds }}
       volumes:
         - name: config
           secret:
@@ -144,11 +141,12 @@ spec:
         - name: graphite-schemas
           configMap:
             name: {{ template "enterprise-metrics.fullname" . }}-graphite-schemas
-{{- if .Values.querier.extraVolumes }}
-{{ toYaml .Values.querier.extraVolumes | indent 8}}
+{{- if .Values.graphite_querier.extraVolumes }}
+{{ toYaml .Values.graphite_querier.extraVolumes | indent 8}}
 {{- end }}
         - name: license
           secret:
             secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
+{{- end -}}
