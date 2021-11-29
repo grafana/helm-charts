@@ -625,6 +625,7 @@ sidecar:
 #   requests:
 #     cpu: 50m
 #     memory: 50Mi
+  securityContext: {}
   # skipTlsVerify Set to true to skip tls verification for kube api calls
   # skipTlsVerify: true
   enableUniqueFilenames: false

@@ -112,6 +112,10 @@ initContainers:
       {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
+{{- if .Values.sidecar.securityContext }}
+    securityContext:
+{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
@@ -147,6 +151,10 @@ initContainers:
       {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
+{{- if .Values.sidecar.securityContext }}
+    securityContext:
+{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
@@ -205,6 +213,10 @@ containers:
       {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
+{{- if .Values.sidecar.securityContext }}
+    securityContext:
+{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: sc-dashboard-volume
         mountPath: {{ .Values.sidecar.dashboards.folder | quote }}
