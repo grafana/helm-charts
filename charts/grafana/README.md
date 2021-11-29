@@ -536,9 +536,9 @@ If you want to run Grafana in a high availability cluster you need to enable
 the headless service by setting `headlessService: true` in your `values.yaml`
 file.
 
-As next step you have to setup the `grafana.ini` in a way that it will make use
-of the headless service to obtain all the IPs of the cluster. You should replace
-``{{ Name }}`` with the name of your helm deployment.
+As next step you have to setup the `grafana.ini` in your `values.yaml` in a way 
+that it will make use of the headless service to obtain all the IPs of the 
+cluster. You should replace ``{{ Name }}`` with the name of your helm deployment.
 
 ```yaml
 grafana.ini:
