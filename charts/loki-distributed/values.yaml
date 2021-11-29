@@ -14,6 +14,10 @@ global:
 # -- Overrides the chart's name
 nameOverride: null
 
+# -- Loki config as a secrets
+configAsSecret: 
+  enabled: false
+
 # -- Overrides the chart's computed fullname
 fullnameOverride: null
 
