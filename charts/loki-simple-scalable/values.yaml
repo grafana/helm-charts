@@ -77,7 +77,7 @@ loki:
           store: memberlist
       storage:
         filesystem:
-          chunks_directory: /var/loki/chunks,
+          chunks_directory: /var/loki/chunks
           rules_directory: /var/loki/rules
 
     limits_config:
