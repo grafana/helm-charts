@@ -99,7 +99,7 @@ spec:
           {{- if .Values.loki.existingSecretForConfig }}
           secret:
             secretName: {{ .Values.loki.existingSecretForConfig }}
-          {{- else if .Values.configAsSecret }}
+          {{- else if .Values.configAsSecret.enabled }}
           secret:
             secretName: {{ include "loki.fullname" . }}
           {{- else }}
