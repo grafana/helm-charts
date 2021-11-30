@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.3.3
+
+- [BUGFIX] Bumped version of `loki-disctributed` chart to 0.39.3 that defines default WAL location. #863
+
 ## 1.3.2
 
 - [BUGFIX] Fixed issue that caused GEL version not to be updated in the templates of the loki-distributed child chart. #863
