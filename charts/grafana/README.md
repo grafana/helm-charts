@@ -75,6 +75,7 @@ This version requires Helm >= 3.1.0.
 | `service.loadBalancerIP`                  | IP address to assign to load balancer (if supported) | `nil`                                            |
 | `service.loadBalancerSourceRanges`        | list of IP CIDRs allowed access to lb (if supported) | `[]`                                             |
 | `service.externalIPs`                     | service external IP addresses                 | `[]`                                                    |
+| `headlessService`                         | Create a headless service                     | `false`                                                 |
 | `extraExposePorts`                        | Additional service ports for sidecar containers| `[]`                                                   |
 | `hostAliases`                             | adds rules to the pod's /etc/hosts            | `[]`                                                    |
 | `ingress.enabled`                         | Enables Ingress                               | `false`                                                 |
@@ -528,3 +529,23 @@ imageRenderer:
 ### Image Renderer NetworkPolicy
 
 By default the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance
+
+### High Availability for unified alerting
+
+If you want to run Grafana in a high availability cluster you need to enable 
+the headless service by setting `headlessService: true` in your `values.yaml`
+file.
+
+As next step you have to setup the `grafana.ini` in your `values.yaml` in a way 
+that it will make use of the headless service to obtain all the IPs of the 
+cluster. You should replace ``{{ Name }}`` with the name of your helm deployment.
+
+```yaml
+grafana.ini:
+  ...
+  unified_alerting:
+    enabled: true
+    ha_peers: {{ Name }}-headless:9094
+  alerting:
+    enabled: false
+```
