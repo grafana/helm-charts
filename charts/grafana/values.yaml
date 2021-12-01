@@ -672,6 +672,8 @@ sidecar:
       allowUiUpdates: false
       # allow Grafana to replicate dashboard structure from filesystem
       foldersFromFilesStructure: false
+    # Additional dashboard sidecar volume mounts
+    extraMounts: []
   datasources:
     enabled: false
     # label that the configmaps with datasources are marked with
