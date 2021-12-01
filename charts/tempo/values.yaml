@@ -31,6 +31,7 @@ tempo:
   searchEnabled: false
   ingester: {}
   retention: 24h
+  overrides: {}  
 
   # Tempo server configuration
   # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
