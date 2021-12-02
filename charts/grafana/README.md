@@ -234,6 +234,11 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods  | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods   | `false`                          |
 | `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
+| `networkPolicy.enabled`                    | Enable creation of NetworkPolicy resources.                                                                              | `false`             |
+| `networkPolicy.allowExternal`              | Don't require client label for connections                                                                               | `true`              |
+| `networkPolicy.explicitNamespacesSelector` | A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed                           | `{}`                |
+
+
 
 ### Example ingress with path
 
@@ -533,12 +538,12 @@ By default the image-renderer pods will have a network policy which only allows 
 
 ### High Availability for unified alerting
 
-If you want to run Grafana in a high availability cluster you need to enable 
+If you want to run Grafana in a high availability cluster you need to enable
 the headless service by setting `headlessService: true` in your `values.yaml`
 file.
 
-As next step you have to setup the `grafana.ini` in your `values.yaml` in a way 
-that it will make use of the headless service to obtain all the IPs of the 
+As next step you have to setup the `grafana.ini` in your `values.yaml` in a way
+that it will make use of the headless service to obtain all the IPs of the
 cluster. You should replace ``{{ Name }}`` with the name of your helm deployment.
 
 ```yaml
