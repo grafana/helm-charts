@@ -40,6 +40,7 @@ Grafana Tempo Single Binary Mode
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.ingester | object | `{}` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
+| tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
 | tempo.receivers.jaeger.protocols.thrift_binary.endpoint | string | `"0.0.0.0:6832"` |  |
