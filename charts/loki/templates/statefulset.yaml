@@ -58,7 +58,11 @@ spec:
           args:
             - "-config.file=/etc/loki/loki.yaml"
           {{- range $key, $value := .Values.extraArgs }}
+            {{- if eq ($value | quote | len) 2 }}
+            - "-{{ $key }}"
+            {{- else }}
             - "-{{ $key }}={{ $value }}"
+            {{- end }}
           {{- end }}
           volumeMounts:
             {{- if .Values.extraVolumeMounts }}
