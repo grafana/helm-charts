@@ -1,0 +1,585 @@
+---
+global:
+  image:
+    # -- Overrides the Docker registry globally for all images
+    registry: null
+  # -- Overrides the priorityClassName for all pods
+  priorityClassName: null
+  # -- configures cluster domain ("cluster.local" by default)
+  clusterDomain: "cluster.local"
+  # -- configures DNS service name
+  dnsService: "kube-dns"
+  # -- configures DNS service namespace
+  dnsNamespace: "kube-system"
+
+# -- Overrides the chart's name
+nameOverride: null
+
+# -- Overrides the chart's computed fullname
+fullnameOverride: null
+
+# -- Image pull secrets for Docker images
+imagePullSecrets: []
+
+loki:
+  # Configures the readiness probe for all of the Loki pods
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 30
+    timeoutSeconds: 1
+  image:
+    # -- The Docker registry
+    registry: docker.io
+    # -- Docker image repository
+    repository: grafana/loki
+    # -- Overrides the image tag whose default is the chart's appVersion
+    tag: null
+    # -- Docker image pull policy
+    pullPolicy: IfNotPresent
+  # -- Common annotations for all pods
+  podAnnotations: {}
+  # -- The number of old ReplicaSets to retain to allow rollback
+  revisionHistoryLimit: 10
+  # -- The SecurityContext for Loki pods
+  podSecurityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+  # -- The SecurityContext for Loki containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
+  # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
+  existingSecretForConfig: ""
+  # -- Config file contents for Loki
+  # @default -- See values.yaml
+  config:
+    auth_enabled: false
+
+    server:
+      http_listen_port: 3100
+
+    memberlist:
+      join_members:
+        - "{{ include \"loki.fullname\" . }}-memberlist"
+
+    common:
+      path_prefix: /var/loki
+      replication_factor: 1
+      ring:
+        kvstore:
+          store: memberlist
+      storage:
+        filesystem:
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
+
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+      max_cache_freshness_per_query: 10m
+
+    schema_config:
+      configs:
+        - from: 2020-09-07
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+  # -- Common storage config component of loki configuration file.
+  # The must be overriden with a valid object storage backend
+  # in order for queries to work.
+  # @default -- loki.defaultStorageConfig
+  storageConfig: {}
+  # -- Default storage config, used when no loki.storageConfig is provided.
+  # Required for CI, but queries will not work using these defaults.
+  defaultStorageConfig:
+    filesystem:
+      chunks_directory: /var/loki/chunks,
+      rules_directory: /var/loki/rules
+serviceAccount:
+  # -- Specifies whether a ServiceAccount should be created
+  create: true
+  # -- The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+  # -- Image pull secrets for the service account
+  imagePullSecrets: []
+  # -- Annotations for the service account
+  annotations: {}
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: true
+
+# RBAC configuration
+rbac:
+  # -- If enabled, a PodSecurityPolicy is created
+  pspEnabled: false
+
+# ServiceMonitor configuration
+serviceMonitor:
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for ServiceMonitor resources
+  namespace: null
+  # -- Namespace selector for ServiceMonitor resources
+  namespaceSelector: {}
+  # -- ServiceMonitor annotations
+  annotations: {}
+  # -- Additional ServiceMonitor labels
+  labels: {}
+  # -- ServiceMonitor scrape interval
+  interval: null
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+  # -- ServiceMonitor relabel configs to apply to samples before scraping
+  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+  relabelings: []
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: http
+  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+  tlsConfig: null
+
+# Rules for the Prometheus Operator
+prometheusRule:
+  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
+  enabled: false
+  # -- Alternative namespace for the PrometheusRule resource
+  namespace: null
+  # -- PrometheusRule annotations
+  annotations: {}
+  # -- Additional PrometheusRule labels
+  labels: {}
+  # -- Contents of Prometheus rules file
+  groups: []
+  # - name: loki-rules
+  #   rules:
+  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
+# Configuration for the write
+write:
+  # -- Number of replicas for the write
+  replicas: 1
+  image:
+    # -- The Docker registry for the write image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the write image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the write image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for write pods
+  priorityClassName: null
+  # -- Annotations for write pods
+  podAnnotations: {}
+  # -- Labels for ingestor service
+  serviceLabels: {}
+  # -- Additional CLI args for the write
+  extraArgs: []
+  # -- Environment variables to add to the write pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the write pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the write pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the write pods
+  extraVolumes: []
+  # -- Resource requests and limits for the write
+  resources: {}
+  # -- Grace period to allow the write to shutdown before it is killed. Especially for the ingestor,
+  # this must be increased. It must be long enough so writes can be gracefully shutdown flushing/transferring
+  # all data and to successfully leave the member ring on shutdown.
+  terminationGracePeriodSeconds: 300
+  # -- Affinity for write pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.writeSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.writeSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for write pods
+  nodeSelector: {}
+  # -- Tolerations for write pods
+  tolerations: []
+  persistence:
+    # -- Size of persistent disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
+
+# Configuration for the read node(s)
+read:
+  # -- Number of replicas for the read
+  replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the read, this is only used if `queryIndex.enabled: true`
+    enabled: false
+    # -- Minimum autoscaling replicas for the read
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the read
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the read
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the read
+    targetMemoryUtilizationPercentage:
+  image:
+    # -- The Docker registry for the read image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the read image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the read image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for read pods
+  priorityClassName: null
+  # -- Annotations for read pods
+  podAnnotations: {}
+  # -- Labels for read service
+  serviceLabels: {}
+  # -- Additional CLI args for the read
+  extraArgs: []
+  # -- Environment variables to add to the read pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the read pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the read pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the read pods
+  extraVolumes: []
+  # -- Resource requests and limits for the read
+  resources: {}
+  # -- Grace period to allow the read to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # -- Affinity for read pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.readSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.readSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for read pods
+  nodeSelector: {}
+  # -- Tolerations for read pods
+  tolerations: []
+  persistence:
+    # -- Size of persistent disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
+
+# Configuration for the gateway
+gateway:
+  # -- Specifies whether the gateway should be enabled
+  enabled: true
+  # -- Number of replicas for the gateway
+  replicas: 1
+  # -- Enable logging of 2xx and 3xx HTTP requests
+  verboseLogging: true
+  autoscaling:
+    # -- Enable autoscaling for the gateway
+    enabled: false
+    # -- Minimum autoscaling replicas for the gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the gateway
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the gateway
+    targetMemoryUtilizationPercentage:
+  # -- See `kubectl explain deployment.spec.strategy` for more
+  # -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  deploymentStrategy:
+    type: RollingUpdate
+  image:
+    # -- The Docker registry for the gateway image
+    registry: docker.io
+    # -- The gateway image repository
+    repository: nginxinc/nginx-unprivileged
+    # -- The gateway image tag
+    tag: 1.19-alpine
+    # -- The gateway image pull policy
+    pullPolicy: IfNotPresent
+  # -- The name of the PriorityClass for gateway pods
+  priorityClassName: null
+  # -- Annotations for gateway pods
+  podAnnotations: {}
+  # -- Additional CLI args for the gateway
+  extraArgs: []
+  # -- Environment variables to add to the gateway pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the gateway pods
+  extraEnvFrom: []
+  # -- Volumes to add to the gateway pods
+  extraVolumes: []
+  # -- Volume mounts to add to the gateway pods
+  extraVolumeMounts: []
+  # -- The SecurityContext for gateway containers
+  podSecurityContext:
+    fsGroup: 101
+    runAsGroup: 101
+    runAsNonRoot: true
+    runAsUser: 101
+  # -- The SecurityContext for gateway containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
+  # -- Resource requests and limits for the gateway
+  resources: {}
+  # -- Grace period to allow the gateway to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.gatewaySelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.gatewaySelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for gateway pods
+  nodeSelector: {}
+  # -- Tolerations for gateway pods
+  tolerations: []
+  # Gateway service configuration
+  service:
+    # -- Port of the gateway service
+    port: 80
+    # -- Type of the gateway service
+    type: ClusterIP
+    # -- ClusterIP of the gateway service
+    clusterIP: null
+    # -- Node port if service type is NodePort
+    nodePort: null
+    # -- Load balancer IPO address if service type is LoadBalancer
+    loadBalancerIP: null
+    # -- Annotations for the gateway service
+    annotations: {}
+    # -- Labels for gateway service
+    labels: {}
+  # Gateway ingress configuration
+  ingress:
+    # -- Specifies whether an ingress for the gateway should be created
+    enabled: false
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: nginx
+    # -- Annotations for the gateway ingress
+    annotations: {}
+    # -- Hosts configuration for the gateway ingress
+    hosts:
+      - host: gateway.loki.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the gateway ingress
+    tls:
+      - secretName: loki-gateway-tls
+        hosts:
+          - gateway.loki.example.com
+  # Basic auth configuration
+  basicAuth:
+    # -- Enables basic authentication for the gateway
+    enabled: false
+    # -- The basic auth username for the gateway
+    username: null
+    # -- The basic auth password for the gateway
+    password: null
+    # -- Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function.
+    # The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes
+    # high CPU load.
+    htpasswd: >-
+      {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
+    # -- Existing basic auth secret to use. Must contain '.htpasswd'
+    existingSecret: null
+  # Configures the readiness probe for the gateway
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 15
+    timeoutSeconds: 1
+  nginxConfig:
+    # -- NGINX log format
+    logFormat: |-
+      main '$remote_addr - $remote_user [$time_local]  $status '
+              '"$request" $body_bytes_sent "$http_referer" '
+              '"$http_user_agent" "$http_x_forwarded_for"';
+    # -- Allows appending custom configuration to the server block
+    serverSnippet: ""
+    # -- Allows appending custom configuration to the http block
+    httpSnippet: ""
+    # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
+    # @default -- See values.yaml
+    file: |
+      worker_processes  5;  ## Default: 1
+      error_log  /dev/stderr;
+      pid        /tmp/nginx.pid;
+      worker_rlimit_nofile 8192;
+
+      events {
+        worker_connections  4096;  ## Default: 1024
+      }
+
+      http {
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path       /tmp/proxy_temp_path;
+        fastcgi_temp_path     /tmp/fastcgi_temp;
+        uwsgi_temp_path       /tmp/uwsgi_temp;
+        scgi_temp_path        /tmp/scgi_temp;
+
+        default_type application/octet-stream;
+        log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+
+        {{- if .Values.gateway.verboseLogging }}
+        access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   /dev/stderr  main  if=$loggable;
+        {{- end }}
+
+        sendfile     on;
+        tcp_nopush   on;
+        resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+
+        {{- with .Values.gateway.nginxConfig.httpSnippet }}
+        {{ . | nindent 2 }}
+        {{- end }}
+
+        server {
+          listen             8080;
+
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Loki";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
+
+          location = / {
+            return 200 'OK';
+            auth_basic off;
+          }
+
+          location = /api/prom/push {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /api/prom/tail {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
+
+          location ~ /api/prom/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /loki/api/v1/push {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /loki/api/v1/tail {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
+
+          location ~ /loki/api/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
+        }
+      }
+
+networkPolicy:
+  # -- Specifies whether Network Policies should be created
+  enabled: false
+  metrics:
+    # -- Specifies the Pods which are allowed to access the metrics port.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespaces which are allowed to access the metrics port
+    namespaceSelector: {}
+    # -- Specifies specific network CIDRs which are allowed to access the metrics port.
+    # In case you use namespaceSelector, you also have to specify your kubelet networks here.
+    # The metrics ports are also used for probes.
+    cidrs: []
+  ingress:
+    # -- Specifies the Pods which are allowed to access the http port.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespaces which are allowed to access the http port
+    namespaceSelector: {}
+  alertmanager:
+    # -- Specify the alertmanager port used for alerting
+    port: 9093
+    # -- Specifies the alertmanager Pods.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespace the alertmanager is running in
+    namespaceSelector: {}
+  externalStorage:
+    # -- Specify the port used for external storage, e.g. AWS S3
+    ports: []
+    # -- Specifies specific network CIDRs you want to limit access to
+    cidrs: []
+  discovery:
+    # -- Specify the port used for discovery
+    port: null
+    # -- Specifies the Pods labels used for discovery.
+    # As this is cross-namespace communication, you also need the namespaceSelector.
+    podSelector: {}
+    # -- Specifies the namespace the discovery Pods are running in
+    namespaceSelector: {}
