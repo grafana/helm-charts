@@ -10,6 +10,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.7.1
+
+* [BUGFIX] Remove chunks related default limits. #867
+
 ## 1.7.0
 
 * [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.6.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v161----november-18th-2021). #839
