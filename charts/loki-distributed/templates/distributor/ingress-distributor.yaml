@@ -1,0 +1,55 @@
+{{- if .Values.distributor.enabled -}}
+{{- if .Values.distributor.ingress.enabled -}}
+{{- $ingressApiIsStable := eq (include "loki.ingress.isStable" .) "true" -}}
+{{- $ingressSupportsIngressClassName := eq (include "loki.ingress.supportsIngressClassName" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "loki.ingress.supportsPathType" .) "true" -}}
+apiVersion: {{ include "loki.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "loki.distributorFullname" . }}
+  labels:
+    {{- include "loki.distributorLabels" . | nindent 4 }}
+  {{- with .Values.distributor.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and $ingressSupportsIngressClassName .Values.distributor.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.distributor.ingress.ingressClassName }}
+  {{- end -}}
+  {{- if .Values.distributor.ingress.tls }}
+  tls:
+    {{- range .Values.distributor.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- with .secretName }}
+      secretName: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.distributor.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if $ingressSupportsPathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if $ingressApiIsStable }}
+              service:
+                name: {{ include "loki.distributorFullname" $ }}
+                port:
+                  number: {{ $.Values.distributor.service.port }}
+              {{- else }}
+              serviceName: {{ include "loki.distributorFullname" $ }}
+              servicePort: {{ $.Values.distributor.service.port }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}

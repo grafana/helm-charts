@@ -348,6 +348,26 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
+  # Distributor ingress configuration
+  ingress:
+    # -- Specifies whether an ingress for the gateway should be created
+    enabled: false
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: nginx
+    # -- Annotations for the gateway ingress
+    annotations: {}
+    # -- Hosts configuration for the gateway ingress
+    hosts:
+      - host: distributor.loki.example.com
+        paths:
+          - path: /ring
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Exact
+    # -- TLS configuration for the gateway ingress
+    tls:
+      - secretName: loki-distributor-tls
+        hosts:
+          - gateway.distributor.example.com
 
 # Configuration for the querier
 querier:
