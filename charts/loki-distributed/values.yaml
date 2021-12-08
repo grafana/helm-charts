@@ -276,8 +276,8 @@ ingester:
   # -- Tolerations for ingester pods
   tolerations: []
   persistence:
-    # -- Enable creating PVCs which is required when using boltdb-shipper
-    enabled: false
+    # -- Enable creating PVCs which is required when using boltdb-shipper and/or WAL (write ahead log)
+    enabled: true
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
