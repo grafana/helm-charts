@@ -4,6 +4,15 @@ nameOverride: null
 # -- Overrides the chart's computed fullname
 fullnameOverride: null
 
+daemonset:
+  # -- Deploys Promtail as a DaemonSet
+  enabled: true
+
+deployment:
+  # -- Deploys Promtail as a Deployment
+  enabled: false
+  replicaCount: 1
+
 initContainer:
   # -- Specifies whether the init container for setting inotify max user instances is to be enabled
   enabled: false
