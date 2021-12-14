@@ -276,6 +276,7 @@ persistence:
   type: pvc
   enabled: false
   # storageClassName: default
+  snapShotName: ""
   accessModes:
     - ReadWriteOnce
   size: 10Gi
