@@ -214,14 +214,14 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
-      {{- if not .Values.env.GF_SECURITY_ADMIN_USER }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
             name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.userKey | default "admin-user" }}
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_PASSWORD
         valueFrom:
           secretKeyRef:
