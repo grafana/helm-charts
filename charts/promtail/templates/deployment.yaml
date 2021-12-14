@@ -11,7 +11,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if not .Values.deployment.autoscaling.enabled }}
   replicas: {{ .Values.deployment.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "promtail.selectorLabels" . | nindent 6 }}

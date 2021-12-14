@@ -79,6 +79,11 @@ The new release which will pick up again from the existing `positions.yaml`.
 | daemonset.enabled | bool | `true` | Deploys Promtail as a DaemonSet |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
+| deployment.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for the deployment |
+| deployment.autoscaling.maxReplicas | int | `10` |  |
+| deployment.autoscaling.minReplicas | int | `1` |  |
+| deployment.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
 | deployment.replicaCount | int | `1` |  |
 | extraArgs | list | `[]` |  |
