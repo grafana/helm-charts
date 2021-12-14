@@ -15,16 +15,16 @@ metadata:
 {{ toYaml . | indent 4 }}
   {{- end }}
 spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
   {{- if .Values.persistence.snapShotName }}
   dataSource:
     name: {{ .Values.persistence.snapShotName }}
     kind: VolumeSnapshot
     apiGroup: snapshot.storage.k8s.io
   {{- end -}}
-  accessModes:
-    {{- range .Values.persistence.accessModes }}
-    - {{ . | quote }}
-    {{- end }}
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
