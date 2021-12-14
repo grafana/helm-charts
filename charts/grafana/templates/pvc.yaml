@@ -15,6 +15,12 @@ metadata:
 {{ toYaml . | indent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.persistence.snapShotName }}
+  dataSource:
+    name: {{ .Values.persistence.snapShotName }}
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+  {{- end -}}
   accessModes:
     {{- range .Values.persistence.accessModes }}
     - {{ . | quote }}
