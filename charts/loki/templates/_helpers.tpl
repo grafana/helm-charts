@@ -64,7 +64,7 @@ Create the app name of loki clients. Defaults to the same logic as "loki.fullnam
 Generate a right Ingress apiVersion
 */}}
 {{- define "ingress.apiVersion" -}}
-{{- if semverCompare ">=1.22-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.20-0" .Capabilities.KubeVersion.GitVersion -}}
 "networking.k8s.io/v1"
 {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 "networking.k8s.io/v1beta1"
