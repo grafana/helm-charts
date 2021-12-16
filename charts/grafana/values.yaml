@@ -788,3 +788,6 @@ networkPolicy:
   ##    - {key: role, operator: In, values: [frontend]}
   ##
   explicitNamespacesSelector: {}
+
+# Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
+enableKubeBackwardCompatibility: false
