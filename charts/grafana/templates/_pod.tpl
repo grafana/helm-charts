@@ -125,7 +125,9 @@ imagePullSecrets:
   - name: {{ . }}
 {{- end}}
 {{- end }}
+{{- if not .Values.enableKubeBackwardCompatibility }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
+{{- end }}
 containers:
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ template "grafana.name" . }}-sc-dashboard
