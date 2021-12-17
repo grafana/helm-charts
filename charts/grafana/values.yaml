@@ -728,6 +728,7 @@ imageRenderer:
     HTTP_HOST: "0.0.0.0"
     # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
+    # IGNORE_HTTPS_ERRORS: true
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
   # image-renderer deployment securityContext
@@ -744,6 +745,8 @@ imageRenderer:
     # image-renderer service port used by both service and deployment
     port: 8081
     targetPort: 8081
+  # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
+  grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
   grafanaSubPath: ""
   # name of the image-renderer port on the pod

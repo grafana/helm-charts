@@ -227,8 +227,9 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
-| `imageRenderer.service.portName`           | image-renderer service port name                                                   | `'http'`                         |
+| `imageRenderer.service.portName`           | image-renderer service port name                                                   | `http`                           |
 | `imageRenderer.service.port`               | image-renderer service port used by both service and deployment                    | `8081`                           |
+| `imageRenderer.grafanaProtocol`            | Protocol to use for image renderer callback url                                    | `http`                         |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |
 | `imageRenderer.podPortName`                | name of the image-renderer port on the pod                                         | `http`                           |
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
