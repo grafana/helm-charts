@@ -124,7 +124,7 @@ tolerations:
 defaultVolumes:
   - name: containers
     hostPath:
-      path: /data/docker/containers
+      path: /var/lib/docker/containers
   - name: pods
     hostPath:
       path: /var/log/pods
@@ -133,7 +133,7 @@ defaultVolumes:
 # @default -- See `values.yaml`
 defaultVolumeMounts:
   - name: containers
-    mountPath: /data/docker/containers
+    mountPath: /var/lib/docker/containers
     readOnly: true
   - name: pods
     mountPath: /var/log/pods
