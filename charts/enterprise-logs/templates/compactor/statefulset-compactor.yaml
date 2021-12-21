@@ -129,7 +129,7 @@ spec:
               mountPath: /etc/enterprise-logs/license
             - name: storage
               mountPath: /data
-              subPath: {{ .Values.gateway.persistence.subPath }}
+              subPath: {{ .Values.compactor.persistentVolume.subPath }}
             {{- if .Values.compactor.extraVolumeMounts }}
             {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12 }}
             {{- end }}
