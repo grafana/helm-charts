@@ -98,8 +98,8 @@ spec:
           {{- end }}
         - name: storage
           emptyDir: {}
-        {{- if .Values.gateway.extraVolumes }}
-        {{ toYaml .Values.gateway.extraVolumes | nindent 8 }}
+        {{- if .Values.compactor.extraVolumes }}
+        {{ toYaml .Values.compactor.extraVolumes | nindent 8 }}
         {{- end }}
       containers:
         {{- if .Values.compactor.extraContainers }}
@@ -130,8 +130,8 @@ spec:
             - name: storage
               mountPath: /data
               subPath: {{ .Values.gateway.persistence.subPath }}
-            {{- if .Values.gateway.extraVolumeMounts }}
-            {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
+            {{- if .Values.compactor.extraVolumeMounts }}
+            {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12 }}
             {{- end }}
           ports:
             - name: http-metrics
