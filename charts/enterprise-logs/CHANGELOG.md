@@ -13,6 +13,7 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## Unreleased
 
+- [BUGFIX] Fixed issue that prevented users from mouting extra persistent volumes for the compactor.
 - [CHANGE] Configure `securityContext.fsGroup` value for Admin API pod based on the value `adminApi.securityContext.runAsGroup`.
 
 ## 1.3.4
