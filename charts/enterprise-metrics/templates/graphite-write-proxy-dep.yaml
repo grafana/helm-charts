@@ -1,0 +1,136 @@
+{{- if .Values.graphite.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "enterprise-metrics.fullname" . }}-graphite-write-proxy
+  labels:
+    app: {{ template "enterprise-metrics.name" . }}-graphite-write-proxy
+    chart: {{ template "enterprise-metrics.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    {{- toYaml .Values.graphite_write_proxy.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.graphite_write_proxy.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "enterprise-metrics.name" . }}-graphite-write-proxy
+      release: {{ .Release.Name }}
+  strategy:
+    {{- toYaml .Values.graphite_write_proxy.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "enterprise-metrics.name" . }}-graphite-write-proxy
+        # The name label is important for cortex-mixin compatibility which expects certain names for services.
+        name: graphite-querier
+        gossip_ring_member: "true"
+        target: querier
+        release: {{ .Release.Name }}
+        {{- with .Values.graphite_write_proxy.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+{{- if .Values.useExternalConfig }}
+        checksum/config: {{ .Values.externalConfigVersion }}
+{{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- end}}
+        {{- with .Values.graphite_write_proxy.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
+    {{- if .Values.graphite_write_proxy.priorityClassName }}
+      priorityClassName: {{ .Values.graphite_write_proxy.priorityClassName }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.graphite_write_proxy.securityContext | nindent 8 }}
+      initContainers:
+        {{- toYaml .Values.graphite_write_proxy.initContainers | nindent 8 }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - -target=graphite-write-proxy
+            - -license.path=/license/license.jwt
+            - -server.http-listen-port={{ .Values.config.server.http_listen_port }}
+            - -graphite.enabled=true
+            - -graphite.write-proxy.distributor-client.address=dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
+          {{- range $key, $value := .Values.graphite_write_proxy.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.graphite_write_proxy.extraVolumeMounts }}
+              {{ toYaml .Values.graphite_write_proxy.extraVolumeMounts | nindent 12}}
+            {{- end }}
+            - name: config
+              mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
+            - name: graphite-schemas
+              mountPath: /etc/graphite-proxy
+            - name: license
+              mountPath: /license
+            - name: storage
+              mountPath: "/data"
+              subPath: {{ .Values.graphite_write_proxy.persistence.subPath }}
+          ports:
+            - name: http-metrics
+              containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.graphite_write_proxy.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.graphite_write_proxy.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.graphite_write_proxy.resources | nindent 12 }}
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+            {{- if .Values.graphite_write_proxy.env }}
+              {{- toYaml .Values.graphite_write_proxy.env | nindent 12 }}
+            {{- end }}
+{{- if .Values.graphite_write_proxy.extraContainers }}
+{{ toYaml .Values.graphite_write_proxy.extraContainers | indent 8}}
+{{- end }}
+      nodeSelector:
+        {{- toYaml .Values.graphite_write_proxy.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.graphite_write_proxy.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.graphite_write_proxy.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.graphite_write_proxy.terminationGracePeriodSeconds }}
+      volumes:
+        - name: config
+          secret:
+{{- if .Values.useExternalConfig }}
+            secretName: {{ .Values.externalConfigSecretName }}
+{{- else }}
+            secretName: {{ template "enterprise-metrics.fullname" . }}
+{{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
+        - name: graphite-schemas
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-graphite-schemas
+{{- if .Values.graphite_write_proxy.extraVolumes }}
+{{ toYaml .Values.graphite_write_proxy.extraVolumes | indent 8}}
+{{- end }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        - name: storage
+          emptyDir: {}
+{{- end -}}
