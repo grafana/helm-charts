@@ -6,7 +6,7 @@ dependencies:
 - name: "promtail"
   condition: promtail.enabled
   repository: "https://grafana.github.io/helm-charts"
-  version: "^2.2.0"
+  version: "^3.0.0"
 - name: "fluent-bit"
   condition: fluent-bit.enabled
   repository: "https://grafana.github.io/helm-charts"
