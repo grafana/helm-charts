@@ -12,7 +12,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 1.7.2
 
-* [CHANGE] The Ingester statefulset now uses podManagementPolicy Parallel. #920
+* [CHANGE] The Ingester statefulset now uses podManagementPolicy Parallel, upgrading requires recreating the statefulset #920
 
 ## 1.7.1
 
