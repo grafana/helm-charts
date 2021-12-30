@@ -14,6 +14,9 @@ metadata:
   annotations:
     {{- toYaml .Values.service.annotations | nindent 4 }}
 spec:
+{{- if .Values.service.loadBalancerSourceRanges }}
+   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+{{- end }}
   type: {{ .Values.service.type }}
 {{- if (and (eq .Values.service.type "ClusterIP") (not (empty .Values.service.clusterIP))) }}
   clusterIP: {{ .Values.service.clusterIP }}
