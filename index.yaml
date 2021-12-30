@@ -151,6 +151,39 @@ entries:
   enterprise-metrics:
   - apiVersion: v2
     appVersion: v1.6.1
+    created: "2021-12-30T12:47:03.647773425Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    description: Grafana Enterprise Metrics
+    digest: b6a12ae9daa0b54077fdee9277f01f64c24c22e49df20ccf45e7284d454c320d
+    home: https://grafana.com/products/enterprise/metrics
+    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+    kubeVersion: ^1.10.0-0
+    name: enterprise-metrics
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/enterprise-metrics-1.7.2/enterprise-metrics-1.7.2.tgz
+    version: 1.7.2
+  - apiVersion: v2
+    appVersion: v1.6.1
     created: "2021-12-07T09:58:15.215068659Z"
     dependencies:
     - alias: memcached
@@ -18535,4 +18568,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2021-12-18T01:42:19.253301627Z"
+generated: "2021-12-30T12:47:03.658925127Z"
