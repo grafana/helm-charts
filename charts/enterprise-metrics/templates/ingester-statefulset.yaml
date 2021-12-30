@@ -11,6 +11,7 @@ metadata:
   annotations:
     {{- toYaml .Values.ingester.annotations | nindent 4 }}
 spec:
+  podManagementPolicy: Parallel
   replicas: {{ .Values.ingester.replicas }}
   selector:
     matchLabels:
