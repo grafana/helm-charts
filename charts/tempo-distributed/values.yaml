@@ -244,6 +244,9 @@ querier:
   extraVolumeMounts: []
   # -- Extra volumes for querier deployment
   extraVolumes: []
+  config:
+    # -- grpc client configuration
+    grpc_client_config: {}
 
 # Configuration for the query-frontend
 queryFrontend:
