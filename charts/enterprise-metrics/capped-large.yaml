@@ -151,3 +151,33 @@ store_gateway:
     limits:
       cpu: 1
       memory: 6Gi
+
+graphite_querier:
+  replicas: 6
+  resources:
+    limits:
+      cpu: 1
+      memory: 12Gi
+    requests:
+      cpu: 1
+      memory: 12Gi
+
+graphite_write_proxy:
+  replicas: 6
+  resources:
+    limits:
+      cpu: 1
+      memory: 8Gi
+    requests:
+      cpu: 1
+      memory: 8Gi
+
+graphite_web:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1
+      memory: 8Gi
+    requests:
+      cpu: 1
+      memory: 8Gi
