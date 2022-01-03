@@ -1097,12 +1097,12 @@ minio:
   secretKey: supersecret
 
 graphite:
-  # If true, enables graphite querier and graphite writer functionality.
+  # If true, enables graphite querier and graphite write proxy functionality.
   # Read more in https://grafana.com/docs/metrics-enterprise/latest/graphite/
-  enabled: true # TODO(jesus.vazquez) Set to false before merge, also propagate config to small.yaml and large.yaml
+  enabled: false
 
 graphite_querier:
-  replicas: 1 #TODO(jesus.vazquez) Leave this to two replicas
+  replicas: 2
 
   service:
     annotations: {}
@@ -1165,7 +1165,7 @@ graphite_querier:
   extraPorts: []
 
 graphite_write_proxy:
-  replicas: 1 #TODO(jesus.vazquez) Leave this to two replicas
+  replicas: 2
 
   service:
     annotations: {}
@@ -1196,7 +1196,7 @@ graphite_write_proxy:
                 - key: target
                   operator: In
                   values:
-                    - graphite-querier
+                    - graphite-write-proxy
             topologyKey: 'kubernetes.io/hostname'
 
   annotations: {}
