@@ -41,7 +41,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: distributor
           image: {{ include "loki.distributorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

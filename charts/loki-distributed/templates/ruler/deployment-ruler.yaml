@@ -40,7 +40,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.ruler.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: ruler
           image: {{ include "loki.rulerImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
