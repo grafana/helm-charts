@@ -13,10 +13,14 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## Unreleased
 
-## 1.3.4
+## 1.3.5
 
 - [BUGFIX] Use correct subPath configuration for the compactor's storage mount. #915
 - [BUGFIX] Fixed issue that prevented users from mouting extra persistent volumes for the compactor. #915
+
+## 1.3.4
+
+- [CHANGE] Remove selector and config hash annotations from the tokengen job that make it hard to update the helm chart after deploying that job
 
 ## 1.3.3
 

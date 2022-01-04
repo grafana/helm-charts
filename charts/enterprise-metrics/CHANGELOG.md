@@ -10,6 +10,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.7.2
+
+* [CHANGE] The Ingester statefulset now uses podManagementPolicy Parallel, upgrading requires recreating the statefulset #920
+
 ## 1.7.1
 
 * [BUGFIX] Remove chunks related default limits. #867
