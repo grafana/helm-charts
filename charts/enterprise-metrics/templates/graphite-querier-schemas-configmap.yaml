@@ -9,14 +9,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+{{- range  $storageSchemas := toStrings .Values.graphite_querier.schemasConfiguration.storageSchemas }}
   storage-schemas.conf: |
-    [default]
-    pattern = {{ .Values.graphite_querier.schemasConfiguration.storageSchemas.pattern }}
-    intervals = {{ .Values.graphite_querier.schemasConfiguration.storageSchemas.intervals }}
-    retentions = {{ .Values.graphite_querier.schemasConfiguration.storageSchemas.retentions }}
+{{ $storageSchemas | indent 4}}
+{{- end }}
+
+{{- range  $storageAggregations := toStrings .Values.graphite_querier.schemasConfiguration.storageAggregations }}
   storage-aggregations.conf: |
-    [default]
-    aggregationMethod = {{ .Values.graphite_querier.schemasConfiguration.storageAggregations.aggregationMethod }}
-    pattern = {{ .Values.graphite_querier.schemasConfiguration.storageAggregations.patern }}
-    xFilesFactor = {{ .Values.graphite_querier.schemasConfiguration.storageAggregations.xFilesFactor }}
+{{ $storageAggregations | indent 4}}
+{{- end }}
 {{- end -}}
