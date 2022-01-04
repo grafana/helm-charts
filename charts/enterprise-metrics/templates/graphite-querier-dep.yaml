@@ -24,7 +24,6 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-graphite-querier
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: graphite-querier
-        gossip_ring_member: "true"
         target: querier
         release: {{ .Release.Name }}
         {{- with .Values.graphite_querier.podLabels }}
