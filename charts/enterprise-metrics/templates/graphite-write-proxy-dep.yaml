@@ -75,8 +75,6 @@ spec:
               mountPath: /etc/enterprise-metrics
             - name: runtime-config
               mountPath: /var/enterprise-metrics
-            - name: graphite-schemas
-              mountPath: /etc/graphite-proxy
             - name: license
               mountPath: /license
             - name: storage
@@ -122,9 +120,6 @@ spec:
         - name: runtime-config
           configMap:
             name: {{ template "enterprise-metrics.fullname" . }}-runtime
-        - name: graphite-schemas
-          configMap:
-            name: {{ template "enterprise-metrics.fullname" . }}-graphite-schemas
 {{- if .Values.graphite_write_proxy.extraVolumes }}
 {{ toYaml .Values.graphite_write_proxy.extraVolumes | indent 8}}
 {{- end }}
