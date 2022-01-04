@@ -56,7 +56,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - -target=graphite-querier
-            - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml # TODO(jesus.vazquez) Remove when metrics enterprise v1.6.2 is released
+            - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
             - -graphite.enabled=true
             - -graphite.querier.remote-read-enabled=true
             - -graphite.querier.query-address=http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/api/prom
