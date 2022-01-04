@@ -66,9 +66,9 @@ spec:
     protocol: TCP
     targetPort: 55680
   - name: tempo-otlp-http
-    port: 55681
+    port: 4318
     protocol: TCP
-    targetPort: 55681
+    targetPort: 4318
   - name: tempo-otlp-grpc
     port: 4317
     protocol: TCP
