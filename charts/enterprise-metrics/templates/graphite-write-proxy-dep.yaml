@@ -22,9 +22,6 @@ spec:
     metadata:
       labels:
         app: {{ template "enterprise-metrics.name" . }}-graphite-write-proxy
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: graphite-querier
-        target: querier
         release: {{ .Release.Name }}
         {{- with .Values.graphite_write_proxy.podLabels }}
         {{- toYaml . | nindent 8 }}
