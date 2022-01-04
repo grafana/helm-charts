@@ -1099,7 +1099,7 @@ minio:
 graphite:
   # If true, enables graphite querier and graphite write proxy functionality.
   # Read more in https://grafana.com/docs/metrics-enterprise/latest/graphite/
-  enabled: true #TODO(jesus.vazquez) Don't commit this
+  enabled: false
 
 graphite_querier:
   replicas: 2
