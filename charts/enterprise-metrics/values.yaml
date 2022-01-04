@@ -1099,10 +1099,20 @@ minio:
 graphite:
   # If true, enables graphite querier and graphite write proxy functionality.
   # Read more in https://grafana.com/docs/metrics-enterprise/latest/graphite/
-  enabled: false
+  enabled: true #TODO(jesus.vazquez) Don't commit this
 
 graphite_querier:
   replicas: 2
+
+  schemasConfiguration:
+    storageSchemas:
+      pattern: ".*"
+      intervals: "0:1s"
+      retentions: "10s:8d,10min:1y"
+    storageAggregations:
+      aggregationMethod: "avg"
+      pattern: ".*"
+      xFilesFactor: "0.1"
 
   service:
     annotations: {}

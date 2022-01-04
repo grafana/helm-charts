@@ -11,12 +11,12 @@ metadata:
 data:
   storage-schemas.conf: |
     [default]
-    pattern = .*
-    intervals = 0:1s
-    retentions = 10s:8d,10min:1y
+    pattern = {{ .Values.graphite_querier.schemasConfiguration.storageSchemas.pattern }}
+    intervals = {{ .Values.graphite_querier.schemasConfiguration.storageSchemas.intervals }}
+    retentions = {{ .Values.graphite_querier.schemasConfiguration.storageSchemas.retentions }}
   storage-aggregations.conf: |
     [default]
-    aggregationMethod = avg
-    pattern = .*
-    xFilesFactor = 0.1
+    aggregationMethod = {{ .Values.graphite_querier.schemasConfiguration.storageAggregations.aggregationMethod }}
+    pattern = {{ .Values.graphite_querier.schemasConfiguration.storageAggregations.patern }}
+    xFilesFactor = {{ .Values.graphite_querier.schemasConfiguration.storageAggregations.xFilesFactor }}
 {{- end -}}
