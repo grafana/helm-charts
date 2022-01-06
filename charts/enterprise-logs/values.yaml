@@ -56,7 +56,7 @@ license:
   contents: "NOTAVALIDLICENSE"
 
 # -- Grafana Enterprise Logs configuration file
-config:
+config: |
   auth:
     type: enterprise
   auth_enabled: true
