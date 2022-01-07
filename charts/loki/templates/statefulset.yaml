@@ -73,7 +73,7 @@ spec:
             - name: scratch
               mountPath: /tmp/scratch
             - name: rules
-              mountPath: /rules
+              mountPath: /rules/fake
             {{- end }}
           ports:
             - name: http-metrics
