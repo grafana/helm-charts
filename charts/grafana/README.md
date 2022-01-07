@@ -528,7 +528,7 @@ This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Pr
 
 ## Image Renderer Plug-In
 
-This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/docs/remote_rendering_using_docker.md)
+This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/README.md#run-in-docker)
 
 ```yaml
 imageRenderer:
