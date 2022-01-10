@@ -103,6 +103,8 @@ spec:
         - name: storage
           emptyDir: {}
         {{- end }}
+        - name: tmp
+          emptyDir: {}
         {{- if .Values.alertmanager.extraVolumes }}
         {{ toYaml .Values.alertmanager.extraVolumes | nindent 8 }}
         {{- end }}
@@ -155,6 +157,8 @@ spec:
               subPath: {{ .Values.alertmanager.persistentVolume.subPath }}
               {{- else }}
               {{- end }}
+            - name: tmp
+              mountPath: /tmp
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}

@@ -1,0 +1,11 @@
+{{- if not .Values.loki.existingSecretForConfig -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "loki.fullname" . }}
+  labels:
+    {{- include "loki.labels" . | nindent 4 }}
+data:
+  config.yaml: |
+    {{- tpl (toYaml .Values.loki.config) . | nindent 4 }}
+{{- end -}}
