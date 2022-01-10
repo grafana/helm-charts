@@ -1054,6 +1054,12 @@ spec:
                 required:
                 - host
                 type: object
+              args:
+                description: Args controls command line additional arguments sent
+                  to the Agent pod.
+                items:
+                  type: string
+                type: array
               configMaps:
                 description: ConfigMaps is a liset of config maps in the same namespace
                   as the GrafanaAgent object which will be mounted into each running
