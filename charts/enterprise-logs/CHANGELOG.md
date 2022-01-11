@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## Unreleased
+
+- [CHANGE] Configure `securityContext.fsGroup` value for Admin API pod based on the value `adminApi.securityContext.runAsGroup`.
+
 ## 1.3.4
 
 - [CHANGE] Remove selector and config hash annotations from the tokengen job that make it hard to update the helm chart after deploying that job
