@@ -173,6 +173,9 @@ serviceMonitor:
   interval: null
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
+  # -- ServiceMonitor relabel configs to apply to samples before scraping
+  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+  relabelings: []
 
 # -- Configure additional ports and services. For each configured port, a corresponding service is created.
 # See values.yaml for details

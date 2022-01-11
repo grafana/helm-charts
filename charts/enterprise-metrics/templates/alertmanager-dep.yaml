@@ -88,6 +88,8 @@ spec:
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.alertmanager.persistence.subPath }}
+            - name: tmp
+              mountPath: /tmp
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
@@ -132,5 +134,7 @@ spec:
           secret:
             secretName: {{ .Values.license.secretName }}
         - name: storage
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}
 {{- end -}}
