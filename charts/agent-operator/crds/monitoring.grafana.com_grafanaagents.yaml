@@ -1055,6 +1055,10 @@ spec:
                 - host
                 type: object
               args:
+                default:
+                - -config.file=/var/lib/grafana-agent/config/agent.yml
+                - -config.expand-env=true
+                - -reload-port=8081
                 description: Args controls command line additional arguments sent
                   to the Agent pod.
                 items:
