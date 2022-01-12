@@ -11515,6 +11515,24 @@ entries:
     version: 0.5.0
   loki-canary:
   - apiVersion: v2
+    appVersion: 2.4.2
+    created: "2022-01-12T18:06:48.421657174Z"
+    description: Helm chart for Grafana Loki Canary
+    digest: e3addb14f31b3c6f036d4f25b360d25f8ad4ae8513ef069e118e4d257d0d6a77
+    home: https://github.com/grafana/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-canary
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.6.0/loki-canary-0.6.0.tgz
+    version: 0.6.0
+  - apiVersion: v2
     appVersion: 2.4.1
     created: "2021-11-08T13:32:59.058381653Z"
     description: Helm chart for Grafana Loki Canary
@@ -12524,24 +12542,6 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.19.4/loki-distributed-0.19.4.tgz
     version: 0.19.4
   loki-simple-scalable:
-  - apiVersion: v2
-    appVersion: 2.4.2
-    created: "2022-01-12T18:05:40.868143106Z"
-    description: Helm chart for Grafana Loki in simple, scalable mode
-    digest: ff28e20a40224c84617a7e843ee793f5bdc7e0765e1f1bcf13c06c97e4b470cd
-    home: https://grafana.github.io/helm-charts
-    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
-    maintainers:
-    - name: trevorwhitney
-    name: loki-simple-scalable
-    sources:
-    - https://github.com/grafana/loki
-    - https://grafana.com/oss/loki/
-    - https://grafana.com/docs/loki/latest/
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/loki-simple-scalable-0.2.0/loki-simple-scalable-0.2.0.tgz
-    version: 0.2.0
   - apiVersion: v2
     appVersion: 2.4.1
     created: "2021-12-06T23:51:17.690887215Z"
@@ -18891,4 +18891,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-12T18:05:40.879192934Z"
+generated: "2022-01-12T18:06:48.430420723Z"
