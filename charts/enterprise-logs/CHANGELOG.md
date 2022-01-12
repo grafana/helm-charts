@@ -13,6 +13,8 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## Unreleased
 
+## 1.3.5
+
 - [BUGFIX] Use correct subPath configuration for the compactor's storage mount.
 - [BUGFIX] Fixed issue that prevented users from mouting extra persistent volumes for the compactor.
 - [CHANGE] Configure `securityContext.fsGroup` value for Admin API pod based on the value `adminApi.securityContext.runAsGroup`.
