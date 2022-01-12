@@ -245,8 +245,9 @@ querier:
   # -- Extra volumes for querier deployment
   extraVolumes: []
   config:
-    # -- grpc client configuration
-    grpc_client_config: {}
+    frontend_worker:
+      # -- grpc client configuration
+      grpc_client_config: {}
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -414,9 +415,9 @@ config: |
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
-      {{- if .Values.querier.config.grpc_client_config }}
+      {{- if .Values.querier.config.frontend_worker.grpc_client_config }}
       grpc_client_config:
-        {{- toYaml .Values.querier.config.grpc_client_config | nindent 6 }}
+        {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
       {{- end }}
   ingester:
     lifecycler:
