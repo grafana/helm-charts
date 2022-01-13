@@ -73,13 +73,12 @@ spec:
             - -blocks-storage.s3.access-key-id=enterprise-metrics
             - -blocks-storage.s3.secret-access-key=supersecret
             - -blocks-storage.s3.insecure=true
-            - -ruler.storage.type=s3
-            - -ruler.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -ruler.storage.s3.buckets=enterprise-metrics-ruler
-            - -ruler.storage.s3.access-key-id=enterprise-metrics
-            - -ruler.storage.s3.secret-access-key=supersecret
-            - -ruler.storage.s3.insecure=true
-            - -ruler.storage.s3.force-path-style=true
+            - -ruler-storage.backend=s3
+            - -ruler-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -ruler-storage.s3.bucket-name=enterprise-metrics-ruler
+            - -ruler-storage.s3.access-key-id=enterprise-metrics
+            - -ruler-storage.s3.secret-access-key=supersecret
+            - -ruler-storage.s3.insecure=true
            {{- end }}
             {{- if .Values.config.ruler.enable_alertmanager_discovery }}
             - "-ruler.alertmanager-discovery=true"

@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.6.1
+  tag: r168-eb3f021e # TODO This needs to be replaced with v2.0 when it's released
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -74,7 +74,6 @@ config:
     path: "/license/license.jwt"
 
   ingester:
-    max_transfer_retries: 0
     lifecycler:
       join_after: 0s
       final_sleep: 0s
@@ -125,7 +124,6 @@ config:
       health_check_ingesters: true
 
   querier:
-    active_query_tracker_dir: /data/enterprise-metrics/querier
     query_ingesters_within: 12h
 
   query_range:

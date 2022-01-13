@@ -58,7 +58,6 @@ spec:
             - -target=graphite-querier
             - -config.file=/etc/enterprise-metrics/enterprise-metrics.yaml
             - -graphite.enabled=true
-            - -graphite.querier.remote-read-enabled=true
             - -graphite.querier.query-address=http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}/api/prom
             - -graphite.querier.graphite-fallback=http://{{ template "enterprise-metrics.fullname" . }}-graphite-web.{{ .Release.Namespace}}.svc:{{ .Values.config.server.http_listen_port }}
             - -graphite.querier.schemas.default-storage-schemas-file=/etc/graphite-proxy/storage-schemas.conf
