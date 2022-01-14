@@ -12,6 +12,7 @@ grafana:
   sidecar:
     datasources:
       enabled: true
+      maxLines: 1000
   image:
     tag: 8.1.6
 

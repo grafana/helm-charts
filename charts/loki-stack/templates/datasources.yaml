@@ -20,6 +20,8 @@ data:
       access: proxy
       url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
       version: 1
+      jsonData:
+        maxLines: {{ .Values.grafana.sidecar.datasources.enabled }}
 {{- end }}
 {{- if .Values.prometheus.enabled }}
     - name: Prometheus
