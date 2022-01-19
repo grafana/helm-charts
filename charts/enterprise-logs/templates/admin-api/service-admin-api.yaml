@@ -15,11 +15,11 @@ spec:
   type: ClusterIP
   ports:
     - name: http-metrics
-      port: {{ .Values.config.server.http_listen_port }}
+      port: 3100
       protocol: TCP
       targetPort: http-metrics
     - name: grpc
-      port: {{ .Values.config.server.grpc_listen_port }}
+      port: 9095
       protocol: TCP
       targetPort: grpc
   selector:
