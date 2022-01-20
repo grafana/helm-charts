@@ -84,6 +84,8 @@ loki:
       chunk_encoding: snappy
       chunk_retain_period: 1m
       max_transfer_retries: 0
+      wal:
+        dir: /var/loki/wal
 
     limits_config:
       enforce_metric_name: false
@@ -107,6 +109,10 @@ loki:
         active_index_directory: /var/loki/index
         cache_location: /var/loki/cache
         cache_ttl: 168h
+        {{- if .Values.indexGateway.enabled }}
+        index_gateway_client:
+          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
+        {{- end }}
       filesystem:
         directory: /var/loki/chunks
 
@@ -284,6 +290,17 @@ ingester:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the distributor
+    enabled: false
+    # -- Minimum autoscaling replicas for the distributor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the distributor
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the distributor
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the distributor
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
@@ -336,6 +353,17 @@ distributor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true`
+    enabled: false
+    # -- Minimum autoscaling replicas for the querier
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the querier
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the querier
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the querier
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
@@ -399,6 +427,17 @@ querier:
 queryFrontend:
   # -- Number of replicas for the query-frontend
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the query-frontend
+    enabled: false
+    # -- Minimum autoscaling replicas for the query-frontend
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the query-frontend
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the query-frontend
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the query-frontend
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
@@ -505,6 +544,19 @@ gateway:
   enabled: true
   # -- Number of replicas for the gateway
   replicas: 1
+  # -- Enable logging of 2xx and 3xx HTTP requests
+  verboseLogging: true
+  autoscaling:
+    # -- Enable autoscaling for the gateway
+    enabled: false
+    # -- Minimum autoscaling replicas for the gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the gateway
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the gateway
+    targetMemoryUtilizationPercentage:
   # -- See `kubectl explain deployment.spec.strategy` for more
   # -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
@@ -658,7 +710,18 @@ gateway:
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+
+        {{- if .Values.gateway.verboseLogging }}
         access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   /dev/stderr  main  if=$loggable;
+        {{- end }}
+
         sendfile     on;
         tcp_nopush   on;
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
@@ -904,6 +967,71 @@ ruler:
     #           expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
     #           for: 2m
 
+# Configuration for the index-gateway
+indexGateway:
+  # -- Specifies whether the index-gateway should be enabled
+  enabled: false
+  # -- Number of replicas for the index-gateway
+  replicas: 1
+  image:
+    # -- The Docker registry for the index-gateway image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the index-gateway image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the index-gateway image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for index-gateway pods
+  priorityClassName: null
+  # -- Annotations for index-gateway pods
+  podAnnotations: {}
+  # -- Labels for index-gateway service
+  serviceLabels: {}
+  # -- Additional CLI args for the index-gateway
+  extraArgs: []
+  # -- Environment variables to add to the index-gateway pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the index-gateway pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the index-gateway pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the index-gateway pods
+  extraVolumes: []
+  # -- Resource requests and limits for the index-gateway
+  resources: {}
+  # -- Grace period to allow the index-gateway to shutdown before it is killed.
+  terminationGracePeriodSeconds: 300
+  # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.indexGatewaySelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.indexGatewaySelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for index-gateway pods
+  nodeSelector: {}
+  # -- Tolerations for index-gateway pods
+  tolerations: []
+  persistence:
+    # -- Enable creating PVCs which is required when using boltdb-shipper
+    enabled: false
+    # -- Size of persistent disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
+
 memcached:
   image:
     # -- The Docker registry for the memcached
@@ -955,7 +1083,8 @@ memcachedChunks:
   # -- Labels for memcached-chunks service
   serviceLabels: {}
   # -- Additional CLI args for memcached-chunks
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-chunks pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-chunks pods
@@ -997,7 +1126,8 @@ memcachedFrontend:
   # -- Labels for memcached-frontend service
   serviceLabels: {}
   # -- Additional CLI args for memcached-frontend
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-frontend pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-frontend pods
@@ -1039,7 +1169,8 @@ memcachedIndexQueries:
   # -- Labels for memcached-index-queries service
   serviceLabels: {}
   # -- Additional CLI args for memcached-index-queries
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-index-queries pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-index-queries pods
@@ -1081,7 +1212,8 @@ memcachedIndexWrites:
   # -- Labels for memcached-index-writes service
   serviceLabels: {}
   # -- Additional CLI args for memcached-index-writes
-  extraArgs: []
+  extraArgs:
+    - -I 32m
   # -- Environment variables to add to memcached-index-writes pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached-index-writes pods

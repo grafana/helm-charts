@@ -1,0 +1,24 @@
+# Test values to limit the load during CI
+compactor:
+  persistentVolume:
+    enabled: false
+
+loki-distributed:
+  ingester:
+    persistence:
+      enabled: false
+  distributor:
+    persistence:
+      enabled: false
+  ruler:
+    persistence:
+      enabled: false
+  querier:
+    persistence:
+      enabled: false
+  queryFrontend:
+    persistence:
+      enabled: false
+  indexGateway:
+    persistence:
+      enabled: false

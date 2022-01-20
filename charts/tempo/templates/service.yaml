@@ -35,6 +35,9 @@ spec:
   - name: tempo-prom-metrics
     port: 3100
     targetPort: 3100
+  - name: jaeger-metrics
+    port: 16687
+    targetPort: 16687
   - name: tempo-query-jaeger-ui
     port: 16686
     targetPort: 16686
@@ -63,9 +66,9 @@ spec:
     protocol: TCP
     targetPort: 55680
   - name: tempo-otlp-http
-    port: 55681
+    port: 4318
     protocol: TCP
-    targetPort: 55681
+    targetPort: 4318
   - name: tempo-otlp-grpc
     port: 4317
     protocol: TCP

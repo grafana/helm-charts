@@ -3,7 +3,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "tempo.fullname" $ }}-distributor
+  name: {{ include "tempo.distributorFullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
@@ -31,6 +31,10 @@ spec:
       {{- end }}
       {{- with .scrapeTimeout }}
       scrapeTimeout: {{ . }}
+      {{- end }}
+      {{- with .relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .scheme }}
       scheme: {{ . }}

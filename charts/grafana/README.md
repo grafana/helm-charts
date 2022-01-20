@@ -59,8 +59,8 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.0.3`                                                 |
-| `image.sha`                               | Image sha (optional)                          | `80c6d6ac633ba5ab3f722976fb1d9a138f87ca6a9934fcd26a5fc28cbde7dbfa` |
+| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.2.5`                                                 |
+| `image.sha`                               | Image sha (optional)                          | `2acf04c016c77ca2e89af3536367ce847ee326effb933121881c7c89781051d3` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
@@ -75,6 +75,7 @@ This version requires Helm >= 3.1.0.
 | `service.loadBalancerIP`                  | IP address to assign to load balancer (if supported) | `nil`                                            |
 | `service.loadBalancerSourceRanges`        | list of IP CIDRs allowed access to lb (if supported) | `[]`                                             |
 | `service.externalIPs`                     | service external IP addresses                 | `[]`                                                    |
+| `headlessService`                         | Create a headless service                     | `false`                                                 |
 | `extraExposePorts`                        | Additional service ports for sidecar containers| `[]`                                                   |
 | `hostAliases`                             | adds rules to the pod's /etc/hosts            | `[]`                                                    |
 | `ingress.enabled`                         | Enables Ingress                               | `false`                                                 |
@@ -90,7 +91,7 @@ This version requires Helm >= 3.1.0.
 | `tolerations`                             | Toleration labels for pod assignment          | `[]`                                                    |
 | `affinity`                                | Affinity settings for pod assignment          | `{}`                                                    |
 | `extraInitContainers`                     | Init containers to add to the grafana pod     | `{}`                                                    |
-| `extraContainers`                         | Sidecar containers to add to the grafana pod  | `{}`                                                    |
+| `extraContainers`                         | Sidecar containers to add to the grafana pod  | `""`                                                    |
 | `extraContainerVolumes`                   | Volumes that can be mounted in sidecar containers | `[]`                                                |
 | `extraLabels`                             | Custom labels for all manifests               | `{}`                                                    |
 | `schedulerName`                           | Name of the k8s scheduler (other than default) | `nil`                                                  |
@@ -137,11 +138,12 @@ This version requires Helm >= 3.1.0.
 | `podLabels`                               | Pod labels                                    | `{}`                                                    |
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
 | `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.12.2`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.12.3`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
-| `sidecar.enableUniqueFilenames`           | Sets the kiwigrid/k8s-sidecar UNIQUE_FILENAMES environment variable | `false`                           |
+| `sidecar.securityContext`                 | Sidecar securityContext                       | `{}`                                                    |
+| `sidecar.enableUniqueFilenames`           | Sets the kiwigrid/k8s-sidecar UNIQUE_FILENAMES environment variable. If set to `true` the sidecar will create unique filenames where duplicate data keys exist between ConfigMaps and/or Secrets within the same or multiple Namespaces. | `false`                           |
 | `sidecar.dashboards.enabled`              | Enables the cluster wide search for dashboards and adds/updates/deletes them in grafana | `false`       |
 | `sidecar.dashboards.SCProvider`           | Enables creation of sidecar provider          | `true`                                                  |
 | `sidecar.dashboards.provider.name`        | Unique name of the grafana provider           | `sidecarProvider`                                       |
@@ -158,16 +160,19 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.folder`               | Folder in the pod that should hold the collected dashboards (unless `sidecar.dashboards.defaultFolderName` is set). This path will be mounted. | `/tmp/dashboards`    |
 | `sidecar.dashboards.folderAnnotation`     | The annotation the sidecar will look for in configmaps to override the destination folder for files | `nil`                                                  |
 | `sidecar.dashboards.defaultFolderName`    | The default folder name, it will create a subfolder under the `sidecar.dashboards.folder` and put dashboards in there instead | `nil`                                |
-| `sidecar.dashboards.searchNamespace`      | If specified, the sidecar will search for dashboard config-maps inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                                |
+| `sidecar.dashboards.searchNamespace`      | Namespaces list. If specified, the sidecar will search for dashboards config-maps  inside these namespaces.Otherwise the namespace in which the sidecar is running will be used.It's also possible to specify ALL to search in all namespaces. | `nil`                                |
+| `sidecar.dashboards.script`               | Absolute path to shell script to execute after a configmap got reloaded. | `nil`                                |
 | `sidecar.dashboards.resource`             | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
+| `sidecar.dashboards.extraMounts`          | Additional dashboard sidecar volume mounts. | `[]`                               |
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
 | `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
 | `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `nil`                                |
-| `sidecar.datasources.searchNamespace`     | If specified, the sidecar will search for datasources config-maps inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                               |
+| `sidecar.datasources.searchNamespace`     | Namespaces list. If specified, the sidecar will search for datasources config-maps  inside these namespaces.Otherwise the namespace in which the sidecar is running will be used.It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.datasources.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
+| `sidecar.datasources.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/datasources/reload"` |
 | `sidecar.notifiers.enabled`               | Enables the cluster wide search for notifiers and adds/updates/deletes them in grafana | `false`        |
 | `sidecar.notifiers.label`                 | Label that config maps with notifiers should have to be added | `grafana_notifier`                               |
-| `sidecar.notifiers.searchNamespace`       | If specified, the sidecar will search for notifiers config-maps (or secrets) inside this namespace. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces | `nil`                               |
+| `sidecar.notifiers.searchNamespace`       | Namespaces list. If specified, the sidecar will search for notifiers config-maps (or secrets) inside these namespaces.Otherwise the namespace in which the sidecar is running will be used.It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.notifiers.resource`              | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `smtp.existingSecret`                     | The name of an existing secret containing the SMTP credentials. | `""`                                  |
 | `smtp.userKey`                            | The key in the existing SMTP secret containing the username. | `"user"`                                 |
@@ -175,6 +180,7 @@ This version requires Helm >= 3.1.0.
 | `admin.existingSecret`                    | The name of an existing secret containing the admin credentials. | `""`                                 |
 | `admin.userKey`                           | The key in the existing admin secret containing the username. | `"admin-user"`                          |
 | `admin.passwordKey`                       | The key in the existing admin secret containing the password. | `"admin-password"`                      |
+| `serviceAccount.autoMount`                | Automount the service account token in the pod| `true`                                                  |
 | `serviceAccount.annotations`              | ServiceAccount annotations                    |                                                         |
 | `serviceAccount.create`                   | Create service account                        | `true`                                                  |
 | `serviceAccount.name`                     | Service account name to use, when empty will be set to created account if `serviceAccount.create` is set else to `default` | `` |
@@ -189,7 +195,7 @@ This version requires Helm >= 3.1.0.
 | `command`                     | Define command to be executed by grafana container at startup  | `nil`                                              |
 | `testFramework.enabled`                   | Whether to create test-related resources      | `true`                                                  |
 | `testFramework.image`                     | `test-framework` image repository.            | `bats/bats`                                             |
-| `testFramework.tag`                       | `test-framework` image tag.                   | `v1.1.0`                                                |
+| `testFramework.tag`                       | `test-framework` image tag.                   | `v1.4.1`                                                |
 | `testFramework.imagePullPolicy`           | `test-framework` image pull policy.           | `IfNotPresent`                                          |
 | `testFramework.securityContext`           | `test-framework` securityContext              | `{}`                                                    |
 | `downloadDashboards.env`                  | Environment variables to be passed to the `download-dashboards` container | `{}`                        |
@@ -221,14 +227,21 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
-| `imageRenderer.service.portName`           | image-renderer service port name                                                   | `'http'`                         |
+| `imageRenderer.service.portName`           | image-renderer service port name                                                   | `http`                           |
 | `imageRenderer.service.port`               | image-renderer service port used by both service and deployment                    | `8081`                           |
+| `imageRenderer.grafanaProtocol`            | Protocol to use for image renderer callback url                                    | `http`                         |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |
 | `imageRenderer.podPortName`                | name of the image-renderer port on the pod                                         | `http`                           |
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods  | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods   | `false`                          |
 | `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
+| `networkPolicy.enabled`                    | Enable creation of NetworkPolicy resources.                                                                              | `false`             |
+| `networkPolicy.allowExternal`              | Don't require client label for connections                                                                               | `true`              |
+| `networkPolicy.explicitNamespacesSelector` | A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed                           | `{}`                |
+| `enableKubeBackwardCompatibility`          | Enable backward compatibility of kubernetes where pod's defintion version below 1.13 doesn't have the enableServiceLinks option  | `false`     |
+
+
 
 ### Example ingress with path
 
@@ -489,10 +502,10 @@ Include in the `extraSecretMounts` configuration flag:
 ```yaml
 - extraSecretMounts:
   - name: auth-generic-oauth-secret-mount
-     secretName: auth-generic-oauth-secret
-     defaultMode: 0440
-     mountPath: /etc/secrets/auth_generic_oauth
-     readOnly: true
+    secretName: auth-generic-oauth-secret
+    defaultMode: 0440
+    mountPath: /etc/secrets/auth_generic_oauth
+    readOnly: true
 ```
 
 ### extraSecretMounts using a Container Storage Interface (CSI) provider
@@ -515,7 +528,7 @@ This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Pr
 
 ## Image Renderer Plug-In
 
-This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/docs/remote_rendering_using_docker.md)
+This chart supports enabling [remote image rendering](https://github.com/grafana/grafana-image-renderer/blob/master/README.md#run-in-docker)
 
 ```yaml
 imageRenderer:
@@ -525,3 +538,23 @@ imageRenderer:
 ### Image Renderer NetworkPolicy
 
 By default the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance
+
+### High Availability for unified alerting
+
+If you want to run Grafana in a high availability cluster you need to enable
+the headless service by setting `headlessService: true` in your `values.yaml`
+file.
+
+As next step you have to setup the `grafana.ini` in your `values.yaml` in a way
+that it will make use of the headless service to obtain all the IPs of the
+cluster. You should replace ``{{ Name }}`` with the name of your helm deployment.
+
+```yaml
+grafana.ini:
+  ...
+  unified_alerting:
+    enabled: true
+    ha_peers: {{ Name }}-headless:9094
+  alerting:
+    enabled: false
+```

@@ -45,11 +45,11 @@ spec:
       {{- end }}
       {{- if .Values.imageRenderer.securityContext }}
       securityContext:
-      {{ toYaml .Values.imageRenderer.securityContext | indent 2 }}
+        {{- toYaml .Values.imageRenderer.securityContext | nindent 8 }}
       {{- end }}
       {{- if .Values.imageRenderer.hostAliases }}
       hostAliases:
-      {{ toYaml .Values.imageRenderer.hostAliases | indent 2 }}
+        {{- toYaml .Values.imageRenderer.hostAliases | nindent 8 }}
       {{- end }}
       {{- if .Values.imageRenderer.priorityClassName }}
       priorityClassName: {{ .Values.imageRenderer.priorityClassName }}
@@ -78,6 +78,10 @@ spec:
             - name: {{ .Values.imageRenderer.service.portName }}
               containerPort: {{ .Values.imageRenderer.service.port }}
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.imageRenderer.service.portName }}
           env:
             - name: HTTP_PORT
               value: {{ .Values.imageRenderer.service.port | quote }}

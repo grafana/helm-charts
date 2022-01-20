@@ -1,6 +1,6 @@
 image:
   repository: grafana/loki
-  tag: 2.2.1
+  tag: 2.4.2
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -12,6 +12,9 @@ image:
 
 ingress:
   enabled: false
+  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+  # ingressClassName: nginx
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -44,12 +47,15 @@ tracing:
   jaegerAgentHost:
 
 config:
+  # existingSecret:
   auth_enabled: false
   ingester:
     chunk_idle_period: 3m
     chunk_block_size: 262144
     chunk_retain_period: 1m
     max_transfer_retries: 0
+    wal:
+      dir: /data/loki/wal
     lifecycler:
       ring:
         kvstore:

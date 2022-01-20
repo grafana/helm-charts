@@ -1,0 +1,9 @@
+dependencies:
+- name: loki-distributed
+  repository: https://grafana.github.io/helm-charts
+  version: 0.39.3
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.9
+digest: sha256:6158172124f81a657a4652eba44e6187120311154755cd3497a2501e9e41fd3f
+generated: "2021-11-30T16:46:51.046894+02:00"
