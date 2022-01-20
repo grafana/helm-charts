@@ -6,7 +6,9 @@ metadata:
     {{- include "loki.readLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
+  {{- if not .Values.read.autoscaling.enabled }}
   replicas: {{ .Values.read.replicas }}
+  {{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:

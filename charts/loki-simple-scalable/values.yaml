@@ -173,6 +173,17 @@ prometheusRule:
 write:
   # -- Number of replicas for the write
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the write
+    enabled: false
+    # -- Minimum autoscaling replicas for the write
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the write
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the write
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the write
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null

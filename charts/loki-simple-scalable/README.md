@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -157,6 +157,11 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | write.affinity | string | Hard node and soft zone anti-affinity | Affinity for write pods. Passed through `tpl` and, thus, to be configured as string |
+| write.autoscaling.enabled | bool | `false` | Enable autoscaling for the write |
+| write.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the write |
+| write.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the write |
+| write.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the write |
+| write.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the write |
 | write.extraArgs | list | `[]` | Additional CLI args for the write |
 | write.extraEnv | list | `[]` | Environment variables to add to the write pods |
 | write.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the write pods |
