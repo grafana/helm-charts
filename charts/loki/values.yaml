@@ -227,6 +227,7 @@ serviceMonitor:
   additionalLabels: {}
   annotations: {}
   # scrapeTimeout: 10s
+  # path: /metrics
 
 initContainers: []
 ## Init containers to be added to the loki pod.
