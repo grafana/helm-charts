@@ -478,7 +478,6 @@ server:
   grpc_server_max_recv_msg_size: 4194304
   # -- Max gRPC message size that can be sent
   grpc_server_max_send_msg_size: 4194304
-  
 # To configure a different storage backend instead of local storage:
 # storage:
 #   trace:
