@@ -690,6 +690,7 @@ sidecar:
     resource: both
     # Endpoint to send request to reload datasources
     reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
+    skipReload: false
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
