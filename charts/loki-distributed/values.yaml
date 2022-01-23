@@ -93,28 +93,18 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
 
+    {{- if .Values.loki.schemaConfig}}
     schema_config:
-      configs:
-        - from: 2020-09-07
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
-
+    {{- toYaml .Values.loki.schemaConfig | nindent 2}}
+    {{- end}}
+    {{- if .Values.loki.storageConfig}}
     storage_config:
-      boltdb_shipper:
-        shared_store: filesystem
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/cache
-        cache_ttl: 168h
-        {{- if .Values.indexGateway.enabled }}
-        index_gateway_client:
-          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
-        {{- end }}
-      filesystem:
-        directory: /var/loki/chunks
+    {{- toYaml .Values.loki.storageConfig | nindent 2}}
+    {{- if .Values.indexGateway.enabled}}
+      index_gateway_client:
+        server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
+    {{- end}}
+    {{- end}}
 
     chunk_store_config:
       max_look_back_period: 0s
@@ -157,6 +147,32 @@ loki:
       rule_path: /tmp/loki/scratch
       alertmanager_url: https://alertmanager.xx
       external_url: https://alertmanager.xx
+
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
+  schemaConfig:
+    configs:
+    - from: 2020-09-07
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
+
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
+  storageConfig:
+    boltdb_shipper:
+      shared_store: filesystem
+      active_index_directory: /var/loki/index
+      cache_location: /var/loki/cache
+      cache_ttl: 168h
+    filesystem:
+      directory: /var/loki/chunks
+# -- Uncomment to configure each storage individually
+#   azure: {}
+#   gcs: {}
+#   s3: {}
+#   boltdb: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
