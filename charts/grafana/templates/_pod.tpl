@@ -230,10 +230,12 @@ containers:
             name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.passwordKey | default "admin-password" }}
       {{- end }}
+      {{- if not .Values.sidecar.datasources.skipReload }}
       - name: REQ_URL
         value: {{ .Values.sidecar.datasources.reloadURL }}
       - name: REQ_METHOD
         value: POST
+      {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}

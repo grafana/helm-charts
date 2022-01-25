@@ -13,6 +13,10 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## Unreleased
 
+## 1.4.0
+
+- [CHANGE] Bump GEL version to v1.3.0
+
 ## 1.3.5
 
 - [BUGFIX] Use correct subPath configuration for the compactor's storage mount.
