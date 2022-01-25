@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.41.0](https://img.shields.io/badge/Version-0.41.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 0.42.0](https://img.shields.io/badge/Version-0.42.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -24,7 +24,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
-### From 0.40.x to 0.41.0
+### From 0.41.x to 0.42.0
 All containers were previously named "loki". This version changes the container names to make the chart compatible with the loki-mixin. Now the container names correctly reflect the component (querier, distributor, ingester, ...). If you are using custom prometheus rules that use the container name you probably have to change them.
 
 ### From 0.34.x to 0.35.0

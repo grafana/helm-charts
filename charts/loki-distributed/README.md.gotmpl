@@ -22,7 +22,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
-### From 0.40.x to 0.41.0
+### From 0.41.x to 0.42.0
 All containers were previously named "loki". This version changes the container names to make the chart compatible with the loki-mixin. Now the container names correctly reflect the component (querier, distributor, ingester, ...). If you are using custom prometheus rules that use the container name you probably have to change them.
 
 ### From 0.34.x to 0.35.0
