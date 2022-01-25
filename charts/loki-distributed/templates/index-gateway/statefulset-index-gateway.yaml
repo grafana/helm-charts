@@ -38,7 +38,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.indexGateway.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: index-gateway
           image: {{ include "loki.indexGatewayImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
