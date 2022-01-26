@@ -6,6 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ template "grafana.name" . }}
     helm.sh/chart: {{ template "grafana.chart" . }}
+    app.kubernetes.io/component: grafana
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
