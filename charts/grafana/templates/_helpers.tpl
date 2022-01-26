@@ -82,7 +82,6 @@ Selector labels
 {{- define "grafana.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "grafana.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: grafana
 {{- end -}}
 
 {{/*
@@ -103,7 +102,6 @@ Selector labels ImageRenderer
 {{- define "grafana.imageRenderer.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "grafana.name" . }}-image-renderer
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: grafana
 {{- end -}}
 
 {{/*
