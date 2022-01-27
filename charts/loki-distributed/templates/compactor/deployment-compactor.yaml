@@ -25,6 +25,12 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.compactorSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.compactor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.compactorServiceAccountName" . }}
       {{- with .Values.imagePullSecrets }}

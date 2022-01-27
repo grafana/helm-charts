@@ -28,6 +28,12 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.queryFrontendSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.queryFrontend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}

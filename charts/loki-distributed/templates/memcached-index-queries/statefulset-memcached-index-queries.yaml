@@ -28,6 +28,12 @@ spec:
       {{- end }}
       labels:
         {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.memcachedIndexQueries.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
