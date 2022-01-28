@@ -493,7 +493,7 @@ storage:
     backend: local
 
 # Global overrides
-global_overrides: 
+global_overrides:
   per_tenant_override_config: /conf/overrides.yaml
 
 # Per tenants overrides
