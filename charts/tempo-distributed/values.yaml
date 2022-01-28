@@ -431,7 +431,7 @@ config: |
     join_members:
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
-    per_tenant_override_config: /conf/overrides.yaml
+    {{- toYaml .Values.global_overrides | nindent 2 }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
@@ -492,7 +492,11 @@ storage:
   trace:
     backend: local
 
-# Set ingestion overrides
+# Global overrides
+global_overrides:
+  per_tenant_override_config: /conf/overrides.yaml
+
+# Per tenants overrides
 overrides: |
   overrides: {}
 
