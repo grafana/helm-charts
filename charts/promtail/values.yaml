@@ -379,3 +379,15 @@ networkPolicy:
     port: 8443
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
+
+# -- Extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: promtail-secrets
+  #   spec:
+  #     backendType: gcpSecretsManager
+  #     data:
+  #       - key: promtail-oauth2-creds
+  #         name: client_secret
