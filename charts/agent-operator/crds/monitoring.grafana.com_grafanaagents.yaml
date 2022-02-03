@@ -2204,9 +2204,9 @@ spec:
                   type: object
                 type: array
               enableConfigReadAPI:
-                default: "False"
+                default: false
                 description: enableConfigReadAPI enables the read API for viewing
-                  currently running config on the agent.
+                  currently running config port 8080 on the agent.
                 type: boolean
               image:
                 description: Image, when specified, overrides the image used to run
