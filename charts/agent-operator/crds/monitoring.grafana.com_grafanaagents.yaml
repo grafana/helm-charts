@@ -1054,16 +1054,6 @@ spec:
                 required:
                 - host
                 type: object
-              args:
-                default:
-                - -config.file=/var/lib/grafana-agent/config/agent.yml
-                - -config.expand-env=true
-                - -reload-port=8081
-                description: Args controls command line additional arguments sent
-                  to the Agent pod.
-                items:
-                  type: string
-                type: array
               configMaps:
                 description: ConfigMaps is a liset of config maps in the same namespace
                   as the GrafanaAgent object which will be mounted into each running
@@ -2213,6 +2203,11 @@ spec:
                   - name
                   type: object
                 type: array
+              enableConfigReadAPI:
+                default: "False"
+                description: enableConfigReadAPI enables the read API for viewing
+                  currently running config on the agent.
+                type: boolean
               image:
                 description: Image, when specified, overrides the image used to run
                   the Agent. It should be specified along with a tag. Version must
