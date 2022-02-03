@@ -174,6 +174,8 @@ loki:
 #   s3: {}
 #   boltdb: {}
 
+  # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
+  structuredConfig: {}
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
