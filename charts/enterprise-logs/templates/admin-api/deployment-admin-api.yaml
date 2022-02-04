@@ -41,8 +41,10 @@ spec:
       {{- if .Values.adminApi.priorityClassName }}
       priorityClassName: {{ .Values.adminApi.priorityClassName }}
       {{- end }}
+      {{- if .Values.adminApi.securityContext.runAsGroup }}
       securityContext:
-        fsGroup: 10001
+        fsGroup: {{ .Values.adminApi.securityContext.runAsGroup | int }}
+      {{- end}}
       initContainers:
       # Taken from
       # https://github.com/minio/charts/blob/a5c84bcbad884728bff5c9c23541f936d57a13b3/minio/templates/post-install-create-bucket-job.yaml
@@ -101,10 +103,10 @@ spec:
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: 3100
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946

@@ -42,7 +42,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: querier
           image: {{ include "loki.querierImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

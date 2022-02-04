@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.39.5](https://img.shields.io/badge/Version-0.39.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 0.43.0](https://img.shields.io/badge/Version-0.43.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.41.x to 0.42.0
+All containers were previously named "loki". This version changes the container names to make the chart compatible with the loki-mixin. Now the container names correctly reflect the component (querier, distributor, ingester, ...). If you are using custom prometheus rules that use the container name you probably have to change them.
 
 ### From 0.34.x to 0.35.0
 This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
@@ -188,6 +191,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `loki.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
+| ingester.kind | string | `"StatefulSet"` | Kind of deployment [StatefulSet/Deployment] |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -213,6 +217,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.readinessProbe.initialDelaySeconds | int | `30` |  |
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
+| loki.schemaConfig | object | `{"configs":[{"from":"2020-09-07","index":{"period":"24h","prefix":"loki_index_"},"object_store":"filesystem","schema":"v11","store":"boltdb-shipper"}]}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
+| loki.storageConfig | object | `{"boltdb_shipper":{"active_index_directory":"/var/loki/index","cache_location":"/var/loki/cache","cache_ttl":"168h","shared_store":"filesystem"},"filesystem":{"directory":"/var/loki/chunks"}}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
+| loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
 | memcached.image.registry | string | `"docker.io"` | The Docker registry for the memcached |
@@ -454,26 +461,9 @@ Alternatively, in order to quickly test Loki using the filestore, the [single bi
 
 ### Example configuration using memberlist, boltdb-shipper, and S3 for storage
 
-Note that `loki.config` must be configured as string.
-That's required because it is passed through the `tpl` function in order to support templating.
-This means that a complete configuration needs to be supplied to the charts which is a good thing anyways.
-Also, this allows using a separate YAML file which can be passed in using `--set-file loki.config=/path/to/config.yaml`.
-
 ```yaml
 loki:
-  config: |
-    auth_enabled: false
-
-    server:
-      log_level: info
-      # Must be set to 3100
-      http_listen_port: 3100
-
-    distributor:
-      ring:
-        kvstore:
-          store: memberlist
-
+  structuredConfig:
     ingester:
       # Disable chunk transfer which is not possible with statefulsets
       # and unnecessary for boltdb-shipper
@@ -481,22 +471,12 @@ loki:
       chunk_idle_period: 1h
       chunk_target_size: 1536000
       max_chunk_age: 1h
-      lifecycler:
-        join_after: 0s
-        ring:
-          kvstore:
-            store: memberlist
-
-    memberlist:
-      join_members:
-        - {{ include "loki.fullname" . }}-memberlist
-
-    limits_config:
-      ingestion_rate_mb: 10
-      ingestion_burst_size_mb: 20
-      max_concurrent_tail_requests: 20
-      max_cache_freshness_per_query: 10m
-
+    storage_config:
+      aws:
+        s3: s3://eu-central-1
+        bucketnames: my-loki-s3-bucket
+    boltdb_shipper:
+      shared_storage: s3
     schema_config:
       configs:
         - from: 2020-09-07
@@ -506,43 +486,26 @@ loki:
           index:
             prefix: loki_index_
             period: 24h
-
-    storage_config:
-      aws:
-        s3: s3://eu-central-1
-        bucketnames: my-loki-s3-bucket
-      boltdb_shipper:
-        active_index_directory: /var/loki/index
-        shared_store: s3
-        cache_location: /var/loki/cache
-        index_gateway_client:
-          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
-
-    query_range:
-      # make queries more cache-able by aligning them with their step intervals
-      align_queries_with_step: true
-      max_retries: 5
-      # parallelize queries in 15min intervals
-      split_queries_by_interval: 15m
-      cache_results: true
-
-      results_cache:
-        cache:
-          enable_fifocache: true
-          fifocache:
-            max_size_items: 1024
-            validity: 24h
-
-    frontend_worker:
-      frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
-
-    frontend:
-      log_queries_longer_than: 5s
-      compress_responses: true
-      tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 ```
 
-Because the config file is templated, it is also possible to e.g. externalize S3 bucket names:
+The above configuration selectively overrides default values found in the `loki.config` template file.
+
+Using `loki.structuredConfig` it is possible to externally set most any configuration parameter (special considerations for elements of an array).
+
+```
+helm upgrade loki --install -f values.yaml --set loki.structuredConfig.storage_config.aws.bucketnames=my-loki-bucket
+```
+
+`loki.config`, `loki.schemaConfig` and `loki.storageConfig` may also be used in conjuction with `loki.structuredConfig`. Values found in `loki.structuredConfig` will take precedence. Array values, such as those found in `loki.schema_config` will be overridden wholesale and not amended to.
+
+For `loki.schema_config` its generally expected that this will always be configured per usage as its values over time are in reference to the history of loki schema versions and schema configurations throughout the lifetime of a given loki instance.
+
+Note that when using `loki.config` must be configured as string.
+That's required because it is passed through the `tpl` function in order to support templating.
+
+When using `loki.config` the passed in template must include template sections for `loki.schemaConfig` and `loki.storageConfig` for those to continue to work as expected.
+
+Because the config file is templated, it is also possible to reference other values provided to helm e.g. externalize S3 bucket names:
 
 ```yaml
 loki:
