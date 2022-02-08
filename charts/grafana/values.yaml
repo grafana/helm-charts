@@ -73,7 +73,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.3.1
+  tag: 8.3.4
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -618,7 +618,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.14.2
+    tag: 1.15.1
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -685,9 +685,12 @@ sidecar:
     # It's also possible to specify ALL to search in all namespaces
     searchNamespace: null
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
-    watchMethod: LIST
+    watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    # Endpoint to send request to reload datasources
+    reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
+    skipReload: false
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
@@ -726,6 +729,7 @@ imageRenderer:
     HTTP_HOST: "0.0.0.0"
     # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
+    # IGNORE_HTTPS_ERRORS: true
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
   # image-renderer deployment securityContext
@@ -742,6 +746,8 @@ imageRenderer:
     # image-renderer service port used by both service and deployment
     port: 8081
     targetPort: 8081
+  # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
+  grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
   grafanaSubPath: ""
   # name of the image-renderer port on the pod
@@ -786,3 +792,18 @@ networkPolicy:
   ##    - {key: role, operator: In, values: [frontend]}
   ##
   explicitNamespacesSelector: {}
+
+# Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
+enableKubeBackwardCompatibility: false
+
+# Create a dynamic manifests via values:
+extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: grafana-secrets
+  #   spec:
+  #     backendType: gcpSecretsManager
+  #     data:
+  #       - key: grafana-admin-password
+  #         name: adminPassword

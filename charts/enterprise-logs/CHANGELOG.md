@@ -11,6 +11,22 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## Unreleased
+
+## 1.4.0
+
+- [CHANGE] Bump GEL version to v1.3.0
+
+## 1.3.5
+
+- [BUGFIX] Use correct subPath configuration for the compactor's storage mount.
+- [BUGFIX] Fixed issue that prevented users from mouting extra persistent volumes for the compactor.
+- [CHANGE] Configure `securityContext.fsGroup` value for Admin API pod based on the value `adminApi.securityContext.runAsGroup`.
+
+## 1.3.4
+
+- [CHANGE] Remove selector and config hash annotations from the tokengen job that make it hard to update the helm chart after deploying that job
+
 ## 1.3.3
 
 - [BUGFIX] Bumped version of `loki-disctributed` chart to 0.39.3 that defines default WAL location. #863

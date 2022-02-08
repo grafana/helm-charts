@@ -10,7 +10,7 @@ data:
     overrides:
       {{- toYaml .Values.tempo.overrides | nindent 6 }}
   tempo.yaml: |
-    auth_enabled: {{ .Values.tempo.authEnabled }}
+    multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
     compactor:
       compaction:

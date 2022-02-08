@@ -98,8 +98,8 @@ spec:
           {{- end }}
         - name: storage
           emptyDir: {}
-        {{- if .Values.gateway.extraVolumes }}
-        {{ toYaml .Values.gateway.extraVolumes | nindent 8 }}
+        {{- if .Values.compactor.extraVolumes }}
+        {{ toYaml .Values.compactor.extraVolumes | nindent 8 }}
         {{- end }}
       containers:
         {{- if .Values.compactor.extraContainers }}
@@ -129,16 +129,16 @@ spec:
               mountPath: /etc/enterprise-logs/license
             - name: storage
               mountPath: /data
-              subPath: {{ .Values.gateway.persistence.subPath }}
-            {{- if .Values.gateway.extraVolumeMounts }}
-            {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
+              subPath: {{ .Values.compactor.persistentVolume.subPath }}
+            {{- if .Values.compactor.extraVolumeMounts }}
+            {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12 }}
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: 3100
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946
