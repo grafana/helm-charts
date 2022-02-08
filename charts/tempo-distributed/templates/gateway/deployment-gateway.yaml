@@ -23,6 +23,8 @@ spec:
         {{- include "tempo.gatewaySelectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.tempo.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       containers:
         - name: nginx
@@ -40,6 +42,8 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.tempo.containerSecurityContext | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
           volumeMounts:

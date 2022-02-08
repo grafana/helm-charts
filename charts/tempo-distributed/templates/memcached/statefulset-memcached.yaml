@@ -22,6 +22,8 @@ spec:
         {{- include "tempo.memcachedLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.tempo.podSecurityContext | nindent 8 }}
       containers:
         - image: "{{ .Values.memcached.repository }}:{{ .Values.memcached.tag }}"
           imagePullPolicy: {{ .Values.memcached.pullPolicy }}
@@ -41,6 +43,8 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.tempo.containerSecurityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.memcached.resources | nindent 12 }}
         {{- if .Values.memcachedExporter.enabled }}

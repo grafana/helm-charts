@@ -32,6 +32,8 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.tempo.podSecurityContext | nindent 8 }}
       containers:
         - args:
             - -target=compactor
@@ -56,6 +58,8 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.tempo.containerSecurityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
           volumeMounts:
