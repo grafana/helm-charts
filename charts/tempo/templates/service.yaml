@@ -53,7 +53,7 @@ spec:
     port: 14268
     protocol: TCP
     targetPort: 14268
-  - name: tempo-jaeger-grpc
+  - name: grpc-tempo-jaeger
     port: 14250
     protocol: TCP
     targetPort: 14250
@@ -69,7 +69,7 @@ spec:
     port: 4318
     protocol: TCP
     targetPort: 4318
-  - name: tempo-otlp-grpc
+  - name: grpc-tempo-otlp
     port: 4317
     protocol: TCP
     targetPort: 4317
