@@ -12946,6 +12946,52 @@ entries:
   loki-stack:
   - apiVersion: v1
     appVersion: v2.1.0
+    created: "2022-02-10T10:29:51.598485656Z"
+    dependencies:
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.3.0
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.2.0
+    - condition: fluent-bit.enabled
+      name: fluent-bit
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.2.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~6.21.2
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~15.0.1
+    - condition: filebeat.enabled
+      name: filebeat
+      repository: https://helm.elastic.co
+      version: ~7.8.0
+    - condition: logstash.enabled
+      name: logstash
+      repository: https://helm.elastic.co
+      version: ~7.8.0
+    description: 'Loki: like Prometheus, but for logs.'
+    digest: 12ac60c1564e26390992f194cf2f3f0399599a4d0752fe8bbecec4792ba2b0d9
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: loki-stack
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-stack-2.6.1/loki-stack-2.6.1.tgz
+    version: 2.6.1
+  - apiVersion: v1
+    appVersion: v2.1.0
     created: "2022-02-03T05:27:29.124627888Z"
     dependencies:
     - condition: loki.enabled
@@ -19542,4 +19588,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-10T05:49:10.520533652Z"
+generated: "2022-02-10T10:29:51.607547392Z"
