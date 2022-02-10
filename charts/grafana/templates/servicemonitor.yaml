@@ -22,7 +22,6 @@ spec:
     scrapeTimeout: {{ . }}
     {{- end }}
     honorLabels: true
-    port: {{ .Values.service.portName }}
     path: {{ .Values.serviceMonitor.path }}
     scheme: {{ .Values.serviceMonitor.scheme }}
     {{- if .Values.serviceMonitor.tlsConfig }}
