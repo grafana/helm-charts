@@ -26,7 +26,7 @@ Entries should include a reference to the pull request that introduced the chang
 ## 1.3.5
 
 - [BUGFIX] Use correct subPath configuration for the compactor's storage mount.
-- [BUGFIX] Fixed issue that prevented users from mouting extra persistent volumes for the compactor.
+- [BUGFIX] Fixed issue that prevented users from mounting extra persistent volumes for the compactor.
 - [CHANGE] Configure `securityContext.fsGroup` value for Admin API pod based on the value `adminApi.securityContext.runAsGroup`.
 
 ## 1.3.4
@@ -35,7 +35,7 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## 1.3.3
 
-- [BUGFIX] Bumped version of `loki-disctributed` chart to 0.39.3 that defines default WAL location. #863
+- [BUGFIX] Bumped version of `loki-distributed` chart to 0.39.3 that defines default WAL location. #863
 
 ## 1.3.2
 
