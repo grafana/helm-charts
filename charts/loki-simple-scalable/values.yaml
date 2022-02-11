@@ -59,7 +59,7 @@ loki:
   existingSecretForConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
-  config:
+  config: |
     auth_enabled: false
 
     server:
@@ -75,10 +75,10 @@ loki:
       ring:
         kvstore:
           store: memberlist
+      {{- if .Values.loki.storageConfig}}
       storage:
-        filesystem:
-          chunks_directory: /var/loki/chunks
-          rules_directory: /var/loki/rules
+      {{- toYaml .Values.loki.storageConfig | nindent 2}}
+      {{ -end }}
 
     limits_config:
       enforce_metric_name: false
@@ -86,26 +86,34 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
 
+    {{- if .Values.loki.schemaConfig}}
     schema_config:
-      configs:
-        - from: 2020-09-07
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
-  # -- Common storage config component of loki configuration file.
-  # The must be overriden with a valid object storage backend
-  # in order for queries to work.
-  # @default -- loki.defaultStorageConfig
-  storageConfig: {}
-  # -- Default storage config, used when no loki.storageConfig is provided.
-  # Required for CI, but queries will not work using these defaults.
-  defaultStorageConfig:
+    {{- toYaml .Values.loki.schemaConfig | nindent 2}}
+    {{- end}}
+
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
+  schemaConfig:
+    configs:
+      - from: 2020-09-07
+        store: boltdb-shipper
+        object_store: filesystem
+        schema: v11
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
+  storageConfig:
     filesystem:
       chunks_directory: /var/loki/chunks,
       rules_directory: /var/loki/rules
+  # -- Uncomment to configure each storage individually
+  # azure: {}
+  # gcs: {}
+  # s3: {}
+
+  # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
+  structuredConfig: {}
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
