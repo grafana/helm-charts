@@ -19,7 +19,7 @@ priorityClassName: {{ .Values.priorityClassName }}
 {{- if ( or .Values.persistence.enabled .Values.dashboards .Values.sidecar.notifiers.enabled .Values.extraInitContainers) }}
 initContainers:
 {{- end }}
-{{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
+{{- if ( .Values.initChownData.enabled ) }}
   - name: init-chown-data
     {{- if .Values.initChownData.image.sha }}
     image: "{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}@sha256:{{ .Values.initChownData.image.sha }}"
@@ -324,7 +324,7 @@ containers:
 {{- if .Values.sidecar.dashboards.enabled }}
       - name: sc-dashboard-volume
         mountPath: {{ .Values.sidecar.dashboards.folder | quote }}
-{{ if .Values.sidecar.dashboards.SCProvider }}
+{{- if .Values.sidecar.dashboards.SCProvider }}
       - name: sc-dashboard-provider
         mountPath: "/etc/grafana/provisioning/dashboards/sc-dashboardproviders.yaml"
         subPath: provider.yaml
@@ -353,6 +353,16 @@ containers:
     {{- range .Values.extraEmptyDirMounts }}
       - name: {{ .name }}
         mountPath: {{ .mountPath }}
+    {{- end }}
+    {{- if .Values.extraInitContainers }}
+    {{- range .Values.extraInitContainers }}
+    {{- if .volumeMounts }}
+    {{- range .volumeMounts }}
+      - name: {{ .name }}
+        mountPath: {{ .mountPath | quote }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
     {{- end }}
     ports:
       - name: {{ .Values.service.portName }}
@@ -538,6 +548,16 @@ volumes:
 {{- else if .csi }}
   - name: {{ .name }}
     csi: {{- toYaml .csi | nindent 6 }}
+{{- end }}
+{{- end }}
+{{- if .Values.extraInitContainers }}
+{{- range .Values.extraInitContainers }}
+{{- if .volumeMounts }}
+{{- range .volumeMounts }}
+  - name: {{ .name }}
+    emptyDir: {}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- range .Values.extraVolumeMounts }}
