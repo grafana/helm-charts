@@ -11,7 +11,13 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
-## Unreleased
+## 2.0.1
+
+- [BUGFIX] Configure Loki WAL directory that was absent in the 2.0.0 change #1033
+
+## 2.0.0
+
+- [CHANGE] Expect GEL configuration as a string rather than structured data in the values.yaml file #943
 
 ## 1.4.0
 
