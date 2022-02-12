@@ -11,9 +11,13 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.0.2
+
+- [BUGFIX] Have tokengen use the same ServiceAccount as the other components. #1031
+
 ## 2.0.1
 
-- [BUGFIX] Configure Loki WAL directory that was absent in the 2.0.0 change #1033
+- [BUGFIX] Configure Loki WAL directory that was absent in the 2.0.0 change. #1033
 
 ## 2.0.0
 
