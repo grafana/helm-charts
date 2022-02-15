@@ -20,6 +20,12 @@ spec:
     metadata:
       labels:
         {{- include "tempo.memcachedLabels" . | nindent 8 }}
+        {{- with .Values.tempo.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.memcached.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
