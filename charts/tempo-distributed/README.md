@@ -193,6 +193,11 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
 | overrides | string | `"overrides: {}\n"` |  |
+| prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
+| prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
+| prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
+| prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
+| prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.config.frontend_worker.grpc_client_config | object | `{}` | grpc client configuration |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
