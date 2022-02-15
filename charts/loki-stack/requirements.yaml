@@ -2,11 +2,11 @@ dependencies:
 - name: "loki"
   condition: loki.enabled
   repository: "https://grafana.github.io/helm-charts"
-  version: "^2.3.0"
+  version: "^2.9.1"
 - name: "promtail"
   condition: promtail.enabled
   repository: "https://grafana.github.io/helm-charts"
-  version: "^2.2.0"
+  version: "^3.11.0"
 - name: "fluent-bit"
   condition: fluent-bit.enabled
   repository: "https://grafana.github.io/helm-charts"
