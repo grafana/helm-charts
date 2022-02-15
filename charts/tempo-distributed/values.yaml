@@ -27,6 +27,8 @@ tempo:
       port: http
     initialDelaySeconds: 30
     timeoutSeconds: 1
+  # -- Global labels for all tempo pods
+  podLabels: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -52,6 +54,8 @@ ingester:
     tag: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
+  # -- Labels for ingester pods
+  podLabels: {}
   # -- Annotations for ingester pods
   podAnnotations: {}
   # -- Additional CLI args for the ingester
@@ -123,6 +127,8 @@ distributor:
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
+  # -- Labels for distributor pods
+  podLabels: {}
   # -- Annotations for distributor pods
   podAnnotations: {}
   # -- Additional CLI args for the distributor
@@ -170,6 +176,8 @@ compactor:
     tag: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
   # -- Additional CLI args for the compactor
@@ -208,6 +216,8 @@ querier:
     tag: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
+  # -- Labels for querier pods
+  podLabels: {}
   # -- Annotations for querier pods
   podAnnotations: {}
   # -- Additional CLI args for the querier
@@ -291,6 +301,8 @@ queryFrontend:
     type: ClusterIP
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
+  # -- Labels for queryFrontend pods
+  podLabels: {}
   # -- Annotations for query-frontend pods
   podAnnotations: {}
   # -- Additional CLI args for the query-frontend
@@ -521,6 +533,8 @@ memcached:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached pods
   extraEnvFrom: []
+  # -- Labels for memcached pods
+  podLabels: {}
   # -- Resource requests and limits for memcached
   resources: {}
   # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
@@ -615,6 +629,8 @@ gateway:
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
+  # -- Labels for gateway pods
+  podLabels: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
