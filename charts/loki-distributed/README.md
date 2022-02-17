@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.56.5](https://img.shields.io/badge/Version-0.56.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.56.6](https://img.shields.io/badge/Version-0.56.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -209,6 +209,11 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
 | ingester.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester |
+| ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
+| ingester.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the ingester |
+| ingester.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the ingester |
+| ingester.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the ingester |
 | ingester.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraContainers | list | `[]` | Containers to add to the ingester pods |

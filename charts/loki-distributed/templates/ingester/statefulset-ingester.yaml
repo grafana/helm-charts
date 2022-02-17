@@ -7,7 +7,9 @@ metadata:
     {{- include "loki.ingesterLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
+{{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ .Values.ingester.replicas }}
+{{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
