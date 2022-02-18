@@ -61,6 +61,8 @@ spec:
             - "-{{ $key }}={{ $value }}"
           {{- end }}
           volumeMounts:
+            - name: tmp
+              mountPath: /tmp
             {{- if .Values.extraVolumeMounts }}
               {{ toYaml .Values.extraVolumeMounts | nindent 12}}
             {{- end }}
@@ -70,8 +72,6 @@ spec:
               mountPath: "/data"
               subPath: {{ .Values.persistence.subPath }}
             {{- if gt (len .Values.alerting_groups) 0 }}
-            - name: scratch
-              mountPath: /tmp/scratch
             - name: rules
               mountPath: /rules/fake
             {{- end }}
@@ -106,9 +106,9 @@ spec:
         {{- toYaml .Values.tolerations | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-        {{- if gt (len .Values.alerting_groups) 0 }}
-        - name: scratch
+        - name: tmp
           emptyDir: {}
+        {{- if gt (len .Values.alerting_groups) 0 }}
         - name: rules
           configMap:
             name: {{ template "loki.fullname" . }}-alerting-rules
