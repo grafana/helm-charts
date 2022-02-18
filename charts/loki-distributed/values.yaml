@@ -37,6 +37,8 @@ loki:
     tag: null
     # -- Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Common labels for all pods
+  podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
   # -- The number of old ReplicaSets to retain to allow rollback
@@ -254,6 +256,8 @@ ingester:
     tag: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
+  # -- Labels for ingester pods
+  podLabels: {}
   # -- Annotations for ingester pods
   podAnnotations: {}
   # -- Labels for ingestor service
@@ -330,6 +334,8 @@ distributor:
     tag: null
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
+  # -- Labels for distributor pods
+  podLabels: {}
   # -- Annotations for distributor pods
   podAnnotations: {}
   # -- Labels for distributor service
@@ -393,6 +399,8 @@ querier:
     tag: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
+  # -- Labels for querier pods
+  podLabels: {}
   # -- Annotations for querier pods
   podAnnotations: {}
   # -- Labels for querier service
@@ -467,6 +475,8 @@ queryFrontend:
     tag: null
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
+  # -- Labels for query-frontend pods
+  podLabels: {}
   # -- Annotations for query-frontend pods
   podAnnotations: {}
   # -- Labels for query-frontend service
@@ -519,6 +529,8 @@ tableManager:
     tag: null
   # -- The name of the PriorityClass for table-manager pods
   priorityClassName: null
+  # -- Labels for table-manager pods
+  podLabels: {}
   # -- Annotations for table-manager pods
   podAnnotations: {}
   # -- Labels for table-manager service
@@ -577,8 +589,8 @@ gateway:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
     targetMemoryUtilizationPercentage:
-  # -- See `kubectl explain deployment.spec.strategy` for more
-  # -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # -- See `kubectl explain deployment.spec.strategy` for more,
+  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
     type: RollingUpdate
   image:
@@ -592,6 +604,8 @@ gateway:
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
+  # -- Labels for gateway pods
+  podLabels: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -810,6 +824,8 @@ compactor:
     tag: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
   # -- Labels for compactor service
@@ -871,6 +887,8 @@ ruler:
     tag: null
   # -- The name of the PriorityClass for ruler pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for ruler pods
   podAnnotations: {}
   # -- Labels for ruler service
@@ -1002,6 +1020,8 @@ indexGateway:
     tag: null
   # -- The name of the PriorityClass for index-gateway pods
   priorityClassName: null
+  # -- Labels for index-gateway pods
+  podLabels: {}
   # -- Annotations for index-gateway pods
   podAnnotations: {}
   # -- Labels for index-gateway service
@@ -1062,6 +1082,8 @@ memcached:
     tag: 1.6.7-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Labels for memcached pods
+  podLabels: {}
   # -- The SecurityContext for memcached pods
   podSecurityContext:
     fsGroup: 11211
@@ -1088,6 +1110,8 @@ memcachedExporter:
     tag: v0.6.0
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Labels for memcached-exporter pods
+  podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
 
@@ -1098,6 +1122,8 @@ memcachedChunks:
   replicas: 1
   # -- The name of the PriorityClass for memcached-chunks pods
   priorityClassName: null
+  # -- Labels for memcached-chunks pods
+  podLabels: {}
   # -- Annotations for memcached-chunks pods
   podAnnotations: {}
   # -- Labels for memcached-chunks service
@@ -1141,6 +1167,8 @@ memcachedFrontend:
   replicas: 1
   # -- The name of the PriorityClass for memcached-frontend pods
   priorityClassName: null
+  # -- Labels for memcached-frontend pods
+  podLabels: {}
   # -- Annotations for memcached-frontend pods
   podAnnotations: {}
   # -- Labels for memcached-frontend service
@@ -1184,6 +1212,8 @@ memcachedIndexQueries:
   replicas: 1
   # -- The name of the PriorityClass for memcached-index-queries pods
   priorityClassName: null
+  # -- Labels for memcached-index-queries pods
+  podLabels: {}
   # -- Annotations for memcached-index-queries pods
   podAnnotations: {}
   # -- Labels for memcached-index-queries service
@@ -1227,6 +1257,8 @@ memcachedIndexWrites:
   replicas: 1
   # -- The name of the PriorityClass for memcached-index-writes pods
   priorityClassName: null
+  # -- Labels for memcached-index-writes pods
+  podLabels: {}
   # -- Annotations for memcached-index-writes pods
   podAnnotations: {}
   # -- Labels for memcached-index-writes service
