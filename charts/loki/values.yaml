@@ -102,7 +102,7 @@ config:
   compactor:
     working_directory: /data/loki/boltdb-shipper-compactor
     shared_store: filesystem
-# Needed for Alerting: https://grafana.com/docs/loki/latest/alerting/
+# Needed for Alerting: https://grafana.com/docs/loki/latest/rules/
 # This is just a simple example, for more details: https://grafana.com/docs/loki/latest/configuration/#ruler_config
 #  ruler:
 #    storage:
@@ -271,7 +271,7 @@ extraPorts: []
 # Extra env variables to pass to the loki container
 env: []
 
-# Specify Loki Alerting rules based on this documentation: https://grafana.com/docs/loki/latest/alerting/
+# Specify Loki Alerting rules based on this documentation: https://grafana.com/docs/loki/latest/rules/
 # When specified, you also need to add a ruler config section above. An example is shown in the alerting docs.
 alerting_groups: []
 #  - name: example
