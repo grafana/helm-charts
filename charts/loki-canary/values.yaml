@@ -75,8 +75,8 @@ nodeSelector: {}
 tolerations: []
 # -- Affinities for canary pods
 affinity: {}
-# -- Enables the LivesnessProbe for canary pods
-enableLivenessProbe: false
+# -- LivesnessProbe for canary pods
+livenessProbe: {}
 
 # -- The Loki server URL:Port, e.g. loki:3100
 lokiAddress: null
