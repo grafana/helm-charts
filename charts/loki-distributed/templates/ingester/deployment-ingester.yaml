@@ -1,6 +1,6 @@
-{{- if eq .Values.ingester.kind "StatefulSet"}}
+{{- if eq .Values.ingester.kind "Deployment"}}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "loki.ingesterFullname" . }}
   labels:
@@ -8,11 +8,6 @@ metadata:
     app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.ingester.replicas }}
-  podManagementPolicy: Parallel
-  updateStrategy:
-    rollingUpdate:
-      partition: 0
-  serviceName: {{ include "loki.ingesterFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -30,12 +25,6 @@ spec:
       labels:
         {{- include "loki.ingesterSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
-        {{- with .Values.loki.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.ingester.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -47,7 +36,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.ingester.terminationGracePeriodSeconds }}
       containers:
-        - name: ingester
+        - name: loki
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -112,21 +101,6 @@ spec:
         {{- with .Values.ingester.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-  {{- if not .Values.ingester.persistence.enabled }}
         - name: data
           emptyDir: {}
-  {{- else }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- with .Values.ingester.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.ingester.persistence.size | quote }}
-  {{- end }}
 {{- end }}

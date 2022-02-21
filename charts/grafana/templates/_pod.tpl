@@ -77,6 +77,49 @@ initContainers:
         readOnly: {{ .readOnly }}
     {{- end }}
 {{- end }}
+{{- if and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources }}
+  - name: {{ template "grafana.name" . }}-init-sc-datasources
+    {{- if .Values.sidecar.image.sha }}
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    {{- else }}
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    env:
+      - name: METHOD
+        value: "LIST"
+      - name: LABEL
+        value: "{{ .Values.sidecar.datasources.label }}"
+      {{- if .Values.sidecar.datasources.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.datasources.labelValue }}
+      {{- end }}
+      - name: FOLDER
+        value: "/etc/grafana/provisioning/datasources"
+      - name: RESOURCE
+        value: {{ quote .Values.sidecar.datasources.resource }}
+      {{- if .Values.sidecar.enableUniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "{{ .Values.sidecar.enableUniqueFilenames }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.searchNamespace }}
+      - name: NAMESPACE
+        value: "{{ .Values.sidecar.datasources.searchNamespace | join "," }}"
+      {{- end }}
+      {{- if .Values.sidecar.skipTlsVerify }}
+      - name: SKIP_TLS_VERIFY
+        value: "{{ .Values.sidecar.skipTlsVerify }}"
+      {{- end }}
+    resources:
+{{ toYaml .Values.sidecar.resources | indent 6 }}
+{{- if .Values.sidecar.securityContext }}
+    securityContext:
+{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
+{{- end }}
+    volumeMounts:
+      - name: sc-datasources-volume
+        mountPath: "/etc/grafana/provisioning/datasources"
+{{- end }}
 {{- if .Values.sidecar.notifiers.enabled }}
   - name: {{ template "grafana.name" . }}-sc-notifiers
     {{- if .Values.sidecar.image.sha }}
@@ -230,10 +273,12 @@ containers:
             name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.passwordKey | default "admin-password" }}
       {{- end }}
+      {{- if not .Values.sidecar.datasources.skipReload }}
       - name: REQ_URL
         value: {{ .Values.sidecar.datasources.reloadURL }}
       - name: REQ_METHOD
         value: POST
+      {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}

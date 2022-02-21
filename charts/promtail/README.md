@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 3.10.0](https://img.shields.io/badge/Version-3.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 3.11.0](https://img.shields.io/badge/Version-3.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -81,6 +81,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | extraArgs | list | `[]` |  |
 | extraEnv | list | `[]` | Extra environment variables |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy |
 | extraPorts | object | `{}` | Configure additional ports and services. For each configured port, a corresponding service is created. See values.yaml for details |
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |

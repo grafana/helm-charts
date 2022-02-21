@@ -106,7 +106,7 @@ spec:
   - name: busybox
     image: busybox
     command: ['wget']
-    args:  ['grafana-agent-operated:8080/-/healthy']
+    args:  ['grafana-agent-test-operated:8080/-/healthy']
   # Wait for GrafanaAgent CR
   initContainers:
   - name: sleep

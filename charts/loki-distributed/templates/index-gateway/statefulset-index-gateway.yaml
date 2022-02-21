@@ -27,6 +27,12 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.indexGatewaySelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.indexGateway.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -38,7 +44,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.indexGateway.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: index-gateway
           image: {{ include "loki.indexGatewayImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

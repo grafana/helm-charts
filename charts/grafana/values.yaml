@@ -73,7 +73,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.3.3
+  tag: 8.3.6
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -618,7 +618,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.14.2
+    tag: 1.15.1
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -690,6 +690,10 @@ sidecar:
     resource: both
     # Endpoint to send request to reload datasources
     reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
+    skipReload: false
+    # Deploy the datasource sidecar as an initContainer in addition to a container.
+    # This is needed if skipReload is true, to load any datasources defined at startup time.
+    initDatasources: false
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with

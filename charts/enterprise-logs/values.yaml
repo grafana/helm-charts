@@ -56,14 +56,15 @@ license:
   contents: "NOTAVALIDLICENSE"
 
 # -- Grafana Enterprise Logs configuration file
-config:
+config: |
   auth:
     type: enterprise
   auth_enabled: true
 
   license:
     path: "/etc/enterprise-logs/license/license.jwt"
-  cluster_name: "{{ .Release.Name }}"
+
+  cluster_name: {{ .Release.Name }}
 
   server:
     http_listen_port: 3100
@@ -73,7 +74,7 @@ config:
     storage:
       type: s3
       s3:
-        endpoint: "{{ include \"enterprise-logs.minio\" . }}"
+        endpoint: {{ include "enterprise-logs.minio" . }}
         bucket_name: enterprise-logs-admin
         secret_access_key: supersecret
         access_key_id: enterprise-logs
@@ -99,6 +100,8 @@ config:
     chunk_block_size: 262144
     chunk_encoding: snappy
     chunk_retain_period: 1m
+    wal:
+      dir: /var/loki/wal
 
   ingester_client:
     grpc_client_config:
@@ -114,14 +117,14 @@ config:
   frontend:
     log_queries_longer_than: 10s
     compress_responses: true
-    tail_proxy_url: "http://{{ include \"loki.querierFullname\" . }}:3100"
+    tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 
   frontend_worker:
-    frontend_address: "{{ include \"loki.queryFrontendFullname\" . }}:9095"
+    frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
 
   memberlist:
     join_members:
-      - "{{ include \"loki.fullname\" . }}-memberlist"
+      - {{ include "loki.fullname" . }}-memberlist
 
   querier:
     query_ingesters_within: 12h
@@ -149,7 +152,7 @@ config:
 
   storage_config:
     aws:
-      endpoint: "{{ include \"enterprise-logs.minio\" . }}"
+      endpoint: {{ include "enterprise-logs.minio" . }}
       bucketnames: enterprise-logs-tsdb
       access_key_id: enterprise-logs
       secret_access_key: supersecret
@@ -161,13 +164,13 @@ config:
       cache_ttl: 24h
       shared_store: s3
       index_gateway_client:
-        server_address: "dns:///{{ include \"loki.indexGatewayFullname\" . }}:9095"
+        server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
 
   ruler:
     storage:
       type: s3
       s3:
-        endpoint: "{{ include \"enterprise-logs.minio\" . }}"
+        endpoint: {{ include "enterprise-logs.minio" . }}
         bucketnames: enterprise-logs-ruler
         access_key_id: enterprise-logs
         secret_access_key: supersecret
@@ -180,6 +183,7 @@ config:
       kvstore:
         store: memberlist
     rule_path: /var/loki
+
 
 # -- Configuration for `tokengen` target
 tokengen:
