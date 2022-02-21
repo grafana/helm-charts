@@ -30,7 +30,7 @@ tempo:
   # -- Global labels for all tempo pods
   podLabels: {}
   # --- SecurityContext holds pod-level security attributes and common container settings
-  securityContext:
+  securityContext: {}
   #  capabilities:
   #    drop:
   #    - ALL
