@@ -4,6 +4,10 @@ metadata:
   name: {{ include "loki-canary.fullname" . }}
   labels:
     {{- include "loki-canary.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: ClusterIP
   ports:

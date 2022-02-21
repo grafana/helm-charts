@@ -54,6 +54,11 @@ serviceMonitor:
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
+# Service configuration
+service:
+  # -- Service annotations
+  annotations: {}
+
 # -- Additional CLI args for the canary
 extraArgs:
   - -labelname=pod
@@ -68,9 +73,14 @@ resources: {}
 nodeSelector: {}
 # -- Tolerations for canary pods
 tolerations: []
+# -- Affinities for canary pods
+affinity: {}
 
 # -- The Loki server URL:Port, e.g. loki:3100
 lokiAddress: null
+
+# -- UpdateStrategy for the DeamonSet
+updateStrategy: {}
 
 # Basic auth configuration
 basicAuth:
