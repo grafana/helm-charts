@@ -272,6 +272,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
+| tempo.securityContext | object | `{}` | Global `securityContext` for all tempo pods |
 | traces.jaeger.grpc | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.thriftBinary | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
 | traces.jaeger.thriftCompact | bool | `false` | Enable Tempo to ingest Jaeger Thrift Compact traces |

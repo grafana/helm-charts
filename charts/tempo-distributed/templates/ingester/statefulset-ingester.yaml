@@ -65,6 +65,10 @@ spec:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.ingester.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
