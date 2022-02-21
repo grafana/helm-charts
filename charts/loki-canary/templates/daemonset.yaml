@@ -75,6 +75,14 @@ spec:
               port: http
             initialDelaySeconds: 15
             timeoutSeconds: 1
+          {{ if .Values.enableLivenessProbe }}
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
