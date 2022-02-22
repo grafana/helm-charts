@@ -73,6 +73,7 @@ spec:
             {{- with .Values.ingester.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.ingester.terminationGracePeriodSeconds }}
       {{- with .Values.ingester.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
