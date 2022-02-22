@@ -109,6 +109,7 @@ spec:
             {{- with .Values.distributor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       {{- with .Values.distributor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

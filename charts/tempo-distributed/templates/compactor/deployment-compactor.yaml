@@ -70,6 +70,7 @@ spec:
             {{- with .Values.compactor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
       {{- with .Values.compactor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

@@ -71,6 +71,7 @@ spec:
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
       {{- with .Values.querier.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
