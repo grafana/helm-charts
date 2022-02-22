@@ -7,6 +7,12 @@ fullnameOverride: ""
 # -- Annotations for the Deployment
 annotations: {}
 
+# -- Namespace
+namespace: default
+
+# -- Number of replicas
+replicas: 1
+
 # -- Annotations for the Deployment Pods
 podAnnotations: {}
 
@@ -29,7 +35,7 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.22.0
+  tag: v0.23.0
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets
@@ -40,6 +46,7 @@ image:
 kubeletService:
   namespace: default
   serviceName: kubelet
+  logLevel: warn
 
 # -- Resource limits and requests config
 resources: {}
@@ -52,3 +59,6 @@ tolerations: []
 
 # -- Pod affinity configuration
 affinity: {}
+
+# -- Topology spread constraints configuration
+topologySpreadConstraints: {}

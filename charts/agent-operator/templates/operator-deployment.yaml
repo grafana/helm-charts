@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "ga-operator.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     app.kubernetes.io/component: operator
     {{- include "ga-operator.labels" . | nindent 4 }}
@@ -10,7 +11,7 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
 {{ include "ga-operator.labels" . | indent 6 }}
@@ -43,6 +44,7 @@ spec:
         {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
         args:
           - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ .Values.kubeletService.serviceName }}
+          - --log.level={{ .Values.kubeletService.logLevel }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -54,5 +56,9 @@ spec:
       {{- end }}
       {{- with .Values.affinity }}
       affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
       {{- toYaml . | nindent 8 }}
       {{- end }}
