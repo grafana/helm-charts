@@ -2,6 +2,7 @@ apiVersion: monitoring.grafana.com/v1alpha1
 kind: GrafanaAgent
 metadata:
   name: grafana-agent-test
+  namespace: {{ .Values.namespace }}
   labels:
     app: grafana-agent-test
   annotations:
@@ -22,6 +23,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: grafana-agent-test-sa
+  namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/hook": test
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
@@ -87,6 +89,7 @@ apiVersion: monitoring.grafana.com/v1alpha1
 kind: MetricsInstance
 metadata:
   name: primary-test
+  namespace: {{ .Values.namespace }}
   labels:
     agent: grafana-agent-test
 spec: {}
@@ -97,6 +100,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: grafana-agent-test-probe
+  namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/hook": test
     "helm.sh/hook-weight": "1"

@@ -63,11 +63,14 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | image.tag | string | `"v0.22.0"` | Image tag |
 | kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets -- https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
 | nameOverride | string | `""` | Overrides the chart's name |
+| namespace | string | default | namespace for deploying Operator resources |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
 | rbac | object | `{"create":true}` | Toggle to create ClusterRole and ClusterRoleBinding |
+| replicas | int | 1 | Number of Pod replicas
 | resources | object | `{}` | Resource limits and requests config |
 | serviceAccount.create | bool | `true` | Toggle to create ServiceAccount |
 | serviceAccount.name | string | `nil` | Service account name |
 | tolerations | list | `[]` | Tolerations applied to Pods |
+| topologySpreadConstraints | object | `[]` | Pod Topology Spread Constraints configuration |
