@@ -23,6 +23,7 @@ Grafana Tempo Single Binary Mode
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | replicas | int | `1` |  |
+| securityContext | object | `{}` |  |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |

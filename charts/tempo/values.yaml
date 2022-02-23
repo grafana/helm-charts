@@ -110,6 +110,11 @@ tempoQuery:
   #   readOnly: true
   #   existingClaim: volume-claim
 
+securityContext: {}
+  # runAsUser: 65532
+  # runAsGroup: 65532
+  # fsGroup: 65532
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true

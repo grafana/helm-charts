@@ -103,6 +103,10 @@ spec:
         {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
+      {{- with .Values.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
