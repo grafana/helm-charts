@@ -49,6 +49,12 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
 
+rbac:
+  # -- Specifies whether RBAC manifests should be created
+  create: false
+  # -- Specifies whether a PodSecurityPolicy should be created
+  pspEnabled: false
+
 # Configuration for the ingester
 ingester:
   # -- Number of replicas for the ingester
