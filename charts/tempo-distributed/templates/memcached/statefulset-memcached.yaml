@@ -49,6 +49,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.memcached.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- if .Values.memcachedExporter.enabled }}
         - args:
             - --memcached.address=localhost:11211
@@ -61,6 +65,10 @@ spec:
               name: http-metrics
           resources:
             {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- end }}
       {{- with .Values.memcached.affinity }}
       affinity:

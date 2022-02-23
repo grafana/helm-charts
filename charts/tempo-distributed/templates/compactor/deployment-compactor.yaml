@@ -64,6 +64,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
