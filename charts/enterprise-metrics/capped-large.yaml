@@ -131,7 +131,7 @@ query_frontend:
       memory: 6Gi
 
 ruler:
-  replicas: 2
+  replicas: 3
   resources:
     requests:
       cpu: 1
@@ -143,7 +143,7 @@ ruler:
 store_gateway:
   persistentVolume:
     size: 50Gi
-  replicas: 1
+  replicas: 6
   resources:
     requests:
       cpu: 1
