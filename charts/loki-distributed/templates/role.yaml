@@ -15,3 +15,18 @@ rules:
     resourceNames:  
       - {{ include "loki.fullname" . }}
 {{- end }}
+
+{{- if .Values.rbac.sccEnabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: scc:hostmount-anyuid
+  labels:
+    {{- include "loki.labels" . | nindent 4 }}
+rules:
+- apiGroups: ['security.openshift.io']
+  resources: ['securitycontextconstraints']
+  verbs:     ['use']
+  resourceNames:
+  - hostmount-anyuid
+{{- end }}
