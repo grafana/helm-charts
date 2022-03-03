@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
 {{- if not .Values.querier.autoscaling.enabled }}
   replicas: {{ .Values.querier.replicas }}

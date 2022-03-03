@@ -21,6 +21,11 @@ fullnameOverride: null
 imagePullSecrets: []
 
 loki:
+  # -- If set, these annotations are added to all of the Kubernetes controllers
+  # (Deployments, StatefulSets, etc) that this chart launches. Use this to
+  # implement something like the "Wave" controller or another controller that
+  # is monitoring top level deployment resources.
+  annotations: {}
   # Configures the readiness probe for all of the Loki pods
   readinessProbe:
     httpGet:

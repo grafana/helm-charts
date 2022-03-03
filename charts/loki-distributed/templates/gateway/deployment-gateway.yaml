@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.gatewayFullname" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
 {{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicas }}
