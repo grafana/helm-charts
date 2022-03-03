@@ -370,7 +370,7 @@ admin:
 env: {}
 
 ## "valueFrom" environment variable references that will be added to deployment pods
-## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core
+## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
 ## Renders in container spec as:
 ##   env:
 ##     ...
@@ -378,6 +378,10 @@ env: {}
 ##       valueFrom:
 ##         <value rendered as YAML>
 envValueFrom: {}
+  #  ENV_NAME:
+  #    configMapKeyRef:
+  #      name: configmap-name
+  #      key: value_key
 
 ## The name of a secret in the same kubernetes namespace which contain values to be added to the environment
 ## This can be useful for auth tokens, etc. Value is templated.
