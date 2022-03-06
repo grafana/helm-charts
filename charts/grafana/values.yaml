@@ -698,6 +698,26 @@ sidecar:
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
     initDatasources: false
+  plugins:
+    enabled: false
+    # label that the configmaps with plugins are marked with
+    label: grafana_plugin
+    # value of label that the configmaps with plugins are set to
+    labelValue: null
+    # If specified, the sidecar will search for plugin config-maps inside this namespace.
+    # Otherwise the namespace in which the sidecar is running will be used.
+    # It's also possible to specify ALL to search in all namespaces
+    searchNamespace: null
+    # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
+    watchMethod: WATCH
+    # search in configmap, secret or both
+    resource: both
+    # Endpoint to send request to reload plugins
+    reloadURL: "http://localhost:3000/api/admin/provisioning/plugins/reload"
+    skipReload: false
+    # Deploy the datasource sidecar as an initContainer in addition to a container.
+    # This is needed if skipReload is true, to load any plugins defined at startup time.
+    initPlugins: false
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
