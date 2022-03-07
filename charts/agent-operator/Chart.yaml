@@ -8,3 +8,6 @@ home: https://grafana.com/docs/agent/latest/
 icon: https://raw.githubusercontent.com/grafana/agent/v0.23.0/docs/assets/logo_and_name.png
 sources:
   - https://github.com/grafana/agent/tree/v0.23.0/pkg/operator
+maintainers:
+  - name: Grafana Agent Team
+    email: grafana-agent-team@googlegroups.com
