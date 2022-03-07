@@ -48,4 +48,8 @@ jobs:
             # Do not run `ct install` for enterprise-metrics and enterprise-logs
             exit 0
           fi
+          if [[ "$changed" == "charts/mimir-distributed" ]]; then
+            # Do not run until Mimir is publicly downloadable from docker.io
+            exit 0
+          fi
           ct install --config ct.yaml
