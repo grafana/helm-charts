@@ -660,6 +660,16 @@ sidecar:
     folderAnnotation: null
     # Absolute path to shell script to execute after a configmap got reloaded
     script: null
+    # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    #watchServerTimeout: 3600
+    #
+    # watchClientTimeout: is a client-side timeout, configuring your local socket.
+    # If you have a network outage dropping all packets with no RST/FIN,
+    # this is how long your client waits before realizing & dropping the connection.
+    # defaults to 66sec (sic!)
+    #watchClientTimeout: 60
+    #
     # provider configuration that lets grafana manage the dashboards
     provider:
       # name of the provider, should be unique

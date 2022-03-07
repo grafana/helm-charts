@@ -213,6 +213,14 @@ containers:
       - name: SCRIPT
         value: "{{ .Values.sidecar.dashboards.script }}"
       {{- end }}
+      {{- if .Values.sidecar.dashboards.watchServerTimeout }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.dashboards.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.watchClientTimeout }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.dashboards.watchClientTimeout }}"
+      {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}
