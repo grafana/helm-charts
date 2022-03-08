@@ -31,4 +31,7 @@ subjects:
   name: loki
   name: {{ include "loki.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: {{ .Release.Name }}-minio
+  namespace: {{ .Release.Namespace }}  
 {{- end }}
