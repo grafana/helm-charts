@@ -34,5 +34,5 @@ volumes:
   - emptyDir
   - persistentVolumeClaim
   - secret
-{{ end }}
+{{- end }}
 
