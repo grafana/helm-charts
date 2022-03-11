@@ -576,11 +576,6 @@ loki-distributed:
 # -------------------------------------
 minio:
   enabled: true
-  serviceAccount:
-  create: false
-  ## The name of the service account to use. If 'create' is 'true', a service account with that name
-  ## will be created.
-  name: {{ include "loki.serviceAccountName" . }}
   accessKey: enterprise-logs
   secretKey: supersecret
   buckets:
