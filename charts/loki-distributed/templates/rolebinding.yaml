@@ -28,7 +28,6 @@ roleRef:
   name: scc:hostmount-anyuid
 subjects:
 - kind: ServiceAccount
-  name: loki
   name: {{ include "loki.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 - kind: ServiceAccount
