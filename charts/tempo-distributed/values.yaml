@@ -313,7 +313,9 @@ queryFrontend:
     annotations: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
-  # -- The name of the PriorityClass for query-frontend pods
+  serviceDiscovery:
+    # -- Annotations for queryFrontendDiscovery service
+    annotations: {}
   priorityClassName: null
   # -- Labels for queryFrontend pods
   podLabels: {}
