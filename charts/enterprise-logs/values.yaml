@@ -594,3 +594,5 @@ minio:
     requests:
       cpu: 100m
       memory: 128Mi
+  #changed the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root and OpenShift will not permit this. 
+  configPathmc: "/tmp/minio/mc/"    
