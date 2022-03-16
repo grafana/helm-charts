@@ -1,4 +1,4 @@
-{{- if .Values.rbac.pspEnabled }}
+{{- if or .Values.rbac.pspEnabled .Values.rbac.sccEnabledi true }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -13,24 +13,4 @@ subjects:
   - kind: ServiceAccount
     name: {{ include "loki.serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
-{{- end }}
-
-{{- if .Values.rbac.sccEnabled }}
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: default:loki
-  labels:
-    {{- include "loki.labels" . | nindent 4 }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: scc:hostmount-anyuid
-subjects:
-- kind: ServiceAccount
-  name: {{ include "loki.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
-- kind: ServiceAccount
-  name: {{ .Release.Name }}-minio
-  namespace: {{ .Release.Namespace }}  
 {{- end }}
