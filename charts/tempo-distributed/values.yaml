@@ -316,6 +316,7 @@ queryFrontend:
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
+  # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Labels for queryFrontend pods
   podLabels: {}
