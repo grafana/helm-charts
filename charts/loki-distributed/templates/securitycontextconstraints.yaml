@@ -10,29 +10,31 @@ allowHostIPC: false
 allowHostNetwork: false
 allowHostPID: false
 allowHostPorts: false
-allowPrivilegeEscalation: false
+allowPrivilegeEscalation: true
 allowPrivilegedContainer: false
 allowedCapabilities: []
 defaultAddCapabilities: null
 fsGroup: 
-  type: MustRunAs
+  type: RunAsAny
 groups: []
 priority: null
-readOnlyRootFilesystem: true
+readOnlyRootFilesystem: false
 requiredDropCapabilities: 
   - ALL
 runAsUser: 
-  type: MustRunAsNonRoot
+  type: RunAsAny
 seLinuxContext: 
-  type: RunAsAny  
+  type: RunAsAny
 seccompProfiles:
   - '*'
 supplementalGroups: 
-  type: MustRunAs
+  type: RunAsAny
 volumes: 
   - configMap
+  - downwardAPI
   - emptyDir
+  - hostPath
   - persistentVolumeClaim
+  - projected
   - secret
 {{- end }}
-
