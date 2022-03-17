@@ -112,6 +112,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.enabled | bool | `false` | Specifies whether the gateway should be enabled |
+| gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
