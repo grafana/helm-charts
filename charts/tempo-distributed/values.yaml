@@ -635,6 +635,8 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  # -- Enable logging of 2xx and 3xx HTTP requests
+  verboseLogging: true
   image:
     # -- The Docker registry for the gateway image
     registry: docker.io
@@ -773,7 +775,18 @@ gateway:
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+
+        {{- if .Values.gateway.verboseLogging }}
         access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   /dev/stderr  main  if=$loggable;
+        {{- end }}
+
         sendfile     on;
         tcp_nopush   on;
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
