@@ -24,7 +24,7 @@ requiredDropCapabilities:
 runAsUser: 
   type: RunAsAny
 seLinuxContext: 
-  type: RunAsAny
+  type: MustRunAs
 seccompProfiles:
   - '*'
 supplementalGroups: 
