@@ -29,6 +29,8 @@ seccompProfiles:
   - '*'
 supplementalGroups: 
   type: RunAsAny
+users:
+- system:serviceaccount:openshift-infra:pv-recycler-controller
 volumes: 
   - configMap
   - downwardAPI
