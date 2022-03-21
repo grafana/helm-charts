@@ -882,7 +882,7 @@ ruler:
   # -- Specifies whether the ruler should be enabled
   enabled: false
   # -- Kind of deployment [StatefulSet/Deployment]
-  kind: StatefulSet
+  kind: Deployment
   # -- Number of replicas for the ruler
   replicas: 1
   image:
