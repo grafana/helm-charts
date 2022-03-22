@@ -1,39 +1,30 @@
 {{- if .Values.rbac.create }}
-
-{{- if .Values.rbac.pspEnabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ template "enterprise-metrics.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "enterprise-metrics.name" . }}
     chart: {{ template "enterprise-metrics.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+{{- if .Values.rbac.pspEnabled }}
 rules:
 - apiGroups:      ['extensions']
   resources:      ['podsecuritypolicies']
   verbs:          ['use']
   resourceNames:  [{{ template "enterprise-metrics.fullname" . }}]
 {{- end }}
-
-
 {{- if .Values.rbac.sccEnabled }}
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: scc:anyuid
-  labels:
-    app: {{ template "enterprise-metrics.name" . }}
-    chart: {{ template "enterprise-metrics.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
 rules:
-- apiGroups:      ['security.openshift.io']
-  resources:      ['securitycontextconstraints']
-  verbs:          ['use']
-  resourceNames: 
-  - anyuid
+- apiGroups: 
+  - security.openshift.io
+  resources: 
+  - securitycontextconstraints
+  verbs: 
+  - use
+  resourceNames:
+  - {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
 {{- end }}
-
