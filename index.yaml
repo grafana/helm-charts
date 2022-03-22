@@ -12386,6 +12386,24 @@ entries:
   loki-distributed:
   - apiVersion: v2
     appVersion: 2.4.2
+    created: "2022-03-22T10:01:48.296044624Z"
+    description: Helm chart for Grafana Loki in microservices mode
+    digest: 4b9c75fab607238c1981572a572b6ab774678b2ebcb108b8a251f6b49a457553
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-distributed
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.46.0/loki-distributed-0.46.0.tgz
+    version: 0.46.0
+  - apiVersion: v2
+    appVersion: 2.4.2
     created: "2022-03-08T22:48:23.486339578Z"
     description: Helm chart for Grafana Loki in microservices mode
     digest: f5429cb3de0952b94393fc72abf85230f93c71a6483af255135d2d3065e15dbc
@@ -19175,6 +19193,29 @@ entries:
   tempo-distributed:
   - apiVersion: v2
     appVersion: 1.3.2
+    created: "2022-03-22T10:01:48.45060947Z"
+    description: Grafana Tempo in MicroService mode
+    digest: a5614726c3c02668342e3a59601be81645c73ab1adfdbb1d0f62ab5b588de3cb
+    home: https://grafana.com/docs/tempo/latest/
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: dgzlopes
+    - name: mapno
+    name: tempo-distributed
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-0.16.6/tempo-distributed-0.16.6.tgz
+    version: 0.16.6
+  - apiVersion: v2
+    appVersion: 1.3.2
     created: "2022-03-16T12:35:52.404254253Z"
     description: Grafana Tempo in MicroService mode
     digest: 2095c0fb5162a7e6e4af8e2930ef30290778879b86d7bc35350faf4e8e10a666
@@ -20268,4 +20309,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-03-16T12:35:52.415011623Z"
+generated: "2022-03-22T10:01:48.4619183Z"
