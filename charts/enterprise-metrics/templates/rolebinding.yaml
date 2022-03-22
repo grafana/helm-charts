@@ -1,6 +1,4 @@
 {{- if .Values.rbac.create }}
-
-{{- if .Values.rbac.pspEnabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -17,30 +15,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ template "enterprise-metrics.serviceAccountName" . }}
-{{- end }}
-
-
-{{- if .Values.rbac.sccEnabled }}
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: {{ template "enterprise-metrics.fullname" . }}
-  labels:
-    app: {{ template "enterprise-metrics.name" . }}
-    chart: {{ template "enterprise-metrics.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: scc:anyuid
-subjects:
-- kind: ServiceAccount
-  name: {{ template "enterprise-metrics.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
-- kind: ServiceAccount
-  name: {{ .Release.Name }}-minio
   namespace: {{ .Release.Namespace }}
 {{- end }}
-{{- end }}
-
