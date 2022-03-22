@@ -1,5 +1,16 @@
-{{- if .Values.rbac.sccEnabled }}
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: false
+allowedCapabilities: null
 apiVersion: security.openshift.io/v1
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
 kind: SecurityContextConstraints
 metadata:
   name: {{ template "enterprise-metrics.fullname" . }}
@@ -8,35 +19,24 @@ metadata:
     chart: {{ template "enterprise-metrics.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-
-allowHostDirVolumePlugin: false
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
-allowHostPorts: false
-allowPrivilegeEscalation: false
-allowPrivilegedContainer: false
-allowedCapabilities: []
-defaultAddCapabilities: null
-fsGroup: 
+priority: 10
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- MKNOD
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
   type: MustRunAs
-groups: []
-priority: null
-readOnlyRootFilesystem: true
-requiredDropCapabilities: 
-  - ALL
-runAsUser: 
-  type: MustRunAsNonRoot
-seLinuxContext: 
-  type: RunAsAny  
-seccompProfiles:
-  - '*'
-supplementalGroups: 
-  type: MustRunAs
-volumes: 
-  - configMap
-  - emptyDir
-  - persistentVolumeClaim
-  - secret
-{{ end }}
-
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:openshift-infra:pv-recycler-controller
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- hostPath
+- nfs
+- persistentVolumeClaim
+- projected
+- secret
