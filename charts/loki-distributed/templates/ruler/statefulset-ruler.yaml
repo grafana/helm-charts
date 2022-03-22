@@ -12,11 +12,8 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.ruler.replicas }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
+  serviceName: {{ include "loki.rulerFullname" . }}
   selector:
     matchLabels:
       {{- include "loki.rulerSelectorLabels" . | nindent 6 }}
