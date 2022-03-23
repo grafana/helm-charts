@@ -188,17 +188,6 @@ prometheusRule:
 write:
   # -- Number of replicas for the write
   replicas: 3
-  autoscaling:
-    # -- Enable autoscaling for the read, this is only used if `queryIndex.enabled: true`
-    enabled: false
-    # -- Minimum autoscaling replicas for the read
-    minReplicas: 1
-    # -- Maximum autoscaling replicas for the read
-    maxReplicas: 3
-    # -- Target CPU utilisation percentage for the read
-    targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for the read
-    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null
@@ -262,17 +251,6 @@ write:
 read:
   # -- Number of replicas for the read
   replicas: 3
-  autoscaling:
-    # -- Enable autoscaling for the read, this is only used if `queryIndex.enabled: true`
-    enabled: false
-    # -- Minimum autoscaling replicas for the read
-    minReplicas: 1
-    # -- Maximum autoscaling replicas for the read
-    maxReplicas: 3
-    # -- Target CPU utilisation percentage for the read
-    targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for the read
-    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the read image. Overrides `loki.image.registry`
     registry: null
