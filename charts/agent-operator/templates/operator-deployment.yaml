@@ -32,10 +32,6 @@ spec:
       - name: {{ include "ga-operator.name" . }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- with .Values.image.pullSecrets }}
-        imagePullSecrets:
-        {{- toYaml . | nindent 4 }}
-        {{- end }}
         {{- with .Values.resources }}
         resources:
         {{- toYaml . | nindent 10 }}
@@ -44,6 +40,10 @@ spec:
         args:
           - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ .Values.kubeletService.serviceName }}
         {{- end }}
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}
