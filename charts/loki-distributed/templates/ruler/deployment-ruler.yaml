@@ -1,4 +1,4 @@
-{{- if .Values.ruler.enabled }}
+{{- if and (eq .Values.ruler.kind "Deployment") .Values.ruler.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "loki.rulerLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.ruler.replicas }}
   strategy:

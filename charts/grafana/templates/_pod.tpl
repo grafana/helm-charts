@@ -213,6 +213,14 @@ containers:
       - name: SCRIPT
         value: "{{ .Values.sidecar.dashboards.script }}"
       {{- end }}
+      {{- if .Values.sidecar.dashboards.watchServerTimeout }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.dashboards.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.watchClientTimeout }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.dashboards.watchClientTimeout }}"
+      {{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}
@@ -288,6 +296,69 @@ containers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+{{- end}}
+{{- if .Values.sidecar.plugins.enabled }}
+  - name: {{ template "grafana.name" . }}-sc-plugins
+    {{- if .Values.sidecar.image.sha }}
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    {{- else }}
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    env:
+      - name: METHOD
+        value: {{ .Values.sidecar.plugins.watchMethod }}
+      - name: LABEL
+        value: "{{ .Values.sidecar.plugins.label }}"
+      {{- if .Values.sidecar.plugins.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.plugins.labelValue }}
+      {{- end }}
+      - name: FOLDER
+        value: "/etc/grafana/provisioning/plugins"
+      - name: RESOURCE
+        value: {{ quote .Values.sidecar.plugins.resource }}
+      {{- if .Values.sidecar.enableUniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "{{ .Values.sidecar.enableUniqueFilenames }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.searchNamespace }}
+      - name: NAMESPACE
+        value: "{{ .Values.sidecar.plugins.searchNamespace | join "," }}"
+      {{- end }}
+      {{- if .Values.sidecar.skipTlsVerify }}
+      - name: SKIP_TLS_VERIFY
+        value: "{{ .Values.sidecar.skipTlsVerify }}"
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.userKey | default "admin-user" }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- end }}
+      {{- if not .Values.sidecar.plugins.skipReload }}
+      - name: REQ_URL
+        value: {{ .Values.sidecar.plugins.reloadURL }}
+      - name: REQ_METHOD
+        value: POST
+      {{- end }}
+    resources:
+{{ toYaml .Values.sidecar.resources | indent 6 }}
+{{- if .Values.sidecar.securityContext }}
+    securityContext:
+{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
+{{- end }}
+    volumeMounts:
+      - name: sc-plugins-volume
+        mountPath: "/etc/grafana/provisioning/plugins"
 {{- end}}
   - name: {{ .Chart.Name }}
     {{- if .Values.image.sha }}
@@ -376,6 +447,10 @@ containers:
 {{- if .Values.sidecar.datasources.enabled }}
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+{{- end}}
+{{- if .Values.sidecar.plugins.enabled }}
+      - name: sc-plugins-volume
+        mountPath: "/etc/grafana/provisioning/plugins"
 {{- end}}
 {{- if .Values.sidecar.notifiers.enabled }}
       - name: sc-notifiers-volume
@@ -563,6 +638,10 @@ volumes:
 {{- end }}
 {{- if .Values.sidecar.datasources.enabled }}
   - name: sc-datasources-volume
+    emptyDir: {}
+{{- end -}}
+{{- if .Values.sidecar.plugins.enabled }}
+  - name: sc-plugins-volume
     emptyDir: {}
 {{- end -}}
 {{- if .Values.sidecar.notifiers.enabled }}

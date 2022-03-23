@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.indexGatewayFullname" . }}
   labels:
     {{- include "loki.indexGatewayLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.indexGateway.replicas }}
   updateStrategy:

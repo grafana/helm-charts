@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedIndexWritesFullname" . }}
   labels:
     {{- include "loki.memcachedIndexWritesLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedIndexWrites.replicas }}
   updateStrategy:

@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
-  {{- with .Values.queryFrontend.service.annotations }}
+  {{- with .Values.queryFrontend.serviceDiscovery.annotations }}
   annotations:
     {{ toYaml . | nindent 4 }}
   {{- end }}

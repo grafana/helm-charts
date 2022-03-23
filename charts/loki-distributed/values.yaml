@@ -21,6 +21,11 @@ fullnameOverride: null
 imagePullSecrets: []
 
 loki:
+  # -- If set, these annotations are added to all of the Kubernetes controllers
+  # (Deployments, StatefulSets, etc) that this chart launches. Use this to
+  # implement something like the "Wave" controller or another controller that
+  # is monitoring top level deployment resources.
+  annotations: {}
   # Configures the readiness probe for all of the Loki pods
   readinessProbe:
     httpGet:
@@ -876,6 +881,8 @@ compactor:
 ruler:
   # -- Specifies whether the ruler should be enabled
   enabled: false
+  # -- Kind of deployment [StatefulSet/Deployment]
+  kind: Deployment
   # -- Number of replicas for the ruler
   replicas: 1
   image:
@@ -928,7 +935,7 @@ ruler:
   # -- Tolerations for ruler pods
   tolerations: []
   persistence:
-    # -- Enable creating PVCs for the ruler
+    # -- Enable creating PVCs which is required when using recording rules
     enabled: false
     # -- Size of persistent disk
     size: 10Gi
