@@ -13,4 +13,4 @@ Entries should include a reference to the pull request that introduced the chang
 
 ## 1.0.0
 
-* [FEATURE] Initial version of the `enterprise-logs-simple` (GEL) Helm chart. #629
+* [FEATURE] Initial version of the `enterprise-logs-simple` (GEL) Helm chart. #1123
