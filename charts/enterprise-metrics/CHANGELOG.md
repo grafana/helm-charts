@@ -9,6 +9,11 @@ Entries should be ordered as follows:
 - [BUGFIX]
 
 Entries should include a reference to the Pull Request that introduced the change.
+
+## 1.8.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.7.0](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v170----january-6th-2022).
+
 ## 1.7.3
 
 * [BUGFIX] Alertmanager does not fail anymore to load configuration via the API. #945
