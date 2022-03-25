@@ -276,6 +276,39 @@ entries:
     version: 1.0.0
   enterprise-metrics:
   - apiVersion: v2
+    appVersion: v1.7.0
+    created: "2022-03-25T16:03:10.450472076Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    description: Grafana Enterprise Metrics
+    digest: c4ea8fbfe8ee8aca35822b20e04af17b7af10f3813caae4b2f387e7d5f25ef62
+    home: https://grafana.com/products/enterprise/metrics
+    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+    kubeVersion: ^1.10.0-0
+    name: enterprise-metrics
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/enterprise-metrics-1.8.0/enterprise-metrics-1.8.0.tgz
+    version: 1.8.0
+  - apiVersion: v2
     appVersion: v1.6.1
     created: "2022-01-10T11:18:37.897657162Z"
     dependencies:
@@ -12403,6 +12436,24 @@ entries:
   loki-distributed:
   - apiVersion: v2
     appVersion: 2.4.2
+    created: "2022-03-25T16:03:10.580191489Z"
+    description: Helm chart for Grafana Loki in microservices mode
+    digest: 0fe0235a566de5d6cbcc8031797283f08653f7fbaba65d730e711e1844275cda
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-distributed
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.46.4/loki-distributed-0.46.4.tgz
+    version: 0.46.4
+  - apiVersion: v2
+    appVersion: 2.4.2
     created: "2022-03-23T09:55:12.537631803Z"
     description: Helm chart for Grafana Loki in microservices mode
     digest: 36bad852b64ed67702f553b5d2e1653d9184c860fdb9776a4e831ad2c3c5c7ba
@@ -20344,4 +20395,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-03-23T09:55:12.546778897Z"
+generated: "2022-03-25T16:03:10.592887291Z"
