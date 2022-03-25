@@ -595,5 +595,5 @@ minio:
     requests:
       cpu: 100m
       memory: 128Mi
-  #change the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root
+  # -- Change the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root
   configPathmc: "/tmp/minio/mc/"
