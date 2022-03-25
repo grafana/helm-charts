@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.0.4
+
+- [FEATURE] Added OpenShift support. #1085
+
 ## 2.0.2
 
 - [BUGFIX] Have tokengen use the same ServiceAccount as the other components. #1031
