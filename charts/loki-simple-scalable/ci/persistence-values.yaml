@@ -1,11 +1,9 @@
 read:
-  replicas: 1
   persistence:
     enabled: true
     size: 100Mi
 
 write:
-  replicas: 1
   persistence:
     enabled: true
     size: 100Mi
