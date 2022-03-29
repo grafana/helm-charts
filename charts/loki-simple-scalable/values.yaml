@@ -69,12 +69,10 @@ loki:
       join_members:
         - {{ include "loki.fullname" . }}-memberlist
 
+    {{- if .Values.loki.commonConfig}}
     common:
-      path_prefix: /var/loki
-      replication_factor: 1
-      ring:
-        kvstore:
-          store: memberlist
+    {{- toYaml .Values.loki.commonConfig | nindent 2}}
+    {{- end}}
 
     limits_config:
       enforce_metric_name: false
@@ -92,6 +90,15 @@ loki:
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- end}}
 
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
+  commonConfig:
+    path_prefix: /var/loki
+    replication_factor: 1
+    storage:
+      filesystem:
+        chunks_directory: /var/loki/chunks
+        rules_directory: /var/loki/rules
+
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
@@ -104,15 +111,10 @@ loki:
           period: 24h
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
-  storageConfig:
-    boltdb_shipper:
-      shared_store: filesystem
-      active_index_directory: /var/loki/index
-      cache_location: /var/loki/cache
-      cache_ttl: 168h
-    filesystem:
-      directory: /var/loki/chunks
+  storageConfig: {}
   # -- Uncomment to configure each storage individually
+  # boltdb_shipper: {}
+  # filesystem: {}
   # azure: {}
   # gcs: {}
   # s3: {}
@@ -449,6 +451,7 @@ gateway:
     # high CPU load.
     htpasswd: >-
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
+
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
   # Configures the readiness probe for the gateway
