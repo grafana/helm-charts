@@ -108,8 +108,9 @@ loki:
     storage_config:
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- if .Values.indexGateway.enabled}}
-      index_gateway_client:
-        server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
+      boltdb_shipper:
+        index_gateway_client:
+          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
     {{- end}}
     {{- end}}
 
