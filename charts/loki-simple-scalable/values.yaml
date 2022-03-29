@@ -67,7 +67,7 @@ loki:
 
     memberlist:
       join_members:
-        - "{{ include \"loki.fullname\" . }}-memberlist"
+        - {{ include "loki.fullname" . }}-memberlist
 
     common:
       path_prefix: /var/loki
