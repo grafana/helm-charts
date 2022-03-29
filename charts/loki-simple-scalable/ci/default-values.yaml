@@ -1,0 +1,5 @@
+---
+loki:
+  config:
+    common:
+      replication_factor: 1
