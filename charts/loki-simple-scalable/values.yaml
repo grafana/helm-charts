@@ -75,10 +75,6 @@ loki:
       ring:
         kvstore:
           store: memberlist
-      {{- if .Values.loki.storageConfig}}
-      storage:
-      {{- toYaml .Values.loki.storageConfig | nindent 2}}
-      {{ -end }}
 
     limits_config:
       enforce_metric_name: false
@@ -89,6 +85,11 @@ loki:
     {{- if .Values.loki.schemaConfig}}
     schema_config:
     {{- toYaml .Values.loki.schemaConfig | nindent 2}}
+    {{- end}}
+
+    {{- if .Values.loki.storageConfig}}
+    storage_config:
+    {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- end}}
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
@@ -105,7 +106,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
   storageConfig:
     filesystem:
-      chunks_directory: /var/loki/chunks,
+      chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
   # -- Uncomment to configure each storage individually
   # azure: {}
