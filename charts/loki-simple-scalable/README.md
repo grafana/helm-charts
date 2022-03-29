@@ -35,7 +35,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
-| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | See `kubectl explain deployment.spec.strategy` for more -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
+| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
 | gateway.enabled | bool | `true` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
@@ -46,7 +46,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
-| gateway.ingress.annotations | object | `{}` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 ingressClassName: nginx -- Annotations for the gateway ingress |
+| gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
@@ -120,11 +120,6 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
 | rbac.pspEnabled | bool | `false` | If enabled, a PodSecurityPolicy is created |
 | read.affinity | string | Hard node and soft zone anti-affinity | Affinity for read pods. Passed through `tpl` and, thus, to be configured as string |
-| read.autoscaling.enabled | bool | `false` | Enable autoscaling for the read, this is only used if `queryIndex.enabled: true` |
-| read.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the read |
-| read.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the read |
-| read.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the read |
-| read.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the read |
 | read.extraArgs | list | `[]` | Additional CLI args for the read |
 | read.extraEnv | list | `[]` | Environment variables to add to the read pods |
 | read.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the read pods |
@@ -138,7 +133,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | read.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | read.podAnnotations | object | `{}` | Annotations for read pods |
 | read.priorityClassName | string | `nil` | The name of the PriorityClass for read pods |
-| read.replicas | int | `1` | Number of replicas for the read |
+| read.replicas | int | `3` | Number of replicas for the read |
 | read.resources | object | `{}` | Resource requests and limits for the read |
 | read.serviceLabels | object | `{}` | Labels for read service |
 | read.terminationGracePeriodSeconds | int | `30` | Grace period to allow the read to shutdown before it is killed |
@@ -172,7 +167,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | write.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | write.podAnnotations | object | `{}` | Annotations for write pods |
 | write.priorityClassName | string | `nil` | The name of the PriorityClass for write pods |
-| write.replicas | int | `1` | Number of replicas for the write |
+| write.replicas | int | `3` | Number of replicas for the write |
 | write.resources | object | `{}` | Resource requests and limits for the write |
 | write.serviceLabels | object | `{}` | Labels for ingestor service |
 | write.terminationGracePeriodSeconds | int | `300` | Grace period to allow the write to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so writes can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
