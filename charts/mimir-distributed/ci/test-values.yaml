@@ -10,6 +10,9 @@ compactor:
 ingester:
   persistentVolume:
     enabled: false
+  resources:
+    requests:
+      cpu: 10m
 
 store_gateway:
   persistentVolume:
