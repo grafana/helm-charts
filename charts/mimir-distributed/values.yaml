@@ -368,7 +368,7 @@ ingester:
 
   resources:
     requests:
-      cpu: 100m
+      cpu: 10m
       memory: 512Mi
 
   # Additional ingester container arguments, e.g. log level (debug, info, warn, error)
