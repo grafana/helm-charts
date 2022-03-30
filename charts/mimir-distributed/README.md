@@ -17,7 +17,7 @@ Kubernetes: `^1.10.0-0`
 | https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
 | https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
 | https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
-| https://helm.min.io/ | minio | 8.0.9 |
+| https://helm.min.io/ | minio | 8.0.10 |
 
 ### Storage
 

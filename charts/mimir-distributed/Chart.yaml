@@ -25,6 +25,6 @@ dependencies:
     condition: memcached-metadata.enabled
   - name: minio
     alias: minio
-    version: 8.0.9
+    version: 8.0.10
     repository: https://helm.min.io/
     condition: minio.enabled
