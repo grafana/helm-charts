@@ -1,0 +1,14 @@
+{{- if .Values.nginx.podDisruptionBudget -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "mimir.nginxFullname" . }}
+  labels:
+    {{- include "mimir.nginxLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.nginxSelectorLabels" . | nindent 6 }}
+{{ toYaml .Values.nginx.podDisruptionBudget | indent 2 }}
+{{- end -}}
