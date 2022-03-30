@@ -61,21 +61,15 @@ config: |
 
   auth_enabled: true
 
-  common:
-    path_prefix: /var/loki
-    storage:
-      s3:
-        endpoint: {{ include "enterprise-logs.minio" . }}
-        bucketnames: enterprise-logs-tsdb
-        secret_access_key: supersecret
-        access_key_id: enterprise-logs
-        s3forcepathstyle: true
-        insecure: true
-
   license:
     path: /etc/enterprise-logs/license/license.jwt
 
   cluster_name: {{ .Release.Name }}
+
+  {{- if .Values.commonConfig}}
+  common:
+  {{- toYaml .Values.commonConfig | nindent 2}}
+  {{- end}}
 
   server:
     http_listen_port: 3100
@@ -109,15 +103,15 @@ config: |
   querier:
     query_ingesters_within: 2h
 
+  {{- if .Values.schemaConfig}}
   schema_config:
-    configs:
-      - from: 2021-01-01
-        store: boltdb-shipper
-        object_store: aws
-        schema: v11
-        index:
-          prefix: index_
-          period: 24h
+  {{- toYaml .Values.schemaConfig | nindent 2}}
+  {{- end}}
+
+  {{- if .Values.storageConfig}}
+  storage_config:
+  {{- toYaml .Values.storageConfig | nindent 2}}
+  {{- end}}
 
   ruler:
     storage:
@@ -127,12 +121,49 @@ config: |
     enable_api: true
     enable_sharding: true
 
+# -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
+commonConfig:
+  path_prefix: /var/loki
+  replication_factor: 3
+  storage:
+    s3:
+      endpoint: '{{ include "enterprise-logs.minio" . }}'
+      bucketnames: enterprise-logs-tsdb
+      secret_access_key: supersecret
+      access_key_id: enterprise-logs
+      s3forcepathstyle: true
+      insecure: true
+
+# -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
+schemaConfig:
+  configs:
+    - from: 2020-09-07
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
+
+# -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
+storageConfig: {}
+# -- Uncomment to configure each storage individually
+# boltdb_shipper: {}
+# filesystem: {}
+# azure: {}
+# gcs: {}
+# s3: {}
+#
+#
+# -- Structured GEL configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
+structuredConfig: {}
+
 # -- Configuration for `tokengen` target
 tokengen:
   # -- Whether the job should be part of the deployment
   enable: true
   # -- Name of the secret to store the admin token in
-  adminTokenSecret: 'gel-admin-token'
+  adminTokenSecret: "gel-admin-token"
   # -- Additional CLI arguments for the `tokengen` target
   extraArgs: []
   # -- Additional Kubernetes environment
