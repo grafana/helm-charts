@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "loki.distributorLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
 {{- if not .Values.distributor.autoscaling.enabled }}
   replicas: {{ .Values.distributor.replicas }}
@@ -30,6 +34,12 @@ spec:
       labels:
         {{- include "loki.distributorSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.distributor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -41,7 +51,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: distributor
           image: {{ include "loki.distributorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

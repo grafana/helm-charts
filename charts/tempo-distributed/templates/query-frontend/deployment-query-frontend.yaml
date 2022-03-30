@@ -25,8 +25,17 @@ spec:
       labels:
         {{- include "tempo.queryFrontendLabels" . | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- with .Values.tempo.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.queryFrontend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.tempo.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with .Values.queryFrontend.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -58,6 +67,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
@@ -90,6 +103,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.query.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
@@ -97,6 +114,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       {{- end}}
+      terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
       {{- with .Values.queryFrontend.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

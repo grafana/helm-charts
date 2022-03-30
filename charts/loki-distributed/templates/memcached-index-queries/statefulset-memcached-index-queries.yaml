@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedIndexQueriesFullname" . }}
   labels:
     {{- include "loki.memcachedIndexQueriesLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedIndexQueries.replicas }}
   updateStrategy:
@@ -28,6 +32,12 @@ spec:
       {{- end }}
       labels:
         {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.memcachedIndexQueries.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}

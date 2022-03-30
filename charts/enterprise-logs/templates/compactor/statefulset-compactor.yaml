@@ -135,10 +135,10 @@ spec:
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: 3100
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946

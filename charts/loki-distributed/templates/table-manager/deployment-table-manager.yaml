@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.tableManagerFullname" . }}
   labels:
     {{- include "loki.tableManagerLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
@@ -23,6 +27,12 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.tableManagerSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.tableManager.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -34,7 +44,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.tableManager.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: table-manager
           image: {{ include "loki.tableManagerImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:

@@ -92,8 +92,8 @@ spec:
             - name: license
               mountPath: /etc/enterprise-logs/license
       restartPolicy: OnFailure
-      serviceAccount: {{ template "enterprise-logs.tokengenFullname" . }}
-      serviceAccountName: {{ template "enterprise-logs.tokengenFullname" . }}
+      serviceAccount: {{ include "loki.serviceAccountName" . }}
+      serviceAccountName: {{ include "loki.serviceAccountName" .  }}
       volumes:
         - name: config
           secret:

@@ -27,6 +27,18 @@ tempo:
       port: http
     initialDelaySeconds: 30
     timeoutSeconds: 1
+  # -- Global labels for all tempo pods
+  podLabels: {}
+  # -- Common annotations for all pods
+  podAnnotations: {}
+  # --- SecurityContext holds pod-level security attributes and common container settings
+  securityContext: {}
+  #  capabilities:
+  #    drop:
+  #    - ALL
+  #  readOnlyRootFilesystem: true
+  #  runAsNonRoot: true
+  #  runAsUser: 1000
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -38,6 +50,12 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+
+rbac:
+  # -- Specifies whether RBAC manifests should be created
+  create: false
+  # -- Specifies whether a PodSecurityPolicy should be created
+  pspEnabled: false
 
 # Configuration for the ingester
 ingester:
@@ -52,6 +70,8 @@ ingester:
     tag: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
+  # -- Labels for ingester pods
+  podLabels: {}
   # -- Annotations for ingester pods
   podAnnotations: {}
   # -- Additional CLI args for the ingester
@@ -123,6 +143,8 @@ distributor:
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
+  # -- Labels for distributor pods
+  podLabels: {}
   # -- Annotations for distributor pods
   podAnnotations: {}
   # -- Additional CLI args for the distributor
@@ -170,6 +192,8 @@ compactor:
     tag: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
   # -- Additional CLI args for the compactor
@@ -208,6 +232,8 @@ querier:
     tag: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
+  # -- Labels for querier pods
+  podLabels: {}
   # -- Annotations for querier pods
   podAnnotations: {}
   # -- Additional CLI args for the querier
@@ -289,8 +315,13 @@ queryFrontend:
     annotations: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
+  serviceDiscovery:
+    # -- Annotations for queryFrontendDiscovery service
+    annotations: {}
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
+  # -- Labels for queryFrontend pods
+  podLabels: {}
   # -- Annotations for query-frontend pods
   podAnnotations: {}
   # -- Additional CLI args for the query-frontend
@@ -431,11 +462,13 @@ config: |
     join_members:
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
-    per_tenant_override_config: /conf/overrides.yaml
+    {{- toYaml .Values.global_overrides | nindent 2 }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
     log_format: {{ .Values.server.logFormat }}
+    grpc_server_max_recv_msg_size: {{ .Values.server.grpc_server_max_recv_msg_size }}
+    grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
@@ -468,13 +501,14 @@ config: |
 server:
   # --  HTTP server listen host
   httpListenPort: 3100
-
   # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
   logLevel: info
-
   # -- Log format. Can be set to logfmt (default) or json.
   logFormat: logfmt
-
+  # -- Max gRPC message size that can be received
+  grpc_server_max_recv_msg_size: 4194304
+  # -- Max gRPC message size that can be sent
+  grpc_server_max_send_msg_size: 4194304
 # To configure a different storage backend instead of local storage:
 # storage:
 #   trace:
@@ -489,7 +523,11 @@ storage:
   trace:
     backend: local
 
-# Set ingestion overrides
+# Global overrides
+global_overrides:
+  per_tenant_override_config: /conf/overrides.yaml
+
+# Per tenants overrides
 overrides: |
   overrides: {}
 
@@ -514,6 +552,10 @@ memcached:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached pods
   extraEnvFrom: []
+  # -- Labels for memcached pods
+  podLabels: {}
+  # -- Annotations for memcached pods
+  podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
   # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
@@ -570,12 +612,35 @@ serviceMonitor:
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
   tlsConfig: null
 
+# Rules for the Prometheus Operator
+prometheusRule:
+  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
+  enabled: false
+  # -- Alternative namespace for the PrometheusRule resource
+  namespace: null
+  # -- PrometheusRule annotations
+  annotations: {}
+  # -- Additional PrometheusRule labels
+  labels: {}
+  # -- Contents of Prometheus rules file
+  groups: []
+  # - name: loki-rules
+  #   rules:
+  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  # -- Enable logging of 2xx and 3xx HTTP requests
+  verboseLogging: true
   image:
     # -- The Docker registry for the gateway image
     registry: docker.io
@@ -587,6 +652,8 @@ gateway:
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
+  # -- Labels for gateway pods
+  podLabels: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -712,7 +779,18 @@ gateway:
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+
+        {{- if .Values.gateway.verboseLogging }}
         access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   /dev/stderr  main  if=$loggable;
+        {{- end }}
+
         sendfile     on;
         tcp_nopush   on;
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
