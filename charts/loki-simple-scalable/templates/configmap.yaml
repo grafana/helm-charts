@@ -7,5 +7,5 @@ metadata:
     {{- include "loki.labels" . | nindent 4 }}
 data:
   config.yaml: |
-    {{- tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | nindent 4 }}
+    {{- tpl (toYaml .Values.loki.config) . | nindent 4 }}
 {{- end -}}

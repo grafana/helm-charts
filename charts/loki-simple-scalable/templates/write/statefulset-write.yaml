@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.write.replicas }}
-
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
