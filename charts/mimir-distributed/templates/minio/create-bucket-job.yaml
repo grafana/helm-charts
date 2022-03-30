@@ -52,9 +52,9 @@ spec:
           projected:
             sources:
             - configMap:
-                name: {{ template "minio.fullname" . }}-minio
+                name: {{ .Release.Name }}-minio
             - secret:
-                name: {{ template "minio.secretName" . }}-minio
+                name: {{ .Release.Name }}-minio
         {{- if .Values.minio.tls.enabled }}
         - name: cert-secret-volume-mc
           secret:
@@ -70,7 +70,7 @@ spec:
         command: ["/bin/sh", "/config/initialize"]
         env:
           - name: MINIO_ENDPOINT
-            value: {{ template "minio.fullname" . }}-minio
+            value: {{ .Release.Name }}-minio
           - name: MINIO_PORT
             value: {{ .Values.minio.service.port | quote }}
         volumeMounts:
