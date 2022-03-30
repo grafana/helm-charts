@@ -17206,6 +17206,40 @@ entries:
     urls:
     - https://grafana.github.io/helm-charts/packages/loki-stack-0.6.0.tgz
     version: 0.6.0
+  mimir-distributed:
+  - apiVersion: v2
+    appVersion: 2.0.0
+    created: "2022-03-30T17:12:21.771294173Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.10
+    description: Grafana Mimir
+    digest: 82268a7d5c3fd3dc9ba13546834a6e0312f045a98f4b14da32866fb2f072a6d2
+    home: https://grafana.com/docs/mimir/v2.0.x
+    icon: https://grafana.com/static/img/logos/logo-mimir.svg
+    kubeVersion: ^1.10.0-0
+    name: mimir-distributed
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-0.1.1/mimir-distributed-0.1.1.tgz
+    version: 0.1.1
   promtail:
   - apiVersion: v2
     appVersion: 2.4.2
@@ -20433,4 +20467,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-03-26T08:12:41.387130407Z"
+generated: "2022-03-30T17:12:21.780457814Z"
