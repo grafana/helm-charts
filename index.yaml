@@ -26,10 +26,13 @@ entries:
       repository: https://helm.min.io/
       version: 8.0.9
     description: Grafana Mimir
+    digest: 903047d4d1089290b480a79113b8602ffb7d4415761cb843adb228e693b568ed
     home: https://grafana.com/docs/mimir/v2.0.x
     icon: https://grafana.com/static/img/logos/logo-mimir.svg
     kubeVersion: ^1.10.0-0
     name: mimir-distributed
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-0.1.0/mimir-distributed-0.1.0.tgz
     version: 0.1.0
   enterprise-logs:
   - apiVersion: v2
