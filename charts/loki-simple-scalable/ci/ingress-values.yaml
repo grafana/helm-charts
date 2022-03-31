@@ -1,8 +1,7 @@
 ---
 loki:
-  config:
-    common:
-      replication_factor: 1
+  commonConfig:
+    replication_factor: 1
 
 read:
   replicas: 1
