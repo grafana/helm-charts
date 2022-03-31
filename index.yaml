@@ -298,6 +298,39 @@ entries:
   enterprise-metrics:
   - apiVersion: v2
     appVersion: v1.7.0
+    created: "2022-03-31T13:55:46.979916581Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    description: Grafana Enterprise Metrics
+    digest: a00a8ae89096074a157084d1d8458b0e828d5219b573ea463e8a52afc9bf662c
+    home: https://grafana.com/products/enterprise/metrics
+    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+    kubeVersion: ^1.10.0-0
+    name: enterprise-metrics
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/enterprise-metrics-1.8.1/enterprise-metrics-1.8.1.tgz
+    version: 1.8.1
+  - apiVersion: v2
+    appVersion: v1.7.0
     created: "2022-03-25T16:03:10.450472076Z"
     dependencies:
     - alias: memcached
@@ -17245,39 +17278,6 @@ entries:
   mimir-distributed:
   - apiVersion: v2
     appVersion: 2.0.0
-    created: "2022-03-31T13:54:40.868984236Z"
-    dependencies:
-    - alias: memcached
-      condition: memcached.enabled
-      name: memcached
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.5.2
-    - alias: memcached-queries
-      condition: memcached-queries.enabled
-      name: memcached
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.5.2
-    - alias: memcached-metadata
-      condition: memcached-metadata.enabled
-      name: memcached
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.5.2
-    - alias: minio
-      condition: minio.enabled
-      name: minio
-      repository: https://helm.min.io/
-      version: 8.0.10
-    description: Grafana Mimir
-    digest: e299db50c9f0e11c5051f43b15f4b0fe6f997149190e3b69c930e5be7f7b6a5e
-    home: https://grafana.com/docs/mimir/v2.0.x
-    icon: https://grafana.com/static/img/logos/logo-mimir.svg
-    kubeVersion: ^1.10.0-0
-    name: mimir-distributed
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-0.1.3/mimir-distributed-0.1.3.tgz
-    version: 0.1.3
-  - apiVersion: v2
-    appVersion: 2.0.0
     created: "2022-03-30T17:59:35.432076616Z"
     dependencies:
     - alias: memcached
@@ -20569,4 +20569,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-03-31T13:54:40.880480097Z"
+generated: "2022-03-31T13:55:46.992910697Z"
