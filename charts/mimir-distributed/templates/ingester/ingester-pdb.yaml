@@ -1,0 +1,14 @@
+{{- if .Values.ingester.podDisruptionBudget -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "mimir.ingesterFullname" . }}
+  labels:
+    {{- include "mimir.ingesterLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.ingesterSelectorLabels" . | nindent 6 }}
+{{ toYaml .Values.ingester.podDisruptionBudget | indent 2 }}
+{{- end -}}

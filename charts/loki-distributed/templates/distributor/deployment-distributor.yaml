@@ -90,6 +90,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.distributor.resources | nindent 12 }}
+        {{- if .Values.distributor.extraContainers }}
+        {{- toYaml .Values.distributor.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.distributor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
