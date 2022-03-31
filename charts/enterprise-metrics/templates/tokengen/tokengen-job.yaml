@@ -4,10 +4,8 @@ kind: Job
 metadata:
   name: {{ template "enterprise-metrics.fullname" . }}-tokengen
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-tokengen
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "mimir.tokengenJobLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
   annotations:
     {{- if .Values.tokengenJob.annotations }}
     {{- toYaml .Values.tokengenJob.annotations | nindent 4 }}
@@ -21,11 +19,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-tokengen
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: tokengen
-        target: tokengen
-        release: {{ .Release.Name }}
+        {{- include "mimir.tokengenJobLabels" . | nindent 8 }}
+        {{- if .Values.useGEMLabels }}{{- include "mimir.gemTokengenJobPodLabels" . | nindent 8 }}{{- end }}
+        {{- with .Values.tokengenJob.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
       {{- if .Values.tokengenJob.priorityClassName }}
@@ -47,15 +45,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=tokengen"
-            - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            {{- if .Values.minio.enabled }}
-            - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -admin.client.s3.bucket-name=enterprise-metrics-admin
-            - -admin.client.s3.access-key-id=enterprise-metrics
-            - -admin.client.s3.secret-access-key=supersecret
-            - -admin.client.s3.insecure=true
-            {{- end }}
+            - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.tokengenJob.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
@@ -64,7 +54,7 @@ spec:
               {{ toYaml .Values.tokengenJob.extraVolumeMounts | nindent 12 }}
             {{- end }}
             - name: config
-              mountPath: /etc/enterprise-metrics
+              mountPath: /etc/mimir
             - name: license
               mountPath: /license
           env:
@@ -75,11 +65,7 @@ spec:
       volumes:
         - name: config
           secret:
-          {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
-          {{- else }}
-            secretName: {{ template "enterprise-metrics.fullname" . }}
-          {{- end }}
         {{- if .Values.tokengenJob.extraVolumes }}
         {{ toYaml .Values.tokengenJob.extraVolumes | nindent 8 }}
         {{- end }}

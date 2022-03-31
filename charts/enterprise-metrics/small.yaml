@@ -15,9 +15,8 @@
 # result in data loss.
 config:
   ingester:
-    lifecycler:
-      ring:
-        replication_factor: 3
+    ring:
+      replication_factor: 3
 
 admin_api:
   replicas: 3
@@ -39,7 +38,7 @@ alertmanager:
     requests:
       cpu: 300m
       memory: 6Gi
-  statefulset:
+  statefulSet:
     enabled: true
 
 compactor:
@@ -91,8 +90,9 @@ memcached-queries:
 memcached-metadata:
   enabled: true
 
-minio:
-  enabled: false
+mimir:
+  minio:
+    enabled: false
 
 overrides_exporter:
   replicas: 1

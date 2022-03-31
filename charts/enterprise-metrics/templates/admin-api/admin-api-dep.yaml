@@ -4,28 +4,21 @@ metadata:
   annotations:
     {{- toYaml .Values.admin_api.annotations | nindent 4 }}
   labels:
-    app: {{ template "enterprise-metrics.name" . }}-admin-api
-    chart: {{ template "enterprise-metrics.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  name: {{ template "enterprise-metrics.fullname" . }}-admin-api
+    {{- include "mimir.adminApiLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+  name: {{ template "mimir.adminApiFullname" . }}-admin-api
 spec:
   replicas: {{ .Values.admin_api.replicas }}
   selector:
     matchLabels:
-      app: {{ template "enterprise-metrics.name" . }}-admin-api
-      release: {{ .Release.Name }}
+      {{- include "mimir.adminApiSelectorLabels" . | nindent 6 }}
   strategy:
     {{- toYaml .Values.admin_api.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "enterprise-metrics.name" . }}-admin-api
-        # The name label is important for cortex-mixin compatibility which expects certain names for services.
-        name: admin-api
-        gossip_ring_member: "true"
-        target: admin-api
-        release: {{ .Release.Name }}
+        {{- include "mimir.adminApiLabels" . | nindent 8 }}
+        {{- if .Values.useGEMLabels }}{{- include "mimir.gemAdminApiPodLabels" . | nindent 8 }}{{- end }}
         {{- with .Values.admin_api.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -49,22 +42,22 @@ spec:
         {{- with .Values.admin_api.initContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.minio.enabled }}
+        {{- if .Values.mimir.minio.enabled }}
         - name: minio-mc
-          image: "{{ .Values.minio.mcImage.repository }}:{{ .Values.minio.mcImage.tag }}"
-          imagePullPolicy: {{ .Values.minio.mcImage.pullPolicy }}
+          image: "{{ .Values.mimir.minio.mcImage.repository }}:{{ .Values.mimir.minio.mcImage.tag }}"
+          imagePullPolicy: {{ .Values.mimir.minio.mcImage.pullPolicy }}
           command: ["/bin/sh", "/config/initialize"]
           env:
             - name: MINIO_ENDPOINT
               value: {{ .Release.Name }}-minio
             - name: MINIO_PORT
-              value: {{ .Values.minio.service.port | quote }}
+              value: {{ .Values.mimir.minio.service.port | quote }}
           volumeMounts:
             - name: minio-configuration
               mountPath: /config
-          {{- if .Values.minio.tls.enabled }}
+          {{- if .Values.mimir.minio.tls.enabled }}
             - name: cert-secret-volume-mc
-              mountPath: {{ .Values.minio.configPathmc }}certs
+              mountPath: {{ .Values.mimir.minio.configPathmc }}certs
           {{ end }}
         {{- end }}
       {{- if .Values.image.pullSecrets }}
@@ -79,16 +72,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=admin-api"
-            - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
-            {{- if .Values.minio.enabled }}
-            - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -admin.client.s3.bucket-name=enterprise-metrics-admin
-            - -admin.client.s3.access-key-id=enterprise-metrics
-            - -admin.client.s3.secret-access-key=supersecret
-            - -admin.client.s3.insecure=true
-            {{- end }}
+            - -activity-tracker.filepath=
+            - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.admin_api.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
@@ -97,9 +82,9 @@ spec:
               {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/enterprise-metrics
+              mountPath: /etc/mimir
             - name: runtime-config
-              mountPath: /var/enterprise-metrics
+              mountPath: /var/mimir
             - name: license
               mountPath: /license
             - name: storage
@@ -107,10 +92,10 @@ spec:
               subPath: {{ .Values.admin_api.persistence.subPath }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: {{ include "mimir.serverHttpListenPort" . }}
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: {{ include "mimir.serverGrpcListenPort" . }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.admin_api.livenessProbe | nindent 12 }}
@@ -137,11 +122,7 @@ spec:
       volumes:
         - name: config
           secret:
-          {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
-          {{- else }}
-            secretName: {{ template "enterprise-metrics.fullname" . }}
-          {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "enterprise-metrics.fullname" . }}-runtime
@@ -153,7 +134,7 @@ spec:
             secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
-        {{- if .Values.minio.enabled }}
+        {{- if .Values.mimir.minio.enabled }}
         - name: minio-configuration
           projected:
             sources:
@@ -161,12 +142,12 @@ spec:
                 name: {{ .Release.Name }}-minio
             - secret:
                 name: {{ .Release.Name }}-minio
-        {{- if .Values.minio.tls.enabled }}
+        {{- if .Values.mimir.minio.tls.enabled }}
         - name: cert-secret-volume-mc
           secret:
-            secretName: {{ .Values.minio.tls.certSecret }}
+            secretName: {{ .Values.mimir.minio.tls.certSecret }}
             items:
-            - key: {{ .Values.minio.tls.publicCrt }}
+            - key: {{ .Values.mimir.minio.tls.publicCrt }}
               path: CAs/public.crt
         {{- end }}
         {{- end }}
