@@ -1,0 +1,11 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mimir.nginxFullname" . }}
+  labels:
+    {{- include "mimir.nginxLabels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    {{- tpl .Values.nginx.nginxConfig.file . | nindent 4 }}
+{{- end }}

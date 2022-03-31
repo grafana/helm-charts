@@ -18,6 +18,15 @@ spec:
   serviceName: memcached
   template:
     metadata:
+      {{- if or .Values.tempo.podAnnotations .Values.memcached.podAnnotations }}
+      annotations:
+        {{- with .Values.tempo.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.memcached.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
       labels:
         {{- include "tempo.memcachedLabels" . | nindent 8 }}
         {{- with .Values.tempo.podLabels }}

@@ -80,6 +80,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
+        {{- if .Values.compactor.extraContainers }}
+        {{- toYaml .Values.compactor.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.compactor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

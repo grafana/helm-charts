@@ -1,0 +1,14 @@
+{{- if .Values.compactor.podDisruptionBudget -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "mimir.compactorFullname" . }}
+  labels:
+    {{- include "mimir.compactorLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.compactorSelectorLabels" . | nindent 6 }}
+{{ toYaml .Values.compactor.podDisruptionBudget | indent 2 }}
+{{- end -}}
