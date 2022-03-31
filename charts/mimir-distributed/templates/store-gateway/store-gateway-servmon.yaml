@@ -3,13 +3,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "mimir.storeGatewayFullname" . }}
+  name: {{ template "mimir.storeGatewayFullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
   labels:
-    {{- include "mimir.storeGatewayLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.storeGatewayLabels" $ | nindent 4 }}
+    {{- if $.Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" $ | nindent 4 }}{{- end }}
     {{- with .labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -24,7 +24,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mimir.storeGatewaySelectorLabels" . | nindent 6 }}
+      {{- include "mimir.storeGatewaySelectorLabels" $ | nindent 6 }}
   endpoints:
     - port: http-metrics
       {{- with .interval }}

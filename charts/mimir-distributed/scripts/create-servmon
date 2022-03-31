@@ -44,13 +44,13 @@ cat <<EOF
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "mimir.${camel_cased}Fullname" . }}
+  name: {{ template "mimir.${camel_cased}Fullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
   labels:
-    {{- include "mimir.${camel_cased}Labels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.${camel_cased}Labels" $ | nindent 4 }}
+    {{- if $.Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" $ | nindent 4 }}{{- end }}
     {{- with .labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -65,7 +65,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mimir.${camel_cased}SelectorLabels" . | nindent 6 }}
+      {{- include "mimir.${camel_cased}SelectorLabels" $ | nindent 6 }}
   endpoints:
     - port: http-metrics
       {{- with .interval }}
