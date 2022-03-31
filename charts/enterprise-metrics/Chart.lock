@@ -8,8 +8,8 @@ dependencies:
 - name: memcached
   repository: https://charts.bitnami.com/bitnami
   version: 5.5.2
-- name: minio
-  repository: https://helm.min.io/
-  version: 8.0.9
-digest: sha256:a4f19f16d818da7216c6386eb1a8ff941619f100796525098fec318940c7f755
-generated: "2021-09-08T03:07:20.793390675Z"
+- name: mimir-distributed
+  repository: https://grafana.github.io/helm-charts
+  version: 0.1.2
+digest: sha256:b7435705762e8fcd2528a110e25c2db5512e04ee3ef0614e42fe08700d01299f
+generated: "2022-03-31T20:01:28.147966501+02:00"
