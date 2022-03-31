@@ -1,5 +1,5 @@
-apiVersion: v2
-version: 0.1.2
++apiVersion: v2
+version: 0.1.3
 appVersion: 2.0.0
 description: "Grafana Mimir"
 engine: gotpl
