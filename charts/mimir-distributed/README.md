@@ -24,7 +24,7 @@ Kubernetes: `^1.10.0-0`
 Grafana Mimir requires an object storage backend to store metrics and indexes.
 
 The default chart values will deploy [Minio](https://min.io) for initial set up. Production deployments should use a separately deployed object store.
-See [Grafana Mimir documentation](https://grafana.com/docs/mimir/v2.0.x) for details on storage types and documentation.
+See [Grafana Mimir documentation](https://grafana.com/docs/mimir/latest/operators-guide/architecture/about-grafana-mimir-architecture/#long-term-storage) for details on storage types and documentation.
 
 ## Installation
 
