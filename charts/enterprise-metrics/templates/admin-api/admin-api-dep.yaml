@@ -42,24 +42,6 @@ spec:
         {{- with .Values.admin_api.initContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.mimir.minio.enabled }}
-        - name: minio-mc
-          image: "{{ .Values.mimir.minio.mcImage.repository }}:{{ .Values.mimir.minio.mcImage.tag }}"
-          imagePullPolicy: {{ .Values.mimir.minio.mcImage.pullPolicy }}
-          command: ["/bin/sh", "/config/initialize"]
-          env:
-            - name: MINIO_ENDPOINT
-              value: {{ .Release.Name }}-minio
-            - name: MINIO_PORT
-              value: {{ .Values.mimir.minio.service.port | quote }}
-          volumeMounts:
-            - name: minio-configuration
-              mountPath: /config
-          {{- if .Values.mimir.minio.tls.enabled }}
-            - name: cert-secret-volume-mc
-              mountPath: {{ .Values.mimir.minio.configPathmc }}certs
-          {{ end }}
-        {{- end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
