@@ -13,7 +13,7 @@ fullnameOverride: null
 # required to update the values in the `loki-simple-scalable.loki.image` block.
 # This can be done by copying the values, or like here, by using an anchor and
 # a pointer.
-image: &image # -- The container registry to use
+image: &image  # -- The container registry to use
   registry: docker.io
   # -- The image repository to use
   repository: grafana/enterprise-logs

@@ -7,11 +7,11 @@ kubeVersion: "^1.10.0-0"
 description: "Grafana Enterprise Logs (Simple Scalable)"
 home: "https://grafana.com/products/enterprise/logs/"
 dependencies:
-- name: loki-simple-scalable
-  version: ^0.3.0
-  repository: https://grafana.github.io/helm-charts
-- name: minio
-  alias: minio
-  version: 8.0.9
-  repository: https://helm.min.io/
-  condition: minio.enabled
+  - name: loki-simple-scalable
+    version: ^0.3.0
+    repository: https://grafana.github.io/helm-charts
+  - name: minio
+    alias: minio
+    version: 8.0.9
+    repository: https://helm.min.io/
+    condition: minio.enabled
