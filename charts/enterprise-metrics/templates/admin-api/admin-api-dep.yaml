@@ -116,20 +116,3 @@ spec:
             secretName: {{ .Values.license.secretName }}
         - name: storage
           emptyDir: {}
-        {{- if .Values.mimir.minio.enabled }}
-        - name: minio-configuration
-          projected:
-            sources:
-            - configMap:
-                name: {{ .Release.Name }}-minio
-            - secret:
-                name: {{ .Release.Name }}-minio
-        {{- if .Values.mimir.minio.tls.enabled }}
-        - name: cert-secret-volume-mc
-          secret:
-            secretName: {{ .Values.mimir.minio.tls.certSecret }}
-            items:
-            - key: {{ .Values.mimir.minio.tls.publicCrt }}
-              path: CAs/public.crt
-        {{- end }}
-        {{- end }}
