@@ -10,6 +10,36 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.0
+
+* [CHANGE] **Breaking** Configuration for Grafana Enterprise Metrics is now in `.enterpriseMetrics.config` as a template **string**.
+  Please consult the [Grafana Enterprise Migration Guide](TODO add final version) to learn more about how to upgrade the configuration.
+  Except for the following parameters, everything is now set in this string typed value, giving a definite source of configuration.
+  Exceptions:
+    > The `-target=` must be provided individually.\
+    The `-config.file=` obviously.\
+    The `-activity-tracker` for convenience.\
+    User defined arguments from `.<service>.extraArgs` or `.mimir.<service>.extraArgs`.
+* [CHANGE] **Breaking** The default for `ingester.ring.replication_factor` is now 3 and there will be 3 ingesters started even with the default `values.yaml`.
+  On the other hand, POD anti affinity is turned off by default to allow single node deployment.
+* [CHANGE] **Breaking** Ingesters only support `StatefulSet` from now on as chunks storage was removed in favour of blocks storage.
+* [CHANGE] **Breaking** Moved Grafana Mimir services into their own deployable subchart. Helm values of services are now under `.mimir`, as in:
+  > moved `.alertmanager` to `.mimir.alertmanager`,\
+  moved `.compactor` to `.mimir.compactor`,\
+  moved `.distributor` to `.mimir.distributor`,\
+  moved `.ingester` to `.mimir.ingester`,\
+  moved `.overrides-exporter` to `.mimir.overrides-exported`,\
+  moved `.querier` to `.mimir.querier`,\
+  moved `.query-frontend` to `.mimir.query-frontedn`,\
+  moved `.ruler` to `.mimir.ruler`,\
+  moved `.store-gateway` to `.mimir.store-gateway`.
+* [CHANGE] **Breaking** Moved Minio service into the Grafana Mimir subchart, setting available via `.mimir.minio`, for example `.mimir.minio.enabled`.
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v2.0.0](TODO add final version)
+* [ENHANCEMENT] Minio bucket creation is not tied to `admin-api` anymore, moved to its own job.
+* [BUGFIX] `.<service>.PodDisruptionBudget` was not working. Added template definition for all services.
+* [BUGFIX] Fix typo in value `.alertmanager.statefulset` to `.alertmanager.statefulSet`.
+* [BUGFIX] Remove unused value `.useExternalLicense`.
+
 ## 1.8.1
 
 * [ENHANCEMENT] Support Grafana Mimir monitoring mixin labels by setting container names to the component names.

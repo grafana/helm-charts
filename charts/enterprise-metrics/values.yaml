@@ -152,7 +152,6 @@ enterpriseMetrics:
       ring:
         final_sleep: 0s
         num_tokens: 512
-        replication_factor: 1
 
     ingester_client:
       grpc_client_config:
