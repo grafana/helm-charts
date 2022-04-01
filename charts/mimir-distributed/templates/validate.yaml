@@ -1,0 +1,7 @@
+{{- if .Values.config }}
+{{- fail "Top level 'config' is not allowed, configuration should be provided as a string in 'mimir.config' and can contain template expressions. Alternatively configuration can be provided as an external secret." }}
+{{- end }}
+
+{{- if .Values.podDisruptionBudget }}
+{{- fail "Top level 'podDisruptionBudget' is removed in favour of per component podDisruptionBudget" }}
+{{- end }}

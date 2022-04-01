@@ -37,30 +37,46 @@ loki:
 Sample helm template for ingress:
 
 ```yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-annotations:
+  name: loki
+  annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
-    ingress.kubernetes.io/auth-type: "basic"
+    ingress.kubernetes.io/auth-type: basic
     ingress.kubernetes.io/auth-secret: {{ .Values.ingress.basic.secret }}
-name: loki
 spec:
-rules:
-- host: {{ .Values.ingress.host }}
+  rules:
+  - host: {{ .Values.ingress.host }}
     http:
-    paths:
-    - backend:
-        serviceName: loki
-        servicePort: 3100
-tls:
-- secretName: {{ .Values.ingress.cert }}
-    hosts:
+      paths:
+      - backend:
+          service:
+            name: loki
+            port:
+              number: 3100
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
     - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.cert }}
 ```
 
 ## Use Loki Alerting
 
 You can add your own alerting rules with `alerting_groups` in `values.yaml`. This will create a ConfigMap with your rules and additional volumes and mounts for Loki.
 
-This does **not** enable the Loki `ruler` component which does the evaluation of your rules. The `values.yaml` file does contain a simple example. For more details take a look at the official [alerting docs](https://grafana.com/docs/loki/latest/alerting/).
+This does **not** enable the Loki `ruler` component which does the evaluation of your rules. The `values.yaml` file does contain a simple example. For more details take a look at the official [alerting docs](https://grafana.com/docs/loki/latest/rules/).
+
+## Enable retention policy (log deletion)
+
+Set Helm value `config.compactor.retention_enabled` to enable retention using the default policy, which deletes logs after 31 days.
+
+```yaml
+config:
+  compactor:
+    retention_enabled: true
+```
+
+See [the documentation](https://grafana.com/docs/loki/latest/operations/storage/retention/) for additional options.

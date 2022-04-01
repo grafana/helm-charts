@@ -1,0 +1,14 @@
+{{- if .Values.distributor.podDisruptionBudget -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "mimir.distributorFullname" . }}
+  labels:
+    {{- include "mimir.distributorLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.distributorSelectorLabels" . | nindent 6 }}
+{{ toYaml .Values.distributor.podDisruptionBudget | indent 2 }}
+{{- end -}}

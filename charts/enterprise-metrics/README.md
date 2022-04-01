@@ -89,3 +89,18 @@ To configure a local default storage class for k3d:
 $ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 $ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
+
+To install the chart with the values used in CI tests:
+
+```console
+$ helm install test ./ --values ./ci/test-values.yaml
+```
+
+# Contributing/Releasing
+
+All changes require a bump to the chart version, as this enforced by CI. All changes to the chart itself should also have a corresponding CHANGELOG entry.
+
+When making a change and organizing a release, first ensure your changes are encapuslated in a meaningful commit.
+In a separate commit, increase the chart version in the `Chart.yaml` file and add a CHANGELOG entry in the `CHANGELOG.md` file under the new version.
+
+Finally, push your changes and open up a Pull Request with the prefix `[enterprise-metrics]`.
