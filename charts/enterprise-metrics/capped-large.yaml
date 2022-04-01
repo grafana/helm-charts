@@ -13,11 +13,6 @@
 # object storage service for production deployments.
 # Ingesters are configured with a replication factor of 3 to ensure that a single ingester failur does not
 # result in data loss.
-config:
-  ingester:
-    ring:
-      replication_factor: 3
-
 admin_api:
   replicas: 3
   resources:
@@ -28,41 +23,6 @@ admin_api:
       cpu: 1
       memory: 256Mi
 
-alertmanager:
-  persistentVolume:
-    enabled: true
-  replicas: 3
-  resources:
-    requests:
-      cpu: 1
-      memory: 8Gi
-    limits:
-      cpu: 1
-      memory: 8Gi
-  statefulSet:
-    enabled: true
-
-compactor:
-  persistentVolume:
-    size: 50Gi
-  resources:
-    requests:
-      cpu: 2
-      memory: 2Gi
-    limits:
-      cpu: 2
-      memory: 2Gi
-
-distributor:
-  replicas: 15
-  resources:
-    requests:
-      cpu: 2
-      memory: 4Gi
-    limits:
-      cpu: 2
-      memory: 4Gi
-
 gateway:
   replicas: 8
   resources:
@@ -72,18 +32,6 @@ gateway:
     limits:
       cpu: 1
       memory: 384Mi
-
-ingester:
-  persistentVolume:
-    size: 50Gi
-  replicas: 25
-  resources:
-    requests:
-      cpu: 4
-      memory: 15Gi
-    limits:
-      cpu: 4
-      memory: 15Gi
 
 memcached:
   enabled: true
@@ -97,57 +45,114 @@ memcached-metadata:
   enabled: true
 
 mimir:
+  alertmanager:
+    persistentVolume:
+      enabled: true
+    replicas: 3
+    resources:
+      requests:
+        cpu: 1
+        memory: 8Gi
+      limits:
+        cpu: 1
+        memory: 8Gi
+    statefulSet:
+      enabled: true
+
+  compactor:
+    persistentVolume:
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 2
+        memory: 2Gi
+      limits:
+        cpu: 2
+        memory: 2Gi
+
+  distributor:
+    replicas: 15
+    resources:
+      requests:
+        cpu: 2
+        memory: 4Gi
+      limits:
+        cpu: 2
+        memory: 4Gi
+
+  ingester:
+    persistentVolume:
+      size: 50Gi
+    replicas: 25
+    resources:
+      requests:
+        cpu: 4
+        memory: 15Gi
+      limits:
+        cpu: 4
+        memory: 15Gi
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - ingester
+            topologyKey: 'kubernetes.io/hostname'
+
   minio:
     enabled: false
 
-overrides_exporter:
-  replicas: 1
-  resources:
-    limits:
-      cpu: 1
-      memory: 256Mi
-    requests:
-      cpu: 1
-      memory: 256Mi
+  overrides_exporter:
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1
+        memory: 256Mi
+      requests:
+        cpu: 1
+        memory: 256Mi
 
-querier:
-  replicas: 6
-  resources:
-    requests:
-      cpu: 1
-      memory: 12Gi
-    limits:
-      cpu: 1
-      memory: 12Gi
+  querier:
+    replicas: 6
+    resources:
+      requests:
+        cpu: 1
+        memory: 12Gi
+      limits:
+        cpu: 1
+        memory: 12Gi
 
-query_frontend:
-  replicas: 2
-  resources:
-    requests:
-      cpu: 2
-      memory: 6Gi
-    limits:
-      cpu: 2
-      memory: 6Gi
+  query_frontend:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 2
+        memory: 6Gi
+      limits:
+        cpu: 2
+        memory: 6Gi
 
-ruler:
-  replicas: 2
-  resources:
-    requests:
-      cpu: 1
-      memory: 6Gi
-    limits:
-      cpu: 1
-      memory: 6Gi
+  ruler:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 1
+        memory: 6Gi
+      limits:
+        cpu: 1
+        memory: 6Gi
 
-store_gateway:
-  persistentVolume:
-    size: 50Gi
-  replicas: 1
-  resources:
-    requests:
-      cpu: 1
-      memory: 6Gi
-    limits:
-      cpu: 1
-      memory: 6Gi
+  store_gateway:
+    persistentVolume:
+      size: 50Gi
+    replicas: 1
+    resources:
+      requests:
+        cpu: 1
+        memory: 6Gi
+      limits:
+        cpu: 1
+        memory: 6Gi
