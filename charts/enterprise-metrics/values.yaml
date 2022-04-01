@@ -82,7 +82,7 @@ enterpriseMetrics:
     gateway:
       proxy:
         default:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}            
+          url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         admin_api:
           url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         alertmanager:
@@ -248,6 +248,9 @@ admin_api:
   podLabels: {}
   podAnnotations: {}
 
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
   securityContext: {}
 
   extraArgs: {}
@@ -291,6 +294,9 @@ gateway:
 
   podLabels: {}
   podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
 
   securityContext: {}
   initContainers: []
