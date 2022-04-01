@@ -22,6 +22,12 @@ Grafana Labs employees can extend the expiry of the private key using the `gpg` 
 
    ```console
    $ gpg --no-default-keyring --keyring ~/.gnupg/helm-charts.gpg --import <PATH TO GPG KEY>
+   gpg: key 7054A9559D3CFB0B: public key "Grafana Loki <loki-team@googlegroups.com>" imported
+   gpg: key 7054A9559D3CFB0B: secret key imported
+   gpg: Total number processed: 1
+   gpg:               imported: 1
+   gpg:       secret keys read: 1
+   gpg:  secret keys unchanged: 1
    ```
 
 1. Run the `gpg` interactive prompt to edit the 'Grafana Loki' key.
@@ -94,6 +100,7 @@ Grafana Labs employees can extend the expiry of the private key using the `gpg` 
 
    ```console
    $ base64 ~/.gnupg/helm-charts.gpg | xclip -selection clipboard -i
+   ​
    ```
 
 1. Update the `GPG_KEY_BASE64` GitHub Actions secret with the contents of your clipboard.
@@ -102,6 +109,7 @@ Grafana Labs employees can extend the expiry of the private key using the `gpg` 
 
    ```console
    $ gpg --no-default-keyring --keyring ~/helm-charts.gpg --export -a | xclip -selection clipboard -i
+   ​​
    ```
 
 1. Update the `Loki Helm GPG Key` secret in 1password with the contents of your clipboard.
