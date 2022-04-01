@@ -220,7 +220,7 @@ enterpriseMetrics:
     instrumentation:
       enabled: true
       distributor_client:
-        address: 'dns:///{{ template "mimir.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}'
+        address: 'dns:///{{ template "mimir.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverGrpcListenPort" . }}'
 
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
