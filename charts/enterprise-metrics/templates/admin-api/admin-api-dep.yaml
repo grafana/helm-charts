@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "mimir.adminApiLabels" . | nindent 4 }}
     {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
-  name: {{ template "mimir.adminApiFullname" . }}-admin-api
+  name: {{ template "mimir.adminApiFullname" . }}
 spec:
   replicas: {{ .Values.admin_api.replicas }}
   selector:
