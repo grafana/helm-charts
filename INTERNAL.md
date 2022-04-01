@@ -108,7 +108,7 @@ Grafana Labs employees can extend the expiry of the private key using the `gpg` 
 1. Export the private key to your clipboard.
 
    ```console
-   $ gpg --no-default-keyring --keyring ~/helm-charts.gpg --export-secret-key -a | xclip -selection clipboard -i
+   $ gpg --no-default-keyring --keyring ~/.gnupg/helm-charts.gpg --export-secret-key -a | xclip -selection clipboard -i
    ​​
    ```
 
