@@ -114,8 +114,10 @@ This version requires Helm >= 3.1.0.
 | `initChownData.resources`                 | init-chown-data pod resource requests & limits | `{}`                                                   |
 | `schedulerName`                           | Alternate scheduler name                      | `nil`                                                   |
 | `env`                                     | Extra environment variables passed to pods    | `{}`                                                    |
-| `envValueFrom`                            | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details.  | `{}` |
+| `envValueFrom`                            | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
 | `envFromSecret`                           | Name of a Kubernetes secret (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `""` |
+| `envFromSecrets`                          | List of Kubernetes secrets (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `[]` |
+| `envFromConfigMaps`                       | List of Kubernetes ConfigMaps (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `[]` |
 | `envRenderSecret`                         | Sensible environment variables passed to pods and stored as secret | `{}`                               |
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
