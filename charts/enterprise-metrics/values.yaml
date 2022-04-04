@@ -839,6 +839,69 @@ query_frontend:
   extraPorts: []
   env: []
 
+# Mimir ruler
+ruler:
+  replicas: 1
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Additional ruler container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+    # log.level: debug
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  affinity: {}
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 180
+
+  tolerations: []
+  initContainers: []
+  extraContainers: []
+  extraVolumes:
+    # -- Create license volume from license secret
+    - name: license
+      secret:
+        secretName: *emLicenseSecretName
+  extraVolumeMounts:
+    # -- Mount the license volume
+    - name: license
+      mountPath: /license
+  extraPorts: []
+  env: []
+
 # Mimir compactor
 compactor:
   enabled: true
@@ -1066,18 +1129,6 @@ mimir:
   gateway:
     # using the parent enterprise gateway instead
     enabled: false
-
-  ruler:
-    extraVolumes:
-      # -- Create license volume from license secret
-      - name: license
-        secret:
-          secretName: *emLicenseSecretName
-    extraVolumeMounts:
-      # -- Mount the license volume
-      - name: license
-        mountPath: /license
-
 
 
   store_gateway:
