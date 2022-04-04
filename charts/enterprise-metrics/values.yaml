@@ -168,7 +168,7 @@ enterpriseMetrics:
       join_members:
       - {{ include "mimir.fullname" . }}-gossip-ring
 
-    # This configures how the store-gateway synchronizes blocks stored in the bucket. It uses Minio by default for getting started (configured via flags) but this should be changed for production deployments.
+    # This configures how the store-gateway synchronizes blocks stored in the bucket. It uses MinIO by default for getting started but this should be changed for production deployments.
     blocks_storage:
       backend: s3
       tsdb:
