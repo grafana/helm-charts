@@ -160,7 +160,7 @@ initContainers:
         mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
 {{- if .Values.extraInitContainers }}
-{{ toYaml .Values.extraInitContainers | indent 2 }}
+{{ tpl (toYaml .Values.extraInitContainers) . | indent 2 }}
 {{- end }}
 {{- if .Values.image.pullSecrets }}
 imagePullSecrets:
@@ -530,13 +530,13 @@ containers:
     {{- range $key, $value := .Values.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
-{{ toYaml $value | indent 10 }}
+{{ tpl (toYaml $value) $ | indent 10 }}
     {{- end }}
 {{- range $key, $value := .Values.env }}
       - name: "{{ tpl $key $ }}"
         value: "{{ tpl (print $value) $ }}"
 {{- end }}
-    {{- if or .Values.envFromSecret (or .Values.envRenderSecret .Values.envFromSecrets) }}
+    {{- if or .Values.envFromSecret (or .Values.envRenderSecret .Values.envFromSecrets) .Values.envFromConfigMaps }}
     envFrom:
     {{- if .Values.envFromSecret }}
       - secretRef:
@@ -548,7 +548,12 @@ containers:
     {{- end }}
     {{- range .Values.envFromSecrets }}
       - secretRef:
-          name: {{ .name }}
+          name: {{ tpl .name $ }}
+          optional: {{ .optional | default false }}
+    {{- end }}
+    {{- range .Values.envFromConfigMaps }}
+      - configMapRef:
+          name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
     {{- end }}
     {{- end }}

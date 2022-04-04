@@ -241,6 +241,9 @@ tolerations: []
 ##
 affinity: {}
 
+## Additional init containers (evaluated as template)
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+##
 extraInitContainers: []
 
 ## Enable an Specify container in extraContainers. This is meant to allow adding an authentication proxy to a grafana pod
@@ -369,7 +372,7 @@ admin:
 
 env: {}
 
-## "valueFrom" environment variable references that will be added to deployment pods
+## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
 ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
 ## Renders in container spec as:
 ##   env:
@@ -393,8 +396,17 @@ envRenderSecret: {}
 
 ## The names of secrets in the same kubernetes namespace which contain values to be added to the environment
 ## Each entry should contain a name key, and can optionally specify whether the secret must be defined with an optional key.
+## Name is templated.
 envFromSecrets: []
 ## - name: secret-name
+##   optional: true
+
+## The names of conifgmaps in the same kubernetes namespace which contain values to be added to the environment
+## Each entry should contain a name key, and can optionally specify whether the configmap must be defined with an optional key.
+## Name is templated.
+## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#configmapenvsource-v1-core
+envFromConfigMaps: []
+## - name: configmap-name
 ##   optional: true
 
 # Inject Kubernetes services as environment variables.
