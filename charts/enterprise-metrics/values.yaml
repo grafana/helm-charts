@@ -318,6 +318,145 @@ gateway:
   tolerations: []
   terminationGracePeriodSeconds: 60
 
+# Mimir alertmanager
+alertmanager:
+  replicas: 1
+
+  statefulSet:
+    enabled: true
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  affinity: {}
+  annotations: {}
+  persistence:
+    # SubPath in emptyDir for persistence, only enabled if alertmanager.statefulSet.enabled is false
+    subPath:
+
+  persistentVolume:
+    # If true and alertmanager.statefulSet.enabled is true,
+    # Alertmanager will create/use a Persistent Volume Claim
+    # If false, use emptyDir
+    enabled: true
+
+    # Alertmanager data Persistent Volume Claim annotations
+    #
+    annotations: {}
+
+    # Alertmanager data Persistent Volume access modes
+    # Must match those of existing PV or dynamic provisioner
+    # Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    #
+    accessModes:
+      - ReadWriteOnce
+
+    # Alertmanager data Persistent Volume size
+    #
+    size: 1Gi
+
+    # Subdirectory of Alertmanager data Persistent Volume to mount
+    # Useful if the volume's root directory is not empty
+    #
+    subPath: ''
+
+    # Alertmanager data Persistent Volume Storage Class
+    # If defined, storageClassName: <storageClass>
+    # If set to "-", storageClassName: "", which disables dynamic provisioning
+    # If undefined (the default) or set to null, no storageClassName spec is
+    #   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    #   GKE, AWS & OpenStack)
+    #
+    # storageClass: "-"
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  # Tolerations for pod assignment
+  # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  statefulStrategy:
+    type: RollingUpdate
+
+  terminationGracePeriodSeconds: 60
+
+  initContainers: []
+  # Init containers to be added to the alertmanager pod.
+  # - name: my-init-container
+  #   image: busybox:latest
+  #   command: ['sh', '-c', 'echo hello']
+
+  extraContainers: []
+  # Additional containers to be added to the alertmanager pod.
+  # - name: reverse-proxy
+  #   image: angelbarrera92/basic-auth-reverse-proxy:dev
+  #   args:
+  #     - "serve"
+  #     - "--upstream=http://localhost:3100"
+  #     - "--auth-config=/etc/reverse-proxy-conf/authn.yaml"
+  #   ports:
+  #     - name: http
+  #       containerPort: 11811
+  #       protocol: TCP
+  #   volumeMounts:
+  #     - name: reverse-proxy-auth-config
+  #       mountPath: /etc/reverse-proxy-conf
+
+  extraVolumes:
+  # Additional volumes to the alertmanager pod.
+  # - name: reverse-proxy-auth-config
+  #   secret:
+  #     secretName: reverse-proxy-auth-config
+  # -- Create license volume from license secret
+    - name: license
+      secret:
+        secretName: *emLicenseSecretName
+
+  # Extra volume mounts that will be added to the alertmanager container
+  extraVolumeMounts:
+    # -- Mount the license volume
+    - name: license
+      mountPath: /license
+
+  extraPorts: []
+  # Additional ports to the alertmanager services. Useful to expose extra container ports.
+  # - port: 11811
+  #   protocol: TCP
+  #   name: http
+  #   targetPort: http
+
+  # Extra env variables to pass to the alertmanager container
+  env: []
+
 # Mimir distributor
 distributor:
   replicas: 1
@@ -390,6 +529,7 @@ distributor:
   extraPorts: []
   env: []
 
+# Mimir compactor
 compactor:
   enabled: true
   replicas: 1
@@ -616,19 +756,6 @@ mimir:
   gateway:
     # using the parent enterprise gateway instead
     enabled: false
-
-  alertmanager:
-    extraVolumes:
-      # -- Create license volume from license secret
-      - name: license
-        secret:
-          secretName: *emLicenseSecretName
-    extraVolumeMounts:
-      # -- Mount the license volume
-      - name: license
-        mountPath: /license
-
-
 
   ingester:
     extraVolumes:
