@@ -691,6 +691,80 @@ overrides_exporter:
   tolerations: []
   terminationGracePeriodSeconds: 60
 
+# Mimir querier
+querier:
+  replicas: 2
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Additional querier container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - querier
+            topologyKey: 'kubernetes.io/hostname'
+
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 180
+
+  tolerations: []
+  initContainers: []
+  extraContainers: []
+  extraVolumes:
+    # -- Create license volume from license secret
+    - name: license
+      secret:
+        secretName: *emLicenseSecretName
+  extraVolumeMounts:
+    # -- Mount the license volume
+    - name: license
+      mountPath: /license
+  extraPorts: []
+  env: []
+
 # Mimir compactor
 compactor:
   enabled: true
@@ -920,17 +994,6 @@ mimir:
     enabled: false
 
   ruler:
-    extraVolumes:
-      # -- Create license volume from license secret
-      - name: license
-        secret:
-          secretName: *emLicenseSecretName
-    extraVolumeMounts:
-      # -- Mount the license volume
-      - name: license
-        mountPath: /license
-
-  querier:
     extraVolumes:
       # -- Create license volume from license secret
       - name: license
