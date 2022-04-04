@@ -14,12 +14,14 @@ metadata:
     {{- end }}
 spec:
   endpoints:
-  - interval: {{ .Values.serviceMonitor.interval }}
-    {{- if .Values.serviceMonitor.scrapeTimeout }}
-    scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
+  - port: {{ .Values.service.portName }}
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
     {{- end }}
     honorLabels: true
-    port: {{ .Values.service.portName }}
     path: {{ .Values.serviceMonitor.path }}
     scheme: {{ .Values.serviceMonitor.scheme }}
     {{- if .Values.serviceMonitor.tlsConfig }}

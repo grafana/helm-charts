@@ -173,6 +173,9 @@ serviceMonitor:
   interval: null
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
+  # -- ServiceMonitor relabel configs to apply to samples before scraping
+  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+  relabelings: []
 
 # -- Configure additional ports and services. For each configured port, a corresponding service is created.
 # See values.yaml for details
@@ -287,7 +290,7 @@ config:
 
     # -- You can put here any keys that will be directly added to the config file's 'client' block.
     # @default -- empty
-    extraClientConfigs: ""
+    extraClientConfigs: []
 
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
@@ -341,9 +344,11 @@ config:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
 
-    client:
-      url: {{ tpl .Values.config.lokiAddress . }}
-      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
+    clients:
+      - url: {{ tpl .Values.config.lokiAddress . }}
+      {{- with .Values.config.snippets.extraClientConfigs }}
+      {{- toYaml . | nindent 2 }}
+      {{- end }}
 
     positions:
       filename: /run/promtail/positions.yaml
@@ -370,3 +375,15 @@ networkPolicy:
     port: 8443
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
+
+# -- Extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: promtail-secrets
+  #   spec:
+  #     backendType: gcpSecretsManager
+  #     data:
+  #       - key: promtail-oauth2-creds
+  #         name: client_secret

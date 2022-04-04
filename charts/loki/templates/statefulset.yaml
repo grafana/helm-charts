@@ -61,6 +61,8 @@ spec:
             - "-{{ $key }}={{ $value }}"
           {{- end }}
           volumeMounts:
+            - name: tmp
+              mountPath: /tmp
             {{- if .Values.extraVolumeMounts }}
               {{ toYaml .Values.extraVolumeMounts | nindent 12}}
             {{- end }}
@@ -69,11 +71,9 @@ spec:
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.persistence.subPath }}
-            {{- if gt (len .Values.alerting_groups) 0 }}
-            - name: scratch
-              mountPath: /tmp/scratch
+            {{- if or (.Values.useExistingAlertingGroup.enabled) (gt (len .Values.alerting_groups) 0) }}
             - name: rules
-              mountPath: /rules
+              mountPath: /rules/fake
             {{- end }}
           ports:
             - name: http-metrics
@@ -106,12 +106,16 @@ spec:
         {{- toYaml .Values.tolerations | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-        {{- if gt (len .Values.alerting_groups) 0 }}
-        - name: scratch
+        - name: tmp
           emptyDir: {}
+        {{- if or (.Values.useExistingAlertingGroup.enabled) (gt (len .Values.alerting_groups) 0) }}
         - name: rules
           configMap:
+            {{- if .Values.useExistingAlertingGroup.enabled }}
+            name: {{ .Values.useExistingAlertingGroup.configmapName }}
+            {{- else }}
             name: {{ template "loki.fullname" . }}-alerting-rules
+            {{- end }}
         {{- end }}
         - name: config
           secret:
