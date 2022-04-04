@@ -91,10 +91,6 @@ enterpriseMetrics:
           url: http://{{ template "enterprise-metrics.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         distributor:
           url: http://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
-        graphite_querier:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
-        graphite_write_proxy:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-graphite.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         ingester:
           url: http://{{ template "enterprise-metrics.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         query_frontend:
