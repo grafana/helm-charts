@@ -12,7 +12,7 @@ Release automation uses the `GPG_KEY_BASE64` secret to sign the packages.
 The `GPG_KEY_BASE64` is a base64 encoded GPG key.
 It expires on 2023-03-30.
 
-Grafana Labs employees may access the private key using from the company 1password.
+Grafana Labs employees may access the private key using the company 1password.
 
 Grafana Labs employees can extend the expiry of the private key using the `gpg` command line tool.
 
