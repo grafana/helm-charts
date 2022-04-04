@@ -61,7 +61,7 @@ Create the app name of enterprise-metrics clients. Defaults to the same logic as
 {{- end -}}
 
 {{/*
-Calculate the config from structured and unstructred text input
+Render the configuration as template
 */}}
 {{- define "enterprise-metrics.calculatedConfig" -}}
 {{ include (print $.Template.BasePath "/_config-render.tpl") . }}
