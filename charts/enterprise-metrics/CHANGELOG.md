@@ -23,16 +23,6 @@ Entries should include a reference to the Pull Request that introduced the chang
 * [CHANGE] **Breaking** The default for `ingester.ring.replication_factor` is now 3 and there will be 3 ingesters started even with the default `values.yaml`.
   On the other hand, POD anti affinity is turned off by default to allow single node deployment.
 * [CHANGE] **Breaking** Ingesters only support `StatefulSet` from now on as chunks storage was removed in favour of blocks storage.
-* [CHANGE] **Breaking** Moved Grafana Mimir services into their own deployable subchart. Helm values of services are now under `.mimir`, as in:
-  > moved `.alertmanager` to `.mimir.alertmanager`,\
-  moved `.compactor` to `.mimir.compactor`,\
-  moved `.distributor` to `.mimir.distributor`,\
-  moved `.ingester` to `.mimir.ingester`,\
-  moved `.overrides-exporter` to `.mimir.overrides-exported`,\
-  moved `.querier` to `.mimir.querier`,\
-  moved `.query-frontend` to `.mimir.query-frontedn`,\
-  moved `.ruler` to `.mimir.ruler`,\
-  moved `.store-gateway` to `.mimir.store-gateway`.
 * [CHANGE] **Breaking** Moved Minio service into the Grafana Mimir subchart, setting available via `.mimir.minio`, for example `.mimir.minio.enabled`.
 * [FEATURE] Upgrade to [Grafana Enterprise Metrics v2.0.0](TODO add final version)
 * [ENHANCEMENT] Minio bucket creation is not tied to `admin-api` anymore, moved to its own job.

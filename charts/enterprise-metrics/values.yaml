@@ -6,7 +6,7 @@
 
 # Container image settings.
 # Since the image is unique for all microservices, so are image settings.
-image: &image
+image:
   repository: grafana/metrics-enterprise
   tag: v2.0.0-rc.0
   pullPolicy: IfNotPresent
@@ -22,13 +22,13 @@ serviceAccount:
   annotations: {}
 
 # -- Configuration is loaded from the secret called 'externalConfigSecretName'. If 'useExternalConfig' is true, then the configuration is not generated, just consumed.
-useExternalConfig: &emUseExternalConfig false
+useExternalConfig: false
 
 # -- Name of the secret that contains the configuration (used for naming even if config is internal).
-externalConfigSecretName: &emExternalConfigSecretName 'enterprise-metrics-config'
+externalConfigSecretName: 'enterprise-metrics-config'
 
 # -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
-externalConfigVersion: &emExternalConfigVersion '0'
+externalConfigVersion: '0'
 
 
 # In order to use Grafana Enterprise Metrics features, you will need to provide the contents of your Grafana Enterprise Metrics
@@ -1237,9 +1237,5 @@ mimir:
   # Overrides on Mimir subchart
   nameOverride: enterprise-metrics
   useGEMLabels: *useGEMLabels
-  useExternalConfig: *emUseExternalConfig
-  externalConfigSecretName: *emExternalConfigSecretName
-  externalConfigVersion: *emExternalConfigVersion
   # Reserved for internal use: stop the subchart from rendering some of its resources in its own context
   skipResourceRendering: true
-  image: *image
