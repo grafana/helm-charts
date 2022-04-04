@@ -41,8 +41,8 @@ externalConfigSecretName: 'mimir-config'
 # -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
 externalConfigVersion: '0'
 
-# -- Reserved for internal use
-skipConfigSecret: false
+# -- Reserved for internal use - stops this chart from rendering some its resources in its own context
+skipResourceRendering: false
 
 mimir:
   # -- Config file for Grafana Mimir, enables templates. Needs to be copied in full for modifications.

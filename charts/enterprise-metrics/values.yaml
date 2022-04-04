@@ -55,7 +55,6 @@ tokengenJob:
 enterpriseMetrics:
   config: |
     multitenancy_enabled: true
-
     auth:
       type: enterprise
 
@@ -319,6 +318,78 @@ gateway:
   tolerations: []
   terminationGracePeriodSeconds: 60
 
+# Mimir distributor
+distributor:
+  replicas: 1
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+  # Additional distributor container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target
+                operator: In
+                values:
+                  - distributor
+          topologyKey: 'kubernetes.io/hostname'
+
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
+  initContainers: []
+  extraContainers: []
+  extraVolumes:
+    # -- Create license volume from license secret
+    - name: license
+      secret:
+        secretName: *emLicenseSecretName
+  extraVolumeMounts:
+    # -- Mount the license volume
+    - name: license
+      mountPath: /license
+  extraPorts: []
+  env: []
+
 memcached:
   enabled: false
   architecture: high-availability
@@ -452,16 +523,7 @@ mimir:
       - name: license
         mountPath: /license
 
-  distributor:
-    extraVolumes:
-      # -- Create license volume from license secret
-      - name: license
-        secret:
-          secretName: *emLicenseSecretName
-    extraVolumeMounts:
-      # -- Mount the license volume
-      - name: license
-        mountPath: /license
+
 
   ingester:
     extraVolumes:
@@ -541,12 +603,11 @@ mimir:
         mountPath: /license
 
   # Overrides on Mimir subchart
-  config: null
   nameOverride: enterprise-metrics
   useGEMLabels: *useGEMLabels
   useExternalConfig: *emUseExternalConfig
   externalConfigSecretName: *emExternalConfigSecretName
   externalConfigVersion: *emExternalConfigVersion
-  # Stop the mimir chart from also generating the config secret
-  skipConfigSecret: true
+  # Reserved for internal use: stop the subchart from rendering some of its resources in its own context
+  skipResourceRendering: true
   image: *image
