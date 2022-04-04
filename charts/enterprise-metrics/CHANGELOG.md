@@ -10,6 +10,13 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.8.1
+
+* [ENHANCEMENT] Support Grafana Mimir monitoring mixin labels by setting container names to the component names.
+  This will make it easier to select different components in cadvisor metrics.
+  Previously, all containers used "enterprise-metrics" as the container name.
+  Now, the ingester Pod will have a container name "ingester".
+
 ## 1.8.0
 
 * [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.7.0](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v170----january-6th-2022).

@@ -91,6 +91,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.querier.resources | nindent 12 }}
+        {{- if .Values.querier.extraContainers }}
+        {{- toYaml .Values.querier.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.querier.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

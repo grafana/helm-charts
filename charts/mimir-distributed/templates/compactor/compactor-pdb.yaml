@@ -1,3 +1,4 @@
+{{- if .Values.compactor.enabled -}}
 {{- if .Values.compactor.podDisruptionBudget -}}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -11,4 +12,5 @@ spec:
     matchLabels:
       {{- include "mimir.compactorSelectorLabels" . | nindent 6 }}
 {{ toYaml .Values.compactor.podDisruptionBudget | indent 2 }}
+{{- end -}}
 {{- end -}}
