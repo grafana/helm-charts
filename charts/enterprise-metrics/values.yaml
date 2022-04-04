@@ -630,6 +630,67 @@ ingester:
   extraPorts: []
   env: []
 
+# Mimir overrides exporter
+overrides_exporter:
+  replicas: 1
+
+  annotations: {}
+
+  initContainers: []
+
+  service:
+    annotations: {}
+    labels: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  securityContext: {}
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  extraContainers: []
+  extraVolumes:
+    # -- Create license volume from license secret
+    - name: license
+      secret:
+        secretName: *emLicenseSecretName
+  extraVolumeMounts:
+    # -- Mount the license volume
+    - name: license
+      mountPath: /license
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  terminationGracePeriodSeconds: 60
+
 # Mimir compactor
 compactor:
   enabled: true
@@ -857,17 +918,6 @@ mimir:
   gateway:
     # using the parent enterprise gateway instead
     enabled: false
-
-  overrides_exporter:
-    extraVolumes:
-      # -- Create license volume from license secret
-      - name: license
-        secret:
-          secretName: *emLicenseSecretName
-    extraVolumeMounts:
-      # -- Mount the license volume
-      - name: license
-        mountPath: /license
 
   ruler:
     extraVolumes:
