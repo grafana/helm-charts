@@ -1,0 +1,53 @@
+{{/*
+alertmanager ServiceMonitor template
+*/}}
+{{- define "mimir.alertmanagerServiceMonitor" -}}
+{{- with .Values.serviceMonitor }}
+{{- if .enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "mimir.alertmanagerFullname" $ }}
+  {{- with .namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  labels:
+    {{- include "mimir.alertmanagerLabels" $ | nindent 4 }}
+    {{- if $.Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" $ | nindent 4 }}{{- end }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .namespaceSelector }}
+  namespaceSelector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "mimir.alertmanagerSelectorLabels" $ | nindent 6 }}
+  endpoints:
+    - port: http-metrics
+      {{- with .interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+      {{- with .relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .tlsConfig }}
+      tlsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

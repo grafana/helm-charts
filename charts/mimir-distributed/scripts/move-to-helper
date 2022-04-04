@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+set -euf -o pipefail
+
+function usage {
+  cat <<EOF
+Move template to a named template
+
+Usage:
+  $0 <component> <template-filename>
+
+Examples:
+  $0 overrides-exporter
+EOF
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 1
+fi
+
+case "$1" in
+  -h) usage && exit 0 ;;
+  *) ;; # default
+esac
+
+# Convert kebab-case to camelCase.
+# Only works with GNU sed.
+function camel_case {
+  sed -E -e 's/-(.)/\U\1/' <<<"$1"
+}
+# Convert kebab-case to snake_case.
+function snake_case {
+  sed -E -e 's/-/_/' <<<"$1"
+}
+
+function kindToName {
+    local kind=$(grep -Ei '^kind:' "$1" | cut -c6- | tr -d '[:space:]' | tr '[A-Z]' '[a-z]')
+    case "${kind}" in
+        deployment)
+            echo "Deployment" ;;
+        statefulset)
+            echo "StatefulSet" ;;
+        poddisruptionbudget)
+            echo "PodDisruptionBudget" ;;
+        service)
+            if grep -Eiq "clusterip:[[:space:]]*none" "$1" ; then
+                echo "HeadlessService"
+            else
+                echo "Service"
+            fi
+            ;;
+        servicemonitor)
+            echo "ServiceMonitor" ;;
+        *)
+            echo "Dont understand this manifest kind"
+            exit 1
+            ;;
+    esac
+}
+
+component="$1"
+camel_cased="$(camel_case "$1")"
+snake_cased="$(snake_case "$1")"
+
+kind=$(kindToName "$2")
+
+templateName="mimir.${camel_cased}${kind}"
+
+cat > "_$2" <<EOF
+{{/*
+${camel_cased} ${kind} template
+*/}}
+{{- define "${templateName}" -}}
+$(cat $2)
+{{- end -}}
+EOF
+
+cat > "$2" <<EOF
+{{- if not .Values.skipResourceRendering -}}
+{{- include "${templateName}" . -}}
+{{- end -}}
+EOF
