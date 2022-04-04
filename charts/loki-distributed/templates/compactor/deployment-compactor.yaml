@@ -25,6 +25,12 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.compactorSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.compactor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.compactorServiceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -36,7 +42,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: compactor
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -74,6 +80,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
+        {{- if .Values.compactor.extraContainers }}
+        {{- toYaml .Values.compactor.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.compactor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -11,6 +11,44 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.0.4
+
+- [FEATURE] Added OpenShift support. #1085
+
+## 2.0.2
+
+- [BUGFIX] Have tokengen use the same ServiceAccount as the other components. #1031
+
+## 2.0.1
+
+- [BUGFIX] Configure Loki WAL directory that was absent in the 2.0.0 change. #1033
+
+## 2.0.0
+
+- [CHANGE] Expect GEL configuration as a string rather than structured data in the values.yaml file #943
+
+## 1.4.0
+
+- [CHANGE] Bump GEL version to v1.3.0
+
+## 1.3.5
+
+- [BUGFIX] Use correct subPath configuration for the compactor's storage mount.
+- [BUGFIX] Fixed issue that prevented users from mounting extra persistent volumes for the compactor.
+- [CHANGE] Configure `securityContext.fsGroup` value for Admin API pod based on the value `adminApi.securityContext.runAsGroup`.
+
+## 1.3.4
+
+- [CHANGE] Remove selector and config hash annotations from the tokengen job that make it hard to update the helm chart after deploying that job
+
+## 1.3.3
+
+- [BUGFIX] Bumped version of `loki-distributed` chart to 0.39.3 that defines default WAL location. #863
+
+## 1.3.2
+
+- [BUGFIX] Fixed issue that caused GEL version not to be updated in the templates of the loki-distributed child chart. #863
+
 ## 1.3.1
 
 - [BUGFIX] Fixed error in template rendering when MinIO is disabled.

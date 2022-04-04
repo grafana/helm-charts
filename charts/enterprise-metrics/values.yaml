@@ -8,7 +8,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.5.0
+  tag: v1.7.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -89,10 +89,7 @@ config:
     distributor_client:
       address: 'dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
 
-  limits:
-    enforce_metric_name: false
-    reject_old_samples: true
-    reject_old_samples_max_age: 168h
+  limits: {}
 
   server:
     http_listen_port: 8080

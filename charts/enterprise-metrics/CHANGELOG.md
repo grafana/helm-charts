@@ -10,6 +10,33 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.8.1
+
+* [ENHANCEMENT] Support Grafana Mimir monitoring mixin labels by setting container names to the component names.
+  This will make it easier to select different components in cadvisor metrics.
+  Previously, all containers used "enterprise-metrics" as the container name.
+  Now, the ingester Pod will have a container name "ingester".
+
+## 1.8.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.7.0](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v170----january-6th-2022).
+
+## 1.7.3
+
+* [BUGFIX] Alertmanager does not fail anymore to load configuration via the API. #945
+
+## 1.7.2
+
+* [CHANGE] The Ingester statefulset now uses podManagementPolicy Parallel, upgrading requires recreating the statefulset #920
+
+## 1.7.1
+
+* [BUGFIX] Remove chunks related default limits. #867
+
+## 1.7.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.6.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v161----november-18th-2021). #839
+
 ## 1.6.0
 
 * [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.5.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v151----september-21st-2021). #729
