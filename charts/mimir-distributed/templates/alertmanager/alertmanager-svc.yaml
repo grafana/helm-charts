@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mimir.alertmanagerFullname" . }}
+  labels:
+    {{- include "mimir.alertmanagerLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- with .Values.alertmanager.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.alertmanager.service.annotations | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ include "mimir.serverHttpListenPort" . }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+    - port: {{ include "mimir.serverGrpcListenPort" . }}
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  selector:
+    {{- include "mimir.alertmanagerSelectorLabels" . | nindent 4 }}
