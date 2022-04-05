@@ -26,6 +26,7 @@ spec:
 {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
 {{- end}}
+        {{- include "mimir.podAnnotations" . | nindent 8 }}
         {{- with .Values.query_frontend.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

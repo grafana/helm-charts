@@ -11,6 +11,9 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.6
+* [ENHANCEMENT] Add standard prometheus pod annotations. #1181
+
 ## 2.0.5
 
 * [BUGFIX] Use new component name system for gateway ingress. This regression has been introduced with #1203. #1260

@@ -215,6 +215,14 @@ app.kubernetes.io/component: {{ .component }}
 {{- end -}}
 
 {{/*
+Common pod annotations
+*/}}
+{{- define "mimir.podAnnotations" -}}
+prometheus.io/scrape: "true"
+prometheus.io/port: "{{ include "mimir.serverHttpListenPort" . }}"
+{{- end -}}
+
+{{/*
 Alertmanager http prefix
 */}}
 {{- define "mimir.alertmanagerHttpPrefix" -}}
