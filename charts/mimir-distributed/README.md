@@ -1,10 +1,10 @@
 # Grafana Mimir Helm Chart
 
-Helm chart for deploying [Grafana Mimir](https://grafana.com/docs/mimir/v2.0.x) to Kubernetes. Derived from [Grafana Enterprise Metrics Helm Chart](https://github.com/grafana/helm-charts/blob/main/charts/enterprise-metrics/README.md)
+Helm chart for deploying [Grafana Mimir](https://grafana.com/docs/mimir/v2.0.x/) to Kubernetes. Derived from [Grafana Enterprise Metrics Helm Chart](https://github.com/grafana/helm-charts/blob/main/charts/enterprise-metrics/README.md)
 
 # mimir-distributed
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Grafana Mimir
 
@@ -24,7 +24,7 @@ Kubernetes: `^1.10.0-0`
 Grafana Mimir requires an object storage backend to store metrics and indexes.
 
 The default chart values will deploy [Minio](https://min.io) for initial set up. Production deployments should use a separately deployed object store.
-See [Grafana Mimir documentation](https://grafana.com/docs/mimir/v2.0.x) for details on storage types and documentation.
+See [Grafana Mimir documentation](https://grafana.com/docs/mimir/v2.0.x/) for details on storage types and documentation.
 
 ## Installation
 
