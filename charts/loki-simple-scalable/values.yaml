@@ -190,9 +190,9 @@ write:
   replicas: 1
   autoscaling:
     # -- Enable autoscaling for the write
-    enabled: false
+    enabled: true
     # -- Minimum autoscaling replicas for the write
-    minReplicas: 1
+    minReplicas: 3
     # -- Maximum autoscaling replicas for the write
     maxReplicas: 3
     # -- Target CPU utilisation percentage for the write
