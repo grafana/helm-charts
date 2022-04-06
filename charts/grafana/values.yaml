@@ -73,7 +73,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.4.2
+  tag: 8.4.5
   sha: ""
   pullPolicy: IfNotPresent
 
