@@ -6,8 +6,9 @@ metadata:
     {{- include "loki.writeLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
+  {{- if not .Values.write.autoscaling.enabled }}
   replicas: {{ .Values.write.replicas }}
-
+  {{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:

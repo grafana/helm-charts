@@ -6,7 +6,9 @@ metadata:
     {{- include "loki.readLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
 spec:
+  {{- if not .Values.read.autoscaling.enabled }}
   replicas: {{ .Values.read.replicas }}
+  {{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
@@ -74,8 +76,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
-            - name: tmp
-              mountPath: /tmp
             - name: data
               mountPath: /var/loki
             {{- with .Values.read.extraVolumeMounts }}
@@ -96,8 +96,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: tmp
-          emptyDir: {}
         - name: config
           {{- if .Values.loki.existingSecretForConfig }}
           secret:

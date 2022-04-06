@@ -59,7 +59,7 @@ loki:
   existingSecretForConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
-  config: |
+  config:
     auth_enabled: false
 
     server:
@@ -67,12 +67,18 @@ loki:
 
     memberlist:
       join_members:
-        - {{ include "loki.fullname" . }}-memberlist
+        - "{{ include \"loki.fullname\" . }}-memberlist"
 
-    {{- if .Values.loki.commonConfig}}
     common:
-    {{- toYaml .Values.loki.commonConfig | nindent 2}}
-    {{- end}}
+      path_prefix: /var/loki
+      replication_factor: 1
+      ring:
+        kvstore:
+          store: memberlist
+      storage:
+        filesystem:
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
 
     limits_config:
       enforce_metric_name: false
@@ -80,47 +86,26 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
 
-    {{- if .Values.loki.schemaConfig}}
     schema_config:
-    {{- toYaml .Values.loki.schemaConfig | nindent 2}}
-    {{- end}}
-
-    {{- if .Values.loki.storageConfig}}
-    storage_config:
-    {{- toYaml .Values.loki.storageConfig | nindent 2}}
-    {{- end}}
-
-  # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
-  commonConfig:
-    path_prefix: /var/loki
-    replication_factor: 1
-    storage:
-      filesystem:
-        chunks_directory: /var/loki/chunks
-        rules_directory: /var/loki/rules
-
-  # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
-  schemaConfig:
-    configs:
-      - from: 2020-09-07
-        store: boltdb-shipper
-        object_store: filesystem
-        schema: v11
-        index:
-          prefix: loki_index_
-          period: 24h
-
-  # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
+      configs:
+        - from: 2020-09-07
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+  # -- Common storage config component of loki configuration file.
+  # The must be overriden with a valid object storage backend
+  # in order for queries to work.
+  # @default -- loki.defaultStorageConfig
   storageConfig: {}
-  # -- Uncomment to configure each storage individually
-  # boltdb_shipper: {}
-  # filesystem: {}
-  # azure: {}
-  # gcs: {}
-  # s3: {}
-
-  # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
-  structuredConfig: {}
+  # -- Default storage config, used when no loki.storageConfig is provided.
+  # Required for CI, but queries will not work using these defaults.
+  defaultStorageConfig:
+    filesystem:
+      chunks_directory: /var/loki/chunks,
+      rules_directory: /var/loki/rules
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -188,6 +173,17 @@ prometheusRule:
 write:
   # -- Number of replicas for the write
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the write
+    enabled: false
+    # -- Minimum autoscaling replicas for the write
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the write
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the write
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the write
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null
@@ -451,7 +447,6 @@ gateway:
     # high CPU load.
     htpasswd: >-
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
-
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
   # Configures the readiness probe for the gateway

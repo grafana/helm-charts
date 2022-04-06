@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -80,9 +80,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
-| loki.commonConfig | object | `{"path_prefix":"/var/loki","replication_factor":1,"storage":{"filesystem":{"chunks_directory":"/var/loki/chunks","rules_directory":"/var/loki/rules"}}}` | Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration |
-| loki.config | string | See values.yaml | Config file contents for Loki |
+| loki.config | object | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
+| loki.defaultStorageConfig | object | `{"filesystem":{"chunks_directory":"/var/loki/chunks,","rules_directory":"/var/loki/rules"}}` | Default storage config, used when no loki.storageConfig is provided. Required for CI, but queries will not work using these defaults. |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
@@ -95,9 +95,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.readinessProbe.initialDelaySeconds | int | `30` |  |
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
-| loki.schemaConfig | object | `{"configs":[{"from":"2020-09-07","index":{"period":"24h","prefix":"loki_index_"},"object_store":"filesystem","schema":"v11","store":"boltdb-shipper"}]}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
-| loki.storageConfig | object | `{}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
-| loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
+| loki.storageConfig | object | loki.defaultStorageConfig | Common storage config component of loki configuration file. The must be overriden with a valid object storage backend in order for queries to work. |
 | nameOverride | string | `nil` | Overrides the chart's name |
 | networkPolicy.alertmanager.namespaceSelector | object | `{}` | Specifies the namespace the alertmanager is running in |
 | networkPolicy.alertmanager.podSelector | object | `{}` | Specifies the alertmanager Pods. As this is cross-namespace communication, you also need the namespaceSelector. |
@@ -159,6 +157,11 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | write.affinity | string | Hard node and soft zone anti-affinity | Affinity for write pods. Passed through `tpl` and, thus, to be configured as string |
+| write.autoscaling.enabled | bool | `false` | Enable autoscaling for the write |
+| write.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the write |
+| write.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the write |
+| write.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the write |
+| write.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the write |
 | write.extraArgs | list | `[]` | Additional CLI args for the write |
 | write.extraEnv | list | `[]` | Environment variables to add to the write pods |
 | write.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the write pods |
