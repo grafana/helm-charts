@@ -105,7 +105,7 @@ spec:
         {{- if .Values.compactor.extraContainers }}
         {{ toYaml .Values.compactor.extraContainers | nindent 8 }}
         {{- end }}
-        - name: enterprise-logs
+        - name: compactor
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
