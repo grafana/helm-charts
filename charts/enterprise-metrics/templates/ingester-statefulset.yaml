@@ -110,7 +110,7 @@ spec:
         {{- if .Values.ingester.extraContainers }}
         {{ toYaml .Values.ingester.extraContainers | nindent 8 }}
         {{- end }}
-        - name: {{ .Chart.Name }}
+        - name: ingester
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

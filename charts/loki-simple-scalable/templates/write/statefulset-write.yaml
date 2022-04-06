@@ -9,6 +9,7 @@ spec:
   {{- if not .Values.write.autoscaling.enabled }}
   replicas: {{ .Values.write.replicas }}
   {{- end }}
+
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
