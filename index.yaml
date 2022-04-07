@@ -17547,39 +17547,6 @@ entries:
   mimir-distributed:
   - apiVersion: v2
     appVersion: 2.0.0
-    created: "2022-04-07T13:59:41.220626792Z"
-    dependencies:
-    - alias: memcached
-      condition: memcached.enabled
-      name: memcached
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.5.2
-    - alias: memcached-queries
-      condition: memcached-queries.enabled
-      name: memcached
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.5.2
-    - alias: memcached-metadata
-      condition: memcached-metadata.enabled
-      name: memcached
-      repository: https://charts.bitnami.com/bitnami
-      version: 5.5.2
-    - alias: minio
-      condition: minio.enabled
-      name: minio
-      repository: https://helm.min.io/
-      version: 8.0.10
-    description: Grafana Mimir
-    digest: 344cfe238d9eb28bcd6b0a551e1a9c7c8dc699e7791467b7282af40f011f0952
-    home: https://grafana.com/docs/mimir/v2.0.x/
-    icon: https://grafana.com/static/img/logos/logo-mimir.svg
-    kubeVersion: ^1.10.0-0
-    name: mimir-distributed
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-0.1.5/mimir-distributed-0.1.5.tgz
-    version: 0.1.5
-  - apiVersion: v2
-    appVersion: 2.0.0
     created: "2022-04-05T07:26:10.838501581Z"
     dependencies:
     - alias: memcached
@@ -20927,4 +20894,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-07T13:59:41.230165797Z"
+generated: "2022-04-07T22:33:41.230165797Z"
