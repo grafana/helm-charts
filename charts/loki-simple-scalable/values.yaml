@@ -95,11 +95,19 @@ loki:
           index:
             prefix: loki_index_
             period: 24h
+
   # -- Common storage config component of loki configuration file.
   # The must be overriden with a valid object storage backend
   # in order for queries to work.
   # @default -- loki.defaultStorageConfig
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   storageConfig: {}
+  # -- Uncomment to configure each storage individually
+  # boltdb_shipper: {}
+  # filesystem: {}
+  # azure: {}
+  # gcs: {}
+  # s3: {}
   # -- Default storage config, used when no loki.storageConfig is provided.
   # Required for CI, but queries will not work using these defaults.
   defaultStorageConfig:
