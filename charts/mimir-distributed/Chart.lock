@@ -11,5 +11,8 @@ dependencies:
 - name: minio
   repository: https://helm.min.io/
   version: 8.0.10
-digest: sha256:8a8861e8a68eae8dacbba0be65dbfcee5574629ebe4fd5bfd7ffee11e58f889d
-generated: "2022-03-30T17:30:35.654777032+01:00"
+- name: rollout-operator
+  repository: https://grafana.github.io/helm-charts
+  version: 0.1.2
+digest: sha256:e2adab7977ba17e2ba89f5861ef958c0200dbca4833ac1c295cdbb2d6b16607f
+generated: "2022-04-26T07:24:06.213027922-05:00"

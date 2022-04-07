@@ -96,6 +96,9 @@ mimir:
       ring:
         final_sleep: 0s
         num_tokens: 512
+        {{- if .Values.ingester.zone_aware_replication.enabled }}
+        zone_awareness_enabled: true
+        {{- end }}
 
     ingester_client:
       grpc_client_config:
@@ -219,6 +222,11 @@ mimir:
 
     {{- end }}
 
+    {{- if .Values.store_gateway.zone_aware_replication.enabled }}
+    store_gateway:
+      sharding_ring:
+        zone_awareness_enabled: true
+    {{- end }}
 
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
@@ -531,6 +539,56 @@ ingester:
   extraVolumeMounts: []
   env: []
 
+  zone_aware_replication:
+    enabled: false
+    zones:
+    - name: zone-a
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - ingester
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - ingester-zone-a
+              topologyKey: 'kubernetes.io/hostname'
+    - name: zone-b
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - ingester
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - ingester-zone-b
+              topologyKey: 'kubernetes.io/hostname'
+    - name: zone-c
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - ingester
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - ingester-zone-c
+              topologyKey: 'kubernetes.io/hostname'
+
+
 overrides_exporter:
   enabled: true
   replicas: 1
@@ -776,6 +834,55 @@ query_frontend:
 store_gateway:
   replicas: 1
 
+  zone_aware_replication:
+    enabled: false
+    zones:
+    - name: zone-a
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-zone-a
+              topologyKey: 'kubernetes.io/hostname'
+    - name: zone-b
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-zone-b
+              topologyKey: 'kubernetes.io/hostname'
+    - name: zone-c
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-zone-c
+              topologyKey: 'kubernetes.io/hostname'
+
   service:
     annotations: {}
     labels: {}
@@ -799,6 +906,7 @@ store_gateway:
     maxUnavailable: 1
 
   nodeSelector: {}
+
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -1521,3 +1629,21 @@ gateway:
       - secretName: gem-gateway-tls
         hosts:
           - gateway.gem.example.com
+
+# -- Deploy mimir with rollout-operator for use by zone_aware_replication
+rollout_operator:
+  enabled: false
+
+zone_aware_replication:
+  max_unavailable: 10
+  zones: []
+  # -- zone name must match those within the component.rollout_operator.zones
+  # - name: zone-a
+  #   nodeSelector:
+  #     topology.kubernetes.io/zone: zone-a
+  # - name: zone-b
+  #   nodeSelector:
+  #     topology.kubernetes.io/zone: zone-b
+  # - name: zone-c
+  #   nodeSelector:
+  #     topology.kubernetes.io/zone: zone-c

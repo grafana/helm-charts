@@ -1,0 +1,17 @@
+rollout_operator:
+  enabled: true
+  zones:
+  - name: zone-a
+    nodeSelector:
+      topology.kubernetes.io/zone: zone-a
+  - name: zone-b
+    nodeSelector:
+      topology.kubernetes.io/zone: zone-b
+  - name: zone-c
+    nodeSelector:
+      topology.kubernetes.io/zone: zone-c
+
+store_gateway:
+  rollout_operator:
+    enabled: true
+

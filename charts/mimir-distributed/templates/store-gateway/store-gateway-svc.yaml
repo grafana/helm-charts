@@ -1,12 +1,14 @@
+{{- $_ := set . "component_config" "store_gateway" -}}
+{{- $zonesMap := include "mimir.zoneAwareReplicationMap" $ | fromYaml -}}
+{{- range $name, $rolloutZone := $zonesMap }}
+{{- with $ -}}
+{{- $_ := set . "rolloutZoneName" $name -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "store-gateway") }}
+  name: {{ include "mimir.storeGatewayZonename" . }}
   labels:
-    {{- include "mimir.labels" (dict "ctx" . "component" "store-gateway" "memberlist" true) | nindent 4 }}
-    {{- with .Values.store_gateway.service.labels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
+    {{- include "mimir.storeGatewayZoneLabels" . | nindent 4 }}
   annotations:
     {{- toYaml .Values.store_gateway.service.annotations | nindent 4 }}
 spec:
@@ -21,4 +23,8 @@ spec:
       name: grpc
       targetPort: grpc
   selector:
-    {{- include "mimir.selectorLabels" (dict "ctx" . "component" "store-gateway" "memberlist" true) | nindent 4 }}
+    {{- include "mimir.storeGatewayZoneSelectorLabels" . | nindent 4 }}
+
+---
+{{- end -}}
+{{- end -}}

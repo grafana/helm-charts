@@ -1,0 +1,7 @@
+rollout_operator:
+  enabled: true
+
+store_gateway:
+  rollout_operator:
+    enabled: true
+
