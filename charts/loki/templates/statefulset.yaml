@@ -24,7 +24,7 @@ spec:
     metadata:
       labels:
         app: {{ template "loki.name" . }}
-        name: {{ template "loki.name" . }}
+        name: {{ template "loki.fullname" . }}
         release: {{ .Release.Name }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
@@ -71,7 +71,7 @@ spec:
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.persistence.subPath }}
-            {{- if gt (len .Values.alerting_groups) 0 }}
+            {{- if or (.Values.useExistingAlertingGroup.enabled) (gt (len .Values.alerting_groups) 0) }}
             - name: rules
               mountPath: /rules/fake
             {{- end }}
@@ -108,10 +108,14 @@ spec:
       volumes:
         - name: tmp
           emptyDir: {}
-        {{- if gt (len .Values.alerting_groups) 0 }}
+        {{- if or (.Values.useExistingAlertingGroup.enabled) (gt (len .Values.alerting_groups) 0) }}
         - name: rules
           configMap:
+            {{- if .Values.useExistingAlertingGroup.enabled }}
+            name: {{ .Values.useExistingAlertingGroup.configmapName }}
+            {{- else }}
             name: {{ template "loki.fullname" . }}-alerting-rules
+            {{- end }}
         {{- end }}
         - name: config
           secret:

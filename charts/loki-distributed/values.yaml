@@ -106,11 +106,11 @@ loki:
     {{- end}}
     {{- if .Values.loki.storageConfig}}
     storage_config:
-    {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- if .Values.indexGateway.enabled}}
-      index_gateway_client:
-        server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
+    {{- $indexGatewayClient := dict "server_address" (printf "dns:///%s:9095" (include "loki.indexGatewayFullname" .)) }}
+    {{- $_ := set .Values.loki.storageConfig.boltdb_shipper "index_gateway_client" $indexGatewayClient }}
     {{- end}}
+    {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- end}}
 
     chunk_store_config:
@@ -281,6 +281,8 @@ ingester:
   extraVolumes: []
   # -- Resource requests and limits for the ingester
   resources: {}
+  # -- Containers to add to the ingester pods
+  extraContainers: []
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -359,6 +361,8 @@ distributor:
   extraVolumes: []
   # -- Resource requests and limits for the distributor
   resources: {}
+  # -- Containers to add to the distributor pods
+  extraContainers: []
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
@@ -424,6 +428,8 @@ querier:
   extraVolumes: []
   # -- Resource requests and limits for the querier
   resources: {}
+  # -- Containers to add to the querier pods
+  extraContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
@@ -500,6 +506,8 @@ queryFrontend:
   extraVolumes: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
+  # -- Containers to add to the query-frontend pods
+  extraContainers: []
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -554,6 +562,8 @@ tableManager:
   extraVolumes: []
   # -- Resource requests and limits for the table-manager
   resources: {}
+  # -- Containers to add to the table-manager pods
+  extraContainers: []
   # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
@@ -640,6 +650,8 @@ gateway:
     allowPrivilegeEscalation: false
   # -- Resource requests and limits for the gateway
   resources: {}
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -849,6 +861,8 @@ compactor:
   extraVolumes: []
   # -- Resource requests and limits for the compactor
   resources: {}
+  # -- Containers to add to the compactor pods
+  extraContainers: []
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -914,6 +928,8 @@ ruler:
   extraVolumes: []
   # -- Resource requests and limits for the ruler
   resources: {}
+  # -- Containers to add to the ruler pods
+  extraContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
@@ -1047,6 +1063,8 @@ indexGateway:
   extraVolumes: []
   # -- Resource requests and limits for the index-gateway
   resources: {}
+  # -- Containers to add to the index-gateway pods
+  extraContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -1146,6 +1164,8 @@ memcachedChunks:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-chunks
   resources: {}
+  # -- Containers to add to the memcached-chunks pods
+  extraContainers: []
   # -- Grace period to allow memcached-chunks to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
@@ -1191,6 +1211,8 @@ memcachedFrontend:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-frontend
   resources: {}
+  # -- Containers to add to the memcached-frontend pods
+  extraContainers: []
   # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -1236,6 +1258,8 @@ memcachedIndexQueries:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-queries
   resources: {}
+  # -- Containers to add to the memcached-index-queries pods
+  extraContainers: []
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
@@ -1281,6 +1305,8 @@ memcachedIndexWrites:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-writes
   resources: {}
+  # -- Containers to add to the memcached-index-writes pods
+  extraContainers: []
   # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
