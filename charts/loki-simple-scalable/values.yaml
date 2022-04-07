@@ -99,15 +99,8 @@ loki:
   # -- Common storage config component of loki configuration file.
   # The must be overriden with a valid object storage backend
   # in order for queries to work.
-  # @default -- loki.defaultStorageConfig
-  # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
+
   storageConfig: {}
-  # -- Uncomment to configure each storage individually
-  # boltdb_shipper: {}
-  # filesystem: {}
-  # azure: {}
-  # gcs: {}
-  # s3: {}
   # -- Default storage config, used when no loki.storageConfig is provided.
   # Required for CI, but queries will not work using these defaults.
   defaultStorageConfig:
@@ -342,8 +335,8 @@ gateway:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
     targetMemoryUtilizationPercentage:
-  # -- See `kubectl explain deployment.spec.strategy` for more
-  # -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # -- See `kubectl explain deployment.spec.strategy` for more.
+  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
     type: RollingUpdate
   image:
@@ -426,9 +419,8 @@ gateway:
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
-    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # -- Annotations for gateway ingress class name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: nginx
-    # -- Annotations for the gateway ingress
     annotations: {}
     # -- Hosts configuration for the gateway ingress
     hosts:
