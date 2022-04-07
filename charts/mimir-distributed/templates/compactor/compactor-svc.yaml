@@ -1,4 +1,3 @@
-{{- if .Values.compactor.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,4 +23,3 @@ spec:
       targetPort: grpc
   selector:
     {{- include "mimir.compactorSelectorLabels" . | nindent 4 }}
-{{- end -}}

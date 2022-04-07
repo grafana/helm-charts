@@ -810,7 +810,6 @@ store_gateway:
   env: []
 
 compactor:
-  enabled: true
   replicas: 1
 
   service:
