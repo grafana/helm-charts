@@ -80,6 +80,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
+| loki.commonConfig | object | `{"path_prefix":"/var/loki","replication_factor":1,"storage":{"filesystem":{"chunks_directory":"/var/loki/chunks","rules_directory":"/var/loki/rules"}}}` | Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration |
 | loki.config | object | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.defaultStorageConfig | object | `{"filesystem":{"chunks_directory":"/var/loki/chunks,","rules_directory":"/var/loki/rules"}}` | Default storage config, used when no loki.storageConfig is provided. Required for CI, but queries will not work using these defaults. |
