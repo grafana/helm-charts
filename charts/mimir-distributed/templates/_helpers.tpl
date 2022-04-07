@@ -158,3 +158,10 @@ Prometheus http prefix
 {{- print "/prometheus" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Cluster name that shows up in dashboard metrics
+*/}}
+{{- define "mimir.clusterName" -}}
+{{ (include "mimir.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
+{{- end -}}
