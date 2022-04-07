@@ -1,3 +1,4 @@
+{{- if .Values.alertmanager.enabled -}}
 {{- if .Values.alertmanager.podDisruptionBudget -}}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -11,4 +12,5 @@ spec:
     matchLabels:
       {{- include "mimir.alertmanagerSelectorLabels" . | nindent 6 }}
 {{ toYaml .Values.alertmanager.podDisruptionBudget | indent 2 }}
+{{- end -}}
 {{- end -}}
