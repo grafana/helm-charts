@@ -186,6 +186,7 @@ serviceMonitor:
   tlsConfig: null
 
 alertmanager:
+  enabled: true
   replicas: 1
 
   statefulSet:
