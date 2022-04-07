@@ -160,7 +160,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | write.affinity | string | Hard node and soft zone anti-affinity | Affinity for write pods. Passed through `tpl` and, thus, to be configured as string |
 | write.autoscaling.enabled | bool | `false` | Enable autoscaling for the write |
 | write.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the write |
-| write.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the write |
+| write.autoscaling.minReplicas | int | `3` | Minimum autoscaling replicas for the write |
 | write.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the write |
 | write.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the write |
 | write.extraArgs | list | `[]` | Additional CLI args for the write |
