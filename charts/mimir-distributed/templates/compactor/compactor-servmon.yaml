@@ -1,3 +1,4 @@
+{{- if .Values.compactor.enabled -}}
 {{- with .Values.serviceMonitor }}
 {{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
@@ -44,5 +45,6 @@ spec:
       tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
