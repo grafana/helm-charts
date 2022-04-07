@@ -13739,6 +13739,24 @@ entries:
   loki-simple-scalable:
   - apiVersion: v2
     appVersion: 2.4.2
+    created: "2022-04-07T12:25:58.529235328Z"
+    description: Helm chart for Grafana Loki in simple, scalable mode
+    digest: 389a4b6cd2c6160e51db3ef1befa93bf4de207647d8f145fb1423cf9352b1042
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: trevorwhitney
+    name: loki-simple-scalable
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-simple-scalable-0.3.3/loki-simple-scalable-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v2
+    appVersion: 2.4.2
     created: "2022-04-01T19:24:53.926123117Z"
     description: Helm chart for Grafana Loki in simple, scalable mode
     digest: 04d3b3606f4120ccf1c36f5982f8f42afbe48cc1d8590e2f3a20e9b5a4fa6401
@@ -20876,4 +20894,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-06T12:06:14.759956892Z"
+generated: "2022-04-07T12:25:58.538980923Z"
