@@ -95,7 +95,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.readinessProbe.initialDelaySeconds | int | `30` |  |
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
-| loki.storageConfig | object | `{}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
+| loki.storageConfig | object | loki.defaultStorageConfig | Common storage config component of loki configuration file. The must be overriden with a valid object storage backend in order for queries to work. |
 | nameOverride | string | `nil` | Overrides the chart's name |
 | networkPolicy.alertmanager.namespaceSelector | object | `{}` | Specifies the namespace the alertmanager is running in |
 | networkPolicy.alertmanager.podSelector | object | `{}` | Specifies the alertmanager Pods. As this is cross-namespace communication, you also need the namespaceSelector. |
