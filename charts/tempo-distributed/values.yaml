@@ -457,6 +457,15 @@ config: |
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
+    {{- if .Values.ingester.maxBlockBytes }}
+    max_block_bytes: {{ .Values.ingester.maxBlockBytes }}
+    {{- end }}
+    {{- if .Values.ingester.maxBlockDuration }}
+    max_block_duration: {{ .Values.ingester.maxBlockDuration }}
+    {{- end }}
+    {{- if .Values.ingester.completeBlockTimeout }}
+    complete_block_timeout: {{ .Values.ingester.completeBlockTimeout }}
+    {{- end }}
   memberlist:
     abort_if_cluster_join_fails: false
     join_members:
