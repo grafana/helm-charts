@@ -121,8 +121,8 @@ loki:
       aws:
         s3: s3://eu-central-1
         bucketnames: my-loki-s3-bucket
-    boltdb_shipper:
-      shared_storage: s3
+      boltdb_shipper:
+        shared_store: s3
     schema_config:
       configs:
         - from: 2020-09-07
