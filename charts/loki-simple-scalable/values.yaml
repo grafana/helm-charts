@@ -122,8 +122,10 @@ serviceAccount:
 
 # RBAC configuration
 rbac:
-  # -- If enabled, a PodSecurityPolicy is created
+  # -- If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp.
   pspEnabled: false
+  # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
+  sccEnabled: false
 
 # ServiceMonitor configuration
 serviceMonitor:
