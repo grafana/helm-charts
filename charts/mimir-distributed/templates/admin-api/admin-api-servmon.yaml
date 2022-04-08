@@ -1,55 +1,15 @@
-#!/usr/bin/env bash
-
-set -euf -o pipefail
-
-function usage {
-  cat <<EOF
-Create the POD Disruption Budget manifest template
-
-Usage:
-  $0 <component>
-
-Examples:
-  $0 overrides-exporter
-EOF
-}
-
-if [[ $# -eq 0 ]]; then
-  usage
-  exit 1
-fi
-
-case "$1" in
-  -h) usage && exit 0 ;;
-  *) ;; # default
-esac
-
-# Convert kebab-case to camelCase.
-# Only works with GNU sed.
-function camel_case {
-  sed -E -e 's/-(.)/\U\1/' <<<"$1"
-}
-# Convert kebab-case to snake_case.
-function snake_case {
-  sed -E -e 's/-/_/' <<<"$1"
-}
-
-component="$1"
-camel_cased="$(camel_case "$1")"
-snake_cased="$(snake_case "$1")"
-
-cat <<EOF
+{{- if .Values.enterprise.enabled -}}
 {{- with .Values.serviceMonitor }}
 {{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "mimir.${camel_cased}Fullname" $ }}
+  name: {{ template "mimir.adminApiFullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
   labels:
-    {{- include "mimir.${camel_cased}Labels" $ | nindent 4 }}
+    {{- include "mimir.adminApiLabels" $ | nindent 4 }}
     {{- if $.Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" $ | nindent 4 }}{{- end }}
     {{- with .labels }}
     {{- toYaml . | nindent 4 }}
@@ -65,7 +25,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mimir.${camel_cased}SelectorLabels" $ | nindent 6 }}
+      {{- include "mimir.adminApiSelectorLabels" $ | nindent 6 }}
   endpoints:
     - port: http-metrics
       {{- with .interval }}
@@ -76,7 +36,7 @@ spec:
       {{- end }}
       relabelings:
         - sourceLabels: [job]
-          replacement: "{{ $.Release.Namespace }}/${component}"
+          replacement: "{{ $.Release.Namespace }}/admin-api"
           targetLabel: job
         - replacement: "{{ include "mimir.clusterName" $ }}"
           targetLabel: cluster
@@ -92,4 +52,4 @@ spec:
       {{- end }}
 {{- end -}}
 {{- end -}}
-EOF
+{{- end -}}

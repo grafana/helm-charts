@@ -35,7 +35,7 @@ spec:
       {{- end }}
       relabelings:
         - sourceLabels: [job]
-          replacement: "{{ $.Release.Namespace }}/query_frontend"
+          replacement: "{{ $.Release.Namespace }}/query-frontend"
           targetLabel: job
         - replacement: "{{ include "mimir.clusterName" $ }}"
           targetLabel: cluster
