@@ -48,7 +48,7 @@ spec:
         {{- toYaml .Values.overrides_exporter.initContainers | nindent 8 }}
       containers:
         - name: overrides-exporter
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=overrides-exporter"

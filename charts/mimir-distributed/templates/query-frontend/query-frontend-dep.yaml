@@ -48,7 +48,7 @@ spec:
       {{- end }}
       containers:
         - name: query-frontend
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - -activity-tracker.filepath=/active-query-tracker/activity.log

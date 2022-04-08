@@ -48,7 +48,7 @@ spec:
       {{- end }}
       containers:
         - name: querier
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=querier"
