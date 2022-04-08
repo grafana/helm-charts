@@ -41,7 +41,7 @@ spec:
       {{- end }}
       {{- end }}
       initContainers:
-        - name: enterprise-logs
+        - name: tokengen
           image: {{ template "enterprise-logs.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

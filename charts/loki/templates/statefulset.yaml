@@ -24,7 +24,7 @@ spec:
     metadata:
       labels:
         app: {{ template "loki.name" . }}
-        name: {{ template "loki.name" . }}
+        name: {{ template "loki.fullname" . }}
         release: {{ .Release.Name }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}

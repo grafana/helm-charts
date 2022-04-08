@@ -1,0 +1,14 @@
+{{- if .Values.overrides_exporter.podDisruptionBudget -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "mimir.overridesExporterFullname" . }}
+  labels:
+    {{- include "mimir.overridesExporterLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.overridesExporterSelectorLabels" . | nindent 6 }}
+{{ toYaml .Values.overrides_exporter.podDisruptionBudget | indent 2 }}
+{{- end -}}

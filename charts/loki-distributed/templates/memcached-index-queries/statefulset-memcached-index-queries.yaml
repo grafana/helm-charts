@@ -91,6 +91,9 @@ spec:
           resources:
             {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
         {{- end }}
+        {{- if .Values.memcachedIndexQueries.extraContainers }}
+        {{- toYaml .Values.memcachedIndexQueries.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.memcachedIndexQueries.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

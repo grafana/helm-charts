@@ -29,6 +29,8 @@ tempo:
     timeoutSeconds: 1
   # -- Global labels for all tempo pods
   podLabels: {}
+  # -- Common annotations for all pods
+  podAnnotations: {}
   # --- SecurityContext holds pod-level security attributes and common container settings
   securityContext: {}
   #  capabilities:
@@ -552,6 +554,8 @@ memcached:
   extraEnvFrom: []
   # -- Labels for memcached pods
   podLabels: {}
+  # -- Annotations for memcached pods
+  podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
   # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
@@ -603,6 +607,9 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+  # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+  metricRelabelings: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
