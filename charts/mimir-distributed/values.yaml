@@ -47,7 +47,9 @@ externalConfigVersion: '0'
 mimir:
   # -- Config file for Grafana Mimir, enables templates. Needs to be copied in full for modifications.
   config: |
+    {{- if not .Values.enterprise.enabled -}}
     multitenancy_enabled: false
+    {{- end -}}
 
     limits: {}
 
@@ -153,6 +155,67 @@ mimir:
         secret_access_key: {{ .Values.minio.secretKey }}
         insecure: true
     {{- end }}
+
+    {{- if .Values.enterprise.enabled -}}
+    multitenancy_enabled: true
+
+    admin_api:
+      leader_election:
+        enabled: true
+        ring:
+          kvstore:
+            store: "memberlist"
+
+    {{- if .Values.mimir.minio.enabled }}
+    admin_client:
+      storage:
+        type: s3
+        s3:
+          endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+          bucket_name: enterprise-metrics-admin
+          access_key_id: {{ .Values.mimir.minio.accessKey }}
+          secret_access_key: {{ .Values.mimir.minio.secretKey }}
+          insecure: true
+    {{- end }}
+
+    auth:
+      type: enterprise
+
+    cluster_name: "{{ .Release.Name }}"
+
+    license:
+      path: "/license/license.jwt"
+
+    {{- if .Values.gateway.useDefaultProxyURLs }}
+    gateway:
+      proxy:
+        default:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        admin_api:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        alertmanager:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        compactor:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        distributor:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        ingester:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        query_frontend:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        ruler:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+        store_gateway:
+          url: http://{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+    {{- end }}
+
+    instrumentation:
+      enabled: true
+      distributor_client:
+        address: 'dns:///{{ template "mimir.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverGrpcListenPort" . }}'
+
+    {{- end -}}
+
 
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
