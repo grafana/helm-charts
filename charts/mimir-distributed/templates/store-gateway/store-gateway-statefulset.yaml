@@ -14,7 +14,7 @@ spec:
       {{- include "mimir.storeGatewaySelectorLabels" . | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.store_gateway.strategy | nindent 4 }}
-  serviceName: {{ template "mimir.fullname" . }}-store-gateway-headless
+  serviceName: {{ template "mimir.fullname" . }}-store-gateway{{- if not .Values.useGEMLabels -}}-headless{{- end -}}
   {{- if .Values.store_gateway.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:

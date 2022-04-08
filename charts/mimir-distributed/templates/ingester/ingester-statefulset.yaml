@@ -16,7 +16,7 @@ spec:
       {{- include "mimir.ingesterSelectorLabels" . | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
-  serviceName: {{ template "mimir.fullname" . }}-ingester-headless
+  serviceName: {{ template "mimir.fullname" . }}-ingester{{- if not .Values.useGEMLabels -}}-headless{{- end -}}
   {{- if .Values.ingester.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
