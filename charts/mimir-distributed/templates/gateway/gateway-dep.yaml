@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "mimir.gatewayLabels" . | nindent 4 }}
     {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
-  name: {{ template "enterprise-metrics.fullname" . }}-gateway
+  name: {{ template "mimir.gatewayFullname" . }}
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:
@@ -33,7 +33,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
+      serviceAccountName: {{ template "mimir.serviceAccountName" . }}
       {{- if .Values.gateway.priorityClassName }}
       priorityClassName: {{ .Values.gateway.priorityClassName }}
       {{- end }}
@@ -103,7 +103,7 @@ spec:
             secretName: {{ .Values.externalConfigSecretName }}
         - name: runtime-config
           configMap:
-            name: {{ template "enterprise-metrics.fullname" . }}-runtime
+            name: {{ template "mimir.fullname" . }}-runtime
         {{- if .Values.gateway.extraVolumes }}
         {{ toYaml .Values.gateway.extraVolumes | nindent 8}}
         {{- end }}
