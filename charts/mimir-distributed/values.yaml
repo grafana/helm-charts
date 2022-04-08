@@ -156,7 +156,7 @@ mimir:
         insecure: true
     {{- end }}
 
-    {{- if .Values.enterprise.enabled -}}
+    {{- if .Values.enterprise.enabled }}
     multitenancy_enabled: true
 
     admin_api:
