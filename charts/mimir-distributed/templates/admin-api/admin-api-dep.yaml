@@ -33,7 +33,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
+      serviceAccountName: {{ template "mimir.serviceAccountName" . }}
       {{- if .Values.admin_api.priorityClassName }}
       priorityClassName: {{ .Values.admin_api.priorityClassName }}
       {{- end }}
@@ -108,7 +108,7 @@ spec:
             secretName: {{ .Values.externalConfigSecretName }}
         - name: runtime-config
           configMap:
-            name: {{ template "enterprise-metrics.fullname" . }}-runtime
+            name: {{ template "mimir.fullname" . }}-runtime
         {{- if .Values.admin_api.extraVolumes }}
         {{ toYaml .Values.admin_api.extraVolumes | nindent 8}}
         {{- end }}

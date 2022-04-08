@@ -3,7 +3,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "enterprise-metrics.fullname" . }}-tokengen
+  name: {{ template "mimir.fullname" . }}-tokengen
   labels:
     {{- include "mimir.tokengenJobLabels" . | nindent 4 }}
     {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
+      serviceAccountName: {{ template "mimir.serviceAccountName" . }}
       {{- if .Values.tokengenJob.priorityClassName }}
       priorityClassName: {{ .Values.tokengenJob.priorityClassName }}
       {{- end }}

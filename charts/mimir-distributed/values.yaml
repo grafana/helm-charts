@@ -166,15 +166,15 @@ mimir:
           kvstore:
             store: "memberlist"
 
-    {{- if .Values.mimir.minio.enabled }}
+    {{- if .Values.minio.enabled }}
     admin_client:
       storage:
         type: s3
         s3:
           endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
           bucket_name: enterprise-metrics-admin
-          access_key_id: {{ .Values.mimir.minio.accessKey }}
-          secret_access_key: {{ .Values.mimir.minio.secretKey }}
+          access_key_id: {{ .Values.minio.accessKey }}
+          secret_access_key: {{ .Values.minio.secretKey }}
           insecure: true
     {{- end }}
 
@@ -190,23 +190,23 @@ mimir:
     gateway:
       proxy:
         default:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         admin_api:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         alertmanager:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         compactor:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         distributor:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         ingester:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         query_frontend:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         ruler:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
         store_gateway:
-          url: http://{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
+          url: http://{{ template "mimir.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ include "mimir.serverHttpListenPort" . }}
     {{- end }}
 
     instrumentation:
@@ -1073,6 +1073,9 @@ minio:
       policy: none
       purge: false
     - name: mimir-ruler
+      policy: none
+      purge: false
+    - name: enterprise-metrics-admin
       policy: none
       purge: false
   persistence:
