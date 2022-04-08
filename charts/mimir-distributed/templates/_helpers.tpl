@@ -38,6 +38,12 @@ For compatiblity and to support upgrade from enterprise-metrics chart redefine .
 {{- if .Values.useGEMLabels -}}enterprise-metrics{{- else -}}{{ .Chart.Name }}{{- end -}}
 {{- end -}}
 
+{{/*
+For compatiblity and to support upgrade from enterprise-metrics chart calculate minio bucket name
+*/}}
+{{- define "mimir.minioBucketPrefix" -}}
+{{- if .Values.useGEMLabels -}}enterprise-metrics{{- else -}}mimir{{- end -}}
+{{- end -}}
 
 {{/*
 Create the name of the service account
