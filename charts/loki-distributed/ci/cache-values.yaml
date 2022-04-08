@@ -33,6 +33,7 @@ loki:
       reject_old_samples_max_age: 168h
       ingestion_burst_size_mb: 20
       ingestion_rate_mb: 10
+      split_queries_by_interval: 30m
 
     schema_config:
       configs:
@@ -75,7 +76,6 @@ loki:
     query_range:
       align_queries_with_step: true
       max_retries: 5
-      split_queries_by_interval: 30m
       cache_results: true
       results_cache:
         cache:
