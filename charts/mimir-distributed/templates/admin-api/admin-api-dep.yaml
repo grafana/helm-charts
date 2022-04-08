@@ -1,0 +1,120 @@
+{{- if .Values.enterprise.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    {{- toYaml .Values.admin_api.annotations | nindent 4 }}
+  labels:
+    {{- include "mimir.adminApiLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+  name: {{ template "mimir.adminApiFullname" . }}
+spec:
+  replicas: {{ .Values.admin_api.replicas }}
+  selector:
+    matchLabels:
+      {{- include "mimir.adminApiSelectorLabels" . | nindent 6 }}
+  strategy:
+    {{- toYaml .Values.admin_api.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "mimir.adminApiLabels" . | nindent 8 }}
+        {{- if .Values.useGEMLabels }}{{- include "mimir.gemAdminApiPodLabels" . | nindent 8 }}{{- end }}
+        {{- with .Values.admin_api.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.useExternalConfig }}
+        checksum/config: {{ .Values.externalConfigVersion }}
+        {{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end}}
+        {{- with .Values.admin_api.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "enterprise-metrics.serviceAccountName" . }}
+      {{- if .Values.admin_api.priorityClassName }}
+      priorityClassName: {{ .Values.admin_api.priorityClassName }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.admin_api.securityContext | nindent 8 }}
+      initContainers:
+        {{- with .Values.admin_api.initContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      containers:
+        - name: admin-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "-target=admin-api"
+            - -activity-tracker.filepath=
+            - "-config.file=/etc/mimir/mimir.yaml"
+            {{- range $key, $value := .Values.admin_api.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.admin_api.extraVolumeMounts }}
+              {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
+            {{- end }}
+            - name: config
+              mountPath: /etc/mimir
+            - name: runtime-config
+              mountPath: /var/mimir
+            - name: license
+              mountPath: /license
+            - name: storage
+              mountPath: "/data"
+              subPath: {{ .Values.admin_api.persistence.subPath }}
+          ports:
+            - name: http-metrics
+              containerPort: {{ include "mimir.serverHttpListenPort" . }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ include "mimir.serverGrpcListenPort" . }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.admin_api.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.admin_api.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.admin_api.resources | nindent 12 }}
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+            {{- if .Values.admin_api.env }}
+            {{ toYaml .Values.admin_api.env | nindent 12 }}
+            {{- end }}
+        {{- with .Values.admin_api.extraContainers }}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+      nodeSelector:
+        {{- toYaml .Values.admin_api.nodeSelector | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.admin_api.affinity | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.admin_api.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.admin_api.terminationGracePeriodSeconds }}
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ .Values.externalConfigSecretName }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
+        {{- if .Values.admin_api.extraVolumes }}
+        {{ toYaml .Values.admin_api.extraVolumes | nindent 8}}
+        {{- end }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        - name: storage
+          emptyDir: {}
+{{- end -}}
