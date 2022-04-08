@@ -34,7 +34,6 @@ function snake_case {
   sed -E -e 's/-/_/' <<<"$1"
 }
 
-component="$1"
 camel_cased="$(camel_case "$1")"
 snake_cased="$(snake_case "$1")"
 
@@ -74,10 +73,15 @@ spec:
       {{- with .scrapeTimeout }}
       scrapeTimeout: {{ . }}
       {{- end }}
-      {{- with .relabelings }}
       relabelings:
+        - sourceLabels: [job]
+          replacement: "{{ $.Release.Namespace }}/${snake_cased}"
+          targetLabel: job
+        - replacement: "{{ include "mimir.clusterName" $ }}"
+          targetLabel: cluster
+        {{- with .relabelings }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       {{- with .scheme }}
       scheme: {{ . }}
       {{- end }}

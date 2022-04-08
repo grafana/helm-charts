@@ -1,4 +1,3 @@
-{{- if .Values.compactor.enabled -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -137,4 +136,3 @@ spec:
             {{- if .Values.compactor.env }}
               {{- toYaml .Values.compactor.env | nindent 12 }}
             {{- end }}
-{{- end -}}
