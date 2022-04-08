@@ -65,6 +65,10 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/mimir
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.alertmanager.persistence.subPath }}
@@ -103,6 +107,11 @@ spec:
         - name: config
           secret:
             secretName: {{ .Values.externalConfigSecretName }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        {{- end }}
 {{- if .Values.alertmanager.extraVolumes }}
 {{ toYaml .Values.alertmanager.extraVolumes | indent 8}}
 {{- end }}

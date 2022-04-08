@@ -63,6 +63,10 @@ spec:
             {{- end }}
             - name: runtime-config
               mountPath: /var/mimir
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             - name: config
               mountPath: /etc/mimir
             - name: storage
@@ -105,6 +109,11 @@ spec:
         - name: config
           secret:
             secretName: {{ .Values.externalConfigSecretName }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime

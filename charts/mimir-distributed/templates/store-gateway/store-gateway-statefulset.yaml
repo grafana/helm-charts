@@ -80,6 +80,11 @@ spec:
         - name: config
           secret:
             secretName: {{ .Values.externalConfigSecretName }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime
@@ -112,6 +117,10 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/mimir
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             - name: runtime-config
               mountPath: /var/mimir
             - name: storage
