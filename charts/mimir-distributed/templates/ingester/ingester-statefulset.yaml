@@ -82,6 +82,11 @@ spec:
         - name: config
           secret:
             secretName: {{ .Values.externalConfigSecretName }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ .Values.license.secretName }}
+        {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime
@@ -120,6 +125,10 @@ spec:
               subPath: {{ .Values.ingester.persistentVolume.subPath }}
               {{- else }}
               {{- end }}
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
           ports:
             - name: http-metrics
               containerPort: {{ include "mimir.serverHttpListenPort" . }}
