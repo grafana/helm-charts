@@ -1379,11 +1379,10 @@ license:
   external: false
   secretName: 'enterprise-metrics-license'
 
-
 # Whether to generate pre-2.0 Grafana Enterprise Metrics resource labels and selectors, or generate new Kubernetes standard selectors.
 # Rolling upgrade from version 1.7.x without downtime requires this setting to be true. Fresh installation or upgrade with downtime can set
 # it to false.
-useGEMLabels: true
+useGEMLabels: false
 
 # Settings for the initial admin(istrator) token generator job. Can only be enabled if
 # enterprise.enabled is true - requires license.
