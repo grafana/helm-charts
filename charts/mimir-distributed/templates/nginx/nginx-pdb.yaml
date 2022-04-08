@@ -1,3 +1,4 @@
+{{- if not .Values.enterprise.enabled -}}
 {{- if .Values.nginx.podDisruptionBudget -}}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -11,4 +12,5 @@ spec:
     matchLabels:
       {{- include "mimir.nginxSelectorLabels" . | nindent 6 }}
 {{ toYaml .Values.nginx.podDisruptionBudget | indent 2 }}
+{{- end -}}
 {{- end -}}
