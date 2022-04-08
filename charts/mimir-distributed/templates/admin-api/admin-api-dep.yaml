@@ -51,7 +51,7 @@ spec:
       {{- end }}
       containers:
         - name: admin-api
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=admin-api"

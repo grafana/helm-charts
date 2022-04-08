@@ -39,6 +39,13 @@ For compatiblity and to support upgrade from enterprise-metrics chart redefine .
 {{- end -}}
 
 {{/*
+Calculate image name based on whether enterprise features are requested
+*/}}
+{{- define "mimir.imageReference" -}}
+{{- if .Values.useGEMLabels -}}{{ .Values.enterprise.image.repository }}:{{ .Values.enterprise.image.tag }}{{- else -}}{{ .Values.image.repository }}:{{ .Values.image.tag }}{{- end -}}
+{{- end -}}
+
+{{/*
 For compatiblity and to support upgrade from enterprise-metrics chart calculate minio bucket name
 */}}
 {{- define "mimir.minioBucketPrefix" -}}

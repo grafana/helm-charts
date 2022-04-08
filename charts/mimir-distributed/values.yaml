@@ -1364,15 +1364,10 @@ enterprise:
   enabled: false
   # Container image settings.
   # Since the image is unique for all microservices, so are image settings.
+  # pullPolicy and pullSecrets are set in .image
   image:
     repository: grafana/metrics-enterprise
     tag: v2.0.0-rc.0
-    pullPolicy: IfNotPresent
-    # Optionally specify an array of imagePullSecrets.
-    # Secrets must be manually created in the namespace.
-    # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-    # pullSecrets:
-    #   - myRegistryKeySecretName
 
 # In order to use Grafana Enterprise Metrics features, you will need to provide the contents of your Grafana Enterprise Metrics
 # license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
