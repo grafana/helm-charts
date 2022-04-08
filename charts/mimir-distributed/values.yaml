@@ -63,7 +63,7 @@ mimir:
       backend: s3
       s3:
         endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        bucket_name: mimir-ruler
+        bucket_name: {{ include "mimir.minioBucketPrefix" . }}-ruler
         access_key_id: {{ .Values.minio.accessKey }}
         secret_access_key: {{ .Values.minio.secretKey }}
         insecure: true
@@ -139,7 +139,7 @@ mimir:
       {{- if .Values.minio.enabled }}
       s3:
         endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        bucket_name: mimir-tsdb
+        bucket_name: {{ include "mimir.minioBucketPrefix" . }}-tsdb
         access_key_id: {{ .Values.minio.accessKey }}
         secret_access_key: {{ .Values.minio.secretKey }}
         insecure: true
@@ -150,7 +150,7 @@ mimir:
       backend: s3
       s3:
         endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        bucket_name: mimir-ruler
+        bucket_name: {{ include "mimir.minioBucketPrefix" . }}-ruler
         access_key_id: {{ .Values.minio.accessKey }}
         secret_access_key: {{ .Values.minio.secretKey }}
         insecure: true
@@ -1075,7 +1075,13 @@ minio:
     - name: mimir-ruler
       policy: none
       purge: false
+    - name: enterprise-metrics-tsdb
+      policy: none
+      purge: false
     - name: enterprise-metrics-admin
+      policy: none
+      purge: false
+    - name: enterprise-metrics-ruler
       policy: none
       purge: false
   persistence:
