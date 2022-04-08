@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.16.8](https://img.shields.io/badge/Version-0.16.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.2](https://img.shields.io/badge/AppVersion-1.3.2-informational?style=flat-square)
+![Version: 0.16.9](https://img.shields.io/badge/Version-0.16.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.2](https://img.shields.io/badge/AppVersion-1.3.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -175,6 +175,9 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
+| ingester.maxBlockBytes | int | `nil` | Maximum size of a block before cutting it |
+| ingester.maxBlockDuration | string | `nil` | Maximum length of time before cutting a block |
+| ingester.completeBlockTimeout | string | `nil` | Duration to keep blocks in the ingester after they have been flushed |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
