@@ -103,7 +103,7 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime
@@ -112,7 +112,7 @@ spec:
         {{- end }}
         - name: license
           secret:
-            secretName: {{ .Values.license.secretName }}
+            secretName: {{ tpl .Values.license.secretName . }}
         - name: storage
           emptyDir: {}
 {{- end -}}

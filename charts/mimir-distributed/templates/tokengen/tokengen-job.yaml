@@ -64,13 +64,13 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
         {{- if .Values.tokengenJob.extraVolumes }}
         {{ toYaml .Values.tokengenJob.extraVolumes | nindent 8 }}
         {{- end }}
         - name: license
           secret:
-            secretName: {{ .Values.license.secretName }}
+            secretName: {{ tpl .Values.license.secretName . }}
         - name: storage
           emptyDir: {}
 {{- end -}}

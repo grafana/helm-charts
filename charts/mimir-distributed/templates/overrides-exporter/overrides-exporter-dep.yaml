@@ -102,11 +102,11 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
         {{- if .Values.enterprise.enabled }}
         - name: license
           secret:
-            secretName: {{ .Values.license.secretName }}
+            secretName: {{ tpl .Values.license.secretName . }}
         {{- end }}
         - name: runtime-config
           configMap:
