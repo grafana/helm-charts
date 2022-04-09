@@ -143,19 +143,19 @@ heritage: {{ .ctx.Release.Service }}
 
 {{- else -}}
 
-{{- if .component -}}
+helm.sh/chart: {{ include "mimir.chart" .ctx }}
+app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
 app.kubernetes.io/component: {{ .component }}
 {{- end }}
-app.kubernetes.io/instance: {{ .ctx.Release.Name }}
-app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
-app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
-{{- if .ctx.Chart.AppVersion }}
 {{- if .memberlist }}
 app.kubernetes.io/part-of: memberlist
 {{- end }}
+{{- if .ctx.Chart.AppVersion }}
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
-helm.sh/chart: {{ include "mimir.chart" .ctx }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
 {{- end }}
 {{- end -}}
 
@@ -179,8 +179,17 @@ target: {{ .component }}
 release: {{ .ctx.Release.Name }}
 {{- end }}
 {{- else -}}
-app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+helm.sh/chart: {{ include "mimir.chart" .ctx }}
 app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
 {{- end }}
 {{- end -}}
 
@@ -194,12 +203,12 @@ app: {{ include "mimir.name" .ctx }}-{{ .component }}
 {{- end }}
 release: {{ .ctx.Release.Name }}
 {{- else -}}
-{{- if .component -}}
+app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
 app.kubernetes.io/component: {{ .component }}
 {{- end }}
-app.kubernetes.io/instance: {{ .ctx.Release.Name }}
-app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
-{{- end }}
+{{- end -}}
 {{- end -}}
 
 {{/*
