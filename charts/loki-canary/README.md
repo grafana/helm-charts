@@ -1,6 +1,6 @@
 # loki-canary
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 
@@ -32,7 +32,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.repository | string | `"docker.io/grafana/loki-canary"` | Docker image repository |
-| image.tag | string | `""` | Overrides the image tag whose default is the chart's appVersion |
+| image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | lokiAddress | string | `nil` | The Loki server URL:Port, e.g. loki:3100 |
 | nameOverride | string | `""` | Overrides the chart's name |

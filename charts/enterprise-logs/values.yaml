@@ -100,6 +100,8 @@ config: |
     chunk_block_size: 262144
     chunk_encoding: snappy
     chunk_retain_period: 1m
+    wal:
+      dir: /var/loki/wal
 
   ingester_client:
     grpc_client_config:
@@ -464,8 +466,10 @@ loki-distributed:
 
   # RBAC configuration
   rbac:
-    # -- If enabled, a PodSecurityPolicy is created
+    # -- If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp.
     pspEnabled: true
+    # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
+    sccEnabled: false
 
   # -- Compactor is defined in parent chart
   compactor:
@@ -591,3 +595,5 @@ minio:
     requests:
       cpu: 100m
       memory: 128Mi
+  # -- Change the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root
+  configPathmc: "/tmp/minio/mc/"

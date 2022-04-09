@@ -1,4 +1,4 @@
-{{- if and .Values.ruler.enabled .Values.ruler.persistence.enabled }}
+{{- if and (eq .Values.ruler.kind "Deployment") .Values.ruler.enabled .Values.ruler.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
