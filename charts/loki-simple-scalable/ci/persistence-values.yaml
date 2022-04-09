@@ -1,0 +1,21 @@
+read:
+  persistence:
+    enabled: true
+    size: 100Mi
+
+write:
+  persistence:
+    enabled: true
+    size: 100Mi
+
+gateway:
+  nginxConfig:
+    httpSnippet: |-
+      client_max_body_size 100M;
+    serverSnippet: |-
+      client_max_body_size 100M;
+
+  basicAuth:
+    enabled: true
+    username: user
+    password: pass

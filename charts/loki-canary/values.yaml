@@ -11,7 +11,7 @@ image:
   # -- Docker image repository
   repository: docker.io/grafana/loki-canary
   # -- Overrides the image tag whose default is the chart's appVersion
-  tag: ""
+  tag: null
   # -- Docker image pull policy
   pullPolicy: IfNotPresent
 

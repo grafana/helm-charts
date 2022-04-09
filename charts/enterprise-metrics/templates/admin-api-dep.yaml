@@ -46,7 +46,10 @@ spec:
       securityContext:
         {{- toYaml .Values.admin_api.securityContext | nindent 8 }}
       initContainers:
-      {{- if .Values.minio.enabled }}
+        {{- with .Values.admin_api.initContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.minio.enabled }}
         - name: minio-mc
           image: "{{ .Values.minio.mcImage.repository }}:{{ .Values.minio.mcImage.tag }}"
           imagePullPolicy: {{ .Values.minio.mcImage.pullPolicy }}
@@ -71,7 +74,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: admin-api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

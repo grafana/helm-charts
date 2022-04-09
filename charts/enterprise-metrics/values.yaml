@@ -8,27 +8,13 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.4.2
+  tag: v1.7.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
   # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   # pullSecrets:
   #   - myRegistryKeySecretName
-
-ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 serviceAccount:
   create: true
@@ -54,10 +40,21 @@ tokengenJob:
   extraArgs: {}
   env: []
   annotations: {}
+  initContainers: []
 
 config:
-  auth_enabled: false
+  auth_enabled: true
+  auth:
+    type: enterprise
+
   cluster_name: "{{ .Release.Name }}"
+
+  admin_api:
+    leader_election:
+      enabled: true
+      ring:
+        kvstore:
+          store: "memberlist"
 
   admin_client:
     storage:
@@ -92,10 +89,7 @@ config:
     distributor_client:
       address: 'dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
 
-  limits:
-    enforce_metric_name: false
-    reject_old_samples: true
-    reject_old_samples_max_age: 168h
+  limits: {}
 
   server:
     http_listen_port: 8080
@@ -189,6 +183,8 @@ admin_api:
   service:
     annotations: {}
     labels: {}
+
+  initContainers: []
 
   strategy:
     type: RollingUpdate
@@ -562,6 +558,56 @@ ingester:
   extraVolumeMounts: []
   extraPorts: []
   env: []
+
+overrides_exporter:
+  replicas: 1
+
+  annotations: {}
+
+  initContainers: []
+
+  service:
+    annotations: {}
+    labels: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  securityContext: {}
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  extraContainers: []
+  extraVolumes: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  terminationGracePeriodSeconds: 60
 
 ruler:
   replicas: 1
@@ -1049,15 +1095,3 @@ minio:
       cpu: 100m
       memory: 128Mi
   secretKey: supersecret
-
-consul:
-  enabled: false
-  client:
-    enabled: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  server:
-    replicas: 1
-    bootstrapExpect: 1

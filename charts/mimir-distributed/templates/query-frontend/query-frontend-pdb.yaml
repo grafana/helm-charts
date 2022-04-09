@@ -1,0 +1,14 @@
+{{- if .Values.query_frontend.podDisruptionBudget -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "mimir.queryFrontendFullname" . }}
+  labels:
+    {{- include "mimir.queryFrontendLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.queryFrontendSelectorLabels" . | nindent 6 }}
+{{ toYaml .Values.query_frontend.podDisruptionBudget | indent 2 }}
+{{- end -}}

@@ -103,10 +103,4 @@ All changes require a bump to the chart version, as this enforced by CI. All cha
 When making a change and organizing a release, first ensure your changes are encapuslated in a meaningful commit.
 In a separate commit, increase the chart version in the `Chart.yaml` file and add a CHANGELOG entry in the `CHANGELOG.md` file under the new version.
 
-In a third commit, create an export of the manifests with:
-
-```console
-$ make exports
-```
-
 Finally, push your changes and open up a Pull Request with the prefix `[enterprise-metrics]`.

@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedFrontendFullname" . }}
   labels:
     {{- include "loki.memcachedFrontendLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedFrontend.replicas }}
   updateStrategy:
@@ -28,6 +32,12 @@ spec:
       {{- end }}
       labels:
         {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.memcachedFrontend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -80,6 +90,9 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
+        {{- end }}
+        {{- if .Values.memcachedFrontend.extraContainers }}
+        {{- toYaml .Values.memcachedFrontend.extraContainers | nindent 8}}
         {{- end }}
       {{- with .Values.memcachedFrontend.affinity }}
       affinity:

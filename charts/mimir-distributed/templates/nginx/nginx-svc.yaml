@@ -1,0 +1,32 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mimir.nginxFullname" . }}
+  labels:
+    {{- include "mimir.nginxLabels" . | nindent 4 }}
+    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- with .Values.nginx.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml .Values.nginx.service.annotations | nindent 4 }}
+spec:
+  type: {{ .Values.nginx.service.type }}
+  {{- with .Values.nginx.service.clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- if and (eq "LoadBalancer" .Values.nginx.service.type) .Values.nginx.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.nginx.service.loadBalancerIP }}
+  {{- end }}
+  ports:
+    - name: http-metric
+      port: {{ .Values.nginx.service.port }}
+      targetPort: http-metric
+      {{- if and (eq "NodePort" .Values.nginx.service.type) .Values.nginx.service.nodePort }}
+      nodePort: {{ .Values.nginx.service.nodePort }}
+      {{- end }}
+      protocol: TCP
+  selector:
+    {{- include "mimir.nginxSelectorLabels" . | nindent 4 }}
+{{- end }}
