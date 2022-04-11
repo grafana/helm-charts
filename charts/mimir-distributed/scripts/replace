@@ -26,10 +26,6 @@ if [[ $# -eq 0 ]]; then
 fi
 
 component="$1"
-manifest="$2"
-enterprise=false
-non_enterprise=false
-toggle=false
 memberlist=''
 SED=('sed' '-z' '-E' '-f/dev/stdin')
 
@@ -39,13 +35,10 @@ case "$1" in
     memberlist=' "memberlist" true'
     ;;
   -e)
-    enterprise=true
     ;;
   -ne)
-    non_enterprise=true
     ;;
   -t)
-    toggle=true
     ;;
   -h) usage && exit 0 ;;
   *)
@@ -66,7 +59,7 @@ function snake_case {
 }
 
 component="$1"
-camel_cased="$(camel_case "${component}")"
+# camel_cased="$(camel_case "${component}")"
 snake_cased="$(snake_case "${component}")"
 headless=""
 if grep -iqE '^  clusterip:[[:space:]]none$' "$2" ; then
