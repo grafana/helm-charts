@@ -1,0 +1,35 @@
+#!/bin/bash
+
+declare -A PDB
+PDB["admin-api"]="-e -g"
+PDB["alertmanager"]="-g -t"
+PDB["compactor"]="-g"
+PDB["distributor"]="-g"
+PDB["gateway"]="-e"
+PDB["ingester"]="-g"
+PDB["nginx"]="-ne"
+PDB["overrides-exporter"]=""
+PDB["querier"]="-g"
+PDB["query-frontend"]=""
+PDB["ruler"]="-g"
+PDB["store-gateway"]="-g"
+
+for component in "${!PDB[@]}" ; do
+  ./scripts/create-pdb ${PDB["${component}"]} "${component}" > "templates/${component}/${component}-pdb.yaml"
+done
+
+declare -A SERVMON
+SERVMON["admin-api"]="-e -g"
+SERVMON["alertmanager"]="-g -t"
+SERVMON["compactor"]="-g"
+SERVMON["distributor"]="-g"
+SERVMON["gateway"]="-e"
+SERVMON["ingester"]="-g"
+SERVMON["querier"]="-g"
+SERVMON["query-frontend"]=""
+SERVMON["ruler"]="-g"
+SERVMON["store-gateway"]="-g"
+
+for component in "${!SERVMON[@]}" ; do
+  ./scripts/create-servmon ${SERVMON["${component}"]} "${component}" > "templates/${component}/${component}-servmon.yaml"
+done

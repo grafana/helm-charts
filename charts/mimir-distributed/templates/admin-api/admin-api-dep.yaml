@@ -5,21 +5,19 @@ metadata:
   annotations:
     {{- toYaml .Values.admin_api.annotations | nindent 4 }}
   labels:
-    {{- include "mimir.adminApiLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
-  name: {{ template "mimir.adminApiFullname" . }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "admin-api" "memberlist" true) | nindent 4 }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "admin-api") }}
 spec:
   replicas: {{ .Values.admin_api.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.adminApiSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "admin-api" "memberlist" true) | nindent 6 }}
   strategy:
     {{- toYaml .Values.admin_api.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "mimir.adminApiLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemAdminApiPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "admin-api" "memberlist" true) | nindent 8 }}
         {{- with .Values.admin_api.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

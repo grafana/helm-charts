@@ -7,9 +7,9 @@
 apiVersion: {{ include "mimir.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "mimir.nginxFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "nginx") }}
   labels:
-    {{- include "mimir.nginxLabels" . | nindent 4 }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "nginx") | nindent 4 }}
   {{- with .Values.nginx.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

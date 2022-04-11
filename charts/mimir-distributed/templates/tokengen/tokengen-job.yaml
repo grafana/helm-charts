@@ -3,10 +3,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "mimir.fullname" . }}-tokengen
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "tokengen") }}
   labels:
-    {{- include "mimir.tokengenJobLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "tokengen") | nindent 4 }}
   annotations:
     {{- if .Values.tokengenJob.annotations }}
     {{- toYaml .Values.tokengenJob.annotations | nindent 4 }}
@@ -20,8 +19,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "mimir.tokengenJobLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemTokengenJobPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "tokengen") | nindent 8 }}
         {{- with .Values.tokengenJob.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

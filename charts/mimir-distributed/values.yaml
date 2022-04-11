@@ -1362,9 +1362,13 @@ enterprise:
   # Enable enterprise features. License must be provided, nginx gateway is not installed, instead
   # the enterprise gateway is used.
   enabled: false
-  # Container image settings.
-  # Since the image is unique for all microservices, so are image settings.
-  # pullPolicy and pullSecrets are set in .image
+
+  # Whether to generate pre-2.0 Grafana Enterprise Metrics resource labels and selectors, or generate new Kubernetes standard selectors.
+  # Rolling upgrade from version 1.7.x without downtime requires this setting to be true. Fresh installation or upgrade with downtime can set
+  # it to false.
+  legacyLabels: false
+
+  # Container image settings for enterprise, note that pullPolicy and pullSecrets are set in top level .image
   image:
     repository: grafana/metrics-enterprise
     tag: v2.0.0-rc.0
@@ -1377,11 +1381,6 @@ license:
   contents: "NOTAVALIDLICENSE"
   external: false
   secretName: 'enterprise-metrics-license'
-
-# Whether to generate pre-2.0 Grafana Enterprise Metrics resource labels and selectors, or generate new Kubernetes standard selectors.
-# Rolling upgrade from version 1.7.x without downtime requires this setting to be true. Fresh installation or upgrade with downtime can set
-# it to false.
-useGEMLabels: false
 
 # Settings for the initial admin(istrator) token generator job. Can only be enabled if
 # enterprise.enabled is true - requires license.
