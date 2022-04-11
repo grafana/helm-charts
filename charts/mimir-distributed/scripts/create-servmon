@@ -36,7 +36,7 @@ function snake_case {
 
 component="$1"
 camel_cased="$(camel_case "$1")"
-snake_cased="$(snake_case "$1")"
+# snake_cased="$(snake_case "$1")"
 
 cat <<EOF
 {{- with .Values.serviceMonitor }}
