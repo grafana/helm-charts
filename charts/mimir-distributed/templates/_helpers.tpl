@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mimir.name" -}}
-{{- default ( include "mimir.chartName" . ) .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -15,7 +15,7 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default ( include "mimir.chartName" . ) .Values.nameOverride -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -28,14 +28,7 @@ If release name contains chart name it will be used as a full name.
 Create chart name and version as used by the chart label.
 */}}
 {{- define "mimir.chart" -}}
-{{- printf "%s-%s" ( include "mimir.chartName" . ) .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-For compatiblity and to support upgrade from enterprise-metrics chart redefine .Chart.Name
-*/}}
-{{- define "mimir.chartName" -}}
-{{- if .Values.enterprise.legacyLabels -}}enterprise-metrics{{- else -}}{{ .Chart.Name }}{{- end -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
