@@ -60,6 +60,16 @@ ingester:
     limits:
       cpu: 4
       memory: 15Gi
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: target
+                operator: In
+                values:
+                  - ingester
+          topologyKey: 'kubernetes.io/hostname'
 
 memcached:
   enabled: true
