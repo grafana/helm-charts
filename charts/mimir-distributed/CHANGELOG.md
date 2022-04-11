@@ -22,7 +22,7 @@ Entries should include a reference to the Pull Request that introduced the chang
     The `-config.file=` obviously.\
     The `-activity-tracker` for convenience.\
     User defined arguments from `.<service>.extraArgs`.
-* [CHANGE] **Breaking** Kubernetes object labels now follow the de-factor kubernetes standard (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatiblity with previous Grafana Enterprise Metrics helm chart, the value `useGEMLabels` should be set to `true`.
+* [CHANGE] **Breaking** Kubernetes object labels now follow the de-factor kubernetes standard (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatiblity with previous Grafana Enterprise Metrics helm chart, the value `enterprise.legacyLabels` should be set to `true`.
 * [CHANGE] **Breaking** Ingesters only support `StatefulSet` from now on as chunks storage was removed in favour of blocks storage.
 * [CHANGE] **Breaking** Compactor is a required component, the value `compactor.enabled` is removed.
 * [CHANGE] **Breaking** The configuration parameter `server.http_listen_port` and `server.grpc_listen_port` cannot be changed from their defaults.

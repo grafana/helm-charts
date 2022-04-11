@@ -4,7 +4,7 @@ set -euf -o pipefail
 
 function usage {
   cat <<EOF
-Create the POD Disruption Budget manifest template
+Create the ServiceMonitor manifest template
 
 Usage:
   $0 [options] <component>
