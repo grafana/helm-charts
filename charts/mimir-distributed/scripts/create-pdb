@@ -62,7 +62,7 @@ function snake_case {
   sed -E -e 's/-/_/' <<<"$1"
 }
 
-camel_cased="$(camel_case "${component}")"
+# camel_cased="$(camel_case "${component}")"
 snake_cased="$(snake_case "${component}")"
 
 if [ "${enterprise}" = "true" ] ; then
