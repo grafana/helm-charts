@@ -2,13 +2,12 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "mimir.distributorFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "distributor") }}
   labels:
-    {{- include "mimir.distributorLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "distributor" "memberlist" true) | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "mimir.distributorSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "distributor" "memberlist" true) | nindent 6 }}
 {{ toYaml .Values.distributor.podDisruptionBudget | indent 2 }}
 {{- end -}}

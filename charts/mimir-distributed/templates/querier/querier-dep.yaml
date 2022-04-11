@@ -1,24 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mimir.querierFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "querier") }}
   labels:
-    {{- include "mimir.querierLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 4 }}
   annotations:
     {{- toYaml .Values.querier.annotations | nindent 4 }}
 spec:
   replicas: {{ .Values.querier.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.querierSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 6 }}
   strategy:
     {{- toYaml .Values.querier.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "mimir.querierLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemQuerierPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 8 }}
         {{- with .Values.querier.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

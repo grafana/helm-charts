@@ -1,17 +1,16 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "mimir.compactorFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "compactor") }}
   labels:
-    {{- include "mimir.compactorLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "compactor" "memberlist" true) | nindent 4 }}
   annotations:
     {{- toYaml .Values.compactor.annotations | nindent 4 }}
 spec:
   replicas: {{ .Values.compactor.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.compactorSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "compactor" "memberlist" true) | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.compactor.strategy | nindent 4 }}
   serviceName: {{ template "mimir.fullname" . }}-compactor
@@ -40,8 +39,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "mimir.compactorLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemCompactorPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "compactor" "memberlist" true) | nindent 8 }}
         {{- with .Values.compactor.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

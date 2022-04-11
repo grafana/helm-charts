@@ -5,21 +5,19 @@ metadata:
   annotations:
     {{- toYaml .Values.gateway.annotations | nindent 4 }}
   labels:
-    {{- include "mimir.gatewayLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
-  name: {{ template "mimir.gatewayFullname" . }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "gateway") }}
 spec:
   replicas: {{ .Values.gateway.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.gatewaySelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 6 }}
   strategy:
     {{- toYaml .Values.gateway.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "mimir.gatewayLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemGatewayPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "gateway") | nindent 8 }}
         {{- with .Values.gateway.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
