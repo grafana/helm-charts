@@ -35,7 +35,7 @@ Create chart name and version as used by the chart label.
 Calculate image name based on whether enterprise features are requested
 */}}
 {{- define "mimir.imageReference" -}}
-{{- if .Values.enterprise.legacyLabels -}}{{ .Values.enterprise.image.repository }}:{{ .Values.enterprise.image.tag }}{{- else -}}{{ .Values.image.repository }}:{{ .Values.image.tag }}{{- end -}}
+{{- if .Values.enterprise.enabled -}}{{ .Values.enterprise.image.repository }}:{{ .Values.enterprise.image.tag }}{{- else -}}{{ .Values.image.repository }}:{{ .Values.image.tag }}{{- end -}}
 {{- end -}}
 
 {{/*
