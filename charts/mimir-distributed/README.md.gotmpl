@@ -69,7 +69,9 @@ mimir:
 
 Perform the upgrade:
 
-$ helm upgrade <cluster name> grafana/enterprise-metrics -f <custom values file>
+```console
+$ helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file>
+```
 
 
 ## Installation of Grafana Enterprise Metrics
@@ -77,7 +79,7 @@ $ helm upgrade <cluster name> grafana/enterprise-metrics -f <custom values file>
 To install the chart with licensed features enabled, using a local Grafana Enterprise Metrics license file called `license.jwt`, provide the license as a value and set the `enterprise.enabled` value to `true`.
 
 ```console
-$ helm install <cluster name> grafana/enterprise-metrics --set 'enterprise.enabled=true' --set-file 'license.contents=./license.jwt'
+$ helm install <cluster name> grafana/mimir-distributed --set 'enterprise.enabled=true' --set-file 'license.contents=./license.jwt'
 ```
 
 ### Upgrade from a previous version of Grafana Enterprise Metrics
@@ -98,7 +100,7 @@ useGEMLabels: true
 The last value (`useGEMLabels: true`) is needed because this chart installs objects with kubernetes de-facto standard labels by default which are different from older Grafana Enterprise Metrics labels.
 
 ```console
-$ helm upgrade <cluster name> grafana/enterprise-metrics -f <custom values file> --set-file 'license.contents=./license.jwt'
+$ helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file> --set-file 'license.contents=./license.jwt'
 ```
 
 ## Scale values
