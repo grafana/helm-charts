@@ -89,18 +89,28 @@ Please consult the [migration guide](TODO) for details on how to prepare the con
 ```yaml
 enterprise:
   enabled: true
+  legacyLabels: true
 
 mimir:
   config: |
     <text of configuration>
-
-useGEMLabels: true
 ```
 
-The last value (`useGEMLabels: true`) is needed because this chart installs objects with kubernetes de-facto standard labels by default which are different from older Grafana Enterprise Metrics labels.
+The value (`enterprise.legacyLabels`) is needed because this chart installs objects with kubernetes de-facto standard labels by default which are different from older Grafana Enterprise Metrics labels.
 
 ```console
 $ helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file> --set-file 'license.contents=./license.jwt'
+```
+
+### Upgrade from Grafana Mimir to Grafana Enterprise Metrics
+
+Use the name override to align labels and selectors and enable licensed features.
+
+```yaml
+nameOverride: mimir-distributed
+
+enterprise:
+  enabled: true
 ```
 
 ## Scale values
