@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mimir.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default ( include "mimir.infixName" . ) .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -15,7 +15,7 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := default ( include "mimir.infixName" . ) .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -23,6 +23,14 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Calculate the infix for naming
+*/}}
+{{- define "mimir.infixName" -}}
+{{- if and .Values.enterprise.enabled .Values.enterprise.legacyLabels -}}enterprise-metrics{{- else -}}mimir{{- end -}}
+{{- end -}}
+
 
 {{/*
 Create chart name and version as used by the chart label.
@@ -129,10 +137,12 @@ Simple resource labels
 {{- if .ctx.Values.enterprise.legacyLabels }}
 {{- if .component -}}
 app: {{ include "mimir.name" .ctx }}-{{ .component }}
+{{- else -}}
+app: {{ include "mimir.name" .ctx }}
 {{- end }}
 chart: {{ template "mimir.chart" .ctx }}
-release: {{ .ctx.Release.Name }}
 heritage: {{ .ctx.Release.Service }}
+release: {{ .ctx.Release.Name }}
 
 {{- else -}}
 
