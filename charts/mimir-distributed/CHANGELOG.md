@@ -14,7 +14,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 * [CHANGE] The chart `enterprise-metrics` is renamed to `mimir-distributed`.
 * [CHANGE] **Breaking** Configuration for Grafana Enterprise Metrics is now in the value `mimir.config` as a helm template **string**.
-  Please consult the [Grafana Enterprise Migration Guide](TODO add final version) to learn more about how to upgrade the configuration.
+  Please consult the [Grafana Enterprise Migration Guide](https://grafana.com/docs/enterprise-metrics/latest/) to learn more about how to upgrade the configuration.
   Except for the following parameters specified as command line parameters in the Pod templates,
   everything is now set in this string typed value, giving a definite source of configuration.
   Exceptions:
@@ -28,7 +28,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 * [CHANGE] **Breaking** The configuration parameter `server.http_listen_port` and `server.grpc_listen_port` cannot be changed from their defaults.
 * [CHANGE] The default for `ingester.ring.replication_factor` is now 3 and there will be 3 ingesters started even with the default `values.yaml`.
   On the other hand, Pod anti affinity is turned off by default to allow single node deployment.
-* [FEATURE] Upgrade to [Grafana Enterprise Metrics v2.0.0](TODO add final version)
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v2.0.0](https://grafana.com/docs/enterprise-metrics/latest/)
 * [FEATURE] Reworked chart to enable installing Grafana Mimir open source software version without licensed features.
 * [FEATURE] Added the value `nameOverride` to enable migration from Cortex helm chart.
 * [FEATURE] The alertmanager can be disabled with `alertmanager.enabled: false`, to support the use case of external alertmanager.
