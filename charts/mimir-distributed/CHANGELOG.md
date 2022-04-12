@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this library will be documented in this file.
+All notable changes to this chart will be documented in this file.
 
 Entries should be ordered as follows:
 - [CHANGE]
@@ -16,13 +16,13 @@ Entries should include a reference to the Pull Request that introduced the chang
 * [CHANGE] **Breaking** Configuration for Grafana Enterprise Metrics is now in the value `mimir.config` as a helm template **string**.
   Please consult the [Grafana Enterprise Migration Guide](https://grafana.com/docs/enterprise-metrics/latest/) to learn more about how to upgrade the configuration.
   Except for the following parameters specified as command line parameters in the Pod templates,
-  everything is now set in this string typed value, giving a definite source of configuration.
+  everything is now set in this string-typed value, giving a definitive source of configuration.
   Exceptions:
     > The `-target=` must be provided individually.\
     The `-config.file=` obviously.\
     The `-activity-tracker` for convenience.\
     User defined arguments from `.<service>.extraArgs`.
-* [CHANGE] **Breaking** Kubernetes object labels now follow the de-factor kubernetes standard (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatiblity with previous Grafana Enterprise Metrics helm chart, the value `enterprise.legacyLabels` should be set to `true`.
+* [CHANGE] **Breaking** Kubernetes object labels now follow the [kubernetes standard](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatibility with previous Grafana Enterprise Metrics helm chart, the value `enterprise.legacyLabels` should be set to `true`.
 * [CHANGE] **Breaking** Ingesters only support `StatefulSet` from now on as chunks storage was removed in favour of blocks storage.
 * [CHANGE] **Breaking** Compactor is a required component, the value `compactor.enabled` is removed.
 * [CHANGE] **Breaking** The configuration parameter `server.http_listen_port` and `server.grpc_listen_port` cannot be changed from their defaults.
