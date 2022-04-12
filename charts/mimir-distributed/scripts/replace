@@ -48,18 +48,12 @@ esac
 shift
 done
 
-# Convert kebab-case to camelCase.
-# Only works with GNU sed.
-function camel_case {
-  sed -E -e 's/-(.)/\U\1/' <<<"$1"
-}
 # Convert kebab-case to snake_case.
 function snake_case {
   sed -E -e 's/-/_/' <<<"$1"
 }
 
 component="$1"
-# camel_cased="$(camel_case "${component}")"
 snake_cased="$(snake_case "${component}")"
 headless=""
 if grep -iqE '^  clusterip:[[:space:]]none$' "$2" ; then
