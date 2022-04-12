@@ -45,16 +45,16 @@ This section describes various use cases for installation, upgrade and migration
 
 These are the common tasks to perform before any of the use cases.
 
-```console
-$ # Add the repository
-$ helm repo add grafana https://grafana.github.io/helm-charts
-$ helm repo update
+```bash
+# Add the repository
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
 ```
 
 ### Installation of Grafana Mimir
 
-```console
-$ helm install <cluster name> grafana/mimir-distributed
+```bash
+helm install <cluster name> grafana/mimir-distributed
 ```
 
 As part of this chart many different pods and services are installed which all
@@ -76,16 +76,16 @@ mimir:
 
 Perform the upgrade:
 
-```console
-$ helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file>
+```bash
+helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file>
 ```
 
 ## Installation of Grafana Enterprise Metrics
 
 To install the chart with licensed features enabled, using a local Grafana Enterprise Metrics license file called `license.jwt`, provide the license as a value and set the `enterprise.enabled` value to `true`.
 
-```console
-$ helm install <cluster name> grafana/mimir-distributed --set 'enterprise.enabled=true' --set-file 'license.contents=./license.jwt'
+```bash
+helm install <cluster name> grafana/mimir-distributed --set 'enterprise.enabled=true' --set-file 'license.contents=./license.jwt'
 ```
 
 ### Upgrade from a previous version of Grafana Enterprise Metrics
@@ -104,8 +104,8 @@ mimir:
 
 The value (`enterprise.legacyLabels`) is needed because this chart installs objects with kubernetes de-facto standard labels by default which are different from older Grafana Enterprise Metrics labels.
 
-```console
-$ helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file> --set-file 'license.contents=./license.jwt'
+```bash
+helm upgrade <cluster name> grafana/mimir-distributed -f <custom values file> --set-file 'license.contents=./license.jwt'
 ```
 
 ### Upgrade from Grafana Mimir to Grafana Enterprise Metrics
@@ -141,8 +141,8 @@ object storage service for production deployments.
 
 To deploy a cluster using `small.yaml` values file:
 
-```console
-$ helm install <cluster name> grafana/mimir-distributed -f small.yaml
+```bash
+helm install <cluster name> grafana/mimir-distributed -f small.yaml
 ```
 
 ### Large
@@ -163,23 +163,23 @@ object storage service for production deployments.
 
 To deploy a cluster using the `large.yaml` values file:
 
-```console
-$ helm install <cluster name> grafana/mimir-distributed -f large.yaml
+```bash
+helm install <cluster name> grafana/mimir-distributed -f large.yaml
 ```
 
 # Development
 
 To configure a local default storage class for k3d:
 
-```console
-$ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
-$ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```bash
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
 To install the chart with the values used in CI tests:
 
-```console
-$ helm install test ./ --values ./ci/test-values.yaml
+```bash
+helm install test ./ --values ./ci/test-values.yaml
 ```
 
 # Contributing/Releasing
