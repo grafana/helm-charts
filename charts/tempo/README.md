@@ -1,12 +1,15 @@
 # tempo
 
-![Version: 0.14.2](https://img.shields.io/badge/Version-0.14.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.2](https://img.shields.io/badge/AppVersion-1.3.2-informational?style=flat-square)
+
+![Version: 0.14.2](https://img.shields.io/badge/Version-0.14.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.2](https://img.shields.io/badge/AppVersion-1.3.2-informational?style=flat-square) 
 
 Grafana Tempo Single Binary Mode
 
 ## Source Code
 
 * <https://github.com/grafana/tempo>
+
+
 
 ## Values
 
@@ -15,7 +18,7 @@ Grafana Tempo Single Binary Mode
 | affinity | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
-| nameOverride | string | `""` | Overrides the chart's name |
+| nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
@@ -26,17 +29,17 @@ Grafana Tempo Single Binary Mode
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
-| serviceAccount.annotations | object | `{}` | Annotations for the service account |
-| serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
-| serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
-| serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
+| serviceAccount.annotations | object | `{}` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.imagePullSecrets | list | `[]` |  |
+| serviceAccount.name | string | `nil` |  |
 | serviceMonitor.additionalLabels | object | `{}` |  |
 | serviceMonitor.annotations | object | `{}` |  |
 | serviceMonitor.enabled | bool | `false` |  |
 | serviceMonitor.interval | string | `""` |  |
 | tempo.extraArgs | object | `{}` |  |
-| tempo.extraEnv | list | `[]` | Environment variables to add |
-| tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
+| tempo.extraEnv | list | `[]` |  |
+| tempo.extraVolumeMounts | list | `[]` |  |
 | tempo.ingester | object | `{}` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |
@@ -52,16 +55,16 @@ Grafana Tempo Single Binary Mode
 | tempo.repository | string | `"grafana/tempo"` |  |
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |
-| tempo.searchEnabled | bool | `false` | If true, enables Tempo's native search |
-| tempo.server.http_listen_port | int | `3100` | HTTP server listen port |
+| tempo.searchEnabled | bool | `false` |  |
+| tempo.server.http_listen_port | int | `3100` |  |
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"1.3.2"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.extraArgs | object | `{}` |  |
-| tempoQuery.extraEnv | list | `[]` | Environment variables to add |
-| tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
+| tempoQuery.extraEnv | list | `[]` |  |
+| tempoQuery.extraVolumeMounts | list | `[]` |  |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.tag | string | `"1.0.1"` |  |
@@ -82,5 +85,5 @@ A major chart version change indicates that there is an incompatible breaking ch
 ### From Chart versions < 0.7.0
 
 Upgrading from pre 0.7.0 will, by default, move your trace storage from `/tmp/tempo/traces` to `/var/tempo/traces`.
-This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the
+This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the 
 old folder to the new.
