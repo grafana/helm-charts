@@ -1486,6 +1486,25 @@ entries:
   fluent-bit:
   - apiVersion: v1
     appVersion: v2.1.0
+    created: "2022-04-12T00:32:32.123894464Z"
+    deprecated: true
+    description: Uses fluent-bit Loki go plugin for gathering logs and sending them
+      to Loki
+    digest: 8dede954bdf1416a306eb5e787266c30425c86dffc7245570593d4b1aa26439e
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: fluent-bit
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/fluent-bit-2.3.1/fluent-bit-2.3.1.tgz
+    version: 2.3.1
+  - apiVersion: v1
+    appVersion: v2.1.0
     created: "2021-05-25T15:33:14.124419537Z"
     deprecated: true
     description: Uses fluent-bit Loki go plugin for gathering logs and sending them
@@ -21111,4 +21130,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-11T13:09:36.121743194Z"
+generated: "2022-04-12T00:32:32.135254073Z"
