@@ -123,11 +123,11 @@ ingester:
     storageClass: null
   config:
     # -- Maximum size of a block before cutting it
-    maxBlockBytes: null
+    max_block_bytes: null
     # -- Maximum length of time before cutting a block
-    maxBlockDuration: null
+    max_block_duration: null
     # -- Duration to keep blocks in the ingester after they have been flushed
-    completeBlockTimeout: null
+    complete_block_timeout: null
 
 distributor:
   # -- Number of replicas for the distributor
