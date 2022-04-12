@@ -1,5 +1,6 @@
 # Changelog
 
+This changelog is continued from `enterprise-metrics` after Grafana Enterprise Metrics was added to `mimir-distributed` in PR #1203.
 All notable changes to this chart will be documented in this file.
 
 Entries should be ordered as follows:
@@ -12,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.0
 
-* [CHANGE] The chart `enterprise-metrics` is renamed to `mimir-distributed`.
+* [CHANGE] The chart `enterprise-metrics` is renamed to `mimir-distributed`. #1203
 * [CHANGE] **Breaking** Configuration for Grafana Enterprise Metrics is now in the value `mimir.config` as a helm template **string**.
   Please consult the [Grafana Enterprise Migration Guide](https://grafana.com/docs/enterprise-metrics/latest/) to learn more about how to upgrade the configuration.
   Except for the following parameters specified as command line parameters in the Pod templates,
@@ -37,6 +38,8 @@ Entries should include a reference to the Pull Request that introduced the chang
 * [BUGFIX] `.<service>.PodDisruptionBudget` was not working. Added template definition for all services. Pod disruption budget is enabled for the ingesters and store-gateways by default.
 * [BUGFIX] Fix typo in value `.alertmanager.statefulset` to `.alertmanager.statefulSet`.
 * [BUGFIX] Remove unused value `.useExternalLicense`.
+
+## Entries from enterprise-metrics chart
 
 ## 1.8.1
 
@@ -202,3 +205,34 @@ Entries should include a reference to the Pull Request that introduced the chang
 ## 1.0.0
 
 * [FEATURE] Initial versioned release. ##168
+
+## Entries from mimir-distributed chart
+
+## 0.1.6
+
+* [CHANGE] **Breaking** Compactor is a required component, the value `compactor.enabled` is removed. #1193
+* [FEATURE] The alertmanager can be disabled with `alertmanager.enabled: false`, to support the use case of external alertmanager. #1193
+
+## 0.1.5
+
+* [BUGFIX] Fix labels for Mimir dashboards. #1190
+
+## 0.1.4
+
+* [BUGFIX] Fix documentation link missing slash. #1177
+
+## 0.1.3
+
+* [FEATURE] Add ServiceMonitor definitions. #1156
+
+## 0.1.2
+
+* [BUGFIX] Fix the naming of minio configmap and secret in the parent chart. #1152
+
+## 0.1.1
+
+* [BUGFIX] CI fixes. #1144
+
+## 0.1.0
+
+* [FEATURE] Initial commit, Mimir only, derived from `enterprise-metrics` chart. #1141
