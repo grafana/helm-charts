@@ -160,9 +160,9 @@ The memcached default args are removed and should be provided manually. The sett
 | global.priorityClassName | string | `nil` |  |
 | global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | ingester.affinity | string | `"podAntiAffinity:\n  requiredDuringSchedulingIgnoredDuringExecution:\n    - labelSelector:\n        matchLabels:\n          {{- include \"tempo.ingesterSelectorLabels\" . | nindent 10 }}\n      topologyKey: kubernetes.io/hostname\n  preferredDuringSchedulingIgnoredDuringExecution:\n    - weight: 100\n      podAffinityTerm:\n        labelSelector:\n          matchLabels:\n            {{- include \"tempo.ingesterSelectorLabels\" . | nindent 12 }}\n        topologyKey: failure-domain.beta.kubernetes.io/zone\n"` |  |
-| ingester.config.complete_block_timeout | string | `nil` |  |
-| ingester.config.max_block_bytes | string | `nil` |  |
-| ingester.config.max_block_duration | string | `nil` |  |
+| ingester.config.completeBlockTimeout | string | `nil` |  |
+| ingester.config.maxBlockBytes | string | `nil` |  |
+| ingester.config.maxBlockDuration | string | `nil` |  |
 | ingester.extraArgs | list | `[]` |  |
 | ingester.extraEnv | list | `[]` |  |
 | ingester.extraEnvFrom | list | `[]` |  |
