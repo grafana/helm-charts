@@ -13,6 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.0
 
+* [CHANGE] **Breaking** for existing users of `mimir-distributed`: the naming convention is changed to have shorter resource names, as in `<release>-mimir-distributed-store-gateway` is now just `<release>-mimir-store-gateway`. To have the previous names, please specify `nameOverride: mimir-distributed` in the values. #1203
 * [CHANGE] The chart `enterprise-metrics` is renamed to `mimir-distributed`. #1203
 * [CHANGE] **Breaking** Configuration for Grafana Enterprise Metrics is now in the value `mimir.config` as a helm template **string**.
   Please consult the [Grafana Enterprise Migration Guide](https://grafana.com/docs/enterprise-metrics/latest/) to learn more about how to upgrade the configuration.
