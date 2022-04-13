@@ -10,6 +10,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.9.0
+
+* [CHANGE] This chart is now deprecated and will no longer be updated. Grafana Enterprise Metrics v2.0.0 is included in the new `mimir-distributed` chart which implements Grafana Enterprise Metrics as an option (`enterprise.enabled: true`). To upgrade to using the new chart, see the [Grafana Enterprise Metrics migration guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/).
+
 ## 1.8.1
 
 * [ENHANCEMENT] Support Grafana Mimir monitoring mixin labels by setting container names to the component names.
