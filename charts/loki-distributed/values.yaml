@@ -826,7 +826,7 @@ gateway:
           location ~ /loki/api/.* {
             proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
-      
+
           location ~ /prometheus/api/v1/alerts.* {
             proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
