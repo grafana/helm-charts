@@ -103,7 +103,7 @@ mimir:
         max_send_msg_size: 104857600
 
     runtime_config:
-      file: /var/mimir/runtime.yaml
+      file: /var/{{ include "mimir.name" . }}/runtime.yaml
 
     memberlist:
       abort_if_cluster_join_fails: false

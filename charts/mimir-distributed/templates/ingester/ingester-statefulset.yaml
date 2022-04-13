@@ -115,7 +115,7 @@ spec:
             - name: config
               mountPath: /etc/mimir
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: storage
               mountPath: "/data"
               {{- if .Values.ingester.persistentVolume.subPath }}

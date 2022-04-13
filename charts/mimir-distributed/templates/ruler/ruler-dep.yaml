@@ -65,7 +65,7 @@ spec:
               mountPath: /license
             {{- end }}
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.ruler.persistence.subPath }}

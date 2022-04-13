@@ -64,7 +64,7 @@ spec:
             - name: config
               mountPath: /etc/mimir
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: license
               mountPath: /license
             - name: storage

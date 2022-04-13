@@ -66,6 +66,8 @@ spec:
             - name: license
               mountPath: /license
             {{- end }}
+            - name: runtime-config
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.alertmanager.persistence.subPath }}
@@ -109,6 +111,9 @@ spec:
           secret:
             secretName: {{ tpl .Values.license.secretName . }}
         {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "mimir.fullname" . }}-runtime
 {{- if .Values.alertmanager.extraVolumes }}
 {{ toYaml .Values.alertmanager.extraVolumes | indent 8}}
 {{- end }}

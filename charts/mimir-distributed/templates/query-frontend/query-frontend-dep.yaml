@@ -59,7 +59,7 @@ spec:
               {{ toYaml .Values.query_frontend.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
             {{- if .Values.enterprise.enabled }}
             - name: license
               mountPath: /license
