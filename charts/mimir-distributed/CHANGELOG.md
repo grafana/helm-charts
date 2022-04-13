@@ -208,6 +208,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## Entries from mimir-distributed chart
 
+## 0.1.8
+
+* [BUGFIX] Fix nginx routing for rules and expose buildinfo. #1233
+
 ## 0.1.7
 
 * [BUGFIX] Remove misplaced config value and add affinity rules in `capped-small.yaml` and `capped-large.yaml`. #1225
