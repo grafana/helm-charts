@@ -16,7 +16,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 * [CHANGE] **Breaking** for existing users of `mimir-distributed`: the naming convention is changed to have shorter resource names, as in `<release>-mimir-distributed-store-gateway` is now just `<release>-mimir-store-gateway`. To have the previous names, please specify `nameOverride: mimir-distributed` in the values. #1203
 * [CHANGE] The chart `enterprise-metrics` is renamed to `mimir-distributed`. #1203
 * [CHANGE] **Breaking** Configuration for Grafana Enterprise Metrics is now in the value `mimir.config` as a helm template **string**.
-  Please consult the [Grafana Enterprise Migration Guide](https://grafana.com/docs/enterprise-metrics/latest/) to learn more about how to upgrade the configuration.
+  Please consult the [Grafana Enterprise Migration Guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/) to learn more about how to upgrade the configuration.
   Except for the following parameters specified as command line parameters in the Pod templates,
   everything is now set in this string-typed value, giving a definitive source of configuration.
   Exceptions:
@@ -24,17 +24,17 @@ Entries should include a reference to the Pull Request that introduced the chang
     The `-config.file=` obviously.\
     The `-activity-tracker` for convenience.\
     User defined arguments from `.<service>.extraArgs`.
-* [CHANGE] **Breaking** Kubernetes object labels now follow the [kubernetes standard](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatibility with previous Grafana Enterprise Metrics helm chart, the value `enterprise.legacyLabels` should be set to `true`.
+* [CHANGE] **Breaking** Kubernetes object labels now follow the [kubernetes standard](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatibility with previous Grafana Enterprise Metrics Helm chart, the value `enterprise.legacyLabels` should be set to `true`.
 * [CHANGE] **Breaking** Ingesters only support `StatefulSet` from now on as chunks storage was removed in favour of blocks storage.
 * [CHANGE] **Breaking** Compactor is a required component, the value `compactor.enabled` is removed.
 * [CHANGE] **Breaking** The configuration parameter `server.http_listen_port` and `server.grpc_listen_port` cannot be changed from their defaults.
 * [CHANGE] The default for `ingester.ring.replication_factor` is now 3 and there will be 3 ingesters started even with the default `values.yaml`.
   On the other hand, Pod anti affinity is turned off by default to allow single node deployment.
-* [FEATURE] Upgrade to [Grafana Enterprise Metrics v2.0.0](https://grafana.com/docs/enterprise-metrics/latest/)
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v2.0.0](https://grafana.com/docs/enterprise-metrics/v2.0.x/)
 * [FEATURE] Reworked chart to enable installing Grafana Mimir open source software version without licensed features.
 * [FEATURE] Added the value `nameOverride` to enable migration from Cortex helm chart.
 * [FEATURE] The alertmanager can be disabled with `alertmanager.enabled: false`, to support the use case of external alertmanager.
-* [FEATURE] Added definitions of `ServiceMonitor` objects for Prometheus monitoring. Configuration via the `serviceMonitor` values. This enables partial functionality of Grafana Mimir dashboards out of the box - without alerts and recording rules pre-loaded.
+* [FEATURE] Added definitions of `ServiceMonitor` objects for Prometheus monitoring. Configuration is done via the `serviceMonitor` values. This enables partial functionality of Grafana Mimir dashboards out of the box - without alerts and recording rules pre-loaded.
 * [ENHANCEMENT] Minio bucket creation is not tied to `admin-api` anymore, moved to its own job `templates/minio/create-bucket-job.yaml`.
 * [BUGFIX] `.<service>.PodDisruptionBudget` was not working. Added template definition for all services. Pod disruption budget is enabled for the ingesters and store-gateways by default.
 * [BUGFIX] Fix typo in value `.alertmanager.statefulset` to `.alertmanager.statefulSet`.
@@ -47,7 +47,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 * [ENHANCEMENT] Support Grafana Mimir monitoring mixin labels by setting container names to the component names.
   This will make it easier to select different components in cadvisor metrics.
   Previously, all containers used "enterprise-metrics" as the container name.
-  Now, the ingester Pod will have a container name "ingester".
+  Now, for example, the ingester Pod will have a container name "ingester" rather than "enterprise-metrics".
 
 ## 1.8.0
 
