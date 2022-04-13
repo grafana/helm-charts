@@ -346,7 +346,7 @@ metadata:
      grafana_dashboard: "1"
 data:
   k8s-dashboard.json: |-
-  [...]
+    [...]
 ```
 
 ## Sidecar for datasources
