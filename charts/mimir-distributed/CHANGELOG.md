@@ -11,13 +11,17 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.3
+
+* [ENHANCEMENT] Update README.md with helm-docs version 1.8.1 instead of old 1.4.0. #1230
+
 ## 2.0.2
 
 * [ENHANCEMENT] Update Grafana Enterprise Metrics docker image tag to v2.0.1 #1241
 
 ## 2.0.1
 
-* [BUGFIX] Honor `global.clusterDomain` when referencing internal services, e.g. alertmanager or nginx gateway.
+* [BUGFIX] Honor `global.clusterDomain` when referencing internal services, e.g. alertmanager or nginx gateway. #1227
 
 ## 2.0.0
 
