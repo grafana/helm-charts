@@ -1,10 +1,10 @@
 # Grafana Mimir Helm Chart
 
-Helm chart for deploying [Grafana Mimir](https://grafana.com/docs/mimir/v2.0.x/) to Kubernetes. Derived from [Grafana Enterprise Metrics Helm Chart](https://github.com/grafana/helm-charts/blob/main/charts/enterprise-metrics/README.md)
+Helm chart for deploying [Grafana Mimir](https://grafana.com/docs/mimir/v2.0.x/) or optionally [Grafana Enterprise Metrics](https://grafana.com/docs/metrics-enterprise/latest/) to Kubernetes. Derived from [Grafana Enterprise Metrics Helm Chart](https://github.com/grafana/helm-charts/blob/main/charts/enterprise-metrics/README.md)
 
 # mimir-distributed
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Grafana Mimir
 
@@ -19,20 +19,41 @@ Kubernetes: `^1.10.0-0`
 | https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
 | https://helm.min.io/ | minio | 8.0.10 |
 
+## Dependencies
+
 ### Storage
 
-Grafana Mimir requires an object storage backend to store metrics and indexes.
+Grafana Mimir and Grafana Enterprise Metrics require an object storage backend to store metrics and indexes.
 
 The default chart values will deploy [Minio](https://min.io) for initial set up. Production deployments should use a separately deployed object store.
 See [Grafana Mimir documentation](https://grafana.com/docs/mimir/v2.0.x/) for details on storage types and documentation.
 
+### Grafana Enterprise Metrics license
+
+In order to use the enterprise features of this chart, you need to provide the contents of a Grafana Enterprise Metrics license file as the value for the `license.contents` variable.
+To obtain a Grafana Enterprise Metrics license, refer to [Get a license](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license).
+
+### Helm3
+
+The chart requires at least Helm version 3 to work.
+
 ## Installation
+
+This section describes various use cases for installation, upgrade and migration from different systems and versions.
+
+### Preparation
+
+These are the common tasks to perform before any of the use cases.
 
 ```console
 $ # Add the repository
 $ helm repo add grafana https://grafana.github.io/helm-charts
 $ helm repo update
-$ # Perform install
+```
+
+### Installation of Grafana Mimir
+
+```console
 $ helm install <cluster name> grafana/mimir-distributed
 ```
 
@@ -40,7 +61,53 @@ As part of this chart many different pods and services are installed which all
 have varying resource requirements. Please make sure that you have sufficient
 resources (CPU/memory) available in your cluster before installing Grafana Mimir Helm Chart.
 
-### Scale values
+### Migration from Cortex to Grafana Mimir
+
+Please consult the [Migration from Cortex to Grafana](https://grafana.com/docs/mimir/v2.0.x/migration-guide/migrating-from-cortex/) guide on how to update the configuration.
+Prepare a custom values file with the contents:
+
+```yaml
+nameOverride: cortex
+
+mimir:
+  config: |
+    <text of configuration>
+```
+
+Perform the upgrade:
+
+$ helm upgrade <cluster name> grafana/enterprise-metrics -f <custom values file>
+
+## Installation of Grafana Enterprise Metrics
+
+To install the chart with licensed features enabled, using a local Grafana Enterprise Metrics license file called `license.jwt`, provide the license as a value and set the `enterprise.enabled` value to `true`.
+
+```console
+$ helm install <cluster name> grafana/enterprise-metrics --set 'enterprise.enabled=true' --set-file 'license.contents=./license.jwt'
+```
+
+### Upgrade from a previous version of Grafana Enterprise Metrics
+
+Please consult the [migration guide](TODO) for details on how to prepare the configuration. Prepare a custom values file, with the contents:
+
+```yaml
+enterprise:
+  enabled: true
+
+mimir:
+  config: |
+    <text of configuration>
+
+useGEMLabels: true
+```
+
+The last value (`useGEMLabels: true`) is needed because this chart installs objects with kubernetes de-facto standard labels by default which are different from older Grafana Enterprise Metrics labels.
+
+```console
+$ helm upgrade <cluster name> grafana/enterprise-metrics -f <custom values file> --set-file 'license.contents=./license.jwt'
+```
+
+## Scale values
 
 The default Helm chart values in the `values.yaml` file are configured to allow you to quickly test out Grafana Mimir.
 Alternative values files are included to provide a more realistic configuration that should facilitate a certain level of ingest load.
