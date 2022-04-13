@@ -90,8 +90,6 @@ spec:
         - name: storage
           emptyDir: {}
         {{- end }}
-        - name: active-queries
-          emptyDir: {}
         {{- if .Values.store_gateway.extraVolumes }}
         {{ toYaml .Values.store_gateway.extraVolumes | nindent 8 }}
         {{- end }}
@@ -104,7 +102,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=store-gateway"
-            - -activity-tracker.filepath=/active-query-tracker/activity.log
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.store_gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -126,8 +123,6 @@ spec:
               {{- if .Values.store_gateway.persistentVolume.subPath }}
               subPath: {{ .Values.store_gateway.persistentVolume.subPath }}             
               {{- end }}
-            - name: active-queries
-              mountPath: /active-query-tracker
           ports:
             - name: http-metrics
               containerPort: {{ include "mimir.serverHttpListenPort" . }}

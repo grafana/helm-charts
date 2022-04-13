@@ -50,7 +50,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=distributor"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
           {{- range $key, $value := .Values.distributor.extraArgs }}
             - "-{{ $key }}={{ $value }}"

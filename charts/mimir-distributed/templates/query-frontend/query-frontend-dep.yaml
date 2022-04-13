@@ -49,7 +49,6 @@ spec:
           image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - -activity-tracker.filepath=/active-query-tracker/activity.log
             - "-target=query-frontend"
             - "-config.file=/etc/mimir/mimir.yaml"
           {{- range $key, $value := .Values.query_frontend.extraArgs }}
@@ -72,8 +71,6 @@ spec:
               {{- if .Values.query_frontend.persistence.subPath }}
               subPath: {{ .Values.query_frontend.persistence.subPath }}
               {{- end }}
-            - name: active-queries
-              mountPath: /active-query-tracker
           ports:
             - name: http-metrics
               containerPort: {{ include "mimir.serverHttpListenPort" . }}
@@ -119,6 +116,4 @@ spec:
 {{ toYaml .Values.query_frontend.extraVolumes | indent 8}}
 {{- end }}
         - name: storage
-          emptyDir: {}
-        - name: active-queries
           emptyDir: {}

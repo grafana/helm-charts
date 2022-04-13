@@ -102,7 +102,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=compactor"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.compactor.extraArgs }}
             - "-{{ $key }}={{ $value }}"

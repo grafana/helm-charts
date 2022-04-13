@@ -104,7 +104,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ingester"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.ingester.extraArgs }}
             - "-{{ $key }}={{ $value }}"

@@ -50,7 +50,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=overrides-exporter"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.overrides_exporter.extraArgs }}
             - "-{{ $key }}={{ $value }}"

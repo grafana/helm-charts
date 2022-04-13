@@ -52,7 +52,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"

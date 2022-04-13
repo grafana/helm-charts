@@ -51,7 +51,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=gateway"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"

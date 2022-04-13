@@ -22,7 +22,6 @@ Entries should include a reference to the Pull Request that introduced the chang
   Exceptions:
     > The `-target=` must be provided individually.\
     The `-config.file=` obviously.\
-    The `-activity-tracker` for convenience.\
     User defined arguments from `.<service>.extraArgs`.
 * [CHANGE] **Breaking** Kubernetes object labels now follow the [kubernetes standard](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (e.g. `app.kubernetes.io/component=ingester`). To enable smooth upgrade and compatibility with previous Grafana Enterprise Metrics Helm chart, the value `enterprise.legacyLabels` should be set to `true`.
 * [CHANGE] **Breaking** Ingesters only support `StatefulSet` from now on as chunks storage was removed in favour of blocks storage.

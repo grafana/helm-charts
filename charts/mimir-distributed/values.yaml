@@ -53,6 +53,9 @@ mimir:
 
     limits: {}
 
+    activity_tracker:
+      filepath: /data/activity_tracker
+
     alertmanager:
       data_dir: '/data'
       enable_api: true
