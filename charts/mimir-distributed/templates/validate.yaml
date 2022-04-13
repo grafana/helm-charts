@@ -1,5 +1,5 @@
 {{- if .Values.config }}
-{{- fail "Top level 'config' is not allowed, configuration should be provided as a string in 'mimir.config' and can contain template expressions. Alternatively configuration can be provided as an external secret." }}
+{{- fail "Top level 'config' is not allowed. In 'mimir.config', provide the configuration as a string that can contain template expressions. Alternatively, you can provide the configuration as an external secret." }}
 {{- end }}
 
 {{- if .Values.podDisruptionBudget }}

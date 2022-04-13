@@ -4,21 +4,19 @@ metadata:
   annotations:
     {{- toYaml .Values.overrides_exporter.annotations | nindent 4 }}
   labels:
-    {{- include "mimir.overridesExporterLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
-  name: {{ include "mimir.overridesExporterFullname" . }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "overrides-exporter") | nindent 4 }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "overrides-exporter") }}
 spec:
   replicas: {{ .Values.overrides_exporter.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.overridesExporterSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "overrides-exporter") | nindent 6 }}
   strategy:
     {{- toYaml .Values.overrides_exporter.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "mimir.overridesExporterLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemOverridesExporterPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "overrides-exporter") | nindent 8 }}
         {{- with .Values.overrides_exporter.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -48,11 +46,10 @@ spec:
         {{- toYaml .Values.overrides_exporter.initContainers | nindent 8 }}
       containers:
         - name: overrides-exporter
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=overrides-exporter"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.overrides_exporter.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -63,8 +60,12 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/mimir
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.overrides_exporter.persistence.subPath }}
@@ -100,7 +101,12 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime

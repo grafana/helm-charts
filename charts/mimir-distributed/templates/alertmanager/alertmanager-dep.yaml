@@ -3,24 +3,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mimir.alertmanagerFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "alertmanager") }}
   labels:
-    {{- include "mimir.alertmanagerLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "alertmanager" "memberlist" true) | nindent 4 }}
   annotations:
     {{- toYaml .Values.alertmanager.annotations | nindent 4 }}
 spec:
   replicas: {{ .Values.alertmanager.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.alertmanagerSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "alertmanager" "memberlist" true) | nindent 6 }}
   strategy:
     {{- toYaml .Values.alertmanager.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "mimir.alertmanagerLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemAlertmanagerPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "alertmanager" "memberlist" true) | nindent 8 }}
         {{- with .Values.alertmanager.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -50,11 +48,10 @@ spec:
       {{- end }}
       containers:
         - name: alertmanager
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - -activity-tracker.filepath=
             - "-config.file=/etc/mimir/mimir.yaml"
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -65,6 +62,12 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/mimir
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
+            - name: runtime-config
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.alertmanager.persistence.subPath }}
@@ -102,7 +105,15 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "mimir.fullname" . }}-runtime
 {{- if .Values.alertmanager.extraVolumes }}
 {{ toYaml .Values.alertmanager.extraVolumes | indent 8}}
 {{- end }}
