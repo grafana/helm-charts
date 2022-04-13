@@ -54,7 +54,7 @@ mimir:
     limits: {}
 
     activity_tracker:
-      filepath: /data/activity_tracker
+      filepath: /data/metrics-activity.log
 
     alertmanager:
       data_dir: '/data'
