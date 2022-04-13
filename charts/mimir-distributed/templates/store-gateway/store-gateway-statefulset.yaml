@@ -1,20 +1,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "mimir.storeGatewayFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "store-gateway") }}
   labels:
-    {{- include "mimir.storeGatewayLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "store-gateway" "memberlist" true) | nindent 4 }}
   annotations:
     {{- toYaml .Values.store_gateway.annotations | nindent 4 }}
 spec:
   replicas: {{ .Values.store_gateway.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.storeGatewaySelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "store-gateway" "memberlist" true) | nindent 6 }}
   updateStrategy:
     {{- toYaml .Values.store_gateway.strategy | nindent 4 }}
-  serviceName: {{ template "mimir.fullname" . }}-store-gateway-headless
+  serviceName: {{ template "mimir.fullname" . }}-store-gateway{{- if not .Values.enterprise.legacyLabels -}}-headless{{- end -}}
   {{- if .Values.store_gateway.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -40,8 +39,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "mimir.storeGatewayLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemStoreGatewayPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "store-gateway" "memberlist" true) | nindent 8 }}
         {{- with .Values.store_gateway.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -79,7 +77,12 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime
@@ -87,8 +90,6 @@ spec:
         - name: storage
           emptyDir: {}
         {{- end }}
-        - name: active-queries
-          emptyDir: {}
         {{- if .Values.store_gateway.extraVolumes }}
         {{ toYaml .Values.store_gateway.extraVolumes | nindent 8 }}
         {{- end }}
@@ -97,11 +98,10 @@ spec:
         {{ toYaml .Values.store_gateway.extraContainers | nindent 8 }}
         {{- end }}
         - name: store-gateway
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=store-gateway"
-            - -activity-tracker.filepath=/active-query-tracker/activity.log
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- range $key, $value := .Values.store_gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -112,15 +112,17 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/mimir
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
             - name: storage
               mountPath: "/data"
               {{- if .Values.store_gateway.persistentVolume.subPath }}
               subPath: {{ .Values.store_gateway.persistentVolume.subPath }}             
               {{- end }}
-            - name: active-queries
-              mountPath: /active-query-tracker
           ports:
             - name: http-metrics
               containerPort: {{ include "mimir.serverHttpListenPort" . }}

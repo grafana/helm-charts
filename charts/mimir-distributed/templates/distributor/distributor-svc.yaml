@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "mimir.distributorFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "distributor") }}
   labels:
-    {{- include "mimir.distributorLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "distributor" "memberlist" true) | nindent 4 }}
     {{- with .Values.distributor.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -22,4 +21,4 @@ spec:
       name: grpc
       targetPort: grpc
   selector:
-    {{- include "mimir.distributorSelectorLabels" . | nindent 4 }}
+    {{- include "mimir.selectorLabels" (dict "ctx" . "component" "distributor" "memberlist" true) | nindent 4 }}
