@@ -13,10 +13,6 @@
 # object storage service for production deployments.
 # Ingesters are configured with a replication factor of 3 to ensure that a single ingester failur does not
 # result in data loss.
-config:
-  ingester:
-    ring:
-      replication_factor: 3
 
 alertmanager:
   persistentVolume:
