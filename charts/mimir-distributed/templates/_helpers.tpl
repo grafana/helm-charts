@@ -243,3 +243,17 @@ Cluster name that shows up in dashboard metrics
 {{- define "mimir.clusterName" -}}
 {{ (include "mimir.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
 {{- end -}}
+
+{{/* Allow KubeVersion to be overridden. */}}
+{{- define "mimir.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- end -}}
+
+{{/* Get API Versions */}}
+{{- define "mimir.podDisruptionBudget.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">= 1.21-0" (include "mimir.kubeVersion" .)) -}}
+      {{- print "policy/v1" -}}
+  {{- else -}}
+    {{- print "policy/v1beta1" -}}
+  {{- end -}}
+{{- end -}}

@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.4
+
+* [ENHANCEMENT] Determine PodDisruptionBudget APIVersion based on running version of k8s #1229
+
 ## 2.0.3
 
 * [ENHANCEMENT] Update README.md with helm-docs version 1.8.1 instead of old 1.4.0. #1230
