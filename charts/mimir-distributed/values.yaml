@@ -1380,7 +1380,7 @@ enterprise:
   # Container image settings for enterprise, note that pullPolicy and pullSecrets are set in top level .image
   image:
     repository: grafana/enterprise-metrics
-    tag: v2.0.0
+    tag: v2.0.1
 
 # In order to use Grafana Enterprise Metrics features, you will need to provide the contents of your Grafana Enterprise Metrics
 # license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
