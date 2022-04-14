@@ -1,0 +1,46 @@
+# -- Toggle to create ClusterRole and ClusterRoleBinding
+rbac:
+  create: true
+
+serviceAccount:
+  # -- Toggle to create ServiceAccount
+  create: true
+  # -- Service account name
+  name: 
+
+config:
+  # -- Toggle to create ConfigMap
+  create: true
+  # -- Provide content as a plain string. Perhaps with `--set-file config.contents=my-config.yaml`
+  contents: ""
+  # -- Or if convenient, insert full config as yaml object
+  yaml_contents:
+
+controller_type: "Deployment"
+replicas: 1
+podAnnotations: 
+podLabels:
+  name: "grafana-agent"
+args: ["--config.file=/etc/agent/agent-config.yaml", "--config.expand-env"]
+command: "/bin/agent"
+
+# simple key/value pairs that will be rendered as environment variables
+env: {}
+
+## The names of secrets in the same kubernetes namespace which contain values to be added to the environment
+## Each entry should contain a name key, and can optionally specify whether the secret must be defined with an optional key.
+envFromSecrets:
+## - name: secret-name
+##   optional: true
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repo
+  repository: grafana/agent
+  # -- Image tag
+  tag: v0.24.0
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image pull secrets
+  pullSecrets: []

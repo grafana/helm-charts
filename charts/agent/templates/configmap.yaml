@@ -1,0 +1,13 @@
+{{- if .Values.config.create -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "agent.fullname" . }}
+  labels:
+    app.kubernetes.io/component: grafana-agent
+{{ include "agent.labels" . | indent 4 }}
+data:
+    agent-config.yaml: |
+{{ if .Values.config.contents -}} {{.Values.config.contents | indent 6}} {{- else if .Values.config.yaml_contents -}} {{ .Values.config.yaml_contents | toYaml | indent 6 }} {{- end -}}
+    
+{{- end -}}

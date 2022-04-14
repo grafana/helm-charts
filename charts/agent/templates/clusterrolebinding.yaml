@@ -1,0 +1,18 @@
+{{- if .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "agent.fullname" . }}
+  labels:
+    app.kubernetes.io/component: grafana-agent
+{{ include "agent.labels" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "agent.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ template "agent.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end -}}
+
