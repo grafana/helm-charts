@@ -6,7 +6,7 @@ serviceAccount:
   # -- Toggle to create ServiceAccount
   create: true
   # -- Service account name
-  name: 
+  name:
 
 config:
   # -- Toggle to create ConfigMap
@@ -18,7 +18,7 @@ config:
 
 controller_type: "Deployment"
 replicas: 1
-podAnnotations: 
+podAnnotations:
 podLabels:
   name: "grafana-agent"
 args: ["--config.file=/etc/agent/agent-config.yaml", "--config.expand-env"]

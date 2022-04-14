@@ -9,5 +9,4 @@ metadata:
 data:
     agent-config.yaml: |
 {{ if .Values.config.contents -}} {{.Values.config.contents | indent 6}} {{- else if .Values.config.yaml_contents -}} {{ .Values.config.yaml_contents | toYaml | indent 6 }} {{- end -}}
-    
 {{- end -}}
