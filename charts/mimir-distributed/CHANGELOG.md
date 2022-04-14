@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.2
 
-* [ENHANCEMENT] Update Grafana Enterprise Metrics docker image tag to v2.0.1 #1241 
+* [ENHANCEMENT] Update Grafana Enterprise Metrics docker image tag to v2.0.1 #1241
 
 ## 2.0.1
 
