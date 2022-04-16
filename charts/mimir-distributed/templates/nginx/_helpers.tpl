@@ -1,4 +1,11 @@
 {{/*
+nginx fullname
+*/}}
+{{- define "mimir.nginxFullname" -}}
+{{ include "mimir.fullname" . }}-nginx
+{{- end }}
+
+{{/*
 nginx auth secret name
 */}}
 {{- define "mimir.nginxAuthSecret" -}}
