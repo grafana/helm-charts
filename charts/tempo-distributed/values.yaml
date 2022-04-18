@@ -59,6 +59,8 @@ rbac:
 
 # Configuration for the ingester
 ingester:
+  # -- Annotations for the ingester StatefulSet
+  annotations: {}
   # -- Number of replicas for the ingester
   replicas: 1
   image:
@@ -225,6 +227,9 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+  service:
+    # -- Annotations for compactor service
+    annotations: {}
 
 # Configuration for the querier
 querier:

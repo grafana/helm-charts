@@ -5,9 +5,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.ingesterLabels" . | nindent 4 }}
-  {{- with .Values.annotations }}
+  {{- with .Values.ingester.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   replicas: {{ .Values.ingester.replicas }}
