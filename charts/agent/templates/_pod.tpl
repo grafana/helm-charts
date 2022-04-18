@@ -5,6 +5,9 @@ containers:
   imagePullPolicy: {{.Values.image.pullPolicy}}
   image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
   command: [{{.Values.command}}]
+  ports:
+    - containerPort: 12345
+      name: http-metrics
   args:
 {{- with .Values.args }}
     {{- toYaml . | nindent 4 }}
