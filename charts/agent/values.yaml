@@ -40,6 +40,11 @@ security:
 
 volumes:
   addNodeExporterVolumes: false
+  additionalHostVolumes:
+# - hostPath: "/var/whatever"
+#   mountPath: "/whatever"
+#   readOnly: true
+#   name: foo
 
 image:
   # -- Image registry

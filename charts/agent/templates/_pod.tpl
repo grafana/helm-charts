@@ -43,6 +43,11 @@ containers:
     mountPath: /host/proc
     readOnly: true
 {{- end }}
+{{- range .Values.volumes.additionalHostVolumes}}
+  - name: {{.name}}
+    mountPath: {{.mountPath}}
+    readOnly: {{.readOnly}}
+{{- end }}
   securityContext:
     privileged: {{.Values.security.privileged}}
     runAsUser: {{.Values.security.runAsUser}}
@@ -62,5 +67,10 @@ volumes:
 - name: procfs
   hostPath:
     path: /proc
+{{- end }}
+{{- range .Values.volumes.additionalHostVolumes}}
+- name: {{.name}}
+  hostPath:
+    path: {{.hostPath}}
 {{- end }}
 {{- end }}
