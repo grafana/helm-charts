@@ -1,5 +1,5 @@
 {{/*
-nginx fullname
+nginx Fullname
 */}}
 {{- define "mimir.nginxFullname" -}}
 {{ include "mimir.fullname" . }}-nginx
