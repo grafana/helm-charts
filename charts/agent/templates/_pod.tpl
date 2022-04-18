@@ -7,7 +7,7 @@ containers:
   command: [{{.Values.command}}]
   ports:
     - containerPort: 12345
-      name: http-metrics
+      name: http
   args:
 {{- with .Values.args }}
     {{- toYaml . | nindent 4 }}
@@ -32,8 +32,35 @@ containers:
   volumeMounts:
   - mountPath: /etc/agent
     name: agent-config
+{{- if .Values.volumes.addNodeExporterVolumes }}
+  - name: rootfs
+    mountPath: /host/root
+    readOnly: true
+  - name: sysfs
+    mountPath: /host/sys
+    readOnly: true
+  - name: procfs
+    mountPath: /host/proc
+    readOnly: true
+{{- end }}
+  securityContext:
+    privileged: {{.Values.security.privileged}}
+    runAsUser: {{.Values.security.runAsUser}}
+    capabilities:
+      add: {{.Values.security.capabilities}}
 volumes:
 - configMap:
     name: {{ include "agent.fullname" . }}
   name: agent-config
+{{- if .Values.volumes.addNodeExporterVolumes }}
+- name: rootfs
+  hostPath:
+    path: /
+- name: sysfs
+  hostPath:
+    path: /sys
+- name: procfs
+  hostPath:
+    path: /proc
+{{- end }}
 {{- end }}

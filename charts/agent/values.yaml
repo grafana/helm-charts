@@ -33,6 +33,14 @@ envFromSecrets:
 ## - name: secret-name
 ##   optional: true
 
+security:
+  privileged: false
+  capabilities: ["SYS_TIME"]
+  runAsUser: 0
+
+volumes:
+  addNodeExporterVolumes: false
+
 image:
   # -- Image registry
   registry: docker.io
