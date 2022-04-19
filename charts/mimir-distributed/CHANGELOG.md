@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.5
 
-* [BUGFIX] Use new component name system for gateway ingress. This regression has been introduced with #1203
+* [BUGFIX] Use new component name system for gateway ingress. This regression has been introduced with #1203. #1260
 
 ## 2.0.4
 

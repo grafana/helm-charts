@@ -43,11 +43,11 @@ spec:
             backend:
               {{- if $ingressApiIsStable }}
               service:
-                name: {{ include "mimir.resourceName" (dict "ctx" . "component" "nginx") }}
+                name: {{ include "mimir.resourceName" (dict "ctx" $ "component" "nginx") }}
                 port:
                   number: {{ $.Values.nginx.service.port }}
               {{- else }}
-              serviceName: {{ include "mimir.resourceName" (dict "ctx" . "component" "nginx") }}
+              serviceName: {{ include "mimir.resourceName" (dict "ctx" $ "component" "nginx") }}
               servicePort: {{ $.Values.nginx.service.port }}
               {{- end }}
           {{- end }}
