@@ -561,6 +561,9 @@ containers:
 {{ toYaml .Values.livenessProbe | indent 6 }}
     readinessProbe:
 {{ toYaml .Values.readinessProbe | indent 6 }}
+{{- if .Values.grafana.lifecycleHooks }}
+    lifecycle: {{ tpl (.Values.lifecycleHooks | toYaml) . | nindent 6 }}
+{{- end }}
     resources:
 {{ toYaml .Values.resources | indent 6 }}
 {{- with .Values.extraContainers }}
