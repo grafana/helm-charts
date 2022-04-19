@@ -808,7 +808,7 @@ gateway:
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
           }
-      
+
           # Ruler
           location ~ /prometheus/api/v1/alerts.* {
             proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
