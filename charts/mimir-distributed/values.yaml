@@ -1498,3 +1498,24 @@ gateway:
   affinity: {}
   tolerations: []
   terminationGracePeriodSeconds: 60
+
+  # Ingress configuration
+  ingress:
+    # -- Specifies whether an ingress for the gateway should be created
+    enabled: true
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: gateway
+    # -- Annotations for the gateway ingress
+    annotations: {}
+    # -- Hosts configuration for the gateway ingress
+    hosts:
+      - host: gateway.gem.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the gateway ingress
+    tls:
+      - secretName: gem-gateway-tls
+        hosts:
+          - gateway.gem.example.com
