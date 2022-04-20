@@ -5,6 +5,7 @@ compactor:
 
 loki-distributed:
   ingester:
+    replicas: 1
     persistence:
       enabled: false
   distributor:
