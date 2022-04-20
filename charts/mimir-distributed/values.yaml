@@ -1506,7 +1506,7 @@ gateway:
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: gateway
     # -- Annotations for the gateway ingress
-    annotations: { }
+    annotations: {}
     # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.gem.example.com
