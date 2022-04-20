@@ -19,7 +19,7 @@ image: &image
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: null
+  tag: v1.4.0
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
