@@ -18,7 +18,7 @@ image: &image  # -- The container registry to use
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: null
+  tag: "{{ .Chart.AppVerion }}"
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
