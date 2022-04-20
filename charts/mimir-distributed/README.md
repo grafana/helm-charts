@@ -14,10 +14,10 @@ Kubernetes: `^1.10.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
-| https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
-| https://charts.bitnami.com/bitnami | memcached | 5.5.2 |
-| https://helm.min.io/ | minio | 8.0.10 |
+| https://charts.bitnami.com/bitnami | memcached(memcached) | 5.5.2 |
+| https://charts.bitnami.com/bitnami | memcached-queries(memcached) | 5.5.2 |
+| https://charts.bitnami.com/bitnami | memcached-metadata(memcached) | 5.5.2 |
+| https://helm.min.io/ | minio(minio) | 8.0.10 |
 
 ## Dependencies
 
