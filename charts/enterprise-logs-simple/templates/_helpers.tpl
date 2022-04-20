@@ -54,7 +54,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Docker image name
 */}}
 {{- define "enterprise-logs.image" -}}
-{{- $tag := coalesce .Values.image.tag .Chart.AppVersion | toString -}}
+{{- $tag := .Values.image.tag | toString -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository $tag -}}
 {{- end -}}
 
