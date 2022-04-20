@@ -44,8 +44,8 @@ jobs:
       - name: Run chart-testing (install)
         run: |
           changed=$(ct list-changed --config ct.yaml)
-          if [[ "$changed" == "charts/enterprise-metrics" || "$changed" == "charts/enterprise-logs" ]]; then
-            # Do not run `ct install` for enterprise-metrics and enterprise-logs
+          if [[ "$changed" == "charts/enterprise-metrics" ]]; then
+            # Do not run `ct install` for enterprise-metrics
             exit 0
           fi
           ct install --config ct.yaml
