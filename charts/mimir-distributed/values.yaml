@@ -32,7 +32,7 @@ global:
 
 serviceAccount:
   create: true
-  name:
+  name: &serviceAccountName "mimir-service-account"
   annotations: {}
 
 # -- Configuration is loaded from the secret called 'externalConfigSecretName'. If 'useExternalConfig' is true, then the configuration is not generated, just consumed.
@@ -995,6 +995,9 @@ memcached:
       cpu: 500m
       # memory requests should be exceed memcached -m flag
       memory: 9830Mi  # (floor (* 1.2 8192))
+  serviceAccount:
+    create: false
+    name: *serviceAccountName
 
 memcached-queries:
   enabled: false
@@ -1027,6 +1030,9 @@ memcached-queries:
       cpu: 500m
       # memory requests should be exceed memcached -m flag
       memory: 2457Mi  # (floor (* 1.2 2048))
+  serviceAccount:
+    create: false
+    name: *serviceAccountName
 
 memcached-metadata:
   enabled: false
@@ -1059,6 +1065,9 @@ memcached-metadata:
       cpu: 500m
       # memory requests should be exceed memcached -m flag
       memory: 614Mi  # (floor (* 1.2 512))
+  serviceAccount:
+    create: false
+    name: *serviceAccountName
 
 minio:
   enabled: true
@@ -1086,6 +1095,9 @@ minio:
       cpu: 100m
       memory: 128Mi
   secretKey: supersecret
+  serviceAccount:
+    create: false
+    name: *serviceAccountName
 
 # Configuration for nginx gateway
 nginx:
