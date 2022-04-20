@@ -19779,6 +19779,19 @@ entries:
     urls:
     - https://grafana.github.io/helm-charts/packages/promtail-0.6.0.tgz
     version: 0.6.0
+  rollout-operator:
+  - apiVersion: v2
+    appVersion: v0.1.1
+    created: "2022-04-20T14:40:41.292691128Z"
+    description: Grafana rollout-operator
+    digest: 667d59befe40a34546f42375e72e8428d77365cdbc8de419ae76fdadf094f8a4
+    home: https://github.com/grafana/rollout-operator
+    kubeVersion: ^1.10.0-0
+    name: rollout-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/rollout-operator-0.1.0/rollout-operator-0.1.0.tgz
+    version: 0.1.0
   tempo:
   - apiVersion: v2
     appVersion: 1.3.2
@@ -21722,4 +21735,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-20T13:23:02.507758873Z"
+generated: "2022-04-20T14:40:41.303175069Z"
