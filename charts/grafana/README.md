@@ -239,6 +239,9 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods  | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods   | `false`                          |
 | `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
+| `imageRenderer.nodeSelector`               | Node labels for pod assignment                | `{}`                                                    |
+| `imageRenderer.tolerations`                | Toleration labels for pod assignment          | `[]`                                                    |
+| `imageRenderer.affinity`                   | Affinity settings for pod assignment          | `{}`                                                    |
 | `networkPolicy.enabled`                    | Enable creation of NetworkPolicy resources.                                                                              | `false`             |
 | `networkPolicy.allowExternal`              | Don't require client label for connections                                                                               | `true`              |
 | `networkPolicy.explicitNamespacesSelector` | A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed                           | `{}`                |
