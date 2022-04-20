@@ -1,4 +1,6 @@
-# Test values to limit the load during CI
+---
+commonConfig:
+  replication_factor: 1
 compactor:
   persistentVolume:
     enabled: false

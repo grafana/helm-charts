@@ -70,38 +70,21 @@ config: |
     http_listen_port: 3100
     grpc_listen_port: 9095
 
+  {{- if .Values.commonConfig}}
+  common:
+  {{- toYaml .Values.commonConfig | nindent 2}}
+  {{- end}}
+
   admin_client:
     storage:
-      type: s3
       s3:
-        endpoint: {{ include "enterprise-logs.minio" . }}
         bucket_name: enterprise-logs-admin
-        secret_access_key: supersecret
-        access_key_id: enterprise-logs
-        insecure: true
-
-  compactor:
-    shared_store: s3
-    working_directory: /data/boltdb-shipper-compactor
-
-  distributor:
-    ring:
-      kvstore:
-        store: memberlist
 
   ingester:
-    lifecycler:
-      num_tokens: 512
-      ring:
-        replication_factor: 3
-        kvstore:
-          store: memberlist
     chunk_idle_period: 30m
     chunk_block_size: 262144
     chunk_encoding: snappy
     chunk_retain_period: 1m
-    wal:
-      dir: /var/loki/wal
 
   ingester_client:
     grpc_client_config:
@@ -152,38 +135,28 @@ config: |
 
   storage_config:
     aws:
-      endpoint: {{ include "enterprise-logs.minio" . }}
       bucketnames: enterprise-logs-tsdb
-      access_key_id: enterprise-logs
-      secret_access_key: supersecret
-      s3forcepathstyle: true
-      insecure: true
     boltdb_shipper:
-      active_index_directory: /var/loki/index
-      cache_location: /var/loki/cache
-      cache_ttl: 24h
-      shared_store: s3
       index_gateway_client:
         server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
 
   ruler:
     storage:
-      type: s3
       s3:
-        endpoint: {{ include "enterprise-logs.minio" . }}
         bucketnames: enterprise-logs-ruler
-        access_key_id: enterprise-logs
-        secret_access_key: supersecret
-        s3forcepathstyle: true
-        insecure: true
-    enable_alertmanager_discovery: false
-    enable_api: true
-    enable_sharding: true
-    ring:
-      kvstore:
-        store: memberlist
-    rule_path: /var/loki
 
+# -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
+commonConfig:
+  path_prefix: /var/loki
+  replication_factor: 3
+  storage:
+    s3:
+      endpoint: '{{ include "enterprise-logs.minio" . }}'
+      bucketnames: enterprise-logs-tsdb
+      secret_access_key: supersecret
+      access_key_id: enterprise-logs
+      s3forcepathstyle: true
+      insecure: true
 
 # -- Configuration for `tokengen` target
 tokengen:
