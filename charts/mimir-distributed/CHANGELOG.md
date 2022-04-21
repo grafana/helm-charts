@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.7
+
+* [ENHANCEMENT] Add option to modify the port for the GEM gateway service. #1267
+
 ## 2.0.6
 
 * [ENHANCEMENT] Add option for an ingress on GEM gateway. #1266

@@ -13,7 +13,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ include "mimir.serverHttpListenPort" . }}
+    - port: {{ .Values.gateway.service.port | default (include "mimir.serverHttpListenPort" . ) }}
       protocol: TCP
       name: http-metrics
       targetPort: http-metrics
