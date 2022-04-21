@@ -1460,6 +1460,8 @@ gateway:
   service:
     annotations: {}
     labels: {}
+    # -- If the port is left undefined, the service will listen on the same port as the pod
+    port: null
 
   strategy:
     type: RollingUpdate
