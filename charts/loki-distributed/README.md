@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.48.3](https://img.shields.io/badge/Version-0.48.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 0.49.0](https://img.shields.io/badge/Version-0.49.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -140,6 +140,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
+| gateway.nginxConfig.resolver | string | `""` | Allows overriding the DNS resolver address nginx will use. |
 | gateway.nginxConfig.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
