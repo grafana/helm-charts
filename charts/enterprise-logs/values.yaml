@@ -62,7 +62,7 @@ config: |
   auth_enabled: true
 
   license:
-    path: "/etc/enterprise-logs/license/license.jwt"
+    path: /etc/enterprise-logs/license/license.jwt
 
   cluster_name: {{ .Release.Name }}
 
@@ -358,10 +358,6 @@ compactor:
     # compactor data Persistent Volume size
     #
     size: 2Gi
-    # Subdirectory of compactor data Persistent Volume to mount
-    # Useful if the volume's root directory is not empty
-    #
-    subPath: ''
     # compactor data Persistent Volume Storage Class
     # If defined, storageClassName: <storageClass>
     # If set to "-", storageClassName: "", which disables dynamic provisioning
