@@ -458,6 +458,12 @@ extraVolumeMounts: []
   #   readOnly: true
   #   hostPath: /usr/shared/
 
+## Container Lifecycle Hooks. Execute a specific bash command or make an HTTP request
+lifecycleHooks: {}
+  # postStart:
+  #   exec:
+  #     command: []
+
 ## Pass the plugins you want installed as a list.
 ##
 plugins: []

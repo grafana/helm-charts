@@ -698,7 +698,9 @@ gateway:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
-    # ingressClassName: nginx
+    # For example: `ingressClassName: nginx`
+    ingressClassName: ''
+
     # -- Annotations for the gateway ingress
     annotations: {}
     # -- Hosts configuration for the gateway ingress
