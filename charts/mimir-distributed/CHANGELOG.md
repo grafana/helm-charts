@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.7
 
-* [ENHANCEMENT] Add option to modify the port for the GEM gateway service. #1267
+* [ENHANCEMENT] Add option to modify the port for the GEM gateway service. #1270
 
 ## 2.0.6
 
