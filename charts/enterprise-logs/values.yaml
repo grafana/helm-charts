@@ -158,6 +158,9 @@ commonConfig:
       s3forcepathstyle: true
       insecure: true
 
+# -- Structured GEL configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
+structuredConfig: {}
+
 # -- Configuration for `tokengen` target
 tokengen:
   # -- Whether the job should be part of the deployment
