@@ -222,6 +222,9 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+  # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+  metricRelabelings: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
@@ -695,7 +698,9 @@ gateway:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
-    # ingressClassName: nginx
+    # For example: `ingressClassName: nginx`
+    ingressClassName: ''
+
     # -- Annotations for the gateway ingress
     annotations: {}
     # -- Hosts configuration for the gateway ingress
@@ -804,6 +809,20 @@ gateway:
             proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+          }
+
+          # Ruler
+          location ~ /prometheus/api/v1/alerts.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+          location ~ /prometheus/api/v1/rules.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+          location ~ /api/prom/rules.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+          location ~ /api/prom/alerts.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           location ~ /api/prom/.* {

@@ -73,7 +73,7 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.4.5
+  tag: 8.4.6
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -458,6 +458,12 @@ extraVolumeMounts: []
   #   readOnly: true
   #   hostPath: /usr/shared/
 
+## Container Lifecycle Hooks. Execute a specific bash command or make an HTTP request
+lifecycleHooks: {}
+  # postStart:
+  #   exec:
+  #     command: []
+
 ## Pass the plugins you want installed as a list.
 ##
 plugins: []
@@ -815,6 +821,20 @@ imageRenderer:
 #   requests:
 #     cpu: 50m
 #     memory: 50Mi
+  ## Node labels for pod assignment
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  #
+  nodeSelector: {}
+
+  ## Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+  ## Affinity for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
 
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.

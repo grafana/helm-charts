@@ -21,6 +21,8 @@ data:
       url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
       version: 1
       isDefault: {{ .Values.loki.isDefault }}
+      jsonData:
+        maxLines: {{ .Values.grafana.sidecar.datasources.maxLines }}
 {{- end }}
 {{- if .Values.prometheus.enabled }}
     - name: Prometheus

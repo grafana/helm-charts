@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mimir.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default ( include "mimir.infixName" . ) .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -15,7 +15,7 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := default ( include "mimir.infixName" . ) .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -25,10 +25,32 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Calculate the infix for naming
+*/}}
+{{- define "mimir.infixName" -}}
+{{- if and .Values.enterprise.enabled .Values.enterprise.legacyLabels -}}enterprise-metrics{{- else -}}mimir{{- end -}}
+{{- end -}}
+
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "mimir.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Calculate image name based on whether enterprise features are requested
+*/}}
+{{- define "mimir.imageReference" -}}
+{{- if .Values.enterprise.enabled -}}{{ .Values.enterprise.image.repository }}:{{ .Values.enterprise.image.tag }}{{- else -}}{{ .Values.image.repository }}:{{ .Values.image.tag }}{{- end -}}
+{{- end -}}
+
+{{/*
+For compatiblity and to support upgrade from enterprise-metrics chart calculate minio bucket name
+*/}}
+{{- define "mimir.minioBucketPrefix" -}}
+{{- if .Values.enterprise.legacyLabels -}}enterprise-metrics{{- else -}}mimir{{- end -}}
 {{- end -}}
 
 {{/*
@@ -102,39 +124,95 @@ Memberlist bind port
 {{- end -}}
 
 {{/*
-Common labels
+Resource name template
+*/}}
+{{- define "mimir.resourceName" -}}
+{{ include "mimir.fullname" .ctx }}{{- if .component -}}-{{ .component }}{{- end -}}
+{{- end -}}
+
+{{/*
+Simple resource labels
 */}}
 {{- define "mimir.labels" -}}
-{{ include "mimir.selectorLabels" . }}
-{{- if not .Values.useGEMLabels }}
-helm.sh/chart: {{ include "mimir.chart" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "mimir.name" .ctx }}-{{ .component }}
+{{- else -}}
+app: {{ include "mimir.name" .ctx }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+chart: {{ template "mimir.chart" .ctx }}
+heritage: {{ .ctx.Release.Service }}
+release: {{ .ctx.Release.Name }}
+
+{{- else -}}
+
+helm.sh/chart: {{ include "mimir.chart" .ctx }}
+app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
+{{- if .ctx.Chart.AppVersion }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
 {{- end }}
 {{- end -}}
 
 {{/*
-Selector labels
+POD labels
+*/}}
+{{/*
+POD labels
+*/}}
+{{- define "mimir.podLabels" -}}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "mimir.name" .ctx }}-{{ .component }}
+name: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+gossip_ring_member: "true"
+{{- end -}}
+{{- if .component }}
+target: {{ .component }}
+release: {{ .ctx.Release.Name }}
+{{- end }}
+{{- else -}}
+helm.sh/chart: {{ include "mimir.chart" .ctx }}
+app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Simple service selector labels
 */}}
 {{- define "mimir.selectorLabels" -}}
-{{- if .Values.useGEMLabels }}
-release: {{ .Release.Name }}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "mimir.name" .ctx }}-{{ .component }}
+{{- end }}
+release: {{ .ctx.Release.Name }}
 {{- else -}}
-app.kubernetes.io/name: {{ include "mimir.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "mimir.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
 {{- end }}
 {{- end -}}
-
-{{/*
-GEM extra labels, included in non-Pod resources
-*/}}
-{{- define "mimir.gemExtraLabels" -}}
-chart: {{ template "mimir.chart" . }}
-heritage: {{ .Release.Service }}
 {{- end -}}
-
 
 {{/*
 Alertmanager http prefix
@@ -164,4 +242,18 @@ Cluster name that shows up in dashboard metrics
 */}}
 {{- define "mimir.clusterName" -}}
 {{ (include "mimir.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
+{{- end -}}
+
+{{/* Allow KubeVersion to be overridden. */}}
+{{- define "mimir.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- end -}}
+
+{{/* Get API Versions */}}
+{{- define "mimir.podDisruptionBudget.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">= 1.21-0" (include "mimir.kubeVersion" .)) -}}
+      {{- print "policy/v1" -}}
+  {{- else -}}
+    {{- print "policy/v1beta1" -}}
+  {{- end -}}
 {{- end -}}

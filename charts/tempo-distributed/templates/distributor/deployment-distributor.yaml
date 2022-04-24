@@ -7,7 +7,7 @@ metadata:
   {{- include "tempo.distributorLabels" . | nindent 4 }}
   {{- with .Values.distributor.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   minReadySeconds: 10

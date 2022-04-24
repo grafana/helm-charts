@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "mimir.ingesterFullname" . }}-headless
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "ingester") }}-headless
   labels:
-    {{- include "mimir.ingesterLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "ingester" "memberlist" true) | nindent 4 }}
     {{- with .Values.ingester.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -19,4 +18,4 @@ spec:
       name: grpc
       targetPort: grpc
   selector:
-    {{- include "mimir.ingesterSelectorLabels" . | nindent 4 }}
+    {{- include "mimir.selectorLabels" (dict "ctx" . "component" "ingester" "memberlist" true) | nindent 4 }}

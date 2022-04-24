@@ -7,7 +7,7 @@ metadata:
     {{- include "tempo.labels" . | nindent 4 }}
   {{- with .Values.queryFrontend.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   minReadySeconds: 10

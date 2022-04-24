@@ -128,8 +128,7 @@ spec:
             - name: license
               mountPath: /etc/enterprise-logs/license
             - name: storage
-              mountPath: /data
-              subPath: {{ .Values.compactor.persistentVolume.subPath }}
+              mountPath: /var/loki
             {{- if .Values.compactor.extraVolumeMounts }}
             {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12 }}
             {{- end }}

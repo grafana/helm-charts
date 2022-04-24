@@ -1,3 +1,4 @@
+{{- if not .Values.enterprise.enabled -}}
 {{- if .Values.nginx.enabled -}}
 {{- if .Values.nginx.ingress.enabled -}}
 {{- $ingressApiIsStable := eq (include "mimir.ingress.isStable" .) "true" -}}
@@ -6,9 +7,9 @@
 apiVersion: {{ include "mimir.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "mimir.nginxFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "nginx") }}
   labels:
-    {{- include "mimir.nginxLabels" . | nindent 4 }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "nginx") | nindent 4 }}
   {{- with .Values.nginx.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -42,14 +43,15 @@ spec:
             backend:
               {{- if $ingressApiIsStable }}
               service:
-                name: {{ include "mimir.nginxFullname" $ }}
+                name: {{ include "mimir.resourceName" (dict "ctx" $ "component" "nginx") }}
                 port:
                   number: {{ $.Values.nginx.service.port }}
               {{- else }}
-              serviceName: {{ include "mimir.nginxFullname" $ }}
+              serviceName: {{ include "mimir.resourceName" (dict "ctx" $ "component" "nginx") }}
               servicePort: {{ $.Values.nginx.service.port }}
               {{- end }}
           {{- end }}
     {{- end }}
-{{- end }}
-{{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

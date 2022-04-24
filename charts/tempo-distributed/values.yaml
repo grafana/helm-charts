@@ -59,6 +59,8 @@ rbac:
 
 # Configuration for the ingester
 ingester:
+  # -- Annotations for the ingester StatefulSet
+  annotations: {}
   # -- Number of replicas for the ingester
   replicas: 1
   image:
@@ -121,6 +123,13 @@ ingester:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+  config:
+    # -- Maximum size of a block before cutting it
+    max_block_bytes: null
+    # -- Maximum length of time before cutting a block
+    max_block_duration: null
+    # -- Duration to keep blocks in the ingester after they have been flushed
+    complete_block_timeout: null
 
 distributor:
   # -- Number of replicas for the distributor
@@ -218,6 +227,9 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+  service:
+    # -- Annotations for compactor service
+    annotations: {}
 
 # Configuration for the querier
 querier:
@@ -457,6 +469,15 @@ config: |
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
+    {{- if .Values.ingester.config.maxBlockBytes }}
+    max_block_bytes: {{ .Values.ingester.config.maxBlockBytes }}
+    {{- end }}
+    {{- if .Values.ingester.config.maxBlockDuration }}
+    max_block_duration: {{ .Values.ingester.config.maxBlockDuration }}
+    {{- end }}
+    {{- if .Values.ingester.config.completeBlockTimeout }}
+    complete_block_timeout: {{ .Values.ingester.config.completeBlockTimeout }}
+    {{- end }}
   memberlist:
     abort_if_cluster_join_fails: false
     join_members:

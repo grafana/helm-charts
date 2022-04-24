@@ -1,24 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mimir.queryFrontendFullname" . }}
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "query-frontend") }}
   labels:
-    {{- include "mimir.queryFrontendLabels" . | nindent 4 }}
-    {{- if .Values.useGEMLabels }}{{- include "mimir.gemExtraLabels" . | nindent 4 }}{{- end }}
+    {{- include "mimir.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
   annotations:
     {{- toYaml .Values.query_frontend.annotations | nindent 4 }}
 spec:
   replicas: {{ .Values.query_frontend.replicas }}
   selector:
     matchLabels:
-      {{- include "mimir.queryFrontendSelectorLabels" . | nindent 6 }}
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
   strategy:
     {{- toYaml .Values.query_frontend.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "mimir.queryFrontendLabels" . | nindent 8 }}
-        {{- if .Values.useGEMLabels }}{{- include "mimir.gemQueryFrontendPodLabels" . | nindent 8 }}{{- end }}
+        {{- include "mimir.podLabels" (dict "ctx" . "component" "query-frontend") | nindent 8 }}
         {{- with .Values.query_frontend.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -48,10 +46,9 @@ spec:
       {{- end }}
       containers:
         - name: query-frontend
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ include "mimir.imageReference" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - -activity-tracker.filepath=/active-query-tracker/activity.log
             - "-target=query-frontend"
             - "-config.file=/etc/mimir/mimir.yaml"
           {{- range $key, $value := .Values.query_frontend.extraArgs }}
@@ -62,7 +59,11 @@ spec:
               {{ toYaml .Values.query_frontend.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: runtime-config
-              mountPath: /var/mimir
+              mountPath: /var/{{ include "mimir.name" . }}
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             - name: config
               mountPath: /etc/mimir
             - name: storage
@@ -70,8 +71,6 @@ spec:
               {{- if .Values.query_frontend.persistence.subPath }}
               subPath: {{ .Values.query_frontend.persistence.subPath }}
               {{- end }}
-            - name: active-queries
-              mountPath: /active-query-tracker
           ports:
             - name: http-metrics
               containerPort: {{ include "mimir.serverHttpListenPort" . }}
@@ -104,7 +103,12 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.externalConfigSecretName }}
+            secretName: {{ tpl .Values.externalConfigSecretName . }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         - name: runtime-config
           configMap:
             name: {{ template "mimir.fullname" . }}-runtime
@@ -112,6 +116,4 @@ spec:
 {{ toYaml .Values.query_frontend.extraVolumes | indent 8}}
 {{- end }}
         - name: storage
-          emptyDir: {}
-        - name: active-queries
           emptyDir: {}

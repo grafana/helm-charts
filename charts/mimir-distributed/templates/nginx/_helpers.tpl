@@ -1,43 +1,4 @@
 {{/*
-nginx fullname
-*/}}
-{{- define "mimir.nginxFullname" -}}
-{{ include "mimir.fullname" . }}-nginx
-{{- end }}
-
-{{/*
-nginx labels
-*/}}
-{{- define "mimir.nginxLabels" -}}
-{{ include "mimir.labels" . }}
-{{- if .Values.useGEMLabels }}
-app: {{ template "mimir.name" . }}-nginx
-{{- else }}
-app.kubernetes.io/component: nginx
-{{- end }}
-{{- end -}}
-
-{{/*
-nginx selector labels
-*/}}
-{{- define "mimir.nginxSelectorLabels" -}}
-{{ include "mimir.selectorLabels" . }}
-{{- if .Values.useGEMLabels }}
-app: {{ template "mimir.name" . }}-nginx
-{{- else }}
-app.kubernetes.io/component: nginx
-{{- end }}
-{{- end -}}
-
-{{/*
-GEM nginx Pod labels
-*/}}
-{{- define "mimir.gemGatewayPodLabels" -}}
-name: nginx
-target: nginx
-{{- end -}}
-
-{{/*
 nginx auth secret name
 */}}
 {{- define "mimir.nginxAuthSecret" -}}
