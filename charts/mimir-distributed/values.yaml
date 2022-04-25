@@ -587,6 +587,7 @@ overrides_exporter:
 
   extraContainers: []
   extraVolumes: []
+  extraVolumeMounts: []
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -1444,6 +1445,7 @@ admin_api:
 
   extraContainers: []
   extraVolumes: []
+  extraVolumeMounts: []
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -1496,6 +1498,7 @@ gateway:
 
   extraContainers: []
   extraVolumes: []
+  extraVolumeMounts: []
   nodeSelector: {}
   affinity: {}
   tolerations: []
