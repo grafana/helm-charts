@@ -4,6 +4,7 @@ metadata:
   name: {{ include "loki.writeFullname" . }}-headless
   labels:
     {{- include "loki.writeSelectorLabels" . | nindent 4 }}
+    prometheus.io/service-monitor: "false"
 spec:
   type: ClusterIP
   clusterIP: None
