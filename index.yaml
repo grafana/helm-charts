@@ -1942,6 +1942,32 @@ entries:
     version: 0.0.1
   grafana:
   - apiVersion: v2
+    appVersion: 8.5.0
+    created: "2022-04-25T13:35:47.189308249Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: fbb7f272ffa8ce98ba4da0ba82c94321fe02304fadc290b54797cc71af2e9662
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-6.26.6/grafana-6.26.6.tgz
+    version: 6.26.6
+  - apiVersion: v2
     appVersion: 8.4.6
     created: "2022-04-21T10:43:32.565025987Z"
     description: The leading tool for querying and visualizing time series and metrics.
@@ -19968,18 +19994,6 @@ entries:
   rollout-operator:
   - apiVersion: v2
     appVersion: v0.1.1
-    created: "2022-04-25T10:30:00.653513807Z"
-    description: Grafana rollout-operator
-    digest: 5c1f05418aeb7833aea3e91c73a38f2385c825751147cba53e698ddf1eb3cad1
-    home: https://github.com/grafana/rollout-operator
-    kubeVersion: ^1.10.0-0
-    name: rollout-operator
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/rollout-operator-0.1.1/rollout-operator-0.1.1.tgz
-    version: 0.1.1
-  - apiVersion: v2
-    appVersion: v0.1.1
     created: "2022-04-20T14:40:41.292691128Z"
     description: Grafana rollout-operator
     digest: 667d59befe40a34546f42375e72e8428d77365cdbc8de419ae76fdadf094f8a4
@@ -21933,4 +21947,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-25T10:30:00.665592049Z"
+generated: "2022-04-25T13:35:47.200772Z"
