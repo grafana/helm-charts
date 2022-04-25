@@ -149,6 +149,14 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
+{{- if .Values.sidecar.livenessProbe }}
+    livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 6 }}
+{{- end }}
+{{- if .Values.sidecar.readinessProbe }}
+    readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 6 }}
+{{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}
@@ -221,6 +229,14 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.dashboards.watchClientTimeout }}"
       {{- end }}
+{{- if .Values.sidecar.livenessProbe }}
+    livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 6 }}
+{{- end }}
+{{- if .Values.sidecar.readinessProbe }}
+    readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 6 }}
+{{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}
@@ -287,6 +303,14 @@ containers:
       - name: REQ_METHOD
         value: POST
       {{- end }}
+{{- if .Values.sidecar.livenessProbe }}
+    livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 6 }}
+{{- end }}
+{{- if .Values.sidecar.readinessProbe }}
+    readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 6 }}
+{{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}
@@ -350,6 +374,14 @@ containers:
       - name: REQ_METHOD
         value: POST
       {{- end }}
+{{- if .Values.sidecar.livenessProbe }}
+    livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 6 }}
+{{- end }}
+{{- if .Values.sidecar.readinessProbe }}
+    readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 6 }}
+{{- end }}
     resources:
 {{ toYaml .Values.sidecar.resources | indent 6 }}
 {{- if .Values.sidecar.securityContext }}
