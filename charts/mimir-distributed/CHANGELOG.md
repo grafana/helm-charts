@@ -14,6 +14,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 ## 2.0.8
 
 * [ENHANCEMENT] Add validation if `activity_tracker.filepath` is missing in `mimir.config`. #1290
+* [ENHANCEMENT] Add validation if `server.http_listen_port` or `server.grpc_listen_port` is set in `mimir.config`. #1290
 
 ## 2.0.7
 
