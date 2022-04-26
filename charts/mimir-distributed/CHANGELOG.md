@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.12
+
+* [ENHANCEMENT] Added memberlist named service port. #1305
+
 ## 2.0.10
 
 * [ENHANCEMENT] Reorder some values for consistency. #1302
