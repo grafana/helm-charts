@@ -20,5 +20,9 @@ spec:
       protocol: TCP
       name: grpc
       targetPort: grpc
+    - port: {{ include "mimir.memberlistBindPort" . }}
+      protocol: TCP
+      name: memberlist
+      targetPort: memberlist
   selector:
     {{- include "mimir.selectorLabels" (dict "ctx" . "component" "compactor" "memberlist" true) | nindent 4 }}

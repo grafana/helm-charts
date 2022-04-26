@@ -16,5 +16,9 @@ spec:
       protocol: TCP
       name: http-metrics
       targetPort: http-metrics
+    - port: {{ include "mimir.memberlistBindPort" . }}
+      protocol: TCP
+      name: memberlist
+      targetPort: memberlist
   selector:
     {{- include "mimir.selectorLabels" (dict "ctx" . "component" "ruler" "memberlist" true) | nindent 4 }}
