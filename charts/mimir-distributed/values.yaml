@@ -532,6 +532,7 @@ ingester:
   env: []
 
 overrides_exporter:
+  enabled: true
   replicas: 1
 
   annotations: {}
@@ -588,6 +589,7 @@ overrides_exporter:
   env: []
 
 ruler:
+  enabled: true
   replicas: 1
 
   service:

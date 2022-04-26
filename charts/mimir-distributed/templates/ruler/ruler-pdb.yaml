@@ -1,3 +1,4 @@
+{{- if .Values.ruler.enabled -}}
 {{- if .Values.ruler.podDisruptionBudget -}}
 apiVersion: {{ include "mimir.podDisruptionBudget.apiVersion" . }}
 kind: PodDisruptionBudget
@@ -10,4 +11,5 @@ spec:
     matchLabels:
       {{- include "mimir.selectorLabels" (dict "ctx" . "component" "ruler" "memberlist" true) | nindent 6 }}
 {{ toYaml .Values.ruler.podDisruptionBudget | indent 2 }}
+{{- end -}}
 {{- end -}}
