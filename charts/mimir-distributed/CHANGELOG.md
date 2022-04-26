@@ -14,7 +14,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 ## 2.0.9
 
 * [ENHANCEMENT] Disable gateway ingress by default. #1303
-* [BUGFIX] Fix null port at gateway at ingress definition. #1303
+* [BUGFIX] Fix null port at gateway ingress definition. #1303
 
 ## 2.0.8
 
