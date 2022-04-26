@@ -553,6 +553,9 @@ overrides_exporter:
   # Pod Disruption Budget
   podDisruptionBudget: {}
 
+  nodeSelector: {}
+  affinity: {}
+
   securityContext: {}
 
   extraArgs: {}
@@ -576,14 +579,13 @@ overrides_exporter:
       cpu: 100m
       memory: 128Mi
 
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
   env: []
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  terminationGracePeriodSeconds: 60
 
 ruler:
   replicas: 1
@@ -1409,6 +1411,9 @@ admin_api:
   podLabels: {}
   podAnnotations: {}
 
+  nodeSelector: {}
+  affinity: {}
+
   # Pod Disruption Budget
   podDisruptionBudget: {}
 
@@ -1430,14 +1435,13 @@ admin_api:
       cpu: 10m
       memory: 32Mi
 
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
   env: []
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  terminationGracePeriodSeconds: 60
 
 # Settings for the gateway service providing authentication and authorization via the admin_api.
 # Can only be enabled if enterprise.enabled is true - requires license.
@@ -1465,6 +1469,9 @@ gateway:
   # Pod Disruption Budget
   podDisruptionBudget: {}
 
+  nodeSelector: {}
+  affinity: {}
+
   securityContext: {}
   initContainers: []
 
@@ -1484,14 +1491,13 @@ gateway:
       cpu: 10m
       memory: 32Mi
 
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
   env: []
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  terminationGracePeriodSeconds: 60
 
   # Ingress configuration
   ingress:
