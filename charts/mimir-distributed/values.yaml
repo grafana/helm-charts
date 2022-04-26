@@ -1507,7 +1507,7 @@ gateway:
   # Ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
-    enabled: true
+    enabled: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: gateway
     # -- Annotations for the gateway ingress
