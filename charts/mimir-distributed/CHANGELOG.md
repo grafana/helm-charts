@@ -11,6 +11,11 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.9
+
+* [ENHANCEMENT] Disable gateway ingress by default. #1303
+* [BUGFIX] Fix null port at gateway at ingress definition. #1303
+
 ## 2.0.8
 
 * [ENHANCEMENT] Add validation if `activity_tracker.filepath` is missing in `mimir.config`. #1290
