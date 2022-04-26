@@ -11,6 +11,13 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.8
+
+* [ENHANCEMENT] Add validation if `activity_tracker.filepath` is missing in `mimir.config`. #1290
+* [ENHANCEMENT] Add validation if `server.http_listen_port` or `server.grpc_listen_port` is set in `mimir.config`. #1290
+* [BUGFIX] Add missing empty array definition for `extraVolumeMounts` in admin_api, gateway and override-exporter. #1290
+* [BUGFIX] Fix wrong template called in nginx helper. #1290
+
 ## 2.0.7
 
 * [ENHANCEMENT] Add option to modify the port for the GEM gateway service. #1270
