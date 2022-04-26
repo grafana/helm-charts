@@ -373,13 +373,6 @@ alertmanager:
   # Extra volume mounts that will be added to the alertmanager container
   extraVolumeMounts: []
 
-  extraPorts: []
-  # Additional ports to the alertmanager services. Useful to expose extra container ports.
-  # - port: 11811
-  #   protocol: TCP
-  #   name: http
-  #   targetPort: http
-
   # Extra env variables to pass to the alertmanager container
   env: []
 
@@ -444,7 +437,6 @@ distributor:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 ingester:
@@ -537,7 +529,6 @@ ingester:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 overrides_exporter:
@@ -645,7 +636,6 @@ ruler:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 querier:
@@ -711,7 +701,6 @@ querier:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 query_frontend:
@@ -777,7 +766,6 @@ query_frontend:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 store_gateway:
@@ -873,7 +861,6 @@ store_gateway:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 compactor:
@@ -970,7 +957,6 @@ compactor:
   extraContainers: []
   extraVolumes: []
   extraVolumeMounts: []
-  extraPorts: []
   env: []
 
 memcached:
