@@ -60,6 +60,10 @@ mimir:
       data_dir: '/data'
       enable_api: true
       external_url: '/alertmanager'
+      {{- if .Values.alertmanager.zone_aware_replication.enabled }}
+      sharding_ring:
+        zone_awareness_enabled: true
+      {{- end }}
 
     {{- if .Values.minio.enabled }}
     alertmanager_storage:
@@ -383,6 +387,55 @@ alertmanager:
 
   # Extra env variables to pass to the alertmanager container
   env: []
+
+  zone_aware_replication:
+    enabled: false
+    zones:
+    - name: zone-a
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - alertmanager
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - alertmanager-zone-a
+              topologyKey: 'kubernetes.io/hostname'
+    - name: zone-b
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - alertmanager
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - alertmanager-zone-b
+              topologyKey: 'kubernetes.io/hostname'
+    - name: zone-c
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - alertmanager
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - alertmanager-zone-c
+              topologyKey: 'kubernetes.io/hostname'
 
 distributor:
   replicas: 1
