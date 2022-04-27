@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.12
+
+* [ENHANCEMENT] Add memberlist named port to container spec.
+
 ## 2.0.11
 
 * [ENHANCEMENT] Turn `ruler` and `override-exporter` into optional components. #1304
