@@ -22,7 +22,7 @@ spec:
     {{- if .Values.ingester.zone_aware_replication.enabled }}
     type: OnDelete
     {{- else }}
-    {{- toYaml .Values.ingester.strategy | nindent 4 }}
+    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
     {{- end }}
   serviceName: {{ template "mimir.fullname" . }}-ingester{{- if not .Values.enterprise.legacyLabels -}}-headless{{- end -}}
   {{- if .Values.ingester.persistentVolume.enabled }}
