@@ -654,6 +654,8 @@ sidecar:
   # skipTlsVerify Set to true to skip tls verification for kube api calls
   # skipTlsVerify: true
   enableUniqueFilenames: false
+  readinessProbe: {}
+  livenessProbe: {}
   dashboards:
     enabled: false
     SCProvider: true
