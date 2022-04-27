@@ -261,7 +261,7 @@ Cluster name that shows up in dashboard metrics
 
 {{/* Creates dict for zone aware replication configuration */}}
 {{- define "mimir.zoneAwareReplicationMap" -}}
-{{- $zonesMap := (dict) -}}
+{{- $zonesMap := (dict "default" (dict)) -}}
 {{- $config := index .Values (printf "%s" $.component_config) -}}
 {{- if $config.zone_aware_replication.enabled -}}
 {{- range $idx, $rolloutZone := .Values.zone_aware_replication.zones -}}
