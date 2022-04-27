@@ -261,7 +261,7 @@ Cluster name that shows up in dashboard metrics
 
 {{/* Creates dict for zone aware replication configuration */}}
 {{- define "mimir.zoneAwareReplicationMap" -}}
-{{- $zonesMap := (dict "default" (dict)) -}}
+{{- $zonesMap := (dict) -}}
 {{- $config := index .Values (printf "%s" $.component_config) -}}
 {{- if $config.zone_aware_replication.enabled -}}
 {{- range $idx, $rolloutZone := .Values.zone_aware_replication.zones -}}
@@ -270,6 +270,8 @@ Cluster name that shows up in dashboard metrics
 {{- range $idx, $rolloutZone := $config.zone_aware_replication.zones -}}
 {{- $zonesMap = deepCopy (dict $rolloutZone.name (dict "affinity" ($rolloutZone.affinity | default (dict)) "nodeSelector" ($rolloutZone.nodeSelector | default (dict)) )) | merge $zonesMap -}}
 {{- end -}}
+{{- else -}}
+{{- merge $zonesMap (dict "default" (dict)) -}}
 {{- end -}}
 {{- $zonesMap | toYaml }}
 {{- end -}}
