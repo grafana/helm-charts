@@ -1,3 +1,4 @@
+{{- if .Values.overrides_exporter.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -115,3 +116,4 @@ spec:
         {{- end }}
         - name: storage
           emptyDir: {}
+{{- end -}}
