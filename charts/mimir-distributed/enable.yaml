@@ -1,7 +1,9 @@
+# Example for the documentation , not going to be merged
+
 rollout_operator:
   enabled: true
 
 store_gateway:
-  rollout_operator:
+  zone_aware_replication:
     enabled: true
 
