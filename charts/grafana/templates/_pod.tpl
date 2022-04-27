@@ -669,7 +669,12 @@ volumes:
 {{- end -}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
+{{- if .Values.sidecar.dashboards.sizeLimit }}
+    emptyDir:
+      sizeLimit: {{ .Values.sidecar.dashboards.sizeLimit }}
+{{- else }}
     emptyDir: {}
+{{- end -}}
 {{- if .Values.sidecar.dashboards.SCProvider }}
   - name: sc-dashboard-provider
     configMap:
@@ -678,15 +683,30 @@ volumes:
 {{- end }}
 {{- if .Values.sidecar.datasources.enabled }}
   - name: sc-datasources-volume
+{{- if .Values.sidecar.datasources.sizeLimit }}
+    emptyDir:
+      sizeLimit: {{ .Values.sidecar.datasources.sizeLimit }}
+{{- else }}
     emptyDir: {}
+{{- end -}}
 {{- end -}}
 {{- if .Values.sidecar.plugins.enabled }}
   - name: sc-plugins-volume
+{{- if .Values.sidecar.plugins.sizeLimit }}
+    emptyDir:
+      sizeLimit: {{ .Values.sidecar.plugins.sizeLimit }}
+{{- else }}
     emptyDir: {}
+{{- end -}}
 {{- end -}}
 {{- if .Values.sidecar.notifiers.enabled }}
   - name: sc-notifiers-volume
+{{- if .Values.sidecar.notifiers.sizeLimit }}
+    emptyDir:
+      sizeLimit: {{ .Values.sidecar.notifiers.sizeLimit }}
+{{- else }}
     emptyDir: {}
+{{- end -}}
 {{- end -}}
 {{- range .Values.extraSecretMounts }}
 {{- if .secretName }}
