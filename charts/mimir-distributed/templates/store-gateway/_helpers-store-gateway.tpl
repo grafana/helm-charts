@@ -2,6 +2,12 @@
 store-gateway zonename
 */}}
 {{- define "mimir.storeGatewayZonename" -}}
+{{- if .Values.store_gateway.zone_aware_replication.enabled -}}
+{{- $zoneNameCharLimit := sub 64 (len "store-gateway-") -}}
+{{- if gt (len .rolloutZoneName) $zoneNameCharLimit -}}
+{{- fail (printf "Zone Name (%s) exceeds character limit (%d)" .rolloutZoneName $zoneNameCharLimit ) -}}
+{{- end -}}
+{{- end -}}
 {{ include "mimir.resourceName" (dict "ctx" . "component" "store-gateway") }}{{- if .Values.store_gateway.zone_aware_replication.enabled }}-{{ .rolloutZoneName }}{{- end }}
 {{- end }}
 

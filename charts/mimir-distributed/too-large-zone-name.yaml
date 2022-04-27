@@ -1,0 +1,67 @@
+# Example for the documentation, not going to be merged
+
+rollout_operator:
+  enabled: true
+
+zone_aware_replication:
+  zones:
+  - name: abcdefghijklnmopqrstuvwxyz1234567890abcdefghijklnmopqrstuvwxyz1234567890abcdefghijklnmopqrstuvwxyz1234567890abcdefghijklnmopqrstuvwxyz1234567890
+    nodeSelector:
+      topology.kubernetes.io/zone: us-east-1a
+  - name: us-east-1b
+    nodeSelector:
+      topology.kubernetes.io/zone: us-east-1b
+  - name: us-east-1c
+    nodeSelector:
+      topology.kubernetes.io/zone: us-east-1c
+
+store_gateway:
+  zone_aware_replication:
+    enabled: true
+    zones:
+    - name: abcdefghijklnmopqrstuvwxyz1234567890abcdefghijklnmopqrstuvwxyz1234567890abcdefghijklnmopqrstuvwxyz1234567890abcdefghijklnmopqrstuvwxyz1234567890
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-us-east-1a
+              topologyKey: 'kubernetes.io/hostname'
+    - name: us-east-1b
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-us-east-1b
+              topologyKey: 'kubernetes.io/hostname'
+    - name: us-east-1c
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-us-east-1c
+              topologyKey: 'kubernetes.io/hostname'
+

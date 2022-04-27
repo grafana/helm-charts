@@ -2,6 +2,12 @@
 ingester zonename
 */}}
 {{- define "mimir.ingesterZonename" -}}
+{{- if .Values.ingester.zone_aware_replication.enabled -}}
+{{- $zoneNameCharLimit := sub 64 (len "ingester-") -}}
+{{- if gt (len .rolloutZoneName) $zoneNameCharLimit -}}
+{{- fail (printf "Zone Name (%s) exceeds character limit (%d)" .rolloutZoneName $zoneNameCharLimit ) -}}
+{{- end -}}
+{{- end -}}
 {{ include "mimir.resourceName" (dict "ctx" . "component" "ingester") }}{{- if .Values.ingester.zone_aware_replication.enabled }}-{{ .rolloutZoneName }}{{- end }}
 {{- end }}
 

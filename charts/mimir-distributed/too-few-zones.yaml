@@ -1,0 +1,48 @@
+# Example for the documentation, not going to be merged
+
+rollout_operator:
+  enabled: true
+
+zone_aware_replication:
+  zones:
+  - name: us-east-1a
+    nodeSelector:
+      topology.kubernetes.io/zone: us-east-1a
+  - name: us-east-1b
+    nodeSelector:
+      topology.kubernetes.io/zone: us-east-1b
+
+store_gateway:
+  zone_aware_replication:
+    enabled: true
+    zones:
+    - name: us-east-1a
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-us-east-1a
+              topologyKey: 'kubernetes.io/hostname'
+    - name: us-east-1b
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: target
+                    operator: In
+                    values:
+                      - store-gateway
+                  - key: target
+                    operator: NotIn
+                    values:
+                      - store-gateway-us-east-1b
+              topologyKey: 'kubernetes.io/hostname'
