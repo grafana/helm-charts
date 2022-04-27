@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.12
 
-* [ENHANCEMENT] Add memberlist named port to container spec.
+* [ENHANCEMENT] Add memberlist named port to container spec. #1311
 
 ## 2.0.11
 
