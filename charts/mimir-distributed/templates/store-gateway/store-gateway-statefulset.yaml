@@ -1,8 +1,8 @@
 {{- $_ := set . "component_config" "store_gateway" -}}
 {{- $zonesMap := include "mimir.zoneAwareReplicationMap" $ | fromYaml -}}
-{{- range $name, $rolloutZone := $zonesMap }}
+{{- range $zoneName, $rolloutZone := $zonesMap }}
 {{- with $ -}}
-{{- $_ := set . "rolloutZoneName" $name -}}
+{{- $_ := set . "rolloutZoneName" $zoneName -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -110,7 +110,7 @@ spec:
             - "-target=store-gateway"
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- if .Values.store_gateway.zone_aware_replication.enabled }}
-            - "-store-gateway.sharding-ring.instance-availability-zone={{ $name }}"
+            - "-store-gateway.sharding-ring.instance-availability-zone={{ $zoneName }}"
             {{- end }}
             {{- range $key, $value := .Values.store_gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"

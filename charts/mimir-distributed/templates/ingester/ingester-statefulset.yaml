@@ -1,9 +1,9 @@
 {{- if .Values.ingester.statefulSet.enabled -}}
 {{- $_ := set . "component_config" "ingester" -}}
 {{- $zonesMap := include "mimir.zoneAwareReplicationMap" $ | fromYaml -}}
-{{- range $name, $rolloutZone := $zonesMap }}
+{{- range $zoneName, $rolloutZone := $zonesMap }}
 {{- with $ -}}
-{{- $_ := set . "rolloutZoneName" $name -}}
+{{- $_ := set . "rolloutZoneName" $zoneName -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -112,7 +112,7 @@ spec:
             - "-target=ingester"
             - "-config.file=/etc/mimir/mimir.yaml"
             {{- if .Values.ingester.zone_aware_replication.enabled }}
-            - "-ingester.ring.instance-availability-zone={{ $name }}"
+            - "-ingester.ring.instance-availability-zone={{ $zoneName }}"
             {{- end }}
             {{- range $key, $value := .Values.ingester.extraArgs }}
             - "-{{ $key }}={{ $value }}"
