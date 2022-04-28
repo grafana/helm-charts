@@ -223,9 +223,7 @@ mimir:
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
 
-rbac:
-  create: true
-  pspEnabled: true
+rbacEnabled: true
 
 # ServiceMonitor configuration
 serviceMonitor:
