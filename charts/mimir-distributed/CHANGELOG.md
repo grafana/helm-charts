@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.13
 
-* [ENHANCEMENT] Merge rbac options into a single `rbacEnabled` flag. #1317
+* [ENHANCEMENT] Removed `rbac.create` option. #1317
 
 ## 2.0.12
 
