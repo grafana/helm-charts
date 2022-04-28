@@ -264,7 +264,7 @@ Cluster name that shows up in dashboard metrics
 {{- $zonesMap := (dict) -}}
 {{- $config := index .Values (printf "%s" $.component_config) -}}
 {{- if $config.zone_aware_replication.enabled -}}
-{{- if lt (len $config.zone_aware_replication.zones) 3 -}}
+{{- if and (lt (len $config.zone_aware_replication.zones) 3) (lt (len .Values.zone_aware_replication.zones) 3) -}}
 {{- fail "When zone awareness is enabled, you must have at least 3 zones defined." -}}
 {{- end -}}
 {{- range $idx, $rolloutZone := .Values.zone_aware_replication.zones -}}
