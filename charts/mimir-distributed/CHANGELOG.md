@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.13
+
+* [ENHANCEMENT] Merge rbac options into a single `rbacEnabled` flag. #1317
+
 ## 2.0.12
 
 * [ENHANCEMENT] Add memberlist named port to container spec. #1311
