@@ -77,6 +77,9 @@ spec:
             - name: grpc
               containerPort: {{ include "mimir.serverGrpcListenPort" . }}
               protocol: TCP
+            - name: memberlist
+              containerPort: {{ include "mimir.memberlistBindPort" . }}
+              protocol: TCP
           livenessProbe:
             {{- toYaml .Values.ruler.livenessProbe | nindent 12 }}
           readinessProbe:
