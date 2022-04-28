@@ -63,6 +63,7 @@ mimir:
       {{- if .Values.alertmanager.zone_aware_replication.enabled }}
       sharding_ring:
         zone_awareness_enabled: true
+        instance_availability_zone: default  # required due to bug in code which requires this field even when set via CLI.
       {{- end }}
 
     {{- if .Values.minio.enabled }}

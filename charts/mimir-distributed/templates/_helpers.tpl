@@ -264,14 +264,14 @@ Cluster name that shows up in dashboard metrics
 {{- $zonesMap := (dict) -}}
 {{- $config := index .Values (printf "%s" $.component_config) -}}
 {{- if $config.zone_aware_replication.enabled -}}
-{{- if and (lt (len $config.zone_aware_replication.zones) 3) (lt (len .Values.zone_aware_replication.zones) 3) -}}
-{{- fail "When zone awareness is enabled, you must have at least 3 zones defined." -}}
-{{- end -}}
 {{- range $idx, $rolloutZone := .Values.zone_aware_replication.zones -}}
 {{- $_ := set $zonesMap $rolloutZone.name (dict "nodeSelector" ( $rolloutZone.nodeSelector | default (dict) ) "affinity" ( $rolloutZone.affinity | default (dict) ) ) -}}
 {{- end -}}
 {{- range $idx, $rolloutZone := $config.zone_aware_replication.zones -}}
 {{- $zonesMap = deepCopy (dict $rolloutZone.name (dict "affinity" ($rolloutZone.affinity | default (dict)) "nodeSelector" ($rolloutZone.nodeSelector | default (dict)) )) | merge $zonesMap -}}
+{{- end -}}
+{{- if lt (len $zonesMap) 3 -}}
+{{- fail "When zone awareness is enabled, you must have at least 3 zones defined." -}}
 {{- end -}}
 {{- else -}}
 {{- merge $zonesMap (dict "default" (dict)) -}}
