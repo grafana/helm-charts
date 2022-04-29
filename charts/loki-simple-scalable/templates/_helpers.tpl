@@ -123,6 +123,7 @@ s3:
 {{- else if eq .Values.loki.storage.type "s3" -}}
 {{- with .Values.loki.storage.s3 }}
 s3:
+  s3: {{ .s3 }}
   endpoint: {{ .endpoint }}
   bucketnames: {{ $.Values.loki.storage.bucketNames.chunks }}
   secret_access_key: {{ .secretAccessKey }}

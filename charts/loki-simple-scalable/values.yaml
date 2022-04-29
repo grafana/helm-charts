@@ -103,7 +103,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
   commonConfig:
     path_prefix: /var/loki
-    replication_factor: 1
+    replication_factor: 3
 
   storage:
     bucketNames:
@@ -112,6 +112,7 @@ loki:
       admin: admin
     type: s3
     s3:
+      s3: null
       endpoint: https://amazonaws.com
       secretAccessKey: supersecret
       accessKeyId: accesskey
@@ -388,7 +389,7 @@ prometheusRule:
 # Configuration for the write
 write:
   # -- Number of replicas for the write
-  replicas: 1
+  replicas: 3
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null
@@ -451,7 +452,7 @@ write:
 # Configuration for the read node(s)
 read:
   # -- Number of replicas for the read
-  replicas: 1
+  replicas: 3
   autoscaling:
     # -- Enable autoscaling for the read, this is only used if `queryIndex.enabled: true`
     enabled: false
@@ -805,7 +806,7 @@ networkPolicy:
 # Configuration for `minio` child chart
 # -------------------------------------
 minio:
-  enabled: true
+  enabled: false
   accessKey: enterprise-logs
   secretKey: supersecret
   buckets:
