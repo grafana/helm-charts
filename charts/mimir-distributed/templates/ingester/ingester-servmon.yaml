@@ -24,6 +24,11 @@ spec:
   selector:
     matchLabels:
       {{- include "mimir.selectorLabels" (dict "ctx" $ "component" "ingester" "memberlist" true) | nindent 6 }}
+    matchExpressions:
+      - key: prometheus.io/service-monitor
+        operator: NotIn
+        values:
+          - "false"
   endpoints:
     - port: http-metrics
       {{- with .interval }}
