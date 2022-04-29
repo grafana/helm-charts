@@ -469,14 +469,14 @@ config: |
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
-    {{- if .Values.ingester.config.maxBlockBytes }}
-    max_block_bytes: {{ .Values.ingester.config.maxBlockBytes }}
+    {{- if .Values.ingester.config.max_block_bytes }}
+    max_block_bytes: {{ .Values.ingester.config.max_block_bytes }}
     {{- end }}
-    {{- if .Values.ingester.config.maxBlockDuration }}
-    max_block_duration: {{ .Values.ingester.config.maxBlockDuration }}
+    {{- if .Values.ingester.config.max_block_duration }}
+    max_block_duration: {{ .Values.ingester.config.max_block_duration }}
     {{- end }}
-    {{- if .Values.ingester.config.completeBlockTimeout }}
-    complete_block_timeout: {{ .Values.ingester.config.completeBlockTimeout }}
+    {{- if .Values.ingester.config.complete_block_timeout }}
+    complete_block_timeout: {{ .Values.ingester.config.complete_block_timeout }}
     {{- end }}
   memberlist:
     abort_if_cluster_join_fails: false
