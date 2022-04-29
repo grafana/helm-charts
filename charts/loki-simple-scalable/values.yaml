@@ -60,10 +60,15 @@ loki:
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
+    {{- if .Values.enterprise.enabled}}
+    {{- tpl .Values.enterprise.config . }}
+    {{- else }}
     auth_enabled: false
+    {{- end }}
 
     server:
       http_listen_port: 3100
+      grpc_listen_port: 9095
 
     memberlist:
       join_members:
@@ -72,6 +77,8 @@ loki:
     {{- if .Values.loki.commonConfig}}
     common:
     {{- toYaml .Values.loki.commonConfig | nindent 2}}
+      storage:
+      {{- include "loki.commonStorageConfig" . | nindent 4}}
     {{- end}}
 
     limits_config:
@@ -79,25 +86,44 @@ loki:
       reject_old_samples: true
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
+      split_queries_by_interval: 15m
 
     {{- if .Values.loki.schemaConfig}}
     schema_config:
     {{- toYaml .Values.loki.schemaConfig | nindent 2}}
     {{- end}}
 
-    {{- if .Values.loki.storageConfig}}
-    storage_config:
-    {{- toYaml .Values.loki.storageConfig | nindent 2}}
-    {{- end}}
+    {{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") (eq .Values.loki.storage.type "gcs") }}
+    ruler:
+      storage:
+        s3:
+          bucketnames: {{ .Values.loki.storage.bucketNames.ruler }}
+    {{- end -}}
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
   commonConfig:
     path_prefix: /var/loki
     replication_factor: 1
-    storage:
-      filesystem:
-        chunks_directory: /var/loki/chunks
-        rules_directory: /var/loki/rules
+
+  storage:
+    bucketNames:
+      chunks: chunks
+      ruler: ruler
+      admin: admin
+    type: s3
+    s3:
+      endpoint: https://amazonaws.com
+      secretAccessKey: supersecret
+      accessKeyId: accesskey
+      s3ForcePathStyle: false
+      insecure: false
+    gcs:
+      chunkBufferSize: 0
+      requestTimeout: "0s"
+      enableHttp2: true
+    local:
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
@@ -110,17 +136,190 @@ loki:
           prefix: loki_index_
           period: 24h
 
-  # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
-  storageConfig: {}
-  # -- Uncomment to configure each storage individually
-  # boltdb_shipper: {}
-  # filesystem: {}
-  # azure: {}
-  # gcs: {}
-  # s3: {}
-
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
+
+enterprise:
+  # Enable enterprise features, license must be provided
+  enabled: false
+
+  # Default verion of GEL to deploy
+  version: v1.4.0
+
+  # -- Grafana Enterprise Logs license
+  # In order to use Grafana Enterprise Logs features, you will need to provide
+  # the contents of your Grafana Enterprise Logs license, either by providing the
+  # contents of the license.jwt, or the name Kubernetes Secret that contains your
+  # license.jwt.
+  # To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
+  license:
+    contents: "NOTAVALIDLICENSE"
+
+  # enterprise specific sections of the config.yaml file
+  config: |
+    {{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") (eq .Values.loki.storage.type "gcs") }}
+    admin_client:
+      storage:
+        s3:
+          bucket_name: {{ .Values.loki.storage.bucketNames.admin }}
+    {{- end }}
+    auth:
+      type: enterprise
+    auth_enabled: true
+    cluster_name: {{ .Release.Name }}
+    license:
+      path: /etc/loki/license/license.jwt
+
+  image:
+    # -- The Docker registry
+    registry: docker.io
+    # -- Docker image repository
+    repository: grafana/enterprise-logs
+    # -- Overrides the image tag whose default is the chart's appVersion
+    tag: v1.4.0
+    # -- Docker image pull policy
+    pullPolicy: IfNotPresent
+
+  nginxConfig:
+    file: |
+      worker_processes  5;  ## Default: 1
+      error_log  /dev/stderr;
+      pid        /tmp/nginx.pid;
+      worker_rlimit_nofile 8192;
+
+      events {
+        worker_connections  4096;  ## Default: 1024
+      }
+
+      http {
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path       /tmp/proxy_temp_path;
+        fastcgi_temp_path     /tmp/fastcgi_temp;
+        uwsgi_temp_path       /tmp/uwsgi_temp;
+        scgi_temp_path        /tmp/scgi_temp;
+
+        default_type application/octet-stream;
+        log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+
+        {{- if .Values.gateway.verboseLogging }}
+        access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   /dev/stderr  main  if=$loggable;
+        {{- end }}
+
+        sendfile     on;
+        tcp_nopush   on;
+        resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+
+        {{- with .Values.gateway.nginxConfig.httpSnippet }}
+        {{ . | nindent 2 }}
+        {{- end }}
+
+        server {
+          listen             8080;
+
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Loki";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
+
+          location = / {
+            return 200 'OK';
+            auth_basic off;
+          }
+
+          location = /api/prom/push {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /api/prom/tail {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
+
+          location ~ /api/prom/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /loki/api/v1/push {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location = /loki/api/v1/tail {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+          }
+
+          location ~ /loki/api/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /admin/api/.* {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /compactor/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /distributor/.* {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /ring {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /ingester/.* {
+            proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /ruler/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /scheduler/.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
+        }
+      }
+
+# -- Configuration for `tokengen` target
+tokengen:
+  # -- Whether the job should be part of the deployment
+  enable: true
+  # -- Name of the secret to store the admin token in
+  adminTokenSecret: "gel-admin-token"
+  # -- Additional CLI arguments for the `tokengen` target
+  extraArgs: []
+  # -- Additional Kubernetes environment
+  env: []
+  # -- Additional labels for the `tokengen` Job
+  labels: {}
+  # -- Additional annotations for the `tokengen` Job
+  annotations: {}
+  # -- Additional volumes for Pods
+  extraVolumes: []
+  # -- Additional volume mounts for Pods
+  extraVolumeMounts: []
+  # -- Run containers as user `enterprise-logs(uid=10001)`
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 10001
+    runAsUser: 10001
+    fsGroup: 10001
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -601,3 +800,27 @@ networkPolicy:
     podSelector: {}
     # -- Specifies the namespace the discovery Pods are running in
     namespaceSelector: {}
+
+# -------------------------------------
+# Configuration for `minio` child chart
+# -------------------------------------
+minio:
+  enabled: true
+  accessKey: enterprise-logs
+  secretKey: supersecret
+  buckets:
+    - name: chunks
+      policy: none
+      purge: false
+    - name: ruler
+      policy: none
+      purge: false
+    - name: admin
+      policy: none
+      purge: false
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
