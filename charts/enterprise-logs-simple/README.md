@@ -9,7 +9,7 @@ Grafana Enterprise Logs (Simple Scalable)
 
 ## Deprecation warning
 
-This chart is now deprecated and will no longer be updated. Grafana Enterprise Logs v1.5.0 is included in the `loki-simple-scalable` chart which implements Grafana Enterprise Logs as an option (`enterprise.enabled: true`).
+This chart is now deprecated and will no longer be updated. Grafana Enterprise Logs v1.4.0 is included in the `loki-simple-scalable` chart which implements Grafana Enterprise Logs as an option (`enterprise.enabled: true`).
 
 ## Requirements
 
