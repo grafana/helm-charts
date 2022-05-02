@@ -22,14 +22,6 @@ app.kubernetes.io/component: write
 {{- end }}
 
 {{/*
-write image
-*/}}
-{{- define "loki.writeImage" -}}
-{{- $dict := dict "loki" .Values.loki.image "service" .Values.write.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
-{{- include "loki.lokiImage" $dict -}}
-{{- end }}
-
-{{/*
 write priority class name
 */}}
 {{- define "loki.writePriorityClassName" -}}

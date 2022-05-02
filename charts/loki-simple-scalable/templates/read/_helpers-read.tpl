@@ -22,14 +22,6 @@ app.kubernetes.io/component: read
 {{- end }}
 
 {{/*
-read image
-*/}}
-{{- define "loki.readImage" -}}
-{{- $dict := dict "loki" .Values.loki.image "service" .Values.read.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
-{{- include "loki.lokiImage" $dict -}}
-{{- end }}
-
-{{/*
 read priority class name
 */}}
 {{- define "loki.readPriorityClassName" -}}
