@@ -361,6 +361,28 @@ entries:
   enterprise-logs-simple:
   - apiVersion: v2
     appVersion: v1.4.0
+    created: "2022-05-02T21:52:29.380647185Z"
+    dependencies:
+    - name: loki-simple-scalable
+      repository: https://grafana.github.io/helm-charts
+      version: ^0.3.0
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    deprecated: true
+    description: DEPRECATED Grafana Enterprise Logs (Simple Scalable)
+    digest: c4eacdfd2dce7ca22ab2f00c0d5d67223fbb98629cdb4f0b94678a9d71e4fd78
+    home: https://grafana.com/products/enterprise/logs/
+    kubeVersion: ^1.10.0-0
+    name: enterprise-logs-simple
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/enterprise-logs-simple-1.2.0/enterprise-logs-simple-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: v1.4.0
     created: "2022-04-20T23:18:56.743250818Z"
     dependencies:
     - name: loki-simple-scalable
@@ -22354,4 +22376,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-02T21:42:06.216157094Z"
+generated: "2022-05-02T21:52:29.389534655Z"
