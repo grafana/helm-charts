@@ -17,6 +17,7 @@ serviceAccount:
   create: true
   name:
   nameTest:
+## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
   autoMount: true

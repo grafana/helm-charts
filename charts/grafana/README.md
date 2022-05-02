@@ -69,7 +69,7 @@ This version requires Helm >= 3.1.0.
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
 | `service.targetPort`                      | Internal service is port                      | `3000`                                                  |
 | `service.nodePort`                        | Kubernetes service nodePort                   | `nil`                                                   |
-| `service.annotations`                     | Service annotations                           | `{}`                                                    |
+| `service.annotations`                     | Service annotations (can be templated)        | `{}`                                                    |
 | `service.labels`                          | Custom labels                                 | `{}`                                                    |
 | `service.clusterIP`                       | internal cluster service IP                   | `nil`                                                   |
 | `service.loadBalancerIP`                  | IP address to assign to load balancer (if supported) | `nil`                                            |
