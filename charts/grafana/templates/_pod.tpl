@@ -172,8 +172,9 @@ initContainers:
 {{- end }}
 {{- if .Values.image.pullSecrets }}
 imagePullSecrets:
+{{- $root := . }}
 {{- range .Values.image.pullSecrets }}
-  - name: {{ . }}
+  - name: {{ tpl . $root }}
 {{- end}}
 {{- end }}
 {{- if not .Values.enableKubeBackwardCompatibility }}

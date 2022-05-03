@@ -14,10 +14,11 @@ spec:
   {{- if .Values.testFramework.securityContext }}
   securityContext: {{ toYaml .Values.testFramework.securityContext | nindent 4 }}
   {{- end }}
+  {{- $root := . }}
   {{- if .Values.image.pullSecrets }}
   imagePullSecrets:
   {{- range .Values.image.pullSecrets }}
-    - name: {{ . }}
+    - name: {{ tpl . $root }}
   {{- end}}
   {{- end }}
   {{- with .Values.nodeSelector }}

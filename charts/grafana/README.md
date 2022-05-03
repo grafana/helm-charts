@@ -62,7 +62,7 @@ This version requires Helm >= 3.1.0.
 | `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.2.5`                                                 |
 | `image.sha`                               | Image sha (optional)                          | `2acf04c016c77ca2e89af3536367ce847ee326effb933121881c7c89781051d3` |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
-| `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
+| `image.pullSecrets`                       | Image pull secrets (can be templated)         | `{}`                                                    |
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
