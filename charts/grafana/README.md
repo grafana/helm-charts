@@ -122,7 +122,7 @@ This version requires Helm >= 3.1.0.
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
-| `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts | `[]`                                                |
+| `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts (values are templated) | `[]`                         |
 | `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
 | `plugins`                                 | Plugins to be loaded along with Grafana       | `[]`                                                    |
 | `datasources`                             | Configure grafana datasources (passed through tpl) | `{}`                                               |

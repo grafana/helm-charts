@@ -101,6 +101,8 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Extra configmaps to mount in grafana pods
+# Values are templated.
 extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/

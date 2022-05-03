@@ -419,11 +419,12 @@ containers:
         mountPath: "/etc/grafana/ldap.toml"
         subPath: ldap.toml
       {{- end }}
+      {{- $root := . }}
       {{- range .Values.extraConfigmapMounts }}
-      - name: {{ .name }}
-        mountPath: {{ .mountPath }}
-        subPath: {{ .subPath | default "" }}
-        readOnly: {{ .readOnly }}
+      - name: {{ tpl .name $root }}
+        mountPath: {{ tpl .mountPath $root }}
+        subPath: {{ tpl (.subPath $root) | default "" }}
+        readOnly: {{ tpl .readOnly $root }}
       {{- end }}
       - name: storage
         mountPath: "/var/lib/grafana"
@@ -619,10 +620,11 @@ volumes:
   - name: config
     configMap:
       name: {{ template "grafana.fullname" . }}
+{{- $root := . }}
 {{- range .Values.extraConfigmapMounts }}
-  - name: {{ .name }}
+  - name: {{ tpl .name $root }}
     configMap:
-      name: {{ .configMap }}
+      name: {{ tpl .configMap $root }}
 {{- end }}
   {{- if .Values.dashboards }}
     {{- range (keys .Values.dashboards | sortAlpha) }}
