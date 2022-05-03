@@ -181,7 +181,7 @@ This version requires Helm >= 3.1.0.
 | `smtp.existingSecret`                     | The name of an existing secret containing the SMTP credentials. | `""`                                  |
 | `smtp.userKey`                            | The key in the existing SMTP secret containing the username. | `"user"`                                 |
 | `smtp.passwordKey`                        | The key in the existing SMTP secret containing the password. | `"password"`                             |
-| `admin.existingSecret`                    | The name of an existing secret containing the admin credentials. | `""`                                 |
+| `admin.existingSecret`                    | The name of an existing secret containing the admin credentials (can be templated). | `""`                                 |
 | `admin.userKey`                           | The key in the existing admin secret containing the username. | `"admin-user"`                          |
 | `admin.passwordKey`                       | The key in the existing admin secret containing the password. | `"admin-password"`                      |
 | `serviceAccount.autoMount`                | Automount the service account token in the pod| `true`                                                  |
