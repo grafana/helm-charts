@@ -20,7 +20,7 @@ rules:
   - metricsinstances/finalizers
   - logsinstances/finalizers
   - podlogs/finalizers
-  verbs: [get, list, watch, create, update, patch, delete]
+  verbs: [get, list, watch, update]
 - apiGroups: [monitoring.coreos.com]
   resources:
   - podmonitors
@@ -32,7 +32,7 @@ rules:
   - podmonitors/finalizers
   - probes/finalizers
   - servicemonitors/finalizers
-  verbs: [get, list, watch, create, update, patch, delete]
+  verbs: [get, list, watch, update]
 - apiGroups: [""]
   resources:
   - namespaces
