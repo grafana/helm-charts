@@ -288,7 +288,9 @@ persistence:
   finalizers:
     - kubernetes.io/pvc-protection
   # selectorLabels: {}
+  ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""
+  ## Name of an existing PVC. Can be templated.
   # existingClaim:
 
   ## If persistence is not enabled, this allows to mount the

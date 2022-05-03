@@ -98,12 +98,12 @@ This version requires Helm >= 3.1.0.
 | `persistence.enabled`                     | Use persistent volume to store data           | `false`                                                 |
 | `persistence.type`                        | Type of persistence (`pvc` or `statefulset`)  | `pvc`                                                   |
 | `persistence.size`                        | Size of persistent volume claim               | `10Gi`                                                  |
-| `persistence.existingClaim`               | Use an existing PVC to persist data           | `nil`                                                   |
+| `persistence.existingClaim`               | Use an existing PVC to persist data (can be templated) | `nil`                                          |
 | `persistence.storageClassName`            | Type of persistent volume claim               | `nil`                                                   |
 | `persistence.accessModes`                 | Persistence access modes                      | `[ReadWriteOnce]`                                       |
 | `persistence.annotations`                 | PersistentVolumeClaim annotations             | `{}`                                                    |
 | `persistence.finalizers`                  | PersistentVolumeClaim finalizers              | `[ "kubernetes.io/pvc-protection" ]`                    |
-| `persistence.subPath`                     | Mount a sub dir of the persistent volume      | `nil`                                                   |
+| `persistence.subPath`                     | Mount a sub dir of the persistent volume (can be templated) | `nil`                                     |
 | `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
 | `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |

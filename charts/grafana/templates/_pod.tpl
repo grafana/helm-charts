@@ -37,7 +37,7 @@ initContainers:
       - name: storage
         mountPath: "/var/lib/grafana"
 {{- if .Values.persistence.subPath }}
-        subPath: {{ .Values.persistence.subPath }}
+        subPath: {{ tpl .Values.persistence.subPath . }}
 {{- end }}
 {{- end }}
 {{- if .Values.dashboards }}
@@ -69,7 +69,7 @@ initContainers:
       - name: storage
         mountPath: "/var/lib/grafana"
 {{- if .Values.persistence.subPath }}
-        subPath: {{ .Values.persistence.subPath }}
+        subPath: {{ tpl .Values.persistence.subPath . }}
 {{- end }}
     {{- range .Values.extraSecretMounts }}
       - name: {{ .name }}
@@ -428,7 +428,7 @@ containers:
       - name: storage
         mountPath: "/var/lib/grafana"
 {{- if .Values.persistence.subPath }}
-        subPath: {{ .Values.persistence.subPath }}
+        subPath: {{ tpl .Values.persistence.subPath . }}
 {{- end }}
 {{- if .Values.dashboards }}
 {{- range $provider, $dashboards := .Values.dashboards }}
@@ -653,7 +653,7 @@ volumes:
 {{- if and .Values.persistence.enabled (eq .Values.persistence.type "pvc") }}
   - name: storage
     persistentVolumeClaim:
-      claimName: {{ .Values.persistence.existingClaim | default (include "grafana.fullname" .) }}
+      claimName: {{ tpl (.Values.persistence.existingClaim .) | default (include "grafana.fullname" .) }}
 {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
 # nothing
 {{- else }}
