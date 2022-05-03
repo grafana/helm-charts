@@ -13,7 +13,6 @@ rules:
   resourceNames:  [{{ include "mimir.resourceName" (dict "ctx" .) }}]
 {{- end }}
 {{- if .Values.rbac.sccEnabled }}
-rules:
 - apiGroups:
   - security.openshift.io
   resources:
