@@ -238,7 +238,7 @@ nodeSelector: {}
 ##
 tolerations: []
 
-## Affinity for pod assignment
+## Affinity for pod assignment (evaluated as template)
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
@@ -846,7 +846,7 @@ imageRenderer:
   ##
   tolerations: []
 
-  ## Affinity for pod assignment
+  ## Affinity for pod assignment (evaluated as template)
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
   affinity: {}

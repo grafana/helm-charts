@@ -106,9 +106,10 @@ spec:
       nodeSelector:
 {{ toYaml . | indent 8 }}
       {{- end }}
+      {{- $root := . }}
       {{- with .Values.imageRenderer.affinity }}
       affinity:
-{{ toYaml . | indent 8 }}
+{{ tpl (toYaml .) $root | indent 8 }}
       {{- end }}
       {{- with .Values.imageRenderer.tolerations }}
       tolerations:

@@ -25,9 +25,10 @@ spec:
   nodeSelector:
 {{ toYaml . | indent 4 }}
   {{- end }}
+  {{- $root := . }}
   {{- with .Values.affinity }}
   affinity:
-{{ toYaml . | indent 4 }}
+{{ tpl (toYaml .) $root | indent 4 }}
   {{- end }}
   {{- with .Values.tolerations }}
   tolerations:

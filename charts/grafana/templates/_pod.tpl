@@ -606,9 +606,10 @@ containers:
 nodeSelector:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- $root := . }}
 {{- with .Values.affinity }}
 affinity:
-{{ toYaml . | indent 2 }}
+{{ tpl (toYaml .) $root | indent 2 }}
 {{- end }}
 {{- with .Values.tolerations }}
 tolerations:
