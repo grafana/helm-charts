@@ -1,0 +1,29 @@
+{{- if and .Values.alertmanager.enabled .Values.alertmanager.autoscaling.enabled -}}
+{{- with .Values.alertmanager.autoscaling -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "alertmanager") }}
+  labels:
+    {{- include "mimir.labels" (dict "ctx" . "component" "alertmanager" "memberlist" true) | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: {{ if $.Values.alertmanager.statefulSet.enabled }}StatefulSet{{ else }}Deployment{{ end }}
+    name: {{ include "mimir.resourceName" (dict "ctx" . "component" "alertmanager") }}
+  minReplicas: {{ .Values.alertmanager.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.alertmanager.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.alertmanager.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+  {{- with .Values.alertmanager.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+{{- end }}

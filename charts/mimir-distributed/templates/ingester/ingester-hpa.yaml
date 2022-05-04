@@ -1,0 +1,29 @@
+{{- if .Values.ingester.autoscaling.enabled -}}
+{{- with .Values.ingester.autoscaling -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "ingester") }}
+  labels:
+    {{- include "mimir.labels" (dict "ctx" . "component" "ingester" "memberlist" true) | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: {{ include "mimir.resourceName" (dict "ctx" . "component" "ingester") }}
+  minReplicas: {{ .Values.ingester.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.ingester.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.ingester.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+  {{- with .Values.ingester.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+{{- end }}

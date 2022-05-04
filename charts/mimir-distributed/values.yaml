@@ -255,6 +255,18 @@ alertmanager:
   enabled: true
   replicas: 1
 
+  autoscaling:
+    # -- Enable autoscaling for the alertmanager
+    enabled: false
+    # -- Minimum autoscaling replicas for the alertmanager
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the alertmanager
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the alertmanager
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the alertmanager
+    targetMemoryUtilizationPercentage:
+
   statefulSet:
     enabled: true
 
@@ -379,6 +391,18 @@ alertmanager:
 distributor:
   replicas: 1
 
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
+
   service:
     annotations: {}
     labels: {}
@@ -441,6 +465,18 @@ distributor:
 
 ingester:
   replicas: 3
+
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
 
   statefulSet:
     enabled: true
