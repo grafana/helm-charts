@@ -448,7 +448,7 @@ write:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
-    initContainers: []
+  initContainers: []
     ## Init containers to be added to the loki pod.
     # - name: my-init-container
     #   image: busybox:latest
@@ -524,7 +524,7 @@ read:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
-    initContainers: []
+  initContainers: []
     ## Init containers to be added to the loki pod.
     # - name: my-init-container
     #   image: busybox:latest
