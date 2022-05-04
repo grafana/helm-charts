@@ -1,0 +1,88 @@
+---
+patch_rules:
+# NOTE: these rules depend on the rules in helm_labels.yaml to rename labels
+
+- name: "Rename /metadata/labels/memcached-queries to memcached-index-queries"
+  match:
+  - op: test
+    path: "/metadata/labels/name"
+    value: memcached-queries
+  steps:
+  - op: replace
+    path: "/metadata/labels/name"
+    value: memcached-index-queries
+
+- name: "Rename /spec/selector/memcached-queries to memcached-index-queries"
+  match:
+  - op: test
+    path: "/spec/selector/name"
+    value: memcached-queries
+  steps:
+  - op: replace
+    path: "/spec/selector/name"
+    value: memcached-index-queries
+
+- name: "Rename /spec/selector/matchLabels/memcached-queries to memcached-index-queries"
+  match:
+  - op: test
+    path: "/spec/selector/matchLabels/name"
+    value: memcached-queries
+  steps:
+  - op: replace
+    path: "/spec/selector/matchLabels/name"
+    value: memcached-index-queries
+
+- name: "Rename /spec/template/metadata/labels/memcached-queries to memcached-index-queries"
+  match:
+  - op: test
+    path: "/spec/template/metadata/labels/name"
+    value: memcached-queries
+  steps:
+  - op: replace
+    path: "/spec/template/metadata/labels/name"
+    value: memcached-index-queries
+
+- name: "Fix memcached Service ports to match exactly"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /spec/ports/1/name
+    value: exporter-http-metrics
+  steps:
+  - op: replace
+    path: /spec/ports/0/name
+    value: memcache
+  - op: replace
+    path: /spec/ports/0/targetPort
+    value: memcache
+  - op: remove
+    path: /spec/ports/1
+
+- name: "Remove labels from memcached"
+  match:
+  - op: test
+    path: /metadata/labels/name
+    value: memcached
+  steps:
+  - op: remove
+    path: /metadata/labels
+
+- name: "Remove labels from memcached-index-queries"
+  match:
+  - op: test
+    path: /metadata/labels/name
+    value: memcached-index-queries
+  steps:
+  - op: remove
+    path: /metadata/labels
+
+- name: "Remove labels from memcached-metadata"
+  match:
+  - op: test
+    path: /metadata/labels/name
+    value: memcached-metadata
+  steps:
+  - op: remove
+    path: /metadata/labels

@@ -1,0 +1,94 @@
+---
+patch_rules:
+
+- name: "Rename http ports in Services"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /spec/ports/0/port
+    value: 8080
+  steps:
+  - op: replace
+    path: /spec/ports/0/name
+    value: http-metrics
+  - op: replace
+    path: /spec/ports/0/targetPort
+    value: http-metrics
+
+- name: "Rename grpc ports in Services"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /spec/ports/1/port
+    value: 9095
+  steps:
+  - op: replace
+    path: /spec/ports/1/name
+    value: grpc
+  - op: replace
+    path: /spec/ports/1/targetPort
+    value: grpc
+
+- name: "Remove overrides exporter grpc port"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: overrides-exporter
+  - op: test
+    path: /spec/ports/1/name
+    value: grpc
+  steps:
+  - op: remove
+    path: /spec/ports/1
+
+- name: "Remove ruler grpc port"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: ruler
+  - op: test
+    path: /spec/ports/1/name
+    value: grpc
+  steps:
+  - op: remove
+    path: /spec/ports/1
+
+- name: "Fix alertmanager ports to match exactly"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /spec/ports/2/name
+    value: cluster
+  steps:
+  - op: remove
+    path: /spec/ports/2
+  - op: remove
+    path: /spec/publishNotReadyAddresses
+  
+- name: "Make distributor service headless"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: distributor
+  steps:
+  - op: add
+    path: /spec/clusterIP
+    value: None
+  - op: add
+    path: /spec/clusterIPs
+    value: [None]

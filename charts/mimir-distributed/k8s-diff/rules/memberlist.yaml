@@ -1,0 +1,56 @@
+---
+patch_rules:
+
+- name: "Adjust gossip-ring to match"
+  match:
+  - op: test
+    path: /metadata/name
+    value: gossip-ring
+  - op: remove
+    path: /spec/publishNotReadyAddresses
+  steps:
+  - op: remove
+    path: /spec/publishNotReadyAddresses
+  - op: remove
+    path: /metadata/labels
+  - op: remove
+    path: /spec/selector/name
+
+- name: "Rename /spec/selector/app.kubernetes.io/part-of=memberlist to gossip_ring_member=true"
+  match:
+  - op: test
+    path: "/spec/selector/app.kubernetes.io~1part-of"
+    value: memberlist
+  steps:
+  - op: remove
+    path: "/spec/selector/app.kubernetes.io~1part-of"
+  - op: add
+    path: "/spec/selector/gossip_ring_member"
+    value: "true"
+
+- name: "Rename /spec/template/metadata/labels/app.kubernetes.io/part-of=memberlist to gossip_ring_member=true"
+  match:
+  - op: test
+    path: "/spec/template/metadata/labels/app.kubernetes.io~1part-of"
+    value: memberlist
+  steps:
+  - op: remove
+    path: "/spec/template/metadata/labels/app.kubernetes.io~1part-of"
+  - op: add
+    path: "/spec/template/metadata/labels/gossip_ring_member"
+    value: "true"
+
+- remove_field: /metadata/labels/app.kubernetes.io~1part-of
+
+- name: "Remove memberlist port from services"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /spec/ports/2/port
+    value: 7946
+  steps:
+  - op: remove
+    path: /spec/ports/2
+

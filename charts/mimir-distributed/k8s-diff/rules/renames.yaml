@@ -1,0 +1,59 @@
+---
+patch_rules:
+- rename_object:
+    from: 'mimir-store-gateway'
+    to: 'store-gateway-pdb'
+  match_kind: 'PodDisruptionBudget'
+- rename_object:
+    from: 'mimir-ingester'
+    to: 'ingester-pdb'
+  match_kind: 'PodDisruptionBudget'
+
+- rename_object:
+    from: 'mimir-store-gateway'
+    to: 'store-gateway'
+- rename_object:
+    from: 'mimir-distributor'
+    to: 'distributor'
+- rename_object:
+    from: 'mimir-querier'
+    to: 'querier'
+- rename_object:
+    from: 'mimir-query-frontend'
+    to: 'query-frontend'
+- rename_object:
+    from: 'mimir-ingester'
+    to: 'ingester'
+- rename_object:
+    from: 'mimir-ruler'
+    to: 'ruler'
+- rename_object:
+    from: 'mimir-alertmanager-headless'
+    to: 'alertmanager'
+- rename_object:
+    from: 'mimir-alertmanager'
+    to: 'alertmanager'
+- rename_object:
+    from: 'mimir-overrides-exporter'
+    to: 'overrides-exporter'
+- rename_object:
+    from: 'mimir-compactor'
+    to: 'compactor'
+- rename_object:
+    from: 'mimir-query-frontend-headless'
+    to: 'query-frontend-discovery'
+- rename_object:
+    from: 'mimir-runtime'
+    to: 'overrides'
+- rename_object:
+    from: 'mimir-memcached'
+    to: 'memcached'
+- rename_object:
+    from: 'mimir-memcached-queries'
+    to: 'memcached-index-queries'
+- rename_object:
+    from: 'mimir-memcached-metadata'
+    to: 'memcached-metadata'
+- rename_object:
+    from: 'mimir-gossip-ring'
+    to: 'gossip-ring'

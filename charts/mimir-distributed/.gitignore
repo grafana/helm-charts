@@ -1,2 +1,4 @@
 # Ignore dependencies downloaded by helm
 charts/
+k8s-diff/rendered-manifests/
+k8s-diff/jsonnet-workspace/vendor/

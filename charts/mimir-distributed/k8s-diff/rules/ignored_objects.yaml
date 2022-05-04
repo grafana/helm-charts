@@ -1,0 +1,65 @@
+---
+ignore_rules:
+
+- name: "Helm does not create etcd"
+  match:
+  - op: test
+    path: /kind
+    value: EtcdCluster
+
+- name: "Helm does not create consul"
+  match:
+  - op: test
+    path: /metadata/name
+    value: consul
+  
+- name: "Helm does not create consul"
+  match:
+  - op: test
+    path: /metadata/name
+    value: consul-sidekick
+
+- name: "Helm does not create memcached-frontend"
+  match:
+  - op: test
+    path: /metadata/name
+    value: memcached-frontend
+
+- name: "Helm does not create a namespace"
+  match:
+  - op: test
+    path: /kind
+    value: Namespace
+
+- name: "Jsonnet does not create a service for the compactor"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: mimir-compactor
+- name: "Jsonnet does not create a headless ingester service"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: mimir-ingester-headless
+- name: "Jsonnet does not create a headless store-gateway service"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: mimir-store-gateway-headless
+- name: "Jsonnet only creates a headless alertmanager service"
+  match:
+  - op: test
+    path: /kind
+    value: Service
+  - op: test
+    path: /metadata/name
+    value: mimir-alertmanager

@@ -5,3 +5,4 @@ ci/
 INTERNAL*
 README.md.gotmpl
 scripts/
+k8s-diff/

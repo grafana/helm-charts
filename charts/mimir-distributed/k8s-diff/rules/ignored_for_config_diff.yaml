@@ -1,0 +1,8 @@
+---
+ignore_rules:
+
+- name: "Jsonnet does not use config files"
+  match:
+  - op: test
+    path: /metadata/name
+    value: mimir-config

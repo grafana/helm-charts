@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "$0")"
+
+chartDir="$(pwd)/.."
+
+function renderHelm {
+    [[ -d "$chartDir/k8s-diff/rendered-manifests/helm-original" ]] && rm -r "$chartDir/k8s-diff/rendered-manifests/helm-original"
+
+    helm template mimir "$chartDir" -f "$chartDir/k8s-diff/helm-workspace/values.yaml" --output-dir "$chartDir/k8s-diff/rendered-manifests/helm-original"
+}
+
+function renderJsonnet {
+    [[ -d "$chartDir/k8s-diff/rendered-manifests/jsonnet-original" ]] && rm -r "$chartDir/k8s-diff/rendered-manifests/jsonnet-original"
+
+    pushd "$chartDir/k8s-diff/jsonnet-workspace" > /dev/null
+        jb install
+        tk export "$chartDir/k8s-diff/rendered-manifests/jsonnet-original" environments/default
+    popd > /dev/null
+}
+
+renderHelm
+renderJsonnet
+
+helmInput="$chartDir/k8s-diff/rendered-manifests/helm-original"
+helmOutput="$chartDir/k8s-diff/rendered-manifests/helm-patched"
+jsonnetInput="$chartDir/k8s-diff/rendered-manifests/jsonnet-original"
+jsonnetOutput="$chartDir/k8s-diff/rendered-manifests/jsonnet-patched"
+
+[[ -d "$helmOutput" ]] && rm -r "$helmOutput"
+[[ -d "$jsonnetOutput" ]] && rm -r "$jsonnetOutput"
+
+pushd "$chartDir/../../scripts/k8s-diff/cmd" >/dev/null
+    # Fix up the large-scale differences between the two manifest directories
+    # We ignore some objects that are missing in the jsonnet or helm versions
+    # We also rename some objects to match the jsonnet version
+    go run ./yaml-patch \
+        -input-dir "$helmInput" -output-dir "$helmOutput/manifests" \
+        -input-dir "$jsonnetInput" -output-dir "$jsonnetOutput/manifests" \
+        -rules "$chartDir/k8s-diff/rules/ignored_objects.yaml" \
+        -rules "$chartDir/k8s-diff/rules/renames.yaml" \
+        -output-template "{{.metadata.name}}-{{.kind}}.yaml"
+
+    # Extract the Mimir configuration from each of the manifests
+    # This uses mimir itself to resolve cli flags / config file / defaults
+    go run ./config-generate -input-dir "$helmOutput/manifests" -output-dir "$helmOutput/config"
+    go run ./config-generate -input-dir "$jsonnetOutput/manifests" -output-dir "$jsonnetOutput/config"
+
+    # Patch the Mimir configuration to remove differences we don't care about
+    go run ./yaml-patch \
+        -input-dir "$helmOutput/config" -output-dir "$helmOutput/config" \
+        -input-dir "$jsonnetOutput/config" -output-dir "$jsonnetOutput/config" \
+        -rules "$chartDir/k8s-diff/rules/config_diffs.yaml"
+
+    # Finally, remove any values matching the defaults
+    # These are not useful for comparison since they have no effect
+    go run ./config-defaults -input-dir "$helmOutput/config" -output-dir "$helmOutput/config"
+    go run ./config-defaults -input-dir "$jsonnetOutput/config" -output-dir "$jsonnetOutput/config"
+    go run ./k8s-defaults -input-dir "$helmOutput/manifests" -output-dir "$helmOutput/manifests"
+    go run ./k8s-defaults -input-dir "$jsonnetOutput/manifests" -output-dir "$jsonnetOutput/manifests"
+
+    # Patch the k8s manifests to remove any differences we don't care about
+    go run ./yaml-patch \
+        -input-dir "$helmOutput/manifests" -output-dir "$helmOutput/manifests" \
+        -input-dir "$jsonnetOutput/manifests" -output-dir "$jsonnetOutput/manifests" \
+        -rules "$chartDir/k8s-diff/rules/helm_labels.yaml" \
+        -rules "$chartDir/k8s-diff/rules/memberlist.yaml" \
+        -rules "$chartDir/k8s-diff/rules/memcached.yaml" \
+        -rules "$chartDir/k8s-diff/rules/services.yaml" \
+        -rules "$chartDir/k8s-diff/rules/ignored_for_config_diff.yaml" \
+        -rules "$chartDir/k8s-diff/rules/ignored_fields.yaml"
+popd >/dev/null 
+
+difft --skip-unchanged "$chartDir/k8s-diff/rendered-manifests/jsonnet-patched" "$chartDir/k8s-diff/rendered-manifests/helm-patched"

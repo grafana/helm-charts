@@ -1,0 +1,55 @@
+---
+patch_rules:
+
+# Helm doesn't set a namespace when running helm template
+- name: "Set default namespace"
+  match:
+  - op: remove
+    path: /metadata
+  steps:
+  - op: add
+    path: /metadata/namespace
+    value: default
+
+# The name label in Jsonnet is the same as Helm's app.kubernetes.io/component
+# label when it exists. If no app.kubernetes.io/component label exists, then use
+# the app.kubernetes.io/name label. To accomplish this, we rename
+# app.kubernetes.io/name first, then app.kubernetes.io will overrite if it
+# exists.
+- rename_field:
+    from: '/metadata/labels/app.kubernetes.io~1name'
+    to: /metadata/labels/name
+- rename_field:
+    from: '/spec/selector/app.kubernetes.io~1name'
+    to: /spec/selector/name
+- rename_field:
+    from: '/spec/selector/matchLabels/app.kubernetes.io~1name'
+    to: /spec/selector/matchLabels/name
+- rename_field:
+    from: '/spec/template/metadata/labels/app.kubernetes.io~1name'
+    to: /spec/template/metadata/labels/name
+
+- rename_field:
+    from: '/metadata/labels/app.kubernetes.io~1component'
+    to: /metadata/labels/name
+- rename_field:
+    from: '/spec/selector/app.kubernetes.io~1component'
+    to: /spec/selector/name
+- rename_field:
+    from: '/spec/selector/matchLabels/app.kubernetes.io~1component'
+    to: /spec/selector/matchLabels/name
+- rename_field:
+    from: '/spec/template/metadata/labels/app.kubernetes.io~1component'
+    to: /spec/template/metadata/labels/name
+
+# The remaining labels are redundant and don't meaningfully impact the functionality
+- remove_field: '/metadata/labels/app.kubernetes.io~1instance'
+- remove_field: '/metadata/labels/app.kubernetes.io~1managed-by'
+- remove_field: '/metadata/labels/app.kubernetes.io~1version'
+- remove_field: '/metadata/labels/helm.sh~1chart'
+- remove_field: '/spec/selector/app.kubernetes.io~1instance'
+- remove_field: '/spec/selector/matchLabels/app.kubernetes.io~1instance'
+- remove_field: '/spec/template/metadata/labels/app.kubernetes.io~1instance'
+- remove_field: '/spec/template/metadata/labels/app.kubernetes.io~1managed-by'
+- remove_field: '/spec/template/metadata/labels/app.kubernetes.io~1version'
+- remove_field: '/spec/template/metadata/labels/helm.sh~1chart'
