@@ -10,6 +10,7 @@ read:
       command: ['sh', '-c', 'echo hello']
 write:
   replicas: 1
+  initContainers:
   - name: my-init-container
     image: busybox:latest
     command: ['sh', '-c', 'echo hello']
