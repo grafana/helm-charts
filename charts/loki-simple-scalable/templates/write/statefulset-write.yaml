@@ -39,6 +39,8 @@ spec:
       {{- include "loki.writePriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- toYaml .Values.write.initContainers | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.write.terminationGracePeriodSeconds }}
       containers:
         - name: loki
