@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "consul"
+        }
+      },
+      "version": "28e90490f768aaf14d5bcb15ed2f6ab4e3efe725",
+      "sum": "Po3c1Ic96ngrJCtOazic/7OsLkoILOKZWXWyZWl+od8="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "etcd-operator"
+        }
+      },
+      "version": "28e90490f768aaf14d5bcb15ed2f6ab4e3efe725",
+      "sum": "fQC1HY2iSTGfd4UfUE0nomf6NcRT+6xaVTDgwwRCrQc="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "jaeger-agent-mixin"
+        }
+      },
+      "version": "28e90490f768aaf14d5bcb15ed2f6ab4e3efe725",
+      "sum": "DsdBoqgx5kE3zc6fMYnfiGjW2+9Mx2OXFieWm1oFHgY="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "ksonnet-util"
+        }
+      },
+      "version": "28e90490f768aaf14d5bcb15ed2f6ab4e3efe725",
+      "sum": "xo1A7iYvJ7OZ64q2dOZY0G8FGHHt+t/+vEJW3bnXHyk="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "memcached"
+        }
+      },
+      "version": "28e90490f768aaf14d5bcb15ed2f6ab4e3efe725",
+      "sum": "8hXTN4QOMkpad75LESkdfRD4/Sl81fMqZcD0ZPx2SNc="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/mimir.git",
+          "subdir": "operations/mimir"
+        }
+      },
+      "version": "99c90795b497ea372d0cdebfd0e6d69d23e1063e",
+      "sum": "MhA3qnMbcM4zi+hHPSrn+QbCoathsgcpzC2dDZy8C7I="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/jsonnet-libs/k8s-libsonnet.git",
+          "subdir": "1.18"
+        }
+      },
+      "version": "3b2af2f1ef5c357a24069c104d5c26f10eb5f4a7",
+      "sum": "Fjg5u078wnGpSXOKo264J/mKfZIQhuSwwvDL6YXR2KA="
+    }
+  ],
+  "legacyImports": false
+}

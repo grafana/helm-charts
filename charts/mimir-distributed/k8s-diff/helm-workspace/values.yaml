@@ -1,0 +1,23 @@
+# This file contains the minimal configuration to bring the Helm-deployed objects in line with the Jsonnet-deployed objects
+
+memcached:
+    enabled: true
+    metrics:
+        enabled: false
+memcached-queries:
+    enabled: true
+    metrics:
+        enabled: false
+memcached-metadata:
+    enabled: true
+    metrics:
+        enabled: false
+minio:
+   enabled: false
+nginx:
+   enabled: false
+rbac:
+   create: false
+   pspEnabled: false
+serviceAccount:
+   create: false
