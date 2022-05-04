@@ -390,6 +390,11 @@ prometheusRule:
 write:
   # -- Number of replicas for the write
   replicas: 3
+  initContainers: []
+   ## Init containers to be added to the loki pod.
+   # - name: my-init-container
+   #   image: busybox:latest
+   #   command: ['sh', '-c', 'echo hello']
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null
@@ -453,6 +458,11 @@ write:
 read:
   # -- Number of replicas for the read
   replicas: 3
+  initContainers: []
+   ## Init containers to be added to the loki pod.
+   # - name: my-init-container
+   #   image: busybox:latest
+   #   command: ['sh', '-c', 'echo hello']
   autoscaling:
     # -- Enable autoscaling for the read, this is only used if `queryIndex.enabled: true`
     enabled: false
