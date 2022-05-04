@@ -193,6 +193,9 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 10001
 
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+
 service:
   type: ClusterIP
   nodePort:
