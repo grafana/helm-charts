@@ -224,8 +224,10 @@ mimir:
 runtimeConfig: {}
 
 # RBAC configuration
+# For GKE/EKS/AKS use 'pspEnabled: true' and 'sccEnabled: false'. For OpenShift use 'pspEnabled: false' and 'sccEnabled: true'
 rbac:
   pspEnabled: true
+  sccEnabled: false
 
 # ServiceMonitor configuration
 serviceMonitor:
@@ -1098,6 +1100,8 @@ minio:
   serviceAccount:
     create: false
     name: *serviceAccountName
+  # Changed the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root and OpenShift will not permit this.
+  configPathmc: "/tmp/minio/mc/"
 
 # Configuration for nginx gateway
 nginx:

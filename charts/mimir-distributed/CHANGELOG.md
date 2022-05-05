@@ -13,12 +13,14 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.1.0
 
-* [CHANGE] **Breaking** The parameter `memcached.arguments` is no called `memcached.args`. Due to update to memcached sub-chart.
-* [CHANGE] **Breaking** The parameter `memcached-queries.arguments` is no called `memcached-queries.args`. Due to update to memcached sub-chart.
-* [CHANGE] **Breaking** The parameter `memcached-metadata.arguments` is no called `memcached-metadata.args`. Due to update to memcached sub-chart.
-* [ENHANCEMENT] Support install on OpenShift.
-* [ENHANCEMENT] Update memcached dependency from chart version 5.5.2 to 6.0.16, memcached version 1.6.9 to 1.6.15.
+* [CHANGE] **Breaking** The parameter `memcached.arguments` is no called `memcached.args`. Due to update to memcached sub-chart. #1329
+* [CHANGE] **Breaking** The parameter `memcached-queries.arguments` is no called `memcached-queries.args`. Due to update to memcached sub-chart. #1329
+* [CHANGE] **Breaking** The parameter `memcached-metadata.arguments` is no called `memcached-metadata.args`. Due to update to memcached sub-chart. #1329
+* [CHANGE] Changed the service account name value `serviceAccount.name` from generated to fixed `mimir-service-account` to be able to share between services via YAML reference `&serviceAccountName`. #1329
+* [ENHANCEMENT] Support install on OpenShift. Added `rbac.sccEnabled` to enable Security Context Constraint. It is mutually exclusive with respect to `rbac.pspEnabled`. #1329
+* [ENHANCEMENT] Update memcached dependency from chart version 5.5.2 to 6.0.16, memcached version 1.6.9 to 1.6.15. #1329
 With this change memcached sub-chart now supports setting service account, needed for OpenShift.
+* [ENHANCEMENT] mc path in Minio changed to be compatible with OpenShift secutiry. #1329
 
 ## 2.0.14
 
