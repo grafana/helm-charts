@@ -1,14 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"k8s-diff/pkg/differ"
 	"k8s-diff/pkg/process"
 	"os"
-
-	jsonpatch "github.com/evanphx/json-patch"
+	"reflect"
 )
 
 type Config struct {
@@ -47,11 +45,7 @@ func main() {
 	}
 
 	for i, yo := range objects {
-		objects[i], err = removeDefaults(defaults, yo)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "failed to remove defaults:", err)
-			os.Exit(1)
-		}
+		annotateDefaults(defaults.Object, yo.Object)
 
 		objects[i].RemoveNulls()
 	}
@@ -63,31 +57,29 @@ func main() {
 	}
 }
 
-func removeDefaults(defaults, config *differ.YamlObject) (*differ.YamlObject, error) {
-	defaultsBuf := new(bytes.Buffer)
-	err := differ.EncodeYamlObjectAsJson(defaultsBuf, defaults)
-	if err != nil {
-		return nil, err
+func annotateDefaults(defaults, config interface{}) interface{} {
+	switch config := config.(type) {
+	case map[string]interface{}:
+		for k, v := range config {
+			config[k] = annotateDefaults(defaults.(map[string]interface{})[k], v)
+		}
+	case map[interface{}]interface{}:
+		for k, v := range config {
+			config[k] = annotateDefaults(defaults.(map[interface{}]interface{})[k], v)
+		}
+	case []interface{}:
+		for i, v := range config {
+			defaultV := defaults.([]interface{})
+			if len(defaultV) > i {
+				config[i] = annotateDefaults(defaultV[i], v)
+			}
+		}
+	default:
+		if reflect.DeepEqual(config, defaults) {
+			return fmt.Sprintf("%#v (default)", config)
+		}
 	}
-
-	configBuf := new(bytes.Buffer)
-	err = differ.EncodeYamlObjectAsJson(configBuf, config)
-	if err != nil {
-		return nil, err
-	}
-
-	patchResult, err := jsonpatch.CreateMergePatch(defaultsBuf.Bytes(), configBuf.Bytes())
-	if err != nil {
-		return nil, err
-	}
-
-	var finalConfig = differ.NewYamlObject(config.ResourceKey.Source)
-	err = differ.DecodeYamlObject(bytes.NewReader(patchResult), finalConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	return finalConfig, nil
+	return config
 }
 
 func LoadDefaults() (*differ.YamlObject, error) {
