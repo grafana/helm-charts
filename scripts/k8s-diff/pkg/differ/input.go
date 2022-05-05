@@ -17,7 +17,7 @@ func ReadStateFromDirectory(path string) ([]*YamlObject, error) {
 		}
 
 		if filepath.Ext(path) != ".yaml" {
-			fmt.Printf("%s: skipping non-yaml file\n", path)
+			fmt.Fprintf(os.Stderr, "%s: skipping non-yaml file\n", path)
 			return nil
 		}
 

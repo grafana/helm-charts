@@ -9,7 +9,7 @@ chartDir="$(pwd)/.."
 function renderHelm {
     [[ -d "$chartDir/k8s-diff/rendered-manifests/helm-original" ]] && rm -r "$chartDir/k8s-diff/rendered-manifests/helm-original"
 
-    helm template mimir "$chartDir" -f "$chartDir/k8s-diff/helm-workspace/values.yaml" --output-dir "$chartDir/k8s-diff/rendered-manifests/helm-original"
+    helm template mimir "$chartDir" -f "$chartDir/k8s-diff/helm-workspace/values.yaml" --output-dir "$chartDir/k8s-diff/rendered-manifests/helm-original" 1>&2
 }
 
 function renderJsonnet {

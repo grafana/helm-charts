@@ -36,7 +36,7 @@ func RunMimirAndCaptureConfigOutput(pc ProcessConfiguration, source string) (*di
 
 	if _, ok := pulledImages[pc.Image]; !ok {
 		pullCommand := exec.Command("docker", "pull", pc.Image)
-		pullCommand.Stdout = os.Stdout
+		pullCommand.Stdout = os.Stderr
 		pullCommand.Stderr = os.Stderr
 		err = pullCommand.Run()
 		if err != nil {
