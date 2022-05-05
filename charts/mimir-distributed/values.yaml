@@ -967,7 +967,7 @@ compactor:
 memcached:
   enabled: false
   architecture: high-availability
-  arguments:
+  args:
     - -m 8192
     - -o
     - modern
@@ -976,7 +976,7 @@ memcached:
     - -c 4096
   image:
     repository: memcached
-    tag: 1.6.9
+    tag: 1.6.15
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
@@ -999,7 +999,7 @@ memcached:
 memcached-queries:
   enabled: false
   architecture: high-availability
-  arguments:
+  args:
     - -m 2048
     - -o
     - modern
@@ -1008,7 +1008,7 @@ memcached-queries:
     - -c 1024
   image:
     repository: memcached
-    tag: 1.6.9
+    tag: 1.6.15
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '15728640'  # (* 15 (* 1024 1024))
@@ -1031,7 +1031,7 @@ memcached-queries:
 memcached-metadata:
   enabled: false
   architecture: high-availability
-  arguments:
+  args:
     - -m 512
     - -o
     - modern
@@ -1040,7 +1040,7 @@ memcached-metadata:
     - -c 1024
   image:
     repository: memcached
-    tag: 1.6.9
+    tag: 1.6.15
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))

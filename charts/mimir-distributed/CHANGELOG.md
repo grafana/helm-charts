@@ -11,6 +11,15 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.1.0
+
+* [CHANGE] **Breaking** The parameter `memcached.arguments` is no called `memcached.args`. Due to update to memcached sub-chart.
+* [CHANGE] **Breaking** The parameter `memcached-queries.arguments` is no called `memcached-queries.args`. Due to update to memcached sub-chart.
+* [CHANGE] **Breaking** The parameter `memcached-metadata.arguments` is no called `memcached-metadata.args`. Due to update to memcached sub-chart.
+* [ENHANCEMENT] Support install on OpenShift.
+* [ENHANCEMENT] Update memcached dependency from chart version 5.5.2 to 6.0.16, memcached version 1.6.9 to 1.6.15.
+With this change memcached sub-chart now supports setting service account, needed for OpenShift.
+
 ## 2.0.14
 
 * [BUGFIX] exclude headless services from ServiceMonitors to prevent duplication of prometheus scrape targets #1308

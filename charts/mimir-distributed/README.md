@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana Mimir](https://grafana.com/docs/mimir/v2.0.x/)
 
 # mimir-distributed
 
-![Version: 2.0.14](https://img.shields.io/badge/Version-2.0.14-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Grafana Mimir
 
@@ -14,9 +14,9 @@ Kubernetes: `^1.10.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | memcached(memcached) | 5.5.2 |
-| https://charts.bitnami.com/bitnami | memcached-queries(memcached) | 5.5.2 |
-| https://charts.bitnami.com/bitnami | memcached-metadata(memcached) | 5.5.2 |
+| https://charts.bitnami.com/bitnami | memcached(memcached) | 6.0.16 |
+| https://charts.bitnami.com/bitnami | memcached-queries(memcached) | 6.0.16 |
+| https://charts.bitnami.com/bitnami | memcached-metadata(memcached) | 6.0.16 |
 | https://helm.min.io/ | minio(minio) | 8.0.10 |
 
 ## Dependencies
