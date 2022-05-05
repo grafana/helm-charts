@@ -18975,6 +18975,40 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-0.1.1/mimir-distributed-0.1.1.tgz
     version: 0.1.1
+  mimir-openshift-experimental:
+  - apiVersion: v2
+    appVersion: 2.0.0
+    created: "2022-05-05T14:35:55.329073586Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.0.16
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.0.16
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.0.16
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.10
+    description: Grafana Mimir on OpenShift Experiment
+    digest: 6b7bacc82b42de36ffe423431088aeabf51af00d31fe144cd3bc06ee0bddd866
+    home: https://grafana.com/docs/mimir/v2.0.x/
+    icon: https://grafana.com/static/img/logos/logo-mimir.svg
+    kubeVersion: ^1.10.0-0
+    name: mimir-openshift-experimental
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/mimir-openshift-experimental-2.1.0/mimir-openshift-experimental-2.1.0.tgz
+    version: 2.1.0
   promtail:
   - apiVersion: v2
     appVersion: 2.5.0
@@ -22409,4 +22443,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-05T10:53:44.932449578Z"
+generated: "2022-05-05T14:35:55.336977388Z"
