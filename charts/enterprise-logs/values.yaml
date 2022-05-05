@@ -145,6 +145,13 @@ config: |
       s3:
         bucketnames: enterprise-logs-ruler
 
+  {{- if .Values.additionalConfig}}
+  {{.Values.additionalConfig}}
+  {{- end}}
+
+# Append some additional config to the default config. Expects a string or `null`
+additionalConfig: null
+
 # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
 commonConfig:
   path_prefix: /var/loki
