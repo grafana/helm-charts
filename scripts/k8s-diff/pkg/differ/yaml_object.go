@@ -3,7 +3,6 @@ package differ
 import (
 	"fmt"
 	"io"
-	"strings"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/mitchellh/copystructure"
@@ -25,33 +24,41 @@ func NewYamlObject(source string) *YamlObject {
 	}
 }
 
-func (y *YamlObject) Flatten() *YamlObject {
-	output := NewYamlObject(y.ResourceKey.Source)
-	flatten([]string{""}, y.Object, output.Object)
-	return output
+// RemoveNulls removes all null values from the object. This is useful because
+// the default removal process leaves null values for fields that are not set.
+func (y *YamlObject) RemoveNulls() {
+	removeNulls(y.Object)
 }
 
-func flatten(prefix []string, source interface{}, dest map[string]interface{}) {
-	switch value := source.(type) {
-	case map[string]interface{}:
-		for k, v := range value {
-			key := append(prefix, k)
-			flatten(key, v, dest)
-		}
+func removeNulls(obj interface{}) interface{} {
+	switch value := obj.(type) {
 	case map[interface{}]interface{}:
-		for k, v := range value {
-			key := append(prefix, fmt.Sprint(k))
-			flatten(key, v, dest)
+		for k := range value {
+			value[k] = removeNulls(value[k])
+			if value[k] == nil {
+				delete(value, k)
+			}
+		}
+		if len(value) == 0 {
+			return nil
+		}
+	case map[string]interface{}:
+		for k := range value {
+			value[k] = removeNulls(value[k])
+			if value[k] == nil {
+				delete(value, k)
+			}
+		}
+		if len(value) == 0 {
+			return nil
 		}
 	case []interface{}:
-		for i, v := range value {
-			key := append(prefix, fmt.Sprintf("%d", i))
-			flatten(key, v, dest)
+		for i := range value {
+			value[i] = removeNulls(value[i])
 		}
-	default:
-		key := strings.Join(prefix, "/")
-		dest[key] = value
 	}
+
+	return obj
 }
 
 func (obj *YamlObject) Get(path string) (value interface{}, error error) {

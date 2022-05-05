@@ -53,7 +53,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		objects[i] = objects[i].Flatten()
+		objects[i].RemoveNulls()
 	}
 
 	err = differ.WriteStateToDirectory(objects, config.OutputDir, "")
