@@ -392,15 +392,15 @@ distributor:
   replicas: 1
 
   autoscaling:
-    # -- Enable autoscaling for the ingester
+    # -- Enable autoscaling for the distributor
     enabled: false
-    # -- Minimum autoscaling replicas for the ingester
+    # -- Minimum autoscaling replicas for the distributor
     minReplicas: 1
-    # -- Maximum autoscaling replicas for the ingester
+    # -- Maximum autoscaling replicas for the distributor
     maxReplicas: 3
-    # -- Target CPU utilisation percentage for the ingester
+    # -- Target CPU utilisation percentage for the distributor
     targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for the ingester
+    # -- Target memory utilisation percentage for the distributor
     targetMemoryUtilizationPercentage:
 
   service:
