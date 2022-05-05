@@ -1,0 +1,1327 @@
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/alertmanager-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/alertmanager-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/alertmanager-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/alertmanager-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -8,26 +8,21 @@
+   namespace: default
+ spec:
+   podManagementPolicy: OrderedReady
+-  replicas: 3
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: alertmanager
+-  serviceName: alertmanager
++  serviceName: mimir-alertmanager
+   template:
+     metadata:
+       creationTimestamp: null
+       labels:
+         name: alertmanager
+     spec:
++      affinity: {}
+       containers:
+-      - env:
+-        - name: POD_IP
+-          valueFrom:
+-            fieldRef:
+-              apiVersion: v1
+-              fieldPath: status.podIP
+-        image: grafana/mimir:2.0.0
++      - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+         name: alertmanager
+         ports:
+@@ -37,40 +32,52 @@
+         - containerPort: 9095
+           name: grpc
+           protocol: TCP
++        - containerPort: 7946
++          name: memberlist
++          protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 45
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 15Gi
+           requests:
+-            cpu: "2"
+-            memory: 10Gi
++            cpu: 10m
++            memory: 32Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+-        - mountPath: /data
+-          name: alertmanager-data
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
++        - mountPath: /tmp
++          name: tmp
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext:
+-        runAsUser: 0
+-      terminationGracePeriodSeconds: 900
++      securityContext: {}
++      terminationGracePeriodSeconds: 60
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: tmp
+   updateStrategy:
+     type: RollingUpdate
+   volumeClaimTemplates:
+@@ -78,13 +85,13 @@
+     kind: PersistentVolumeClaim
+     metadata:
+       creationTimestamp: null
+-      name: alertmanager-data
++      name: storage
+     spec:
+       accessModes:
+       - ReadWriteOnce
+       resources:
+         requests:
+-          storage: 100Gi
++          storage: 1Gi
+       volumeMode: Filesystem
+     status:
+       phase: Pending
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/compactor-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/compactor-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/compactor-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/compactor-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -7,19 +7,31 @@
+   name: compactor
+   namespace: default
+ spec:
+-  podManagementPolicy: Parallel
++  podManagementPolicy: OrderedReady
+   replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: compactor
+-  serviceName: compactor
++  serviceName: mimir-compactor
+   template:
+     metadata:
+       creationTimestamp: null
+       labels:
+         name: compactor
+     spec:
++      affinity:
++        podAntiAffinity:
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - podAffinityTerm:
++              labelSelector:
++                matchExpressions:
++                - key: target
++                  operator: In
++                  values:
++                  - compactor
++              topologyKey: kubernetes.io/hostname
++            weight: 100
+       containers:
+       - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+@@ -32,42 +44,47 @@
+           name: grpc
+           protocol: TCP
+         - containerPort: 7946
+-          name: gossip-ring
++          name: memberlist
+           protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 60
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 6Gi
+           requests:
+-            cpu: "1"
+-            memory: 6Gi
++            cpu: 100m
++            memory: 512Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+-        - mountPath: /data
+-          name: compactor-data
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext:
+-        runAsUser: 0
+-      terminationGracePeriodSeconds: 900
++      securityContext: {}
++      terminationGracePeriodSeconds: 240
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
+   updateStrategy:
+     type: RollingUpdate
+   volumeClaimTemplates:
+@@ -75,14 +92,13 @@
+     kind: PersistentVolumeClaim
+     metadata:
+       creationTimestamp: null
+-      name: compactor-data
++      name: storage
+     spec:
+       accessModes:
+       - ReadWriteOnce
+       resources:
+         requests:
+-          storage: 250Gi
+-      storageClassName: standard
++          storage: 2Gi
+       volumeMode: Filesystem
+     status:
+       phase: Pending
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/distributor-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/distributor-Deployment.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/distributor-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/distributor-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -2,19 +2,20 @@
+ kind: Deployment
+ metadata:
+   generation: 1
++  labels:
++    name: distributor
+   name: distributor
+   namespace: default
+ spec:
+-  minReadySeconds: 10
+   progressDeadlineSeconds: 600
+-  replicas: 3
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: distributor
+   strategy:
+     rollingUpdate:
+-      maxSurge: 5
++      maxSurge: 0
+       maxUnavailable: 1
+     type: RollingUpdate
+   template:
+@@ -28,8 +29,11 @@
+         podAntiAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+           - labelSelector:
+-              matchLabels:
+-                name: distributor
++              matchExpressions:
++              - key: target
++                operator: In
++                values:
++                - distributor
+             topologyKey: kubernetes.io/hostname
+       containers:
+       - image: grafana/mimir:2.0.0
+@@ -43,37 +47,47 @@
+           name: grpc
+           protocol: TCP
+         - containerPort: 7946
+-          name: gossip-ring
++          name: memberlist
+           protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 45
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 4Gi
+           requests:
+-            cpu: "2"
+-            memory: 2Gi
++            cpu: 100m
++            memory: 512Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+       securityContext: {}
+-      terminationGracePeriodSeconds: 30
++      terminationGracePeriodSeconds: 60
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: storage
+ status: {}
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/ingester-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/ingester-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/ingester-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/ingester-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -13,20 +13,14 @@
+   selector:
+     matchLabels:
+       name: ingester
+-  serviceName: ingester
++  serviceName: mimir-ingester-headless
+   template:
+     metadata:
+       creationTimestamp: null
+       labels:
+         name: ingester
+     spec:
+-      affinity:
+-        podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: ingester
+-            topologyKey: kubernetes.io/hostname
++      affinity: {}
+       containers:
+       - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+@@ -39,42 +33,47 @@
+           name: grpc
+           protocol: TCP
+         - containerPort: 7946
+-          name: gossip-ring
++          name: memberlist
+           protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 60
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 25Gi
+           requests:
+-            cpu: "4"
+-            memory: 15Gi
++            cpu: 100m
++            memory: 512Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+-        - mountPath: /data
+-          name: ingester-data
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext:
+-        runAsUser: 0
+-      terminationGracePeriodSeconds: 1200
++      securityContext: {}
++      terminationGracePeriodSeconds: 240
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
+   updateStrategy:
+     type: RollingUpdate
+   volumeClaimTemplates:
+@@ -82,14 +81,13 @@
+     kind: PersistentVolumeClaim
+     metadata:
+       creationTimestamp: null
+-      name: ingester-data
++      name: storage
+     spec:
+       accessModes:
+       - ReadWriteOnce
+       resources:
+         requests:
+-          storage: 100Gi
+-      storageClassName: fast
++          storage: 2Gi
+       volumeMode: Filesystem
+     status:
+       phase: Pending
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/ingester-pdb-PodDisruptionBudget.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/ingester-pdb-PodDisruptionBudget.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/ingester-pdb-PodDisruptionBudget.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/ingester-pdb-PodDisruptionBudget.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -3,7 +3,7 @@
+ metadata:
+   generation: 1
+   labels:
+-    name: ingester-pdb
++    name: ingester
+   name: ingester-pdb
+   namespace: default
+ spec:
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/memcached-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/memcached-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/memcached-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/memcached-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -6,12 +6,12 @@
+   namespace: default
+ spec:
+   podManagementPolicy: OrderedReady
+-  replicas: 3
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: memcached
+-  serviceName: memcached
++  serviceName: mimir-memcached
+   template:
+     metadata:
+       creationTimestamp: null
+@@ -20,46 +20,66 @@
+     spec:
+       affinity:
+         podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: memcached
+-            topologyKey: kubernetes.io/hostname
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - podAffinityTerm:
++              labelSelector:
++                matchLabels:
++                  app.kubernetes.io/instance: mimir
++                  app.kubernetes.io/name: memcached
++              namespaces:
++              - default
++              topologyKey: kubernetes.io/hostname
++            weight: 1
+       containers:
+-      - image: memcached:1.6.9-alpine
++      - image: docker.io/memcached:1.6.9
+         imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 6
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          tcpSocket:
++            port: memcache
++          timeoutSeconds: 5
+         name: memcached
+         ports:
+         - containerPort: 11211
+-          name: client
++          name: memcache
+           protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          tcpSocket:
++            port: memcache
++          timeoutSeconds: 3
+         resources:
+           limits:
+-            memory: 9Gi
++            memory: 9830Mi
+           requests:
+             cpu: 500m
+-            memory: 6552Mi
+-        terminationMessagePath: /dev/termination-log
+-        terminationMessagePolicy: File
+-      - args:
+-        - --memcached.address=localhost:11211
+-        - --web.listen-address=0.0.0.0:9150
+-        image: prom/memcached-exporter:v0.6.0
+-        imagePullPolicy: IfNotPresent
+-        name: exporter
+-        ports:
+-        - containerPort: 9150
+-          name: http-metrics
+-          protocol: TCP
+-        resources: {}
++            memory: 9830Mi
++        securityContext:
++          readOnlyRootFilesystem: false
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /tmp
++          name: tmp
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext: {}
++      securityContext:
++        fsGroup: 1001
++        runAsUser: 1001
+       terminationGracePeriodSeconds: 30
++      volumes:
++      - emptyDir: {}
++        name: tmp
+   updateStrategy:
++    rollingUpdate:
++      partition: 0
+     type: RollingUpdate
+ status:
+   replicas: 0
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/memcached-index-queries-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/memcached-index-queries-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/memcached-index-queries-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/memcached-index-queries-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -6,12 +6,12 @@
+   namespace: default
+ spec:
+   podManagementPolicy: OrderedReady
+-  replicas: 3
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: memcached-index-queries
+-  serviceName: memcached-index-queries
++  serviceName: mimir-memcached-queries
+   template:
+     metadata:
+       creationTimestamp: null
+@@ -20,46 +20,66 @@
+     spec:
+       affinity:
+         podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: memcached-index-queries
+-            topologyKey: kubernetes.io/hostname
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - podAffinityTerm:
++              labelSelector:
++                matchLabels:
++                  app.kubernetes.io/instance: mimir
++                  app.kubernetes.io/name: memcached-queries
++              namespaces:
++              - default
++              topologyKey: kubernetes.io/hostname
++            weight: 1
+       containers:
+-      - image: memcached:1.6.9-alpine
++      - image: docker.io/memcached:1.6.9
+         imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 6
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          tcpSocket:
++            port: memcache
++          timeoutSeconds: 5
+         name: memcached
+         ports:
+         - containerPort: 11211
+-          name: client
++          name: memcache
+           protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          tcpSocket:
++            port: memcache
++          timeoutSeconds: 3
+         resources:
+           limits:
+-            memory: 1536Mi
++            memory: 2457Mi
+           requests:
+             cpu: 500m
+-            memory: 1329Mi
+-        terminationMessagePath: /dev/termination-log
+-        terminationMessagePolicy: File
+-      - args:
+-        - --memcached.address=localhost:11211
+-        - --web.listen-address=0.0.0.0:9150
+-        image: prom/memcached-exporter:v0.6.0
+-        imagePullPolicy: IfNotPresent
+-        name: exporter
+-        ports:
+-        - containerPort: 9150
+-          name: http-metrics
+-          protocol: TCP
+-        resources: {}
++            memory: 2457Mi
++        securityContext:
++          readOnlyRootFilesystem: false
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /tmp
++          name: tmp
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext: {}
++      securityContext:
++        fsGroup: 1001
++        runAsUser: 1001
+       terminationGracePeriodSeconds: 30
++      volumes:
++      - emptyDir: {}
++        name: tmp
+   updateStrategy:
++    rollingUpdate:
++      partition: 0
+     type: RollingUpdate
+ status:
+   replicas: 0
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/memcached-metadata-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/memcached-metadata-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/memcached-metadata-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/memcached-metadata-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -11,7 +11,7 @@
+   selector:
+     matchLabels:
+       name: memcached-metadata
+-  serviceName: memcached-metadata
++  serviceName: mimir-memcached-metadata
+   template:
+     metadata:
+       creationTimestamp: null
+@@ -20,46 +20,66 @@
+     spec:
+       affinity:
+         podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: memcached-metadata
+-            topologyKey: kubernetes.io/hostname
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - podAffinityTerm:
++              labelSelector:
++                matchLabels:
++                  app.kubernetes.io/instance: mimir
++                  app.kubernetes.io/name: memcached-metadata
++              namespaces:
++              - default
++              topologyKey: kubernetes.io/hostname
++            weight: 1
+       containers:
+-      - image: memcached:1.6.9-alpine
++      - image: docker.io/memcached:1.6.9
+         imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 6
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          tcpSocket:
++            port: memcache
++          timeoutSeconds: 5
+         name: memcached
+         ports:
+         - containerPort: 11211
+-          name: client
++          name: memcache
+           protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          tcpSocket:
++            port: memcache
++          timeoutSeconds: 3
+         resources:
+           limits:
+-            memory: 768Mi
++            memory: 614Mi
+           requests:
+             cpu: 500m
+-            memory: 715Mi
+-        terminationMessagePath: /dev/termination-log
+-        terminationMessagePolicy: File
+-      - args:
+-        - --memcached.address=localhost:11211
+-        - --web.listen-address=0.0.0.0:9150
+-        image: prom/memcached-exporter:v0.6.0
+-        imagePullPolicy: IfNotPresent
+-        name: exporter
+-        ports:
+-        - containerPort: 9150
+-          name: http-metrics
+-          protocol: TCP
+-        resources: {}
++            memory: 614Mi
++        securityContext:
++          readOnlyRootFilesystem: false
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /tmp
++          name: tmp
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext: {}
++      securityContext:
++        fsGroup: 1001
++        runAsUser: 1001
+       terminationGracePeriodSeconds: 30
++      volumes:
++      - emptyDir: {}
++        name: tmp
+   updateStrategy:
++    rollingUpdate:
++      partition: 0
+     type: RollingUpdate
+ status:
+   replicas: 0
+Only in /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests: mimir-config-Secret.yaml
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/overrides-ConfigMap.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/overrides-ConfigMap.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/overrides-ConfigMap.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/overrides-ConfigMap.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -1,8 +1,11 @@
+ apiVersion: v1
+ data:
+-  overrides.yaml: |
+-    overrides: {}
++  runtime.yaml: |2
++
++    {}
+ kind: ConfigMap
+ metadata:
++  labels:
++    name: mimir
+   name: overrides
+   namespace: default
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/overrides-exporter-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/overrides-exporter-Deployment.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/overrides-exporter-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/overrides-exporter-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -7,7 +7,6 @@
+   name: overrides-exporter
+   namespace: default
+ spec:
+-  minReadySeconds: 10
+   progressDeadlineSeconds: 600
+   replicas: 1
+   revisionHistoryLimit: 10
+@@ -16,8 +15,8 @@
+       name: overrides-exporter
+   strategy:
+     rollingUpdate:
+-      maxSurge: 25%
+-      maxUnavailable: 25%
++      maxSurge: 0
++      maxUnavailable: 1
+     type: RollingUpdate
+   template:
+     metadata:
+@@ -25,41 +24,67 @@
+       labels:
+         name: overrides-exporter
+     spec:
++      affinity: {}
+       containers:
+       - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /ready
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 45
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
+         name: overrides-exporter
+         ports:
+         - containerPort: 8080
+           name: http-metrics
+           protocol: TCP
++        - containerPort: 9095
++          name: grpc
++          protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+             port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 45
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+           requests:
+-            cpu: 500m
+-            memory: 512Mi
++            cpu: 100m
++            memory: 128Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+       securityContext: {}
+-      terminationGracePeriodSeconds: 30
++      terminationGracePeriodSeconds: 60
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: storage
+ status: {}
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/querier-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/querier-Deployment.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/querier-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/querier-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -2,19 +2,20 @@
+ kind: Deployment
+ metadata:
+   generation: 1
++  labels:
++    name: querier
+   name: querier
+   namespace: default
+ spec:
+-  minReadySeconds: 10
+   progressDeadlineSeconds: 600
+-  replicas: 6
++  replicas: 2
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: querier
+   strategy:
+     rollingUpdate:
+-      maxSurge: 5
++      maxSurge: 0
+       maxUnavailable: 1
+     type: RollingUpdate
+   template:
+@@ -26,16 +27,18 @@
+     spec:
+       affinity:
+         podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: querier
+-            topologyKey: kubernetes.io/hostname
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - podAffinityTerm:
++              labelSelector:
++                matchExpressions:
++                - key: target
++                  operator: In
++                  values:
++                  - querier
++              topologyKey: kubernetes.io/hostname
++            weight: 100
+       containers:
+-      - env:
+-        - name: JAEGER_REPORTER_MAX_QUEUE_SIZE
+-          value: "1024"
+-        image: grafana/mimir:2.0.0
++      - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+         name: querier
+         ports:
+@@ -46,37 +49,47 @@
+           name: grpc
+           protocol: TCP
+         - containerPort: 7946
+-          name: gossip-ring
++          name: memberlist
+           protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 45
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 24Gi
+           requests:
+-            cpu: "1"
+-            memory: 12Gi
++            cpu: 100m
++            memory: 128Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+       securityContext: {}
+-      terminationGracePeriodSeconds: 30
++      terminationGracePeriodSeconds: 180
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: storage
+ status: {}
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/query-frontend-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/query-frontend-Deployment.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/query-frontend-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/query-frontend-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -2,19 +2,20 @@
+ kind: Deployment
+ metadata:
+   generation: 1
++  labels:
++    name: query-frontend
+   name: query-frontend
+   namespace: default
+ spec:
+-  minReadySeconds: 10
+   progressDeadlineSeconds: 600
+-  replicas: 2
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: query-frontend
+   strategy:
+     rollingUpdate:
+-      maxSurge: 1
++      maxSurge: 0
+       maxUnavailable: 1
+     type: RollingUpdate
+   template:
+@@ -25,11 +26,16 @@
+     spec:
+       affinity:
+         podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: query-frontend
+-            topologyKey: kubernetes.io/hostname
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - podAffinityTerm:
++              labelSelector:
++                matchExpressions:
++                - key: target
++                  operator: In
++                  values:
++                  - query-frontend
++              topologyKey: kubernetes.io/hostname
++            weight: 100
+       containers:
+       - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+@@ -45,31 +51,41 @@
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 45
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 1200Mi
+           requests:
+-            cpu: "2"
+-            memory: 600Mi
++            cpu: 100m
++            memory: 128Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
++        - mountPath: /var/mimir
++          name: runtime-config
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+       securityContext: {}
+-      terminationGracePeriodSeconds: 30
++      terminationGracePeriodSeconds: 180
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: storage
+ status: {}
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/ruler-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/ruler-Deployment.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/ruler-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/ruler-Deployment.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -2,12 +2,13 @@
+ kind: Deployment
+ metadata:
+   generation: 1
++  labels:
++    name: ruler
+   name: ruler
+   namespace: default
+ spec:
+-  minReadySeconds: 10
+   progressDeadlineSeconds: 600
+-  replicas: 2
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+@@ -24,13 +25,7 @@
+         gossip_ring_member: "true"
+         name: ruler
+     spec:
+-      affinity:
+-        podAntiAffinity:
+-          requiredDuringSchedulingIgnoredDuringExecution:
+-          - labelSelector:
+-              matchLabels:
+-                name: ruler
+-            topologyKey: kubernetes.io/hostname
++      affinity: {}
+       containers:
+       - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+@@ -42,36 +37,48 @@
+         - containerPort: 9095
+           name: grpc
+           protocol: TCP
++        - containerPort: 7946
++          name: memberlist
++          protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 45
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            cpu: "16"
+-            memory: 16Gi
+           requests:
+-            cpu: "1"
+-            memory: 6Gi
++            cpu: 100m
++            memory: 128Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+       securityContext: {}
+-      terminationGracePeriodSeconds: 600
++      terminationGracePeriodSeconds: 180
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: storage
+ status: {}
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/store-gateway-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/store-gateway-StatefulSet.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/store-gateway-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/store-gateway-StatefulSet.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -7,19 +7,29 @@
+   name: store-gateway
+   namespace: default
+ spec:
+-  podManagementPolicy: Parallel
+-  replicas: 3
++  podManagementPolicy: OrderedReady
++  replicas: 1
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+       name: store-gateway
+-  serviceName: store-gateway
++  serviceName: mimir-store-gateway-headless
+   template:
+     metadata:
+       creationTimestamp: null
+       labels:
+         name: store-gateway
+     spec:
++      affinity:
++        podAntiAffinity:
++          requiredDuringSchedulingIgnoredDuringExecution:
++          - labelSelector:
++              matchExpressions:
++              - key: target
++                operator: In
++                values:
++                - store-gateway
++            topologyKey: kubernetes.io/hostname
+       containers:
+       - image: grafana/mimir:2.0.0
+         imagePullPolicy: IfNotPresent
+@@ -32,42 +42,47 @@
+           name: grpc
+           protocol: TCP
+         - containerPort: 7946
+-          name: gossip-ring
++          name: memberlist
+           protocol: TCP
+         readinessProbe:
+           failureThreshold: 3
+           httpGet:
+             path: /ready
+-            port: 8080
++            port: http-metrics
+             scheme: HTTP
+-          initialDelaySeconds: 15
++          initialDelaySeconds: 60
+           periodSeconds: 10
+           successThreshold: 1
+           timeoutSeconds: 1
+         resources:
+-          limits:
+-            memory: 18Gi
+           requests:
+-            cpu: "1"
+-            memory: 12Gi
++            cpu: 100m
++            memory: 512Mi
++        securityContext:
++          readOnlyRootFilesystem: true
+         terminationMessagePath: /dev/termination-log
+         terminationMessagePolicy: File
+         volumeMounts:
+-        - mountPath: /data
+-          name: store-gateway-data
+         - mountPath: /etc/mimir
+-          name: overrides
++          name: config
++        - mountPath: /var/mimir
++          name: runtime-config
++        - mountPath: /data
++          name: storage
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+       schedulerName: default-scheduler
+-      securityContext:
+-        runAsUser: 0
+-      terminationGracePeriodSeconds: 120
++      securityContext: {}
++      terminationGracePeriodSeconds: 240
+       volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: mimir-config
+       - configMap:
+           defaultMode: 420
+-          name: overrides
+-        name: overrides
++          name: mimir-runtime
++        name: runtime-config
+   updateStrategy:
+     type: RollingUpdate
+   volumeClaimTemplates:
+@@ -75,14 +90,13 @@
+     kind: PersistentVolumeClaim
+     metadata:
+       creationTimestamp: null
+-      name: store-gateway-data
++      name: storage
+     spec:
+       accessModes:
+       - ReadWriteOnce
+       resources:
+         requests:
+-          storage: 50Gi
+-      storageClassName: standard
++          storage: 2Gi
+       volumeMode: Filesystem
+     status:
+       phase: Pending
+diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/store-gateway-pdb-PodDisruptionBudget.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/store-gateway-pdb-PodDisruptionBudget.yaml
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/manifests/store-gateway-pdb-PodDisruptionBudget.yaml	2022-05-05 16:21:18.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests/store-gateway-pdb-PodDisruptionBudget.yaml	2022-05-05 16:21:18.000000000 -0500
+@@ -3,11 +3,11 @@
+ metadata:
+   generation: 1
+   labels:
+-    name: store-gateway-pdb
++    name: store-gateway
+   name: store-gateway-pdb
+   namespace: default
+ spec:
+-  maxUnavailable: 2
++  maxUnavailable: 1
+   selector:
+     matchLabels:
+       name: store-gateway
