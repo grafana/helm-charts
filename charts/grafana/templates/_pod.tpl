@@ -423,8 +423,8 @@ containers:
       {{- range .Values.extraConfigmapMounts }}
       - name: {{ tpl .name $root }}
         mountPath: {{ tpl .mountPath $root }}
-        subPath: {{ tpl (.subPath $root) | default "" }}
-        readOnly: {{ tpl .readOnly $root }}
+        subPath: {{ (tpl .subPath $root) | default "" }}
+        readOnly: {{ .readOnly }}
       {{- end }}
       - name: storage
         mountPath: "/var/lib/grafana"
