@@ -3,7 +3,6 @@ patch_rules:
 
 - remove_field: '/spec/template/metadata/annotations'
 - remove_field: '/spec/template/spec/containers'
-- remove_field: '/spec/template/spec/volumes'
 - remove_field: '/spec/template/spec/serviceAccount'
 - remove_field: '/spec/template/spec/serviceAccountName'
 - remove_field: '/spec/template/metadata/labels/gossip_ring_member'

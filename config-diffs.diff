@@ -1,79 +1,7 @@
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-alertmanager-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-alertmanager-StatefulSet.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-alertmanager-StatefulSet.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-alertmanager-StatefulSet.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -165,7 +165,7 @@
-     max_concurrent: 100 (default)
-     meta_sync_concurrency: 20 (default)
-     metadata_cache:
--      backend: '"" (default)'
-+      backend: memcached
-       block_index_attributes_ttl: '"168h0m0s" (default)'
-       bucket_index_content_ttl: '"5m0s" (default)'
-       bucket_index_max_size_bytes: 1048576 (default)
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -516,7 +516,7 @@
-       prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -596,17 +596,18 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-alertmanager-StatefulSet.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-alertmanager-StatefulSet.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -436,12 +436,12 @@
    s3_sse_type: '"" (default)'
    store_gateway_tenant_shard_size: 0 (default)
  memberlist:
@@ -88,14 +16,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
--  join_members: []
-+  join_members:
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -627,7 +628,7 @@
+@@ -466,7 +466,7 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -104,7 +25,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -812,12 +813,12 @@
+@@ -651,12 +651,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -121,45 +42,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-compactor-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-compactor-StatefulSet.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-compactor-StatefulSet.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-compactor-StatefulSet.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -165,7 +165,7 @@
-     max_concurrent: 100 (default)
-     meta_sync_concurrency: 20 (default)
-     metadata_cache:
--      backend: '"" (default)'
-+      backend: memcached
-       block_index_attributes_ttl: '"168h0m0s" (default)'
-       bucket_index_content_ttl: '"5m0s" (default)'
-       bucket_index_max_size_bytes: 1048576 (default)
-@@ -264,16 +264,16 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-compactor-StatefulSet.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-compactor-StatefulSet.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -215,16 +215,16 @@
    cleanup_concurrency: 20 (default)
    cleanup_interval: '"15m0s" (default)'
    compaction_concurrency: 1 (default)
@@ -180,12 +65,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    meta_sync_concurrency: 20 (default)
    sharding_ring:
      heartbeat_period: '"5s" (default)'
-@@ -308,12 +308,12 @@
-         mirror_timeout: '"2s" (default)'
-         primary: '"" (default)'
-         secondary: '"" (default)'
--      prefix: ""
-+      prefix: '"collectors/" (default)'
+@@ -262,8 +262,8 @@
        store: '"memberlist" (default)'
      wait_active_instance_timeout: '"10m0s" (default)'
      wait_stability_max_duration: '"5m0s" (default)'
@@ -196,43 +76,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    tenant_cleanup_delay: '"6h0m0s" (default)'
  distributor:
    extend_writes: true (default)
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -516,7 +516,7 @@
-       prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -555,7 +555,7 @@
+@@ -395,7 +395,7 @@
    compactor_blocks_retention_period: '"0s" (default)'
    compactor_split_and_merge_shards: 0 (default)
    compactor_split_groups: 1 (default)
@@ -241,7 +85,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    creation_grace_period: '"10m" (default)'
    drop_labels: []
    enforce_metadata_metric_name: true (default)
-@@ -601,13 +601,13 @@
+@@ -441,7 +441,7 @@
    advertise_port: 7946 (default)
    bind_addr: []
    bind_port: 7946 (default)
@@ -250,14 +94,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
-   join_members:
--  - gossip-ring.default.svc.cluster.local:7946
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -628,7 +628,7 @@
+@@ -466,7 +466,7 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -266,7 +103,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -813,12 +813,12 @@
+@@ -651,12 +651,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -283,45 +120,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-distributor-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-distributor-Deployment.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-distributor-Deployment.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-distributor-Deployment.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -165,7 +165,7 @@
-     max_concurrent: 100 (default)
-     meta_sync_concurrency: 20 (default)
-     metadata_cache:
--      backend: '"" (default)'
-+      backend: memcached
-       block_index_attributes_ttl: '"168h0m0s" (default)'
-       bucket_index_content_ttl: '"5m0s" (default)'
-       bucket_index_max_size_bytes: 1048576 (default)
-@@ -318,7 +318,7 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-distributor-Deployment.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-distributor-Deployment.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -268,7 +268,7 @@
  distributor:
    extend_writes: true (default)
    ha_tracker:
@@ -330,17 +131,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      ha_tracker_failover_timeout: '"30s" (default)'
      ha_tracker_update_timeout: '"15s" (default)'
      ha_tracker_update_timeout_jitter_max: '"5s" (default)'
-@@ -332,8 +332,7 @@
-         watch_rate_limit: 1 (default)
-       etcd:
-         dial_timeout: '"10s" (default)'
--        endpoints:
--        - etcd-client.default.svc.cluster.local.:2379
-+        endpoints: []
-         max_retries: 10 (default)
-         password: '"" (default)'
-         tls_ca_path: '"" (default)'
-@@ -348,7 +347,7 @@
+@@ -296,7 +296,7 @@
          mirror_timeout: '"2s" (default)'
          primary: '"" (default)'
          secondary: '"" (default)'
@@ -349,34 +140,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    instance_limits:
      max_inflight_push_requests: 2000 (default)
      max_ingestion_rate: 0 (default)
-@@ -395,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -418,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -444,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -481,7 +480,7 @@
+@@ -379,7 +379,7 @@
      excluded_zones: '"" (default)'
      final_sleep: '"0s" (default)'
      heartbeat_period: '"5s" (default)'
@@ -385,20 +149,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      instance_addr: '"" (default)'
      instance_availability_zone: '"" (default)'
      instance_id: '"docker" (default)'
-@@ -514,10 +513,10 @@
-         mirror_timeout: '"2s" (default)'
-         primary: '"" (default)'
-         secondary: '"" (default)'
--      prefix: ""
-+      prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -542,7 +541,7 @@
+@@ -438,7 +438,7 @@
      tls_key_path: '"" (default)'
      tls_server_name: '"" (default)'
  limits:
@@ -407,7 +158,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    alertmanager_max_alerts_count: 0 (default)
    alertmanager_max_alerts_size_bytes: 0 (default)
    alertmanager_max_config_size_bytes: 0 (default)
-@@ -602,13 +601,13 @@
+@@ -498,7 +498,7 @@
    advertise_port: 7946 (default)
    bind_addr: []
    bind_port: 7946 (default)
@@ -416,14 +167,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
-   join_members:
--  - gossip-ring.default.svc.cluster.local:7946
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -629,7 +628,7 @@
+@@ -523,7 +523,7 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -432,7 +176,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -814,12 +813,12 @@
+@@ -708,12 +708,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -452,45 +196,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-ingester-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-ingester-StatefulSet.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-ingester-StatefulSet.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-ingester-StatefulSet.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -165,7 +165,7 @@
-     max_concurrent: 100 (default)
-     meta_sync_concurrency: 20 (default)
-     metadata_cache:
--      backend: '"" (default)'
-+      backend: memcached
-       block_index_attributes_ttl: '"168h0m0s" (default)'
-       bucket_index_content_ttl: '"5m0s" (default)'
-       bucket_index_max_size_bytes: 1048576 (default)
-@@ -245,7 +245,7 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-ingester-StatefulSet.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-ingester-StatefulSet.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -196,7 +196,7 @@
      head_compaction_concurrency: 5 (default)
      head_compaction_idle_timeout: '"1h0m0s" (default)'
      head_compaction_interval: '"1m0s" (default)'
@@ -499,34 +207,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      max_tsdb_opening_concurrency_on_startup: 10 (default)
      memory_snapshot_on_shutdown: false (default)
      retention_period: '"24h0m0s" (default)'
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -479,8 +479,8 @@
+@@ -378,8 +378,8 @@
    ring:
      excluded_zones: '"" (default)'
      final_sleep: '"0s" (default)'
@@ -537,13 +218,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      instance_addr: '"" (default)'
      instance_availability_zone: '"" (default)'
      instance_id: '"docker" (default)'
-@@ -513,12 +513,12 @@
-         mirror_timeout: '"2s" (default)'
-         primary: '"" (default)'
-         secondary: '"" (default)'
--      prefix: ""
-+      prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
+@@ -416,7 +416,7 @@
      min_ready_duration: '"15s" (default)'
      num_tokens: 512
      observe_period: '"0s" (default)'
@@ -552,7 +227,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      replication_factor: 3 (default)
      unregister_on_shutdown: true (default)
      zone_awareness_enabled: false (default)
-@@ -601,13 +601,13 @@
+@@ -499,7 +499,7 @@
    advertise_port: 7946 (default)
    bind_addr: []
    bind_port: 7946 (default)
@@ -561,14 +236,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
-   join_members:
--  - gossip-ring.default.svc.cluster.local:7946
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -628,7 +628,7 @@
+@@ -524,7 +524,7 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -577,7 +245,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -813,12 +813,12 @@
+@@ -709,12 +709,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -594,81 +262,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-overrides-exporter-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-overrides-exporter-Deployment.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-overrides-exporter-Deployment.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-overrides-exporter-Deployment.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -165,7 +165,7 @@
-     max_concurrent: 100 (default)
-     meta_sync_concurrency: 20 (default)
-     metadata_cache:
--      backend: '"" (default)'
-+      backend: memcached
-       block_index_attributes_ttl: '"168h0m0s" (default)'
-       bucket_index_content_ttl: '"5m0s" (default)'
-       bucket_index_max_size_bytes: 1048576 (default)
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -516,7 +516,7 @@
-       prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -588,7 +588,7 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-overrides-exporter-Deployment.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-overrides-exporter-Deployment.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -428,14 +428,14 @@
    query_sharding_max_sharded_queries: 128 (default)
    query_sharding_total_shards: 16 (default)
    ruler_evaluation_delay_duration: '"0s" (default)'
@@ -677,38 +273,15 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    ruler_max_rules_per_rule_group: 20 (default)
    ruler_tenant_shard_size: 0 (default)
    s3_sse_kms_encryption_context: '"" (default)'
-@@ -596,17 +596,18 @@
+   s3_sse_kms_key_id: '"" (default)'
    s3_sse_type: '"" (default)'
    store_gateway_tenant_shard_size: 0 (default)
- memberlist:
--  abort_if_cluster_join_fails: true (default)
-+  abort_if_cluster_join_fails: false
-   advertise_addr: '"" (default)'
-   advertise_port: 7946 (default)
-   bind_addr: []
-   bind_port: 7946 (default)
--  compression_enabled: true (default)
-+  compression_enabled: false
-   dead_node_reclaim_time: '"0s" (default)'
-   gossip_interval: '"200ms" (default)'
-   gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
--  join_members: []
-+  join_members:
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -627,7 +628,7 @@
-   tls_insecure_skip_verify: false (default)
-   tls_key_path: '"" (default)'
-   tls_server_name: '"" (default)'
 -multitenancy_enabled: true (default)
 +multitenancy_enabled: false
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -812,12 +813,12 @@
+@@ -620,12 +620,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -725,85 +298,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-querier-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-querier-Deployment.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-querier-Deployment.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-querier-Deployment.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-querier-Deployment.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-querier-Deployment.yaml	2022-05-06 14:05:51.000000000 -0500
 @@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: query-frontend-discovery.default.svc.cluster.local:9095
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -480,7 +480,7 @@
-     excluded_zones: '"" (default)'
-     final_sleep: '"0s" (default)'
-     heartbeat_period: '"5s" (default)'
--    heartbeat_timeout: 10m0s
-+    heartbeat_timeout: '"1m0s" (default)'
-     instance_addr: '"" (default)'
-     instance_availability_zone: '"" (default)'
-     instance_id: '"docker" (default)'
-@@ -513,10 +513,10 @@
-         mirror_timeout: '"2s" (default)'
-         primary: '"" (default)'
-         secondary: '"" (default)'
--      prefix: ""
-+      prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -582,7 +582,7 @@
    max_labels_query_length: '"0s" (default)'
    max_metadata_length: 1024 (default)
    max_queriers_per_tenant: 0 (default)
@@ -812,7 +309,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    max_query_lookback: '"0s" (default)'
    max_query_parallelism: 14 (default)
    query_sharding_max_sharded_queries: 128 (default)
-@@ -601,13 +601,13 @@
+@@ -462,7 +462,7 @@
    advertise_port: 7946 (default)
    bind_addr: []
    bind_port: 7946 (default)
@@ -821,14 +318,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
-   join_members:
--  - gossip-ring.default.svc.cluster.local:7946
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -628,18 +628,18 @@
+@@ -487,18 +487,18 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -850,7 +340,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    shuffle_sharding_ingesters_lookback_period: '"0s" (default)'
    store_gateway_client:
      tls_ca_path: '"" (default)'
-@@ -813,12 +813,12 @@
+@@ -672,12 +672,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -866,7 +356,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_min_time_between_pings: '"10s" (default)'
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
-@@ -833,7 +833,7 @@
+@@ -692,7 +692,7 @@
    http_path_prefix: '"" (default)'
    http_server_idle_timeout: '"2m0s" (default)'
    http_server_read_timeout: '"30s" (default)'
@@ -876,45 +366,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      cert_file: '"" (default)'
      client_auth_type: '"" (default)'
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-query-frontend-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-query-frontend-Deployment.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-query-frontend-Deployment.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-query-frontend-Deployment.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -165,7 +165,7 @@
-     max_concurrent: 100 (default)
-     meta_sync_concurrency: 20 (default)
-     metadata_cache:
--      backend: '"" (default)'
-+      backend: memcached
-       block_index_attributes_ttl: '"168h0m0s" (default)'
-       bucket_index_content_ttl: '"5m0s" (default)'
-       bucket_index_max_size_bytes: 1048576 (default)
-@@ -394,8 +394,8 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-query-frontend-Deployment.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-query-frontend-Deployment.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -343,8 +343,8 @@
    exit_after_flush: true (default)
  frontend:
    address: '"" (default)'
@@ -925,7 +379,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    cache_unaligned_requests: false (default)
    downstream_url: '"" (default)'
    grpc_client_config:
-@@ -417,7 +417,7 @@
+@@ -366,7 +366,7 @@
      tls_server_name: '"" (default)'
    instance_interface_names:
    - '"eth0" (default)'
@@ -934,7 +388,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    max_body_size: 10485760 (default)
    max_outstanding_per_tenant: 100 (default)
    max_retries: 5 (default)
-@@ -426,24 +426,24 @@
+@@ -375,7 +375,7 @@
    querier_forget_delay: '"0s" (default)'
    query_stats_enabled: true (default)
    results_cache:
@@ -942,11 +396,8 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
 +    backend: '"" (default)'
      compression: '"" (default)'
      memcached:
--      addresses: dnssrvnoa+memcached-frontend.default.svc.cluster.local:11211
-+      addresses: '"" (default)'
        max_async_buffer_size: 25000 (default)
-       max_async_concurrency: 50 (default)
-       max_get_multi_batch_size: 100 (default)
+@@ -384,7 +384,7 @@
        max_get_multi_concurrency: 100 (default)
        max_idle_connections: 100 (default)
        max_item_size: 1048576 (default)
@@ -955,24 +406,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    scheduler_address: '"" (default)'
    scheduler_dns_lookup_period: '"10s" (default)'
    scheduler_worker_concurrency: 5 (default)
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -516,7 +516,7 @@
-       prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -567,7 +567,7 @@
+@@ -455,7 +455,7 @@
    ingestion_tenant_shard_size: 0 (default)
    label_names_and_values_results_max_size_bytes: 419430400 (default)
    label_values_max_cardinality_label_names_per_request: 100 (default)
@@ -981,7 +415,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    max_fetched_chunk_bytes_per_query: 0 (default)
    max_fetched_chunks_per_query: 2000000 (default)
    max_fetched_series_per_query: 0 (default)
-@@ -582,7 +582,7 @@
+@@ -470,7 +470,7 @@
    max_labels_query_length: '"0s" (default)'
    max_metadata_length: 1024 (default)
    max_queriers_per_tenant: 0 (default)
@@ -990,38 +424,16 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    max_query_lookback: '"0s" (default)'
    max_query_parallelism: 14 (default)
    query_sharding_max_sharded_queries: 128 (default)
-@@ -596,17 +596,18 @@
+@@ -483,7 +483,7 @@
+   s3_sse_kms_key_id: '"" (default)'
    s3_sse_type: '"" (default)'
    store_gateway_tenant_shard_size: 0 (default)
- memberlist:
--  abort_if_cluster_join_fails: true (default)
-+  abort_if_cluster_join_fails: false
-   advertise_addr: '"" (default)'
-   advertise_port: 7946 (default)
-   bind_addr: []
-   bind_port: 7946 (default)
--  compression_enabled: true (default)
-+  compression_enabled: false
-   dead_node_reclaim_time: '"0s" (default)'
-   gossip_interval: '"200ms" (default)'
-   gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
--  join_members: []
-+  join_members:
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -627,7 +628,7 @@
-   tls_insecure_skip_verify: false (default)
-   tls_key_path: '"" (default)'
-   tls_server_name: '"" (default)'
 -multitenancy_enabled: true (default)
 +multitenancy_enabled: false
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -812,12 +813,12 @@
+@@ -668,12 +668,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -1036,7 +448,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_min_time_between_pings: '"10s" (default)'
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
-@@ -832,7 +833,7 @@
+@@ -688,7 +688,7 @@
    http_path_prefix: '"" (default)'
    http_server_idle_timeout: '"2m0s" (default)'
    http_server_read_timeout: '"30s" (default)'
@@ -1046,63 +458,9 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      cert_file: '"" (default)'
      client_auth_type: '"" (default)'
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-ruler-Deployment.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-ruler-Deployment.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-ruler-Deployment.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-ruler-Deployment.yaml	2022-05-05 16:13:44.000000000 -0500
-@@ -132,7 +132,7 @@
-     chunks_cache:
-       attributes_in_memory_max_items: 0 (default)
-       attributes_ttl: '"168h0m0s" (default)'
--      backend: '"" (default)'
-+      backend: memcached
-       max_get_range_requests: 3 (default)
-       memcached:
-         max_async_buffer_size: 25000 (default)
-@@ -148,7 +148,7 @@
-     ignore_blocks_within: '"0s" (default)'
-     ignore_deletion_mark_delay: '"1h0m0s" (default)'
-     index_cache:
--      backend: '"inmemory" (default)'
-+      backend: memcached
-       inmemory:
-         max_size_bytes: 1073741824 (default)
-       memcached:
-@@ -157,7 +157,7 @@
-         max_get_multi_batch_size: 100 (default)
-         max_get_multi_concurrency: 100 (default)
-         max_idle_connections: 100 (default)
--        max_item_size: 1048576 (default)
-+        max_item_size: 15728640
-         timeout: '"200ms" (default)'
-     index_header_lazy_loading_enabled: true (default)
-     index_header_lazy_loading_idle_timeout: '"1h0m0s" (default)'
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -480,7 +480,7 @@
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-ruler-Deployment.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-ruler-Deployment.yaml	2022-05-06 14:05:51.000000000 -0500
+@@ -400,7 +400,7 @@
      excluded_zones: '"" (default)'
      final_sleep: '"0s" (default)'
      heartbeat_period: '"5s" (default)'
@@ -1111,20 +469,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      instance_addr: '"" (default)'
      instance_availability_zone: '"" (default)'
      instance_id: '"docker" (default)'
-@@ -513,10 +513,10 @@
-         mirror_timeout: '"2s" (default)'
-         primary: '"" (default)'
-         secondary: '"" (default)'
--      prefix: ""
-+      prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -582,13 +582,13 @@
+@@ -500,13 +500,13 @@
    max_labels_query_length: '"0s" (default)'
    max_metadata_length: 1024 (default)
    max_queriers_per_tenant: 0 (default)
@@ -1140,7 +485,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    ruler_max_rules_per_rule_group: 20 (default)
    ruler_tenant_shard_size: 0 (default)
    s3_sse_kms_encryption_context: '"" (default)'
-@@ -601,13 +601,13 @@
+@@ -519,7 +519,7 @@
    advertise_port: 7946 (default)
    bind_addr: []
    bind_port: 7946 (default)
@@ -1149,14 +494,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
-   join_members:
--  - gossip-ring.default.svc.cluster.local:7946
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -628,7 +628,7 @@
+@@ -544,7 +544,7 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -1165,7 +503,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -639,7 +639,7 @@
+@@ -555,7 +555,7 @@
    max_query_into_future: '"10m0s" (default)'
    max_samples: 50000000 (default)
    query_ingesters_within: '"13h0m0s" (default)'
@@ -1174,7 +512,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    shuffle_sharding_ingesters_lookback_period: '"0s" (default)'
    store_gateway_client:
      tls_ca_path: '"" (default)'
-@@ -813,12 +813,12 @@
+@@ -729,12 +729,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -1191,8 +529,8 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
 diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-store-gateway-StatefulSet.yaml /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-store-gateway-StatefulSet.yaml
---- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-store-gateway-StatefulSet.yaml	2022-05-05 16:13:47.000000000 -0500
-+++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-store-gateway-StatefulSet.yaml	2022-05-05 16:13:44.000000000 -0500
+--- /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/jsonnet-patched/config/config-store-gateway-StatefulSet.yaml	2022-05-06 14:05:54.000000000 -0500
++++ /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/config/config-store-gateway-StatefulSet.yaml	2022-05-06 14:05:51.000000000 -0500
 @@ -130,7 +130,7 @@
      chunk_pool_max_bucket_size_bytes: 50000000 (default)
      chunk_pool_min_bucket_size_bytes: 16000 (default)
@@ -1225,43 +563,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      max_concurrent: 100 (default)
      meta_sync_concurrency: 20 (default)
      metadata_cache:
-@@ -394,7 +394,7 @@
-   exit_after_flush: true (default)
- frontend:
-   address: '"" (default)'
--  align_queries_with_step: false (default)
-+  align_queries_with_step: true
-   cache_results: false (default)
-   cache_unaligned_requests: false (default)
-   downstream_url: '"" (default)'
-@@ -417,7 +417,7 @@
-     tls_server_name: '"" (default)'
-   instance_interface_names:
-   - '"eth0" (default)'
--  log_queries_longer_than: '"0s" (default)'
-+  log_queries_longer_than: 10s
-   max_body_size: 10485760 (default)
-   max_outstanding_per_tenant: 100 (default)
-   max_retries: 5 (default)
-@@ -443,7 +443,7 @@
-   split_queries_by_interval: '"24h0m0s" (default)'
- frontend_worker:
-   dns_lookup_duration: '"10s" (default)'
--  frontend_address: '"" (default)'
-+  frontend_address: mimir-query-frontend-headless.default.svc:9095
-   grpc_client_config:
-     backoff_config:
-       max_period: '"10s" (default)'
-@@ -516,7 +516,7 @@
-       prefix: '"collectors/" (default)'
-       store: '"memberlist" (default)'
-     min_ready_duration: '"15s" (default)'
--    num_tokens: 128 (default)
-+    num_tokens: 512
-     observe_period: '"0s" (default)'
-     readiness_check_ring_health: true (default)
-     replication_factor: 3 (default)
-@@ -601,13 +601,13 @@
+@@ -490,7 +490,7 @@
    advertise_port: 7946 (default)
    bind_addr: []
    bind_port: 7946 (default)
@@ -1270,14 +572,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    dead_node_reclaim_time: '"0s" (default)'
    gossip_interval: '"200ms" (default)'
    gossip_nodes: 3 (default)
-   gossip_to_dead_nodes_time: '"30s" (default)'
-   join_members:
--  - gossip-ring.default.svc.cluster.local:7946
-+  - mimir-gossip-ring
-   leave_timeout: '"5s" (default)'
-   left_ingesters_timeout: '"5m0s" (default)'
-   max_join_backoff: '"1m0s" (default)'
-@@ -628,7 +628,7 @@
+@@ -515,7 +515,7 @@
    tls_insecure_skip_verify: false (default)
    tls_key_path: '"" (default)'
    tls_server_name: '"" (default)'
@@ -1286,7 +581,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
  no_auth_tenant: '"anonymous" (default)'
  querier:
    batch_iterators: true (default)
-@@ -813,12 +813,12 @@
+@@ -700,12 +700,12 @@
    grpc_listen_port: 9095 (default)
    grpc_server_keepalive_time: '"2h0m0s" (default)'
    grpc_server_keepalive_timeout: '"20s" (default)'
@@ -1302,7 +597,7 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
    grpc_server_min_time_between_pings: '"10s" (default)'
    grpc_server_ping_without_stream_allowed: true (default)
    grpc_tls_config:
-@@ -884,7 +884,7 @@
+@@ -771,7 +771,7 @@
      replication_factor: 3 (default)
      unregister_on_shutdown: true (default)
      wait_stability_max_duration: '"5m0s" (default)'
@@ -1311,4 +606,3 @@ diff -r -u /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/
      zone_awareness_enabled: false (default)
  target: store-gateway
  tenant_federation:
-Only in /Users/patrickoyarzun/workspace/helm-charts/charts/mimir-distributed/scripts/../k8s-diff/rendered-manifests/helm-patched/manifests: mimir-config-Secret.yaml

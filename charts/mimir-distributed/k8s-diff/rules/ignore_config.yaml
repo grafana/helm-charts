@@ -1,0 +1,79 @@
+---
+patch_rules:
+
+# filepath-related (doesn't impact functionality)
+- remove_field: /activity_tracker/filepath
+- remove_field: /alertmanager/data_dir
+- remove_field: /blocks_storage/bucket_store/sync_dir
+- remove_field: /blocks_storage/tsdb/dir
+- remove_field: /compactor/data_dir
+- remove_field: /ingester/ring/tokens_file_path
+- remove_field: /ruler/rule_path
+- remove_field: /runtime_config/file
+- remove_field: /store_gateway/sharding_ring/tokens_file_path
+
+# hostnames (doesn't impact functionality)
+- remove_field: /alertmanager/external_url
+- remove_field: /ruler/alertmanager_url
+- remove_field: /blocks_storage/bucket_store/metadata_cache/memcached/addresses
+- remove_field: /frontend/results_cache/memcached/addresses
+- remove_field: /blocks_storage/bucket_store/index_cache/memcached/addresses
+- remove_field: /blocks_storage/bucket_store/chunks_cache/memcached/addresses
+- remove_field: /distributor/ha_tracker/kvstore/etcd/endpoints
+- remove_field: /frontend_worker/frontend_address
+- remove_field: /memberlist/join_members
+
+# object store configuration
+- remove_field: /alertmanager_storage/backend
+- remove_field: /alertmanager_storage/gcs/bucket_name
+- remove_field: /blocks_storage/backend
+- remove_field: /blocks_storage/gcs/bucket_name
+- remove_field: /ruler_storage/backend
+- remove_field: /ruler_storage/gcs/bucket_name
+
+# ring configuration
+- remove_field: /distributor/ha_tracker/kvstore/prefix
+- remove_field: /distributor/ring/kvstore/prefix
+- remove_field: /ingester/ring/kvstore/prefix
+- remove_field: /store_gateway/sharding_ring/kvstore/prefix
+- remove_field: /compactor/sharding_ring/kvstore/prefix
+
+# Jsonnet alertmanager uses consul for ring instead of memberlist
+- remove_field: /alertmanager/sharding_ring/kvstore/consul/host
+- remove_field: /alertmanager/sharding_ring/kvstore/store
+
+## VVVVVVVVVV Potential Important Things VVVVVVVVVVVVVVVV
+
+
+# Cache configuration on irrelevant components
+- name: "Index cache is used by store-gateway only"
+  /target: [alertmanager, compactor, distributor, ingester, overrides-exporter, querier, ruler, query-frontend]
+  remove_field: /blocks_storage/bucket_store/index_cache
+
+- name: "Chunk pool is used by store-gateway only"
+  /target: [alertmanager, compactor, distributor, ingester, overrides-exporter, querier, ruler, query-frontend]
+  remove_field: /blocks_storage/bucket_store/max_chunk_pool_bytes
+
+- name: "Chunks cache is used by store-gateway only"
+  /target: [alertmanager, compactor, distributor, ingester, overrides-exporter, querier, ruler, query-frontend]
+  remove_field: /blocks_storage/bucket_store/chunks_cache
+
+- name: "Metadata cache is used by ruler, querier, and store-gateway only"
+  /target: [alertmanager, compactor, distributor, ingester, overrides-exporter, query-frontend]
+  remove_field: /blocks_storage/bucket_store/metadata_cache
+
+- name: "Ignore frontend configuration where irrelevant"
+  /target: [alertmanager, compactor, distributor, ingester, overrides-exporter, querier, ruler, store-gateway]
+  remove_field: /frontend
+
+- name: "Ignore ingester configuration where irrelevant"
+  /target: [alertmanager, compactor, querier, store-gateway, query-frontend, overrides-exporter]
+  remove_field: /ingester
+- name: "Ignore ingester tokens where irrelevant"
+  /target: [ruler, distributor]
+  remove_field: /ingester/ring/num_tokens
+
+- name: "Ignore memberlist configuration where irrelevant"
+  /target: [query-frontend, overrides-exporter]
+  remove_field: /memberlist
+

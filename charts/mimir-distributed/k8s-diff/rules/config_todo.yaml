@@ -1,0 +1,146 @@
+---
+patch_rules:
+
+- name: "TODO: Helm disables multitenancy"
+  remove_field: /multitenancy_enabled
+
+- name: "TODO: Helm server settings"
+  remove_field: /server/grpc_server_max_concurrent_streams
+- name: "TODO: Helm server settings"
+  remove_field: /server/grpc_server_max_recv_msg_size
+- name: "TODO: Helm server settings"
+  remove_field: /server/grpc_server_max_send_msg_size
+
+- name: "TODO: Helm disabled memberlist compression"
+  remove_field: /memberlist/compression_enabled
+
+- name: "TODO: Helm aligns queries with step"
+  /target: [query-frontend]
+  remove_field: /frontend/align_queries_with_step
+
+- name: "TODO: Helm logs long queries"
+  /target: [query-frontend]
+  remove_field: /frontend/log_queries_longer_than
+
+
+- name: "TODO: Jsonnet compactor ring stability duration"
+  /target: [compactor]
+  remove_field: /compactor/sharding_ring/wait_stability_min_duration
+
+- name: "TODO: Jsonnet store-gateway ring stability duration"
+  /target: [store-gateway]
+  remove_field: /store_gateway/sharding_ring/wait_stability_min_duration
+
+- name: "TODO: Jsonnet store-gateway ignore blocks within"
+  /target: [store-gateway]
+  remove_field: /blocks_storage/bucket_store/ignore_blocks_within
+
+- name: "TODO: Jsonnet store-gateway caches"
+  /target: [store-gateway]
+  remove_field: /blocks_storage/bucket_store/index_cache/memcached/max_item_size
+- name: "TODO: Jsonnet store-gateway caches"
+  /target: [store-gateway]
+  remove_field: /blocks_storage/bucket_store/chunks_cache/attributes_in_memory_max_items
+- name: "TODO: Jsonnet store-gateway caches"
+  /target: [store-gateway]
+  remove_field: /blocks_storage/bucket_store/max_chunk_pool_bytes
+
+- name: "TODO: Jsonnet query path parameters"
+  /target: [ruler]
+  remove_field: /querier/query_store_after
+- name: "TODO: Jsonnet query path parameters"
+  /target: [ruler, querier]
+  remove_field: /limits/max_query_length
+
+- name: "TODO: Jsonnet query path parameters"
+  /target: [querier]
+  remove_field: /querier/max_concurrent
+- name: "TODO: Jsonnet query path parameters"
+  /target: [querier]
+  remove_field: /querier/query_store_after
+
+- name: "TODO: Jsonnet query path parameters, query frontend has longer max_query_length"
+  /target: [query-frontend]
+  remove_field: /limits/max_query_length
+
+- name: "TODO: Jsonnet sets smaller ruler limits"
+  /target: [ruler, overrides-exporter]
+  remove_field: /limits/ruler_max_rule_groups_per_tenant
+
+- name: "TODO: Jsonnet sets higher ring heartbeat timeout"
+  /target: [ruler]
+  remove_field: /ingester/ring/heartbeat_timeout
+
+- name: "TODO: Jsonnet enables query frontend results cache"
+  /target: [query-frontend]
+  remove_field: /frontend/cache_results
+- name: "TODO: Jsonnet enables query frontend results cache"
+  /target: [query-frontend]
+  remove_field: /frontend/results_cache/backend
+- name: "TODO: Jsonnet enables query frontend results cache"
+  /target: [query-frontend]
+  remove_field: /frontend/results_cache/memcached/timeout
+- name: "TODO: Jsonnet enables query frontend results cache"
+  /target: [query-frontend]
+  remove_field: /limits/max_cache_freshness
+
+- name: "TODO: Jsonnet query-frontend & querier has longer server_write_timeout"
+  /target: [query-frontend, querier]
+  remove_field: /server/http_server_write_timeout
+
+- name: "TODO: Jsonnet disables query isolation (Mimir 2.1 will include this by default)"
+  /target: [ingester]
+  remove_field: /blocks_storage/tsdb/isolation_enabled
+
+- name: "TODO: Jsonnet sets different ingester ring options"
+  /target: [ingester]
+  remove_field: /ingester/ring/heartbeat_period
+- name: "TODO: Jsonnet sets different ingester ring options"
+  /target: [ingester, distributor]
+  remove_field: /ingester/ring/heartbeat_timeout
+- name: "TODO: Jsonnet sets different ingester ring options"
+  /target: [ingester]
+  remove_field: /ingester/ring/readiness_check_ring_health
+
+- name: "TODO: Jsonnet enables HA tracker"
+  /target: [distributor]
+  remove_field: /distributor/ha_tracker/enable_ha_tracker
+- name: "TODO: Jsonnet enables HA tracker"
+  /target: [distributor]
+  remove_field: /distributor/ha_tracker/kvstore/store
+- name: "TODO: Jsonnet enables HA tracker"
+  /target: [distributor]
+  remove_field: /limits/accept_ha_samples
+
+- name: "TODO: Jsonnet sets special grpc connection settings on the distributor"
+  /target: [distributor]
+  remove_field: /server/grpc_server_max_connection_age
+- name: "TODO: Jsonnet sets special grpc connection settings on the distributor"
+  /target: [distributor]
+  remove_field: /server/grpc_server_max_connection_age_grace
+- name: "TODO: Jsonnet sets special grpc connection settings on the distributor"
+  /target: [distributor]
+  remove_field: /server/grpc_server_max_connection_idle
+
+- name: "TODO: Jsonnet tunes the compactor"
+  /target: [compactor]
+  remove_field: /compactor/compaction_interval
+- name: "TODO: Jsonnet tunes the compactor"
+  /target: [compactor]
+  remove_field: /compactor/deletion_delay
+- name: "TODO: Jsonnet tunes the compactor"
+  /target: [compactor]
+  remove_field: /compactor/max_closing_blocks_concurrency
+- name: "TODO: Jsonnet tunes the compactor"
+  /target: [compactor]
+  remove_field: /compactor/max_opening_blocks_concurrency
+- name: "TODO: Jsonnet tunes the compactor"
+  /target: [compactor]
+  remove_field: /compactor/symbols_flushers_concurrency
+- name: "TODO: Jsonnet tunes the compactor"
+  /target: [compactor]
+  remove_field: /limits/compactor_tenant_shard_size
+
+- name: "TODO: Helm uses memberlist for alertmanager ring"
+  /target: [alertmanager]
+  remove_field: /memberlist

@@ -39,8 +39,8 @@ pushd "$chartDir/../../scripts/k8s-diff/cmd" >/dev/null
     go run ./yaml-patch \
         -input-dir "$helmInput" -output-dir "$helmOutput/manifests" \
         -input-dir "$jsonnetInput" -output-dir "$jsonnetOutput/manifests" \
-        -rules "$chartDir/k8s-diff/rules/ignored_objects.yaml" \
-        -rules "$chartDir/k8s-diff/rules/renames.yaml" \
+        -rules "$chartDir/k8s-diff/rules/ignore_missing_objects.yaml" \
+        -rules "$chartDir/k8s-diff/rules/fix_k8s_names.yaml" \
         -output-template "{{.metadata.name}}-{{.kind}}.yaml"
 
     # Extract the Mimir configuration from each of the manifests
@@ -52,7 +52,8 @@ pushd "$chartDir/../../scripts/k8s-diff/cmd" >/dev/null
     go run ./yaml-patch \
         -input-dir "$helmOutput/config" -output-dir "$helmOutput/config" \
         -input-dir "$jsonnetOutput/config" -output-dir "$jsonnetOutput/config" \
-        -rules "$chartDir/k8s-diff/rules/config_diffs.yaml"
+        -rules "$chartDir/k8s-diff/rules/ignore_config.yaml" \
+        -rules "$chartDir/k8s-diff/rules/config_todo.yaml"
 
     # Finally, remove any values matching the defaults
     # These are not useful for comparison since they have no effect
@@ -65,12 +66,12 @@ pushd "$chartDir/../../scripts/k8s-diff/cmd" >/dev/null
     go run ./yaml-patch \
         -input-dir "$helmOutput/manifests" -output-dir "$helmOutput/manifests" \
         -input-dir "$jsonnetOutput/manifests" -output-dir "$jsonnetOutput/manifests" \
-        -rules "$chartDir/k8s-diff/rules/helm_labels.yaml" \
-        -rules "$chartDir/k8s-diff/rules/memberlist.yaml" \
-        -rules "$chartDir/k8s-diff/rules/memcached.yaml" \
-        -rules "$chartDir/k8s-diff/rules/services.yaml" \
-        -rules "$chartDir/k8s-diff/rules/ignored_for_config_diff.yaml" \
-        -rules "$chartDir/k8s-diff/rules/ignored_fields.yaml"
+        -rules "$chartDir/k8s-diff/rules/fix_labels.yaml" \
+        -rules "$chartDir/k8s-diff/rules/fix_memberlist.yaml" \
+        -rules "$chartDir/k8s-diff/rules/fix_memcached.yaml" \
+        -rules "$chartDir/k8s-diff/rules/fix_services.yaml" \
+        -rules "$chartDir/k8s-diff/rules/ignore_config_file.yaml" \
+        -rules "$chartDir/k8s-diff/rules/ignore_k8s.yaml"
 popd >/dev/null 
 
 diff -r -u "$chartDir/k8s-diff/rendered-manifests/jsonnet-patched" "$chartDir/k8s-diff/rendered-manifests/helm-patched"
