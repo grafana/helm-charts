@@ -656,7 +656,7 @@ volumes:
 {{- if and .Values.persistence.enabled (eq .Values.persistence.type "pvc") }}
   - name: storage
     persistentVolumeClaim:
-      claimName: {{ tpl (.Values.persistence.existingClaim .) | default (include "grafana.fullname" .) }}
+      claimName: {{ tpl (default .Values.persistence.existingClaim (include "grafana.fullname" .)) . }}
 {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
 # nothing
 {{- else }}
