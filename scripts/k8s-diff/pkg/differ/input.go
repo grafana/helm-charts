@@ -63,7 +63,12 @@ func WriteStateToDirectory(objects []*YamlObject, path, outputTemplate string) e
 		}
 	}
 
-	err := os.MkdirAll(path, 0755)
+	err := os.RemoveAll(path)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+
+	err = os.MkdirAll(path, 0755)
 	if err != nil {
 		return err
 	}

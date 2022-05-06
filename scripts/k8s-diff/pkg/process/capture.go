@@ -46,7 +46,7 @@ func RunMimirAndCaptureConfigOutput(pc ProcessConfiguration, source string) (*di
 	}
 
 	finalArgs := []string{}
-	finalArgs = append(finalArgs, "run", "--hostname", "docker", "-v", tmpConfigFile.Name()+":/config.yml", pc.Image)
+	finalArgs = append(finalArgs, "run", "--rm", "--hostname", "docker", "-v", tmpConfigFile.Name()+":/config.yml", pc.Image)
 	finalArgs = append(finalArgs, pc.Args...)
 	finalArgs = append(finalArgs, "-print.config", "-config.file", "/config.yml")
 
