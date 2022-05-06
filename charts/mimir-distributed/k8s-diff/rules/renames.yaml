@@ -3,11 +3,11 @@ patch_rules:
 - rename_object:
     from: 'mimir-store-gateway'
     to: 'store-gateway-pdb'
-  match_kind: 'PodDisruptionBudget'
+  /kind: ['PodDisruptionBudget']
 - rename_object:
     from: 'mimir-ingester'
     to: 'ingester-pdb'
-  match_kind: 'PodDisruptionBudget'
+  /kind: ['PodDisruptionBudget']
 
 - rename_object:
     from: 'mimir-store-gateway'

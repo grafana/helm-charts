@@ -30,9 +30,11 @@ func (r *RuleSet) Merge(other *RuleSet) {
 }
 
 func (r *RuleSet) Desugar() {
+	finalRules := make([]Json6902PatchRule, 0, len(r.PatchRules))
 	for i := range r.PatchRules {
-		r.PatchRules[i] = Desugar(r.PatchRules[i])
+		finalRules = append(finalRules, Desugar(r.PatchRules[i])...)
 	}
+	r.PatchRules = finalRules
 }
 
 type Json6902PatchRule struct {
@@ -42,10 +44,10 @@ type Json6902PatchRule struct {
 
 	// These fields exist to support syntax sugar.
 	// They are converted to the above fields when the rule is created.
-	MatchKind    string      `yaml:"match_kind,omitempty"`
-	RemoveField  string      `yaml:"remove_field,omitempty"`
-	RenameField  *RenameRule `yaml:"rename_field,omitempty"`
-	RenameObject *RenameRule `yaml:"rename_object,omitempty"`
+	RemoveField  string                   `yaml:"remove_field,omitempty"`
+	RenameField  *RenameRule              `yaml:"rename_field,omitempty"`
+	RenameObject *RenameRule              `yaml:"rename_object,omitempty"`
+	Matchers     map[string][]interface{} `yaml:",inline"`
 }
 
 type RenameRule struct {

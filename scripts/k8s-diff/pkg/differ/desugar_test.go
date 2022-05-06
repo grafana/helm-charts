@@ -11,7 +11,9 @@ func TestDesugaring(t *testing.T) {
 		rule := Json6902PatchRule{
 			RemoveField: "/spec/replicas",
 		}
-		rule = Desugar(rule)
+		rules := Desugar(rule)
+		require.Len(t, rules, 1)
+		rule = rules[0]
 
 		// We use a remove operation in the Match to check that the field exists first
 		require.Len(t, rule.Match, 1)
@@ -31,7 +33,9 @@ func TestDesugaring(t *testing.T) {
 				To:   "/metadata/labels/name",
 			},
 		}
-		rule = Desugar(rule)
+		rules := Desugar(rule)
+		require.Len(t, rules, 1)
+		rule = rules[0]
 
 		// We use a remove operation in the Match to check that the field exists first
 		require.Len(t, rule.Match, 1)
@@ -52,7 +56,9 @@ func TestDesugaring(t *testing.T) {
 				To:   "querier",
 			},
 		}
-		rule = Desugar(rule)
+		rules := Desugar(rule)
+		require.Len(t, rules, 1)
+		rule = rules[0]
 
 		// We use a test operation to find objects of the old name
 		require.Len(t, rule.Match, 1)
@@ -67,19 +73,6 @@ func TestDesugaring(t *testing.T) {
 		require.Equal(t, "querier", rule.Steps[0].Value)
 	})
 
-	t.Run("match_kind desugars to a test operation", func(t *testing.T) {
-		rule := Json6902PatchRule{
-			MatchKind: "Deployment",
-		}
-		rule = Desugar(rule)
-
-		// We use a test operation to find objects with the correct kind
-		require.Len(t, rule.Match, 1)
-		require.Equal(t, "test", rule.Match[0].Op)
-		require.Equal(t, "/kind", rule.Match[0].Path)
-		require.Equal(t, "Deployment", rule.Match[0].Value)
-	})
-
 	t.Run("complex desugaring appends to match and patch steps", func(t *testing.T) {
 		rule := Json6902PatchRule{
 			Name: "Mixed desugaring operations",
@@ -90,14 +83,18 @@ func TestDesugaring(t *testing.T) {
 				{Op: "remove", Path: "/spec/strategy"},
 			},
 
-			MatchKind: "Deployment",
+			Matchers: map[string][]interface{}{
+				"/kind": {"Deployment"},
+			},
 			RenameObject: &RenameRule{
 				From: "mimir-querier",
 				To:   "querier",
 			},
 			RemoveField: "/spec/replicas",
 		}
-		rule = Desugar(rule)
+		rules := Desugar(rule)
+		require.Len(t, rules, 1)
+		rule = rules[0]
 
 		// There should be one match operation for each of the following:
 		// - test /metadata/labels/part-of memberlist
@@ -111,5 +108,60 @@ func TestDesugaring(t *testing.T) {
 		// - replace /metadata/name querier
 		// - remove /spec/replicas
 		require.Len(t, rule.Steps, 3)
+	})
+
+	t.Run("matches are converted to tests", func(t *testing.T) {
+		rule := Json6902PatchRule{
+			Name:        "Remove a field from a specific kind",
+			RemoveField: "/spec/replicas",
+			Matchers: map[string][]interface{}{
+				"/kind": {"Deployment"},
+			},
+		}
+		rules := Desugar(rule)
+		require.Len(t, rules, 1)
+		rule = rules[0]
+
+		// We use a test operation to find objects with the correct kind
+		require.Len(t, rule.Match, 2)
+		require.Equal(t, "remove", rule.Match[0].Op)
+		require.Equal(t, "/spec/replicas", rule.Match[0].Path)
+		require.Equal(t, "test", rule.Match[1].Op)
+		require.Equal(t, "/kind", rule.Match[1].Path)
+		require.Equal(t, "Deployment", rule.Match[1].Value)
+	})
+
+	t.Run("matches on arrays are converted to multiple rules", func(t *testing.T) {
+		rule := Json6902PatchRule{
+			Name:        "Remove a field from two specific kinds",
+			RemoveField: "/spec/replicas",
+			Matchers: map[string][]interface{}{
+				"/kind": {"Deployment", "StatefulSet"},
+			},
+		}
+		rules := Desugar(rule)
+		require.Len(t, rules, 2)
+		{
+			rule = rules[0]
+
+			// We use a test operation to find objects with the correct kind
+			require.Len(t, rule.Match, 2)
+			require.Equal(t, "remove", rule.Match[0].Op)
+			require.Equal(t, "/spec/replicas", rule.Match[0].Path)
+			require.Equal(t, "test", rule.Match[1].Op)
+			require.Equal(t, "/kind", rule.Match[1].Path)
+			require.Equal(t, "Deployment", rule.Match[1].Value)
+		}
+		{
+			rule = rules[1]
+
+			// We use a test operation to find objects with the correct kind
+			require.Len(t, rule.Match, 2)
+			require.Equal(t, "remove", rule.Match[0].Op)
+			require.Equal(t, "/spec/replicas", rule.Match[0].Path)
+			require.Equal(t, "test", rule.Match[1].Op)
+			require.Equal(t, "/kind", rule.Match[1].Path)
+			require.Equal(t, "StatefulSet", rule.Match[1].Value)
+		}
 	})
 }

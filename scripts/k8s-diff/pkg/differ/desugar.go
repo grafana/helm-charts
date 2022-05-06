@@ -1,17 +1,12 @@
 package differ
 
-import "fmt"
+import (
+	"fmt"
 
-func Desugar(rule Json6902PatchRule) Json6902PatchRule {
-	if rule.MatchKind != "" {
-		rule.Match = append(rule.Match, Json6902Operation{
-			Op:    "test",
-			Path:  "/kind",
-			Value: rule.MatchKind,
-		})
-		rule.MatchKind = ""
-	}
+	"github.com/mitchellh/copystructure"
+)
 
+func Desugar(rule Json6902PatchRule) []Json6902PatchRule {
 	if rule.RenameObject != nil {
 		rule.Match = append(rule.Match, Json6902Operation{
 			Op:    "test",
@@ -60,5 +55,39 @@ func Desugar(rule Json6902PatchRule) Json6902PatchRule {
 		rule.RenameField = nil
 	}
 
-	return rule
+	finalRules := []Json6902PatchRule{rule}
+
+	for path, values := range rule.Matchers {
+		finalRules = addMatchRulesToAll(finalRules, path, values)
+	}
+
+	return finalRules
+}
+
+func addMatchRulesToAll(rules []Json6902PatchRule, path string, values []interface{}) []Json6902PatchRule {
+	output := []Json6902PatchRule{}
+
+	for _, jpr := range rules {
+		output = append(output, addMatchRules(jpr, path, values)...)
+	}
+
+	return output
+}
+
+func addMatchRules(rule Json6902PatchRule, path string, values []interface{}) []Json6902PatchRule {
+	var output = []Json6902PatchRule{}
+	for _, value := range values {
+		copy, err := copystructure.Copy(rule)
+		if err != nil {
+			panic(err)
+		}
+		newRule := copy.(Json6902PatchRule)
+		newRule.Match = append(newRule.Match, Json6902Operation{
+			Op:    "test",
+			Path:  path,
+			Value: value,
+		})
+		output = append(output, newRule)
+	}
+	return output
 }

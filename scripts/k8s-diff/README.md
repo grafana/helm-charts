@@ -157,26 +157,52 @@ Patch rules have the following structure:
 - name: string
   match: []JsonPatchOperation (optional)
   steps: []JsonPatchOperation
-  match_kind: string (optional), kubernetes Kind (e.g. Secret)
-  remove_field: string (optional), field name in jsonpatch notation (e.g. /metadata/labels/name)
+  remove_field: jsonpointer (optional), (e.g. /metadata/labels/name)
   rename_object: (optional)
     from: string, name to replace in /metadata/name
     to: string, target name
   rename_field: (optional)
-    from: string, field name in jsonpatch notation (e.g. /metadata/labels/name)
-    to: string, field name in jsonpatch notation (e.g. /metadata/labels/name)
+    from: jsonpointer (optional), (e.g. /metadata/labels/name)
+    to: jsonpointer (optional), (e.g. /metadata/labels/name)
+  <jsonpointer>: []any (optional)
 ```
 
 - `name` is meant for documentation only. It is used in the program output to communicate issues to the user.
 - `match` is a [JsonPatch](#note-about-jsonpatchoperations) value. If the patch can be successfully applied to a given object, then that object is said to "match" the patch rule. An empty `match` section will match every object.
 - `steps` is a [JsonPatch](#note-about-jsonpatchoperations) value. Any objects matching the patch rule will have this JsonPatch applied to them.
 
-The `match_kind`, `remove_field`, `rename_object`, and `rename_field` properties are all shorthand for various JsonPatchOperations. A desugaring step before rule application converts these fields into additional items in one or both of the `match` and `steps` fields. They are provided as convenient shorthands to reduce noise in the rules files. When using one of `remove_field`, `rename_object`, or `rename_field`, the `name` is optional. It will be generated according to the relevant shorthand if absent.
+The `remove_field`, `rename_object`, and `rename_field` properties are all shorthand for various JsonPatchOperations. A desugaring step before rule application converts these fields into additional items in one or both of the `match` and `steps` fields. They are provided as convenient shorthands to reduce noise in the rules files. When using one of `remove_field`, `rename_object`, or `rename_field`, the `name` is optional. It will be generated according to the relevant shorthand if absent.
 
-- `match_kind` adds an additional `test` operation to the `match` section.
 - `remove_field` adds an additional `remove` operation to both the `match` and `steps` section. Adding the `remove` operation to the `match` section ensures that the rule only applies to objects that actually have that property.
 - `rename_object` adds an additional `test` operation to the `match` section and an additional `replace` operation to the `steps` section. The end result is that any object where the `/metadata/name` field matches `rename_object.from` will be renamed to `rename_object.to`
 - `rename_field` adds an additional `remove` operation to the `match` section and an additional `move` operation to the `steps` section. The end result is that any object containing a value in the field denoted by `rename_field.from` will have that value moved to the field denoted by `rename_field.to`. This is useful to rename labels for example.
+
+The final field noted above `<jsonpointer>` allows arbitrary fields to be matched with a simple shorthand. For example:
+
+```
+- name: "Remove containers"
+  remove_field: /spec/template/spec/containers
+  /kind: ["StatefulSet", "Deployment"]
+```
+
+The above rule will match any object where `/kind` is either `StatefulSet` or `Deployment`.
+
+This can be used on multiple fields, which are AND-ed together. For example:
+
+```
+- name: "Remove containers"
+  remove_field: /spec/template/spec/containers
+  /kind: ["StatefulSet", "Deployment"]
+  /metadata/name: ["ingester", "querier"]
+```
+
+The above rule will result in 4 new rules being created, one for each combination of `/kind` and `/metadata/name`:
+
+- (/kind: StatefulSet, /metadata/name: ingester)
+- (/kind: Deployment, /metadata/name: ingester)
+- (/kind: StatefulSet, /metadata/name: querier)
+- (/kind: Deployment, /metadata/name: querier)
+
 #### Note about JsonPatchOperations
 
 Both the `match` and `steps` fields are of type []JsonPatchOperation. 
