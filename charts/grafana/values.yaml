@@ -293,7 +293,7 @@ persistence:
   ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""
   ## Name of an existing PVC. Can be templated.
-  # existingClaim:
+  existingClaim: ""
 
   ## If persistence is not enabled, this allows to mount the
   ## local storage in-memory to improve performance
