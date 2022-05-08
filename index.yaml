@@ -11459,6 +11459,23 @@ entries:
   grafana-agent-operator:
   - apiVersion: v2
     appVersion: 0.24.1
+    created: "2022-05-08T02:06:42.933071372Z"
+    description: A Helm chart for Grafana Agent Operator
+    digest: 8964ba2f3184ef183d069d549b3e71243c7ca819021a76322dd01541e7d091e1
+    home: https://grafana.com/docs/agent/latest/
+    icon: https://raw.githubusercontent.com/grafana/agent/v0.24.1/docs/assets/logo_and_name.png
+    maintainers:
+    - email: grafana-agent-team@googlegroups.com
+      name: Grafana Agent Team
+    name: grafana-agent-operator
+    sources:
+    - https://github.com/grafana/agent/tree/v0.24.1/pkg/operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-agent-operator-0.1.11/grafana-agent-operator-0.1.11.tgz
+    version: 0.1.11
+  - apiVersion: v2
+    appVersion: 0.24.1
     created: "2022-04-20T23:10:04.086654863Z"
     description: A Helm chart for Grafana Agent Operator
     digest: 83c4313df8d8d02977005469c75b9b954f5ede6ca43262b6a178ada3dbc2bdf3
@@ -22518,4 +22535,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-08T02:02:39.416107838Z"
+generated: "2022-05-08T02:06:42.942444013Z"
