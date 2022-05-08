@@ -223,8 +223,8 @@ mimir:
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
 
+# RBAC configuration
 rbac:
-  create: true
   pspEnabled: true
 
 # ServiceMonitor configuration
@@ -532,6 +532,7 @@ ingester:
   env: []
 
 overrides_exporter:
+  enabled: true
   replicas: 1
 
   annotations: {}
@@ -588,6 +589,7 @@ overrides_exporter:
   env: []
 
 ruler:
+  enabled: true
   replicas: 1
 
   service:

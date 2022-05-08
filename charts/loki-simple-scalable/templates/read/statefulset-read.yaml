@@ -41,7 +41,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.read.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: {{ include "loki.readImage" . }}
+          image: {{ include "loki.image" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
             - -config.file=/etc/loki/config/config.yaml
@@ -78,6 +78,10 @@ spec:
               mountPath: /tmp
             - name: data
               mountPath: /var/loki
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /etc/loki/license
+            {{- end}}
             {{- with .Values.read.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -106,6 +110,15 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+          {{- if .Values.useExternalLicense }}
+            secretName: {{ .Values.externalLicenseName }}
+          {{- else }}
+            secretName: enterprise-logs-license
+          {{- end }}
+        {{- end }}
         {{- with .Values.read.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

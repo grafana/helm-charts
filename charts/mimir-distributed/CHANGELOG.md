@@ -11,6 +11,22 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.14
+
+* [BUGFIX] exclude headless services from ServiceMonitors to prevent duplication of prometheus scrape targets #1308
+
+## 2.0.13
+
+* [ENHANCEMENT] Removed `rbac.create` option. #1317
+
+## 2.0.12
+
+* [ENHANCEMENT] Add memberlist named port to container spec. #1311
+
+## 2.0.11
+
+* [ENHANCEMENT] Turn `ruler` and `override-exporter` into optional components. #1304
+
 ## 2.0.10
 
 * [ENHANCEMENT] Reorder some values for consistency. #1302
