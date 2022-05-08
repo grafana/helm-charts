@@ -86,6 +86,11 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | config | string | `"multitenancy_enabled: false\nsearch_enabled: {{ .Values.search.enabled }}\ncompactor:\n  compaction:\n    block_retention: {{ .Values.compactor.config.compaction.block_retention }}\n  ring:\n    kvstore:\n      store: memberlist\ndistributor:\n  ring:\n    kvstore:\n      store: memberlist\n  receivers:\n    {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}\n    jaeger:\n      protocols:\n        {{- if .Values.traces.jaeger.thriftCompact }}\n        thrift_compact:\n          endpoint: 0.0.0.0:6831\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftBinary }}\n        thrift_binary:\n          endpoint: 0.0.0.0:6832\n        {{- end }}\n        {{- if .Values.traces.jaeger.thriftHttp }}\n        thrift_http:\n          endpoint: 0.0.0.0:14268\n        {{- end }}\n        {{- if .Values.traces.jaeger.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:14250\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.zipkin}}\n    zipkin:\n      endpoint: 0.0.0.0:9411\n    {{- end }}\n    {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}\n    otlp:\n      protocols:\n        {{- if .Values.traces.otlp.http }}\n        http:\n          endpoint: 0.0.0.0:55681\n        {{- end }}\n        {{- if .Values.traces.otlp.grpc }}\n        grpc:\n          endpoint: 0.0.0.0:4317\n        {{- end }}\n    {{- end }}\n    {{- if .Values.traces.opencensus }}\n    opencensus:\n      endpoint: 0.0.0.0:55678\n    {{- end }}\n    {{- if .Values.traces.kafka }}\n    kafka:\n      {{- toYaml .Values.traces.kafka | nindent 6 }}\n    {{- end }}\nquerier:\n  frontend_worker:\n    frontend_address: {{ include \"tempo.queryFrontendFullname\" . }}-discovery:9095\n    {{- if .Values.querier.config.frontend_worker.grpc_client_config }}\n    grpc_client_config:\n      {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}\n    {{- end }}\ningester:\n  lifecycler:\n    ring:\n      replication_factor: 1\n      kvstore:\n        store: memberlist\n    tokens_file_path: /var/tempo/tokens.json\n  {{- if .Values.ingester.config.maxBlockBytes }}\n  max_block_bytes: {{ .Values.ingester.config.maxBlockBytes }}\n  {{- end }}\n  {{- if .Values.ingester.config.maxBlockDuration }}\n  max_block_duration: {{ .Values.ingester.config.maxBlockDuration }}\n  {{- end }}\n  {{- if .Values.ingester.config.completeBlockTimeout }}\n  complete_block_timeout: {{ .Values.ingester.config.completeBlockTimeout }}\n  {{- end }}\nmemberlist:\n  abort_if_cluster_join_fails: false\n  join_members:\n    - {{ include \"tempo.fullname\" . }}-gossip-ring\noverrides:\n  {{- toYaml .Values.global_overrides | nindent 2 }}\nserver:\n  http_listen_port: {{ .Values.server.httpListenPort }}\n  log_level: {{ .Values.server.logLevel }}\n  log_format: {{ .Values.server.logFormat }}\n  grpc_server_max_recv_msg_size: {{ .Values.server.grpc_server_max_recv_msg_size }}\n  grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}\nstorage:\n  trace:\n    backend: {{.Values.storage.trace.backend}}\n    {{- if eq .Values.storage.trace.backend \"gcs\"}}\n    gcs:\n      {{- toYaml .Values.storage.trace.gcs | nindent 6}}\n    {{- end}}\n    {{- if eq .Values.storage.trace.backend \"s3\"}}\n    s3:\n      {{- toYaml .Values.storage.trace.s3 | nindent 6}}\n    {{- end}}\n    {{- if eq .Values.storage.trace.backend \"azure\"}}\n    azure:\n      {{- toYaml .Values.storage.trace.azure | nindent 6}}\n    {{- end}}\n    blocklist_poll: 5m\n    local:\n      path: /var/tempo/traces\n    wal:\n      path: /var/tempo/wal\n    cache: memcached\n    memcached:\n      consistent_hash: true\n      host: {{ include \"tempo.fullname\" . }}-memcached\n      service: memcached-client\n      timeout: 500ms\n"` |  |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
+| distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
+| distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
+| distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
+| distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
+| distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
@@ -107,6 +112,11 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
+| gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
+| gateway.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the gateway |
+| gateway.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the gateway |
+| gateway.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the gateway |
 | gateway.basicAuth.enabled | bool | `false` | Enables basic authentication for the gateway |
 | gateway.basicAuth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' |
 | gateway.basicAuth.htpasswd | string | `"{{ htpasswd (required \"'gateway.basicAuth.username' is required\" .Values.gateway.basicAuth.username) (required \"'gateway.basicAuth.password' is required\" .Values.gateway.basicAuth.password) }}"` | Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function. The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes high CPU load. |
@@ -157,7 +167,12 @@ The memcached default args are removed and should be provided manually. The sett
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
-| ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
+| ingester.annotations | object | `{}` | Annotations for ingester StatefulSet |
+| ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester |
+| ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
+| ingester.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the ingester |
+| ingester.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the ingester |
+| ingester.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the ingester |
 | ingester.config.complete_block_timeout | string | `nil` | Duration to keep blocks in the ingester after they have been flushed |
 | ingester.config.max_block_bytes | string | `nil` | Maximum size of a block before cutting it |
 | ingester.config.max_block_duration | string | `nil` | Maximum length of time before cutting a block |
@@ -224,6 +239,11 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
+| queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
+| queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
+| queryFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the query-frontend |
+| queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
