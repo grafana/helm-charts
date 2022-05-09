@@ -206,3 +206,12 @@ Create the service endpoint including port for MinIO.
 {{- printf "%s-%s.%s.svc:%s" .Release.Name "minio" .Release.Namespace (.Values.minio.service.port | toString) -}}
 {{- end -}}
 {{- end -}}
+
+{{/* Return the appropriate apiVersion for PodDisruptionBudget. */}}
+{{- define "loki.podDisruptionBudget.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">= 1.21-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "policy/v1" -}}
+  {{- else -}}
+    {{- print "policy/v1beta1" -}}
+  {{- end -}}
+{{- end -}}
