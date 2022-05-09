@@ -42,6 +42,7 @@ store-gateway multi zone pod labels
 {{- define "mimir.storeGatewayZonePodLabels" -}}
 {{- include "mimir.podLabels" (dict "ctx" . "component" "store-gateway" "memberlist" true) }}
 {{- if .Values.store_gateway.zone_aware_replication.enabled }}
+name: {{ include "mimir.storeGatewayZonename" . }}
 rollout-group: store-gateway
 zone: {{ .rolloutZoneName }}
 {{- end }}
