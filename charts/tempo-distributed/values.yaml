@@ -190,6 +190,12 @@ distributor:
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
   extraVolumes: []
+  config:
+    receivers:
+      otlp:
+        protocols:
+          # -- grpc server configuration
+          grpc: {}
 
 compactor:
   image:
@@ -445,6 +451,9 @@ config: |
           {{- if .Values.traces.otlp.grpc }}
           grpc:
             endpoint: 0.0.0.0:4317
+            {{- if .Values.distributor.config.receivers.otlp.protocols.grpc }}
+            {{- toYaml .Values.distributor.config.receivers.otlp.protocols.grpc | nindent 10 }}
+            {{- end}}
           {{- end }}
       {{- end }}
       {{- if .Values.traces.opencensus }}
