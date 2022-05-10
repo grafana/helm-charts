@@ -101,7 +101,25 @@ querier:
       cpu: 1
       memory: 12Gi
 
+ruler_querier:
+  replicas: 6
+  resources:
+    limits:
+      memory: 24Gi
+    requests:
+      cpu: 1
+      memory: 12Gi
+
 query_frontend:
+  replicas: 2
+  resources:
+    limits:
+      memory: 6Gi
+    requests:
+      cpu: 2
+      memory: 2Gi
+
+ruler_query_frontend:
   replicas: 2
   resources:
     limits:

@@ -79,6 +79,11 @@ mimir:
       enable_api: true
       rule_path: '/data'
       alertmanager_url: dnssrvnoa+http://_http-metrics._tcp.{{ template "mimir.fullname" . }}-alertmanager-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}/alertmanager
+      {{- if .Values.ruler.remoteEvaluationEnabled }}
+      # TODO(ortuman): Remote evaluation not yet supported. Waiting for grafana/mimir:2.1.0 
+      # query_frontend:
+      #  address: 'dns:///{{ template "mimir.fullname" . }}-ruler-query-frontend.{{ .Release.Namespace }}.svc:{{ include "mimir.serverGrpcListenPort" . }}'
+      {{- end }}
 
     server:
       grpc_server_max_recv_msg_size: 104857600
@@ -592,6 +597,9 @@ ruler:
   enabled: true
   replicas: 1
 
+  # Use a dedicated set of query components (ruler-query-frontend + ruler-querier) to perform rule evaluation.
+  remoteEvaluationEnabled: true
+
   service:
     annotations: {}
     labels: {}
@@ -616,6 +624,136 @@ ruler:
 
   nodeSelector: {}
   affinity: {}
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 180
+
+  tolerations: []
+  initContainers: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  env: []
+
+ruler_querier:
+  replicas: 1
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Additional ruler-querier container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - querier
+            topologyKey: 'kubernetes.io/hostname'
+
+  annotations: {}
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 180
+
+  tolerations: []
+  initContainers: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  env: []
+
+ruler_query_frontend:
+  replicas: 1
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Additional ruler-query-frontend container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs: {}
+
+  # Pod Labels
+  podLabels: {}
+
+  # Pod Annotations
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: target
+                  operator: In
+                  values:
+                    - query-frontend
+            topologyKey: 'kubernetes.io/hostname'
+
   annotations: {}
   persistence:
     subPath:

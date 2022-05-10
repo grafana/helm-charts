@@ -1,0 +1,15 @@
+{{- if .Values.ruler.remoteEvaluationEnabled -}}
+{{- if .Values.ruler_querier.podDisruptionBudget -}}
+apiVersion: {{ include "mimir.podDisruptionBudget.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "ruler-querier") }}
+  labels:
+    {{- include "mimir.labels" (dict "ctx" . "component" "ruler-querier" "memberlist" true) | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "ruler-querier" "memberlist" true) | nindent 6 }}
+{{ toYaml .Values.ruler_querier.podDisruptionBudget | indent 2 }}
+{{- end -}}
+{{- end -}}

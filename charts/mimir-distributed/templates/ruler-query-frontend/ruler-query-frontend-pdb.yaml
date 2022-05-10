@@ -1,0 +1,15 @@
+{{- if .Values.ruler.remoteEvaluationEnabled -}}
+{{- if .Values.ruler_query_frontend.podDisruptionBudget -}}
+apiVersion: {{ include "mimir.podDisruptionBudget.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "mimir.resourceName" (dict "ctx" . "component" "ruler-query-frontend") }}
+  labels:
+    {{- include "mimir.labels" (dict "ctx" . "component" "ruler-query-frontend") | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mimir.selectorLabels" (dict "ctx" . "component" "ruler-query-frontend") | nindent 6 }}
+{{ toYaml .Values.ruler_query_frontend.podDisruptionBudget | indent 2 }}
+{{- end -}}
+{{- end -}}
