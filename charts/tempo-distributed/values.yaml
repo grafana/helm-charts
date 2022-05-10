@@ -194,8 +194,9 @@ distributor:
     receivers:
       otlp:
         protocols:
-          # -- grpc server configuration
+          # -- OTLP Receiver advanced configuration
           grpc: {}
+          http: {}
 
 compactor:
   image:
@@ -447,6 +448,9 @@ config: |
           {{- if .Values.traces.otlp.http }}
           http:
             endpoint: 0.0.0.0:55681
+            {{- if .Values.distributor.config.receivers.otlp.protocols.http }}
+            {{- toYaml .Values.distributor.config.receivers.otlp.protocols.http | nindent 10 }}
+            {{- end}}
           {{- end }}
           {{- if .Values.traces.otlp.grpc }}
           grpc:
