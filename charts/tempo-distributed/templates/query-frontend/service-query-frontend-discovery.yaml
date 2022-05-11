@@ -20,6 +20,10 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
+    - name: grpclb
+      port: 9096
+      protocol: TCP
+      targetPort: grpc
     - name: tempo-query-jaeger-ui
       port: 16686
       targetPort: 16686
