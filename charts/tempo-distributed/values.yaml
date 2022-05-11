@@ -217,7 +217,7 @@ distributor:
     receivers:
       otlp:
         protocols:
-          # -- OTLP Receiver advanced configuration
+          # -- OTLP receiver advanced configuration
           grpc: {}
           http: {}
 
