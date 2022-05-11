@@ -63,6 +63,17 @@ ingester:
   annotations: {}
   # -- Number of replicas for the ingester
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -131,9 +142,21 @@ ingester:
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
 
+# Configuration for the distributor
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the distributor
+    enabled: false
+    # -- Minimum autoscaling replicas for the distributor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the distributor
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the distributor
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the distributor
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -322,6 +345,17 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the query-frontend
+    enabled: false
+    # -- Minimum autoscaling replicas for the query-frontend
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the query-frontend
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the query-frontend
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the query-frontend
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
     registry: null
@@ -676,6 +710,17 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the gateway
+    enabled: false
+    # -- Minimum autoscaling replicas for the gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the gateway
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the gateway
+    targetMemoryUtilizationPercentage:
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
   image:

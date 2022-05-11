@@ -37,7 +37,7 @@ initContainers:
       - name: storage
         mountPath: "/var/lib/grafana"
 {{- if .Values.persistence.subPath }}
-        subPath: {{ .Values.persistence.subPath }}
+        subPath: {{ tpl .Values.persistence.subPath . }}
 {{- end }}
 {{- end }}
 {{- if .Values.dashboards }}
@@ -69,7 +69,7 @@ initContainers:
       - name: storage
         mountPath: "/var/lib/grafana"
 {{- if .Values.persistence.subPath }}
-        subPath: {{ .Values.persistence.subPath }}
+        subPath: {{ tpl .Values.persistence.subPath . }}
 {{- end }}
     {{- range .Values.extraSecretMounts }}
       - name: {{ .name }}
@@ -172,8 +172,9 @@ initContainers:
 {{- end }}
 {{- if .Values.image.pullSecrets }}
 imagePullSecrets:
+{{- $root := . }}
 {{- range .Values.image.pullSecrets }}
-  - name: {{ . }}
+  - name: {{ tpl . $root }}
 {{- end}}
 {{- end }}
 {{- if not .Values.enableKubeBackwardCompatibility }}
@@ -287,14 +288,14 @@ containers:
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
-            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.userKey | default "admin-user" }}
       {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.passwordKey | default "admin-password" }}
       {{- end }}
       {{- if not .Values.sidecar.datasources.skipReload }}
@@ -358,14 +359,14 @@ containers:
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
-            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.userKey | default "admin-user" }}
       {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.passwordKey | default "admin-password" }}
       {{- end }}
       {{- if not .Values.sidecar.plugins.skipReload }}
@@ -418,16 +419,17 @@ containers:
         mountPath: "/etc/grafana/ldap.toml"
         subPath: ldap.toml
       {{- end }}
+      {{- $root := . }}
       {{- range .Values.extraConfigmapMounts }}
-      - name: {{ .name }}
-        mountPath: {{ .mountPath }}
-        subPath: {{ .subPath | default "" }}
+      - name: {{ tpl .name $root }}
+        mountPath: {{ tpl .mountPath $root }}
+        subPath: {{ (tpl .subPath $root) | default "" }}
         readOnly: {{ .readOnly }}
       {{- end }}
       - name: storage
         mountPath: "/var/lib/grafana"
 {{- if .Values.persistence.subPath }}
-        subPath: {{ .Values.persistence.subPath }}
+        subPath: {{ tpl .Values.persistence.subPath . }}
 {{- end }}
 {{- if .Values.dashboards }}
 {{- range $provider, $dashboards := .Values.dashboards }}
@@ -516,14 +518,14 @@ containers:
       - name: GF_SECURITY_ADMIN_USER
         valueFrom:
           secretKeyRef:
-            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.userKey | default "admin-user" }}
       {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: GF_SECURITY_ADMIN_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: {{ .Values.admin.existingSecret | default (include "grafana.fullname" .) }}
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
             key: {{ .Values.admin.passwordKey | default "admin-password" }}
       {{- end }}
       {{- if .Values.plugins }}
@@ -605,9 +607,10 @@ containers:
 nodeSelector:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- $root := . }}
 {{- with .Values.affinity }}
 affinity:
-{{ toYaml . | indent 2 }}
+{{ tpl (toYaml .) $root | indent 2 }}
 {{- end }}
 {{- with .Values.tolerations }}
 tolerations:
@@ -617,10 +620,11 @@ volumes:
   - name: config
     configMap:
       name: {{ template "grafana.fullname" . }}
+{{- $root := . }}
 {{- range .Values.extraConfigmapMounts }}
-  - name: {{ .name }}
+  - name: {{ tpl .name $root }}
     configMap:
-      name: {{ .configMap }}
+      name: {{ tpl .configMap $root }}
 {{- end }}
   {{- if .Values.dashboards }}
     {{- range (keys .Values.dashboards | sortAlpha) }}
@@ -652,7 +656,7 @@ volumes:
 {{- if and .Values.persistence.enabled (eq .Values.persistence.type "pvc") }}
   - name: storage
     persistentVolumeClaim:
-      claimName: {{ .Values.persistence.existingClaim | default (include "grafana.fullname" .) }}
+      claimName: {{ tpl (.Values.persistence.existingClaim | default (include "grafana.fullname" .)) . }}
 {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
 # nothing
 {{- else }}
