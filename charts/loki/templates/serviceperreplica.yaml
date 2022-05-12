@@ -1,0 +1,51 @@
+{{- if and .Values.servicePerReplica.enabled }}
+{{- $count := .Values.replicas | int -}}
+{{- $serviceValues := .Values.servicePerReplica -}}
+{{- range $i, $e := until $count }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "loki.fullname" $ }}-{{ $i }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ template "loki.name" $ }}
+    chart: {{ template "loki.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    {{- with $serviceValues.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- toYaml $serviceValues.annotations | nindent 4 }}
+spec:
+  type: {{ $serviceValues.type }}
+{{- if (and (eq $serviceValues.type "ClusterIP") (not (empty $serviceValues.clusterIP))) }}
+  clusterIP: {{ $serviceValues.clusterIP }}
+{{- end }}
+{{- if (and (eq $serviceValues.type "LoadBalancer") (not (empty $serviceValues.loadBalancerIP))) }}
+  loadBalancerIP: {{ $serviceValues.loadBalancerIP }}
+{{- end }}
+{{- if $serviceValues.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := $serviceValues.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+  {{- end }}
+{{- end }}
+  ports:
+    - port: {{ $serviceValues.port }}
+      protocol: TCP
+      name: http-metrics
+      targetPort: {{ $serviceValues.targetPort }}
+{{- if (and (eq $serviceValues.type "NodePort") (not (empty $serviceValues.nodePort))) }}
+      nodePort: {{ $serviceValues.nodePort }}
+{{- end }}
+{{- if $.Values.extraPorts }}
+{{ toYaml $.Values.extraPorts | indent 4}}
+{{- end }}
+  selector:
+    app: {{ template "loki.name" $ }}
+    release: {{ $.Release.Name }}
+    statefulset.kubernetes.io/pod-name: {{ template "loki.fullname" $ }}-{{ $i }}
+{{- end }}
+{{- end }}
