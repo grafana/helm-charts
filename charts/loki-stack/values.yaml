@@ -1,6 +1,7 @@
 loki:
   enabled: true
   isDefault: true
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
 
 promtail:
   enabled: true
@@ -22,6 +23,7 @@ grafana:
 prometheus:
   enabled: false
   isDefault: false
+  url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
 
 filebeat:
   enabled: false
