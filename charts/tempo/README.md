@@ -64,7 +64,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
-| tempoQuery.tag | string | `"1.0.1"` |  |
+| tempoQuery.tag | string | `"1.4.1"` |  |
 | tolerations | list | `[]` |  |
 
 ## Chart Repo
