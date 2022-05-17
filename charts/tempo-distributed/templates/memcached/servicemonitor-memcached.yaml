@@ -4,7 +4,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "tempo.fullname" $ }}-memcached
+  name: {{ template "tempo.memcachedFullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
