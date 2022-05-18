@@ -213,13 +213,6 @@ distributor:
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
   extraVolumes: []
-  config:
-    receivers:
-      otlp:
-        protocols:
-          # -- OTLP receiver advanced configuration
-          grpc: {}
-          http: {}
 
 compactor:
   image:
@@ -429,10 +422,16 @@ traces:
   # -- Enable Tempo to ingest Zipkin traces
   zipkin: false
   otlp:
-    # -- Enable Tempo to ingest Open Telemetry HTTP traces
-    http: false
-    # -- Enable Tempo to ingest Open Telemetry GRPC traces
-    grpc: false
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: false
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: false
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
   # -- Enable Tempo to ingest Open Census traces
   opencensus: false
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
@@ -476,22 +475,18 @@ config: |
       zipkin:
         endpoint: 0.0.0.0:9411
       {{- end }}
-      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+      {{- if or (.Values.traces.otlp.http.enabled) (.Values.traces.otlp.grpc.enabled) }}
       otlp:
         protocols:
-          {{- if .Values.traces.otlp.http }}
+          {{- if .Values.traces.otlp.http.enabled }}
           http:
-            endpoint: 0.0.0.0:55681
-            {{- if .Values.distributor.config.receivers.otlp.protocols.http }}
-            {{- toYaml .Values.distributor.config.receivers.otlp.protocols.http | nindent 10 }}
-            {{- end}}
+            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55681") .Values.traces.otlp.http.receiverConfig }}
+            {{- toYaml $mergedOtlpHttpReceiverConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.otlp.grpc }}
+          {{- if .Values.traces.otlp.grpc.enabled }}
           grpc:
-            endpoint: 0.0.0.0:4317
-            {{- if .Values.distributor.config.receivers.otlp.protocols.grpc }}
-            {{- toYaml .Values.distributor.config.receivers.otlp.protocols.grpc | nindent 10 }}
-            {{- end}}
+            {{- $mergedOtlpGrpcReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:4317") .Values.traces.otlp.grpc.receiverConfig }}
+            {{- toYaml $mergedOtlpGrpcReceiverConfig | nindent 10 }}
           {{- end }}
       {{- end }}
       {{- if .Values.traces.opencensus }}
