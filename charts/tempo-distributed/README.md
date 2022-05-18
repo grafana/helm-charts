@@ -91,8 +91,6 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
-| distributor.config.receivers.otlp.protocols.grpc  | object | `{}` | OTLP receiver gRPC advanced configuration |
-| distributor.config.receivers.otlp.protocols.http  | object | `{}` | OTLP receiver http advanced configuration |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
@@ -313,8 +311,10 @@ The memcached default args are removed and should be provided manually. The sett
 | traces.jaeger.thriftHttp | bool | `false` | Enable Tempo to ingest Jaeger Thrift HTTP traces |
 | traces.kafka | object | `{}` | Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver |
 | traces.opencensus | bool | `false` | Enable Tempo to ingest Open Census traces |
-| traces.otlp.grpc | bool | `false` | Enable Tempo to ingest Open Telemetry GRPC traces |
-| traces.otlp.http | bool | `false` | Enable Tempo to ingest Open Telemetry HTTP traces |
+| traces.otlp.grpc.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry GRPC traces |
+| traces.otlp.grpc.receiverConfig | object | `{}` | GRPC receiver advanced config |
+| traces.otlp.http.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry HTTP traces |
+| traces.otlp.http.receiverConfig | object | `{}` | HTTP receiver advanced config |
 | traces.zipkin | bool | `false` | Enable Tempo to ingest Zipkin traces |
 
 ## Components
