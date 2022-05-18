@@ -5,7 +5,7 @@ loki:
 promtail:
   enabled: true
   config:
-    lokiAddress: http://{{ .Release.Name }}:3100/loki/api/v1/push
+    lokiAddress: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
 
 fluent-bit:
   enabled: false
