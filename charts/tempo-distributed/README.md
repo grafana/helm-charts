@@ -20,6 +20,17 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart version < 0.18.0
+Trace ingestion through OTLP grpc and http protocols must now be enabled with the `enabled` key:
+```yaml
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+```
+
 ### From Chart versions < 0.9.0
 
 This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
