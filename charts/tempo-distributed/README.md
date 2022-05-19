@@ -316,12 +316,17 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
 | tempo.securityContext | object | `{}` | - SecurityContext holds pod-level security attributes and common container settings |
-| traces.jaeger.grpc | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
-| traces.jaeger.thriftBinary | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
-| traces.jaeger.thriftCompact | bool | `false` | Enable Tempo to ingest Jaeger Thrift Compact traces |
-| traces.jaeger.thriftHttp | bool | `false` | Enable Tempo to ingest Jaeger Thrift HTTP traces |
+| traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
+| traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
+| traces.jaeger.thriftBinary.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
+| traces.jaeger.thriftBinary.receiverConfig | object | `{}` | Jaeger Thrift Binary receiver config |
+| traces.jaeger.thriftCompact.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Compact traces |
+| traces.jaeger.thriftCompact.receiverConfig | object | `{}` | Jaeger Thrift Compact receiver config |
+| traces.jaeger.thriftHttp.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift HTTP traces |
+| traces.jaeger.thriftHttp.receiverConfig | object | `{}` | Jaeger Thrift HTTP receiver config |
 | traces.kafka | object | `{}` | Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver |
-| traces.opencensus | bool | `false` | Enable Tempo to ingest Open Census traces |
+| traces.opencensus.enabled | bool | `false` | Enable Tempo to ingest Open Census traces |
+| traces.opencensus.receiverConfig | object | `{}` | Open Census receiver config |
 | traces.otlp.grpc.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry GRPC traces |
 | traces.otlp.grpc.receiverConfig | object | `{}` | GRPC receiver advanced config |
 | traces.otlp.http.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry HTTP traces |
