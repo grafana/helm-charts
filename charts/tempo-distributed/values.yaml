@@ -135,6 +135,8 @@ ingester:
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
   config:
+    # -- Number of copies of spans to store in the ingester ring
+    replication_factor: 1
     # -- Maximum size of a block before cutting it
     max_block_bytes: null
     # -- Maximum length of time before cutting a block
@@ -531,7 +533,7 @@ config: |
   ingester:
     lifecycler:
       ring:
-        replication_factor: 1
+        replication_factor: {{ .Values.ingester.config.replication_factor }}
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
