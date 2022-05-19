@@ -17,6 +17,7 @@ serviceAccount:
   create: true
   name:
   nameTest:
+## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
   autoMount: true
@@ -73,13 +74,14 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.4.6
+  tag: 8.5.2
   sha: ""
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Can be templated.
   ##
   # pullSecrets:
   #   - myRegistrKeySecretName
@@ -99,6 +101,8 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Extra configmaps to mount in grafana pods
+# Values are templated.
 extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/
@@ -236,7 +240,7 @@ nodeSelector: {}
 ##
 tolerations: []
 
-## Affinity for pod assignment
+## Affinity for pod assignment (evaluated as template)
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
@@ -286,7 +290,9 @@ persistence:
   finalizers:
     - kubernetes.io/pvc-protection
   # selectorLabels: {}
+  ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""
+  ## Name of an existing PVC. Can be templated.
   # existingClaim:
 
   ## If persistence is not enabled, this allows to mount the
@@ -332,6 +338,7 @@ adminUser: admin
 
 # Use an existing secret for the admin user.
 admin:
+  ## Name of the secret. Can be templated.
   existingSecret: ""
   userKey: admin-user
   passwordKey: admin-password
@@ -654,6 +661,8 @@ sidecar:
   # skipTlsVerify Set to true to skip tls verification for kube api calls
   # skipTlsVerify: true
   enableUniqueFilenames: false
+  readinessProbe: {}
+  livenessProbe: {}
   dashboards:
     enabled: false
     SCProvider: true
@@ -706,6 +715,8 @@ sidecar:
       foldersFromFilesStructure: false
     # Additional dashboard sidecar volume mounts
     extraMounts: []
+    # Sets the size limit of the dashboard sidecar emptyDir volume
+    sizeLimit: {}
   datasources:
     enabled: false
     # label that the configmaps with datasources are marked with
@@ -726,6 +737,8 @@ sidecar:
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
     initDatasources: false
+    # Sets the size limit of the datasource sidecar emptyDir volume
+    sizeLimit: {}
   plugins:
     enabled: false
     # label that the configmaps with plugins are marked with
@@ -746,6 +759,8 @@ sidecar:
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any plugins defined at startup time.
     initPlugins: false
+    # Sets the size limit of the plugin sidecar emptyDir volume
+    sizeLimit: {}
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
@@ -756,6 +771,8 @@ sidecar:
     searchNamespace: null
     # search in configmap, secret or both
     resource: both
+    # Sets the size limit of the notifier sidecar emptyDir volume
+    sizeLimit: {}
 
 ## Override the deployment namespace
 ##
@@ -831,7 +848,7 @@ imageRenderer:
   ##
   tolerations: []
 
-  ## Affinity for pod assignment
+  ## Affinity for pod assignment (evaluated as template)
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
   affinity: {}

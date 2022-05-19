@@ -63,6 +63,17 @@ ingester:
   annotations: {}
   # -- Number of replicas for the ingester
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -131,9 +142,21 @@ ingester:
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
 
+# Configuration for the distributor
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the distributor
+    enabled: false
+    # -- Minimum autoscaling replicas for the distributor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the distributor
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the distributor
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the distributor
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -315,6 +338,17 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the query-frontend
+    enabled: false
+    # -- Minimum autoscaling replicas for the query-frontend
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the query-frontend
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the query-frontend
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the query-frontend
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
     registry: null
@@ -377,23 +411,47 @@ search:
 
 traces:
   jaeger:
-    # -- Enable Tempo to ingest Jaeger GRPC traces
-    grpc: false
-    # -- Enable Tempo to ingest Jaeger Thrift Binary traces
-    thriftBinary: false
-    # -- Enable Tempo to ingest Jaeger Thrift Compact traces
-    thriftCompact: false
-    # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
-    thriftHttp: false
-  # -- Enable Tempo to ingest Zipkin traces
-  zipkin: false
+    grpc:
+      # -- Enable Tempo to ingest Jaeger GRPC traces
+      enabled: false
+      # -- Jaeger GRPC receiver config
+      receiverConfig: {}
+    thriftBinary:
+      # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+      enabled: false
+      # -- Jaeger Thrift Binary receiver config
+      receiverConfig: {}
+    thriftCompact:
+      # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+      enabled: false
+      # -- Jaeger Thrift Compact receiver config
+      receiverConfig: {}
+    thriftHttp:
+       # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      enabled: false
+      # -- Jaeger Thrift HTTP receiver config
+      receiverConfig: {}
+  zipkin:
+    # -- Enable Tempo to ingest Zipkin traces
+    enabled: false
+    # -- Zipkin receiver config
+    receiverConfig: {}
   otlp:
-    # -- Enable Tempo to ingest Open Telemetry HTTP traces
-    http: false
-    # -- Enable Tempo to ingest Open Telemetry GRPC traces
-    grpc: false
-  # -- Enable Tempo to ingest Open Census traces
-  opencensus: false
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: false
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: false
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+  opencensus:
+    # -- Enable Tempo to ingest Open Census traces
+    enabled: false
+    # -- Open Census receiver config
+    receiverConfig: {}
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
@@ -411,45 +469,53 @@ config: |
       kvstore:
         store: memberlist
     receivers:
-      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
+      {{- if  or (.Values.traces.jaeger.thriftCompact.enabled) (.Values.traces.jaeger.thriftBinary.enabled) (.Values.traces.jaeger.thriftHttp.enabled) (.Values.traces.jaeger.grpc.enabled) }}
       jaeger:
         protocols:
-          {{- if .Values.traces.jaeger.thriftCompact }}
+          {{- if .Values.traces.jaeger.thriftCompact.enabled }}
           thrift_compact:
-            endpoint: 0.0.0.0:6831
+            {{- $mergedJaegerThriftCompactConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6831") .Values.traces.jaeger.thriftCompact.receiverConfig }}
+            {{- toYaml $mergedJaegerThriftCompactConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.thriftBinary }}
+          {{- if .Values.traces.jaeger.thriftBinary.enabled }}
           thrift_binary:
-            endpoint: 0.0.0.0:6832
+            {{- $mergedJaegerThriftBinaryConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6832") .Values.traces.jaeger.thriftBinary.receiverConfig }}
+            {{- toYaml $mergedJaegerThriftBinaryConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.thriftHttp }}
+          {{- if .Values.traces.jaeger.thriftHttp.enabled }}
           thrift_http:
-            endpoint: 0.0.0.0:14268
+            {{- $mergedJaegerThriftHttpConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14268") .Values.traces.jaeger.thriftHttp.receiverConfig }}
+            {{- toYaml $mergedJaegerThriftHttpConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.grpc }}
+          {{- if .Values.traces.jaeger.grpc.enabled }}
           grpc:
-            endpoint: 0.0.0.0:14250
+            {{- $mergedJaegerGrpcConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14250") .Values.traces.jaeger.grpc.receiverConfig }}
+            {{- toYaml $mergedJaegerGrpcConfig | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.zipkin}}
+      {{- if .Values.traces.zipkin.enabled }}
       zipkin:
-        endpoint: 0.0.0.0:9411
+        {{- $mergedZipkinReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:9411") .Values.traces.zipkin.receiverConfig }}
+        {{- toYaml $mergedZipkinReceiverConfig | nindent 6 }}
       {{- end }}
-      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+      {{- if or (.Values.traces.otlp.http.enabled) (.Values.traces.otlp.grpc.enabled) }}
       otlp:
         protocols:
-          {{- if .Values.traces.otlp.http }}
+          {{- if .Values.traces.otlp.http.enabled }}
           http:
-            endpoint: 0.0.0.0:55681
+            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55681") .Values.traces.otlp.http.receiverConfig }}
+            {{- toYaml $mergedOtlpHttpReceiverConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.otlp.grpc }}
+          {{- if .Values.traces.otlp.grpc.enabled }}
           grpc:
-            endpoint: 0.0.0.0:4317
+            {{- $mergedOtlpGrpcReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:4317") .Values.traces.otlp.grpc.receiverConfig }}
+            {{- toYaml $mergedOtlpGrpcReceiverConfig | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.opencensus }}
+      {{- if .Values.traces.opencensus.enabled }}
       opencensus:
-        endpoint: 0.0.0.0:55678
+        {{- $mergedOpencensusReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55678") .Values.traces.opencensus.receiverConfig }}
+        {{- toYaml $mergedOpencensusReceiverConfig | nindent 6 }}
       {{- end }}
       {{- if .Values.traces.kafka }}
       kafka:
@@ -469,14 +535,14 @@ config: |
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
-    {{- if .Values.ingester.config.maxBlockBytes }}
-    max_block_bytes: {{ .Values.ingester.config.maxBlockBytes }}
+    {{- if .Values.ingester.config.max_block_bytes }}
+    max_block_bytes: {{ .Values.ingester.config.max_block_bytes }}
     {{- end }}
-    {{- if .Values.ingester.config.maxBlockDuration }}
-    max_block_duration: {{ .Values.ingester.config.maxBlockDuration }}
+    {{- if .Values.ingester.config.max_block_duration }}
+    max_block_duration: {{ .Values.ingester.config.max_block_duration }}
     {{- end }}
-    {{- if .Values.ingester.config.completeBlockTimeout }}
-    complete_block_timeout: {{ .Values.ingester.config.completeBlockTimeout }}
+    {{- if .Values.ingester.config.complete_block_timeout }}
+    complete_block_timeout: {{ .Values.ingester.config.complete_block_timeout }}
     {{- end }}
   memberlist:
     abort_if_cluster_join_fails: false
@@ -663,6 +729,17 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the gateway
+    enabled: false
+    # -- Minimum autoscaling replicas for the gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the gateway
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the gateway
+    targetMemoryUtilizationPercentage:
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
   image:
