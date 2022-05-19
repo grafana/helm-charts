@@ -474,22 +474,22 @@ config: |
         protocols:
           {{- if .Values.traces.jaeger.thriftCompact.enabled }}
           thrift_compact:
-            {{- $mergedJaegerThriftCompactConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6831") .Values.traces.jaeger.thriftCompact.receiverConfig }}    
+            {{- $mergedJaegerThriftCompactConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6831") .Values.traces.jaeger.thriftCompact.receiverConfig }}
             {{- toYaml $mergedJaegerThriftCompactConfig | nindent 10 }}
           {{- end }}
           {{- if .Values.traces.jaeger.thriftBinary.enabled }}
           thrift_binary:
-            {{- $mergedJaegerThriftBinaryConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6832") .Values.traces.jaeger.thriftBinary.receiverConfig }}    
+            {{- $mergedJaegerThriftBinaryConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6832") .Values.traces.jaeger.thriftBinary.receiverConfig }}
             {{- toYaml $mergedJaegerThriftBinaryConfig | nindent 10 }}
           {{- end }}
           {{- if .Values.traces.jaeger.thriftHttp.enabled }}
           thrift_http:
-            {{- $mergedJaegerThriftHttpConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14268") .Values.traces.jaeger.thriftHttp.receiverConfig }}    
+            {{- $mergedJaegerThriftHttpConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14268") .Values.traces.jaeger.thriftHttp.receiverConfig }}
             {{- toYaml $mergedJaegerThriftHttpConfig | nindent 10 }}
           {{- end }}
           {{- if .Values.traces.jaeger.grpc.enabled }}
           grpc:
-            {{- $mergedJaegerGrpcConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14250") .Values.traces.jaeger.grpc.receiverConfig }}    
+            {{- $mergedJaegerGrpcConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14250") .Values.traces.jaeger.grpc.receiverConfig }}
             {{- toYaml $mergedJaegerGrpcConfig | nindent 10 }}
           {{- end }}
       {{- end }}
