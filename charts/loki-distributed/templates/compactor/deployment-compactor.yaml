@@ -5,6 +5,7 @@ metadata:
   name: {{ include "loki.compactorFullname" . }}
   labels:
     {{- include "loki.compactorLabels" . | nindent 4 }}
+    app.kubernetes.io/part-of: memberlist
 spec:
   replicas: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
