@@ -411,16 +411,31 @@ search:
 
 traces:
   jaeger:
-    # -- Enable Tempo to ingest Jaeger GRPC traces
-    grpc: false
-    # -- Enable Tempo to ingest Jaeger Thrift Binary traces
-    thriftBinary: false
-    # -- Enable Tempo to ingest Jaeger Thrift Compact traces
-    thriftCompact: false
-    # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
-    thriftHttp: false
-  # -- Enable Tempo to ingest Zipkin traces
-  zipkin: false
+    grpc:
+      # -- Enable Tempo to ingest Jaeger GRPC traces
+      enabled: false
+      # -- Jaeger GRPC receiver config
+      receiverConfig: {}
+    thriftBinary:
+      # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+      enabled: false
+      # -- Jaeger Thrift Binary receiver config
+      receiverConfig: {}
+    thriftCompact:
+      # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+      enabled: false
+      # -- Jaeger Thrift Compact receiver config
+      receiverConfig: {}
+    thriftHttp:
+       # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      enabled: false
+      # -- Jaeger Thrift HTTP receiver config
+      receiverConfig: {}
+  zipkin:
+    # -- Enable Tempo to ingest Zipkin traces
+    enabled: false
+    # -- Zipkin receiver config
+    receiverConfig: {}
   otlp:
     http:
       # -- Enable Tempo to ingest Open Telemetry HTTP traces
@@ -432,8 +447,11 @@ traces:
       enabled: false
       # -- GRPC receiver advanced config
       receiverConfig: {}
-  # -- Enable Tempo to ingest Open Census traces
-  opencensus: false
+  opencensus:
+    # -- Enable Tempo to ingest Open Census traces
+    enabled: false
+    # -- Open Census receiver config
+    receiverConfig: {}
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
@@ -451,29 +469,34 @@ config: |
       kvstore:
         store: memberlist
     receivers:
-      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
+      {{- if  or (.Values.traces.jaeger.thriftCompact.enabled) (.Values.traces.jaeger.thriftBinary.enabled) (.Values.traces.jaeger.thriftHttp.enabled) (.Values.traces.jaeger.grpc.enabled) }}
       jaeger:
         protocols:
-          {{- if .Values.traces.jaeger.thriftCompact }}
+          {{- if .Values.traces.jaeger.thriftCompact.enabled }}
           thrift_compact:
-            endpoint: 0.0.0.0:6831
+            {{- $mergedJaegerThriftCompactConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6831") .Values.traces.jaeger.thriftCompact.receiverConfig }}    
+            {{- toYaml $mergedJaegerThriftCompactConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.thriftBinary }}
+          {{- if .Values.traces.jaeger.thriftBinary.enabled }}
           thrift_binary:
-            endpoint: 0.0.0.0:6832
+            {{- $mergedJaegerThriftBinaryConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6832") .Values.traces.jaeger.thriftBinary.receiverConfig }}    
+            {{- toYaml $mergedJaegerThriftBinaryConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.thriftHttp }}
+          {{- if .Values.traces.jaeger.thriftHttp.enabled }}
           thrift_http:
-            endpoint: 0.0.0.0:14268
+            {{- $mergedJaegerThriftHttpConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14268") .Values.traces.jaeger.thriftHttp.receiverConfig }}    
+            {{- toYaml $mergedJaegerThriftHttpConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.grpc }}
+          {{- if .Values.traces.jaeger.grpc.enabled }}
           grpc:
-            endpoint: 0.0.0.0:14250
+            {{- $mergedJaegerGrpcConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14250") .Values.traces.jaeger.grpc.receiverConfig }}    
+            {{- toYaml $mergedJaegerGrpcConfig | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.zipkin}}
+      {{- if .Values.traces.zipkin.enabled }}
       zipkin:
-        endpoint: 0.0.0.0:9411
+        {{- $mergedZipkinReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:9411") .Values.traces.zipkin.receiverConfig }}
+        {{- toYaml $mergedZipkinReceiverConfig | nindent 6 }}
       {{- end }}
       {{- if or (.Values.traces.otlp.http.enabled) (.Values.traces.otlp.grpc.enabled) }}
       otlp:
@@ -489,9 +512,10 @@ config: |
             {{- toYaml $mergedOtlpGrpcReceiverConfig | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.opencensus }}
+      {{- if .Values.traces.opencensus.enabled }}
       opencensus:
-        endpoint: 0.0.0.0:55678
+        {{- $mergedOpencensusReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55678") .Values.traces.opencensus.receiverConfig }}
+        {{- toYaml $mergedOpencensusReceiverConfig | nindent 6 }}
       {{- end }}
       {{- if .Values.traces.kafka }}
       kafka:
