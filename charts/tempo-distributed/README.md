@@ -21,7 +21,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
 ### From Chart version < 0.18.0
-Trace ingestion through OTLP grpc and http protocols must now be enabled with the `enabled` key:
+Trace ingestion must now be enabled with the `enabled` key:
 ```yaml
 traces:
   otlp:
@@ -29,6 +29,13 @@ traces:
       enabled: true
     http:
       enabled: true
+  zipkin:
+    enabled: true
+  jaeger:
+    thriftHttp:
+      enabled: true
+  opencensus:
+    enabled: true
 ```
 
 ### From Chart versions < 0.9.0
