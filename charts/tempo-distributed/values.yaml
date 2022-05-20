@@ -62,7 +62,7 @@ ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 1
+  replicas: 3
   autoscaling:
     # -- Enable autoscaling for the ingester
     enabled: false
@@ -136,7 +136,7 @@ ingester:
     storageClass: null
   config:
     # -- Number of copies of spans to store in the ingester ring
-    replication_factor: 1
+    replication_factor: 3
     # -- Maximum size of a block before cutting it
     max_block_bytes: null
     # -- Maximum length of time before cutting a block
