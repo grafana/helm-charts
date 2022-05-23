@@ -1,0 +1,28 @@
+{{- if and .Values.metricsGenerator.enabled .Values.metricsGenerator.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "tempo.metricsGeneratorFullname" . }}
+  labels:
+    {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: {{ include "tempo.metricsGeneratorFullname" . }}
+  minReplicas: {{ .Values.metricsGenerator.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.metricsGenerator.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.metricsGenerator.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+  {{- with .Values.metricsGenerator.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+{{- end }}
