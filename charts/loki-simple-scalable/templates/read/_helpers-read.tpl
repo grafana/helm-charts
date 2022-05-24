@@ -2,7 +2,7 @@
 read fullname
 */}}
 {{- define "loki.readFullname" -}}
-{{ include "loki.fullname" . }}-read
+{{ include "loki.name" . }}-read
 {{- end }}
 
 {{/*
