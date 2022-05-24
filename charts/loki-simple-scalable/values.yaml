@@ -173,6 +173,8 @@ enterprise:
   # -- Name of external licesne secret to use
   externalLicenseName: null
 
+  # -- If enabled, the correct admin_client storage will be configured. If disabled while running enterprise,
+  # make sure auth is set to `type: trust`, or that `auth_enabled` is set to `false`.
   adminApi:
     enabled: true
 
