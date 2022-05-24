@@ -31,6 +31,9 @@ tempo:
   searchEnabled: false
   ingester: {}
   retention: 24h
+  # Global overrides
+  global_overrides:
+    per_tenant_override_config: /conf/overrides.yaml
   overrides: {}
 
   # Tempo server configuration

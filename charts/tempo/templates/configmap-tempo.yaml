@@ -24,3 +24,5 @@ data:
       {{- toYaml .Values.tempo.server | nindent 6 }}
     storage:
       {{- toYaml .Values.tempo.storage | nindent 6 }}
+    overrides:
+      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
