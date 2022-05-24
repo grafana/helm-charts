@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 2.0.15
+
+* [ENHANCEMENT] Add support for the results cache used by the query frontend
+
 ## 2.0.14
 
 * [BUGFIX] exclude headless services from ServiceMonitors to prevent duplication of prometheus scrape targets #1308
