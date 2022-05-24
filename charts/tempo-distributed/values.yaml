@@ -100,16 +100,17 @@ ingester:
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Hard node and soft zone anti-affinity
+  # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "tempo.ingesterSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
           podAffinityTerm:
             labelSelector:
               matchLabels:
