@@ -87,6 +87,10 @@ spec:
         {{- with .Values.gateway.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
+      {{if .Values.gateway.topologySpreadEnabled }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.gateway.topologySpreadConstraints | nindent 8 }}
+      {{- end}}
       nodeSelector:
         {{- toYaml .Values.gateway.nodeSelector | nindent 8 }}
       affinity:

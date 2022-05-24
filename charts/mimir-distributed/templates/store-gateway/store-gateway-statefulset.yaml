@@ -67,6 +67,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{if .Values.store_gateway.topologySpreadEnabled }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.store_gateway.topologySpreadConstraints | nindent 8 }}
+      {{- end}}
       nodeSelector:
         {{- toYaml .Values.store_gateway.nodeSelector | nindent 8 }}
       affinity:

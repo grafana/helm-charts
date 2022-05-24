@@ -95,6 +95,10 @@ spec:
 {{- if .Values.ruler.extraContainers }}
 {{ toYaml .Values.ruler.extraContainers | indent 8}}
 {{- end }}
+      {{if .Values.ruler.topologySpreadEnabled }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.ruler.topologySpreadConstraints | nindent 8 }}
+      {{- end}}
       nodeSelector:
         {{- toYaml .Values.ruler.nodeSelector | nindent 8 }}
       affinity:

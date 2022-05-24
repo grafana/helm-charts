@@ -69,6 +69,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{if .Values.ingester.topologySpreadEnabled }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.ingester.topologySpreadConstraints | nindent 8 }}
+      {{- end}}
       nodeSelector:
         {{- toYaml .Values.ingester.nodeSelector | nindent 8 }}
       affinity:

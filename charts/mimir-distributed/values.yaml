@@ -279,6 +279,19 @@ alertmanager:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: alertmanager
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
+
   affinity: {}
   annotations: {}
   persistence:
@@ -412,6 +425,17 @@ distributor:
                   - distributor
           topologyKey: 'kubernetes.io/hostname'
 
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: distributor
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   annotations: {}
   persistence:
     subPath:
@@ -469,6 +493,18 @@ ingester:
   podManagementPolicy: Parallel
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: ingester
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity: {}
   annotations: {}
 
@@ -555,6 +591,18 @@ overrides_exporter:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: overrides_exporter
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity: {}
 
   securityContext: {}
@@ -615,6 +663,18 @@ ruler:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: ruler
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity: {}
   annotations: {}
   persistence:
@@ -668,6 +728,18 @@ querier:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: querier
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -733,6 +805,18 @@ query_frontend:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: query_frontend
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -799,6 +883,18 @@ store_gateway:
     maxUnavailable: 1
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: store_gateway
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -893,6 +989,18 @@ compactor:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: compactor
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -1472,6 +1580,18 @@ gateway:
   podDisruptionBudget: {}
 
   nodeSelector: {}
+
+  # Topology Spread Constraints
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadEnabled: false
+  # topologySpreadConstraints:
+  #   - labelSelector:
+  #       matchLabels:
+  #         app.kubernetes.io/component: gateway
+  #     maxSkew: 1
+  #     topologyKey: topology.kubernetes.io/zone
+  #     whenUnsatisfiable: DoNotSchedule
+
   affinity: {}
 
   securityContext: {}

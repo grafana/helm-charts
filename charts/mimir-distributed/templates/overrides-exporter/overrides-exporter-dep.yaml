@@ -92,6 +92,10 @@ spec:
         {{- with .Values.overrides_exporter.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
+      {{if .Values.overrides_exporter.topologySpreadEnabled }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.overrides.topologySpreadConstraints | nindent 8 }}
+      {{- end}}
       nodeSelector:
         {{- toYaml .Values.overrides_exporter.nodeSelector | nindent 8 }}
       affinity:
