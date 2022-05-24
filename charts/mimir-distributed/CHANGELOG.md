@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.0.15
 
-* [ENHANCEMENT] Add support for the results cache used by the query frontend
+* [ENHANCEMENT] Add support for the results cache used by the query frontend #1411
 
 ## 2.0.14
 
