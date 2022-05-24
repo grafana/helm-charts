@@ -62,7 +62,7 @@ ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 1
+  replicas: 3
   autoscaling:
     # -- Enable autoscaling for the ingester
     enabled: false
@@ -100,16 +100,17 @@ ingester:
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Hard node and soft zone anti-affinity
+  # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "tempo.ingesterSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
           podAffinityTerm:
             labelSelector:
               matchLabels:
@@ -135,6 +136,8 @@ ingester:
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
   config:
+    # -- Number of copies of spans to store in the ingester ring
+    replication_factor: 3
     # -- Maximum size of a block before cutting it
     max_block_bytes: null
     # -- Maximum length of time before cutting a block
@@ -531,7 +534,7 @@ config: |
   ingester:
     lifecycler:
       ring:
-        replication_factor: 1
+        replication_factor: {{ .Values.ingester.config.replication_factor }}
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
