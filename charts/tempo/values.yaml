@@ -80,7 +80,6 @@ tempo:
           endpoint: "0.0.0.0:4317"
         http:
           endpoint: "0.0.0.0:4318"
-
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -91,6 +90,25 @@ tempo:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
+
+# -- Tempo configuration file contents
+config: |
+    multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
+    search_enabled: {{ .Values.tempo.searchEnabled }}
+    compactor:
+      compaction:
+        compacted_block_retention: {{ .Values.tempo.retention }}
+    distributor:
+      receivers:
+        {{- toYaml .Values.tempo.receivers | nindent 8 }}
+    ingester:
+      {{- toYaml .Values.tempo.ingester | nindent 6 }}
+    server:
+      {{- toYaml .Values.tempo.server | nindent 6 }}
+    storage:
+      {{- toYaml .Values.tempo.storage | nindent 6 }}
+    overrides:
+      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
 
 tempoQuery:
   repository: grafana/tempo-query
