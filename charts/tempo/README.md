@@ -1,15 +1,12 @@
 # tempo
 
-
-![Version: 0.15.3](https://img.shields.io/badge/Version-0.15.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square) 
+![Version: 0.15.3](https://img.shields.io/badge/Version-0.15.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
 ## Source Code
 
 * <https://github.com/grafana/tempo>
-
-
 
 ## Values
 
@@ -87,5 +84,5 @@ A major chart version change indicates that there is an incompatible breaking ch
 ### From Chart versions < 0.7.0
 
 Upgrading from pre 0.7.0 will, by default, move your trace storage from `/tmp/tempo/traces` to `/var/tempo/traces`.
-This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the 
+This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the
 old folder to the new.
