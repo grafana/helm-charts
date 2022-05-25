@@ -13,7 +13,7 @@ Entries should include a reference to the Pull Request that introduced the chang
 
 ## 2.1.0
 
-* [ENHANCEMENT] Allow optional enablement of topologySpreadConstraint for each component
+* [ENHANCEMENT] Allow optional enablement of topologySpreadConstraints for each component #1407
 
 ## 2.0.14
 
