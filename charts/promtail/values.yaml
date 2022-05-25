@@ -294,9 +294,14 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
-    # -- You can put here any keys that will be directly added to the config file's 'client' block.
+    # -- You can put here any keys that will be directly added to the config file's main 'client' block.
+    # This is helpful to add custom configuration for the promtail for things like tenant
     # @default -- empty
-    extraClientConfigs: []
+    extraClientConfigs: ""
+
+    # -- You can put any client configs here that will be added in addition to the main client block.
+    # @default -- empty
+    extraClients: []
 
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
@@ -352,7 +357,8 @@ config:
 
     clients:
       - url: {{ tpl .Values.config.lokiAddress . }}
-      {{- with .Values.config.snippets.extraClientConfigs }}
+      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 4 }}
+      {{- with .Values.config.snippets.extraClients }}
       {{- toYaml . | nindent 2 }}
       {{- end }}
 
