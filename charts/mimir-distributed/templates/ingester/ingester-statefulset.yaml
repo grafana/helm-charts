@@ -69,7 +69,7 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{if .Values.ingester.topologySpreadEnabled }}
+      {{ if .Values.ingester.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.ingester.topologySpreadConstraints | nindent 8 }}
       {{- end}}

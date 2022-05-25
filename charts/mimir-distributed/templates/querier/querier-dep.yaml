@@ -94,7 +94,7 @@ spec:
 {{- if .Values.querier.extraContainers }}
 {{ toYaml .Values.querier.extraContainers | indent 8}}
 {{- end }}
-      {{if .Values.querier.topologySpreadEnabled }}
+      {{ if .Values.querier.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.querier.topologySpreadConstraints | nindent 8 }}
       {{- end}}

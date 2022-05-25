@@ -98,10 +98,10 @@ spec:
 {{- if .Values.alertmanager.extraContainers }}
 {{ toYaml .Values.alertmanager.extraContainers | indent 8}}
 {{- end }}
-      {{if .Values.alertmanager.topologySpreadEnabled }}
+      {{- if .Values.alertmanager.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.alertmanager.topologySpreadConstraints | nindent 8 }}
-      {{- end}}
+      {{- end }}
       nodeSelector:
         {{- toYaml .Values.alertmanager.nodeSelector | nindent 8 }}
       affinity:

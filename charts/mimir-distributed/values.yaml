@@ -282,7 +282,7 @@ alertmanager:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -427,7 +427,7 @@ distributor:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -496,7 +496,7 @@ ingester:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -594,7 +594,7 @@ overrides_exporter:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -666,7 +666,7 @@ ruler:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -731,7 +731,7 @@ querier:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -808,7 +808,7 @@ query_frontend:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -886,7 +886,7 @@ store_gateway:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -992,7 +992,7 @@ compactor:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:
@@ -1583,7 +1583,7 @@ gateway:
 
   # Topology Spread Constraints
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadEnabled: false
+  topologySpreadConstraints: []
   # topologySpreadConstraints:
   #   - labelSelector:
   #       matchLabels:

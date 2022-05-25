@@ -69,6 +69,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- if .Values.alertmanager.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.alertmanager.topologySpreadConstraints | nindent 8 }}
+      {{- end }}
       nodeSelector:
         {{- toYaml .Values.alertmanager.nodeSelector | nindent 8 }}
       affinity:

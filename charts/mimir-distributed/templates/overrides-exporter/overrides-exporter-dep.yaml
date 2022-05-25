@@ -92,7 +92,7 @@ spec:
         {{- with .Values.overrides_exporter.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
-      {{if .Values.overrides_exporter.topologySpreadEnabled }}
+      {{ if .Values.overrides_exporter.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.overrides.topologySpreadConstraints | nindent 8 }}
       {{- end}}

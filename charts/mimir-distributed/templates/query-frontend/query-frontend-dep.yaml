@@ -93,7 +93,7 @@ spec:
 {{- if .Values.query_frontend.extraContainers }}
 {{ toYaml .Values.query_frontend.extraContainers | indent 8}}
 {{- end }}
-      {{if .Values.query_frontend.topologySpreadEnabled }}
+      {{ if .Values.query_frontend.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.query_frontend.topologySpreadConstraints | nindent 8 }}
       {{- end}}

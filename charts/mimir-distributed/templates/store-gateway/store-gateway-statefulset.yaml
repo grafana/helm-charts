@@ -67,7 +67,7 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{if .Values.store_gateway.topologySpreadEnabled }}
+      {{ if .Values.store_gateway.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.store_gateway.topologySpreadConstraints | nindent 8 }}
       {{- end}}

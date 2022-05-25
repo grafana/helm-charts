@@ -87,7 +87,7 @@ spec:
         {{- with .Values.gateway.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
-      {{if .Values.gateway.topologySpreadEnabled }}
+      {{ if .Values.gateway.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.gateway.topologySpreadConstraints | nindent 8 }}
       {{- end}}

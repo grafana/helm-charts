@@ -67,7 +67,7 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{if .Values.compactor.topologySpreadEnabled }}
+      {{- if .Values.compactor.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml .Values.compactor.topologySpreadConstraints | nindent 8 }}
       {{- end}}
