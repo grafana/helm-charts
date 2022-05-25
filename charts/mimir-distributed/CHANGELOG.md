@@ -14,6 +14,10 @@ Entries should include a reference to the Pull Request that introduced the chang
 ## 2.0.15
 
 * [ENHANCEMENT] Add support for the results cache used by the query frontend #1411
+  - This will result in additional resource usage due to the addition of one or
+    more memcached replicas. This applies when using small.yaml, large.yaml,
+    capped-large.yaml, capped-small.yaml, or when setting
+    `memcached-results.enabled=true`
 
 ## 2.0.14
 
