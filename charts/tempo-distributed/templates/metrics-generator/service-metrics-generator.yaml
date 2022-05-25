@@ -8,14 +8,14 @@ metadata:
     {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
 spec:
   ports:
-    - name: http
-      port: 3100
+    {{- range .Values.metricsGenerator.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
       protocol: TCP
-      targetPort: 3100
-    - name: grpc
-      port: 9095
-      protocol: TCP
-      targetPort: 9095
+      targetPort: {{ .port }}
+    {{- end }}
+    {{- end }}
   selector:
     {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 4 }}
 {{- end }}

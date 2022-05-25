@@ -1,27 +1,22 @@
 {{- if .Values.metricsGenerator.enabled }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: {{ template "tempo.metricsGeneratorFullname" . }}
+  name: {{ include "tempo.metricsGeneratorFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+  {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
   {{- with .Values.metricsGenerator.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if not .Values.metricsGenerator.autoscaling.enabled }}
+  minReadySeconds: 10
   replicas: {{ .Values.metricsGenerator.replicas }}
-{{- end }}
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 6}}
-  serviceName: metrics-generator
-  podManagementPolicy: Parallel
-  updateStrategy:
-    rollingUpdate:
-      partition: 0
+      {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
@@ -47,6 +42,7 @@ spec:
         - args:
             - -target=metrics-generator
             - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
             {{- with .Values.metricsGenerator.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -54,12 +50,10 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: metrics-generator
           ports:
-            - name: grpc
-              containerPort: 9095
-            - name: http-memberlist
-              containerPort: 7946
-            - name: http
-              containerPort: 3100
+            {{- range .Values.metricsGenerator.ports }}
+            - name: {{ .name | quote }}
+              containerPort: {{ .port }}
+            {{- end }}
           {{- with .Values.metricsGenerator.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -101,24 +95,9 @@ spec:
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
+        - name: wal
+          emptyDir: {}
         {{- with .Values.metricsGenerator.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-  {{- if not .Values.metricsGenerator.persistence.enabled }}
-        - name: data
-          emptyDir: {}
-  {{- else }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- with .Values.metricsGenerator.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.metricsGenerator.persistence.size | quote }}
-  {{- end }}
 {{- end }}
