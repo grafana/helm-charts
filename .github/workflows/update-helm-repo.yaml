@@ -1,0 +1,69 @@
+name: Release Charts
+
+on:
+  workflow_call:
+    inputs:
+      cr_configfile:
+        description: location of the cr config file
+        default: cr.yaml
+        required: false
+        type: string
+      charts_dir:
+        description: path to the helm charts
+        default: charts
+        required: false
+        type: string
+    secrets:
+      gpg_key_base64:
+        description: GPG key in base64 for signing helm package with
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.5.2
+
+      - name: Prepare GPG key
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+
+          keyring="$gpg_dir/secring.gpg"
+          base64 -d <<< "$GPG_KEY_BASE64" > "$keyring"
+
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
+        env:
+          GPG_KEY_BASE64: "${{ secrets.gpg_key_base64 }}"
+
+      - name: Add dependency chart repos
+        run: |
+          helm repo add elastic https://helm.elastic.co
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo add prometheus https://prometheus-community.github.io/helm-charts
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm repo add minio https://helm.min.io
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.2.0
+        with:
+          charts_dir: ${{ inputs.charts_dir }}
+          config: ${{ inputs.cr_configfile }}
+          # This would be redudant if this action was only called from the same repo, but it's not. Do not delete.
+          charts_repo_url: https://grafana.github.io/helm-charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
