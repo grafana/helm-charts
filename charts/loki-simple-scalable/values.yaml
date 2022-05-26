@@ -142,8 +142,8 @@ loki:
       requestTimeout: "0s"
       enableHttp2: true
     local:
-      chunks_directory: /var/loki/chunks
-      rules_directory: /var/loki/rules
+      chunksDirectory: /var/loki/chunks
+      rulesDirectory: /var/loki/rules
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig: {}
