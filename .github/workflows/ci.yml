@@ -4,4 +4,6 @@ on: pull_request
 
 jobs:
   call-lint:
-    uses: grafana/helm-charts/.github/workflows/linter.yml
+    uses: ./.github/workflows/linter.yml
+  call-lint-test:
+    uses: ./.github/workflows/lint-test.yaml
