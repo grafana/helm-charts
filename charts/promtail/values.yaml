@@ -247,6 +247,7 @@ config:
   clients:
     # The Loki address to post logs to.
     - url: http://loki-gateway/loki/api/v1/push
+  #    tenant_id: tenant-name
   #    external_labels:
   #      label: value
   #    basic_auth:
@@ -305,8 +306,6 @@ config:
     # If set to true, adds an additional label for the scrape job.
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
-
-
 
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
