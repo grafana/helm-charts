@@ -17,7 +17,6 @@ spec:
   backoffLimit: 6
   completions: 1
   parallelism: 1
-  selector:
   template:
     metadata:
       labels:
@@ -26,11 +25,6 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        {{- if .Values.useExternalConfig }}
-        checksum/config: {{ .Values.externalConfigVersion }}
-        {{- else }}
-        checksum/config: {{ include (print $.Template.BasePath "/secret-config.yaml") . | sha256sum }}
-        {{- end}}
         {{- with .Values.tokengen.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -47,7 +41,7 @@ spec:
       {{- end }}
       {{- end }}
       initContainers:
-        - name: enterprise-logs
+        - name: tokengen
           image: {{ template "enterprise-logs.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -98,8 +92,8 @@ spec:
             - name: license
               mountPath: /etc/enterprise-logs/license
       restartPolicy: OnFailure
-      serviceAccount: {{ template "enterprise-logs.tokengenFullname" . }}
-      serviceAccountName: {{ template "enterprise-logs.tokengenFullname" . }}
+      serviceAccount: {{ include "loki.serviceAccountName" . }}
+      serviceAccountName: {{ include "loki.serviceAccountName" .  }}
       volumes:
         - name: config
           secret:

@@ -21,6 +21,11 @@ fullnameOverride: null
 imagePullSecrets: []
 
 loki:
+  # -- If set, these annotations are added to all of the Kubernetes controllers
+  # (Deployments, StatefulSets, etc) that this chart launches. Use this to
+  # implement something like the "Wave" controller or another controller that
+  # is monitoring top level deployment resources.
+  annotations: {}
   # Configures the readiness probe for all of the Loki pods
   readinessProbe:
     httpGet:
@@ -37,6 +42,8 @@ loki:
     tag: null
     # -- Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Common labels for all pods
+  podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
   # -- The number of old ReplicaSets to retain to allow rollback
@@ -92,29 +99,20 @@ loki:
       reject_old_samples: true
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
+      split_queries_by_interval: 15m
 
+    {{- if .Values.loki.schemaConfig}}
     schema_config:
-      configs:
-        - from: 2020-09-07
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
-
+    {{- toYaml .Values.loki.schemaConfig | nindent 2}}
+    {{- end}}
+    {{- if .Values.loki.storageConfig}}
     storage_config:
-      boltdb_shipper:
-        shared_store: filesystem
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/cache
-        cache_ttl: 168h
-        {{- if .Values.indexGateway.enabled }}
-        index_gateway_client:
-          server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
-        {{- end }}
-      filesystem:
-        directory: /var/loki/chunks
+    {{- if .Values.indexGateway.enabled}}
+    {{- $indexGatewayClient := dict "server_address" (printf "dns:///%s:9095" (include "loki.indexGatewayFullname" .)) }}
+    {{- $_ := set .Values.loki.storageConfig.boltdb_shipper "index_gateway_client" $indexGatewayClient }}
+    {{- end}}
+    {{- toYaml .Values.loki.storageConfig | nindent 2}}
+    {{- end}}
 
     chunk_store_config:
       max_look_back_period: 0s
@@ -126,7 +124,6 @@ loki:
     query_range:
       align_queries_with_step: true
       max_retries: 5
-      split_queries_by_interval: 15m
       cache_results: true
       results_cache:
         cache:
@@ -158,6 +155,34 @@ loki:
       alertmanager_url: https://alertmanager.xx
       external_url: https://alertmanager.xx
 
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
+  schemaConfig:
+    configs:
+    - from: 2020-09-07
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
+
+  # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
+  storageConfig:
+    boltdb_shipper:
+      shared_store: filesystem
+      active_index_directory: /var/loki/index
+      cache_location: /var/loki/cache
+      cache_ttl: 168h
+    filesystem:
+      directory: /var/loki/chunks
+# -- Uncomment to configure each storage individually
+#   azure: {}
+#   gcs: {}
+#   s3: {}
+#   boltdb: {}
+
+  # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
+  structuredConfig: {}
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -173,8 +198,10 @@ serviceAccount:
 
 # RBAC configuration
 rbac:
-  # -- If enabled, a PodSecurityPolicy is created
+  # -- If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp.
   pspEnabled: false
+  # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
+  sccEnabled: false
 
 # ServiceMonitor configuration
 serviceMonitor:
@@ -195,6 +222,9 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+  # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+  metricRelabelings: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
@@ -223,6 +253,8 @@ prometheusRule:
 
 # Configuration for the ingester
 ingester:
+  # -- Kind of deployment [StatefulSet/Deployment]
+  kind: StatefulSet
   # -- Number of replicas for the ingester
   replicas: 1
   image:
@@ -234,6 +266,8 @@ ingester:
     tag: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
+  # -- Labels for ingester pods
+  podLabels: {}
   # -- Annotations for ingester pods
   podAnnotations: {}
   # -- Labels for ingestor service
@@ -250,6 +284,8 @@ ingester:
   extraVolumes: []
   # -- Resource requests and limits for the ingester
   resources: {}
+  # -- Containers to add to the ingester pods
+  extraContainers: []
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -310,6 +346,8 @@ distributor:
     tag: null
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
+  # -- Labels for distributor pods
+  podLabels: {}
   # -- Annotations for distributor pods
   podAnnotations: {}
   # -- Labels for distributor service
@@ -326,6 +364,8 @@ distributor:
   extraVolumes: []
   # -- Resource requests and limits for the distributor
   resources: {}
+  # -- Containers to add to the distributor pods
+  extraContainers: []
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
@@ -373,6 +413,8 @@ querier:
     tag: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
+  # -- Labels for querier pods
+  podLabels: {}
   # -- Annotations for querier pods
   podAnnotations: {}
   # -- Labels for querier service
@@ -389,6 +431,8 @@ querier:
   extraVolumes: []
   # -- Resource requests and limits for the querier
   resources: {}
+  # -- Containers to add to the querier pods
+  extraContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
@@ -447,6 +491,8 @@ queryFrontend:
     tag: null
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
+  # -- Labels for query-frontend pods
+  podLabels: {}
   # -- Annotations for query-frontend pods
   podAnnotations: {}
   # -- Labels for query-frontend service
@@ -463,6 +509,8 @@ queryFrontend:
   extraVolumes: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
+  # -- Containers to add to the query-frontend pods
+  extraContainers: []
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -499,6 +547,8 @@ tableManager:
     tag: null
   # -- The name of the PriorityClass for table-manager pods
   priorityClassName: null
+  # -- Labels for table-manager pods
+  podLabels: {}
   # -- Annotations for table-manager pods
   podAnnotations: {}
   # -- Labels for table-manager service
@@ -515,6 +565,8 @@ tableManager:
   extraVolumes: []
   # -- Resource requests and limits for the table-manager
   resources: {}
+  # -- Containers to add to the table-manager pods
+  extraContainers: []
   # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
@@ -557,8 +609,8 @@ gateway:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
     targetMemoryUtilizationPercentage:
-  # -- See `kubectl explain deployment.spec.strategy` for more
-  # -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # -- See `kubectl explain deployment.spec.strategy` for more,
+  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
     type: RollingUpdate
   image:
@@ -572,6 +624,8 @@ gateway:
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
+  # -- Labels for gateway pods
+  podLabels: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -599,6 +653,8 @@ gateway:
     allowPrivilegeEscalation: false
   # -- Resource requests and limits for the gateway
   resources: {}
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -642,7 +698,9 @@ gateway:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
-    # ingressClassName: nginx
+    # For example: `ingressClassName: nginx`
+    ingressClassName: ''
+
     # -- Annotations for the gateway ingress
     annotations: {}
     # -- Hosts configuration for the gateway ingress
@@ -753,6 +811,20 @@ gateway:
             proxy_set_header Connection "upgrade";
           }
 
+          # Ruler
+          location ~ /prometheus/api/v1/alerts.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+          location ~ /prometheus/api/v1/rules.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+          location ~ /api/prom/rules.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+          location ~ /api/prom/alerts.* {
+            proxy_pass       http://{{ include "loki.rulerFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
           location ~ /api/prom/.* {
             proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
@@ -790,6 +862,8 @@ compactor:
     tag: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
   # -- Labels for compactor service
@@ -806,6 +880,8 @@ compactor:
   extraVolumes: []
   # -- Resource requests and limits for the compactor
   resources: {}
+  # -- Containers to add to the compactor pods
+  extraContainers: []
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -840,6 +916,8 @@ compactor:
 ruler:
   # -- Specifies whether the ruler should be enabled
   enabled: false
+  # -- Kind of deployment [StatefulSet/Deployment]
+  kind: Deployment
   # -- Number of replicas for the ruler
   replicas: 1
   image:
@@ -851,6 +929,8 @@ ruler:
     tag: null
   # -- The name of the PriorityClass for ruler pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for ruler pods
   podAnnotations: {}
   # -- Labels for ruler service
@@ -867,6 +947,8 @@ ruler:
   extraVolumes: []
   # -- Resource requests and limits for the ruler
   resources: {}
+  # -- Containers to add to the ruler pods
+  extraContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
@@ -890,7 +972,7 @@ ruler:
   # -- Tolerations for ruler pods
   tolerations: []
   persistence:
-    # -- Enable creating PVCs for the ruler
+    # -- Enable creating PVCs which is required when using recording rules
     enabled: false
     # -- Size of persistent disk
     size: 10Gi
@@ -982,6 +1064,8 @@ indexGateway:
     tag: null
   # -- The name of the PriorityClass for index-gateway pods
   priorityClassName: null
+  # -- Labels for index-gateway pods
+  podLabels: {}
   # -- Annotations for index-gateway pods
   podAnnotations: {}
   # -- Labels for index-gateway service
@@ -998,6 +1082,8 @@ indexGateway:
   extraVolumes: []
   # -- Resource requests and limits for the index-gateway
   resources: {}
+  # -- Containers to add to the index-gateway pods
+  extraContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -1042,6 +1128,8 @@ memcached:
     tag: 1.6.7-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Labels for memcached pods
+  podLabels: {}
   # -- The SecurityContext for memcached pods
   podSecurityContext:
     fsGroup: 11211
@@ -1068,6 +1156,8 @@ memcachedExporter:
     tag: v0.6.0
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Labels for memcached-exporter pods
+  podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
 
@@ -1078,6 +1168,8 @@ memcachedChunks:
   replicas: 1
   # -- The name of the PriorityClass for memcached-chunks pods
   priorityClassName: null
+  # -- Labels for memcached-chunks pods
+  podLabels: {}
   # -- Annotations for memcached-chunks pods
   podAnnotations: {}
   # -- Labels for memcached-chunks service
@@ -1091,6 +1183,8 @@ memcachedChunks:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-chunks
   resources: {}
+  # -- Containers to add to the memcached-chunks pods
+  extraContainers: []
   # -- Grace period to allow memcached-chunks to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
@@ -1121,6 +1215,8 @@ memcachedFrontend:
   replicas: 1
   # -- The name of the PriorityClass for memcached-frontend pods
   priorityClassName: null
+  # -- Labels for memcached-frontend pods
+  podLabels: {}
   # -- Annotations for memcached-frontend pods
   podAnnotations: {}
   # -- Labels for memcached-frontend service
@@ -1134,6 +1230,8 @@ memcachedFrontend:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-frontend
   resources: {}
+  # -- Containers to add to the memcached-frontend pods
+  extraContainers: []
   # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -1164,6 +1262,8 @@ memcachedIndexQueries:
   replicas: 1
   # -- The name of the PriorityClass for memcached-index-queries pods
   priorityClassName: null
+  # -- Labels for memcached-index-queries pods
+  podLabels: {}
   # -- Annotations for memcached-index-queries pods
   podAnnotations: {}
   # -- Labels for memcached-index-queries service
@@ -1177,6 +1277,8 @@ memcachedIndexQueries:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-queries
   resources: {}
+  # -- Containers to add to the memcached-index-queries pods
+  extraContainers: []
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
@@ -1207,6 +1309,8 @@ memcachedIndexWrites:
   replicas: 1
   # -- The name of the PriorityClass for memcached-index-writes pods
   priorityClassName: null
+  # -- Labels for memcached-index-writes pods
+  podLabels: {}
   # -- Annotations for memcached-index-writes pods
   podAnnotations: {}
   # -- Labels for memcached-index-writes service
@@ -1220,6 +1324,8 @@ memcachedIndexWrites:
   extraEnvFrom: []
   # -- Resource requests and limits for memcached-index-writes
   resources: {}
+  # -- Containers to add to the memcached-index-writes pods
+  extraContainers: []
   # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string

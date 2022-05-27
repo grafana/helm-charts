@@ -27,6 +27,18 @@ tempo:
       port: http
     initialDelaySeconds: 30
     timeoutSeconds: 1
+  # -- Global labels for all tempo pods
+  podLabels: {}
+  # -- Common annotations for all pods
+  podAnnotations: {}
+  # --- SecurityContext holds pod-level security attributes and common container settings
+  securityContext: {}
+  #  capabilities:
+  #    drop:
+  #    - ALL
+  #  readOnlyRootFilesystem: true
+  #  runAsNonRoot: true
+  #  runAsUser: 1000
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -39,10 +51,29 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
 
+rbac:
+  # -- Specifies whether RBAC manifests should be created
+  create: false
+  # -- Specifies whether a PodSecurityPolicy should be created
+  pspEnabled: false
+
 # Configuration for the ingester
 ingester:
+  # -- Annotations for the ingester StatefulSet
+  annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 1
+  replicas: 3
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -52,6 +83,8 @@ ingester:
     tag: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
+  # -- Labels for ingester pods
+  podLabels: {}
   # -- Annotations for ingester pods
   podAnnotations: {}
   # -- Additional CLI args for the ingester
@@ -67,16 +100,17 @@ ingester:
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Hard node and soft zone anti-affinity
+  # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "tempo.ingesterSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
           podAffinityTerm:
             labelSelector:
               matchLabels:
@@ -101,10 +135,108 @@ ingester:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+  config:
+    # -- Number of copies of spans to store in the ingester ring
+    replication_factor: 3
+    # -- Maximum size of a block before cutting it
+    max_block_bytes: null
+    # -- Maximum length of time before cutting a block
+    max_block_duration: null
+    # -- Duration to keep blocks in the ingester after they have been flushed
+    complete_block_timeout: null
 
+# Configuration for the metrics-generator
+metricsGenerator:
+  # -- Specifies whether a metrics-generator should be deployed
+  enabled: false
+  # -- Annotations for the metrics-generator StatefulSet
+  annotations: {}
+  # -- Number of replicas for the metrics-generator
+  replicas: 1
+  image:
+    # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Docker image repository for the metrics-generator image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the metrics-generator image. Overrides `tempo.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for metrics-generator pods
+  priorityClassName: null
+  # -- Labels for metrics-generator pods
+  podLabels: {}
+  # -- Annotations for metrics-generator pods
+  podAnnotations: {}
+  # -- Additional CLI args for the metrics-generator
+  extraArgs: []
+  # -- Environment variables to add to the metrics-generator pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the metrics-generator pods
+  extraEnvFrom: []
+  # -- Resource requests and limits for the metrics-generator
+  resources: {}
+  # -- Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor,
+  # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
+  # all data and to successfully leave the member ring on shutdown.
+  terminationGracePeriodSeconds: 300
+  # -- Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for metrics-generator pods
+  nodeSelector: {}
+  # -- Tolerations for metrics-generator pods
+  tolerations: []
+  # -- Extra volumes for metrics-generator pods
+  extraVolumeMounts: []
+  # -- Extra volumes for metrics-generator deployment
+  extraVolumes: []
+  # -- Default ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-memberlist
+      port: 7946
+      service: false
+    - name: http
+      port: 3100
+      service: true
+  config:
+    #  MaxItems is the amount of edges that will be stored in the store.
+    service_graphs_max_items: 10000
+    storage_remote_write: []
+    # - url: http://cortex/api/v1/push
+    #   send_exemplars: true
+    #   headers:
+    #     x-scope-orgid: operations
+
+# Configuration for the distributor
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the distributor
+    enabled: false
+    # -- Minimum autoscaling replicas for the distributor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the distributor
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the distributor
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the distributor
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -123,6 +255,8 @@ distributor:
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
+  # -- Labels for distributor pods
+  podLabels: {}
   # -- Annotations for distributor pods
   podAnnotations: {}
   # -- Additional CLI args for the distributor
@@ -170,6 +304,8 @@ compactor:
     tag: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
+  # -- Labels for compactor pods
+  podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
   # -- Additional CLI args for the compactor
@@ -194,6 +330,9 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+  service:
+    # -- Annotations for compactor service
+    annotations: {}
 
 # Configuration for the querier
 querier:
@@ -208,6 +347,8 @@ querier:
     tag: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
+  # -- Labels for querier pods
+  podLabels: {}
   # -- Annotations for querier pods
   podAnnotations: {}
   # -- Additional CLI args for the querier
@@ -244,6 +385,10 @@ querier:
   extraVolumeMounts: []
   # -- Extra volumes for querier deployment
   extraVolumes: []
+  config:
+    frontend_worker:
+      # -- grpc client configuration
+      grpc_client_config: {}
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -273,6 +418,17 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the query-frontend
+    enabled: false
+    # -- Minimum autoscaling replicas for the query-frontend
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the query-frontend
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the query-frontend
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the query-frontend
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
     registry: null
@@ -285,8 +441,13 @@ queryFrontend:
     annotations: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
+  serviceDiscovery:
+    # -- Annotations for queryFrontendDiscovery service
+    annotations: {}
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
+  # -- Labels for queryFrontend pods
+  podLabels: {}
   # -- Annotations for query-frontend pods
   podAnnotations: {}
   # -- Additional CLI args for the query-frontend
@@ -330,79 +491,125 @@ search:
 
 traces:
   jaeger:
-    # -- Enable Tempo to ingest Jaeger GRPC traces
-    grpc: false
-    # -- Enable Tempo to ingest Jaeger Thrift Binary traces
-    thriftBinary: false
-    # -- Enable Tempo to ingest Jaeger Thrift Compact traces
-    thriftCompact: false
-    # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
-    thriftHttp: false
-  # -- Enable Tempo to ingest Zipkin traces
-  zipkin: false
+    grpc:
+      # -- Enable Tempo to ingest Jaeger GRPC traces
+      enabled: false
+      # -- Jaeger GRPC receiver config
+      receiverConfig: {}
+    thriftBinary:
+      # -- Enable Tempo to ingest Jaeger Thrift Binary traces
+      enabled: false
+      # -- Jaeger Thrift Binary receiver config
+      receiverConfig: {}
+    thriftCompact:
+      # -- Enable Tempo to ingest Jaeger Thrift Compact traces
+      enabled: false
+      # -- Jaeger Thrift Compact receiver config
+      receiverConfig: {}
+    thriftHttp:
+       # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      enabled: false
+      # -- Jaeger Thrift HTTP receiver config
+      receiverConfig: {}
+  zipkin:
+    # -- Enable Tempo to ingest Zipkin traces
+    enabled: false
+    # -- Zipkin receiver config
+    receiverConfig: {}
   otlp:
-    # -- Enable Tempo to ingest Open Telemetry HTTP traces
-    http: false
-    # -- Enable Tempo to ingest Open Telemetry GRPC traces
-    grpc: false
-  # -- Enable Tempo to ingest Open Census traces
-  opencensus: false
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: false
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: false
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+  opencensus:
+    # -- Enable Tempo to ingest Open Census traces
+    enabled: false
+    # -- Open Census receiver config
+    receiverConfig: {}
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
 config: |
   multitenancy_enabled: false
   search_enabled: {{ .Values.search.enabled }}
+  metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
     ring:
       kvstore:
         store: memberlist
+  {{- if .Values.metricsGenerator.enabled }}
+  metrics_generator:
+    ring:
+      kvstore:
+        store: memberlist
+    processor:
+      service_graphs:
+        max_items: {{ .Values.metricsGenerator.config.service_graphs_max_items }}
+    storage:
+      path: /var/tempo/wal
+      remote_write:
+        {{- toYaml .Values.metricsGenerator.config.storage_remote_write | nindent 6}}
+  {{- end }}
   distributor:
     ring:
       kvstore:
         store: memberlist
     receivers:
-      {{- if  or (.Values.traces.jaeger.thriftCompact) (.Values.traces.jaeger.thriftBinary) (.Values.traces.jaeger.thriftHttp) (.Values.traces.jaeger.grpc) }}
+      {{- if  or (.Values.traces.jaeger.thriftCompact.enabled) (.Values.traces.jaeger.thriftBinary.enabled) (.Values.traces.jaeger.thriftHttp.enabled) (.Values.traces.jaeger.grpc.enabled) }}
       jaeger:
         protocols:
-          {{- if .Values.traces.jaeger.thriftCompact }}
+          {{- if .Values.traces.jaeger.thriftCompact.enabled }}
           thrift_compact:
-            endpoint: 0.0.0.0:6831
+            {{- $mergedJaegerThriftCompactConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6831") .Values.traces.jaeger.thriftCompact.receiverConfig }}
+            {{- toYaml $mergedJaegerThriftCompactConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.thriftBinary }}
+          {{- if .Values.traces.jaeger.thriftBinary.enabled }}
           thrift_binary:
-            endpoint: 0.0.0.0:6832
+            {{- $mergedJaegerThriftBinaryConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:6832") .Values.traces.jaeger.thriftBinary.receiverConfig }}
+            {{- toYaml $mergedJaegerThriftBinaryConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.thriftHttp }}
+          {{- if .Values.traces.jaeger.thriftHttp.enabled }}
           thrift_http:
-            endpoint: 0.0.0.0:14268
+            {{- $mergedJaegerThriftHttpConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14268") .Values.traces.jaeger.thriftHttp.receiverConfig }}
+            {{- toYaml $mergedJaegerThriftHttpConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.jaeger.grpc }}
+          {{- if .Values.traces.jaeger.grpc.enabled }}
           grpc:
-            endpoint: 0.0.0.0:14250
+            {{- $mergedJaegerGrpcConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:14250") .Values.traces.jaeger.grpc.receiverConfig }}
+            {{- toYaml $mergedJaegerGrpcConfig | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.zipkin}}
+      {{- if .Values.traces.zipkin.enabled }}
       zipkin:
-        endpoint: 0.0.0.0:9411
+        {{- $mergedZipkinReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:9411") .Values.traces.zipkin.receiverConfig }}
+        {{- toYaml $mergedZipkinReceiverConfig | nindent 6 }}
       {{- end }}
-      {{- if or (.Values.traces.otlp.http) (.Values.traces.otlp.grpc) }}
+      {{- if or (.Values.traces.otlp.http.enabled) (.Values.traces.otlp.grpc.enabled) }}
       otlp:
         protocols:
-          {{- if .Values.traces.otlp.http }}
+          {{- if .Values.traces.otlp.http.enabled }}
           http:
-            endpoint: 0.0.0.0:55681
+            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55681") .Values.traces.otlp.http.receiverConfig }}
+            {{- toYaml $mergedOtlpHttpReceiverConfig | nindent 10 }}
           {{- end }}
-          {{- if .Values.traces.otlp.grpc }}
+          {{- if .Values.traces.otlp.grpc.enabled }}
           grpc:
-            endpoint: 0.0.0.0:4317
+            {{- $mergedOtlpGrpcReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:4317") .Values.traces.otlp.grpc.receiverConfig }}
+            {{- toYaml $mergedOtlpGrpcReceiverConfig | nindent 10 }}
           {{- end }}
       {{- end }}
-      {{- if .Values.traces.opencensus }}
+      {{- if .Values.traces.opencensus.enabled }}
       opencensus:
-        endpoint: 0.0.0.0:55678
+        {{- $mergedOpencensusReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55678") .Values.traces.opencensus.receiverConfig }}
+        {{- toYaml $mergedOpencensusReceiverConfig | nindent 6 }}
       {{- end }}
       {{- if .Values.traces.kafka }}
       kafka:
@@ -411,23 +618,38 @@ config: |
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
+      {{- if .Values.querier.config.frontend_worker.grpc_client_config }}
+      grpc_client_config:
+        {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
+      {{- end }}
   ingester:
     lifecycler:
       ring:
-        replication_factor: 1
+        replication_factor: {{ .Values.ingester.config.replication_factor }}
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
+    {{- if .Values.ingester.config.max_block_bytes }}
+    max_block_bytes: {{ .Values.ingester.config.max_block_bytes }}
+    {{- end }}
+    {{- if .Values.ingester.config.max_block_duration }}
+    max_block_duration: {{ .Values.ingester.config.max_block_duration }}
+    {{- end }}
+    {{- if .Values.ingester.config.complete_block_timeout }}
+    complete_block_timeout: {{ .Values.ingester.config.complete_block_timeout }}
+    {{- end }}
   memberlist:
     abort_if_cluster_join_fails: false
     join_members:
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
-    per_tenant_override_config: /conf/overrides.yaml
+    {{- toYaml .Values.global_overrides | nindent 2 }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
     log_format: {{ .Values.server.logFormat }}
+    grpc_server_max_recv_msg_size: {{ .Values.server.grpc_server_max_recv_msg_size }}
+    grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
@@ -460,13 +682,14 @@ config: |
 server:
   # --  HTTP server listen host
   httpListenPort: 3100
-
   # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
   logLevel: info
-
   # -- Log format. Can be set to logfmt (default) or json.
   logFormat: logfmt
-
+  # -- Max gRPC message size that can be received
+  grpc_server_max_recv_msg_size: 4194304
+  # -- Max gRPC message size that can be sent
+  grpc_server_max_send_msg_size: 4194304
 # To configure a different storage backend instead of local storage:
 # storage:
 #   trace:
@@ -481,7 +704,14 @@ storage:
   trace:
     backend: local
 
-# Set ingestion overrides
+# Global overrides
+global_overrides:
+  per_tenant_override_config: /conf/overrides.yaml
+  # metrics_generator_processors:
+  #   - service-graphs
+  #   - span-metrics
+
+# Per tenants overrides
 overrides: |
   overrides: {}
 
@@ -506,6 +736,10 @@ memcached:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached pods
   extraEnvFrom: []
+  # -- Labels for memcached pods
+  podLabels: {}
+  # -- Annotations for memcached pods
+  podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
   # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
@@ -557,10 +791,34 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+  # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+  metricRelabelings: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
   tlsConfig: null
+
+# Rules for the Prometheus Operator
+prometheusRule:
+  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
+  enabled: false
+  # -- Alternative namespace for the PrometheusRule resource
+  namespace: null
+  # -- PrometheusRule annotations
+  annotations: {}
+  # -- Additional PrometheusRule labels
+  labels: {}
+  # -- Contents of Prometheus rules file
+  groups: []
+  # - name: loki-rules
+  #   rules:
+  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
 # Configuration for the gateway
 gateway:
@@ -568,6 +826,19 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the gateway
+    enabled: false
+    # -- Minimum autoscaling replicas for the gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the gateway
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the gateway
+    targetMemoryUtilizationPercentage:
+  # -- Enable logging of 2xx and 3xx HTTP requests
+  verboseLogging: true
   image:
     # -- The Docker registry for the gateway image
     registry: docker.io
@@ -579,6 +850,8 @@ gateway:
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
   priorityClassName: null
+  # -- Labels for gateway pods
+  podLabels: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -704,7 +977,18 @@ gateway:
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
+
+        {{- if .Values.gateway.verboseLogging }}
         access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   /dev/stderr  main  if=$loggable;
+        {{- end }}
+
         sendfile     on;
         tcp_nopush   on;
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};

@@ -5,16 +5,16 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" . | nindent 4 }}
-  {{- with .Values.annotations }}
+  {{- with .Values.service.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
 {{- if (or (eq .Values.service.type "ClusterIP") (empty .Values.service.type)) }}
   type: ClusterIP
   {{- if .Values.service.clusterIP }}
   clusterIP: {{ .Values.service.clusterIP }}
-  {{end}}
+  {{ end }}
 {{- else if eq .Values.service.type "LoadBalancer" }}
   type: {{ .Values.service.type }}
   {{- if .Values.service.loadBalancerIP }}
@@ -22,14 +22,14 @@ spec:
   {{- end }}
   {{- if .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{ toYaml .Values.service.loadBalancerSourceRanges | indent 4 }}
+    {{- toYaml .Values.service.loadBalancerSourceRanges | nindent 4 }}
   {{- end -}}
-  {{- else }}
+{{- else }}
   type: {{ .Values.service.type }}
-  {{- end }}
   {{- if .Values.service.externalIPs }}
   externalIPs:
-  {{ toYaml .Values.service.externalIPs | indent 4 }}
+    {{- toYaml .Values.service.externalIPs | nindent 4 }}
+  {{- end }}
 {{- end }}
   ports:
   - name: tempo-prom-metrics
@@ -53,7 +53,7 @@ spec:
     port: 14268
     protocol: TCP
     targetPort: 14268
-  - name: tempo-jaeger-grpc
+  - name: grpc-tempo-jaeger
     port: 14250
     protocol: TCP
     targetPort: 14250
@@ -66,10 +66,10 @@ spec:
     protocol: TCP
     targetPort: 55680
   - name: tempo-otlp-http
-    port: 55681
+    port: 4318
     protocol: TCP
-    targetPort: 55681
-  - name: tempo-otlp-grpc
+    targetPort: 4318
+  - name: grpc-tempo-otlp
     port: 4317
     protocol: TCP
     targetPort: 4317
