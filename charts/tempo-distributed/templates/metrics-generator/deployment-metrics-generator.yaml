@@ -74,7 +74,7 @@ spec:
             - mountPath: /conf
               name: tempo-conf
             - mountPath: /var/tempo
-              name: data
+              name: wal
             {{- with .Values.metricsGenerator.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
