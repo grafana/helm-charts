@@ -24,6 +24,10 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 ### From Chart Versions < 3.0.0
 
+#### Upgrading to >5.0.0
+
+* [breaking] lokiAddress and associated configuation in snippets.extraClientConfigs are removed and replaced with a single config.clients array.
+
 #### Notable Changes
 
 * Helm 3 is required
@@ -67,13 +71,11 @@ The new release which will pick up again from the existing `positions.yaml`.
 | affinity | object | `{}` | Affinity configuration for pods |
 | annotations | object | `{}` | Annotations for the DaemonSet |
 | config | object | See `values.yaml` | Section for crafting Promtails config file. The only directly relevant value is `config.file` which is a templated string that references the other values and snippets below this key. |
+| config.clients | list | `[{"url":"http://loki-gateway/loki/api/v1/push"}]` | You can put here any keys that will be directly added to the config file's 'client' block. A minimum of one client is required. |
 | config.file | string | See `values.yaml` | Config file contents for Promtail. Must be configured as string. It is templated so it can be assembled from reusable snippets in order to avoid redundancy. |
 | config.logLevel | string | `"info"` | The log level of the Promtail server Must be reference in `config.file` to configure `server.log_level` See default config in `values.yaml` |
-| config.lokiAddress | string | `"http://loki-gateway/loki/api/v1/push"` | The Loki address to post logs to. Must be reference in `config.file` to configure `client.url`. See default config in `values.yaml` |
 | config.serverPort | int | `3101` | The port of the Promtail server Must be reference in `config.file` to configure `server.http_listen_port` See default config in `values.yaml` |
 | config.snippets | object | See `values.yaml` | A section of reusable snippets that can be reference in `config.file`. Custom snippets may be added in order to reduce redundancy. This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common. |
-| config.snippets.extraClientConfigs | string | empty | You can put here any keys that will be directly added to the config file's main 'client' block. This is helpful to add custom configuration for the promtail for things like tenant |
-| config.snippets.extraClients | list | empty | You can put any client configs here that will be added in addition to the main client block. |
 | config.snippets.extraRelabelConfigs | list | `[]` | You can put here any additional relabel_configs to "kubernetes-pods" job |
 | config.snippets.extraScrapeConfigs | string | empty | You can put here any additional scrape configs you want to add to the config file. |
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers |

@@ -241,7 +241,19 @@ config:
   # -- The Loki address to post logs to.
   # Must be reference in `config.file` to configure `client.url`.
   # See default config in `values.yaml`
-  lokiAddress: http://loki-gateway/loki/api/v1/push
+
+  # -- You can put here any keys that will be directly added to the config file's 'client' block.
+  # A minimum of one client is required.
+  clients:
+    # The Loki address to post logs to.
+    - url: http://loki-gateway/loki/api/v1/push
+  #    external_labels:
+  #      label: value
+  #    basic_auth:
+  #      username: loki
+  #      password: loki
+  #  - url: http://other-client-service.local/
+
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -294,14 +306,7 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
-    # -- You can put here any keys that will be directly added to the config file's main 'client' block.
-    # This is helpful to add custom configuration for the promtail for things like tenant
-    # @default -- empty
-    extraClientConfigs: ""
 
-    # -- You can put any client configs here that will be added in addition to the main client block.
-    # @default -- empty
-    extraClients: []
 
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
@@ -356,9 +361,7 @@ config:
       http_listen_port: {{ .Values.config.serverPort }}
 
     clients:
-      - url: {{ tpl .Values.config.lokiAddress . }}
-      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 4 }}
-      {{- with .Values.config.snippets.extraClients }}
+      {{- with .Values.config.clients }}
       {{- toYaml . | nindent 2 }}
       {{- end }}
 
