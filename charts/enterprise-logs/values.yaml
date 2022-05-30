@@ -19,7 +19,7 @@ image: &image
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: v1.4.0
+  tag: v1.4.1
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
@@ -144,6 +144,13 @@ config: |
     storage:
       s3:
         bucketnames: enterprise-logs-ruler
+
+  {{- if .Values.additionalConfig}}
+  {{.Values.additionalConfig}}
+  {{- end}}
+
+# Append some additional config to the default config. Expects a string or `null`
+additionalConfig: null
 
 # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
 commonConfig:
