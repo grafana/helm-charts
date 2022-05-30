@@ -9,6 +9,7 @@ metadata:
 spec:
   type: ClusterIP
   clusterIP: None
+  publishNotReadyAddresses: true
   ports:
     - name: http
       port: {{ .Values.config.memberlist.bind_port | default 7946 }}

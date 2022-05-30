@@ -51,7 +51,6 @@ config:
   auth_enabled: false
 
   memberlist:
-    bind_port: 7946
     join_members:
       # the value must be defined as string to be evaluated when secret manifest is being generating
       - '{{ include "loki.fullname" . }}-memberlist'
