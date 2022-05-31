@@ -21553,6 +21553,29 @@ entries:
   tempo-distributed:
   - apiVersion: v2
     appVersion: 1.4.1
+    created: "2022-05-31T10:42:12.818443366Z"
+    description: Grafana Tempo in MicroService mode
+    digest: ace613eb8f14dab460cfa443c7f5b3b6241d0ceeee26f190030d584f3db05605
+    home: https://grafana.com/docs/tempo/latest/
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: dgzlopes
+    - name: mapno
+    name: tempo-distributed
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-0.19.1/tempo-distributed-0.19.1.tgz
+    version: 0.19.1
+  - apiVersion: v2
+    appVersion: 1.4.1
     created: "2022-05-27T13:43:47.429132851Z"
     description: Grafana Tempo in MicroService mode
     digest: 13e18086415391466712613f865b626b886a57026c79018764fa1603dc97b242
@@ -22968,4 +22991,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-27T13:43:47.441564729Z"
+generated: "2022-05-31T10:42:12.828976587Z"
