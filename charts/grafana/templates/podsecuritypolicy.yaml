@@ -1,5 +1,5 @@
 {{- if .Values.rbac.pspEnabled }}
-apiVersion: policy/v1
+apiVersion: {{ include "grafana.policy.apiVersion" . }}
 kind: PodSecurityPolicy
 metadata:
   name: {{ template "grafana.fullname" . }}
