@@ -1,0 +1,144 @@
+name: Copy and push external chart
+
+on:
+  workflow_call:
+    inputs:
+      ct_configfile:
+        description: location of the chart tester (ct) config file
+        default: ct.yaml
+        required: false
+        type: string
+    secrets:
+      helm_repo_token:
+        description: GitHub api token to use against the helm-charts repository
+        required: true
+
+env:
+  CT_CONFIGFILE: "${{ github.workspace }}/source/${{ inputs.ct_configfile }}"
+  GIT_COMMITTER_EMAIL: "43478413+grafanabot@users.noreply.github.com"
+  GIT_COMMITTER_NAME: "grafanabot"
+  RELEASE_BRANCH: krajo/mimir-release-test
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.list-changed.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          path: source
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+
+      - name: List changed charts
+        id: list-changed
+        run: |
+          cd source
+          changed=$(ct list-changed --config "${CT_CONFIGFILE}")
+          echo "${changed}"
+          num_changed=$(wc -l <<< ${changed})
+          if [[ "${num_changed}" -gt "1" ]] ; then
+            echo "More than one chart changed, exiting"
+            exit 1
+          fi
+          if [[ -n "${changed}" ]]; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+
+  release:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    if: needs.setup.outputs.changed == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          path: source
+
+      - name: Configure Git
+        run: |
+          cd source
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Checkout helm-charts
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: grafana/helm-charts
+          path: helm-charts
+          token: ${{ secrets.helm_repo_token }}
+
+      - name: Configure Git for helm-charts
+        run: |
+          cd helm-charts
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git checkout "${RELEASE_BRANCH}"
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+
+      - name: Parse Chart.yaml
+        id: parse-chart
+        run: |
+          cd source
+          changed=$(ct list-changed --config "${CT_CONFIGFILE}")
+          name=$(yq ".name" < ${changed}/Chart.yaml)
+          version=$(yq ".version" < ${changed}/Chart.yaml)
+          echo "::set-output name=chartpath::${changed}"
+          echo "::set-output name=name::${name}"
+          echo "::set-output name=tagname::${name}-${version}"
+
+      - name: Create tag and check if exists on source repository
+        run: |
+          cd source
+          echo "Making tag ${{ steps.parse-chart.outputs.tagname }}"
+          git tag "${{ steps.parse-chart.outputs.tagname }}"
+
+      - name: Copy to helm-charts and stage
+        run: |
+          cd helm-charts
+          # account for removed files by cleaning the current directory
+          if [[ -e "charts/${{ steps.parse-chart.outputs.name }}" ]] ; then
+            git rm -r -f "charts/${{ steps.parse-chart.outputs.name }}"
+          fi
+          cp -r "${{ github.workspace }}/source/${{ steps.parse-chart.outputs.chartpath }}" "charts/${{ steps.parse-chart.outputs.name }}"
+          git add "charts/${{ steps.parse-chart.outputs.name }}"
+
+      - name: Commit
+        run: |
+          cd helm-charts
+          git commit -m "Sync ${{ steps.parse-chart.outputs.tagname }} from ${{ github.repository }}" -m "Source commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+
+      - name: Push
+        run: |
+          cd helm-charts
+          remote_repo="https://${GITHUB_ACTOR}:${{ secrets.helm_repo_token }}@github.com/grafana/helm-charts.git"
+
+          for i in 1 2 3 ; do
+            # Rebase before each push attempt
+            git fetch
+            git rebase "origin/${RELEASE_BRANCH}"
+            echo "Trying to push new version; try=${i}"
+            # Never use force push!
+            if git push "${remote_repo}" "HEAD:${RELEASE_BRANCH}" ; then
+              echo "Pushed."
+              exit 0
+            fi
+          done
+          echo "Failed to push to helm-charts"
+          exit 1
+
+      # - name: Push release tag on source repository
+      #   run: |
+      #     cd source
+      #     echo "Pushing tag ${{ steps.parse-chart.outputs.tagname }}"
+      #     git push origin "${{ steps.parse-chart.outputs.tagname }}"
