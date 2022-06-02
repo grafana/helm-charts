@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.list-changed.outputs.changed }}
+      chartpath: ${{ steps.list-changed.outputs.chartpath }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -53,7 +54,11 @@ jobs:
         id: list-changed
         run: |
           cd source
-          changed=$(ct list-changed --config "${CT_CONFIGFILE}")
+
+          latest_tag=$( if ! git describe --tags --abbrev=0 2> /dev/null ; then git rev-list --max-parents=0 --first-parent HEAD ; fi )
+
+          echo "Running: ct list-changed --config ${CT_CONFIGFILE} --since ${latest_tag} --target-branch ${{ github.ref_name }}"
+          changed=$(ct list-changed --config "${CT_CONFIGFILE}" --since "${latest_tag}" --target-branch "${{ github.ref_name }}")
           echo "${changed}"
           num_changed=$(wc -l <<< ${changed})
           if [[ "${num_changed}" -gt "1" ]] ; then
@@ -62,6 +67,7 @@ jobs:
           fi
           if [[ -n "${changed}" ]]; then
             echo "::set-output name=changed::true"
+            echo "::set-output name=chartpath::${changed}"
           else
             echo "::set-output name=changed::false"
           fi
@@ -120,14 +126,11 @@ jobs:
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo add minio https://helm.min.io
 
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
-
       - name: Parse Chart.yaml
         id: parse-chart
         run: |
           cd source
-          changed=$(ct list-changed --config "${CT_CONFIGFILE}")
+          changed="${{ needs.setup.outputs.chartpath }}"
           description=$(yq ".description" < ${changed}/Chart.yaml)
           name=$(yq ".name" < ${changed}/Chart.yaml)
           version=$(yq ".version" < ${changed}/Chart.yaml)
