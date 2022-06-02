@@ -123,6 +123,7 @@ jobs:
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo add prometheus https://prometheus-community.github.io/helm-charts
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo add minio https://helm.min.io
 
