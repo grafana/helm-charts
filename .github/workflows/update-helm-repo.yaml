@@ -182,4 +182,4 @@ jobs:
       - name: Update helm repo index.yaml
         run: |
           cd helm-charts
-          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ secrets.helm_repo_token }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --pr
+          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ secrets.helm_repo_token }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
