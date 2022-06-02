@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.15.1](https://img.shields.io/badge/Version-0.15.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.15.3](https://img.shields.io/badge/Version-0.15.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -13,6 +13,7 @@ Grafana Tempo Single Binary Mode
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| config | string | `"multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}\nsearch_enabled: {{ .Values.tempo.searchEnabled }}\ncompactor:\n  compaction:\n    compacted_block_retention: {{ .Values.tempo.retention }}\ndistributor:\n  receivers:\n    {{- toYaml .Values.tempo.receivers | nindent 8 }}\ningester:\n  {{- toYaml .Values.tempo.ingester | nindent 6 }}\nserver:\n  {{- toYaml .Values.tempo.server | nindent 6 }}\nstorage:\n  {{- toYaml .Values.tempo.storage | nindent 6 }}\noverrides:\n  {{- toYaml .Values.tempo.global_overrides | nindent 6 }}\n"` | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
@@ -37,6 +38,7 @@ Grafana Tempo Single Binary Mode
 | tempo.extraArgs | object | `{}` |  |
 | tempo.extraEnv | list | `[]` | Environment variables to add |
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
+| tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | tempo.ingester | object | `{}` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |

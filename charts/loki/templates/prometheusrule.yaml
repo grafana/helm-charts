@@ -7,10 +7,7 @@ metadata:
   namespace: {{ .Values.serviceMonitor.prometheusRule.namespace | quote }}
 {{- end }}
   labels:
-    app: {{ template "loki.name" . }}
-    chart: {{ template "loki.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    {{- include "loki.labels" . | nindent 4 }}
   {{- if .Values.serviceMonitor.prometheusRule.additionalLabels }}
     {{- toYaml .Values.serviceMonitor.prometheusRule.additionalLabels | nindent 4 }}
   {{- end }}
