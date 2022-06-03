@@ -10,6 +10,9 @@ annotations: {}
 # -- Annotations for the Deployment Pods
 podAnnotations: {}
 
+# -- Annotations for the Deployment Pods
+podLabels: {}
+
 # -- Pod security context (runAsUser, etc.)
 podSecurityContext: {}
 

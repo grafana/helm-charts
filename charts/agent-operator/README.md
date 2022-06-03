@@ -65,6 +65,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
+| podLabels | object | `{}` | Labels for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
 | rbac | object | `{"create":true}` | Toggle to create ClusterRole and ClusterRoleBinding |
 | resources | object | `{}` | Resource limits and requests config |
