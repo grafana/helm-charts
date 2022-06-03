@@ -63,7 +63,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"1.4.1"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
-| tempoQuery.enabled | bool | `true` | if False and tempo.searchEnabled = True, disables tempo-query container |
+| tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |

@@ -127,7 +127,7 @@ tempoQuery:
   # pullSecrets:
   #   - myRegistryKeySecretName
 
-  # -- if False and tempo.searchEnabled = True, disables tempo-query container
+  # -- if False the tempo-query container is not deployed
   enabled: true
   ## Additional container arguments
   extraArgs: {}
