@@ -81,7 +81,7 @@ spec:
         - mountPath: /var/tempo
           name: storage
         {{- end }}
-      {{- if or (not .Values.tempo.searchEnabled) .Values.tempoQuery.enabled }}
+      {{- if .Values.tempoQuery.enabled }}
       - args:
         - --query.base-path=/
         - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml

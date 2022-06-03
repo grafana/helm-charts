@@ -1,4 +1,4 @@
-{{- if or (not .Values.tempo.searchEnabled) .Values.tempoQuery.enabled }}
+{{- if .Values.tempoQuery.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

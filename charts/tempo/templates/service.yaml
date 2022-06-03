@@ -35,7 +35,7 @@ spec:
   - name: tempo-prom-metrics
     port: 3100
     targetPort: 3100
-  {{- if or (not .Values.tempo.searchEnabled) .Values.tempoQuery.enabled }}
+  {{- if .Values.tempoQuery.enabled }}
   - name: jaeger-metrics
     port: 16687
     targetPort: 16687
