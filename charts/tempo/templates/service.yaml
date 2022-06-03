@@ -35,12 +35,14 @@ spec:
   - name: tempo-prom-metrics
     port: 3100
     targetPort: 3100
+  {{- if or (not .Values.tempo.searchEnabled) .Values.tempoQuery.enabled }}
   - name: jaeger-metrics
     port: 16687
     targetPort: 16687
   - name: tempo-query-jaeger-ui
     port: 16686
     targetPort: 16686
+  {{- end }}
   - name: tempo-jaeger-thrift-compact
     port: 6831
     protocol: UDP

@@ -1,3 +1,4 @@
+{{- if or (not .Values.tempo.searchEnabled) .Values.tempoQuery.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,3 +9,4 @@ metadata:
 data:
   tempo-query.yaml: |
     backend: {{ template "tempo.fullname" . }}:{{ .Values.tempo.server.http_listen_port }}
+{{- end }}

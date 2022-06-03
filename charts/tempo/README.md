@@ -24,6 +24,7 @@ Grafana Tempo Single Binary Mode
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | replicas | int | `1` |  |
+| securityContext | object | `{}` |  |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
@@ -55,17 +56,20 @@ Grafana Tempo Single Binary Mode
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |
 | tempo.searchEnabled | bool | `false` | If true, enables Tempo's native search |
+| tempo.securityContext | object | `{}` | |
 | tempo.server.http_listen_port | int | `3100` | HTTP server listen port |
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"1.4.1"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
+| tempoQuery.enabled | bool | `true` | if False and tempo.searchEnabled = True, disables tempo-query container|
 | tempoQuery.extraArgs | object | `{}` |  |
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
+| tempoQuery.securityContext | object | `{}` | |
 | tempoQuery.tag | string | `"1.4.1"` |  |
 | tolerations | list | `[]` |  |
 

@@ -80,6 +80,12 @@ tempo:
           endpoint: "0.0.0.0:4317"
         http:
           endpoint: "0.0.0.0:4318"
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #    - ALL
+    # readOnlyRootFilesystem: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -120,6 +126,9 @@ tempoQuery:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
+
+  ## remove tempo-query container if tempo.searchEnabled = true and tempoQuery.enabled = false
+  enabled: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -130,6 +139,19 @@ tempoQuery:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #    - ALL
+    # # readOnlyRootFilesystem: true # fails, do not enable
+
+# Add container securityContext
+securityContext: {}
+  # runAsUser: 65532
+  # runAsGroup: 65532
+  # fsGroup: 65532
+  # runAsNonRoot: true
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
