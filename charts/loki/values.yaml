@@ -49,6 +49,12 @@ tracing:
 config:
   # existingSecret:
   auth_enabled: false
+
+  memberlist:
+    join_members:
+      # the value must be defined as string to be evaluated when secret manifest is being generating
+      - '{{ include "loki.fullname" . }}-memberlist'
+
   ingester:
     chunk_idle_period: 3m
     chunk_block_size: 262144
@@ -58,8 +64,6 @@ config:
       dir: /data/loki/wal
     lifecycler:
       ring:
-        kvstore:
-          store: inmemory
         replication_factor: 1
 
       ## Different ring configs can be used. E.g. Consul
@@ -87,6 +91,7 @@ config:
         period: 24h
   server:
     http_listen_port: 3100
+    grpc_listen_port: 9095
   storage_config:
     boltdb_shipper:
       active_index_directory: /data/loki/boltdb-shipper-active

@@ -238,10 +238,11 @@ config:
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
   serverPort: 3101
-  # -- The Loki address to post logs to.
-  # Must be reference in `config.file` to configure `client.url`.
-  # See default config in `values.yaml`
-  lokiAddress: http://loki-gateway/loki/api/v1/push
+  # -- The config of clients of the Promtail server
+  # Must be reference in `config.file` to configure `clients`
+  # @default -- See `values.yaml`
+  clients:
+    - url: http://loki-gateway/loki/api/v1/push
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -293,10 +294,6 @@ config:
     # If set to true, adds an additional label for the scrape job.
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
-
-    # -- You can put here any keys that will be directly added to the config file's 'client' block.
-    # @default -- empty
-    extraClientConfigs: []
 
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
@@ -351,10 +348,7 @@ config:
       http_listen_port: {{ .Values.config.serverPort }}
 
     clients:
-      - url: {{ tpl .Values.config.lokiAddress . }}
-      {{- with .Values.config.snippets.extraClientConfigs }}
-      {{- toYaml . | nindent 2 }}
-      {{- end }}
+      {{- toYaml .Values.config.clients | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
