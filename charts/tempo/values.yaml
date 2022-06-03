@@ -144,7 +144,7 @@ tempoQuery:
     #  capabilities:
     #    drop:
     #    - ALL
-    # # readOnlyRootFilesystem: true # fails, do not enable
+    # readOnlyRootFilesystem: false # fails if true, do not enable
 
 # Add container securityContext
 securityContext: {}
