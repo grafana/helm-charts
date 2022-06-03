@@ -14602,6 +14602,30 @@ entries:
   loki-simple-scalable:
   - apiVersion: v2
     appVersion: 2.5.0
+    created: "2022-06-03T20:41:01.185880863Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    description: Helm chart for Grafana Loki in simple, scalable mode
+    digest: 27b391753064ef59e26a9c632b092399dc32e31545f3c499f3e2eb70ee40d95e
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: trevorwhitney
+    name: loki-simple-scalable
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-simple-scalable-1.2.0/loki-simple-scalable-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: 2.5.0
     created: "2022-05-24T21:59:44.554087132Z"
     dependencies:
     - alias: minio
@@ -23307,4 +23331,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-03T14:38:50.507309206Z"
+generated: "2022-06-03T20:41:01.196204362Z"
