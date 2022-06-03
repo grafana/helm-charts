@@ -38,6 +38,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node selector for canary pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
+| podLabels | object | `{}` | Common labels for all pods |
 | priorityClassName | string | `nil` | The name of the PriorityClass for pods |
 | resources | object | `{}` | Resource requests and limits for the canary |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
