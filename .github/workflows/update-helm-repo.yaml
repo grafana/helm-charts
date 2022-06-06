@@ -66,9 +66,19 @@ jobs:
             exit 1
           fi
           if [[ -n "${changed}" ]]; then
-            echo "::set-output name=changed::true"
-            echo "::set-output name=chartpath::${changed}"
+            name=$(yq ".name" < ${changed}/Chart.yaml)
+            version=$(yq ".version" < ${changed}/Chart.yaml)
+
+            if [ $(git tag -l "${name}-${version}") ]; then
+              echo "Tag ${tagname} already exists, skipping release"
+              echo "::set-output name=changed::false"
+            else
+              echo "Releasing ${changed}"
+              echo "::set-output name=changed::true"
+              echo "::set-output name=chartpath::${changed}"
+            fi
           else
+            echo "No charts have changed, skipping release"
             echo "::set-output name=changed::false"
           fi
 
