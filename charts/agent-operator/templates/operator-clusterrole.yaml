@@ -4,7 +4,7 @@ kind: ClusterRole
 metadata:
   name: {{ include "ga-operator.fullname" . }}
   labels:
-    {{ include "ga-operator.labels" . | indent 4 }}
+{{ include "ga-operator.labels" . | indent 4 }}
 rules:
 - apiGroups: [monitoring.grafana.com]
   resources:
