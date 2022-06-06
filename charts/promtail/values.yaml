@@ -324,6 +324,12 @@ config:
             action: replace
             target_label: app
           - source_labels:
+              - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+              - __meta_kubernetes_pod_label_release
+            regex: ^;*([^;]+)(;.*)?$
+            action: replace
+            target_label: instance
+          - source_labels:
               - __meta_kubernetes_pod_label_app_kubernetes_io_component
               - __meta_kubernetes_pod_label_component
             regex: ^;*([^;]+)(;.*)?$
