@@ -10,6 +10,10 @@ annotations: {}
 # -- Annotations for the Deployment Pods
 podAnnotations: {}
 
+# -- Additional labels to add to all resources
+customLabels: {}
+  # app: grafana-agent-operator
+
 # -- Pod security context (runAsUser, etc.)
 podSecurityContext: {}
 

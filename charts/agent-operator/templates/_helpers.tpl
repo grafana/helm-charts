@@ -36,9 +36,14 @@ Common labels
 {{- define "ga-operator.labels" -}}
 {{ include "ga-operator.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/component: operator
+app.kubernetes.io/part-of: {{ template "ga-operator.name" . }}
 helm.sh/chart: {{ include "ga-operator.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+{{- if .Values.customLabels }}
+{{ toYaml .Values.customLabels }}
 {{- end }}
 {{- end }}
 
