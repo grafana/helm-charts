@@ -10,4 +10,5 @@ spec:
     matchLabels:
       {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 6 }}
   maxUnavailable: 1
+  maxUnavailable: {{ .Values.memcachedIndexQueries.maxUnavailable }}
 {{- end }}

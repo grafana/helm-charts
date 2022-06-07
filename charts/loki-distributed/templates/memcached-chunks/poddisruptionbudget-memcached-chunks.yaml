@@ -9,5 +9,5 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.memcachedChunksSelectorLabels" . | nindent 6 }}
-  maxUnavailable: 1
+  maxUnavailable: {{ .Values.memcachedChunks.maxUnavailable }}
 {{- end }}

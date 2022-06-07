@@ -9,5 +9,5 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 6 }}
-  maxUnavailable: 1
+  maxUnavailable: {{ .Values.memcachedIndexWrites.maxUnavailable }}
 {{- end }}
