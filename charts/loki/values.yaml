@@ -158,6 +158,7 @@ persistence:
   #     app.kubernetes.io/name: loki
   # subPath: ""
   # existingClaim:
+  # storageClassName:
 
 ## Pod Labels
 podLabels: {}
