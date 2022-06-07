@@ -10,6 +10,6 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.gatewaySelectorLabels" . | nindent 6 }}
-  maxUnavailable: 1
+  maxUnavailable: {{ .Values.gateway.maxUnavailable }}
 {{- end }}
 {{- end }}

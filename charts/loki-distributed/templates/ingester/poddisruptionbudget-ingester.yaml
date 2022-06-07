@@ -9,5 +9,5 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.ingesterSelectorLabels" . | nindent 6 }}
-  maxUnavailable: 1
+  maxUnavailable: {{ .Values.ingester.maxUnavailable }}
 {{- end }}

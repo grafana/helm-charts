@@ -9,5 +9,5 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.queryFrontendSelectorLabels" . | nindent 6 }}
-  maxUnavailable: 1
+  maxUnavailable: {{ .Values.queryFrontend.maxUnavailable }}
 {{- end }}

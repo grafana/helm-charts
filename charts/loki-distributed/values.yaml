@@ -306,6 +306,8 @@ ingester:
               matchLabels:
                 {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -384,6 +386,8 @@ distributor:
               matchLabels:
                 {{- include "loki.distributorSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -451,6 +455,8 @@ querier:
               matchLabels:
                 {{- include "loki.querierSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -529,6 +535,8 @@ queryFrontend:
               matchLabels:
                 {{- include "loki.queryFrontendSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -675,6 +683,8 @@ gateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for gateway pods
   nodeSelector: {}
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Tolerations for gateway pods
   tolerations: []
   # Gateway service configuration
@@ -967,6 +977,8 @@ ruler:
               matchLabels:
                 {{- include "loki.rulerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Node selector for ruler pods
   nodeSelector: {}
   # -- Tolerations for ruler pods
@@ -1102,6 +1114,8 @@ indexGateway:
               matchLabels:
                 {{- include "loki.indexGatewaySelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # Pod Disruption Budget maxUnavailable
+  maxUnavailable: 0
   # -- Node selector for index-gateway pods
   nodeSelector: {}
   # -- Tolerations for index-gateway pods
