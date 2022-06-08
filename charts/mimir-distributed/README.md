@@ -2,6 +2,8 @@
 
 The `mimir-distributed` chart source code has moved to the [Grafana Mimir](https://github.com/grafana/mimir) GitHub repository.
 
+Contents of this file, including installation instructions are moved to this [README.md](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/README.md) in the new repository.
+
 ## Usage
 
 Usage will not be impacted, the `mimir-distributed` chart will continue to be released to the same [https://grafana.github.io/helm-charts](https://grafana.github.io/helm-charts) Helm repository as before.
