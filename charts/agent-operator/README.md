@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.1.12](https://img.shields.io/badge/Version-0.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.2](https://img.shields.io/badge/AppVersion-0.24.2-informational?style=flat-square)
+![Version: 0.1.13](https://img.shields.io/badge/Version-0.1.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.2](https://img.shields.io/badge/AppVersion-0.24.2-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -65,7 +65,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
-| podLabels | object | `{}` | Labels for the Deployment Pods |
+| podLabels | object | `{}` | Annotations for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
 | rbac | object | `{"create":true}` | Toggle to create ClusterRole and ClusterRoleBinding |
 | resources | object | `{}` | Resource limits and requests config |
