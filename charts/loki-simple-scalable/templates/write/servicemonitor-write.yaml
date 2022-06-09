@@ -30,7 +30,7 @@ spec:
         values:
           - "false"
   endpoints:
-    - port: http
+    - port: http-metrics
       {{- with .interval }}
       interval: {{ . }}
       {{- end }}
