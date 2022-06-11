@@ -38,6 +38,18 @@ spec:
         {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
         args:
           - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ .Values.kubeletService.serviceName }}
+          {{-  if .Values.extraArgs  }}
+          {{- range .Values.extraArgs  }}
+          - {{ . }}
+          {{- end }}
+          {{- end }}
+        {{- else}}
+        {{-  if .Values.extraArgs  }}
+        args:
+          {{- range .Values.extraArgs  }}
+          - {{ . }}
+          {{- end }}
+        {{- end }}
         {{- end }}
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:

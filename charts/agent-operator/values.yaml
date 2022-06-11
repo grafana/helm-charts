@@ -45,6 +45,10 @@ kubeletService:
   namespace: default
   serviceName: kubelet
 
+# List of additional cli arguments to configure grafana-agent-operator
+# for example: --log.level, etc.
+extraArgs: []
+
 # -- Resource limits and requests config
 resources: {}
 
