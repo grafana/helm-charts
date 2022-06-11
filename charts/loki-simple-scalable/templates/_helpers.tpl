@@ -142,8 +142,8 @@ gcs:
 {{- else -}}
 {{- with .Values.loki.storage.local }}
 filesystem:
-  chunks_directory: {{ .chunksDirectory }}
-  rules_directory: {{ .rulesDirectory }}
+  chunks_directory: {{ .chunks_directory }}
+  rules_directory: {{ .rules_directory }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
