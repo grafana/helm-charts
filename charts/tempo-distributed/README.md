@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.19.2](https://img.shields.io/badge/Version-0.19.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.19.3](https://img.shields.io/badge/Version-0.19.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -147,7 +147,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
 | gateway.extraVolumes | list | `[]` | Volumes to add to the gateway pods |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` | The gateway image pull policy |
-| gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
+| gateway.image.registry | string | `nil` | The Docker registry for the gateway image. Overrides `global.image.registry` |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
 | gateway.ingress.annotations | object | `{}` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 ingressClassName: nginx -- Annotations for the gateway ingress |
@@ -222,16 +222,18 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.extraEnv | list | `[]` | Environment variables to add to memcached pods |
 | memcached.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached pods |
 | memcached.host | string | `"memcached"` |  |
+| memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
+| memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
+| memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
+| memcached.image.tag | string | `"1.5.17-alpine"` | Memcached Docker image tag |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
-| memcached.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
 | memcached.replicas | int | `1` |  |
-| memcached.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service | string | `"memcached-client"` |  |
-| memcached.tag | string | `"1.5.17-alpine"` | Memcached Docker image tag |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
+| memcachedExporter.image.registry | string | `nil` | The Docker registry for the Memcached Exporter image. Overrides `global.image.registry` |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
