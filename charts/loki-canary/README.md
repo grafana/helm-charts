@@ -1,6 +1,6 @@
 # loki-canary
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 0.8.1](https://img.shields.io/badge/Version-0.8.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 
@@ -38,6 +38,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node selector for canary pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
+| podLabels | object | `{}` | Common labels for all pods |
 | priorityClassName | string | `nil` | The name of the PriorityClass for pods |
 | resources | object | `{}` | Resource requests and limits for the canary |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
