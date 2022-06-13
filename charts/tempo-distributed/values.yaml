@@ -297,6 +297,13 @@ distributor:
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
   extraVolumes: []
+  config:
+    # -- Enable to log every received trace id to help debug ingestion
+    log_received_traces: null
+    # -- Disables write extension with inactive ingesters
+    extend_writes: null
+    # -- List of tags that will not be extracted from trace data for search lookups
+    search_tags_deny_list: []
 
 compactor:
   image:
@@ -619,6 +626,18 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
+    {{- if .Values.distributor.config.log_received_traces }}
+    log_received_traces: {{ .Values.distributor.config.log_received_traces }}
+    {{- end }}
+    {{- if .Values.distributor.config.extend_writes }}
+    extend_writes: {{ .Values.distributor.config.extend_writes }}
+    {{- end }}
+    {{- if .Values.distributor.config.search_tags_deny_list }}
+    search_tags_deny_list:
+      {{- with .Values.distributor.config.search_tags_deny_list }}
+      {{- toYaml . | nindent 4 }}
+      {{- end }}
+    {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
