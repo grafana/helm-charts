@@ -35,21 +35,16 @@ spec:
         resources:
         {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
+        {{- if or (and .Values.kubeletService.namespace .Values.kubeletService.serviceName) (.Values.extraArgs) }}
         args:
+          {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
           - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ .Values.kubeletService.serviceName }}
-          {{-  if .Values.extraArgs  }}
+          {{- end }}
+          {{- if .Values.extraArgs  }}
           {{- range .Values.extraArgs  }}
           - {{ . }}
           {{- end }}
           {{- end }}
-        {{- else}}
-        {{-  if .Values.extraArgs  }}
-        args:
-          {{- range .Values.extraArgs  }}
-          - {{ . }}
-          {{- end }}
-        {{- end }}
         {{- end }}
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
