@@ -24,7 +24,7 @@ app.kubernetes.io/component: memcached
 {{/*
 memcached image
 */}}
-{{- define "tempo.mamcachedImage" -}}
+{{- define "tempo.memcachedImage" -}}
 {{- $dict := dict "service" .Values.memcached.image "global" .Values.global.image -}}
 {{- include "tempo.tempoImage" $dict -}}
 {{- end }}
@@ -32,7 +32,7 @@ memcached image
 {{/*
 memcachedExporter image
 */}}
-{{- define "tempo.mamcachedExporterImage" -}}
+{{- define "tempo.memcachedExporterImage" -}}
 {{- $dict := dict "service" .Values.memcachedExporter.image "global" .Values.global.image -}}
 {{- include "tempo.tempoImage" $dict -}}
 {{- end }}
