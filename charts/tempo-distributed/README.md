@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.19.3](https://img.shields.io/badge/Version-0.19.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.20.0](https://img.shields.io/badge/Version-0.20.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -19,6 +19,17 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart version < 0.20.0
+The image's attributes must be set under the `image` key for the Memcached service.
+```yaml
+memcached:
+  image:
+    registry: docker.io
+    repository: memcached
+    tag: "1.5.17-alpine"
+    pullPolicy: "IfNotPresent"
+```
 
 ### From Chart version < 0.18.0
 Trace ingestion must now be enabled with the `enabled` key:
