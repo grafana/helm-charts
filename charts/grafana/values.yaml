@@ -74,7 +74,8 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.5.0
+  # Overrides the Grafana image tag whose default is the chart appVersion
+  tag: ""
   sha: ""
   pullPolicy: IfNotPresent
 

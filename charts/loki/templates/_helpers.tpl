@@ -73,3 +73,13 @@ extensions/v1
 {{- end }}
 {{- end -}}
 
+
+{{/*
+Common labels
+*/}}
+{{- define "loki.labels" -}}
+app: {{ template "loki.name" . }}
+chart: {{ template "loki.chart" . }}
+release: {{ .Release.Name }}
+heritage: {{ .Release.Service }}
+{{- end }}

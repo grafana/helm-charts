@@ -4,10 +4,7 @@ metadata:
   name: {{ template "loki.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "loki.name" . }}
-    chart: {{ template "loki.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "loki.labels" . | nindent 4 }}
   annotations:
     {{- toYaml .Values.annotations | nindent 4 }}
 spec:
@@ -77,8 +74,16 @@ spec:
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: {{ .Values.config.server.http_listen_port | default 3100 }}
               protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port | default 9095 }}
+              protocol: TCP
+            {{- if .Values.config.memberlist }}
+            - name: memberlist-port
+              containerPort: {{ .Values.config.memberlist.bind_port | default 7946 }}
+              protocol: TCP
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

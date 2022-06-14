@@ -3,7 +3,14 @@ name: Lint Code Base
 # Documentation:
 # https://help.github.com/en/articles/workflow-syntax-for-github-actions
 
-on: pull_request
+on:
+  workflow_call:
+    inputs:
+      filter_regex_include:
+        description: this sets the scope of the super linter
+        default: ".*"
+        required: false
+        type: string
 
 jobs:
   build:
@@ -25,6 +32,7 @@ jobs:
         uses: docker://github/super-linter:v3.12.0
         env:
           FILTER_REGEX_EXCLUDE: .*(README\.md|Chart\.yaml|NOTES.txt).*
+          FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_KUBERNETES_KUBEVAL: false
           VALIDATE_YAML: false
