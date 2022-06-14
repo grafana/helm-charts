@@ -21,6 +21,9 @@ priorityClassName: null
 # -- Common annotations for all pods
 podAnnotations: {}
 
+# -- Common labels for all pods
+podLabels: {}
+
 # -- The number of old ReplicaSets to retain to allow rollback
 revisionHistoryLimit: 10
 

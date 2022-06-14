@@ -138,6 +138,10 @@ ingester:
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
+    # -- Amount of time a trace must be idle before flushing it to the wal.
+    trace_idle_period: null
+    # -- How often to sweep all tenants and move traces from live -> wal -> completed blocks.
+    flush_check_period: null
     # -- Maximum size of a block before cutting it
     max_block_bytes: null
     # -- Maximum length of time before cutting a block
@@ -629,6 +633,12 @@ config: |
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
+    {{- if .Values.ingester.config.trace_idle_period }}
+    trace_idle_period: {{ .Values.ingester.config.trace_idle_period }}
+    {{- end }}
+    {{- if .Values.ingester.config.flush_check_period }}
+    flush_check_period: {{ .Values.ingester.config.flush_check_period }}
+    {{- end }}
     {{- if .Values.ingester.config.max_block_bytes }}
     max_block_bytes: {{ .Values.ingester.config.max_block_bytes }}
     {{- end }}
