@@ -30,7 +30,6 @@ spec:
     - ports:
         {{ .Values.networkPolicy.egress.ports | toJson }}
   {{- end }}
-
   {{- if .Values.networkPolicy.ingress }}
   ingress:
     - ports:
@@ -49,7 +48,5 @@ spec:
               {{- include "grafana.labels" . | nindent 14 }}
               role: read
       {{- end }}
-
   {{- end }}
-
 {{- end }}
