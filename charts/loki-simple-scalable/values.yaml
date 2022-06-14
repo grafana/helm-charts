@@ -133,6 +133,7 @@ loki:
     s3:
       s3: null
       endpoint: https://amazonaws.com
+      region: null
       secretAccessKey: supersecret
       accessKeyId: accesskey
       s3ForcePathStyle: false
