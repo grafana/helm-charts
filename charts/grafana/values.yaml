@@ -895,7 +895,7 @@ networkPolicy:
     enabled: false
     ##
     ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
-    ports:
+    ports: []
     ## Add ports to the egress by specifying - port: <port number>
     ## E.X.
     ## ports:
