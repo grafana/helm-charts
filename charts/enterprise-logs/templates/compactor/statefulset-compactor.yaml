@@ -98,14 +98,14 @@ spec:
           {{- end }}
         - name: storage
           emptyDir: {}
-        {{- if .Values.gateway.extraVolumes }}
-        {{ toYaml .Values.gateway.extraVolumes | nindent 8 }}
+        {{- if .Values.compactor.extraVolumes }}
+        {{ toYaml .Values.compactor.extraVolumes | nindent 8 }}
         {{- end }}
       containers:
         {{- if .Values.compactor.extraContainers }}
         {{ toYaml .Values.compactor.extraContainers | nindent 8 }}
         {{- end }}
-        - name: enterprise-logs
+        - name: compactor
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -113,10 +113,10 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -admin.client.s3.endpoint={{ template "enterprise-logs.minio" . }}
             - -admin.client.s3.bucket-name=enterprise-logs-admin
-            - -admin.client.s3.access-key-id=enterprise-logs
-            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.access-key-id={{ .Values.minio.accessKey }}
+            - -admin.client.s3.secret-access-key={{ .Values.minio.secretKey }}
             - -admin.client.s3.insecure=true
             {{- end }}
             {{- range $key, $value := .Values.compactor.extraArgs }}
@@ -128,17 +128,16 @@ spec:
             - name: license
               mountPath: /etc/enterprise-logs/license
             - name: storage
-              mountPath: /data
-              subPath: {{ .Values.gateway.persistence.subPath }}
-            {{- if .Values.gateway.extraVolumeMounts }}
-            {{ toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
+              mountPath: /var/loki
+            {{- if .Values.compactor.extraVolumeMounts }}
+            {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12 }}
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: 3100
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946

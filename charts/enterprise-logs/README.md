@@ -65,6 +65,29 @@ $ helm install <cluster name> grafana/enterprise-logs \
     -f small.yaml
 ```
 
+### Updating the GEL version in custom values file
+
+If you need to update the GEL version in a custom values file that overrides
+the default vaules, you need to be careful to also override the version in the
+`loki-distributed.loki.image` block. This is necessary, because that block
+controls the name and version of the image used in the
+[loki-enterprise](../loki-enterprise) child chart.
+
+Setting a version in a custom values file without duplicating the value can be
+achieved by using a YAML anchor and pointer, like so:
+
+```yaml
+image:
+  tag: &version v1.2.1
+
+...
+
+loki-distributed:
+  loki:
+    image:
+      tag: *version
+```
+
 ## Contributing/Releasing
 
 All changes require a bump to the chart version, as this enforced by CI. All changes to the chart
@@ -77,3 +100,8 @@ file under the new version.
 
 Finally, push your changes and open up a pull request with the prefix `[enterprise-logs]` in the
 title.
+
+### Updating the GEL version
+
+When updating the GEL version, it is necessary to change the value in both the
+`Chart.yaml` as well as in the `values.yaml`.

@@ -41,8 +41,10 @@ spec:
       {{- if .Values.adminApi.priorityClassName }}
       priorityClassName: {{ .Values.adminApi.priorityClassName }}
       {{- end }}
+      {{- if .Values.adminApi.securityContext.runAsGroup }}
       securityContext:
-        fsGroup: 10001
+        fsGroup: {{ .Values.adminApi.securityContext.runAsGroup | int }}
+      {{- end}}
       initContainers:
       # Taken from
       # https://github.com/minio/charts/blob/a5c84bcbad884728bff5c9c23541f936d57a13b3/minio/templates/post-install-create-bucket-job.yaml
@@ -71,7 +73,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: enterprise-logs
+        - name: admin-api
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -79,10 +81,10 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -admin.client.s3.endpoint={{ template "enterprise-logs.minio" . }}
             - -admin.client.s3.bucket-name=enterprise-logs-admin
-            - -admin.client.s3.access-key-id=enterprise-logs
-            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.access-key-id={{ .Values.minio.accessKey }}
+            - -admin.client.s3.secret-access-key={{ .Values.minio.secretKey }}
             - -admin.client.s3.insecure=true
             {{- end }}
             {{- range $key, $value := .Values.adminApi.extraArgs }}
@@ -101,10 +103,10 @@ spec:
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: 3100
               protocol: TCP
             - name: grpc
-              containerPort: {{ .Values.config.server.grpc_listen_port }}
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946
