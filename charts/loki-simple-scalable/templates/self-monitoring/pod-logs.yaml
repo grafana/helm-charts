@@ -1,5 +1,6 @@
-{{- if .Values.self-monitoring.enabled }}
-{{- with .Values.self-monitoring.podLogs }}
+---
+{{- if .Values.monitoring.selfMonitoring.enabled }}
+{{- with .Values.monitoring.selfMonitoring.podLogs }}
 apiVersion: monitoring.grafana.com/v1alpha1
 kind: PodLogs
 metadata:

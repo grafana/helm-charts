@@ -1,5 +1,5 @@
-{{- if .Values.self-monitoring.enabled }}
-{{- with .Values.self-monitoring.logsInstance }}
+{{- if .Values.monitoring.selfMonitoring.enabled }}
+{{- with .Values.monitoring.selfMonitoring.logsInstance }}
 apiVersion: monitoring.grafana.com/v1alpha1
 kind: LogsInstance
 metadata:
