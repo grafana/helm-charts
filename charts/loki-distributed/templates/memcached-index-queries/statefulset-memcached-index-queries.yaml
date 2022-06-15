@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedIndexQueriesFullname" . }}
   labels:
     {{- include "loki.memcachedIndexQueriesLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedIndexQueries.replicas }}
   updateStrategy:
@@ -86,6 +90,9 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
+        {{- end }}
+        {{- if .Values.memcachedIndexQueries.extraContainers }}
+        {{- toYaml .Values.memcachedIndexQueries.extraContainers | nindent 8}}
         {{- end }}
       {{- with .Values.memcachedIndexQueries.affinity }}
       affinity:

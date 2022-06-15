@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.querier.replicas }}
   podManagementPolicy: Parallel
@@ -88,6 +92,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.querier.resources | nindent 12 }}
+        {{- if .Values.querier.extraContainers }}
+        {{- toYaml .Values.querier.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.querier.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

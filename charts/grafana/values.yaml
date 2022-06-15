@@ -17,6 +17,7 @@ serviceAccount:
   create: true
   name:
   nameTest:
+## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
   autoMount: true
@@ -73,13 +74,15 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.3.6
+  # Overrides the Grafana image tag whose default is the chart appVersion
+  tag: ""
   sha: ""
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Can be templated.
   ##
   # pullSecrets:
   #   - myRegistrKeySecretName
@@ -99,6 +102,8 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Extra configmaps to mount in grafana pods
+# Values are templated.
 extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/
@@ -236,11 +241,14 @@ nodeSelector: {}
 ##
 tolerations: []
 
-## Affinity for pod assignment
+## Affinity for pod assignment (evaluated as template)
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
 
+## Additional init containers (evaluated as template)
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+##
 extraInitContainers: []
 
 ## Enable an Specify container in extraContainers. This is meant to allow adding an authentication proxy to a grafana pod
@@ -283,7 +291,9 @@ persistence:
   finalizers:
     - kubernetes.io/pvc-protection
   # selectorLabels: {}
+  ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""
+  ## Name of an existing PVC. Can be templated.
   # existingClaim:
 
   ## If persistence is not enabled, this allows to mount the
@@ -329,6 +339,7 @@ adminUser: admin
 
 # Use an existing secret for the admin user.
 admin:
+  ## Name of the secret. Can be templated.
   existingSecret: ""
   userKey: admin-user
   passwordKey: admin-password
@@ -369,8 +380,8 @@ admin:
 
 env: {}
 
-## "valueFrom" environment variable references that will be added to deployment pods
-## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core
+## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
+## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
 ## Renders in container spec as:
 ##   env:
 ##     ...
@@ -378,6 +389,10 @@ env: {}
 ##       valueFrom:
 ##         <value rendered as YAML>
 envValueFrom: {}
+  #  ENV_NAME:
+  #    configMapKeyRef:
+  #      name: configmap-name
+  #      key: value_key
 
 ## The name of a secret in the same kubernetes namespace which contain values to be added to the environment
 ## This can be useful for auth tokens, etc. Value is templated.
@@ -389,8 +404,17 @@ envRenderSecret: {}
 
 ## The names of secrets in the same kubernetes namespace which contain values to be added to the environment
 ## Each entry should contain a name key, and can optionally specify whether the secret must be defined with an optional key.
+## Name is templated.
 envFromSecrets: []
 ## - name: secret-name
+##   optional: true
+
+## The names of conifgmaps in the same kubernetes namespace which contain values to be added to the environment
+## Each entry should contain a name key, and can optionally specify whether the configmap must be defined with an optional key.
+## Name is templated.
+## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#configmapenvsource-v1-core
+envFromConfigMaps: []
+## - name: configmap-name
 ##   optional: true
 
 # Inject Kubernetes services as environment variables.
@@ -441,6 +465,12 @@ extraVolumeMounts: []
   #   mountPath: /mnt/volume1
   #   readOnly: true
   #   hostPath: /usr/shared/
+
+## Container Lifecycle Hooks. Execute a specific bash command or make an HTTP request
+lifecycleHooks: {}
+  # postStart:
+  #   exec:
+  #     command: []
 
 ## Pass the plugins you want installed as a list.
 ##
@@ -618,7 +648,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.15.1
+    tag: 1.19.2
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -632,6 +662,8 @@ sidecar:
   # skipTlsVerify Set to true to skip tls verification for kube api calls
   # skipTlsVerify: true
   enableUniqueFilenames: false
+  readinessProbe: {}
+  livenessProbe: {}
   dashboards:
     enabled: false
     SCProvider: true
@@ -656,6 +688,16 @@ sidecar:
     folderAnnotation: null
     # Absolute path to shell script to execute after a configmap got reloaded
     script: null
+    # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # watchServerTimeout: 3600
+    #
+    # watchClientTimeout: is a client-side timeout, configuring your local socket.
+    # If you have a network outage dropping all packets with no RST/FIN,
+    # this is how long your client waits before realizing & dropping the connection.
+    # defaults to 66sec (sic!)
+    # watchClientTimeout: 60
+    #
     # provider configuration that lets grafana manage the dashboards
     provider:
       # name of the provider, should be unique
@@ -674,6 +716,8 @@ sidecar:
       foldersFromFilesStructure: false
     # Additional dashboard sidecar volume mounts
     extraMounts: []
+    # Sets the size limit of the dashboard sidecar emptyDir volume
+    sizeLimit: {}
   datasources:
     enabled: false
     # label that the configmaps with datasources are marked with
@@ -694,6 +738,30 @@ sidecar:
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
     initDatasources: false
+    # Sets the size limit of the datasource sidecar emptyDir volume
+    sizeLimit: {}
+  plugins:
+    enabled: false
+    # label that the configmaps with plugins are marked with
+    label: grafana_plugin
+    # value of label that the configmaps with plugins are set to
+    labelValue: null
+    # If specified, the sidecar will search for plugin config-maps inside this namespace.
+    # Otherwise the namespace in which the sidecar is running will be used.
+    # It's also possible to specify ALL to search in all namespaces
+    searchNamespace: null
+    # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
+    watchMethod: WATCH
+    # search in configmap, secret or both
+    resource: both
+    # Endpoint to send request to reload plugins
+    reloadURL: "http://localhost:3000/api/admin/provisioning/plugins/reload"
+    skipReload: false
+    # Deploy the datasource sidecar as an initContainer in addition to a container.
+    # This is needed if skipReload is true, to load any plugins defined at startup time.
+    initPlugins: false
+    # Sets the size limit of the plugin sidecar emptyDir volume
+    sizeLimit: {}
   notifiers:
     enabled: false
     # label that the configmaps with notifiers are marked with
@@ -704,6 +772,8 @@ sidecar:
     searchNamespace: null
     # search in configmap, secret or both
     resource: both
+    # Sets the size limit of the notifier sidecar emptyDir volume
+    sizeLimit: {}
 
 ## Override the deployment namespace
 ##
@@ -769,6 +839,20 @@ imageRenderer:
 #   requests:
 #     cpu: 50m
 #     memory: 50Mi
+  ## Node labels for pod assignment
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  #
+  nodeSelector: {}
+
+  ## Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+  ## Affinity for pod assignment (evaluated as template)
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
 
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.

@@ -3,7 +3,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ include "loki.fullname" $ }}
+  name: {{ include "loki.name" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
