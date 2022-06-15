@@ -1,10 +1,12 @@
-{{- if .Values.self-monitoring.enabled }}
-{{- with .Values.self-monitoring.grafanaAgent }}
+{{- if .Values.monitoring.selfMonitoring.enabled }}
+{{- with .Values.monitoring.selfMonitoring.grafanaAgent }}
 apiVersion: monitoring.grafana.com/v1alpha1
 kind: GrafanaAgent
 metadata:
   name: {{ include "loki.fullname" $ }}-grafana-agent
-  namespace: {{ .namespace | default $.Release.Namespace }}
+  {{- with .namespace }}
+  namespace: {{ . }}
+  {{- end }}
   labels:
     {{- include "loki.labels" $ | nindent 4 }}
     {{- with .labels }}

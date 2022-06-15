@@ -23,3 +23,7 @@
 .vscode/
 doc.yaml
 README.tpl
+
+# Ignore jsonnet sources
+vendor
+templates/dashboards/src
