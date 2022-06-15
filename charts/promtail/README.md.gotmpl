@@ -170,18 +170,17 @@ config:
             pushserver: push1
 ```
 
-### Extra client config options
+### Customize client config options
 
-If you want to add additional options to the `client` section of promtail's config, please use
-the `extraClientConfigs` section. For example, to enable HTTP basic auth and include OrgID
-header, you can use:
+By default, promtail send logs scraped to `loki` server at `http://loki-gateway/loki/api/v1/push`.
+If you want to customize clients or add additional options to `loki`, please use the `clients` section. For example, to enable HTTP basic auth and include OrgID header, you can use:
 
 ```yaml
 config:
-  snippets:
-    extraClientConfigs: |
+  clients:
+    - url: http://loki.server/loki/api/v1/push
+      tenant_id: 1
       basic_auth:
         username: loki
         password: secret
-      tenant_id: 1
 ```

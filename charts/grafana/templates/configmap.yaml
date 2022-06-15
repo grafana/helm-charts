@@ -10,11 +10,24 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 data:
+  allow-snippet-annotations: "false"
 {{- if .Values.plugins }}
   plugins: {{ join "," .Values.plugins }}
 {{- end }}
   grafana.ini: |
+{{- range $elem, $elemVal := index .Values "grafana.ini" }}
+    {{- if not (kindIs "map" $elemVal) }}
+    {{- if kindIs "invalid" $elemVal }}
+    {{ $elem }} =
+    {{- else if kindIs "string" $elemVal }}
+    {{ $elem }} = {{ tpl $elemVal $ }}
+    {{- else }}
+    {{ $elem }} = {{ $elemVal }}
+    {{- end }}
+    {{- end }}
+{{- end }}
 {{- range $key, $value := index .Values "grafana.ini" }}
+    {{- if kindIs "map" $value }}
     [{{ $key }}]
     {{- range $elem, $elemVal := $value }}
     {{- if kindIs "invalid" $elemVal }}
@@ -23,6 +36,7 @@ data:
     {{ $elem }} = {{ tpl $elemVal $ }}
     {{- else }}
     {{ $elem }} = {{ $elemVal }}
+    {{- end }}
     {{- end }}
     {{- end }}
 {{- end }}
@@ -60,7 +74,7 @@ data:
         {{- end }}
       {{- end }}
     {{- end }}
-
+  {{ $dashboardProviders := .Values.dashboardProviders }}
   {{- range $provider, $dashboards := .Values.dashboards }}
     {{- range $key, $value := $dashboards }}
       {{- if (or (hasKey $value "gnetId") (hasKey $value "url")) }}
@@ -74,9 +88,15 @@ data:
         {{- end }}
     -H "Content-Type: application/json;charset=UTF-8" \
       {{ end }}
-    {{- if $value.url -}}"{{ $value.url }}"{{- else -}}"https://grafana.com/api/dashboards/{{ $value.gnetId }}/revisions/{{- if $value.revision -}}{{ $value.revision }}{{- else -}}1{{- end -}}/download"{{- end -}}{{ if $value.datasource }} | sed '/-- .* --/! s/"datasource":.*,/"datasource": "{{ $value.datasource }}",/g'{{ end }}{{- if $value.b64content -}} | base64 -d {{- end -}} \
-    > "/var/lib/grafana/dashboards/{{ $provider }}/{{ $key }}.json"
+    {{- $dpPath := "" -}}
+    {{- range $kd := (index $dashboardProviders "dashboardproviders.yaml").providers -}}
+      {{- if eq $kd.name $provider -}}
+      {{- $dpPath = $kd.options.path -}}
       {{- end -}}
-    {{- end }}
+    {{- end -}}
+    {{- if $value.url -}}"{{ $value.url }}"{{- else -}}"https://grafana.com/api/dashboards/{{ $value.gnetId }}/revisions/{{- if $value.revision -}}{{ $value.revision }}{{- else -}}1{{- end -}}/download"{{- end -}}{{ if $value.datasource }} | sed '/-- .* --/! s/"datasource":.*,/"datasource": "{{ $value.datasource }}",/g'{{ end }}{{- if $value.b64content -}} | base64 -d {{- end -}} \
+    > "{{- if $dpPath -}}{{ $dpPath }}{{- else -}}/var/lib/grafana/dashboards/{{ $provider }}{{- end -}}/{{ $key }}.json"
+      {{- end }}
+    {{- end -}}
   {{- end }}
 {{- end }}

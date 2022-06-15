@@ -54,15 +54,12 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: ingester
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ingester"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            {{- if .Values.consul.enabled }}
-            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
-            {{- end }}
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -96,6 +93,9 @@ spec:
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.ingester.livenessProbe | nindent 12 }}

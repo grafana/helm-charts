@@ -1,3 +1,4 @@
+{{- if eq .Values.ingester.kind "StatefulSet"}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -29,6 +30,12 @@ spec:
       labels:
         {{- include "loki.ingesterSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.ingester.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -40,7 +47,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.ingester.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: ingester
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -81,6 +88,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.ingester.resources | nindent 12 }}
+        {{- if .Values.ingester.extraContainers }}
+        {{- toYaml .Values.ingester.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.ingester.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
@@ -122,3 +132,4 @@ spec:
           requests:
             storage: {{ .Values.ingester.persistence.size | quote }}
   {{- end }}
+{{- end }}
