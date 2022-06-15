@@ -32,7 +32,7 @@ image:
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
-# -- Annotations for the SaemonSet
+# -- Annotations for the DaemonSet
 annotations: {}
 
 # -- The update strategy for the DaemonSet
@@ -173,6 +173,15 @@ serviceMonitor:
   interval: null
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
+  # -- ServiceMonitor relabel configs to apply to samples before scraping
+  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+  # (defines `relabel_configs`)
+  relabelings: []
+  # -- ServiceMonitor relabel configs to apply to samples as the last
+  # step before ingestion
+  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+  # (defines `metric_relabel_configs`)
+  metricRelabelings: []
 
 # -- Configure additional ports and services. For each configured port, a corresponding service is created.
 # See values.yaml for details
@@ -229,10 +238,11 @@ config:
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
   serverPort: 3101
-  # -- The Loki address to post logs to.
-  # Must be reference in `config.file` to configure `client.url`.
-  # See default config in `values.yaml`
-  lokiAddress: http://loki-gateway/loki/api/v1/push
+  # -- The config of clients of the Promtail server
+  # Must be reference in `config.file` to configure `clients`
+  # @default -- See `values.yaml`
+  clients:
+    - url: http://loki-gateway/loki/api/v1/push
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -285,10 +295,6 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
-    # -- You can put here any keys that will be directly added to the config file's 'client' block.
-    # @default -- empty
-    extraClientConfigs: ""
-
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
     extraScrapeConfigs: ""
@@ -318,6 +324,12 @@ config:
             action: replace
             target_label: app
           - source_labels:
+              - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+              - __meta_kubernetes_pod_label_release
+            regex: ^;*([^;]+)(;.*)?$
+            action: replace
+            target_label: instance
+          - source_labels:
               - __meta_kubernetes_pod_label_app_kubernetes_io_component
               - __meta_kubernetes_pod_label_component
             regex: ^;*([^;]+)(;.*)?$
@@ -341,9 +353,8 @@ config:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
 
-    client:
-      url: {{ tpl .Values.config.lokiAddress . }}
-      {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
+    clients:
+      {{- toYaml .Values.config.clients | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
@@ -370,3 +381,15 @@ networkPolicy:
     port: 8443
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
+
+# -- Extra K8s manifests to deploy
+extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: promtail-secrets
+  #   spec:
+  #     backendType: gcpSecretsManager
+  #     data:
+  #       - key: promtail-oauth2-creds
+  #         name: client_secret

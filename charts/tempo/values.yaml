@@ -7,7 +7,7 @@ fullnameOverride: ""
 replicas: 1
 tempo:
   repository: grafana/tempo
-  tag: 1.0.1
+  tag: 1.4.1
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -26,11 +26,21 @@ tempo:
   #    memory: 6Gi
 
   memBallastSizeMbs: 1024
-  authEnabled: false
+  multitenancyEnabled: false
+  # -- If true, enables Tempo's native search
+  searchEnabled: false
   ingester: {}
   retention: 24h
+  # Global overrides
+  global_overrides:
+    per_tenant_override_config: /conf/overrides.yaml
+  overrides: {}
+
+  # Tempo server configuration
+  # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
   server:
-    httpListenPort: 3100
+    # -- HTTP server listen port
+    http_listen_port: 3100
   # tempo storage backend
   # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
   ## Use s3 for example
@@ -64,6 +74,18 @@ tempo:
         thrift_http:
           endpoint: 0.0.0.0:14268
     opencensus:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "0.0.0.0:4317"
+        http:
+          endpoint: "0.0.0.0:4318"
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #    - ALL
+    # readOnlyRootFilesystem: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -75,9 +97,28 @@ tempo:
   #   readOnly: true
   #   existingClaim: volume-claim
 
+# -- Tempo configuration file contents
+config: |
+    multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
+    search_enabled: {{ .Values.tempo.searchEnabled }}
+    compactor:
+      compaction:
+        compacted_block_retention: {{ .Values.tempo.retention }}
+    distributor:
+      receivers:
+        {{- toYaml .Values.tempo.receivers | nindent 8 }}
+    ingester:
+      {{- toYaml .Values.tempo.ingester | nindent 6 }}
+    server:
+      {{- toYaml .Values.tempo.server | nindent 6 }}
+    storage:
+      {{- toYaml .Values.tempo.storage | nindent 6 }}
+    overrides:
+      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 1.0.1
+  tag: 1.4.1
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -85,6 +126,9 @@ tempoQuery:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
+
+  # -- if False the tempo-query container is not deployed
+  enabled: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -95,6 +139,19 @@ tempoQuery:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #    - ALL
+    # readOnlyRootFilesystem: false # fails if true, do not enable
+
+# Add container securityContext
+securityContext: {}
+  # runAsUser: 65532
+  # runAsGroup: 65532
+  # fsGroup: 65532
+  # runAsNonRoot: true
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -112,6 +169,13 @@ service:
   annotations: {}
   labels: {}
 
+serviceMonitor:
+  enabled: false
+  interval: ""
+  additionalLabels: {}
+  annotations: {}
+  # scrapeTimeout: 10s
+
 persistence:
   enabled: false
   # storageClassName: local-path
@@ -120,7 +184,10 @@ persistence:
   size: 10Gi
 
 ## Pod Annotations
-podAnnotations: []
+podAnnotations: {}
+
+## Pod (extra) Labels
+podLabels: {}
 
 # -- Volumes to add
 extraVolumes: []

@@ -2,8 +2,8 @@ apiVersion: v2
 name: loki-canary
 description: Helm chart for Grafana Loki Canary
 type: application
-appVersion: 2.3.0
-version: 0.4.0
+appVersion: 2.5.0
+version: 0.8.1
 home: https://github.com/grafana/helm-charts
 sources:
   - https://github.com/grafana/loki

@@ -27,7 +27,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
+      {{- if not .Values.config.existingSecret }}
         checksum/config: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- end }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -56,6 +58,8 @@ spec:
             - "-{{ $key }}={{ $value }}"
           {{- end }}
           volumeMounts:
+            - name: tmp
+              mountPath: /tmp
             {{- if .Values.extraVolumeMounts }}
               {{ toYaml .Values.extraVolumeMounts | nindent 12}}
             {{- end }}
@@ -64,16 +68,22 @@ spec:
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.persistence.subPath }}
-            {{- if gt (len .Values.alerting_groups) 0 }}
-            - name: scratch
-              mountPath: /tmp/scratch
+            {{- if or (.Values.useExistingAlertingGroup.enabled) (gt (len .Values.alerting_groups) 0) }}
             - name: rules
-              mountPath: /rules
+              mountPath: /rules/fake
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: {{ .Values.config.server.http_listen_port | default 3100 }}
               protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port | default 9095 }}
+              protocol: TCP
+            {{- if .Values.config.memberlist }}
+            - name: memberlist-port
+              containerPort: {{ .Values.config.memberlist.bind_port | default 7946 }}
+              protocol: TCP
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -101,16 +111,24 @@ spec:
         {{- toYaml .Values.tolerations | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-        {{- if gt (len .Values.alerting_groups) 0 }}
-        - name: scratch
+        - name: tmp
           emptyDir: {}
+        {{- if or (.Values.useExistingAlertingGroup.enabled) (gt (len .Values.alerting_groups) 0) }}
         - name: rules
           configMap:
+            {{- if .Values.useExistingAlertingGroup.enabled }}
+            name: {{ .Values.useExistingAlertingGroup.configmapName }}
+            {{- else }}
             name: {{ template "loki.fullname" . }}-alerting-rules
+            {{- end }}
         {{- end }}
         - name: config
           secret:
+          {{- if .Values.config.existingSecret }}
+            secretName: {{ .Values.config.existingSecret }}
+          {{- else }}
             secretName: {{ template "loki.fullname" . }}
+          {{- end }}
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 8}}
 {{- end }}

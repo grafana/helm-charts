@@ -6,6 +6,9 @@ metadata:
   labels:
     app: {{ template "loki.name" . }}
     {{- include "loki.labels" . | nindent 4 }}
+    {{- with .Values.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
     {{- toYaml .Values.service.annotations | nindent 4 }}
 spec:
