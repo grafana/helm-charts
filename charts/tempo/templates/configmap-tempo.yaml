@@ -10,17 +10,4 @@ data:
     overrides:
       {{- toYaml .Values.tempo.overrides | nindent 6 }}
   tempo.yaml: |
-    auth_enabled: {{ .Values.tempo.authEnabled }}
-    search_enabled: {{ .Values.tempo.searchEnabled }}
-    compactor:
-      compaction:
-        compacted_block_retention: {{ .Values.tempo.retention }}
-    distributor:
-      receivers:
-        {{- toYaml .Values.tempo.receivers | nindent 8 }}
-    ingester:
-      {{- toYaml .Values.tempo.ingester | nindent 6 }}
-    server:
-      {{- toYaml .Values.tempo.server | nindent 6 }}
-    storage:
-      {{- toYaml .Values.tempo.storage | nindent 6 }}
+    {{- tpl .Values.config . | nindent 4 }}

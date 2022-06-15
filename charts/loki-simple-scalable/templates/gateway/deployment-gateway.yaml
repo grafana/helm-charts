@@ -30,11 +30,11 @@ spec:
       labels:
         {{- include "loki.gatewaySelectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      serviceAccountName: {{ include "loki.serviceAccountName" . -}}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- end -}}
       {{- include "loki.gatewayPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.gateway.podSecurityContext | nindent 8 }}

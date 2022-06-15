@@ -16,6 +16,8 @@ config:
   k8sLoggingExclude: "Off"
   k8sLoggingParser: "Off"
   memBufLimit: "5MB"
+  bufChunkSize: "32k"
+  bufMaxSize: "32k"
   removeKeys:
     - kubernetes
     - stream

@@ -2,7 +2,7 @@
 gateway fullname
 */}}
 {{- define "loki.gatewayFullname" -}}
-{{ include "loki.fullname" . }}-gateway
+{{ include "loki.name" . }}-gateway
 {{- end }}
 
 {{/*
@@ -33,7 +33,7 @@ gateway Docker image
 */}}
 {{- define "loki.gatewayImage" -}}
 {{- $dict := dict "service" .Values.gateway.image "global" .Values.global.image -}}
-{{- include "loki.image" $dict -}}
+{{- include "loki.baseImage" $dict -}}
 {{- end }}
 
 {{/*

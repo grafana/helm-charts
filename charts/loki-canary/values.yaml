@@ -11,7 +11,7 @@ image:
   # -- Docker image repository
   repository: docker.io/grafana/loki-canary
   # -- Overrides the image tag whose default is the chart's appVersion
-  tag: ""
+  tag: null
   # -- Docker image pull policy
   pullPolicy: IfNotPresent
 
@@ -20,6 +20,9 @@ priorityClassName: null
 
 # -- Common annotations for all pods
 podAnnotations: {}
+
+# -- Common labels for all pods
+podLabels: {}
 
 # -- The number of old ReplicaSets to retain to allow rollback
 revisionHistoryLimit: 10

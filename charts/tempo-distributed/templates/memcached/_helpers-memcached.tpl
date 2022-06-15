@@ -1,4 +1,11 @@
 {{/*
+memcached fullname
+*/}}
+{{- define "tempo.memcachedFullname" -}}
+{{ include "tempo.fullname" . }}-memcached
+{{- end }}
+
+{{/*
 memcached common labels
 */}}
 {{- define "tempo.memcachedLabels" -}}
