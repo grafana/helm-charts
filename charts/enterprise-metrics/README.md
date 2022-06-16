@@ -2,6 +2,10 @@
 
 Helm chart for deploying [Grafana Enterprise Metrics](https://grafana.com/enterprise/metrics) to Kubernetes. Originally forked from the [Cortex Helm Chart](https://github.com/cortexproject/cortex-helm-chart)
 
+## Deprecation warning
+
+This chart is now deprecated and will no longer be updated. Grafana Enterprise Metrics v2.0.0 is included in the new `mimir-distributed` chart which implements Grafana Enterprise Metrics as an option (`enterprise.enabled: true`). To upgrade to using the new chart, see the [Grafana Enterprise Metrics migration guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/).
+
 ## Dependencies
 
 ## Grafana Enterprise Metrics license
@@ -90,17 +94,17 @@ $ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisio
 $ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
+To install the chart with the values used in CI tests:
+
+```console
+$ helm install test ./ --values ./ci/test-values.yaml
+```
+
 # Contributing/Releasing
 
 All changes require a bump to the chart version, as this enforced by CI. All changes to the chart itself should also have a corresponding CHANGELOG entry.
 
 When making a change and organizing a release, first ensure your changes are encapuslated in a meaningful commit.
 In a separate commit, increase the chart version in the `Chart.yaml` file and add a CHANGELOG entry in the `CHANGELOG.md` file under the new version.
-
-In a third commit, create an export of the manifests with:
-
-```console
-$ make exports
-```
 
 Finally, push your changes and open up a Pull Request with the prefix `[enterprise-metrics]`.

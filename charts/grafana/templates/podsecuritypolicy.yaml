@@ -1,9 +1,8 @@
-{{- if .Values.rbac.pspEnabled }}
+{{- if and (.Values.rbac.pspEnabled) (semverCompare "<1.21.0-0" .Capabilities.KubeVersion.Version) }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: {{ template "grafana.fullname" . }}
-  namespace: {{ template "grafana.namespace" . }}
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
   annotations:
@@ -31,7 +30,7 @@ spec:
   hostIPC: false
   hostPID: false
   runAsUser:
-    rule: 'MustRunAsNonRoot'
+    rule: 'RunAsAny'
   seLinux:
     rule: 'RunAsAny'
   supplementalGroups:
