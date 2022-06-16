@@ -49,8 +49,19 @@ spec:
   policyTypes:
     - Ingress
   podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values:
+        {{- if .Values.gateway.enabled }}
+          - gateway
+        {{- else }}
+          - distributor
+          - querier
+          - query-frontent
+        {{- end }}
     matchLabels:
-      {{- include "loki.gatewaySelectorLabels" . | nindent 6 }}
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   ingress:
     - ports:
         - port: http
@@ -70,7 +81,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "loki.name" . }}-ingress-metrics
-  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:

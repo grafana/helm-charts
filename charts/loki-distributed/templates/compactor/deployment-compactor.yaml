@@ -25,8 +25,14 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.compactorSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.compactor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
-      serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      serviceAccountName: {{ include "loki.compactorServiceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -36,7 +42,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: compactor
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -63,6 +69,8 @@ spec:
           readinessProbe:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: config
               mountPath: /etc/loki/config
             - name: data
@@ -72,6 +80,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
+        {{- if .Values.compactor.extraContainers }}
+        {{- toYaml .Values.compactor.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.compactor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -81,9 +92,16 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: config
+          {{- if .Values.loki.existingSecretForConfig }}
+          secret:
+            secretName: {{ .Values.loki.existingSecretForConfig }}
+          {{- else }}
           configMap:
             name: {{ include "loki.fullname" . }}
+          {{- end }}
         - name: data
           {{- if .Values.compactor.persistence.enabled }}
           persistentVolumeClaim:

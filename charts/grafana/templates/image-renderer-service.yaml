@@ -1,4 +1,5 @@
 {{ if .Values.imageRenderer.enabled }}
+{{ if .Values.imageRenderer.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,4 +26,5 @@ spec:
       targetPort: {{ .Values.imageRenderer.service.targetPort }}
   selector:
     {{- include "grafana.imageRenderer.selectorLabels" . | nindent 4 }}
+{{ end }}
 {{ end }}

@@ -2,20 +2,16 @@
 
 Helm chart for deploying [Grafana Enterprise Metrics](https://grafana.com/enterprise/metrics) to Kubernetes. Originally forked from the [Cortex Helm Chart](https://github.com/cortexproject/cortex-helm-chart)
 
+## Deprecation warning
+
+This chart is now deprecated and will no longer be updated. Grafana Enterprise Metrics v2.0.0 is included in the new `mimir-distributed` chart which implements Grafana Enterprise Metrics as an option (`enterprise.enabled: true`). To upgrade to using the new chart, see the [Grafana Enterprise Metrics migration guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/).
+
 ## Dependencies
 
 ## Grafana Enterprise Metrics license
 
 In order to use the enterprise features of Grafana Enterprise Metrics, you need to provide the contents of a Grafana Enterprise Metrics license file as the value for the `license.contents` variable.
 To obtain a Grafana Enterprise Metrics license, refer to [Get a license](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license).
-
-### Key-Value store
-
-Grafana Enterprise Metrics requires an externally provided key-value store, such as [etcd](https://etcd.io/) or [Consul](https://www.consul.io/).
-
-Both services can be installed alongside Grafana Enterprise Metrics, for example using helm charts available [here](https://github.com/bitnami/charts/tree/master/bitnami/etcd) and [here](https://github.com/helm/charts/tree/master/stable/consul).
-
-For convenient first time set up, consul is deployed in the default configuration.
 
 ### Storage
 
@@ -97,3 +93,18 @@ To configure a local default storage class for k3d:
 $ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 $ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
+
+To install the chart with the values used in CI tests:
+
+```console
+$ helm install test ./ --values ./ci/test-values.yaml
+```
+
+# Contributing/Releasing
+
+All changes require a bump to the chart version, as this enforced by CI. All changes to the chart itself should also have a corresponding CHANGELOG entry.
+
+When making a change and organizing a release, first ensure your changes are encapuslated in a meaningful commit.
+In a separate commit, increase the chart version in the `Chart.yaml` file and add a CHANGELOG entry in the `CHANGELOG.md` file under the new version.
+
+Finally, push your changes and open up a Pull Request with the prefix `[enterprise-metrics]`.
