@@ -2,8 +2,8 @@ apiVersion: v2
 name: agent
 description: A Helm chart for Grafana Agent
 type: application
-version: 0.2.7
-appVersion: v0.19.0
+version: 0.2.8
+appVersion: v0.25.0
 home: https://grafana.net
 icon: https://raw.githubusercontent.com/grafana/agent/main/docs/assets/logo_and_name.png
 sources:
