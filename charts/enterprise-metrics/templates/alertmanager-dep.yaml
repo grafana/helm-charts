@@ -54,7 +54,7 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: alertmanager
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -67,13 +67,12 @@ spec:
             - -admin.client.s3.access-key-id=enterprise-metrics
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
-            - -alertmanager.storage.type=s3
-            - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -alertmanager.storage.s3.buckets=enterprise-metrics-ruler
-            - -alertmanager.storage.s3.access-key-id=enterprise-metrics
-            - -alertmanager.storage.s3.secret-access-key=supersecret
-            - -alertmanager.storage.s3.insecure=true
-            - -alertmanager.storage.s3.force-path-style=true
+            - -alertmanager-storage.backend=s3
+            - -alertmanager-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -alertmanager-storage.s3.bucket-name=enterprise-metrics-ruler
+            - -alertmanager-storage.s3.access-key-id=enterprise-metrics
+            - -alertmanager-storage.s3.secret-access-key=supersecret
+            - -alertmanager-storage.s3.insecure=true
           {{- end }}
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -89,9 +88,14 @@ spec:
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.alertmanager.persistence.subPath }}
+            - name: tmp
+              mountPath: /tmp
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.alertmanager.livenessProbe | nindent 12 }}
@@ -130,5 +134,7 @@ spec:
           secret:
             secretName: {{ .Values.license.secretName }}
         - name: storage
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}
 {{- end -}}

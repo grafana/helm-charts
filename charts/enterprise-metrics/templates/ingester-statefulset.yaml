@@ -11,6 +11,7 @@ metadata:
   annotations:
     {{- toYaml .Values.ingester.annotations | nindent 4 }}
 spec:
+  podManagementPolicy: Parallel
   replicas: {{ .Values.ingester.replicas }}
   selector:
     matchLabels:
@@ -47,6 +48,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-ingester
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: ingester
+        gossip_ring_member: "true"
         target: ingester
         release: {{ .Release.Name }}
         {{- with .Values.ingester.podLabels }}
@@ -91,6 +93,9 @@ spec:
             {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
             {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
         - name: license
           secret:
             secretName: {{ .Values.license.secretName }}
@@ -105,15 +110,13 @@ spec:
         {{- if .Values.ingester.extraContainers }}
         {{ toYaml .Values.ingester.extraContainers | nindent 8 }}
         {{- end }}
-        - name: {{ .Chart.Name }}
+        - name: ingester
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ingester"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            {{- if .Values.consul.enabled }}
-            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
-            {{- end }}
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -136,6 +139,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage
@@ -147,6 +152,9 @@ spec:
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.ingester.livenessProbe | nindent 12 }}

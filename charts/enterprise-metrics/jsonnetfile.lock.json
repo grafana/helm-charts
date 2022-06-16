@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "tanka-util"
+        }
+      },
+      "version": "752752875b50fa4c5021d92beb6871ccbd588f03",
+      "sum": "XZGAMWkORQ2XmTTaK9jvsgVvsgabz8Vio1j5U4fmO8U="
+    }
+  ],
+  "legacyImports": false
+}

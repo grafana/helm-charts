@@ -7,8 +7,11 @@
 * @grafana/helm-charts-admins
 
 /charts/grafana/ @maorfr @rtluckie @torstenwalter @Xtigyro @zanhsieh
-/charts/loki-distributed/ @unguiculus
-/charts/loki-canary/ @unguiculus
-/charts/tempo @swartz-k @joe-elliott @annanay25 @mdisibio @dgzlopes @mapno
-/charts/tempo-distributed @swartz-k @joe-elliott @annanay25 @mdisibio @dgzlopes @mapno
-/charts/metrics-enterprise/ @jdbaldry
+/charts/loki-distributed/ @unguiculus @Whyeasy
+/charts/loki-canary/ @unguiculus @Whyeasy
+/charts/promtail/ @unguiculus @Whyeasy
+/charts/tempo/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k
+/charts/tempo-distributed/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k
+/charts/enterprise-metrics/ @jdbaldry @chaudum
+/charts/enterprise-logs/ @jdbaldry @chaudum
+/charts/tempo-vulture/ @Whyeasy @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio

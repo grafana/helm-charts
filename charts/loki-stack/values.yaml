@@ -1,8 +1,11 @@
 loki:
   enabled: true
+  isDefault: true
 
 promtail:
   enabled: true
+  config:
+    lokiAddress: http://{{ .Release.Name }}:3100/loki/api/v1/push
 
 fluent-bit:
   enabled: false
@@ -12,11 +15,13 @@ grafana:
   sidecar:
     datasources:
       enabled: true
+      maxLines: 1000
   image:
-    tag: 6.7.0
+    tag: 8.3.5
 
 prometheus:
   enabled: false
+  isDefault: false
 
 filebeat:
   enabled: false

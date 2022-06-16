@@ -19,6 +19,10 @@ spec:
       protocol: TCP
       name: http-metrics
       targetPort: http-metrics
+    - port: {{ .Values.config.server.grpc_listen_port }}
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
   selector:
     app: {{ template "enterprise-metrics.name" . }}-alertmanager
     release: {{ .Release.Name }}

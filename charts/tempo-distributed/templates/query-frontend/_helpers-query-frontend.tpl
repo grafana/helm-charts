@@ -18,7 +18,7 @@ queryFrontend common labels
 */}}
 {{- define "tempo.queryFrontendLabels" -}}
 {{ include "tempo.labels" . }}
-app.kubernetes.io/component: {{ include "tempo.name" . }}-query-frontend
+app.kubernetes.io/component: query-frontend
 {{- end }}
 
 {{/*
@@ -26,7 +26,7 @@ query common labels
 */}}
 {{- define "tempo.queryLabels" -}}
 {{ include "tempo.labels" . }}
-app.kubernetes.io/component: {{ include "tempo.name" . }}-query
+app.kubernetes.io/component: query
 {{- end }}
 
 
@@ -35,7 +35,7 @@ queryFrontend selector labels
 */}}
 {{- define "tempo.queryFrontendSelectorLabels" -}}
 {{ include "tempo.selectorLabels" . }}
-app.kubernetes.io/component: {{ include "tempo.name" . }}-query-frontend
+app.kubernetes.io/component: query-frontend
 {{- end }}
 
 {{/*
