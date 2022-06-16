@@ -1,7 +1,7 @@
 global:
   image:
     # -- Overrides the Docker registry globally for all images
-    registry: null
+    registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
