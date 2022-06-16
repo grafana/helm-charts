@@ -63,6 +63,10 @@ spec:
           name: opencensus
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
+        {{- with .Values.tempo.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         env:
           {{- if .Values.tempo.extraEnv }}
             {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
@@ -77,6 +81,7 @@ spec:
         - mountPath: /var/tempo
           name: storage
         {{- end }}
+      {{- if .Values.tempoQuery.enabled }}
       - args:
         - --query.base-path=/
         - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
@@ -97,18 +102,27 @@ spec:
           {{- end }}
         resources:
           {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
+        {{- with .Values.tempoQuery.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.tempoQuery.extraVolumeMounts -}}
           {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
+      {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.securityContext }}
+      securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}

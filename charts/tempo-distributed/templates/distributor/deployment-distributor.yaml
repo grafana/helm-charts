@@ -56,42 +56,42 @@ spec:
               protocol: TCP
             - containerPort: 3100
               name: http
-            {{- if .Values.traces.jaeger.thriftCompact }}
+            {{- if .Values.traces.jaeger.thriftCompact.enabled }}
             - containerPort: 6831
               name: jaeger-compact
               protocol: UDP
             {{- end }}
-            {{- if .Values.traces.jaeger.thriftBinary }}
+            {{- if .Values.traces.jaeger.thriftBinary.enabled }}
             - containerPort: 6832
               name: jaeger-binary
               protocol: UDP
             {{- end }}
-            {{- if .Values.traces.jaeger.thriftHttp }}
+            {{- if .Values.traces.jaeger.thriftHttp.enabled }}
             - containerPort: 14268
               name: jaeger-http
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.jaeger.grpc }}
+            {{- if .Values.traces.jaeger.grpc.enabled }}
             - containerPort: 14250
               name: jaeger-grpc
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.zipkin }}
+            {{- if .Values.traces.zipkin.enabled }}
             - containerPort: 9411
               name: zipkin
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.otlp.http }}
+            {{- if .Values.traces.otlp.http.enabled }}
             - containerPort: 55681
               name: otlp-http
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.otlp.grpc }}
+            {{- if .Values.traces.otlp.grpc.enabled }}
             - containerPort: 4317
               name: otlp-grpc
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.opencensus }}
+            {{- if .Values.traces.opencensus.enabled }}
             - containerPort: 55678
               name: opencensus
               protocol: TCP
