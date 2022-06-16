@@ -12,6 +12,3 @@ chart-repos:
   - minio=https://helm.min.io
 helm-extra-args: --timeout 600s
 validate-maintainers: false
-# TODO: Remove this after the Helm chart for agent-operator is merged (PR #599)
-excluded-charts:
-  - agent
