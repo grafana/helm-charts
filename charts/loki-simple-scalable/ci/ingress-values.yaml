@@ -15,3 +15,6 @@ read:
   replicas: 1
 write:
   replicas: 1
+monitoring:
+  selfMonitoring:
+    enabled: false

@@ -23,3 +23,6 @@ write:
   persistence:
     enabled: true
     size: 100Mi
+monitoring:
+  selfMonitoring:
+    enabled: false
