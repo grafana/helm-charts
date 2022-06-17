@@ -14,6 +14,7 @@ Entries should include a reference to the pull request that introduced the chang
 ## 1.6.0
 
 - [FEATURE] Added self-monitoring option, with dashboards and Grafana Agent Operator custom resources to allow Loki to scrape it's own logs.
+- [CHANGE] Move `serviceMonitor` configuraiton under `monitoring` section, which now also includes a section for `dashboards` and `selfMonitoring`.
 
 ## 1.5.0
 
