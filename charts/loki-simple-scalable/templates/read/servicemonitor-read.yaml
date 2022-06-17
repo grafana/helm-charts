@@ -1,3 +1,4 @@
+---
 {{- with .Values.monitoring.serviceMonitor }}
 {{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
