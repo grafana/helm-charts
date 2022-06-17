@@ -2,6 +2,9 @@
 loki:
   commonConfig:
     replication_factor: 1
+monitoring:
+  selfMonitoring:
+    enabled: false
 read:
   replicas: 1
 write:
