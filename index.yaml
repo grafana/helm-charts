@@ -2007,6 +2007,32 @@ entries:
   grafana:
   - apiVersion: v2
     appVersion: 8.5.3
+    created: "2022-06-17T14:51:55.713173928Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 647d5ec7a8341e893ea474a5b28fecf493c1c962c6bc936247e00b2a04a113aa
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-6.30.2/grafana-6.30.2.tgz
+    version: 6.30.2
+  - apiVersion: v2
+    appVersion: 8.5.3
     created: "2022-06-16T22:27:15.752983202Z"
     description: The leading tool for querying and visualizing time series and metrics.
     digest: 3b7d11665dc43928605d253e4f4e3b0ee23f72c6bdfe84153b8cb62ad683ecd1
@@ -15106,6 +15132,52 @@ entries:
   loki-stack:
   - apiVersion: v1
     appVersion: v2.4.2
+    created: "2022-06-17T14:51:55.872478351Z"
+    dependencies:
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.10.1
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: ^3.11.0
+    - condition: fluent-bit.enabled
+      name: fluent-bit
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.3.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~6.24.1
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~15.5.3
+    - condition: filebeat.enabled
+      name: filebeat
+      repository: https://helm.elastic.co
+      version: ~7.17.1
+    - condition: logstash.enabled
+      name: logstash
+      repository: https://helm.elastic.co
+      version: ~7.17.1
+    description: 'Loki: like Prometheus, but for logs.'
+    digest: 5f52fe09d744490102b4bf7db1f13f2cbacd13e135f57ae7a906d3baa19ef1cb
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: loki-stack
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-stack-2.6.5/loki-stack-2.6.5.tgz
+    version: 2.6.5
+  - apiVersion: v1
+    appVersion: v2.4.2
     created: "2022-04-15T20:00:02.500982862Z"
     dependencies:
     - condition: loki.enabled
@@ -23820,4 +23892,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-16T22:27:15.763261246Z"
+generated: "2022-06-17T14:51:55.882206993Z"
