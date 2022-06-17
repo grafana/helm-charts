@@ -4,20 +4,20 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "loki.dashboardsName" . }}-2
+  name: {{ include "loki.dashboardsName" $ }}-2
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
 data:
   "loki-chunks.json": |
-    {{ .Files.Get "src/loki-chunks.json" | fromJson | toJson }}
+    {{ $.Files.Get "src/loki-chunks.json" | fromJson | toJson }}
   "loki-deletion.json": |
-    {{ .Files.Get "src/loki-deletion.json" | fromJson | toJson }}
+    {{ $.Files.Get "src/loki-deletion.json" | fromJson | toJson }}
   "loki-writes-resources.json": |
-    {{ .Files.Get "src/loki-writes-resources.json" | fromJson | toJson }}
+    {{ $.Files.Get "src/loki-writes-resources.json" | fromJson | toJson }}
   "loki-retention.json": |
-    {{ .Files.Get "src/loki-retention.json" | fromJson | toJson }}
+    {{ $.Files.Get "src/loki-retention.json" | fromJson | toJson }}
   "loki-writes.json": |
-    {{ .Files.Get "src/loki-writes.json" | fromJson | toJson }}
+    {{ $.Files.Get "src/loki-writes.json" | fromJson | toJson }}
 {{- end -}}
 {{- end -}}
