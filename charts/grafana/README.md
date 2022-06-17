@@ -246,6 +246,9 @@ This version requires Helm >= 3.1.0.
 | `networkPolicy.enabled`                    | Enable creation of NetworkPolicy resources.                                                                              | `false`             |
 | `networkPolicy.allowExternal`              | Don't require client label for connections                                                                               | `true`              |
 | `networkPolicy.explicitNamespacesSelector` | A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed                           | `{}`                |
+| `networkPolicy.ingress`                    | Enable the creation of an ingress network policy             | `true`    |
+| `networkPolicy.egress.enabled`             | Enable the creation of an egress network policy              | `false`   |
+| `networkPolicy.egress.ports`               | An array of ports to allow for the egress                    | `[]`    |
 | `enableKubeBackwardCompatibility`          | Enable backward compatibility of kubernetes where pod's defintion version below 1.13 doesn't have the enableServiceLinks option  | `false`     |
 
 
