@@ -50,7 +50,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: enterprise-logs
+        - name: gateway
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

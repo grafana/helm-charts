@@ -2,13 +2,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "tempo.fullname" . }}-memcached
+  name: {{ include "tempo.memcachedFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.memcachedLabels" . | nindent 4 }}
   {{- with .Values.memcached.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   replicas: {{ .Values.memcached.replicas }}

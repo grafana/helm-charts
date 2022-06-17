@@ -73,7 +73,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: enterprise-logs
+        - name: admin-api
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

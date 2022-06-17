@@ -7,7 +7,9 @@ metadata:
     {{- include "tempo.gatewayLabels" . | nindent 4 }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
