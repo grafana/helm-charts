@@ -16,5 +16,7 @@ read:
 write:
   replicas: 1
 monitoring:
+  serviceMonitor:
+    enabled: false
   selfMonitoring:
     enabled: false

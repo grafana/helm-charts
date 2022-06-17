@@ -24,5 +24,7 @@ write:
     enabled: true
     size: 100Mi
 monitoring:
+  serviceMonitor:
+    enabled: false
   selfMonitoring:
     enabled: false
