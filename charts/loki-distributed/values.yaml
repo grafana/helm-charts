@@ -33,6 +33,11 @@ loki:
       port: http
     initialDelaySeconds: 30
     timeoutSeconds: 1
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 300
   image:
     # -- The Docker registry
     registry: docker.io
@@ -66,11 +71,10 @@ loki:
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
-    auth_enabled: true
+    auth_enabled: false
 
     server:
       http_listen_port: 3100
-      log_level: info
 
     distributor:
       ring:
@@ -82,14 +86,7 @@ loki:
         - {{ include "loki.fullname" . }}-memberlist
 
     ingester:
-      # Disable chunk transfer which is not possible with statefulsets
-      # and unnecessary for boltdb-shipper
-      max_transfer_retries: 0
-      chunk_idle_period: 1h
-      chunk_target_size: 1536000
-      max_chunk_age: 1h
       lifecycler:
-        join_after: 0s
         ring:
           kvstore:
             store: memberlist
@@ -103,9 +100,9 @@ loki:
         dir: /var/loki/wal
 
     limits_config:
-      ingestion_rate_mb: 10
-      ingestion_burst_size_mb: 20
-      max_concurrent_tail_requests: 20
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
       split_queries_by_interval: 15m
 
@@ -149,19 +146,19 @@ loki:
       tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 
     compactor:
-      shared_store: s3
+      shared_store: filesystem
 
-      #    ruler:
-      #      storage:
-      #        type: local
-      #        local:
-      #          directory: /etc/loki/rules
-      #      ring:
-      #        kvstore:
-      #          store: memberlist
-      #      rule_path: /tmp/loki/scratch
-      #      alertmanager_url: https://alertmanager.xx
-      #      external_url: https://alertmanager.xx
+    ruler:
+      storage:
+        type: local
+        local:
+          directory: /etc/loki/rules
+      ring:
+        kvstore:
+          store: memberlist
+      rule_path: /tmp/loki/scratch
+      alertmanager_url: https://alertmanager.xx
+      external_url: https://alertmanager.xx
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
@@ -264,7 +261,7 @@ ingester:
   # -- Kind of deployment [StatefulSet/Deployment]
   kind: StatefulSet
   # -- Number of replicas for the ingester
-  replicas: 3
+  replicas: 1
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -320,7 +317,7 @@ ingester:
   tolerations: []
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
-    enabled: true
+    enabled: false
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -328,7 +325,7 @@ ingester:
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: gp2
+    storageClass: null
 
 # Configuration for the distributor
 distributor:
@@ -465,7 +462,7 @@ querier:
   tolerations: []
   persistence:
     # -- Enable creating PVCs for the querier cache
-    enabled: true
+    enabled: false
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -473,7 +470,7 @@ querier:
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: gp2
+    storageClass: null
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -745,6 +742,11 @@ gateway:
       port: http
     initialDelaySeconds: 15
     timeoutSeconds: 1
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 30
   nginxConfig:
     # -- NGINX log format
     logFormat: |-
@@ -860,7 +862,7 @@ gateway:
 # Configuration for the compactor
 compactor:
   # -- Specifies whether compactor should be enabled
-  enabled: true
+  enabled: false
   image:
     # -- The Docker registry for the compactor image. Overrides `loki.image.registry`
     registry: null
@@ -898,7 +900,7 @@ compactor:
   tolerations: []
   persistence:
     # -- Enable creating PVCs for the compactor
-    enabled: true
+    enabled: false
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -906,7 +908,7 @@ compactor:
     # If set to "-", storageClassName: "", which disables dynamic provisioning.
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: gp2
+    storageClass: null
   serviceAccount:
     create: false
     # -- The name of the ServiceAccount to use for the compactor.
@@ -1127,6 +1129,15 @@ indexGateway:
     storageClass: null
 
 memcached:
+  readinessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 5
+    timeoutSeconds: 1
+  livenessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 10
   image:
     # -- The Docker registry for the memcached
     registry: docker.io

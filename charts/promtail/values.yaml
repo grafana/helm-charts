@@ -226,14 +226,6 @@ podSecurityPolicy:
   requiredDropCapabilities:
     - ALL
 
-# -- You can put here any keys that will be directly added to the config file's 'client' block.
-# @default -- empty
-extra_client_configs: {}
-
-# -- You can put here any additional scrape configs you want to add to the config file.
-# @default -- empty
-extra_scrape_configs: {}
-
 # -- Section for crafting Promtails config file. The only directly relevant value is `config.file`
 # which is a templated string that references the other values and snippets below this key.
 # @default -- See `values.yaml`

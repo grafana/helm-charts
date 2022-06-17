@@ -84,8 +84,6 @@ The new release which will pick up again from the existing `positions.yaml`.
 | extraPorts | object | `{}` | Configure additional ports and services. For each configured port, a corresponding service is created. See values.yaml for details |
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
-| extra_client_configs | object | empty | You can put here any keys that will be directly added to the config file's 'client' block. |
-| extra_scrape_configs | object | empty | You can put here any additional scrape configs you want to add to the config file. |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |
