@@ -17,6 +17,7 @@ serviceAccount:
   create: true
   name:
   nameTest:
+## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
   autoMount: true
@@ -73,13 +74,15 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.5.0
+  # Overrides the Grafana image tag whose default is the chart appVersion
+  tag: ""
   sha: ""
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Can be templated.
   ##
   # pullSecrets:
   #   - myRegistrKeySecretName
@@ -99,6 +102,8 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Extra configmaps to mount in grafana pods
+# Values are templated.
 extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/
@@ -236,7 +241,7 @@ nodeSelector: {}
 ##
 tolerations: []
 
-## Affinity for pod assignment
+## Affinity for pod assignment (evaluated as template)
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
@@ -286,7 +291,9 @@ persistence:
   finalizers:
     - kubernetes.io/pvc-protection
   # selectorLabels: {}
+  ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""
+  ## Name of an existing PVC. Can be templated.
   # existingClaim:
 
   ## If persistence is not enabled, this allows to mount the
@@ -332,6 +339,7 @@ adminUser: admin
 
 # Use an existing secret for the admin user.
 admin:
+  ## Name of the secret. Can be templated.
   existingSecret: ""
   userKey: admin-user
   passwordKey: admin-password
@@ -640,7 +648,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.15.6
+    tag: 1.19.2
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -841,7 +849,7 @@ imageRenderer:
   ##
   tolerations: []
 
-  ## Affinity for pod assignment
+  ## Affinity for pod assignment (evaluated as template)
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
   affinity: {}
@@ -855,6 +863,10 @@ networkPolicy:
   ## client label will have network access to  grafana port defined.
   ## When true, grafana will accept connections from any source
   ## (with the correct destination port).
+  ##
+  ingress: true
+  ## @param networkPolicy.ingress When true enables the creation
+  ## an ingress network policy
   ##
   allowExternal: true
   ## @param networkPolicy.explicitNamespacesSelector A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed
@@ -871,6 +883,30 @@ networkPolicy:
   ##    - {key: role, operator: In, values: [frontend]}
   ##
   explicitNamespacesSelector: {}
+  ##
+  ##
+  ##
+  ##
+  ##
+  ##
+  egress:
+    ## @param networkPolicy.egress.enabled When enabled, an egress network policy will be
+    ## created allowing grafana to connect to external data sources from kubernetes cluster.
+    enabled: false
+    ##
+    ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
+    ports: []
+    ## Add ports to the egress by specifying - port: <port number>
+    ## E.X.
+    ## ports:
+      ## - port: 80
+      ## - port: 443
+  ##
+  ##
+  ##
+  ##
+  ##
+  ##
 
 # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
 enableKubeBackwardCompatibility: false

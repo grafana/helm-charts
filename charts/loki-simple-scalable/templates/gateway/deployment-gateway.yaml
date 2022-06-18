@@ -35,7 +35,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end -}}
-      {{- include "loki.gatewayPriorityClassName" . | nindent 6 -}}
+      {{- include "loki.gatewayPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.gateway.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}

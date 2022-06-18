@@ -11,6 +11,7 @@ metadata:
   name: {{ template "grafana.fullname" . }}-config-dashboards
   namespace: {{ template "grafana.namespace" . }}
 data:
+  allow-snippet-annotations: "false"
   provider.yaml: |-
     apiVersion: 1
     providers:
