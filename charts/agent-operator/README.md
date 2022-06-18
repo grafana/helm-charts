@@ -55,7 +55,6 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Pod affinity configuration |
 | annotations | object | `{}` | Annotations for the Deployment |
-| customLabels | object | `{}` | Additional labels to add to all resources |
 | extraArgs | list | `[]` | List of additional cli arguments to configure agent-operator (example: `--log.level`) |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
