@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.2](https://img.shields.io/badge/AppVersion-0.24.2-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.2](https://img.shields.io/badge/AppVersion-0.24.2-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -55,7 +55,6 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Pod affinity configuration |
 | annotations | object | `{}` | Annotations for the Deployment |
-| customLabels | object | `{}` | Additional labels to add to all resources |
 | extraArgs | list | `[]` | List of additional cli arguments to configure agent-operator (example: `--log.level`) |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -67,6 +66,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
+| podLabels | object | `{}` | Annotations for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
 | rbac | object | `{"create":true}` | Toggle to create ClusterRole and ClusterRoleBinding |
 | resources | object | `{}` | Resource limits and requests config |
