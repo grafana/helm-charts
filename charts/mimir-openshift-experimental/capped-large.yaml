@@ -11,7 +11,7 @@
 # for more information.
 # Minio is no longer enabled and you are encouraged to use your cloud providers
 # object storage service for production deployments.
-# Ingesters are configured with a replication factor of 3 to ensure that a single ingester failur does not
+# Ingesters are configured with a replication factor of 3 to ensure that a single ingester failure does not
 # result in data loss.
 
 alertmanager:
