@@ -19021,6 +19021,44 @@ entries:
   mimir-distributed:
   - apiVersion: v2
     appVersion: 2.1.0
+    created: "2022-06-20T14:47:27.512104371Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+      version: 5.5.2
+    - alias: memcached-queries
+      condition: memcached-queries.enabled
+      name: memcached
+      repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+      version: 5.5.2
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+      version: 5.5.2
+    - alias: memcached-results
+      condition: memcached-results.enabled
+      name: memcached
+      repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+      version: 5.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.10
+    description: Grafana Mimir
+    digest: b5f05efac7f6c2548e9dbcd36d9daf779c62a102f272f6799c304288dafb2fd6
+    home: https://grafana.com/docs/mimir/v2.1.x/
+    icon: https://grafana.com/static/img/logos/logo-mimir.svg
+    kubeVersion: ^1.10.0-0
+    name: mimir-distributed
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-2.2.0-weekly.191/mimir-distributed-2.2.0-weekly.191.tgz
+    version: 2.2.0-weekly.191
+  - apiVersion: v2
+    appVersion: 2.1.0
     created: "2022-06-13T13:01:58.055640193Z"
     dependencies:
     - alias: memcached
@@ -23926,4 +23964,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-19T00:39:29.174174485Z"
+generated: "2022-06-20T14:47:27.521503073Z"
