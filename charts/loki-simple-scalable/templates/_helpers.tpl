@@ -68,7 +68,7 @@ Create the name of the service account to use
 */}}
 {{- define "loki.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "loki.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "loki.name" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
@@ -125,6 +125,7 @@ s3:
 s3:
   s3: {{ .s3 }}
   endpoint: {{ .endpoint }}
+  region: {{ .region }}
   bucketnames: {{ $.Values.loki.storage.bucketNames.chunks }}
   secret_access_key: {{ .secretAccessKey }}
   access_key_id: {{ .accessKeyId }}
@@ -142,8 +143,8 @@ gcs:
 {{- else -}}
 {{- with .Values.loki.storage.local }}
 filesystem:
-  chunks_directory: {{ .chunksDirectory }}
-  rules_directory: {{ .rulesDirectory }}
+  chunks_directory: {{ .chunks_directory }}
+  rules_directory: {{ .rules_directory }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -205,4 +206,13 @@ Create the service endpoint including port for MinIO.
 {{- if .Values.minio.enabled -}}
 {{- printf "%s-%s.%s.svc:%s" .Release.Name "minio" .Release.Namespace (.Values.minio.service.port | toString) -}}
 {{- end -}}
+{{- end -}}
+
+{{/* Return the appropriate apiVersion for PodDisruptionBudget. */}}
+{{- define "loki.podDisruptionBudget.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">= 1.21-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "policy/v1" -}}
+  {{- else -}}
+    {{- print "policy/v1beta1" -}}
+  {{- end -}}
 {{- end -}}

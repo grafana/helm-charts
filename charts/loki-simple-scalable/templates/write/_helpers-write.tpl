@@ -2,7 +2,7 @@
 write fullname
 */}}
 {{- define "loki.writeFullname" -}}
-{{ include "loki.fullname" . }}-write
+{{ include "loki.name" . }}-write
 {{- end }}
 
 {{/*
