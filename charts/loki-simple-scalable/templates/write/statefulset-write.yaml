@@ -7,6 +7,7 @@ metadata:
     app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.write.replicas }}
+
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
@@ -28,6 +29,9 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.writeSelectorLabels" . | nindent 8 }}
+        {{- with .Values.write.selectorLabels }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
         app.kubernetes.io/part-of: memberlist
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
@@ -41,7 +45,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.write.terminationGracePeriodSeconds }}
       containers:
         - name: loki
-          image: {{ include "loki.writeImage" . }}
+          image: {{ include "loki.image" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
             - -config.file=/etc/loki/config/config.yaml
@@ -50,7 +54,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
-            - name: http
+            - name: http-metrics
               containerPort: 3100
               protocol: TCP
             - name: grpc
@@ -76,6 +80,10 @@ spec:
               mountPath: /etc/loki/config
             - name: data
               mountPath: /var/loki
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /etc/loki/license
+            {{- end}}
             {{- with .Values.write.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -100,8 +108,17 @@ spec:
             secretName: {{ .Values.loki.existingSecretForConfig }}
           {{- else }}
           configMap:
-            name: {{ include "loki.fullname" . }}
+            name: {{ include "loki.name" . }}
           {{- end }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+          {{- if .Values.useExternalLicense }}
+            secretName: {{ .Values.externalLicenseName }}
+          {{- else }}
+            secretName: enterprise-logs-license
+          {{- end }}
+        {{- end }}
         {{- with .Values.write.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

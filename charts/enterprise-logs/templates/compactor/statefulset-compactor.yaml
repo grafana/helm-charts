@@ -105,7 +105,7 @@ spec:
         {{- if .Values.compactor.extraContainers }}
         {{ toYaml .Values.compactor.extraContainers | nindent 8 }}
         {{- end }}
-        - name: enterprise-logs
+        - name: compactor
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -128,8 +128,7 @@ spec:
             - name: license
               mountPath: /etc/enterprise-logs/license
             - name: storage
-              mountPath: /data
-              subPath: {{ .Values.compactor.persistentVolume.subPath }}
+              mountPath: /var/loki
             {{- if .Values.compactor.extraVolumeMounts }}
             {{ toYaml .Values.compactor.extraVolumeMounts | nindent 12 }}
             {{- end }}
