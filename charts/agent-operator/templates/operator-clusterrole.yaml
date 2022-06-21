@@ -12,6 +12,7 @@ rules:
   - metricsinstances
   - logsinstances
   - podlogs
+  - integrations
   verbs: [get, list, watch]
 - apiGroups: [monitoring.grafana.com]
   resources:
@@ -19,6 +20,7 @@ rules:
   - metricsinstances/finalizers
   - logsinstances/finalizers
   - podlogs/finalizers
+  - integrations/finalizers
   verbs: [get, list, watch, update]
 - apiGroups: [monitoring.coreos.com]
   resources:
@@ -48,6 +50,6 @@ rules:
   resources:
   - statefulsets
   - daemonsets
+  - deployments
   verbs: [get, list, watch, create, update, patch, delete]
 {{- end -}}
-
