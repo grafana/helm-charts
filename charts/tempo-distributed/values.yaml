@@ -770,7 +770,6 @@ memcached:
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  service: memcached-client
   # -- Additional CLI args for memcached
   extraArgs: []
   # -- Environment variables to add to memcached pods
