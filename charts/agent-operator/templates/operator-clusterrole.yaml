@@ -12,26 +12,14 @@ rules:
   - metricsinstances
   - logsinstances
   - podlogs
+  - integrations
   verbs: [get, list, watch]
-- apiGroups: [monitoring.grafana.com]
-  resources:
-  - grafanaagents/finalizers
-  - metricsinstances/finalizers
-  - logsinstances/finalizers
-  - podlogs/finalizers
-  verbs: [get, list, watch, update]
 - apiGroups: [monitoring.coreos.com]
   resources:
   - podmonitors
   - probes
   - servicemonitors
   verbs: [get, list, watch]
-- apiGroups: [monitoring.coreos.com]
-  resources:
-  - podmonitors/finalizers
-  - probes/finalizers
-  - servicemonitors/finalizers
-  verbs: [get, list, watch, update]
 - apiGroups: [""]
   resources:
   - namespaces
@@ -48,6 +36,6 @@ rules:
   resources:
   - statefulsets
   - daemonsets
+  - deployments
   verbs: [get, list, watch, create, update, patch, delete]
 {{- end -}}
-
