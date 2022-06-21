@@ -407,7 +407,7 @@ querier:
       # -- grpc client configuration
       grpc_client_config: {}
   service:
-    # -- Annotations for compactor service
+    # -- Annotations for querier service
     annotations: {}
 
 # Configuration for the query-frontend
