@@ -149,7 +149,7 @@ ingester:
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
   service:
-    # -- Annotations for Memcached Exporter service
+    # -- Annotations for ingester service
     annotations: {}
 
 # Configuration for the metrics-generator
