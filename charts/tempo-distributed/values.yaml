@@ -148,6 +148,9 @@ ingester:
     max_block_duration: null
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
+  service:
+    # -- Annotations for Memcached Exporter service
+    annotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -225,6 +228,9 @@ metricsGenerator:
     #   send_exemplars: true
     #   headers:
     #     x-scope-orgid: operations
+  service:
+    # -- Annotations for Metrics Generator service
+    annotations: {}
 
 # Configuration for the distributor
 distributor:
@@ -400,6 +406,9 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+  service:
+    # -- Annotations for compactor service
+    annotations: {}
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -790,6 +799,9 @@ memcached:
               matchLabels:
                 {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  service:
+    # -- Annotations for memcached service
+    annotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
