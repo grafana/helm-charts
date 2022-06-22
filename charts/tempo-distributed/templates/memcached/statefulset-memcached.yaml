@@ -40,8 +40,8 @@ spec:
       securityContext:
         {{- toYaml .Values.tempo.podSecurityContext | nindent 8 }}
       containers:
-        - image: "{{ .Values.memcached.repository }}:{{ .Values.memcached.tag }}"
-          imagePullPolicy: {{ .Values.memcached.pullPolicy }}
+        - image: {{ include "tempo.memcachedImage" . }}
+          imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
           name: memcached
           {{- with .Values.memcached.extraArgs }}
           args:
@@ -70,8 +70,8 @@ spec:
         - args:
             - --memcached.address=localhost:11211
             - --web.listen-address=0.0.0.0:9150
-          image: "{{ .Values.memcachedExporter.image.repository }}:{{ .Values.memcachedExporter.image.tag }}"
-          imagePullPolicy: {{ .Values.memcachedExporter.pullPolicy }}
+          image: {{ include "tempo.memcachedExporterImage" . }}
+          imagePullPolicy: {{ .Values.memcachedExporter.image.pullPolicy }}
           name: exporter
           ports:
             - containerPort: 9150
