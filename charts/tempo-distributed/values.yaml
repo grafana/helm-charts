@@ -1,7 +1,7 @@
 global:
   image:
     # -- Overrides the Docker registry globally for all images
-    registry: null
+    registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -751,16 +751,19 @@ overrides: |
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
+  image:
+    # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
+    registry: null
+    # -- Memcached Docker image repository
+    repository: memcached
+    # -- Memcached Docker image tag
+    tag: 1.5.17-alpine
+    # -- Memcached Docker image pull policy
+    pullPolicy: IfNotPresent
   host: memcached
   # Number of replicas for memchached
   replicas: 1
   service: memcached-client
-  # -- Memcached Docker image repository
-  repository: memcached
-  # -- Memcached Docker image tag
-  tag: 1.5.17-alpine
-  # -- Memcached Docker image pull policy
-  pullPolicy: IfNotPresent
   # -- Additional CLI args for memcached
   extraArgs: []
   # -- Environment variables to add to memcached pods
@@ -794,6 +797,8 @@ memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   image:
+    # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
+    registry: null
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -871,8 +876,8 @@ gateway:
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
   image:
-    # -- The Docker registry for the gateway image
-    registry: docker.io
+    # -- The Docker registry for the gateway image. Overrides `global.image.registry`
+    registry: null
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
