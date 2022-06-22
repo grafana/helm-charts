@@ -33,7 +33,7 @@ Grafana Labs employees may access the private key using the company 1password.
 1. Export the key into the format for Helm packaging tool
 
    ```console
-   $ gpg --keyring ~/.gnupg/helm-charts.gpg --export-secret-keys >~/.gnupg/secring.gpg
+   gpg --keyring ~/.gnupg/helm-charts.gpg --export-secret-keys >~/.gnupg/secring.gpg
    ```
 
 1. Encode the key with BASE64 and place into clipboard
@@ -41,7 +41,8 @@ Grafana Labs employees may access the private key using the company 1password.
    This instruction works best on Linux X11 desktop.
 
    ```console
-   $ base64 ~/.gnupg/secring.gpg | xclip -selection clipboard -i
+   base64 ~/.gnupg/secring.gpg | xclip -selection clipboard -i
+   ```
 
 1. Set up a secret in github where the value is the content of the clipboard.
 
