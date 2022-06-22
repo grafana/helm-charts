@@ -20,6 +20,35 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart version < 0.20.0
+The image's attributes must be set under the `image` key for the Memcached service.
+```yaml
+memcached:
+  image:
+    registry: docker.io
+    repository: memcached
+    tag: "1.5.17-alpine"
+    pullPolicy: "IfNotPresent"
+```
+
+### From Chart version < 0.18.0
+Trace ingestion must now be enabled with the `enabled` key:
+```yaml
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+  zipkin:
+    enabled: true
+  jaeger:
+    thriftHttp:
+      enabled: true
+  opencensus:
+    enabled: true
+```
+
 ### From Chart versions < 0.9.0
 
 This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
@@ -78,6 +107,7 @@ The other components are optional and must be explicitly enabled.
 | querier | no |
 | query-frontend | no |
 | compactor | no |
+| metrics-generator | yes |
 | memcached | yes |
 | gateway | yes |
 
@@ -94,12 +124,33 @@ The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or on
 
 Alternatively, in order to quickly test Tempo using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
 
+### Activate metrics generator
+
+Metrics-generator is disabled by default and can be activated by configuring the following values:
+
+```yaml
+metricsGenerator:
+  enabled: true
+  config:
+    storage_remote_write:
+     - url: http://cortex/api/v1/push
+       send_exemplars: true
+    #   headers:
+    #     x-scope-orgid: operations
+# Global overrides
+global_overrides:
+  metrics_generator_processors:
+    - service-graphs
+    - span-metrics
+```
+
 ----
 
 ### Directory and File Locations
 
 * Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
 * The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
+
 
 ### Example configuration using S3 for storage
 

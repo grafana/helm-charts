@@ -19,5 +19,5 @@ roleRef:
   name: {{ template "enterprise-logs.tokengenFullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "enterprise-logs.tokengenFullname" . }}
+    name: {{ include "loki.serviceAccountName" . }}
 {{- end }}

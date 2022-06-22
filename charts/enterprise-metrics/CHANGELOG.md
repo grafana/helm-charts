@@ -10,6 +10,57 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the Pull Request that introduced the change.
 
+## 1.9.0
+
+* [CHANGE] This chart is now deprecated and will no longer be updated. Grafana Enterprise Metrics v2.0.0 is included in the new `mimir-distributed` chart which implements Grafana Enterprise Metrics as an option (`enterprise.enabled: true`). To upgrade to using the new chart, see the [Grafana Enterprise Metrics migration guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/).
+
+## 1.8.1
+
+* [ENHANCEMENT] Support Grafana Mimir monitoring mixin labels by setting container names to the component names.
+  This will make it easier to select different components in cadvisor metrics.
+  Previously, all containers used "enterprise-metrics" as the container name.
+  Now, the ingester Pod will have a container name "ingester".
+
+## 1.8.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.7.0](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v170----january-6th-2022).
+
+## 1.7.3
+
+* [BUGFIX] Alertmanager does not fail anymore to load configuration via the API. #945
+
+## 1.7.2
+
+* [CHANGE] The Ingester statefulset now uses podManagementPolicy Parallel, upgrading requires recreating the statefulset #920
+
+## 1.7.1
+
+* [BUGFIX] Remove chunks related default limits. #867
+
+## 1.7.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.6.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v161----november-18th-2021). #839
+
+## 1.6.0
+
+* [FEATURE] Upgrade to [Grafana Enterprise Metrics v1.5.1](https://grafana.com/docs/metrics-enterprise/latest/downloads/#v151----september-21st-2021). #729
+* [CHANGE] Production values set the ingester replication factor to three to avoid data loss.
+  The resource calculations of these values already factored in this replication factor but did not apply it in the configuration.
+  If you have not reduced the compute resources in these values then this change should have no impact besides increased resilience to ingester failure.
+  If you have reduced the compute resources, consider increasing them back to the recommended values before installing this version. #729
+
+## 1.5.6
+
+* [BUGFIX] YAML exports are no longer included as part of the Helm chart. #726
+
+## 1.5.5
+
+* [BUGFIX] Ensure all PodSpecs have configurable initContainers. #708
+
+## 1.5.4
+
+* [BUGFIX] Adds a `Service` resource for the Compactor Pods and adds Compactor to the default set of gateway proxy URLs. In previous chart versions the Compactor would not show up in the GEM plugin "Ring Health" tab because the gateway did not know how to reach Compactor. #714
+
 ## 1.5.3
 
 * [BUGFIX] This change does not affect single replica deployments of the
