@@ -122,6 +122,9 @@ tolerations:
 # Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.
 # @default -- See `values.yaml`
 defaultVolumes:
+  - name: run
+    hostPath:
+      path: /run/promtail
   - name: containers
     hostPath:
       path: /var/lib/docker/containers
@@ -132,6 +135,8 @@ defaultVolumes:
 # -- Default volume mounts. Corresponds to `volumes`.
 # @default -- See `values.yaml`
 defaultVolumeMounts:
+  - name: run
+    mountPath: /run/promtail
   - name: containers
     mountPath: /var/lib/docker/containers
     readOnly: true

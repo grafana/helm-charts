@@ -5,3 +5,4 @@
 .settings
 /charts/enterprise-metrics/vendor/tanka-util
 .DS_Store
+*.iml
