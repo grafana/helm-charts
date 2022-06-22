@@ -1,10 +1,9 @@
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.6.2
+    controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
   name: servicemonitors.monitoring.coreos.com
 spec:
@@ -45,6 +44,33 @@ spec:
                   description: Endpoint defines a scrapeable endpoint serving Prometheus
                     metrics.
                   properties:
+                    authorization:
+                      description: Authorization section for this endpoint
+                      properties:
+                        credentials:
+                          description: The secret's key that contains the credentials
+                            of the request
+                          properties:
+                            key:
+                              description: The key of the secret to select from.  Must
+                                be a valid secret key.
+                              type: string
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                            optional:
+                              description: Specify whether the Secret or its key must
+                                be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                        type:
+                          description: Set the authentication type. Defaults to Bearer,
+                            Basic will cause an error
+                          type: string
+                      type: object
                     basicAuth:
                       description: 'BasicAuth allow an endpoint to authenticate over
                         basic authentication More info: https://prometheus.io/docs/operating/configuration/#endpoints'
@@ -111,6 +137,10 @@ spec:
                       required:
                       - key
                       type: object
+                    followRedirects:
+                      description: FollowRedirects configures whether scrape requests
+                        follow HTTP 3xx redirects.
+                      type: boolean
                     honorLabels:
                       description: HonorLabels chooses the metric's labels on collisions
                         with target labels.
@@ -132,8 +162,17 @@ spec:
                           configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
                         properties:
                           action:
+                            default: replace
                             description: Action to perform based on regex matching.
                               Default is 'replace'
+                            enum:
+                            - replace
+                            - keep
+                            - drop
+                            - hashmod
+                            - labelmap
+                            - labeldrop
+                            - labelkeep
                             type: string
                           modulus:
                             description: Modulus to take of the hash of the source
@@ -159,6 +198,10 @@ spec:
                               separator and matched against the configured regular
                               expression for the replace, keep, and drop actions.
                             items:
+                              description: LabelName is a valid Prometheus label name
+                                which may only contain ASCII letters, numbers, as
+                                well as underscores.
+                              pattern: ^[a-zA-Z_][a-zA-Z0-9_]*$
                               type: string
                             type: array
                           targetLabel:
@@ -168,6 +211,90 @@ spec:
                             type: string
                         type: object
                       type: array
+                    oauth2:
+                      description: OAuth2 for the URL. Only valid in Prometheus versions
+                        2.27.0 and newer.
+                      properties:
+                        clientId:
+                          description: The secret or configmap containing the OAuth2
+                            client id
+                          properties:
+                            configMap:
+                              description: ConfigMap containing data to use for the
+                                targets.
+                              properties:
+                                key:
+                                  description: The key to select.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the ConfigMap or its
+                                    key must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                            secret:
+                              description: Secret containing data to use for the targets.
+                              properties:
+                                key:
+                                  description: The key of the secret to select from.  Must
+                                    be a valid secret key.
+                                  type: string
+                                name:
+                                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                    TODO: Add other useful fields. apiVersion, kind,
+                                    uid?'
+                                  type: string
+                                optional:
+                                  description: Specify whether the Secret or its key
+                                    must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                          type: object
+                        clientSecret:
+                          description: The secret containing the OAuth2 client secret
+                          properties:
+                            key:
+                              description: The key of the secret to select from.  Must
+                                be a valid secret key.
+                              type: string
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                            optional:
+                              description: Specify whether the Secret or its key must
+                                be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                        endpointParams:
+                          additionalProperties:
+                            type: string
+                          description: Parameters to append to the token URL
+                          type: object
+                        scopes:
+                          description: OAuth2 scopes used for the token request
+                          items:
+                            type: string
+                          type: array
+                        tokenUrl:
+                          description: The URL to fetch the token from
+                          minLength: 1
+                          type: string
+                      required:
+                      - clientId
+                      - clientSecret
+                      - tokenUrl
+                      type: object
                     params:
                       additionalProperties:
                         items:
@@ -189,8 +316,9 @@ spec:
                     relabelings:
                       description: 'RelabelConfigs to apply to samples before scraping.
                         Prometheus Operator automatically adds relabelings for a few
-                        standard Kubernetes fields and replaces original scrape job
-                        name with __tmp_prometheus_job_name. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config'
+                        standard Kubernetes fields. The original scrape job''s name
+                        is available via the `__tmp_prometheus_job_name` label. More
+                        info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config'
                       items:
                         description: 'RelabelConfig allows dynamic rewriting of the
                           label set, being applied to samples before ingestion. It
@@ -198,8 +326,17 @@ spec:
                           configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
                         properties:
                           action:
+                            default: replace
                             description: Action to perform based on regex matching.
                               Default is 'replace'
+                            enum:
+                            - replace
+                            - keep
+                            - drop
+                            - hashmod
+                            - labelmap
+                            - labeldrop
+                            - labelkeep
                             type: string
                           modulus:
                             description: Modulus to take of the hash of the source
@@ -225,6 +362,10 @@ spec:
                               separator and matched against the configured regular
                               expression for the replace, keep, and drop actions.
                             items:
+                              description: LabelName is a valid Prometheus label name
+                                which may only contain ASCII letters, numbers, as
+                                well as underscores.
+                              pattern: ^[a-zA-Z_][a-zA-Z0-9_]*$
                               type: string
                             type: array
                           targetLabel:
@@ -378,25 +519,45 @@ spec:
                   type: object
                 type: array
               jobLabel:
-                description: The label to use to retrieve the job name from.
+                description: "Chooses the label of the Kubernetes `Endpoints`. Its
+                  value will be used for the `job`-label's value of the created metrics.
+                  \n Default & fallback value: the name of the respective Kubernetes
+                  `Endpoint`."
                 type: string
+              labelLimit:
+                description: Per-scrape limit on number of labels that will be accepted
+                  for a sample. Only valid in Prometheus versions 2.27.0 and newer.
+                format: int64
+                type: integer
+              labelNameLengthLimit:
+                description: Per-scrape limit on length of labels name that will be
+                  accepted for a sample. Only valid in Prometheus versions 2.27.0
+                  and newer.
+                format: int64
+                type: integer
+              labelValueLengthLimit:
+                description: Per-scrape limit on length of labels value that will
+                  be accepted for a sample. Only valid in Prometheus versions 2.27.0
+                  and newer.
+                format: int64
+                type: integer
               namespaceSelector:
-                description: Selector to select which namespaces the Endpoints objects
-                  are discovered from.
+                description: Selector to select which namespaces the Kubernetes Endpoints
+                  objects are discovered from.
                 properties:
                   any:
                     description: Boolean describing whether all namespaces are selected
                       in contrast to a list restricting them.
                     type: boolean
                   matchNames:
-                    description: List of namespace names.
+                    description: List of namespace names to select from.
                     items:
                       type: string
                     type: array
                 type: object
               podTargetLabels:
-                description: PodTargetLabels transfers labels on the Kubernetes Pod
-                  onto the target.
+                description: PodTargetLabels transfers labels on the Kubernetes `Pod`
+                  onto the created metrics.
                 items:
                   type: string
                 type: array
@@ -450,8 +611,8 @@ spec:
                     type: object
                 type: object
               targetLabels:
-                description: TargetLabels transfers labels on the Kubernetes Service
-                  onto the target.
+                description: TargetLabels transfers labels from the Kubernetes `Service`
+                  onto the created metrics.
                 items:
                   type: string
                 type: array
