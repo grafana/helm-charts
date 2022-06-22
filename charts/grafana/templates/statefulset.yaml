@@ -1,4 +1,4 @@
-{{- if (or (.Values.useStatefulSet) (and .Values.persistence.enabled (not .Values.persistence.existingClaim) (eq .Values.persistence.type "statefulset"))}}
+{{- if (or (.Values.useStatefulSet) (and .Values.persistence.enabled (not .Values.persistence.existingClaim) (eq .Values.persistence.type "statefulset")))}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
