@@ -509,6 +509,8 @@ search:
   # -- Enable Tempo search
   enabled: false
 
+multitenancyEnabled: false
+
 traces:
   jaeger:
     grpc:
@@ -556,7 +558,7 @@ traces:
   kafka: {}
 
 config: |
-  multitenancy_enabled: false
+  multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
   metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
   compactor:
