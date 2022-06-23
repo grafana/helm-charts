@@ -17,8 +17,16 @@ spec:
   {{- with .Values.gateway.service.clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
-  {{- if and (eq "LoadBalancer" .Values.gateway.service.type) .Values.gateway.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.gateway.service.loadBalancerIP }}
+  {{- if eq "LoadBalancer" .Values.gateway.service.type }}
+  {{- if .Values.gateway.service.loadbalancerip }}
+  loadbalancerip: {{ .Values.gateway.service.loadbalancerip }}
+  {{- end }}
+  {{- if .Values.gateway.service.loadBalancerSourceRanges  }}
+  loadBalancerSourceRanges:
+    {{- range $cidr := .Values.gateway.service.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+    {{- end }}
+  {{- end }}
   {{- end }}
   ports:
     - name: http
