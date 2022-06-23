@@ -136,6 +136,8 @@ jobs:
           helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo add minio https://helm.min.io
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
       - name: Parse Chart.yaml
         id: parse-chart

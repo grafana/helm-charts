@@ -91,7 +91,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
-            readOnlyRootFilesystem: true
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           env:
             {{- if .Values.env }}
               {{- toYaml .Values.env | nindent 12 }}
