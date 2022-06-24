@@ -219,7 +219,7 @@ For exmaple, to use MinIO (deployed separately) as your backend, provide the fol
 
 ```yaml
 loki:
-  config:
+  config: |
     common:
       storage:
         filesystem: null
@@ -262,7 +262,7 @@ values, you must provide an entire `loki.config` value.
 
 ```yaml
 loki:
-  config:
+  config: |
     common:
       storage:
         s3:
