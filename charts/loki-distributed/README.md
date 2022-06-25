@@ -214,6 +214,16 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.serviceLabels | object | `{}` | Labels for ingestor service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
+| ingress.annotations | object | `{}` | Annotations for the ingress  |
+| ingress.enabled | bool | `false` | Enable ingress as an alterative to the gateway service |
+| ingress.hosts | list | `[]` | List of hosts for the ingress to use |
+| ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 For example: `ingressClassName: nginx` |
+| ingress.paths | object | `{}` | Services that the ingress will route requests to |
+| ingress.paths.distributor | list | `[]` | Paths that should be routed to the distributor service |
+| ingress.paths.querier | list | `[]` | Paths that should be routed to the querier service |
+| ingress.paths.query-frontend | list | `[]` | Paths that should be routed to the query-frontend service |
+| ingress.paths.ruler | list | `[]` | Paths that should be routed to the ruler service |
+| ingress.paths.tls | list | `[{"hosts":["loki.example.com"],"secretName":"loki-tls"}]` | TLS configuration for the ingress |
 | loki.annotations | object | `{}` | If set, these annotations are added to all of the Kubernetes controllers (Deployments, StatefulSets, etc) that this chart launches. Use this to implement something like the "Wave" controller or another controller that is monitoring top level deployment resources. |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |

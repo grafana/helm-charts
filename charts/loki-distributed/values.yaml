@@ -600,7 +600,7 @@ ingress:
 #    nginx.ingress.kubernetes.io/auth-type: basic
 #    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
 #    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
-#    nginx.ingress.kubernetes.io/auth-snippet: |
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
 #      proxy_set_header X-Scope-OrgID $remote_user;
   paths:
     distributor:
