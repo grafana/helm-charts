@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.48.4](https://img.shields.io/badge/Version-0.48.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 0.49.0](https://img.shields.io/badge/Version-0.49.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -137,6 +137,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 For example: `ingressClassName: nginx` |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| gateway.livenessProbe.httpGet.path | string | `"/"` |  |
+| gateway.livenessProbe.httpGet.port | string | `"http"` |  |
+| gateway.livenessProbe.initialDelaySeconds | int | `30` |  |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
@@ -222,6 +225,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| loki.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| loki.livenessProbe.httpGet.port | string | `"http"` |  |
+| loki.livenessProbe.initialDelaySeconds | int | `300` |  |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.podLabels | object | `{}` | Common labels for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
@@ -238,8 +244,13 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcached.image.registry | string | `"docker.io"` | The Docker registry for the memcached |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.7-alpine"` | Memcached Docker image tag |
+| memcached.livenessProbe.initialDelaySeconds | int | `10` |  |
+| memcached.livenessProbe.tcpSocket.port | string | `"http"` |  |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.podSecurityContext | object | `{"fsGroup":11211,"runAsGroup":11211,"runAsNonRoot":true,"runAsUser":11211}` | The SecurityContext for memcached pods |
+| memcached.readinessProbe.initialDelaySeconds | int | `5` |  |
+| memcached.readinessProbe.tcpSocket.port | string | `"http"` |  |
+| memcached.readinessProbe.timeoutSeconds | int | `1` |  |
 | memcachedChunks.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedChunks.enabled | bool | `false` | Specifies whether the Memcached chunks cache should be enabled |
 | memcachedChunks.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-chunks |

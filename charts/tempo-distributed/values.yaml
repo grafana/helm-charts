@@ -1,7 +1,7 @@
 global:
   image:
     # -- Overrides the Docker registry globally for all images
-    registry: null
+    registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -62,7 +62,7 @@ ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 1
+  replicas: 3
   autoscaling:
     # -- Enable autoscaling for the ingester
     enabled: false
@@ -100,16 +100,17 @@ ingester:
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Hard node and soft zone anti-affinity
+  # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "tempo.ingesterSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
           podAffinityTerm:
             labelSelector:
               matchLabels:
@@ -135,12 +136,101 @@ ingester:
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
   config:
+    # -- Number of copies of spans to store in the ingester ring
+    replication_factor: 3
+    # -- Amount of time a trace must be idle before flushing it to the wal.
+    trace_idle_period: null
+    # -- How often to sweep all tenants and move traces from live -> wal -> completed blocks.
+    flush_check_period: null
     # -- Maximum size of a block before cutting it
     max_block_bytes: null
     # -- Maximum length of time before cutting a block
     max_block_duration: null
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
+  service:
+    # -- Annotations for ingester service
+    annotations: {}
+
+# Configuration for the metrics-generator
+metricsGenerator:
+  # -- Specifies whether a metrics-generator should be deployed
+  enabled: false
+  # -- Annotations for the metrics-generator StatefulSet
+  annotations: {}
+  # -- Number of replicas for the metrics-generator
+  replicas: 1
+  image:
+    # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Docker image repository for the metrics-generator image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the metrics-generator image. Overrides `tempo.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for metrics-generator pods
+  priorityClassName: null
+  # -- Labels for metrics-generator pods
+  podLabels: {}
+  # -- Annotations for metrics-generator pods
+  podAnnotations: {}
+  # -- Additional CLI args for the metrics-generator
+  extraArgs: []
+  # -- Environment variables to add to the metrics-generator pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the metrics-generator pods
+  extraEnvFrom: []
+  # -- Resource requests and limits for the metrics-generator
+  resources: {}
+  # -- Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor,
+  # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
+  # all data and to successfully leave the member ring on shutdown.
+  terminationGracePeriodSeconds: 300
+  # -- Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for metrics-generator pods
+  nodeSelector: {}
+  # -- Tolerations for metrics-generator pods
+  tolerations: []
+  # -- Extra volumes for metrics-generator pods
+  extraVolumeMounts: []
+  # -- Extra volumes for metrics-generator deployment
+  extraVolumes: []
+  # -- Default ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-memberlist
+      port: 7946
+      service: false
+    - name: http
+      port: 3100
+      service: true
+  config:
+    #  MaxItems is the amount of edges that will be stored in the store.
+    service_graphs_max_items: 10000
+    storage_remote_write: []
+    # - url: http://cortex/api/v1/push
+    #   send_exemplars: true
+    #   headers:
+    #     x-scope-orgid: operations
+  service:
+    # -- Annotations for Metrics Generator service
+    annotations: {}
 
 # Configuration for the distributor
 distributor:
@@ -213,6 +303,13 @@ distributor:
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
   extraVolumes: []
+  config:
+    # -- Enable to log every received trace id to help debug ingestion
+    log_received_traces: null
+    # -- Disables write extension with inactive ingesters
+    extend_writes: null
+    # -- List of tags that will not be extracted from trace data for search lookups
+    search_tags_deny_list: []
 
 compactor:
   image:
@@ -309,6 +406,9 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+  service:
+    # -- Annotations for querier service
+    annotations: {}
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -409,6 +509,8 @@ search:
   # -- Enable Tempo search
   enabled: false
 
+multitenancyEnabled: false
+
 traces:
   jaeger:
     grpc:
@@ -456,14 +558,28 @@ traces:
   kafka: {}
 
 config: |
-  multitenancy_enabled: false
+  multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
+  metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
     ring:
       kvstore:
         store: memberlist
+  {{- if .Values.metricsGenerator.enabled }}
+  metrics_generator:
+    ring:
+      kvstore:
+        store: memberlist
+    processor:
+      service_graphs:
+        max_items: {{ .Values.metricsGenerator.config.service_graphs_max_items }}
+    storage:
+      path: /var/tempo/wal
+      remote_write:
+        {{- toYaml .Values.metricsGenerator.config.storage_remote_write | nindent 6}}
+  {{- end }}
   distributor:
     ring:
       kvstore:
@@ -521,6 +637,18 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
+    {{- if .Values.distributor.config.log_received_traces }}
+    log_received_traces: {{ .Values.distributor.config.log_received_traces }}
+    {{- end }}
+    {{- if .Values.distributor.config.extend_writes }}
+    extend_writes: {{ .Values.distributor.config.extend_writes }}
+    {{- end }}
+    {{- if .Values.distributor.config.search_tags_deny_list }}
+    search_tags_deny_list:
+      {{- with .Values.distributor.config.search_tags_deny_list }}
+      {{- toYaml . | nindent 4 }}
+      {{- end }}
+    {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
@@ -531,10 +659,16 @@ config: |
   ingester:
     lifecycler:
       ring:
-        replication_factor: 1
+        replication_factor: {{ .Values.ingester.config.replication_factor }}
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
+    {{- if .Values.ingester.config.trace_idle_period }}
+    trace_idle_period: {{ .Values.ingester.config.trace_idle_period }}
+    {{- end }}
+    {{- if .Values.ingester.config.flush_check_period }}
+    flush_check_period: {{ .Values.ingester.config.flush_check_period }}
+    {{- end }}
     {{- if .Values.ingester.config.max_block_bytes }}
     max_block_bytes: {{ .Values.ingester.config.max_block_bytes }}
     {{- end }}
@@ -613,6 +747,9 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /conf/overrides.yaml
+  # metrics_generator_processors:
+  #   - service-graphs
+  #   - span-metrics
 
 # Per tenants overrides
 overrides: |
@@ -623,16 +760,18 @@ overrides: |
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
+  image:
+    # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
+    registry: null
+    # -- Memcached Docker image repository
+    repository: memcached
+    # -- Memcached Docker image tag
+    tag: 1.5.17-alpine
+    # -- Memcached Docker image pull policy
+    pullPolicy: IfNotPresent
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  service: memcached-client
-  # -- Memcached Docker image repository
-  repository: memcached
-  # -- Memcached Docker image tag
-  tag: 1.5.17-alpine
-  # -- Memcached Docker image pull policy
-  pullPolicy: IfNotPresent
   # -- Additional CLI args for memcached
   extraArgs: []
   # -- Environment variables to add to memcached pods
@@ -661,11 +800,16 @@ memcached:
               matchLabels:
                 {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  service:
+    # -- Annotations for memcached service
+    annotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   image:
+    # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
+    registry: null
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -743,8 +887,8 @@ gateway:
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
   image:
-    # -- The Docker registry for the gateway image
-    registry: docker.io
+    # -- The Docker registry for the gateway image. Overrides `global.image.registry`
+    registry: null
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag

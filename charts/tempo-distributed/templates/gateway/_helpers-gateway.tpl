@@ -33,6 +33,6 @@ gateway auth secret name
 gateway image
 */}}
 {{- define "tempo.gatewayImage" -}}
-{{- $dict := dict "tempo" .Values.tempo.image "service" .Values.gateway.image "global" .Values.global.image "defaultVersion" .Chart.AppVersion -}}
+{{- $dict := dict "tempo" (dict) "service" .Values.gateway.image "global" .Values.global.image -}}
 {{- include "tempo.tempoImage" $dict -}}
 {{- end }}
