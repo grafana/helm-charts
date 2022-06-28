@@ -36,6 +36,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.memcached.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.memcached.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - image: "{{ .Values.memcached.repository }}:{{ .Values.memcached.tag }}"
