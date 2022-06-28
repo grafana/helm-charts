@@ -307,7 +307,7 @@ ingester:
                 {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
-  maxUnavailable: 0
+  maxUnavailable: null
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
