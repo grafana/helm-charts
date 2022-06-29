@@ -539,7 +539,7 @@ The above configuration selectively overrides default values found in the `loki.
 Using `loki.structuredConfig` it is possible to externally set most any configuration parameter (special considerations for elements of an array).
 
 ```
-helm upgrade loki --install -f values.yaml --set loki.structuredConfig.storage_config.aws.bucketnames=my-loki-bucket
+helm upgrade loki-distributed --install -f values.yaml --set loki.structuredConfig.storage_config.aws.bucketnames=my-loki-bucket
 ```
 
 `loki.config`, `loki.schemaConfig` and `loki.storageConfig` may also be used in conjuction with `loki.structuredConfig`. Values found in `loki.structuredConfig` will take precedence. Array values, such as those found in `loki.schema_config` will be overridden wholesale and not amended to.
