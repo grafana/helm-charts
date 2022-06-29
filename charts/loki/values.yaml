@@ -126,6 +126,8 @@ config:
 extraArgs: {}
   # log.level: debug
 
+extraEnvFrom: []
+
 livenessProbe:
   httpGet:
     path: /ready
