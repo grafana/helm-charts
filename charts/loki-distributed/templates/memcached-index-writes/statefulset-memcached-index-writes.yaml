@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedIndexWritesFullname" . }}
   labels:
     {{- include "loki.memcachedIndexWritesLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedIndexWrites.replicas }}
   updateStrategy:
@@ -28,6 +32,12 @@ spec:
       {{- end }}
       labels:
         {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 8 }}
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.memcachedIndexWrites.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -61,10 +71,9 @@ spec:
           securityContext:
             {{- toYaml .Values.memcached.containerSecurityContext | nindent 12 }}
           readinessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: 5
-            timeoutSeconds: 1
+            {{- toYaml .Values.memcached.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.memcached.livenessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.memcachedIndexWrites.resources | nindent 12 }}
         {{- if .Values.memcachedExporter.enabled }}
@@ -80,6 +89,9 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
+        {{- end }}
+        {{- if .Values.memcachedIndexWrites.extraContainers }}
+        {{- toYaml .Values.memcachedIndexWrites.extraContainers | nindent 8}}
         {{- end }}
       {{- with .Values.memcachedIndexWrites.affinity }}
       affinity:
