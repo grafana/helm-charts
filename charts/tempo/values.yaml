@@ -41,19 +41,18 @@ tempo:
   server:
     # -- HTTP server listen port
     http_listen_port: 3100
-  # tempo storage backend
-  # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
-  ## Use s3 for example
-  # backend: s3                                         # store traces in s3
-  #  s3:
-  #    bucket: tempo                                   # store traces in this bucket
-  #    endpoint: s3.dualstack.us-east-2.amazonaws.com  # api endpoint
-  #    access_key: ...                                 # optional. access key when using static credentials.
-  #    secret_key: ...                                 # optional. secret key when using static credentials.
-  #    insecure: false                                 # optional. enable if endpoint is http
-  ## end
   storage:
     trace:
+      # tempo storage backend
+      # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
+      ## Use s3 for example
+      # backend: s3                                         # store traces in s3
+      # s3:
+      #   bucket: tempo                                   # store traces in this bucket
+      #   endpoint: s3.dualstack.us-east-2.amazonaws.com  # api endpoint
+      #   access_key: ...                                 # optional. access key when using static credentials.
+      #   secret_key: ...                                 # optional. secret key when using static credentials.
+      #   insecure: false                                 # optional. enable if endpoint is http
       backend: local
       local:
         path: /var/tempo/traces
