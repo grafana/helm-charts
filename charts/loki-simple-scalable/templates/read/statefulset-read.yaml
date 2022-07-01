@@ -13,7 +13,7 @@ spec:
       partition: 0
   serviceName: {{ include "loki.readFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
-  {{- if (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) -}}
+  {{- if (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) }}
   {{/*
     Data on the read nodes is easy to replace, so we want to always delete PVCs to make
     operation easier, and will rely on re-fetching data when needed.
@@ -21,7 +21,7 @@ spec:
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Delete
     whenScaled: Delete
-  {{- end -}}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "loki.readSelectorLabels" . | nindent 6 }}
