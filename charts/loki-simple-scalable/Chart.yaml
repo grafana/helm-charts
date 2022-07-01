@@ -16,5 +16,10 @@ dependencies:
     version: 8.0.9
     repository: https://helm.min.io/
     condition: minio.enabled
+  - name: grafana-agent-operator
+    alias: grafana-agent-operator
+    version: 0.1.12
+    repository: https://grafana.github.io/helm-charts
+    condition: monitoring.selfMonitoring.grafanaAgent.installOperator
 maintainers:
   - name: trevorwhitney
