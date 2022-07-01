@@ -63,7 +63,7 @@ loki:
     {{- if .Values.enterprise.enabled}}
     {{- tpl .Values.enterprise.config . }}
     {{- else }}
-    auth_enabled: {{ .Values.loki.authEnabled }}
+    auth_enabled: {{ .Values.loki.auth_enabled }}
     {{- end }}
 
     server:
@@ -117,7 +117,7 @@ loki:
     {{- end -}}
 
   # Should authentication be enabled
-  authEnabled: true
+  auth_enabled: true
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
   commonConfig:
@@ -191,7 +191,7 @@ enterprise:
     {{- end }}
     auth:
       type: {{ .Values.enterprise.adminApi.enabled | ternary "enterprise" "trust" }}
-    auth_enabled: {{ .Values.loki.authEnabled }}
+    auth_enabled: {{ .Values.loki.auth_enabled }}
     cluster_name: {{ .Release.Name }}
     license:
       path: /etc/loki/license/license.jwt
@@ -374,29 +374,82 @@ rbac:
   # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
   sccEnabled: false
 
-# ServiceMonitor configuration
-serviceMonitor:
-  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: false
-  # -- Alternative namespace for ServiceMonitor resources
-  namespace: null
-  # -- Namespace selector for ServiceMonitor resources
-  namespaceSelector: {}
-  # -- ServiceMonitor annotations
-  annotations: {}
-  # -- Additional ServiceMonitor labels
-  labels: {}
-  # -- ServiceMonitor scrape interval
-  interval: null
-  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
-  scrapeTimeout: null
-  # -- ServiceMonitor relabel configs to apply to samples before scraping
-  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-  relabelings: []
-  # -- ServiceMonitor will use http by default, but you can pick https as well
-  scheme: http
-  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
-  tlsConfig: null
+# Monitoring section determines which monitoring features to enable
+monitoring:
+  # Dashboards for monitoring Loki
+  dashboards:
+    # -- If enabled, create configmap with dashboards for monitoring Loki
+    enabled: true
+    # -- Alternative namespace to create dashboards config map in
+    namespace: null
+
+  # ServiceMonitor configuration
+  serviceMonitor:
+    # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+    enabled: true
+    # -- Alternative namespace for ServiceMonitor resources
+    namespace: null
+    # -- Namespace selector for ServiceMonitor resources
+    namespaceSelector: {}
+    # -- ServiceMonitor annotations
+    annotations: {}
+    # -- Additional ServiceMonitor labels
+    labels: {}
+    # -- ServiceMonitor scrape interval
+    interval: null
+    # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+    scrapeTimeout: null
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor will use http by default, but you can pick https as well
+    scheme: http
+    # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+    tlsConfig: null
+
+  # Self monitoring determines whether Loki should scrape it's own logs.
+  # This feature currently relies on the Grafana Agent Operator being installed,
+  # which is installed by default using the grafana-agent-operator sub-chart.
+  # It will create custom resources for GrafanaAgent, LogsInstance, and PodLogs to configure
+  # scrape configs to scrape it's own logs with the labels expected by the included dashboards.
+  selfMonitoring:
+    enabled: true
+
+    # Grafana Agent configuration
+    grafanaAgent:
+      # -- Controls whether to install the Grafana Agent Operator and its CRDs.
+      # Note that helm will not install CRDs if this flag is enabled during an upgrade.
+      # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
+      installOperator: true
+      # -- Alternative namespace for Grafana Agent resources
+      namespace: null
+      # -- Grafana Agent annotations
+      annotations: {}
+      # -- Additional Grafana Agent labels
+      labels: {}
+      # -- Enable the config read api on port 8080 of the agent
+      enableConfigReadAPI: false
+
+    # PodLogs configuration
+    podLogs:
+      # -- Alternative namespace for PodLogs resources
+      namespace: null
+      # -- PodLogs annotations
+      annotations: {}
+      # -- Additional PodLogs labels
+      labels: {}
+      # -- PodLogs relabel configs to apply to samples before scraping
+      # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+      relabelings: []
+
+    # LogsInstance configuration
+    logsInstance:
+      # -- Alternative namespace for LogsInstance resources
+      namespace: null
+      # -- LogsInstance annotations
+      annotations: {}
+      # -- Additional LogsInstance labels
+      labels: {}
 
 # Rules for the Prometheus Operator
 prometheusRule:
