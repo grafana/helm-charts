@@ -359,7 +359,7 @@ config:
       http_listen_port: {{ .Values.config.serverPort }}
 
     clients:
-      {{- toYaml .Values.config.clients | nindent 2 }}
+      {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
