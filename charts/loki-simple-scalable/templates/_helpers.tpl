@@ -150,6 +150,19 @@ filesystem:
 {{- end -}}
 
 {{/*
+Storage config for ruler
+*/}}
+{{- define "loki.rulerStorageConfig" -}}
+{{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") -}}
+s3:
+  bucketnames: {{ $.Values.loki.storage.bucketNames.ruler }}
+{{- else if eq .Values.loki.storage.type "gcs" -}}
+gcs:
+  bucket_name: {{ $.Values.loki.storage.bucketNames.ruler }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Memcached Docker image
 */}}
 {{- define "loki.memcachedImage" -}}
