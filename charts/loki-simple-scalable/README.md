@@ -14,6 +14,7 @@ Helm chart for Grafana Loki in simple, scalable mode
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.1.12 |
 | https://helm.min.io/ | minio(minio) | 8.0.9 |
 
 ## Chart Repo
@@ -148,6 +149,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | monitoring.selfMonitoring.enabled | bool | `true` |  |
 | monitoring.selfMonitoring.grafanaAgent.annotations | object | `{}` | Grafana Agent annotations |
 | monitoring.selfMonitoring.grafanaAgent.enableConfigReadAPI | bool | `false` | Enable the config read api on port 8080 of the agent |
+| monitoring.selfMonitoring.grafanaAgent.installOperator | bool | `true` | Controls whether to install the Grafana Agent Operator and its CRDs. Note that helm will not install CRDs if this flag is enabled during an upgrade. In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds |
 | monitoring.selfMonitoring.grafanaAgent.labels | object | `{}` | Additional Grafana Agent labels |
 | monitoring.selfMonitoring.grafanaAgent.namespace | string | `nil` | Alternative namespace for Grafana Agent resources |
 | monitoring.selfMonitoring.logsInstance.annotations | object | `{}` | LogsInstance annotations |
