@@ -118,8 +118,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| loki.memcached | object | `{"chunk_cache":{"batch_size":256,"enabled":false,"host":"","parallelism":10,"service":"memcached-client"},"results_cache":{"default_validity":"12h","enabled":false,"host":"","service":"memcached-client","timeout":"500ms"}}` | Configure memcached as an external cache for chunk and results cache. Disabled by default must enable and specify a host for each cache you would like to use. |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
+| loki.query_scheduler | object | `{}` | Additional query scheduler config |
 | loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
 | loki.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | loki.readinessProbe.initialDelaySeconds | int | `30` |  |
@@ -142,6 +144,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.s3.s3ForcePathStyle | bool | `false` |  |
 | loki.storage.s3.secretAccessKey | string | `"supersecret"` |  |
 | loki.storage.type | string | `"s3"` |  |
+| loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | minio | object | `{"accessKey":"enterprise-logs","buckets":[{"name":"chunks","policy":"none","purge":false},{"name":"ruler","policy":"none","purge":false},{"name":"admin","policy":"none","purge":false}],"enabled":false,"persistence":{"size":"5Gi"},"resources":{"requests":{"cpu":"100m","memory":"128Mi"}},"secretKey":"supersecret"}` | ----------------------------------- |
 | monitoring.dashboards.enabled | bool | `true` | If enabled, create configmap with dashboards for monitoring Loki |
