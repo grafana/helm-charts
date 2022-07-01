@@ -25,9 +25,3 @@ gateway:
     enabled: true
     username: user
     password: pass
-
-monitoring:
-  serviceMonitor:
-    enabled: false
-  selfMonitoring:
-    enabled: false
