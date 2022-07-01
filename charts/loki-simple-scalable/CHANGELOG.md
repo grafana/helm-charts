@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.5.0
+
+-[CHANGE] Set `persistentVolumeClaimRetentionPolicy` for read pods to `Delete` for both `whenDeleted` and `whenScaled` since this data is easy to replace by re-fetching from object storage. This should make for easier roll-outs of the stateful sets.
+
 ## 1.3.0
 
 - [BUGFIX] Fix the storage heper functions to use the right properties (snake vs camel case) #1420
