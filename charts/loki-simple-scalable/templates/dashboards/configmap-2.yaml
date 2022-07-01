@@ -5,9 +5,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "loki.dashboardsName" $ }}-2
-  {{- with .namespace }}
-  namespace: {{ . }}
-  {{- end }}
+  namespace: {{ .namespace | default $.Release.Namespace }}
 data:
   "loki-chunks.json": |
     {{ $.Files.Get "src/loki-chunks.json" | fromJson | toJson }}
