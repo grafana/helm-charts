@@ -6,5 +6,4 @@ charts/enterprise-metrics
 charts/enterprise-logs
 # TODO get rid of this list after all docs migrated to helm-docs:1.8.1
 charts/enterprise-logs-simple
-charts/loki-simple-scalable
 charts/tempo-distributed
