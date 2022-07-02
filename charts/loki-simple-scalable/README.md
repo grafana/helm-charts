@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.6.1](https://img.shields.io/badge/Version-1.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -278,7 +278,7 @@ In order to do this, please override the `loki.config` value with a valid object
 the `common.storage` section, as well as the `object_store` in your `schema_config`. Please note that because of the way
 helm deep merges values, you will need to explicitly `null` out the default `filesystem` configuration.
 
-For exmaple, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
+For example, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
 
 ```yaml
 loki:

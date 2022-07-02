@@ -54,7 +54,7 @@ In order to do this, please override the `loki.config` value with a valid object
 the `common.storage` section, as well as the `object_store` in your `schema_config`. Please note that because of the way
 helm deep merges values, you will need to explicitly `null` out the default `filesystem` configuration.
 
-For exmaple, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
+For example, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
 
 ```yaml
 loki:
