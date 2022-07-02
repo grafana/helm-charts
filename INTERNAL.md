@@ -12,7 +12,41 @@ Release automation uses the `GPG_KEY_BASE64` secret to sign the packages.
 The `GPG_KEY_BASE64` is a base64 encoded GPG key.
 It expires on 2023-03-30.
 
+### Setting the signing key as GitHub secret
+
 Grafana Labs employees may access the private key using the company 1password.
+
+1. Write the contents of the `Loki Helm GPG Key` 1password secret into a file.
+
+1. Import the key into a separate keyring.
+
+   ```console
+   $ gpg --no-default-keyring --keyring ~/.gnupg/helm-charts.gpg --import <PATH TO GPG KEY>
+   gpg: key 7054A9559D3CFB0B: public key "Grafana Loki <loki-team@googlegroups.com>" imported
+   gpg: key 7054A9559D3CFB0B: secret key imported
+   gpg: Total number processed: 1
+   gpg:               imported: 1
+   gpg:       secret keys read: 1
+   gpg:  secret keys unchanged: 1
+   ```
+
+1. Export the key into the format for Helm packaging tool
+
+   ```console
+   gpg --keyring ~/.gnupg/helm-charts.gpg --export-secret-keys >~/.gnupg/secring.gpg
+   ```
+
+1. Encode the key with BASE64 and place into clipboard
+
+   This instruction works best on Linux X11 desktop.
+
+   ```console
+   base64 ~/.gnupg/secring.gpg | xclip -selection clipboard -i
+   ```
+
+1. Set up a secret in github where the value is the content of the clipboard.
+
+### Extending the expiry of the private key
 
 Grafana Labs employees can extend the expiry of the private key using the `gpg` command line tool.
 

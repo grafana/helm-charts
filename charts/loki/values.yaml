@@ -126,6 +126,8 @@ config:
 extraArgs: {}
   # log.level: debug
 
+extraEnvFrom: []
+
 livenessProbe:
   httpGet:
     path: /ready
@@ -198,6 +200,9 @@ securityContext:
   runAsGroup: 10001
   runAsNonRoot: true
   runAsUser: 10001
+
+containerSecurityContext:
+  readOnlyRootFilesystem: true
 
 service:
   type: ClusterIP
