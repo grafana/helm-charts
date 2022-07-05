@@ -265,6 +265,8 @@ They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which read and write nodes are part of.
 
+You can find some working examples of this Helm Chart within the [docs/examples](/docs/examples) directory of this repo.
+
 ----
 
 **NOTE:**
