@@ -136,13 +136,13 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.gcs.requestTimeout | string | `"0s"` |  |
 | loki.storage.local.chunks_directory | string | `"/var/loki/chunks"` |  |
 | loki.storage.local.rules_directory | string | `"/var/loki/rules"` |  |
-| loki.storage.s3.accessKeyId | string | `"accesskey"` |  |
+| loki.storage.s3.accessKeyId | string | `nil` |  |
 | loki.storage.s3.endpoint | string | `"https://amazonaws.com"` |  |
 | loki.storage.s3.insecure | bool | `false` |  |
 | loki.storage.s3.region | string | `nil` |  |
 | loki.storage.s3.s3 | string | `nil` |  |
 | loki.storage.s3.s3ForcePathStyle | bool | `false` |  |
-| loki.storage.s3.secretAccessKey | string | `"supersecret"` |  |
+| loki.storage.s3.secretAccessKey | string | `nil` |  |
 | loki.storage.type | string | `"s3"` |  |
 | loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
