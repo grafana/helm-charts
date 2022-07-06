@@ -18,8 +18,8 @@ spec:
   clusterIP: {{ . }}
   {{- end }}
   {{- if eq "LoadBalancer" .Values.gateway.service.type }}
-  {{- if .Values.gateway.service.loadbalancerip }}
-  loadbalancerip: {{ .Values.gateway.service.loadbalancerip }}
+  {{- with .Values.gateway.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
   {{- end }}
   {{- with .Values.gateway.service.loadBalancerSourceRanges  }}
   loadBalancerSourceRanges:
