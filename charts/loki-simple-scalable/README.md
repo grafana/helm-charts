@@ -137,7 +137,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.local.chunks_directory | string | `"/var/loki/chunks"` |  |
 | loki.storage.local.rules_directory | string | `"/var/loki/rules"` |  |
 | loki.storage.s3.accessKeyId | string | `nil` |  |
-| loki.storage.s3.endpoint | string | `"https://amazonaws.com"` |  |
+| loki.storage.s3.endpoint | string | `nil` |  |
 | loki.storage.s3.insecure | bool | `false` |  |
 | loki.storage.s3.region | string | `nil` |  |
 | loki.storage.s3.s3 | string | `nil` |  |
