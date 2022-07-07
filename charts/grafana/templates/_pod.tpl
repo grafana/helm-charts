@@ -90,7 +90,7 @@ initContainers:
         value: "LIST"
       - name: LABEL
         value: "{{ .Values.sidecar.datasources.label }}"
-      {{- if and (.Values.sidecar.datasources.labelValue) (ne (len .Values.sidecar.datasources.labelValue) 0) }}
+      {{- if .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.datasources.labelValue }}
       {{- end }}
@@ -194,7 +194,7 @@ containers:
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.dashboards.label }}"
-      {{- if and (.Values.sidecar.dashboards.labelValue) (ne (len .Values.sidecar.dashboards.labelValue) 0) }}
+      {{- if .Values.sidecar.dashboards.labelValue }}
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.dashboards.labelValue }}
       {{- end }}
@@ -264,7 +264,7 @@ containers:
         value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.datasources.label }}"
-      {{- if and (.Values.sidecar.datasources.labelValue) (ne (len .Values.sidecar.datasources.labelValue) 0) }}
+      {{- if .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.datasources.labelValue }}
       {{- end }}
@@ -335,7 +335,7 @@ containers:
         value: {{ .Values.sidecar.plugins.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.plugins.label }}"
-      {{- if and (.Values.sidecar.plugins.labelValue) (ne (len .Values.sidecar.plugins.labelValue) 0) }}
+      {{- if .Values.sidecar.plugins.labelValue }}
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.plugins.labelValue }}
       {{- end }}
