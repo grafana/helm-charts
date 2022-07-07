@@ -147,8 +147,18 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | minio | object | `{"accessKey":"enterprise-logs","buckets":[{"name":"chunks","policy":"none","purge":false},{"name":"ruler","policy":"none","purge":false},{"name":"admin","policy":"none","purge":false}],"enabled":false,"persistence":{"size":"5Gi"},"resources":{"requests":{"cpu":"100m","memory":"128Mi"}},"secretKey":"supersecret"}` | ----------------------------------- |
+| monitoring.alerts.annotations | object | `{}` | Additional annotations for the alerts PrometheusRule resource |
+| monitoring.alerts.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki alerting rules |
+| monitoring.alerts.labels | object | `{}` | Additional labels for the alerts PrometheusRule resource |
+| monitoring.alerts.namespace | string | `nil` | Alternative namespace to create alerting rules PrometheusRule resource in |
+| monitoring.dashboards.annotations | object | `{}` | Additional annotations for the dashboards ConfigMap |
 | monitoring.dashboards.enabled | bool | `true` | If enabled, create configmap with dashboards for monitoring Loki |
-| monitoring.dashboards.namespace | string | `nil` | Alternative namespace to create dashboards config map in |
+| monitoring.dashboards.labels | object | `{}` | Additional labels for the dashboards ConfigMap |
+| monitoring.dashboards.namespace | string | `nil` | Alternative namespace to create dashboards ConfigMap in |
+| monitoring.rules.annotations | object | `{}` | Additional annotations for the rules PrometheusRule resource |
+| monitoring.rules.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki recording rules |
+| monitoring.rules.labels | object | `{}` | Additional labels for the rules PrometheusRule resource |
+| monitoring.rules.namespace | string | `nil` | Alternative namespace to create recording rules PrometheusRule resource in |
 | monitoring.selfMonitoring.enabled | bool | `true` |  |
 | monitoring.selfMonitoring.grafanaAgent.annotations | object | `{}` | Grafana Agent annotations |
 | monitoring.selfMonitoring.grafanaAgent.enableConfigReadAPI | bool | `false` | Enable the config read api on port 8080 of the agent |
