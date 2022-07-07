@@ -70,6 +70,8 @@ loki:
   existingSecretForConfig: ""
   # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
+  # -- Common annotations for all loki services
+  serviceAnnotations: {}
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -1176,6 +1178,8 @@ memcached:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Common annotations for all memcached services
+  serviceAnnotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled

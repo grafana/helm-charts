@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.6.1](https://img.shields.io/badge/Version-1.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.6.2](https://img.shields.io/badge/Version-1.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -264,6 +264,8 @@ and it is not intended to support these going forward.
 They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which read and write nodes are part of.
+
+You can find some working examples of this Helm Chart within the [docs/examples](/docs/examples) directory of this repo.
 
 ----
 
