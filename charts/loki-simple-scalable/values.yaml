@@ -444,8 +444,34 @@ monitoring:
   dashboards:
     # -- If enabled, create configmap with dashboards for monitoring Loki
     enabled: true
-    # -- Alternative namespace to create dashboards config map in
+    # -- Alternative namespace to create dashboards ConfigMap in
     namespace: null
+    # -- Additional annotations for the dashboards ConfigMap
+    annotations: {}
+    # -- Additional labels for the dashboards ConfigMap
+    labels: {}
+
+  # Recording rules for monitoring Loki, required for some dashboards
+  rules:
+    # -- If enabled, create PrometheusRule resource with Loki recording rules
+    enabled: true
+    # -- Alternative namespace to create recording rules PrometheusRule resource in
+    namespace: null
+    # -- Additional annotations for the rules PrometheusRule resource
+    annotations: {}
+    # -- Additional labels for the rules PrometheusRule resource
+    labels: {}
+
+  # Alerting rules for monitoring Loki
+  alerts:
+    # -- If enabled, create PrometheusRule resource with Loki alerting rules
+    enabled: true
+    # -- Alternative namespace to create alerting rules PrometheusRule resource in
+    namespace: null
+    # -- Additional annotations for the alerts PrometheusRule resource
+    annotations: {}
+    # -- Additional labels for the alerts PrometheusRule resource
+    labels: {}
 
   # ServiceMonitor configuration
   serviceMonitor:
