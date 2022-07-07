@@ -16,6 +16,11 @@ metadata:
   name: {{ include "loki.fullname" $ }}-rules
   namespace: {{ .namespace | default $.Release.Namespace }}
 spec:
-  {{- $.Files.Get "src/rules.yaml" | fromYaml | toYaml | nindent 2 }}
+  groups:
+  {{- include "loki.ruleGroupToYaml" ($.Files.Get "src/rules.yaml" | fromYaml).groups | indent 4 }}
+  {{- if .alerting }}
+  {{- include "loki.ruleGroupToYaml" ($.Files.Get "src/alerts.yaml" | fromYaml).groups | indent 4 }}
+  {{- end }}
+  {{- include "loki.ruleGroupToYaml" .additionalGroups | indent 4 }}
 {{- end }}
 {{- end }}

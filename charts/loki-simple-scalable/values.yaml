@@ -455,12 +455,24 @@ monitoring:
   rules:
     # -- If enabled, create PrometheusRule resource with Loki recording rules
     enabled: true
+    # -- Include alerting rules
+    alerting: true
     # -- Alternative namespace to create recording rules PrometheusRule resource in
     namespace: null
     # -- Additional annotations for the rules PrometheusRule resource
     annotations: {}
     # -- Additional labels for the rules PrometheusRule resource
     labels: {}
+    # -- Additional groups to add to the rules file
+    additionalGroups: []
+    # - name: additional-loki-rules
+    #   rules:
+    #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+    #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+    #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+    #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
   # Alerting rules for monitoring Loki
   alerts:
@@ -540,27 +552,6 @@ monitoring:
       annotations: {}
       # -- Additional LogsInstance labels
       labels: {}
-
-# Rules for the Prometheus Operator
-prometheusRule:
-  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
-  enabled: false
-  # -- Alternative namespace for the PrometheusRule resource
-  namespace: null
-  # -- PrometheusRule annotations
-  annotations: {}
-  # -- Additional PrometheusRule labels
-  labels: {}
-  # -- Contents of Prometheus rules file
-  groups: []
-  # - name: loki-rules
-  #   rules:
-  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
-  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
-  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
-  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
 # Configuration for the write
 write:
