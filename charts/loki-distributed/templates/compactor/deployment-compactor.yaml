@@ -85,6 +85,12 @@ spec:
         {{- if .Values.compactor.extraContainers }}
         {{- toYaml .Values.compactor.extraContainers | nindent 8}}
         {{- end }}
+      {{- if .Values.compactor.affinity }}
+      {{- with .Values.distributor.affinity }}
+      affinity:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.compactor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
