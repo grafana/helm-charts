@@ -154,6 +154,7 @@ persistence:
   accessModes:
   - ReadWriteOnce
   size: 10Gi
+  labels: {}
   annotations: {}
   # selector:
   #   matchLabels:
