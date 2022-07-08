@@ -300,6 +300,10 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
+    # -- You can put here any keys that will be directly added to the config file's 'server' block.
+    # @default -- empty
+    extraServerConfigs: ""
+
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
     extraScrapeConfigs: ""
@@ -357,9 +361,10 @@ config:
     server:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
+      {{- tpl .Values.config.snippets.extraServerConfigs . | nindent 2 }}
 
     clients:
-      {{- toYaml .Values.config.clients | nindent 2 }}
+      {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml
