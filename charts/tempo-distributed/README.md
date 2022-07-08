@@ -367,6 +367,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
+| tempo.structuredConfig | object | `{}` | Structured tempo configuration |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
 | traces.jaeger.thriftBinary.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
