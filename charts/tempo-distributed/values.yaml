@@ -39,6 +39,8 @@ tempo:
   #  readOnlyRootFilesystem: true
   #  runAsNonRoot: true
   #  runAsUser: 1000
+  # -- Structured tempo configuration
+  structuredConfig: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
