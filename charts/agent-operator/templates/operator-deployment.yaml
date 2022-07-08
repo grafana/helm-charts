@@ -16,7 +16,10 @@ spec:
   template:
     metadata:
       labels:
-{{ include "ga-operator.labels" . | indent 8 }}
+{{ include "ga-operator.selectorLabels" . | indent 8 }}
+{{- with .Values.podLabels }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
 {{- with .Values.podAnnotations }}
       annotations:
 {{ toYaml . | indent 8 }}

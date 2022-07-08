@@ -1,7 +1,7 @@
 global:
   image:
     # -- Overrides the Docker registry globally for all images
-    registry: null
+    registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -148,6 +148,9 @@ ingester:
     max_block_duration: null
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
+  service:
+    # -- Annotations for ingester service
+    annotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -225,6 +228,9 @@ metricsGenerator:
     #   send_exemplars: true
     #   headers:
     #     x-scope-orgid: operations
+  service:
+    # -- Annotations for Metrics Generator service
+    annotations: {}
 
 # Configuration for the distributor
 distributor:
@@ -400,6 +406,9 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+  service:
+    # -- Annotations for querier service
+    annotations: {}
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -500,6 +509,8 @@ search:
   # -- Enable Tempo search
   enabled: false
 
+multitenancyEnabled: false
+
 traces:
   jaeger:
     grpc:
@@ -547,7 +558,7 @@ traces:
   kafka: {}
 
 config: |
-  multitenancy_enabled: false
+  multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
   metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
   compactor:
@@ -749,16 +760,18 @@ overrides: |
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
+  image:
+    # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
+    registry: null
+    # -- Memcached Docker image repository
+    repository: memcached
+    # -- Memcached Docker image tag
+    tag: 1.5.17-alpine
+    # -- Memcached Docker image pull policy
+    pullPolicy: IfNotPresent
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  service: memcached-client
-  # -- Memcached Docker image repository
-  repository: memcached
-  # -- Memcached Docker image tag
-  tag: 1.5.17-alpine
-  # -- Memcached Docker image pull policy
-  pullPolicy: IfNotPresent
   # -- Additional CLI args for memcached
   extraArgs: []
   # -- Environment variables to add to memcached pods
@@ -787,11 +800,16 @@ memcached:
               matchLabels:
                 {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  service:
+    # -- Annotations for memcached service
+    annotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   image:
+    # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
+    registry: null
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -869,8 +887,8 @@ gateway:
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
   image:
-    # -- The Docker registry for the gateway image
-    registry: docker.io
+    # -- The Docker registry for the gateway image. Overrides `global.image.registry`
+    registry: null
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag

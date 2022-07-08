@@ -3,7 +3,7 @@ name: loki-simple-scalable
 description: Helm chart for Grafana Loki in simple, scalable mode
 type: application
 appVersion: 2.5.0
-version: 1.4.2
+version: 1.6.2
 home: https://grafana.github.io/helm-charts
 sources:
   - https://github.com/grafana/loki
@@ -16,5 +16,10 @@ dependencies:
     version: 8.0.9
     repository: https://helm.min.io/
     condition: minio.enabled
+  - name: grafana-agent-operator
+    alias: grafana-agent-operator
+    version: 0.2.2
+    repository: https://grafana.github.io/helm-charts
+    condition: monitoring.selfMonitoring.grafanaAgent.installOperator
 maintainers:
   - name: trevorwhitney
