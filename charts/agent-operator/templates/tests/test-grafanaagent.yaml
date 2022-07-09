@@ -87,6 +87,9 @@ apiVersion: monitoring.grafana.com/v1alpha1
 kind: MetricsInstance
 metadata:
   name: primary-test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
   labels:
     agent: grafana-agent-test
 spec: {}
@@ -106,7 +109,7 @@ spec:
   - name: busybox
     image: busybox
     command: ['wget']
-    args:  ['grafana-agent-operated:8080/-/healthy']
+    args:  ['grafana-agent-test-operated:8080/-/healthy']
   # Wait for GrafanaAgent CR
   initContainers:
   - name: sleep

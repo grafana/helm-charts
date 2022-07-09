@@ -7,7 +7,9 @@ metadata:
     {{- include "tempo.gatewayLabels" . | nindent 4 }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -16,12 +18,24 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/gateway/configmap-gateway.yaml") . | sha256sum }}
+        {{- with .Values.tempo.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with .Values.gateway.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
         {{- include "tempo.gatewaySelectorLabels" . | nindent 8 }}
+        {{- with .Values.tempo.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.gateway.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
+      {{- if or (.Values.gateway.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.gateway.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       containers:
@@ -58,6 +72,10 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.gateway.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.gateway.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

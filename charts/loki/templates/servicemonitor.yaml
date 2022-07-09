@@ -4,10 +4,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ template "loki.fullname" . }}
   labels:
-    app: {{ template "loki.name" . }}
-    chart: {{ template "loki.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "loki.labels" . | nindent 4 }}
     {{- if .Values.serviceMonitor.additionalLabels }}
 {{ toYaml .Values.serviceMonitor.additionalLabels | indent 4 }}
     {{- end }}
@@ -31,5 +28,8 @@ spec:
     {{- end }}
     {{- if .Values.serviceMonitor.scrapeTimeout }}
     scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
+    {{- end }}
+    {{- if .Values.serviceMonitor.path }}
+    path: {{ .Values.serviceMonitor.path }}
     {{- end }}
 {{- end }}
