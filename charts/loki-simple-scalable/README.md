@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.7.1](https://img.shields.io/badge/Version-1.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -97,7 +97,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
-| gateway.service.nodePort | string | `nil` | Node port if service type is NodePort |
+| gateway.service.nodePort | int | `nil` | Node port if service type is NodePort |
 | gateway.service.port | int | `80` | Port of the gateway service |
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
@@ -175,7 +175,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | networkPolicy.alertmanager.port | int | `9093` | Specify the alertmanager port used for alerting |
 | networkPolicy.discovery.namespaceSelector | object | `{}` | Specifies the namespace the discovery Pods are running in |
 | networkPolicy.discovery.podSelector | object | `{}` | Specifies the Pods labels used for discovery. As this is cross-namespace communication, you also need the namespaceSelector. |
-| networkPolicy.discovery.port | string | `nil` | Specify the port used for discovery |
+| networkPolicy.discovery.port | int | `nil` | Specify the port used for discovery |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
 | networkPolicy.externalStorage.cidrs | list | `[]` | Specifies specific network CIDRs you want to limit access to |
 | networkPolicy.externalStorage.ports | list | `[]` | Specify the port used for external storage, e.g. AWS S3 |
