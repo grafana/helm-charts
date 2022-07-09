@@ -59,8 +59,8 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.2.5`                                                 |
-| `image.sha`                               | Image sha (optional)                          | `2acf04c016c77ca2e89af3536367ce847ee326effb933121881c7c89781051d3` |
+| `image.tag`                               | Overrides the Grafana image tag whose default is the chart appVersion (`Must be >= 5.0.0`) | ``                                                      |
+| `image.sha`                               | Image sha (optional)                          | ``                                                      |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets (can be templated)         | `[]`                                                    |
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
@@ -141,7 +141,7 @@ This version requires Helm >= 3.1.0.
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.15.6`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.19.2`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -159,7 +159,7 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.watchMethod`          | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. | `WATCH` |
 | `sidecar.skipTlsVerify`                   | Set to true to skip tls verification for kube api calls | `nil`                                         |
 | `sidecar.dashboards.label`                | Label that config maps with dashboards should have to be added | `grafana_dashboard`                                |
-| `sidecar.dashboards.labelValue`                | Label value that config maps with dashboards should have to be added | `nil`                                |
+| `sidecar.dashboards.labelValue`                | Label value that config maps with dashboards should have to be added | `""`                                |
 | `sidecar.dashboards.folder`               | Folder in the pod that should hold the collected dashboards (unless `sidecar.dashboards.defaultFolderName` is set). This path will be mounted. | `/tmp/dashboards`    |
 | `sidecar.dashboards.folderAnnotation`     | The annotation the sidecar will look for in configmaps to override the destination folder for files | `nil`                                                  |
 | `sidecar.dashboards.defaultFolderName`    | The default folder name, it will create a subfolder under the `sidecar.dashboards.folder` and put dashboards in there instead | `nil`                                |
@@ -169,7 +169,7 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.extraMounts`          | Additional dashboard sidecar volume mounts. | `[]`                               |
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
 | `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
-| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `nil`                                |
+| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `""`                                |
 | `sidecar.datasources.searchNamespace`     | Namespaces list. If specified, the sidecar will search for datasources config-maps  inside these namespaces.Otherwise the namespace in which the sidecar is running will be used.It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.datasources.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.datasources.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/datasources/reload"` |
@@ -246,6 +246,9 @@ This version requires Helm >= 3.1.0.
 | `networkPolicy.enabled`                    | Enable creation of NetworkPolicy resources.                                                                              | `false`             |
 | `networkPolicy.allowExternal`              | Don't require client label for connections                                                                               | `true`              |
 | `networkPolicy.explicitNamespacesSelector` | A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed                           | `{}`                |
+| `networkPolicy.ingress`                    | Enable the creation of an ingress network policy             | `true`    |
+| `networkPolicy.egress.enabled`             | Enable the creation of an egress network policy              | `false`   |
+| `networkPolicy.egress.ports`               | An array of ports to allow for the egress                    | `[]`    |
 | `enableKubeBackwardCompatibility`          | Enable backward compatibility of kubernetes where pod's defintion version below 1.13 doesn't have the enableServiceLinks option  | `false`     |
 
 

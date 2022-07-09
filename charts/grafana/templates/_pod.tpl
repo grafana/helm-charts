@@ -395,9 +395,9 @@ containers:
 {{- end}}
   - name: {{ .Chart.Name }}
     {{- if .Values.image.sha }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@sha256:{{ .Values.image.sha }}"
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
     {{- else }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     {{- end }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- if .Values.command }}
@@ -656,7 +656,7 @@ volumes:
 {{- if and .Values.persistence.enabled (eq .Values.persistence.type "pvc") }}
   - name: storage
     persistentVolumeClaim:
-      claimName: {{ tpl (default .Values.persistence.existingClaim (include "grafana.fullname" .)) . }}
+      claimName: {{ tpl (.Values.persistence.existingClaim | default (include "grafana.fullname" .)) . }}
 {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
 # nothing
 {{- else }}

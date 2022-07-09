@@ -83,9 +83,13 @@ spec:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
+            - name: data
+              mountPath: /var/loki
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -115,6 +119,8 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
+        - name: data
+          emptyDir: {}
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
