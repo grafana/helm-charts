@@ -31,7 +31,7 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
-  # --- SecurityContext holds pod-level security attributes and common container settings
+  # -- SecurityContext holds pod-level security attributes and common container settings
   securityContext: {}
   #  capabilities:
   #    drop:
@@ -39,6 +39,8 @@ tempo:
   #  readOnlyRootFilesystem: true
   #  runAsNonRoot: true
   #  runAsUser: 1000
+  # -- Structured tempo configuration
+  structuredConfig: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -312,6 +314,8 @@ distributor:
     search_tags_deny_list: []
 
 compactor:
+  # -- Number of replicas for the compactor
+  replicas: 1
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
@@ -619,7 +623,7 @@ config: |
         protocols:
           {{- if .Values.traces.otlp.http.enabled }}
           http:
-            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55681") .Values.traces.otlp.http.receiverConfig }}
+            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:4318") .Values.traces.otlp.http.receiverConfig }}
             {{- toYaml $mergedOtlpHttpReceiverConfig | nindent 10 }}
           {{- end }}
           {{- if .Values.traces.otlp.grpc.enabled }}
@@ -738,10 +742,9 @@ server:
 #       container-name:
 #       storage-account-name:
 #       storage-account-key:
-# -- the supported storage backends are gcs, s3 and azure
-# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
 storage:
   trace:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
 
 # Global overrides
@@ -1066,7 +1069,7 @@ gateway:
           }
 
           location = /otlp/v1/traces {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:55681/v1/traces;
+            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
           }
 
           location ^~ /api {
