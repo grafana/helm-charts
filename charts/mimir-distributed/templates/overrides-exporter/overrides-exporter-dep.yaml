@@ -94,7 +94,7 @@ spec:
         {{- end }}
       {{ if .Values.overrides_exporter.topologySpreadConstraints }}
       topologySpreadConstraints:
-        {{- toYaml .Values.overrides.topologySpreadConstraints | nindent 8 }}
+        {{- toYaml .Values.overrides_exporter.topologySpreadConstraints | nindent 8 }}
       {{- end}}
       nodeSelector:
         {{- toYaml .Values.overrides_exporter.nodeSelector | nindent 8 }}
