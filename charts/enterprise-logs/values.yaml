@@ -19,7 +19,7 @@ image: &image
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: v1.1.0
+  tag: v1.4.1
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
@@ -56,45 +56,31 @@ license:
   contents: "NOTAVALIDLICENSE"
 
 # -- Grafana Enterprise Logs configuration file
-config:
+config: |
   auth:
     type: enterprise
   auth_enabled: true
 
   license:
-    path: "/etc/enterprise-logs/license/license.jwt"
-  cluster_name: "{{ .Release.Name }}"
+    path: /etc/enterprise-logs/license/license.jwt
+
+  cluster_name: {{ .Release.Name }}
 
   server:
     http_listen_port: 3100
     grpc_listen_port: 9095
 
+  {{- if .Values.commonConfig}}
+  common:
+  {{- toYaml .Values.commonConfig | nindent 2}}
+  {{- end}}
+
   admin_client:
     storage:
-      type: s3
       s3:
-        endpoint: "{{ include \"enterprise-logs.minio\" . }}"
         bucket_name: enterprise-logs-admin
-        secret_access_key: supersecret
-        access_key_id: enterprise-logs
-        insecure: true
-
-  compactor:
-    shared_store: s3
-    working_directory: /data/boltdb-shipper-compactor
-
-  distributor:
-    ring:
-      kvstore:
-        store: memberlist
 
   ingester:
-    lifecycler:
-      num_tokens: 512
-      ring:
-        replication_factor: 3
-        kvstore:
-          store: memberlist
     chunk_idle_period: 30m
     chunk_block_size: 262144
     chunk_encoding: snappy
@@ -110,24 +96,24 @@ config:
     reject_old_samples: true
     reject_old_samples_max_age: 168h
     max_cache_freshness_per_query: 10m
+    split_queries_by_interval: 24h
 
   frontend:
     log_queries_longer_than: 10s
     compress_responses: true
-    tail_proxy_url: "http://{{ include \"loki.querierFullname\" . }}:3100"
+    tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 
   frontend_worker:
-    frontend_address: "{{ include \"loki.queryFrontendFullname\" . }}:9095"
+    frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
 
   memberlist:
     join_members:
-      - "{{ include \"loki.fullname\" . }}-memberlist"
+      - {{ include "loki.fullname" . }}-memberlist
 
   querier:
     query_ingesters_within: 12h
 
   query_range:
-    split_queries_by_interval: 24h
     align_queries_with_step: true
     cache_results: true
     results_cache:
@@ -149,37 +135,38 @@ config:
 
   storage_config:
     aws:
-      endpoint: "{{ include \"enterprise-logs.minio\" . }}"
       bucketnames: enterprise-logs-tsdb
-      access_key_id: enterprise-logs
-      secret_access_key: supersecret
-      s3forcepathstyle: true
-      insecure: true
     boltdb_shipper:
-      active_index_directory: /var/loki/index
-      cache_location: /var/loki/cache
-      cache_ttl: 24h
-      shared_store: s3
       index_gateway_client:
-        server_address: "dns:///{{ include \"loki.indexGatewayFullname\" . }}:9095"
+        server_address: dns:///{{ include "loki.indexGatewayFullname" . }}:9095
 
   ruler:
     storage:
-      type: s3
       s3:
-        endpoint: "{{ include \"enterprise-logs.minio\" . }}"
         bucketnames: enterprise-logs-ruler
-        access_key_id: enterprise-logs
-        secret_access_key: supersecret
-        s3forcepathstyle: true
-        insecure: true
-    enable_alertmanager_discovery: false
-    enable_api: true
-    enable_sharding: true
-    ring:
-      kvstore:
-        store: memberlist
-    rule_path: /var/loki
+
+  {{- if .Values.additionalConfig}}
+  {{.Values.additionalConfig}}
+  {{- end}}
+
+# Append some additional config to the default config. Expects a string or `null`
+additionalConfig: null
+
+# -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
+commonConfig:
+  path_prefix: /var/loki
+  replication_factor: 3
+  storage:
+    s3:
+      endpoint: '{{ include "enterprise-logs.minio" . }}'
+      bucketnames: enterprise-logs-tsdb
+      secret_access_key: supersecret
+      access_key_id: enterprise-logs
+      s3forcepathstyle: true
+      insecure: true
+
+# -- Structured GEL configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
+structuredConfig: {}
 
 # -- Configuration for `tokengen` target
 tokengen:
@@ -378,10 +365,6 @@ compactor:
     # compactor data Persistent Volume size
     #
     size: 2Gi
-    # Subdirectory of compactor data Persistent Volume to mount
-    # Useful if the volume's root directory is not empty
-    #
-    subPath: ''
     # compactor data Persistent Volume Storage Class
     # If defined, storageClassName: <storageClass>
     # If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -462,8 +445,10 @@ loki-distributed:
 
   # RBAC configuration
   rbac:
-    # -- If enabled, a PodSecurityPolicy is created
+    # -- If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp.
     pspEnabled: true
+    # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
+    sccEnabled: false
 
   # -- Compactor is defined in parent chart
   compactor:
@@ -589,3 +574,5 @@ minio:
     requests:
       cpu: 100m
       memory: 128Mi
+  # -- Change the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root
+  configPathmc: "/tmp/minio/mc/"
