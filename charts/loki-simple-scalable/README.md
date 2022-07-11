@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.7.1](https://img.shields.io/badge/Version-1.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.7.2](https://img.shields.io/badge/Version-1.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -134,13 +134,13 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.gcs.requestTimeout | string | `"0s"` |  |
 | loki.storage.local.chunks_directory | string | `"/var/loki/chunks"` |  |
 | loki.storage.local.rules_directory | string | `"/var/loki/rules"` |  |
-| loki.storage.s3.accessKeyId | string | `"accesskey"` |  |
-| loki.storage.s3.endpoint | string | `"https://amazonaws.com"` |  |
+| loki.storage.s3.accessKeyId | string | `nil` |  |
+| loki.storage.s3.endpoint | string | `nil` |  |
 | loki.storage.s3.insecure | bool | `false` |  |
 | loki.storage.s3.region | string | `nil` |  |
 | loki.storage.s3.s3 | string | `nil` |  |
 | loki.storage.s3.s3ForcePathStyle | bool | `false` |  |
-| loki.storage.s3.secretAccessKey | string | `"supersecret"` |  |
+| loki.storage.s3.secretAccessKey | string | `nil` |  |
 | loki.storage.type | string | `"s3"` |  |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | minio | object | `{"accessKey":"enterprise-logs","buckets":[{"name":"chunks","policy":"none","purge":false},{"name":"ruler","policy":"none","purge":false},{"name":"admin","policy":"none","purge":false}],"enabled":false,"persistence":{"size":"5Gi"},"resources":{"requests":{"cpu":"100m","memory":"128Mi"}},"secretKey":"supersecret"}` | ----------------------------------- |
