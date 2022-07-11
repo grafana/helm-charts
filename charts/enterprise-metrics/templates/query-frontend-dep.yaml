@@ -53,7 +53,7 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: query-frontend
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

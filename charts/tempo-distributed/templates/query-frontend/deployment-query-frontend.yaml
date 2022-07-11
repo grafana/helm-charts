@@ -7,11 +7,13 @@ metadata:
     {{- include "tempo.labels" . | nindent 4 }}
   {{- with .Values.queryFrontend.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.queryFrontend.autoscaling.enabled }}
   replicas: {{ .Values.queryFrontend.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -33,10 +35,16 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.tempo.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with .Values.queryFrontend.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.queryFrontend.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.queryFrontend.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:

@@ -1,0 +1,19 @@
+{{- if .Values.monitoring.dashboards.enabled }}
+{{- with .Values.monitoring.dashboards }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "loki.dashboardsName" $ }}-1
+  namespace: {{ .namespace | default $.Release.Namespace }}
+data:
+  "loki-logs.json": |
+    {{ $.Files.Get "src/loki-logs.json" | fromJson | toJson }}
+  "loki-operational.json": |
+    {{ $.Files.Get "src/loki-operational.json" | fromJson | toJson }}
+  "loki-reads-resources.json": |
+    {{ $.Files.Get "src/loki-reads-resources.json" | fromJson | toJson }}
+  "loki-reads.json": |
+    {{ $.Files.Get "src/loki-reads.json" | fromJson | toJson }}
+{{- end -}}
+{{- end -}}

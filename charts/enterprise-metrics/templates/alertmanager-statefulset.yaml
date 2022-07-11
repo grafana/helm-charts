@@ -112,7 +112,7 @@ spec:
         {{- if .Values.alertmanager.extraContainers }}
         {{ toYaml .Values.alertmanager.extraContainers | nindent 8 }}
         {{- end }}
-        - name: {{ .Chart.Name }}
+        - name: alertmanager
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

@@ -54,7 +54,7 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: distributor
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

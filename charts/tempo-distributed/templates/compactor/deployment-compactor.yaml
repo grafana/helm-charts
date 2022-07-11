@@ -7,7 +7,7 @@ metadata:
     {{- include "tempo.compactorLabels" . | nindent 4 }}
   {{- with .Values.compactor.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   minReadySeconds: 10
@@ -33,10 +33,16 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.tempo.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with .Values.compactor.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.compactor.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.compactor.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:
