@@ -476,10 +476,9 @@ server:
 #       container-name:
 #       storage-account-name:
 #       storage-account-key:
-# -- the supported storage backends are gcs, s3 and azure
-# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
 storage:
   trace:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
 
 # Set ingestion overrides
