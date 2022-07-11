@@ -314,6 +314,8 @@ distributor:
     search_tags_deny_list: []
 
 compactor:
+  # -- Number of replicas for the compactor
+  replicas: 1
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
