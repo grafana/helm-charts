@@ -31,7 +31,7 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
-  # --- SecurityContext holds pod-level security attributes and common container settings
+  # -- SecurityContext holds pod-level security attributes and common container settings
   securityContext: {}
   #  capabilities:
   #    drop:
