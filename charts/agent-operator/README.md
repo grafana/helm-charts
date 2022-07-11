@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.20.0](https://img.shields.io/badge/AppVersion-0.20.0-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.25.1](https://img.shields.io/badge/AppVersion-0.25.1-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -8,7 +8,7 @@ A Helm chart for Grafana Agent Operator
 
 ## Source Code
 
-* <https://github.com/grafana/agent/tree/v0.20.0/pkg/operator>
+* <https://github.com/grafana/agent/tree/v0.25.1/pkg/operator>
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
@@ -55,16 +55,18 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Pod affinity configuration |
 | annotations | object | `{}` | Annotations for the Deployment |
+| extraArgs | list | `[]` | List of additional cli arguments to configure agent-operator (example: `--log.level`) |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | Image pull secrets |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"grafana/agent-operator"` | Image repo |
-| image.tag | string | `"v0.20.0"` | Image tag |
-| kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets -- https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
+| image.tag | string | `"v0.25.1"` | Image tag |
+| kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
+| podLabels | object | `{}` | Annotations for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
 | rbac | object | `{"create":true}` | Toggle to create ClusterRole and ClusterRoleBinding |
 | resources | object | `{}` | Resource limits and requests config |

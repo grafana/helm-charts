@@ -2,8 +2,8 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 0.11.3
-appVersion: 1.2.1
+version: 0.21.4
+appVersion: 1.4.1
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
 icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
@@ -18,3 +18,5 @@ maintainers:
   - name: mdisibio
   - name: dgzlopes
   - name: mapno
+  - name: BitProcessor
+  - name: faustodavid

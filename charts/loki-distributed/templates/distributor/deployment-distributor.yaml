@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "loki.distributorLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
 {{- if not .Values.distributor.autoscaling.enabled }}
   replicas: {{ .Values.distributor.replicas }}
@@ -30,6 +34,12 @@ spec:
       labels:
         {{- include "loki.distributorSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.distributor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -41,7 +51,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: distributor
           image: {{ include "loki.distributorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -72,6 +82,8 @@ spec:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
@@ -80,6 +92,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.distributor.resources | nindent 12 }}
+        {{- if .Values.distributor.extraContainers }}
+        {{- toYaml .Values.distributor.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.distributor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
