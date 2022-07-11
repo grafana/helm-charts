@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.indexGatewayFullname" . }}
   labels:
     {{- include "loki.indexGatewayLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.indexGateway.replicas }}
   updateStrategy:
@@ -72,6 +76,8 @@ spec:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
@@ -82,6 +88,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.indexGateway.resources | nindent 12 }}
+        {{- if .Values.indexGateway.extraContainers }}
+        {{- toYaml .Values.indexGateway.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.indexGateway.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

@@ -1,4 +1,5 @@
-{{- with .Values.serviceMonitor }}
+---
+{{- with .Values.monitoring.serviceMonitor }}
 {{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -24,16 +25,26 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.writeSelectorLabels" $ | nindent 6 }}
+    matchExpressions:
+      - key: prometheus.io/service-monitor
+        operator: NotIn
+        values:
+          - "false"
   endpoints:
-    - port: http
+    - port: http-metrics
       {{- with .interval }}
       interval: {{ . }}
       {{- end }}
       {{- with .scrapeTimeout }}
       scrapeTimeout: {{ . }}
       {{- end }}
-      {{- with .relabelings }}
       relabelings:
+        - sourceLabels: [job]
+          replacement: "{{ $.Release.Namespace }}/write"
+          targetLabel: job
+        - replacement: "{{ include "loki.fullname" $ }}"
+          targetLabel: cluster
+        {{- with .relabelings }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .scheme }}

@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.gatewayFullname" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
 {{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicas }}
@@ -63,6 +67,8 @@ spec:
           {{- end }}
           readinessProbe:
             {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
           securityContext:
             {{- toYaml .Values.gateway.containerSecurityContext | nindent 12 }}
           volumeMounts:
@@ -81,6 +87,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.gateway.resources | nindent 12 }}
+        {{- if .Values.gateway.extraContainers }}
+        {{- toYaml .Values.gateway.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.gateway.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
