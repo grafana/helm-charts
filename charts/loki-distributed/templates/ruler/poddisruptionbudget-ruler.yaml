@@ -10,6 +10,8 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.rulerSelectorLabels" . | nindent 6 }}
-  maxUnavailable: {{ .Values.ruler.maxUnavailable }}
+  {{- if not eq .Values.distributor.maxUnavailable null }}
+  maxUnavailable: {{ .Values.distributor.maxUnavailable }}
+  {{- end }}
 {{- end }}
 {{- end }}

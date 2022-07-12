@@ -10,6 +10,8 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
+  {{- if not eq .Values.distributor.maxUnavailable null }}
   maxUnavailable: {{ .Values.indexGateway.maxUnavailable }}
+  {{- end }}
 {{- end }}
 {{- end }}
