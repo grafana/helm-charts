@@ -48,8 +48,6 @@ Pod template used in Daemonset and Deployment
           volumeMounts:
             - name: config
               mountPath: /etc/promtail
-            - name: run
-              mountPath: /run/promtail
             {{- with .Values.defaultVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -107,9 +105,6 @@ Pod template used in Daemonset and Deployment
         - name: config
           secret:
             secretName: {{ include "promtail.fullname" . }}
-        - name: run
-          hostPath:
-            path: /run/promtail
         {{- with .Values.defaultVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
