@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.7.1](https://img.shields.io/badge/Version-1.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -97,7 +97,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
-| gateway.service.nodePort | string | `nil` | Node port if service type is NodePort |
+| gateway.service.nodePort | int | `nil` | Node port if service type is NodePort |
 | gateway.service.port | int | `80` | Port of the gateway service |
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
@@ -175,7 +175,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | networkPolicy.alertmanager.port | int | `9093` | Specify the alertmanager port used for alerting |
 | networkPolicy.discovery.namespaceSelector | object | `{}` | Specifies the namespace the discovery Pods are running in |
 | networkPolicy.discovery.podSelector | object | `{}` | Specifies the Pods labels used for discovery. As this is cross-namespace communication, you also need the namespaceSelector. |
-| networkPolicy.discovery.port | string | `nil` | Specify the port used for discovery |
+| networkPolicy.discovery.port | int | `nil` | Specify the port used for discovery |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
 | networkPolicy.externalStorage.cidrs | list | `[]` | Specifies specific network CIDRs you want to limit access to |
 | networkPolicy.externalStorage.ports | list | `[]` | Specify the port used for external storage, e.g. AWS S3 |
@@ -265,6 +265,8 @@ They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which read and write nodes are part of.
 
+You can find some working examples of this Helm Chart within the [docs/examples](/docs/examples) directory of this repo.
+
 ----
 
 **NOTE:**
@@ -278,7 +280,7 @@ In order to do this, please override the `loki.config` value with a valid object
 the `common.storage` section, as well as the `object_store` in your `schema_config`. Please note that because of the way
 helm deep merges values, you will need to explicitly `null` out the default `filesystem` configuration.
 
-For exmaple, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
+For example, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
 
 ```yaml
 loki:

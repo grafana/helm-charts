@@ -30,6 +30,7 @@ The other components are optional.
 | write |  ❎ | n/a |
 | read |  ❎ | n/a |
 
+
 ## Configuration
 
 This chart configures Loki in simple, scalable mode.
@@ -40,6 +41,9 @@ and it is not intended to support these going forward.
 They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which read and write nodes are part of.
+
+You can find some working examples of this Helm Chart within the [docs/examples](/docs/examples) directory of this repo.
+
 
 ----
 
@@ -54,7 +58,7 @@ In order to do this, please override the `loki.config` value with a valid object
 the `common.storage` section, as well as the `object_store` in your `schema_config`. Please note that because of the way
 helm deep merges values, you will need to explicitly `null` out the default `filesystem` configuration.
 
-For exmaple, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
+For example, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
 
 ```yaml
 loki:
