@@ -20,6 +20,17 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart version < 0.20.0
+The image's attributes must be set under the `image` key for the Memcached service.
+```yaml
+memcached:
+  image:
+    registry: docker.io
+    repository: memcached
+    tag: "1.5.17-alpine"
+    pullPolicy: "IfNotPresent"
+```
+
 ### From Chart version < 0.18.0
 Trace ingestion must now be enabled with the `enabled` key:
 ```yaml
@@ -112,6 +123,20 @@ However, this setup is not fully functional.
 The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/tempo/latest/configuration/#storage.
 
 Alternatively, in order to quickly test Tempo using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
+
+### Overriding configuration variables with structuredConfig
+
+tempo.structuredConfig variable can be used to alter individual values in the configuration and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
+
+Example:
+
+```yaml
+tempo:
+  structuredConfig:
+    query_frontend:
+      search:
+        max_duration: 12h0m0s
+```
 
 ### Activate metrics generator
 

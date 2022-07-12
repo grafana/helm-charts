@@ -30,6 +30,7 @@ The other components are optional.
 | write |  ❎ | n/a |
 | read |  ❎ | n/a |
 
+
 ## Configuration
 
 This chart configures Loki in simple, scalable mode.
@@ -40,6 +41,9 @@ and it is not intended to support these going forward.
 They would have to be set up separately.
 Instead, memberlist can be used which does not require a separate key/value store.
 The chart creates a headless service for the memberlist which read and write nodes are part of.
+
+You can find some working examples of this Helm Chart within the [docs/examples](/docs/examples) directory of this repo.
+
 
 ----
 
@@ -54,7 +58,7 @@ In order to do this, please override the `loki.config` value with a valid object
 the `common.storage` section, as well as the `object_store` in your `schema_config`. Please note that because of the way
 helm deep merges values, you will need to explicitly `null` out the default `filesystem` configuration.
 
-For exmaple, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
+For example, to use MinIO (deployed separately) as your backend, provide the following values when installing this chart:
 
 ```yaml
 loki:
@@ -150,3 +154,21 @@ prometheusRule:
 ## Caching
 
 By default, this chart configures in-memory caching. If that caching does not work for your deployment, take a lot at the [distributed chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) for how to setup memcache.
+
+## Monitoring
+
+**This feature is currently a work in process. Many of the dashboards are only partially functional. We are actively working on improving them**
+
+This chart includes a set of dashboards and custom resources that enable monitoring of the deployed Loki cluster. The dashboards are deployed via a set of config maps that can be mounted to a Grafana instance. The dashboards expect a certain set of labels, which will be correct if you also use the provided `ServiceMonitor`, `GrafanaAgent`, `LogsInstance`, and `PodLogs` custom resources
+
+### Dashboards
+
+This chart includes dashboards for monitoring Loki. These are a work in progress, and require the scrape configs defined in the `monitoring.serviceMonitor` and `monitoring.selfMonitoring` sections described below. The dashboards are deployed via a config map which can be mounted on a Grafana instance. To deploy the dashboards, set `monitoring.dashboards.enabled = true`. If your Grafana instance is in a different namespace than this Loki cluster, you may want to set `monitoring.dashboards.namespace` to the namespace of the Grafana instance.
+
+### Service Monitor
+
+The `ServiceMonitor` resource works with either the Prometheus Operator or the Grafana Agent Operator, and defines how Loki's metrics should be scraped. The resource can be deployed by setting `serviceMonitor.enable = true`. Scraping this Loki cluster using the scrape config defined in the `SerivceMonitor` resource is required for the included dashboards to work.
+
+### Self Monitoring
+
+Self monitoring can be enabled by setting `selfMonitoring.enable = true`. This will deploy a `GrafanaAgent`, `LogsInstance`, and `PodLogs` resource which will instruct the Grafana Agent Operator (installed seperately) on how to scrape this Loki cluster's logs and send them back to itself. Scraping this Loki cluster using the scrape config defined in the `PodLogs` resource is required for the included dashboards to work.
