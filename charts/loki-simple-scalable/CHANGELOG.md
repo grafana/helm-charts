@@ -11,6 +11,14 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.7.3
+
+- [BUGFIX] Fix a bug in how object storage client was defined for the ruler
+
+## 1.7.2
+
+- [ENHANCEMENT] Memcache can now easily be configured as an external caching option.
+
 ## 1.6.0
 
 - [FEATURE] Added self-monitoring option, with dashboards and Grafana Agent Operator custom resources to allow Loki to scrape it's own logs.
