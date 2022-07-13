@@ -125,8 +125,7 @@ loki:
     {{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") (eq .Values.loki.storage.type "gcs") }}
     ruler:
       storage:
-        s3:
-          bucketnames: {{ .Values.loki.storage.bucketNames.ruler }}
+      {{- include "loki.rulerStorageConfig" . | nindent 4}}
     {{- end -}}
 
     {{- with .Values.loki.memcached.results_cache }}
