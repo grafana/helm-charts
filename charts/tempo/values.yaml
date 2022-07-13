@@ -46,7 +46,8 @@ tempo:
       # tempo storage backend
       # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
       ## Use s3 for example
-      # backend: s3                                         # store traces in s3
+      # backend: s3
+      # store traces in s3
       # s3:
       #   bucket: tempo                                   # store traces in this bucket
       #   endpoint: s3.dualstack.us-east-2.amazonaws.com  # api endpoint
