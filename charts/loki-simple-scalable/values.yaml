@@ -170,10 +170,10 @@ loki:
     type: s3
     s3:
       s3: null
-      endpoint: https://amazonaws.com
+      endpoint: null
       region: null
-      secretAccessKey: supersecret
-      accessKeyId: accesskey
+      secretAccessKey: null
+      accessKeyId: null
       s3ForcePathStyle: false
       insecure: false
     gcs:
