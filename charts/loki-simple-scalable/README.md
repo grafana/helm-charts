@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.7.4](https://img.shields.io/badge/Version-1.7.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.7.5](https://img.shields.io/badge/Version-1.7.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -147,8 +147,20 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | minio | object | `{"accessKey":"enterprise-logs","buckets":[{"name":"chunks","policy":"none","purge":false},{"name":"ruler","policy":"none","purge":false},{"name":"admin","policy":"none","purge":false}],"enabled":false,"persistence":{"size":"5Gi"},"resources":{"requests":{"cpu":"100m","memory":"128Mi"}},"secretKey":"supersecret"}` | ----------------------------------- |
+| monitoring.alerts.annotations | object | `{}` | Additional annotations for the alerts PrometheusRule resource |
+| monitoring.alerts.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki alerting rules |
+| monitoring.alerts.labels | object | `{}` | Additional labels for the alerts PrometheusRule resource |
+| monitoring.alerts.namespace | string | `nil` | Alternative namespace to create alerting rules PrometheusRule resource in |
+| monitoring.dashboards.annotations | object | `{}` | Additional annotations for the dashboards ConfigMap |
 | monitoring.dashboards.enabled | bool | `true` | If enabled, create configmap with dashboards for monitoring Loki |
-| monitoring.dashboards.namespace | string | `nil` | Alternative namespace to create dashboards config map in |
+| monitoring.dashboards.labels | object | `{}` | Additional labels for the dashboards ConfigMap |
+| monitoring.dashboards.namespace | string | `nil` | Alternative namespace to create dashboards ConfigMap in |
+| monitoring.rules.additionalGroups | list | `[]` | Additional groups to add to the rules file |
+| monitoring.rules.alerting | bool | `true` | Include alerting rules |
+| monitoring.rules.annotations | object | `{}` | Additional annotations for the rules PrometheusRule resource |
+| monitoring.rules.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki recording rules |
+| monitoring.rules.labels | object | `{}` | Additional labels for the rules PrometheusRule resource |
+| monitoring.rules.namespace | string | `nil` | Alternative namespace to create recording rules PrometheusRule resource in |
 | monitoring.selfMonitoring.enabled | bool | `true` |  |
 | monitoring.selfMonitoring.grafanaAgent.annotations | object | `{}` | Grafana Agent annotations |
 | monitoring.selfMonitoring.grafanaAgent.enableConfigReadAPI | bool | `false` | Enable the config read api on port 8080 of the agent |
@@ -187,11 +199,6 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | networkPolicy.metrics.cidrs | list | `[]` | Specifies specific network CIDRs which are allowed to access the metrics port. In case you use namespaceSelector, you also have to specify your kubelet networks here. The metrics ports are also used for probes. |
 | networkPolicy.metrics.namespaceSelector | object | `{}` | Specifies the namespaces which are allowed to access the metrics port |
 | networkPolicy.metrics.podSelector | object | `{}` | Specifies the Pods which are allowed to access the metrics port. As this is cross-namespace communication, you also need the namespaceSelector. |
-| prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
-| prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
-| prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
-| prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
-| prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | read.affinity | string | Hard node and soft zone anti-affinity | Affinity for read pods. Passed through `tpl` and, thus, to be configured as string |

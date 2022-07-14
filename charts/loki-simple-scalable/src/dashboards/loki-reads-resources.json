@@ -24,23 +24,16 @@
       "rows": [
          {
             "collapse": false,
-            "height": "250px",
+            "collapsed": false,
             "panels": [
                {
-                  "aliasColors": {
-                     "1xx": "#EAB839",
-                     "2xx": "#7EB26D",
-                     "3xx": "#6ED0E0",
-                     "4xx": "#EF843C",
-                     "5xx": "#E24D42",
-                     "error": "#E24D42",
-                     "success": "#7EB26D"
-                  },
+                  "aliasColors": { },
                   "bars": false,
                   "dashLength": 10,
                   "dashes": false,
                   "datasource": "$datasource",
-                  "fill": 10,
+                  "fill": 1,
+                  "gridPos": { },
                   "id": 1,
                   "legend": {
                      "avg": false,
@@ -52,36 +45,48 @@
                      "values": false
                   },
                   "lines": true,
-                  "linewidth": 0,
+                  "linewidth": 1,
                   "links": [ ],
                   "nullPointMode": "null as zero",
                   "percentage": false,
                   "pointradius": 5,
                   "points": false,
                   "renderer": "flot",
-                  "seriesOverrides": [ ],
+                  "seriesOverrides": [
+                     {
+                        "alias": "limit",
+                        "color": "#E02F44",
+                        "fill": 0
+                     }
+                  ],
                   "spaceLength": 10,
                   "span": 6,
-                  "stack": true,
+                  "stack": false,
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "sum by (status) (\n  label_replace(label_replace(rate(loki_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/cortex-gw\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\"}[$__rate_interval]),\n  \"status\", \"${1}xx\", \"status_code\", \"([0-9])..\"),\n  \"status\", \"${1}\", \"status_code\", \"([a-z]+)\"))\n",
+                        "expr": "sum by(pod) (rate(container_cpu_usage_seconds_total{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\"}[$__rate_interval]))",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{status}}",
-                        "refId": "A",
+                        "legendFormat": "{{pod}}",
+                        "legendLink": null,
+                        "step": 10
+                     },
+                     {
+                        "expr": "min(container_spec_cpu_quota{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\"} / container_spec_cpu_period{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\"})",
+                        "format": "time_series",
+                        "intervalFactor": 2,
+                        "legendFormat": "limit",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "QPS",
+                  "title": "CPU",
                   "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
+                     "sort": 2
                   },
                   "type": "graph",
                   "xaxis": {
@@ -117,6 +122,7 @@
                   "dashes": false,
                   "datasource": "$datasource",
                   "fill": 1,
+                  "gridPos": { },
                   "id": 2,
                   "legend": {
                      "avg": false,
@@ -135,45 +141,41 @@
                   "pointradius": 5,
                   "points": false,
                   "renderer": "flot",
-                  "seriesOverrides": [ ],
+                  "seriesOverrides": [
+                     {
+                        "alias": "limit",
+                        "color": "#E02F44",
+                        "fill": 0
+                     }
+                  ],
                   "spaceLength": 10,
                   "span": 6,
                   "stack": false,
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "histogram_quantile(0.99, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/cortex-gw\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"})) * 1e3",
+                        "expr": "max by(pod) (container_memory_working_set_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\"})",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 99th Percentile",
-                        "refId": "A",
+                        "legendFormat": "{{pod}}",
+                        "legendLink": null,
                         "step": 10
                      },
                      {
-                        "expr": "histogram_quantile(0.50, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/cortex-gw\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"})) * 1e3",
+                        "expr": "min(container_spec_memory_limit_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\"} > 0)",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 50th Percentile",
-                        "refId": "B",
-                        "step": 10
-                     },
-                     {
-                        "expr": "1e3 * sum(job_route:loki_request_duration_seconds_sum:sum_rate{job=~\"($namespace)/cortex-gw\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"}) by (route)  / sum(job_route:loki_request_duration_seconds_count:sum_rate{job=~\"($namespace)/cortex-gw\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"}) by (route) ",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{ route }} Average",
-                        "refId": "C",
+                        "legendFormat": "limit",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "Latency",
+                  "title": "Memory (workingset)",
                   "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
+                     "sort": 2
                   },
                   "type": "graph",
                   "xaxis": {
@@ -185,103 +187,7 @@
                   },
                   "yaxes": [
                      {
-                        "format": "ms",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": 0,
-                        "show": true
-                     },
-                     {
-                        "format": "short",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": null,
-                        "show": false
-                     }
-                  ]
-               }
-            ],
-            "repeat": null,
-            "repeatIteration": null,
-            "repeatRowId": null,
-            "showTitle": true,
-            "title": "Frontend (cortex_gw)",
-            "titleSize": "h6"
-         },
-         {
-            "collapse": false,
-            "height": "250px",
-            "panels": [
-               {
-                  "aliasColors": {
-                     "1xx": "#EAB839",
-                     "2xx": "#7EB26D",
-                     "3xx": "#6ED0E0",
-                     "4xx": "#EF843C",
-                     "5xx": "#E24D42",
-                     "error": "#E24D42",
-                     "success": "#7EB26D"
-                  },
-                  "bars": false,
-                  "dashLength": 10,
-                  "dashes": false,
-                  "datasource": "$datasource",
-                  "fill": 10,
-                  "id": 3,
-                  "legend": {
-                     "avg": false,
-                     "current": false,
-                     "max": false,
-                     "min": false,
-                     "show": true,
-                     "total": false,
-                     "values": false
-                  },
-                  "lines": true,
-                  "linewidth": 0,
-                  "links": [ ],
-                  "nullPointMode": "null as zero",
-                  "percentage": false,
-                  "pointradius": 5,
-                  "points": false,
-                  "renderer": "flot",
-                  "seriesOverrides": [ ],
-                  "spaceLength": 10,
-                  "span": 6,
-                  "stack": true,
-                  "steppedLine": false,
-                  "targets": [
-                     {
-                        "expr": "sum by (status) (\n  label_replace(label_replace(rate(loki_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/query-frontend\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\"}[$__rate_interval]),\n  \"status\", \"${1}xx\", \"status_code\", \"([0-9])..\"),\n  \"status\", \"${1}\", \"status_code\", \"([a-z]+)\"))\n",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{status}}",
-                        "refId": "A",
-                        "step": 10
-                     }
-                  ],
-                  "thresholds": [ ],
-                  "timeFrom": null,
-                  "timeShift": null,
-                  "title": "QPS",
-                  "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
-                  },
-                  "type": "graph",
-                  "xaxis": {
-                     "buckets": null,
-                     "mode": "time",
-                     "name": null,
-                     "show": true,
-                     "values": [ ]
-                  },
-                  "yaxes": [
-                     {
-                        "format": "short",
+                        "format": "bytes",
                         "label": null,
                         "logBase": 1,
                         "max": null,
@@ -305,7 +211,8 @@
                   "dashes": false,
                   "datasource": "$datasource",
                   "fill": 1,
-                  "id": 4,
+                  "gridPos": { },
+                  "id": 3,
                   "legend": {
                      "avg": false,
                      "current": false,
@@ -330,38 +237,20 @@
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "histogram_quantile(0.99, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/query-frontend\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"})) * 1e3",
+                        "expr": "sum by(pod) (go_memstats_heap_inuse_bytes{cluster=~\"$cluster\", job=~\"($namespace)/(loki|enterprise-logs)-read\"})",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 99th Percentile",
-                        "refId": "A",
-                        "step": 10
-                     },
-                     {
-                        "expr": "histogram_quantile(0.50, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/query-frontend\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"})) * 1e3",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 50th Percentile",
-                        "refId": "B",
-                        "step": 10
-                     },
-                     {
-                        "expr": "1e3 * sum(job_route:loki_request_duration_seconds_sum:sum_rate{job=~\"($namespace)/query-frontend\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"}) by (route)  / sum(job_route:loki_request_duration_seconds_count:sum_rate{job=~\"($namespace)/query-frontend\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"}) by (route) ",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{ route }} Average",
-                        "refId": "C",
+                        "legendFormat": "{{pod}}",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "Latency",
+                  "title": "Memory (go heap inuse)",
                   "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
+                     "sort": 2
                   },
                   "type": "graph",
                   "xaxis": {
@@ -373,7 +262,7 @@
                   },
                   "yaxes": [
                      {
-                        "format": "ms",
+                        "format": "bytes",
                         "label": null,
                         "logBase": 1,
                         "max": null,
@@ -389,34 +278,92 @@
                         "show": false
                      }
                   ]
-               }
-            ],
-            "repeat": null,
-            "repeatIteration": null,
-            "repeatRowId": null,
-            "showTitle": true,
-            "title": "Frontend (query-frontend)",
-            "titleSize": "h6"
-         },
-         {
-            "collapse": false,
-            "height": "250px",
-            "panels": [
+               },
                {
-                  "aliasColors": {
-                     "1xx": "#EAB839",
-                     "2xx": "#7EB26D",
-                     "3xx": "#6ED0E0",
-                     "4xx": "#EF843C",
-                     "5xx": "#E24D42",
-                     "error": "#E24D42",
-                     "success": "#7EB26D"
-                  },
+                  "aliasColors": { },
                   "bars": false,
                   "dashLength": 10,
                   "dashes": false,
                   "datasource": "$datasource",
                   "fill": 10,
+                  "gridPos": { },
+                  "id": 4,
+                  "legend": {
+                     "avg": false,
+                     "current": false,
+                     "max": false,
+                     "min": false,
+                     "show": true,
+                     "total": false,
+                     "values": false
+                  },
+                  "lines": true,
+                  "linewidth": 0,
+                  "links": [ ],
+                  "nullPointMode": "null as zero",
+                  "percentage": false,
+                  "pointradius": 5,
+                  "points": false,
+                  "renderer": "flot",
+                  "seriesOverrides": [ ],
+                  "spaceLength": 10,
+                  "span": 6,
+                  "stack": true,
+                  "steppedLine": false,
+                  "targets": [
+                     {
+                        "expr": "sum by(instance, pod, device) (rate(node_disk_written_bytes_total[$__rate_interval])) + ignoring(pod) group_right() (label_replace(count by(instance, pod, device) (container_fs_writes_bytes_total{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\", device!~\".*sda.*\"}), \"device\", \"$1\", \"device\", \"/dev/(.*)\") * 0)\n",
+                        "format": "time_series",
+                        "intervalFactor": 2,
+                        "legendFormat": "{{pod}} - {{device}}",
+                        "legendLink": null,
+                        "step": 10
+                     }
+                  ],
+                  "thresholds": [ ],
+                  "timeFrom": null,
+                  "timeShift": null,
+                  "title": "Disk Writes",
+                  "tooltip": {
+                     "shared": true,
+                     "sort": 2,
+                     "value_type": "individual"
+                  },
+                  "type": "graph",
+                  "xaxis": {
+                     "buckets": null,
+                     "mode": "time",
+                     "name": null,
+                     "show": true,
+                     "values": [ ]
+                  },
+                  "yaxes": [
+                     {
+                        "format": "Bps",
+                        "label": null,
+                        "logBase": 1,
+                        "max": null,
+                        "min": 0,
+                        "show": true
+                     },
+                     {
+                        "format": "short",
+                        "label": null,
+                        "logBase": 1,
+                        "max": null,
+                        "min": null,
+                        "show": false
+                     }
+                  ]
+               },
+               {
+                  "aliasColors": { },
+                  "bars": false,
+                  "dashLength": 10,
+                  "dashes": false,
+                  "datasource": "$datasource",
+                  "fill": 10,
+                  "gridPos": { },
                   "id": 5,
                   "legend": {
                      "avg": false,
@@ -442,18 +389,18 @@
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "sum by (status) (\n  label_replace(label_replace(rate(loki_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/read\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\"}[$__rate_interval]),\n  \"status\", \"${1}xx\", \"status_code\", \"([0-9])..\"),\n  \"status\", \"${1}\", \"status_code\", \"([a-z]+)\"))\n",
+                        "expr": "sum by(instance, pod, device) (rate(node_disk_read_bytes_total[$__rate_interval])) + ignoring(pod) group_right() (label_replace(count by(instance, pod, device) (container_fs_writes_bytes_total{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-read.*\", device!~\".*sda.*\"}), \"device\", \"$1\", \"device\", \"/dev/(.*)\") * 0)\n",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{status}}",
-                        "refId": "A",
+                        "legendFormat": "{{pod}} - {{device}}",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "QPS",
+                  "title": "Disk Reads",
                   "tooltip": {
                      "shared": true,
                      "sort": 2,
@@ -469,7 +416,7 @@
                   },
                   "yaxes": [
                      {
-                        "format": "short",
+                        "format": "Bps",
                         "label": null,
                         "logBase": 1,
                         "max": null,
@@ -493,6 +440,7 @@
                   "dashes": false,
                   "datasource": "$datasource",
                   "fill": 1,
+                  "gridPos": { },
                   "id": 6,
                   "legend": {
                      "avg": false,
@@ -518,34 +466,18 @@
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "histogram_quantile(0.99, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/read\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"})) * 1e3",
+                        "expr": "max by(persistentvolumeclaim) (kubelet_volume_stats_used_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\"} / kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\"}) and count by(persistentvolumeclaim) (kube_persistentvolumeclaim_labels{cluster=~\"$cluster\", namespace=~\"$namespace\",label_name=~\"(loki|enterprise-logs)-read.*\"})",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 99th Percentile",
-                        "refId": "A",
-                        "step": 10
-                     },
-                     {
-                        "expr": "histogram_quantile(0.50, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/read\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"})) * 1e3",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 50th Percentile",
-                        "refId": "B",
-                        "step": 10
-                     },
-                     {
-                        "expr": "1e3 * sum(job_route:loki_request_duration_seconds_sum:sum_rate{job=~\"($namespace)/read\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"}) by (route)  / sum(job_route:loki_request_duration_seconds_count:sum_rate{job=~\"($namespace)/read\", route=~\"loki_api_v1_series|api_prom_series|api_prom_query|api_prom_label|api_prom_label_name_values|loki_api_v1_query|loki_api_v1_query_range|loki_api_v1_labels|loki_api_v1_label_name_values\", cluster=~\"$cluster\"}) by (route) ",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{ route }} Average",
-                        "refId": "C",
+                        "legendFormat": "{{persistentvolumeclaim}}",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "Latency",
+                  "title": "Disk Space Utilization",
                   "tooltip": {
                      "shared": true,
                      "sort": 2,
@@ -561,7 +493,84 @@
                   },
                   "yaxes": [
                      {
-                        "format": "ms",
+                        "format": "percentunit",
+                        "label": null,
+                        "logBase": 1,
+                        "max": null,
+                        "min": 0,
+                        "show": true
+                     },
+                     {
+                        "format": "short",
+                        "label": null,
+                        "logBase": 1,
+                        "max": null,
+                        "min": null,
+                        "show": false
+                     }
+                  ]
+               },
+               {
+                  "aliasColors": { },
+                  "bars": false,
+                  "dashLength": 10,
+                  "dashes": false,
+                  "datasource": "$datasource",
+                  "fill": 1,
+                  "gridPos": { },
+                  "id": 7,
+                  "legend": {
+                     "avg": false,
+                     "current": false,
+                     "max": false,
+                     "min": false,
+                     "show": true,
+                     "total": false,
+                     "values": false
+                  },
+                  "lines": true,
+                  "linewidth": 1,
+                  "links": [ ],
+                  "nullPointMode": "null as zero",
+                  "percentage": false,
+                  "pointradius": 5,
+                  "points": false,
+                  "renderer": "flot",
+                  "seriesOverrides": [ ],
+                  "spaceLength": 10,
+                  "span": 6,
+                  "stack": false,
+                  "steppedLine": false,
+                  "targets": [
+                     {
+                        "expr": "loki_boltdb_shipper_query_readiness_duration_seconds{cluster=~\"$cluster\", namespace=~\"$namespace\"}",
+                        "format": "time_series",
+                        "intervalFactor": 2,
+                        "legendFormat": "duration",
+                        "legendLink": null,
+                        "step": 10
+                     }
+                  ],
+                  "thresholds": [ ],
+                  "timeFrom": null,
+                  "timeShift": null,
+                  "title": "Query Readiness Duration",
+                  "tooltip": {
+                     "shared": true,
+                     "sort": 2,
+                     "value_type": "individual"
+                  },
+                  "type": "graph",
+                  "xaxis": {
+                     "buckets": null,
+                     "mode": "time",
+                     "name": null,
+                     "show": true,
+                     "values": [ ]
+                  },
+                  "yaxes": [
+                     {
+                        "format": "s",
                         "label": null,
                         "logBase": 1,
                         "max": null,
@@ -583,29 +592,22 @@
             "repeatIteration": null,
             "repeatRowId": null,
             "showTitle": true,
-            "title": "Querier",
-            "titleSize": "h6"
+            "title": "Read path",
+            "titleSize": "h6",
+            "type": "row"
          },
          {
             "collapse": false,
             "height": "250px",
             "panels": [
                {
-                  "aliasColors": {
-                     "1xx": "#EAB839",
-                     "2xx": "#7EB26D",
-                     "3xx": "#6ED0E0",
-                     "4xx": "#EF843C",
-                     "5xx": "#E24D42",
-                     "error": "#E24D42",
-                     "success": "#7EB26D"
-                  },
+                  "aliasColors": { },
                   "bars": false,
                   "dashLength": 10,
                   "dashes": false,
                   "datasource": "$datasource",
-                  "fill": 10,
-                  "id": 7,
+                  "fill": 1,
+                  "id": 8,
                   "legend": {
                      "avg": false,
                      "current": false,
@@ -616,36 +618,48 @@
                      "values": false
                   },
                   "lines": true,
-                  "linewidth": 0,
+                  "linewidth": 1,
                   "links": [ ],
                   "nullPointMode": "null as zero",
                   "percentage": false,
                   "pointradius": 5,
                   "points": false,
                   "renderer": "flot",
-                  "seriesOverrides": [ ],
+                  "seriesOverrides": [
+                     {
+                        "alias": "limit",
+                        "color": "#E02F44",
+                        "fill": 0
+                     }
+                  ],
                   "spaceLength": 10,
-                  "span": 6,
-                  "stack": true,
+                  "span": 4,
+                  "stack": false,
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "sum by (status) (\n  label_replace(label_replace(rate(loki_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/write\", route=~\"/logproto.Querier/Query|/logproto.Querier/Label|/logproto.Querier/Series|/logproto.Querier/QuerySample|/logproto.Querier/GetChunkIDs\"}[$__rate_interval]),\n  \"status\", \"${1}xx\", \"status_code\", \"([0-9])..\"),\n  \"status\", \"${1}\", \"status_code\", \"([a-z]+)\"))\n",
+                        "expr": "sum by(pod) (rate(container_cpu_usage_seconds_total{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-write.*\"}[$__rate_interval]))",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{status}}",
-                        "refId": "A",
+                        "legendFormat": "{{pod}}",
+                        "legendLink": null,
+                        "step": 10
+                     },
+                     {
+                        "expr": "min(container_spec_cpu_quota{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-write.*\"} / container_spec_cpu_period{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-write.*\"})",
+                        "format": "time_series",
+                        "intervalFactor": 2,
+                        "legendFormat": "limit",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "QPS",
+                  "title": "CPU",
                   "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
+                     "sort": 2
                   },
                   "type": "graph",
                   "xaxis": {
@@ -681,7 +695,7 @@
                   "dashes": false,
                   "datasource": "$datasource",
                   "fill": 1,
-                  "id": 8,
+                  "id": 9,
                   "legend": {
                      "avg": false,
                      "current": false,
@@ -699,45 +713,41 @@
                   "pointradius": 5,
                   "points": false,
                   "renderer": "flot",
-                  "seriesOverrides": [ ],
+                  "seriesOverrides": [
+                     {
+                        "alias": "limit",
+                        "color": "#E02F44",
+                        "fill": 0
+                     }
+                  ],
                   "spaceLength": 10,
-                  "span": 6,
+                  "span": 4,
                   "stack": false,
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "histogram_quantile(0.99, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/write\", route=~\"/logproto.Querier/Query|/logproto.Querier/Label|/logproto.Querier/Series|/logproto.Querier/QuerySample|/logproto.Querier/GetChunkIDs\", cluster=~\"$cluster\"})) * 1e3",
+                        "expr": "max by(pod) (container_memory_working_set_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-write.*\"})",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 99th Percentile",
-                        "refId": "A",
+                        "legendFormat": "{{pod}}",
+                        "legendLink": null,
                         "step": 10
                      },
                      {
-                        "expr": "histogram_quantile(0.50, sum by (le,route) (job_route:loki_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/write\", route=~\"/logproto.Querier/Query|/logproto.Querier/Label|/logproto.Querier/Series|/logproto.Querier/QuerySample|/logproto.Querier/GetChunkIDs\", cluster=~\"$cluster\"})) * 1e3",
+                        "expr": "min(container_spec_memory_limit_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", container=\"loki\", pod=~\"(loki|enterprise-logs)-write.*\"} > 0)",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{ route }} 50th Percentile",
-                        "refId": "B",
-                        "step": 10
-                     },
-                     {
-                        "expr": "1e3 * sum(job_route:loki_request_duration_seconds_sum:sum_rate{job=~\"($namespace)/write\", route=~\"/logproto.Querier/Query|/logproto.Querier/Label|/logproto.Querier/Series|/logproto.Querier/QuerySample|/logproto.Querier/GetChunkIDs\", cluster=~\"$cluster\"}) by (route)  / sum(job_route:loki_request_duration_seconds_count:sum_rate{job=~\"($namespace)/write\", route=~\"/logproto.Querier/Query|/logproto.Querier/Label|/logproto.Querier/Series|/logproto.Querier/QuerySample|/logproto.Querier/GetChunkIDs\", cluster=~\"$cluster\"}) by (route) ",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{ route }} Average",
-                        "refId": "C",
+                        "legendFormat": "limit",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "Latency",
+                  "title": "Memory (workingset)",
                   "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
+                     "sort": 2
                   },
                   "type": "graph",
                   "xaxis": {
@@ -749,103 +759,7 @@
                   },
                   "yaxes": [
                      {
-                        "format": "ms",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": 0,
-                        "show": true
-                     },
-                     {
-                        "format": "short",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": null,
-                        "show": false
-                     }
-                  ]
-               }
-            ],
-            "repeat": null,
-            "repeatIteration": null,
-            "repeatRowId": null,
-            "showTitle": true,
-            "title": "Ingester",
-            "titleSize": "h6"
-         },
-         {
-            "collapse": false,
-            "height": "250px",
-            "panels": [
-               {
-                  "aliasColors": {
-                     "1xx": "#EAB839",
-                     "2xx": "#7EB26D",
-                     "3xx": "#6ED0E0",
-                     "4xx": "#EF843C",
-                     "5xx": "#E24D42",
-                     "error": "#E24D42",
-                     "success": "#7EB26D"
-                  },
-                  "bars": false,
-                  "dashLength": 10,
-                  "dashes": false,
-                  "datasource": "$datasource",
-                  "fill": 10,
-                  "id": 9,
-                  "legend": {
-                     "avg": false,
-                     "current": false,
-                     "max": false,
-                     "min": false,
-                     "show": true,
-                     "total": false,
-                     "values": false
-                  },
-                  "lines": true,
-                  "linewidth": 0,
-                  "links": [ ],
-                  "nullPointMode": "null as zero",
-                  "percentage": false,
-                  "pointradius": 5,
-                  "points": false,
-                  "renderer": "flot",
-                  "seriesOverrides": [ ],
-                  "spaceLength": 10,
-                  "span": 6,
-                  "stack": true,
-                  "steppedLine": false,
-                  "targets": [
-                     {
-                        "expr": "sum by (status) (\n  label_replace(label_replace(rate(loki_bigtable_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/read\", operation=\"/google.bigtable.v2.Bigtable/ReadRows\"}[$__rate_interval]),\n  \"status\", \"${1}xx\", \"status_code\", \"([0-9])..\"),\n  \"status\", \"${1}\", \"status_code\", \"([a-z]+)\"))\n",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{status}}",
-                        "refId": "A",
-                        "step": 10
-                     }
-                  ],
-                  "thresholds": [ ],
-                  "timeFrom": null,
-                  "timeShift": null,
-                  "title": "QPS",
-                  "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
-                  },
-                  "type": "graph",
-                  "xaxis": {
-                     "buckets": null,
-                     "mode": "time",
-                     "name": null,
-                     "show": true,
-                     "values": [ ]
-                  },
-                  "yaxes": [
-                     {
-                        "format": "short",
+                        "format": "bytes",
                         "label": null,
                         "logBase": 1,
                         "max": null,
@@ -889,43 +803,25 @@
                   "renderer": "flot",
                   "seriesOverrides": [ ],
                   "spaceLength": 10,
-                  "span": 6,
+                  "span": 4,
                   "stack": false,
                   "steppedLine": false,
                   "targets": [
                      {
-                        "expr": "histogram_quantile(0.99, sum by (le) (job_operation:loki_bigtable_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/read\", operation=\"/google.bigtable.v2.Bigtable/ReadRows\"})) * 1e3",
+                        "expr": "sum by(pod) (go_memstats_heap_inuse_bytes{cluster=~\"$cluster\", job=~\"($namespace)/(loki|enterprise-logs)-write\"})",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "99th Percentile",
-                        "refId": "A",
-                        "step": 10
-                     },
-                     {
-                        "expr": "histogram_quantile(0.50, sum by (le) (job_operation:loki_bigtable_request_duration_seconds_bucket:sum_rate{job=~\"($namespace)/read\", operation=\"/google.bigtable.v2.Bigtable/ReadRows\"})) * 1e3",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "50th Percentile",
-                        "refId": "B",
-                        "step": 10
-                     },
-                     {
-                        "expr": "1e3 * sum(job_operation:loki_bigtable_request_duration_seconds_sum:sum_rate{job=~\"($namespace)/read\", operation=\"/google.bigtable.v2.Bigtable/ReadRows\"}) / sum(job_operation:loki_bigtable_request_duration_seconds_count:sum_rate{job=~\"($namespace)/read\", operation=\"/google.bigtable.v2.Bigtable/ReadRows\"})",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "Average",
-                        "refId": "C",
+                        "legendFormat": "{{pod}}",
+                        "legendLink": null,
                         "step": 10
                      }
                   ],
                   "thresholds": [ ],
                   "timeFrom": null,
                   "timeShift": null,
-                  "title": "Latency",
+                  "title": "Memory (go heap inuse)",
                   "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
+                     "sort": 2
                   },
                   "type": "graph",
                   "xaxis": {
@@ -937,7 +833,7 @@
                   },
                   "yaxes": [
                      {
-                        "format": "ms",
+                        "format": "bytes",
                         "label": null,
                         "logBase": 1,
                         "max": null,
@@ -959,195 +855,7 @@
             "repeatIteration": null,
             "repeatRowId": null,
             "showTitle": true,
-            "title": "BigTable",
-            "titleSize": "h6"
-         },
-         {
-            "collapse": false,
-            "height": "250px",
-            "panels": [
-               {
-                  "aliasColors": {
-                     "1xx": "#EAB839",
-                     "2xx": "#7EB26D",
-                     "3xx": "#6ED0E0",
-                     "4xx": "#EF843C",
-                     "5xx": "#E24D42",
-                     "error": "#E24D42",
-                     "success": "#7EB26D"
-                  },
-                  "bars": false,
-                  "dashLength": 10,
-                  "dashes": false,
-                  "datasource": "$datasource",
-                  "fill": 10,
-                  "id": 11,
-                  "legend": {
-                     "avg": false,
-                     "current": false,
-                     "max": false,
-                     "min": false,
-                     "show": true,
-                     "total": false,
-                     "values": false
-                  },
-                  "lines": true,
-                  "linewidth": 0,
-                  "links": [ ],
-                  "nullPointMode": "null as zero",
-                  "percentage": false,
-                  "pointradius": 5,
-                  "points": false,
-                  "renderer": "flot",
-                  "seriesOverrides": [ ],
-                  "spaceLength": 10,
-                  "span": 6,
-                  "stack": true,
-                  "steppedLine": false,
-                  "targets": [
-                     {
-                        "expr": "sum by (status) (\n  label_replace(label_replace(rate(loki_boltdb_shipper_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/(querier|index-gateway)\", operation=\"Shipper.Query\"}[$__rate_interval]),\n  \"status\", \"${1}xx\", \"status_code\", \"([0-9])..\"),\n  \"status\", \"${1}\", \"status_code\", \"([a-z]+)\"))\n",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "{{status}}",
-                        "refId": "A",
-                        "step": 10
-                     }
-                  ],
-                  "thresholds": [ ],
-                  "timeFrom": null,
-                  "timeShift": null,
-                  "title": "QPS",
-                  "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
-                  },
-                  "type": "graph",
-                  "xaxis": {
-                     "buckets": null,
-                     "mode": "time",
-                     "name": null,
-                     "show": true,
-                     "values": [ ]
-                  },
-                  "yaxes": [
-                     {
-                        "format": "short",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": 0,
-                        "show": true
-                     },
-                     {
-                        "format": "short",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": null,
-                        "show": false
-                     }
-                  ]
-               },
-               {
-                  "aliasColors": { },
-                  "bars": false,
-                  "dashLength": 10,
-                  "dashes": false,
-                  "datasource": "$datasource",
-                  "fill": 1,
-                  "id": 12,
-                  "legend": {
-                     "avg": false,
-                     "current": false,
-                     "max": false,
-                     "min": false,
-                     "show": true,
-                     "total": false,
-                     "values": false
-                  },
-                  "lines": true,
-                  "linewidth": 1,
-                  "links": [ ],
-                  "nullPointMode": "null as zero",
-                  "percentage": false,
-                  "pointradius": 5,
-                  "points": false,
-                  "renderer": "flot",
-                  "seriesOverrides": [ ],
-                  "spaceLength": 10,
-                  "span": 6,
-                  "stack": false,
-                  "steppedLine": false,
-                  "targets": [
-                     {
-                        "expr": "histogram_quantile(0.99, sum(rate(loki_boltdb_shipper_request_duration_seconds_bucket{cluster=~\"$cluster\",job=~\"($namespace)/(querier|index-gateway)\", operation=\"Shipper.Query\"}[$__rate_interval])) by (le)) * 1e3",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "99th Percentile",
-                        "refId": "A",
-                        "step": 10
-                     },
-                     {
-                        "expr": "histogram_quantile(0.50, sum(rate(loki_boltdb_shipper_request_duration_seconds_bucket{cluster=~\"$cluster\",job=~\"($namespace)/(querier|index-gateway)\", operation=\"Shipper.Query\"}[$__rate_interval])) by (le)) * 1e3",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "50th Percentile",
-                        "refId": "B",
-                        "step": 10
-                     },
-                     {
-                        "expr": "sum(rate(loki_boltdb_shipper_request_duration_seconds_sum{cluster=~\"$cluster\",job=~\"($namespace)/(querier|index-gateway)\", operation=\"Shipper.Query\"}[$__rate_interval])) * 1e3 / sum(rate(loki_boltdb_shipper_request_duration_seconds_count{cluster=~\"$cluster\",job=~\"($namespace)/(querier|index-gateway)\", operation=\"Shipper.Query\"}[$__rate_interval]))",
-                        "format": "time_series",
-                        "intervalFactor": 2,
-                        "legendFormat": "Average",
-                        "refId": "C",
-                        "step": 10
-                     }
-                  ],
-                  "thresholds": [ ],
-                  "timeFrom": null,
-                  "timeShift": null,
-                  "title": "Latency",
-                  "tooltip": {
-                     "shared": true,
-                     "sort": 2,
-                     "value_type": "individual"
-                  },
-                  "type": "graph",
-                  "xaxis": {
-                     "buckets": null,
-                     "mode": "time",
-                     "name": null,
-                     "show": true,
-                     "values": [ ]
-                  },
-                  "yaxes": [
-                     {
-                        "format": "ms",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": 0,
-                        "show": true
-                     },
-                     {
-                        "format": "short",
-                        "label": null,
-                        "logBase": 1,
-                        "max": null,
-                        "min": null,
-                        "show": false
-                     }
-                  ]
-               }
-            ],
-            "repeat": null,
-            "repeatIteration": null,
-            "repeatRowId": null,
-            "showTitle": true,
-            "title": "BoltDB Shipper",
+            "title": "Ingester",
             "titleSize": "h6"
          }
       ],
@@ -1250,7 +958,7 @@
          ]
       },
       "timezone": "utc",
-      "title": "Loki / Reads",
-      "uid": "reads",
+      "title": "Loki / Reads Resources",
+      "uid": "reads-resources",
       "version": 0
    }
