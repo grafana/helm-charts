@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.7.5
+
+- [ENHANCEMENT] Update dashboards, include recording and alerting rules
+
 ## 1.7.4
 
 - [CHANGE] Default accessKeyId, endpoint, and secretAccessKey s3 setting to null to make them easier to provide via env vars
