@@ -599,6 +599,39 @@ tableManager:
   # -- Tolerations for table-manager pods
   tolerations: []
 
+# Use either this ingress or the gateway, but not both at once.
+# If you enable this, make sure to disable the gateway.
+# You'll need to supply authn configuration for your ingress controller.
+ingress:
+  enabled: false
+#  ingressClassName: nginx
+  annotations: {}
+#    nginx.ingress.kubernetes.io/auth-type: basic
+#    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
+#    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      proxy_set_header X-Scope-OrgID $remote_user;
+  paths:
+    distributor:
+      - /api/prom/push
+      - /loki/api/v1/push
+    querier:
+      - /api/prom/tail
+      - /loki/api/v1/tail
+    query-frontend:
+      - /loki/api
+    ruler:
+      - /api/prom/rules
+      - /loki/api/v1/rules
+      - /prometheus/api/v1/rules
+      - /prometheus/api/v1/alerts
+  hosts:
+    - loki.example.com
+#  tls:
+#    - hosts:
+#       - loki.example.com
+#      secretName: loki-distributed-tls
+
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
