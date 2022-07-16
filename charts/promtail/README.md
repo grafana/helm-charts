@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 6.2.1](https://img.shields.io/badge/Version-6.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -74,9 +74,18 @@ The new release which will pick up again from the existing `positions.yaml`.
 | config.snippets | object | See `values.yaml` | A section of reusable snippets that can be reference in `config.file`. Custom snippets may be added in order to reduce redundancy. This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common. |
 | config.snippets.extraRelabelConfigs | list | `[]` | You can put here any additional relabel_configs to "kubernetes-pods" job |
 | config.snippets.extraScrapeConfigs | string | empty | You can put here any additional scrape configs you want to add to the config file. |
+| config.snippets.extraServerConfigs | string | empty | You can put here any keys that will be directly added to the config file's 'server' block. |
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers |
+| daemonset.enabled | bool | `true` | Deploys Promtail as a DaemonSet |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
+| deployment.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for the deployment |
+| deployment.autoscaling.maxReplicas | int | `10` |  |
+| deployment.autoscaling.minReplicas | int | `1` |  |
+| deployment.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
+| deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
+| deployment.replicaCount | int | `1` |  |
 | extraArgs | list | `[]` |  |
 | extraEnv | list | `[]` | Extra environment variables |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
@@ -169,8 +178,22 @@ config:
         relabel_configs:
           - source_labels:
               - __syslog_message_hostname
-            target_label: host
+            target_label: hostname
+
+          # example label values: kernel, CRON, kubelet
+          - source_labels:
+              - __syslog_message_app_name
+            target_label: app
+
+          # example label values: debug, notice, informational, warning, error
+          - source_labels:
+              - __syslog_message_severity
+            target_label: level
 ```
+
+Find additional source labels in the Promtail's docs:
+
+https://grafana.com/docs/loki/latest/clients/promtail/configuration/#syslog
 
 ### Journald Support
 
@@ -187,27 +210,52 @@ config:
             job: systemd-journal
         relabel_configs:
           - source_labels:
-              - '__journal__systemd_unit'
-            target_label: 'unit'
-          - source_labels:
-              - '__journal__hostname'
-            target_label: 'hostname'
+              - __journal__hostname
+            target_label: hostname
 
-# Mount journal directory into promtail pods
+          # example label values: kubelet.service, containerd.service
+          - source_labels:
+              - __journal__systemd_unit
+            target_label: unit
+
+          # example label values: debug, notice, info, warning, error
+          - source_labels:
+              - __journal_priority_keyword
+            target_label: level
+
+# Mount journal directory and machine-id file into promtail pods
 extraVolumes:
   - name: journal
     hostPath:
       path: /var/log/journal
+  - name: machine-id
+    hostPath:
+      path: /etc/machine-id
 
 extraVolumeMounts:
   - name: journal
     mountPath: /var/log/journal
     readOnly: true
+  - name: machine-id
+    mountPath: /etc/machine-id
+    readOnly: true
 ```
+
+Find additional configuration options in Promtail's docs:
+
+https://grafana.com/docs/loki/latest/clients/promtail/configuration/#journal
+
+More journal source labels can be found here https://www.freedesktop.org/software/systemd/man/systemd.journal-fields.html.
+> Note that each message from the journal may have a different set of fields and software may write an arbitrary set of custom fields for their logged messages. [(related issue)](https://github.com/grafana/loki/issues/2048#issuecomment-626234611)
+
+The machine-id needs to be available in the container as it is required for scraping.
+This is described in Promtail's scraping docs:
+
+https://grafana.com/docs/loki/latest/clients/promtail/scraping/#journal-scraping-linux-only
 
 ### Push API Support
 
-```
+```yaml
 extraPorts:
   httpPush:
     name: http-push

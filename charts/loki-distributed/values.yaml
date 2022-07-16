@@ -68,6 +68,10 @@ loki:
     allowPrivilegeEscalation: false
   # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
   existingSecretForConfig: ""
+  # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
+  # -- Common annotations for all loki services
+  serviceAnnotations: {}
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -778,6 +782,8 @@ gateway:
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
 
+        proxy_http_version    1.1;
+
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
 
@@ -1168,6 +1174,8 @@ memcached:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Common annotations for all memcached services
+  serviceAnnotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
