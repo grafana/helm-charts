@@ -3,7 +3,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ include "loki.fullname" $ }}
+  name: {{ include "tempo.fullname" $ }}
   {{- with .namespace }}
   namespace: {{ . }}
   {{- end }}
@@ -12,7 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "loki.labels" $ | nindent 4 }}
+    {{- include "tempo.labels" $ | nindent 4 }}
   {{- with .labels }}
   {{- toYaml . | nindent 4 }}
   {{- end }}

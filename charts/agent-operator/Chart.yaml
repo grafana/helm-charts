@@ -5,6 +5,9 @@ type: application
 version: 0.2.3
 appVersion: "0.25.1"
 home: https://grafana.com/docs/agent/latest/
-icon: https://raw.githubusercontent.com/grafana/agent/v0.22.0/docs/assets/logo_and_name.png
+icon: https://raw.githubusercontent.com/grafana/agent/v0.25.1/docs/assets/logo_and_name.png
 sources:
-  - https://github.com/grafana/agent/tree/v0.22.0/pkg/operator
+  - https://github.com/grafana/agent/tree/v0.25.1/pkg/operator
+maintainers:
+  - name: Grafana Agent Team
+    email: grafana-agent-team@googlegroups.com

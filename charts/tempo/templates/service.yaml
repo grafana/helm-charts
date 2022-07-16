@@ -35,12 +35,14 @@ spec:
   - name: tempo-prom-metrics
     port: 3100
     targetPort: 3100
+  {{- if .Values.tempoQuery.enabled }}
   - name: jaeger-metrics
     port: 16687
     targetPort: 16687
   - name: tempo-query-jaeger-ui
     port: 16686
     targetPort: 16686
+  {{- end }}
   - name: tempo-jaeger-thrift-compact
     port: 6831
     protocol: UDP
@@ -53,7 +55,7 @@ spec:
     port: 14268
     protocol: TCP
     targetPort: 14268
-  - name: tempo-jaeger-grpc
+  - name: grpc-tempo-jaeger
     port: 14250
     protocol: TCP
     targetPort: 14250
@@ -65,14 +67,18 @@ spec:
     port: 55680
     protocol: TCP
     targetPort: 55680
+  - name: tempo-otlp-http-legacy
+    port: 55681
+    protocol: TCP
+    targetPort: 4318
+  - name: grpc-tempo-otlp
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
   - name: tempo-otlp-http
     port: 4318
     protocol: TCP
     targetPort: 4318
-  - name: tempo-otlp-grpc
-    port: 4317
-    protocol: TCP
-    targetPort: 4317
   - name: tempo-opencensus
     port: 55678
     protocol: TCP

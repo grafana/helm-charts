@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.43.0](https://img.shields.io/badge/Version-0.43.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 0.53.1](https://img.shields.io/badge/Version-0.53.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -59,6 +59,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 |-----|------|---------|-------------|
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
+| compactor.extraContainers | list | `[]` | Containers to add to the compactor pods |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
 | compactor.extraVolumeMounts | list | `[]` | Volume mounts to add to the compactor pods |
@@ -71,6 +72,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | compactor.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
+| compactor.podLabels | object | `{}` | Labels for compactor pods |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.serviceAccount.annotations | object | `{}` | Annotations for the compactor service account |
@@ -88,6 +90,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
+| distributor.extraContainers | list | `[]` | Containers to add to the distributor pods |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
 | distributor.extraVolumeMounts | list | `[]` | Volume mounts to add to the distributor pods |
@@ -97,6 +100,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
+| distributor.podLabels | object | `{}` | Labels for distributor pods |
 | distributor.priorityClassName | string | `nil` | The name of the PriorityClass for distributor pods |
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
@@ -116,9 +120,10 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
-| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | See `kubectl explain deployment.spec.strategy` for more -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
+| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | See `kubectl explain deployment.spec.strategy` for more, ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
 | gateway.enabled | bool | `true` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
+| gateway.extraContainers | list | `[]` | Containers to add to the gateway pods |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
@@ -127,16 +132,22 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
-| gateway.ingress.annotations | object | `{}` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 ingressClassName: nginx -- Annotations for the gateway ingress |
+| gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
+| gateway.ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 For example: `ingressClassName: nginx` |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| gateway.livenessProbe.httpGet.path | string | `"/"` |  |
+| gateway.livenessProbe.httpGet.port | string | `"http"` |  |
+| gateway.livenessProbe.initialDelaySeconds | int | `30` |  |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
+| gateway.nginxConfig.resolver | string | `""` | Allows overriding the DNS resolver address nginx will use. |
 | gateway.nginxConfig.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
+| gateway.podLabels | object | `{}` | Labels for gateway pods |
 | gateway.podSecurityContext | object | `{"fsGroup":101,"runAsGroup":101,"runAsNonRoot":true,"runAsUser":101}` | The SecurityContext for gateway containers |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.readinessProbe.httpGet.path | string | `"/"` |  |
@@ -164,6 +175,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | indexGateway.enabled | bool | `false` | Specifies whether the index-gateway should be enabled |
 | indexGateway.extraArgs | list | `[]` | Additional CLI args for the index-gateway |
+| indexGateway.extraContainers | list | `[]` | Containers to add to the index-gateway pods |
 | indexGateway.extraEnv | list | `[]` | Environment variables to add to the index-gateway pods |
 | indexGateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the index-gateway pods |
 | indexGateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the index-gateway pods |
@@ -176,6 +188,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | indexGateway.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | indexGateway.podAnnotations | object | `{}` | Annotations for index-gateway pods |
+| indexGateway.podLabels | object | `{}` | Labels for index-gateway pods |
 | indexGateway.priorityClassName | string | `nil` | The name of the PriorityClass for index-gateway pods |
 | indexGateway.replicas | int | `1` | Number of replicas for the index-gateway |
 | indexGateway.resources | object | `{}` | Resource requests and limits for the index-gateway |
@@ -184,6 +197,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
+| ingester.extraContainers | list | `[]` | Containers to add to the ingester pods |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | ingester.extraVolumeMounts | list | `[]` | Volume mounts to add to the ingester pods |
@@ -197,12 +211,27 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
+| ingester.podLabels | object | `{}` | Labels for ingester pods |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `1` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
 | ingester.serviceLabels | object | `{}` | Labels for ingestor service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.hosts[0] | string | `"loki.example.com"` |  |
+| ingress.paths.distributor[0] | string | `"/api/prom/push"` |  |
+| ingress.paths.distributor[1] | string | `"/loki/api/v1/push"` |  |
+| ingress.paths.querier[0] | string | `"/api/prom/tail"` |  |
+| ingress.paths.querier[1] | string | `"/loki/api/v1/tail"` |  |
+| ingress.paths.query-frontend[0] | string | `"/loki/api"` |  |
+| ingress.paths.ruler[0] | string | `"/api/prom/rules"` |  |
+| ingress.paths.ruler[1] | string | `"/loki/api/v1/rules"` |  |
+| ingress.paths.ruler[2] | string | `"/prometheus/api/v1/rules"` |  |
+| ingress.paths.ruler[3] | string | `"/prometheus/api/v1/alerts"` |  |
+| loki.annotations | object | `{}` | If set, these annotations are added to all of the Kubernetes controllers (Deployments, StatefulSets, etc) that this chart launches. Use this to implement something like the "Wave" controller or another controller that is monitoring top level deployment resources. |
+| loki.appProtocol | string | `""` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp" |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
@@ -210,7 +239,11 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| loki.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| loki.livenessProbe.httpGet.port | string | `"http"` |  |
+| loki.livenessProbe.initialDelaySeconds | int | `300` |  |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
+| loki.podLabels | object | `{}` | Common labels for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
 | loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
 | loki.readinessProbe.httpGet.port | string | `"http"` |  |
@@ -218,6 +251,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | loki.schemaConfig | object | `{"configs":[{"from":"2020-09-07","index":{"period":"24h","prefix":"loki_index_"},"object_store":"filesystem","schema":"v11","store":"boltdb-shipper"}]}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
+| loki.serviceAnnotations | object | `{}` | Common annotations for all loki services |
 | loki.storageConfig | object | `{"boltdb_shipper":{"active_index_directory":"/var/loki/index","cache_location":"/var/loki/cache","cache_ttl":"168h","shared_store":"filesystem"},"filesystem":{"directory":"/var/loki/chunks"}}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
@@ -225,14 +259,23 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcached.image.registry | string | `"docker.io"` | The Docker registry for the memcached |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.7-alpine"` | Memcached Docker image tag |
+| memcached.livenessProbe.initialDelaySeconds | int | `10` |  |
+| memcached.livenessProbe.tcpSocket.port | string | `"http"` |  |
+| memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.podSecurityContext | object | `{"fsGroup":11211,"runAsGroup":11211,"runAsNonRoot":true,"runAsUser":11211}` | The SecurityContext for memcached pods |
+| memcached.readinessProbe.initialDelaySeconds | int | `5` |  |
+| memcached.readinessProbe.tcpSocket.port | string | `"http"` |  |
+| memcached.readinessProbe.timeoutSeconds | int | `1` |  |
+| memcached.serviceAnnotations | object | `{}` | Common annotations for all memcached services |
 | memcachedChunks.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedChunks.enabled | bool | `false` | Specifies whether the Memcached chunks cache should be enabled |
 | memcachedChunks.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-chunks |
+| memcachedChunks.extraContainers | list | `[]` | Containers to add to the memcached-chunks pods |
 | memcachedChunks.extraEnv | list | `[]` | Environment variables to add to memcached-chunks pods |
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
 | memcachedChunks.podAnnotations | object | `{}` | Annotations for memcached-chunks pods |
+| memcachedChunks.podLabels | object | `{}` | Labels for memcached-chunks pods |
 | memcachedChunks.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-chunks pods |
 | memcachedChunks.replicas | int | `1` | Number of replicas for memcached-chunks |
 | memcachedChunks.resources | object | `{}` | Resource requests and limits for memcached-chunks |
@@ -244,14 +287,17 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedExporter.image.registry | string | `"docker.io"` | The Docker registry for the Memcached Exporter |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.6.0"` | Memcached Exporter Docker image tag |
+| memcachedExporter.podLabels | object | `{}` | Labels for memcached-exporter pods |
 | memcachedExporter.resources | object | `{}` | Memcached Exporter resource requests and limits |
 | memcachedFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedFrontend.enabled | bool | `false` | Specifies whether the Memcached frontend cache should be enabled |
 | memcachedFrontend.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-frontend |
+| memcachedFrontend.extraContainers | list | `[]` | Containers to add to the memcached-frontend pods |
 | memcachedFrontend.extraEnv | list | `[]` | Environment variables to add to memcached-frontend pods |
 | memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
 | memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
 | memcachedFrontend.podAnnotations | object | `{}` | Annotations for memcached-frontend pods |
+| memcachedFrontend.podLabels | object | `{}` | Labels for memcached-frontend pods |
 | memcachedFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-frontend pods |
 | memcachedFrontend.replicas | int | `1` | Number of replicas for memcached-frontend |
 | memcachedFrontend.resources | object | `{}` | Resource requests and limits for memcached-frontend |
@@ -261,10 +307,12 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexQueries.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexQueries.enabled | bool | `false` | Specifies whether the Memcached index queries cache should be enabled |
 | memcachedIndexQueries.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-index-queries |
+| memcachedIndexQueries.extraContainers | list | `[]` | Containers to add to the memcached-index-queries pods |
 | memcachedIndexQueries.extraEnv | list | `[]` | Environment variables to add to memcached-index-queries pods |
 | memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
 | memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
 | memcachedIndexQueries.podAnnotations | object | `{}` | Annotations for memcached-index-queries pods |
+| memcachedIndexQueries.podLabels | object | `{}` | Labels for memcached-index-queries pods |
 | memcachedIndexQueries.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-index-queries pods |
 | memcachedIndexQueries.replicas | int | `1` | Number of replicas for memcached-index-queries |
 | memcachedIndexQueries.resources | object | `{}` | Resource requests and limits for memcached-index-queries |
@@ -274,10 +322,12 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexWrites.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexWrites.enabled | bool | `false` | Specifies whether the Memcached index writes cache should be enabled |
 | memcachedIndexWrites.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-index-writes |
+| memcachedIndexWrites.extraContainers | list | `[]` | Containers to add to the memcached-index-writes pods |
 | memcachedIndexWrites.extraEnv | list | `[]` | Environment variables to add to memcached-index-writes pods |
 | memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
 | memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
 | memcachedIndexWrites.podAnnotations | object | `{}` | Annotations for memcached-index-writes pods |
+| memcachedIndexWrites.podLabels | object | `{}` | Labels for memcached-index-writes pods |
 | memcachedIndexWrites.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-index-writes pods |
 | memcachedIndexWrites.replicas | int | `1` | Number of replicas for memcached-index-writes |
 | memcachedIndexWrites.resources | object | `{}` | Resource requests and limits for memcached-index-writes |
@@ -311,6 +361,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |
 | querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
+| querier.extraContainers | list | `[]` | Containers to add to the querier pods |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
 | querier.extraVolumeMounts | list | `[]` | Volume mounts to add to the querier pods |
@@ -323,6 +374,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | querier.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
+| querier.podLabels | object | `{}` | Labels for querier pods |
 | querier.priorityClassName | string | `nil` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
 | querier.resources | object | `{}` | Resource requests and limits for the querier |
@@ -336,6 +388,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the query-frontend |
 | queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
+| queryFrontend.extraContainers | list | `[]` | Containers to add to the query-frontend pods |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
 | queryFrontend.extraVolumeMounts | list | `[]` | Volume mounts to add to the query-frontend pods |
@@ -345,17 +398,20 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `loki.image.tag` |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
+| queryFrontend.podLabels | object | `{}` | Labels for query-frontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.serviceLabels | object | `{}` | Labels for query-frontend service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
-| rbac.pspEnabled | bool | `false` | If enabled, a PodSecurityPolicy is created |
+| rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
+| rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
 | ruler.directories | object | `{}` | Directories containing rules files |
 | ruler.enabled | bool | `false` | Specifies whether the ruler should be enabled |
 | ruler.extraArgs | list | `[]` | Additional CLI args for the ruler |
+| ruler.extraContainers | list | `[]` | Containers to add to the ruler pods |
 | ruler.extraEnv | list | `[]` | Environment variables to add to the ruler pods |
 | ruler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ruler pods |
 | ruler.extraVolumeMounts | list | `[]` | Volume mounts to add to the ruler pods |
@@ -363,11 +419,13 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
+| ruler.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | ruler.nodeSelector | object | `{}` | Node selector for ruler pods |
-| ruler.persistence.enabled | bool | `false` | Enable creating PVCs for the ruler |
+| ruler.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using recording rules |
 | ruler.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | ruler.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ruler.podAnnotations | object | `{}` | Annotations for ruler pods |
+| ruler.podLabels | object | `{}` | Labels for compactor pods |
 | ruler.priorityClassName | string | `nil` | The name of the PriorityClass for ruler pods |
 | ruler.replicas | int | `1` | Number of replicas for the ruler |
 | ruler.resources | object | `{}` | Resource requests and limits for the ruler |
@@ -383,6 +441,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
 | serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
 | serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
+| serviceMonitor.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint |
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
@@ -392,6 +451,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
 | tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |
+| tableManager.extraContainers | list | `[]` | Containers to add to the table-manager pods |
 | tableManager.extraEnv | list | `[]` | Environment variables to add to the table-manager pods |
 | tableManager.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the table-manager pods |
 | tableManager.extraVolumeMounts | list | `[]` | Volume mounts to add to the table-manager pods |
@@ -401,6 +461,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | tableManager.image.tag | string | `nil` | Docker image tag for the table-manager image. Overrides `loki.image.tag` |
 | tableManager.nodeSelector | object | `{}` | Node selector for table-manager pods |
 | tableManager.podAnnotations | object | `{}` | Annotations for table-manager pods |
+| tableManager.podLabels | object | `{}` | Labels for table-manager pods |
 | tableManager.priorityClassName | string | `nil` | The name of the PriorityClass for table-manager pods |
 | tableManager.resources | object | `{}` | Resource requests and limits for the table-manager |
 | tableManager.serviceLabels | object | `{}` | Labels for table-manager service |
@@ -475,8 +536,8 @@ loki:
       aws:
         s3: s3://eu-central-1
         bucketnames: my-loki-s3-bucket
-    boltdb_shipper:
-      shared_storage: s3
+      boltdb_shipper:
+        shared_store: s3
     schema_config:
       configs:
         - from: 2020-09-07
@@ -493,7 +554,7 @@ The above configuration selectively overrides default values found in the `loki.
 Using `loki.structuredConfig` it is possible to externally set most any configuration parameter (special considerations for elements of an array).
 
 ```
-helm upgrade loki --install -f values.yaml --set loki.structuredConfig.storage_config.aws.bucketnames=my-loki-bucket
+helm upgrade loki-distributed --install -f values.yaml --set loki.structuredConfig.storage_config.aws.bucketnames=my-loki-bucket
 ```
 
 `loki.config`, `loki.schemaConfig` and `loki.storageConfig` may also be used in conjuction with `loki.structuredConfig`. Values found in `loki.structuredConfig` will take precedence. Array values, such as those found in `loki.schema_config` will be overridden wholesale and not amended to.
@@ -517,7 +578,7 @@ loki:
 ```
 
 ```console
-helm upgrade loki --install -f values.yaml --set bucketnames=my-loki-bucket
+helm upgrade loki-distributed --install -f values.yaml --set bucketnames=my-loki-bucket
 ```
 
 ## Gateway
