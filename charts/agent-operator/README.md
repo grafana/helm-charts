@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.22.0](https://img.shields.io/badge/AppVersion-0.22.0-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.25.1](https://img.shields.io/badge/AppVersion-0.25.1-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -61,7 +61,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"grafana/agent-operator"` | Image repo |
 | image.tag | string | `"v0.22.0"` | Image tag |
-| kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets -- https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
+| kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
