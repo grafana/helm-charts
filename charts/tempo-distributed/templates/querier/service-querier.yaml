@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.querierLabels" . | nindent 4 }}
-  {{- with .Values.querier.annotations }}
+  {{- with .Values.querier.service.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}

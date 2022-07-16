@@ -6,6 +6,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.memcachedLabels" . | nindent 4 }}
+  {{- with .Values.memcached.service.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ports:
   - name: memcached-client
