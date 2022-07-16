@@ -1,5 +1,7 @@
 # Fluent Bit Loki chart
 
+DEPRECATED. Please use the official Fluent-Bit chart at https://github.com/fluent/helm-charts.
+
 This chart install the Fluent Bit application to ship logs to Loki. It defines daemonset on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Get Repo Info

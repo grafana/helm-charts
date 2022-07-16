@@ -20,7 +20,7 @@ spec:
       labels:
         {{- include "tempo.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
-          {{ toYaml . | indent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
         {{- with .Values.podAnnotations }}
@@ -33,7 +33,7 @@ spec:
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs={{ .Values.tempo.memBallastSizeMbs }}
         {{- range $key, $value := .Values.tempo.extraArgs }}
-        - "-{{ $key }}={{ $value }}"
+        - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
         image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
@@ -54,18 +54,26 @@ spec:
         - containerPort: 9411
           name: zipkin
         - containerPort: 55680
-          name: otlp
+          name: otlp-legacy
+        - containerPort: 4317
+          name: otlp-grpc
+        - containerPort: 55681
+          name: otlp-http
         - containerPort: 55678
           name: opencensus
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
+        {{- with .Values.tempo.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         env:
           {{- if .Values.tempo.extraEnv }}
             {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
           {{- end }}
         volumeMounts:
-        {{- if .Values.tempo.extraVolumeMounts }}
-          {{ toYaml .Values.tempo.extraVolumeMounts | nindent 12 }}
+        {{- if .Values.tempo.extraVolumeMounts -}}
+          {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
           name: tempo-conf
@@ -73,11 +81,12 @@ spec:
         - mountPath: /var/tempo
           name: storage
         {{- end }}
+      {{- if .Values.tempoQuery.enabled }}
       - args:
         - --query.base-path=/
         - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
         {{- range $key, $value := .Values.tempoQuery.extraArgs }}
-        - "-{{ $key }}={{ $value }}"
+        - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
         image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag }}
         imagePullPolicy: {{ .Values.tempoQuery.pullPolicy }}
@@ -93,13 +102,37 @@ spec:
           {{- end }}
         resources:
           {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
+        {{- with .Values.tempoQuery.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
-        {{- if .Values.tempoQuery.extraVolumeMounts }}
-          {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 12 }}
+        {{- if .Values.tempoQuery.extraVolumeMounts -}}
+          {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
+      {{- if .Values.extraVolumes -}}
+        {{ toYaml .Values.extraVolumes | nindent 6 }}
+      {{- end }}
       - configMap:
           name: {{ template "tempo.name" . }}-query
         name: tempo-query-conf

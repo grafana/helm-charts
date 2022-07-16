@@ -36,7 +36,7 @@ helm upgrade --install loki grafana/loki-stack --set "key1=val1,key2=val2,..."
 ## Deploy Loki and Fluent Bit to your cluster
 
 ```bash
-helm upgrade --install loki loki/loki-stack \
+helm upgrade --install loki grafana/loki-stack \
     --set fluent-bit.enabled=true,promtail.enabled=false
 ```
 
@@ -57,5 +57,4 @@ kubectl port-forward --namespace <YOUR-NAMESPACE> service/loki-grafana 3000:80
 ```
 
 Navigate to <http://localhost:3000> and login with `admin` and the password output above.
-Then follow the [instructions for adding the loki datasource](/docs/getting-started/grafana.md), using the URL `http://loki:3100/`.
-
+Then follow the [instructions for adding the loki datasource](https://grafana.com/docs/grafana/latest/datasources/loki/), using the URL `http://loki:3100/`.
