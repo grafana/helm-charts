@@ -67,14 +67,18 @@ spec:
     port: 55680
     protocol: TCP
     targetPort: 55680
-  - name: tempo-otlp-http
-    port: 4318
+  - name: tempo-otlp-http-legacy
+    port: 55681
     protocol: TCP
     targetPort: 4318
   - name: grpc-tempo-otlp
     port: 4317
     protocol: TCP
     targetPort: 4317
+  - name: tempo-otlp-http
+    port: 4318
+    protocol: TCP
+    targetPort: 4318
   - name: tempo-opencensus
     port: 55678
     protocol: TCP

@@ -17,6 +17,9 @@ spec:
         {{- end }}
       labels:
         {{- include "loki-canary.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki-canary.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -26,6 +29,8 @@ spec:
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: loki
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -39,6 +44,8 @@ spec:
             {{- if .Values.extraArgs }}
             {{- toYaml .Values.extraArgs | nindent 12 }}
             {{- end }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           ports:
             - name: http
               containerPort: 3500

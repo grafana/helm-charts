@@ -1,0 +1,21 @@
+{{- if .Values.monitoring.dashboards.enabled }}
+{{- with .Values.monitoring.dashboards }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "loki.dashboardsName" $ }}-1
+  namespace: {{ .namespace | default $.Release.Namespace }}
+data:
+  "loki-chunks.json": |
+    {{ $.Files.Get "src/dashboards/loki-chunks.json" | fromJson | toJson }}
+  "loki-deletion.json": |
+    {{ $.Files.Get "src/dashboards/loki-deletion.json" | fromJson | toJson }}
+  "loki-logs.json": |
+    {{ $.Files.Get "src/dashboards/loki-logs.json" | fromJson | toJson }}
+  "loki-mixin-recording-rules.json": |
+    {{ $.Files.Get "src/dashboards/loki-mixin-recording-rules.json" | fromJson | toJson }}
+  "loki-operational.json": |
+    {{ $.Files.Get "src/dashboards/loki-operational.json" | fromJson | toJson }}
+{{- end -}}
+{{- end -}}

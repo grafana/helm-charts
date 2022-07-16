@@ -63,7 +63,7 @@ loki:
     {{- if .Values.enterprise.enabled}}
     {{- tpl .Values.enterprise.config . }}
     {{- else }}
-    auth_enabled: {{ .Values.loki.authEnabled }}
+    auth_enabled: {{ .Values.loki.auth_enabled }}
     {{- end }}
 
     server:
@@ -87,6 +87,19 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
       split_queries_by_interval: 15m
+
+    {{- with .Values.loki.memcached.chunk_cache }}
+    {{- if and .enabled .host }}
+    chunk_store_config:
+      chunk_cache_config:
+        memcached:
+          batch_size: {{ .batch_size }}
+          parallelism: {{ .parallelism }}
+        memcached_client:
+          host: {{ .host }}
+          service: {{ .service }}
+    {{- end }}
+    {{- end }}
 
     {{- if .Values.loki.schemaConfig}}
     schema_config:
@@ -112,12 +125,37 @@ loki:
     {{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") (eq .Values.loki.storage.type "gcs") }}
     ruler:
       storage:
-        s3:
-          bucketnames: {{ .Values.loki.storage.bucketNames.ruler }}
+      {{- include "loki.rulerStorageConfig" . | nindent 4}}
     {{- end -}}
 
+    {{- with .Values.loki.memcached.results_cache }}
+    query_range:
+      align_queries_with_step: true
+      {{- if and .enabled .host }}
+      cache_results: {{ .enabled }}
+      results_cache:
+        cache:
+          default_validity: {{ .default_validity }}
+          memcached_client:
+            host: {{ .host }}
+            service: {{ .service }}
+            timeout: {{ .timeout }}
+      {{- end }}
+    {{- end }}
+
+    {{- with .Values.loki.storage_config }}
+    storage_config:
+      {{- tpl (. | toYaml) $ | nindent 4 }}
+    {{- end }}
+
+    {{- with .Values.loki.query_scheduler }}
+    query_scheduler:
+      {{- tpl (. | toYaml) $ | nindent 4 }}
+    {{- end }}
+
+
   # Should authentication be enabled
-  authEnabled: true
+  auth_enabled: true
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
   commonConfig:
@@ -132,9 +170,10 @@ loki:
     type: s3
     s3:
       s3: null
-      endpoint: https://amazonaws.com
-      secretAccessKey: supersecret
-      accessKeyId: accesskey
+      endpoint: null
+      region: null
+      secretAccessKey: null
+      accessKeyId: null
       s3ForcePathStyle: false
       insecure: false
     gcs:
@@ -145,11 +184,37 @@ loki:
       chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
 
+  # -- Configure memcached as an external cache for chunk and results cache. Disabled by default
+  # must enable and specify a host for each cache you would like to use.
+  memcached:
+    chunk_cache:
+      enabled: false
+      host: ""
+      service: "memcached-client"
+      batch_size: 256
+      parallelism: 10
+    results_cache:
+      enabled: false
+      host: ""
+      service: "memcached-client"
+      timeout: "500ms"
+      default_validity: "12h"
+
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig: {}
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
+
+  # -- Additional query scheduler config
+  query_scheduler: {}
+
+  # -- Additional storage config
+  storage_config:
+    hedging:
+      at: "250ms"
+      max_per_second: 20
+      up_to: 3
 
 enterprise:
   # Enable enterprise features, license must be provided
@@ -190,7 +255,7 @@ enterprise:
     {{- end }}
     auth:
       type: {{ .Values.enterprise.adminApi.enabled | ternary "enterprise" "trust" }}
-    auth_enabled: {{ .Values.loki.authEnabled }}
+    auth_enabled: {{ .Values.loki.auth_enabled }}
     cluster_name: {{ .Release.Name }}
     license:
       path: /etc/loki/license/license.jwt
@@ -297,6 +362,14 @@ enterprise:
             proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
+          location ~ /prometheus/api/v1/alerts.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
+          location ~ /prometheus/api/v1/rules.* {
+            proxy_pass       http://{{ include "loki.readFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+          }
+
           location = /loki/api/v1/push {
             proxy_pass       http://{{ include "loki.writeFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
@@ -365,50 +438,120 @@ rbac:
   # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
   sccEnabled: false
 
-# ServiceMonitor configuration
-serviceMonitor:
-  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: false
-  # -- Alternative namespace for ServiceMonitor resources
-  namespace: null
-  # -- Namespace selector for ServiceMonitor resources
-  namespaceSelector: {}
-  # -- ServiceMonitor annotations
-  annotations: {}
-  # -- Additional ServiceMonitor labels
-  labels: {}
-  # -- ServiceMonitor scrape interval
-  interval: null
-  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
-  scrapeTimeout: null
-  # -- ServiceMonitor relabel configs to apply to samples before scraping
-  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-  relabelings: []
-  # -- ServiceMonitor will use http by default, but you can pick https as well
-  scheme: http
-  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
-  tlsConfig: null
+# Monitoring section determines which monitoring features to enable
+monitoring:
+  # Dashboards for monitoring Loki
+  dashboards:
+    # -- If enabled, create configmap with dashboards for monitoring Loki
+    enabled: true
+    # -- Alternative namespace to create dashboards ConfigMap in
+    namespace: null
+    # -- Additional annotations for the dashboards ConfigMap
+    annotations: {}
+    # -- Additional labels for the dashboards ConfigMap
+    labels: {}
 
-# Rules for the Prometheus Operator
-prometheusRule:
-  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
-  enabled: false
-  # -- Alternative namespace for the PrometheusRule resource
-  namespace: null
-  # -- PrometheusRule annotations
-  annotations: {}
-  # -- Additional PrometheusRule labels
-  labels: {}
-  # -- Contents of Prometheus rules file
-  groups: []
-  # - name: loki-rules
-  #   rules:
-  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
-  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
-  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
-  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+  # Recording rules for monitoring Loki, required for some dashboards
+  rules:
+    # -- If enabled, create PrometheusRule resource with Loki recording rules
+    enabled: true
+    # -- Include alerting rules
+    alerting: true
+    # -- Alternative namespace to create recording rules PrometheusRule resource in
+    namespace: null
+    # -- Additional annotations for the rules PrometheusRule resource
+    annotations: {}
+    # -- Additional labels for the rules PrometheusRule resource
+    labels: {}
+    # -- Additional groups to add to the rules file
+    additionalGroups: []
+    # - name: additional-loki-rules
+    #   rules:
+    #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+    #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+    #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+    #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
+  # Alerting rules for monitoring Loki
+  alerts:
+    # -- If enabled, create PrometheusRule resource with Loki alerting rules
+    enabled: true
+    # -- Alternative namespace to create alerting rules PrometheusRule resource in
+    namespace: null
+    # -- Additional annotations for the alerts PrometheusRule resource
+    annotations: {}
+    # -- Additional labels for the alerts PrometheusRule resource
+    labels: {}
+
+  # ServiceMonitor configuration
+  serviceMonitor:
+    # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+    enabled: true
+    # -- Alternative namespace for ServiceMonitor resources
+    namespace: null
+    # -- Namespace selector for ServiceMonitor resources
+    namespaceSelector: {}
+    # -- ServiceMonitor annotations
+    annotations: {}
+    # -- Additional ServiceMonitor labels
+    labels: {}
+    # -- ServiceMonitor scrape interval
+    interval: null
+    # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+    scrapeTimeout: null
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor will use http by default, but you can pick https as well
+    scheme: http
+    # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+    tlsConfig: null
+
+  # Self monitoring determines whether Loki should scrape it's own logs.
+  # This feature currently relies on the Grafana Agent Operator being installed,
+  # which is installed by default using the grafana-agent-operator sub-chart.
+  # It will create custom resources for GrafanaAgent, LogsInstance, and PodLogs to configure
+  # scrape configs to scrape it's own logs with the labels expected by the included dashboards.
+  selfMonitoring:
+    enabled: true
+
+    # Grafana Agent configuration
+    grafanaAgent:
+      # -- Controls whether to install the Grafana Agent Operator and its CRDs.
+      # Note that helm will not install CRDs if this flag is enabled during an upgrade.
+      # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
+      installOperator: true
+      # -- Alternative namespace for Grafana Agent resources
+      namespace: null
+      # -- Grafana Agent annotations
+      annotations: {}
+      # -- Additional Grafana Agent labels
+      labels: {}
+      # -- Enable the config read api on port 8080 of the agent
+      enableConfigReadAPI: false
+
+    # PodLogs configuration
+    podLogs:
+      # -- Alternative namespace for PodLogs resources
+      namespace: null
+      # -- PodLogs annotations
+      annotations: {}
+      # -- Additional PodLogs labels
+      labels: {}
+      # -- PodLogs relabel configs to apply to samples before scraping
+      # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+      relabelings: []
+
+    # LogsInstance configuration
+    logsInstance:
+      # -- Alternative namespace for LogsInstance resources
+      namespace: null
+      # -- LogsInstance annotations
+      annotations: {}
+      # -- Additional LogsInstance labels
+      labels: {}
 
 # Configuration for the write
 write:
@@ -619,7 +762,7 @@ gateway:
     type: ClusterIP
     # -- ClusterIP of the gateway service
     clusterIP: null
-    # -- Node port if service type is NodePort
+    # -- (int) Node port if service type is NodePort
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
@@ -801,7 +944,7 @@ networkPolicy:
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
   discovery:
-    # -- Specify the port used for discovery
+    # -- (int) Specify the port used for discovery
     port: null
     # -- Specifies the Pods labels used for discovery.
     # As this is cross-namespace communication, you also need the namespaceSelector.

@@ -1,7 +1,7 @@
 global:
   image:
     # -- Overrides the Docker registry globally for all images
-    registry: null
+    registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -31,7 +31,7 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
-  # --- SecurityContext holds pod-level security attributes and common container settings
+  # -- SecurityContext holds pod-level security attributes and common container settings
   securityContext: {}
   #  capabilities:
   #    drop:
@@ -39,6 +39,8 @@ tempo:
   #  readOnlyRootFilesystem: true
   #  runAsNonRoot: true
   #  runAsUser: 1000
+  # -- Structured tempo configuration
+  structuredConfig: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -138,12 +140,19 @@ ingester:
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
+    # -- Amount of time a trace must be idle before flushing it to the wal.
+    trace_idle_period: null
+    # -- How often to sweep all tenants and move traces from live -> wal -> completed blocks.
+    flush_check_period: null
     # -- Maximum size of a block before cutting it
     max_block_bytes: null
     # -- Maximum length of time before cutting a block
     max_block_duration: null
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
+  service:
+    # -- Annotations for ingester service
+    annotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -221,6 +230,9 @@ metricsGenerator:
     #   send_exemplars: true
     #   headers:
     #     x-scope-orgid: operations
+  service:
+    # -- Annotations for Metrics Generator service
+    annotations: {}
 
 # Configuration for the distributor
 distributor:
@@ -293,8 +305,17 @@ distributor:
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
   extraVolumes: []
+  config:
+    # -- Enable to log every received trace id to help debug ingestion
+    log_received_traces: null
+    # -- Disables write extension with inactive ingesters
+    extend_writes: null
+    # -- List of tags that will not be extracted from trace data for search lookups
+    search_tags_deny_list: []
 
 compactor:
+  # -- Number of replicas for the compactor
+  replicas: 1
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
@@ -389,6 +410,9 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+  service:
+    # -- Annotations for querier service
+    annotations: {}
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -489,6 +513,8 @@ search:
   # -- Enable Tempo search
   enabled: false
 
+multitenancyEnabled: false
+
 traces:
   jaeger:
     grpc:
@@ -536,7 +562,7 @@ traces:
   kafka: {}
 
 config: |
-  multitenancy_enabled: false
+  multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
   metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
   compactor:
@@ -597,7 +623,7 @@ config: |
         protocols:
           {{- if .Values.traces.otlp.http.enabled }}
           http:
-            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:55681") .Values.traces.otlp.http.receiverConfig }}
+            {{- $mergedOtlpHttpReceiverConfig := mustMergeOverwrite (dict "endpoint" "0.0.0.0:4318") .Values.traces.otlp.http.receiverConfig }}
             {{- toYaml $mergedOtlpHttpReceiverConfig | nindent 10 }}
           {{- end }}
           {{- if .Values.traces.otlp.grpc.enabled }}
@@ -615,6 +641,18 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
+    {{- if .Values.distributor.config.log_received_traces }}
+    log_received_traces: {{ .Values.distributor.config.log_received_traces }}
+    {{- end }}
+    {{- if .Values.distributor.config.extend_writes }}
+    extend_writes: {{ .Values.distributor.config.extend_writes }}
+    {{- end }}
+    {{- if .Values.distributor.config.search_tags_deny_list }}
+    search_tags_deny_list:
+      {{- with .Values.distributor.config.search_tags_deny_list }}
+      {{- toYaml . | nindent 4 }}
+      {{- end }}
+    {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
@@ -629,6 +667,12 @@ config: |
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
+    {{- if .Values.ingester.config.trace_idle_period }}
+    trace_idle_period: {{ .Values.ingester.config.trace_idle_period }}
+    {{- end }}
+    {{- if .Values.ingester.config.flush_check_period }}
+    flush_check_period: {{ .Values.ingester.config.flush_check_period }}
+    {{- end }}
     {{- if .Values.ingester.config.max_block_bytes }}
     max_block_bytes: {{ .Values.ingester.config.max_block_bytes }}
     {{- end }}
@@ -698,10 +742,9 @@ server:
 #       container-name:
 #       storage-account-name:
 #       storage-account-key:
-# -- the supported storage backends are gcs, s3 and azure
-# -- as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
 storage:
   trace:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
 
 # Global overrides
@@ -720,16 +763,18 @@ overrides: |
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
+  image:
+    # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
+    registry: null
+    # -- Memcached Docker image repository
+    repository: memcached
+    # -- Memcached Docker image tag
+    tag: 1.5.17-alpine
+    # -- Memcached Docker image pull policy
+    pullPolicy: IfNotPresent
   host: memcached
   # Number of replicas for memchached
   replicas: 1
-  service: memcached-client
-  # -- Memcached Docker image repository
-  repository: memcached
-  # -- Memcached Docker image tag
-  tag: 1.5.17-alpine
-  # -- Memcached Docker image pull policy
-  pullPolicy: IfNotPresent
   # -- Additional CLI args for memcached
   extraArgs: []
   # -- Environment variables to add to memcached pods
@@ -758,11 +803,16 @@ memcached:
               matchLabels:
                 {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  service:
+    # -- Annotations for memcached service
+    annotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   image:
+    # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
+    registry: null
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -840,8 +890,8 @@ gateway:
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
   image:
-    # -- The Docker registry for the gateway image
-    registry: docker.io
+    # -- The Docker registry for the gateway image. Overrides `global.image.registry`
+    registry: null
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
@@ -975,6 +1025,8 @@ gateway:
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
 
+        proxy_http_version    1.1;
+
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
 
@@ -1019,7 +1071,7 @@ gateway:
           }
 
           location = /otlp/v1/traces {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:55681/v1/traces;
+            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
           }
 
           location ^~ /api {

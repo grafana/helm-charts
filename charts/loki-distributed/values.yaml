@@ -33,6 +33,11 @@ loki:
       port: http
     initialDelaySeconds: 30
     timeoutSeconds: 1
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 300
   image:
     # -- The Docker registry
     registry: docker.io
@@ -63,6 +68,10 @@ loki:
     allowPrivilegeEscalation: false
   # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
   existingSecretForConfig: ""
+  # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
+  # -- Common annotations for all loki services
+  serviceAnnotations: {}
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -770,6 +779,11 @@ gateway:
       port: http
     initialDelaySeconds: 15
     timeoutSeconds: 1
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 30
   nginxConfig:
     # -- NGINX log format
     logFormat: |-
@@ -780,6 +794,8 @@ gateway:
     serverSnippet: ""
     # -- Allows appending custom configuration to the http block
     httpSnippet: ""
+    # -- Allows overriding the DNS resolver address nginx will use.
+    resolver: ""
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -799,6 +815,8 @@ gateway:
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
 
+        proxy_http_version    1.1;
+
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
 
@@ -815,7 +833,11 @@ gateway:
 
         sendfile     on;
         tcp_nopush   on;
+        {{- if .Values.gateway.nginxConfig.resolver }}
+        resolver {{ .Values.gateway.nginxConfig.resolver }};
+        {{- else }}
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+        {{- end }}
 
         {{- with .Values.gateway.nginxConfig.httpSnippet }}
         {{ . | nindent 2 }}
@@ -1152,6 +1174,15 @@ indexGateway:
     storageClass: null
 
 memcached:
+  readinessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 5
+    timeoutSeconds: 1
+  livenessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 10
   image:
     # -- The Docker registry for the memcached
     registry: docker.io
@@ -1176,6 +1207,8 @@ memcached:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Common annotations for all memcached services
+  serviceAnnotations: {}
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
