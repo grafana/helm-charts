@@ -58,7 +58,7 @@ spec:
         {{- else }}
           - distributor
           - querier
-          - query-frontent
+          - query-frontend
         {{- end }}
     matchLabels:
       {{- include "loki.selectorLabels" . | nindent 6 }}
