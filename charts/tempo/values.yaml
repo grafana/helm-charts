@@ -29,8 +29,8 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
-    # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
   metricsGenerator:
+    # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
   ingester: {}

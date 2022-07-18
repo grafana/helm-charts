@@ -42,7 +42,8 @@ Grafana Tempo Single Binary Mode
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | tempo.ingester | object | `{}` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
-| tempo.metricsGenerator | object | `{"enabled":false,"remoteWriteUrl":"http://prometheus.monitoring:9090/api/v1/write"}` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
+| tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
+| tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
