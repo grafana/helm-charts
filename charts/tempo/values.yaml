@@ -29,6 +29,10 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+    # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
+  metricsGenerator:
+    enabled: true
+    remoteWriteUrl: "http://prometheus-kube-prometheus-prometheus.monitoring:9090/api/v1/write"
   ingester: {}
   retention: 24h
   # Global overrides
@@ -99,6 +103,7 @@ tempo:
 
 # -- Tempo configuration file contents
 config: |
+    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
     compactor:
@@ -115,6 +120,16 @@ config: |
       {{- toYaml .Values.tempo.storage | nindent 6 }}
     overrides:
       {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+      {{- if .Values.tempo.metricsGenerator.enabled }}
+          metrics_generator_processors: 
+          - 'service-graphs'
+          - 'span-metrics'
+    metrics_generator:
+          storage:
+            path: "/tmp/tempo"
+            remote_write:
+              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+      {{- end }}
 
 tempoQuery:
   repository: grafana/tempo-query
