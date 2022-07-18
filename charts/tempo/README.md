@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.15.6](https://img.shields.io/badge/Version-0.15.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -13,7 +13,7 @@ Grafana Tempo Single Binary Mode
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| config | string | `"multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}\nsearch_enabled: {{ .Values.tempo.searchEnabled }}\ncompactor:\n  compaction:\n    compacted_block_retention: {{ .Values.tempo.retention }}\ndistributor:\n  receivers:\n    {{- toYaml .Values.tempo.receivers | nindent 8 }}\ningester:\n  {{- toYaml .Values.tempo.ingester | nindent 6 }}\nserver:\n  {{- toYaml .Values.tempo.server | nindent 6 }}\nstorage:\n  {{- toYaml .Values.tempo.storage | nindent 6 }}\noverrides:\n  {{- toYaml .Values.tempo.global_overrides | nindent 6 }}\n"` | Tempo configuration file contents |
+| config | string | `"metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}\nmultitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}\nsearch_enabled: {{ .Values.tempo.searchEnabled }}\ncompactor:\n  compaction:\n    compacted_block_retention: {{ .Values.tempo.retention }}\ndistributor:\n  receivers:\n    {{- toYaml .Values.tempo.receivers | nindent 8 }}\ningester:\n  {{- toYaml .Values.tempo.ingester | nindent 6 }}\nserver:\n  {{- toYaml .Values.tempo.server | nindent 6 }}\nstorage:\n  {{- toYaml .Values.tempo.storage | nindent 6 }}\noverrides:\n  {{- toYaml .Values.tempo.global_overrides | nindent 6 }}\n  {{- if .Values.tempo.metricsGenerator.enabled }}\n      metrics_generator_processors: \n      - 'service-graphs'\n      - 'span-metrics'\nmetrics_generator:\n      storage:\n        path: \"/tmp/tempo\"\n        remote_write:\n          - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}\n  {{- end }}\n"` | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
@@ -42,6 +42,7 @@ Grafana Tempo Single Binary Mode
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | tempo.ingester | object | `{}` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
+| tempo.metricsGenerator | object | `{"enabled":false,"remoteWriteUrl":"http://prometheus.monitoring:9090/api/v1/write"}` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
