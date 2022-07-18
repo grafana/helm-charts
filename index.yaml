@@ -13738,6 +13738,24 @@ entries:
     version: 0.5.0
   loki-canary:
   - apiVersion: v2
+    appVersion: 2.6.1
+    created: "2022-07-18T10:57:10.358523699Z"
+    description: Helm chart for Grafana Loki Canary
+    digest: 6b3c56ced8a0641b1f88fde89a509ce21087ea59ea367a990a68cdad60e2e8f5
+    home: https://github.com/grafana/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-canary
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.9.2/loki-canary-0.9.2.tgz
+    version: 0.9.2
+  - apiVersion: v2
     appVersion: 2.6.0
     created: "2022-07-16T05:22:37.385110884Z"
     description: Helm chart for Grafana Loki Canary
@@ -15377,35 +15395,6 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.19.4/loki-distributed-0.19.4.tgz
     version: 0.19.4
   loki-simple-scalable:
-  - apiVersion: v2
-    appVersion: 2.6.1
-    created: "2022-07-18T10:56:33.321553168Z"
-    dependencies:
-    - alias: minio
-      condition: minio.enabled
-      name: minio
-      repository: https://helm.min.io/
-      version: 8.0.9
-    - alias: grafana-agent-operator
-      condition: monitoring.selfMonitoring.grafanaAgent.installOperator
-      name: grafana-agent-operator
-      repository: https://grafana.github.io/helm-charts
-      version: 0.2.2
-    description: Helm chart for Grafana Loki in simple, scalable mode
-    digest: ccf957ad15fc617ce0650ee9afd7e6d4c9ae5a69e3ef269d9a4f35e93fd21621
-    home: https://grafana.github.io/helm-charts
-    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
-    maintainers:
-    - name: trevorwhitney
-    name: loki-simple-scalable
-    sources:
-    - https://github.com/grafana/loki
-    - https://grafana.com/oss/loki/
-    - https://grafana.com/docs/loki/latest/
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/loki-simple-scalable-1.7.6/loki-simple-scalable-1.7.6.tgz
-    version: 1.7.6
   - apiVersion: v2
     appVersion: 2.6.0
     created: "2022-07-14T16:25:26.965952451Z"
@@ -25295,4 +25284,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-18T10:56:33.332286821Z"
+generated: "2022-07-18T10:57:10.367919868Z"
