@@ -103,9 +103,9 @@ tempo:
 
 # -- Tempo configuration file contents
 config: |
-    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
+    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
         compacted_block_retention: {{ .Values.tempo.retention }}
