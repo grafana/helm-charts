@@ -464,6 +464,8 @@ querier:
   nodeSelector: {}
   # -- Tolerations for querier pods
   tolerations: []
+  # -- DNSConfig for querier pods
+  dnsConfig: { }
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
@@ -719,6 +721,8 @@ gateway:
   nodeSelector: {}
   # -- Tolerations for gateway pods
   tolerations: []
+  # -- DNSConfig for gateway pods
+  dnsConfig: {}
   # Gateway service configuration
   service:
     # -- Port of the gateway service
@@ -1026,6 +1030,8 @@ ruler:
   nodeSelector: {}
   # -- Tolerations for ruler pods
   tolerations: []
+  # -- DNSConfig for ruler pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs which is required when using recording rules
     enabled: false
