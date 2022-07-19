@@ -102,6 +102,7 @@ tempo:
   #   existingClaim: volume-claim
 
 # -- Tempo configuration file contents
+# @default -- Dynamically generated tempo configmap
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
@@ -121,7 +122,7 @@ config: |
     overrides:
       {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
       {{- if .Values.tempo.metricsGenerator.enabled }}
-          metrics_generator_processors: 
+          metrics_generator_processors:
           - 'service-graphs'
           - 'span-metrics'
     metrics_generator:

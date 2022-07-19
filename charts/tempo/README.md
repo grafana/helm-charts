@@ -13,7 +13,7 @@ Grafana Tempo Single Binary Mode
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| config | string | `"multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}\nsearch_enabled: {{ .Values.tempo.searchEnabled }}\nmetrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}\ncompactor:\n  compaction:\n    compacted_block_retention: {{ .Values.tempo.retention }}\ndistributor:\n  receivers:\n    {{- toYaml .Values.tempo.receivers | nindent 8 }}\ningester:\n  {{- toYaml .Values.tempo.ingester | nindent 6 }}\nserver:\n  {{- toYaml .Values.tempo.server | nindent 6 }}\nstorage:\n  {{- toYaml .Values.tempo.storage | nindent 6 }}\noverrides:\n  {{- toYaml .Values.tempo.global_overrides | nindent 6 }}\n  {{- if .Values.tempo.metricsGenerator.enabled }}\n      metrics_generator_processors: \n      - 'service-graphs'\n      - 'span-metrics'\nmetrics_generator:\n      storage:\n        path: \"/tmp/tempo\"\n        remote_write:\n          - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}\n  {{- end }}\n"` | Tempo configuration file contents |
+| config | string | Dynamically generated tempo configmap | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
