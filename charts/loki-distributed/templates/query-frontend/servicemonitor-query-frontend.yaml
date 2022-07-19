@@ -50,5 +50,6 @@ spec:
   {{- with .targetLabels }}
   targetLabels:
     {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}
