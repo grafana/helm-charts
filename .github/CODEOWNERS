@@ -11,7 +11,7 @@
 /charts/loki-canary/ @unguiculus @Whyeasy
 /charts/promtail/ @unguiculus @Whyeasy
 /charts/tempo/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid
-/charts/tempo-distributed/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid
+/charts/tempo-distributed/ @annanay25 @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid
 /charts/enterprise-metrics/ @jdbaldry @chaudum
 /charts/enterprise-logs/ @jdbaldry @chaudum
 /charts/tempo-vulture/ @Whyeasy @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio
