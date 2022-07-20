@@ -625,6 +625,9 @@ volumes:
   - name: {{ tpl .name $root }}
     configMap:
       name: {{ tpl .configMap $root }}
+      {{- if .items }}
+      items: {{ toYaml .items | nindent 6 }}
+      {{- end }}
 {{- end }}
   {{- if .Values.dashboards }}
     {{- range (keys .Values.dashboards | sortAlpha) }}
@@ -718,6 +721,9 @@ volumes:
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
+      {{- if .items }}
+      items: {{ toYaml .items | nindent 6 }}
+      {{- end }}
 {{- else if .projected }}
   - name: {{ .name }}
     projected: {{- toYaml .projected | nindent 6 }}
