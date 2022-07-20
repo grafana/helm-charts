@@ -198,6 +198,10 @@ containers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.dashboards.labelValue }}
       {{- end }}
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.dashboards.logLevel }}
+      {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
