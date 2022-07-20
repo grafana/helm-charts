@@ -91,7 +91,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
-            readOnlyRootFilesystem: true
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           env:
             {{- if .Values.env }}
               {{- toYaml .Values.env | nindent 12 }}
@@ -100,6 +100,10 @@ spec:
             - name: JAEGER_AGENT_HOST
               value: "{{ .Values.tracing.jaegerAgentHost }}"
             {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 {{- if .Values.extraContainers }}
 {{ toYaml .Values.extraContainers | indent 8}}
 {{- end }}
@@ -143,6 +147,8 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: storage
+      labels:
+        {{- toYaml .Values.persistence.labels | nindent 8 }}
       annotations:
         {{- toYaml .Values.persistence.annotations | nindent 8 }}
     spec:

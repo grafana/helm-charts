@@ -198,6 +198,10 @@ containers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.dashboards.labelValue }}
       {{- end }}
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.dashboards.logLevel }}
+      {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
@@ -625,6 +629,9 @@ volumes:
   - name: {{ tpl .name $root }}
     configMap:
       name: {{ tpl .configMap $root }}
+      {{- if .items }}
+      items: {{ toYaml .items | nindent 6 }}
+      {{- end }}
 {{- end }}
   {{- if .Values.dashboards }}
     {{- range (keys .Values.dashboards | sortAlpha) }}
@@ -718,6 +725,9 @@ volumes:
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
+      {{- if .items }}
+      items: {{ toYaml .items | nindent 6 }}
+      {{- end }}
 {{- else if .projected }}
   - name: {{ .name }}
     projected: {{- toYaml .projected | nindent 6 }}

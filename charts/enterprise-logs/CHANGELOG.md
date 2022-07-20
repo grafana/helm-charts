@@ -11,9 +11,27 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.3.0
+
+- [CHANGE] Bump GEL version to v1.5.0
+
+## 2.2.3
+
+- [BUGFIX] Mount rw /tmp directory in Compactor to fix error about read-only filesystem. #1548
+
+## 2.2.2
+
+## 2.2.1
+
+## 2.2.0
+
+## 2.1.0
+
 ## 2.0.4
 
 - [FEATURE] Added OpenShift support. #1085
+
+## 2.0.3
 
 ## 2.0.2
 

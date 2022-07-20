@@ -123,12 +123,22 @@ s3:
 {{- else if eq .Values.loki.storage.type "s3" -}}
 {{- with .Values.loki.storage.s3 }}
 s3:
-  s3: {{ .s3 }}
-  endpoint: {{ .endpoint }}
-  region: {{ .region }}
+  {{- with .s3 }}
+  s3: {{ . }}
+  {{- end }}
+  {{- with .endpoint }}
+  endpoint: {{ . }}
+  {{- end }}
+  {{- with .region }}
+  region: {{ . }}
+  {{- end}}
   bucketnames: {{ $.Values.loki.storage.bucketNames.chunks }}
-  secret_access_key: {{ .secretAccessKey }}
-  access_key_id: {{ .accessKeyId }}
+  {{- with .secretAccessKey }}
+  secret_access_key: {{ . }}
+  {{- end }}
+  {{- with .accessKeyId }}
+  access_key_id: {{ . }}
+  {{- end }}
   s3forcepathstyle: {{ .s3ForcePathStyle }}
   insecure: {{ .insecure }}
 {{- end -}}
@@ -146,6 +156,19 @@ filesystem:
   chunks_directory: {{ .chunks_directory }}
   rules_directory: {{ .rules_directory }}
 {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Storage config for ruler
+*/}}
+{{- define "loki.rulerStorageConfig" -}}
+{{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") -}}
+s3:
+  bucketnames: {{ $.Values.loki.storage.bucketNames.ruler }}
+{{- else if eq .Values.loki.storage.type "gcs" -}}
+gcs:
+  bucket_name: {{ $.Values.loki.storage.bucketNames.ruler }}
 {{- end -}}
 {{- end -}}
 
