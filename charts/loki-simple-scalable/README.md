@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.8.1](https://img.shields.io/badge/Version-1.8.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -385,7 +385,7 @@ prometheusRule:
 
 ## Caching
 
-By default, this chart configures in-memory caching. If that caching does not work for your deployment, take a lot at the [distributed chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) for how to setup memcache.
+By default, this chart configures in-memory caching. If that caching does not work for your deployment, take a look at the [distributed chart](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed) for how to setup memcache.
 
 ## Monitoring
 
