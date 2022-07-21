@@ -664,6 +664,8 @@ sidecar:
   enableUniqueFilenames: false
   readinessProbe: {}
   livenessProbe: {}
+  # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+  logLevel: INFO
   dashboards:
     enabled: false
     SCProvider: true

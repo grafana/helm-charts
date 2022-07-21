@@ -147,6 +147,8 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: storage
+      labels:
+        {{- toYaml .Values.persistence.labels | nindent 8 }}
       annotations:
         {{- toYaml .Values.persistence.annotations | nindent 8 }}
     spec:
