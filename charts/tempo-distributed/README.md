@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.21.7](https://img.shields.io/badge/Version-0.21.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.21.8](https://img.shields.io/badge/Version-0.21.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -405,7 +405,7 @@ The other components are optional and must be explicitly enabled.
 | memcached | yes |
 | gateway | yes |
 
-## (Configuration)[https://grafana.com/docs/tempo/latest/configuration/]
+## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
 
