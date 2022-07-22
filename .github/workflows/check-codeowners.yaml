@@ -1,6 +1,7 @@
 name: Check CODEOWNERS
 
-on: pull_request
+on: workflow_call
+
 jobs:
   build:
     runs-on: ubuntu-20.04

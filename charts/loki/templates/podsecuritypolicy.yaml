@@ -4,10 +4,7 @@ kind: PodSecurityPolicy
 metadata:
   name: {{ template "loki.fullname" . }}
   labels:
-    app: {{ template "loki.name" . }}
-    chart: {{ template "loki.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    {{- include "loki.labels" . | nindent 4 }}
 spec:
   privileged: false
   allowPrivilegeEscalation: false

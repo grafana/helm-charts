@@ -9,9 +9,10 @@ Installed components:
 * distributor
 * querier
 * query-frontend
-{{- if .Values.compactor.enabled }}
 * compactor
-{{- end }}
 {{- if .Values.memcached.enabled }}
 * memcached
+{{- end }}
+{{- if .Values.gateway.enabled }}
+* gateway
 {{- end }}
