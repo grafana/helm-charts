@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.9.12](https://img.shields.io/badge/Version-0.9.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.1](https://img.shields.io/badge/AppVersion-1.0.1-informational?style=flat-square)
+![Version: 0.21.8](https://img.shields.io/badge/Version-0.21.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -198,8 +198,8 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
-| storage.trace.backend | string | `"local"` |  |
-| tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1}}` | Overrides the chart's computed fullname fullnameOverride: tempo -- Overrides the chart's computed fullname |
+| storage | object | `{"trace":{"backend":"local"}}` | as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
+| tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1}}` | Overrides the chart's computed fullname |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
