@@ -26,7 +26,8 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 * Helm 3 is required
 * Labels have been updated to follow the official Kubernetes [label recommendations](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
-* The default scrape configs have been updated to take new and old labels into consideration
+* The default scrape configs have been updated to take new and old labels into consideration.
+  Default pipeline stages has changed from docker to cri.
 * The config file must be specified as string which can be templated.
   See below for details
 * The config file is now stored in a Secret and no longer in a ConfigMap because it may contain sensitive data, such as basic auth credentials

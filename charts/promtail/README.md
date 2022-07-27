@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 5.1.0](https://img.shields.io/badge/Version-5.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 5.1.1](https://img.shields.io/badge/Version-5.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -28,7 +28,8 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 * Helm 3 is required
 * Labels have been updated to follow the official Kubernetes [label recommendations](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
-* The default scrape configs have been updated to take new and old labels into consideration. Default pipeline stages has changed from docker to cri.
+* The default scrape configs have been updated to take new and old labels into consideration.
+  Default pipeline stages has changed from docker to cri.
 * The config file must be specified as string which can be templated.
   See below for details
 * The config file is now stored in a Secret and no longer in a ConfigMap because it may contain sensitive data, such as basic auth credentials
