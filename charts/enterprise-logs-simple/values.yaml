@@ -232,6 +232,8 @@ loki-simple-scalable:
           uwsgi_temp_path       /tmp/uwsgi_temp;
           scgi_temp_path        /tmp/scgi_temp;
 
+          proxy_http_version    1.1;
+
           default_type application/octet-stream;
           log_format   {{ .Values.gateway.nginxConfig.logFormat }}
 

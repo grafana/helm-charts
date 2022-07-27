@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.15.3](https://img.shields.io/badge/Version-0.15.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.15.6](https://img.shields.io/badge/Version-0.15.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -24,6 +24,7 @@ Grafana Tempo Single Binary Mode
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | replicas | int | `1` |  |
+| securityContext | object | `{}` |  |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
@@ -55,17 +56,20 @@ Grafana Tempo Single Binary Mode
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |
 | tempo.searchEnabled | bool | `false` | If true, enables Tempo's native search |
+| tempo.securityContext | object | `{}` |  |
 | tempo.server.http_listen_port | int | `3100` | HTTP server listen port |
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"1.4.1"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
+| tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
+| tempoQuery.securityContext | object | `{}` |  |
 | tempoQuery.tag | string | `"1.4.1"` |  |
 | tolerations | list | `[]` |  |
 
