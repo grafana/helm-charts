@@ -14205,6 +14205,24 @@ entries:
   loki-distributed:
   - apiVersion: v2
     appVersion: 2.6.1
+    created: "2022-07-27T15:40:27.158744068Z"
+    description: Helm chart for Grafana Loki in microservices mode
+    digest: 67b20aea5fabbdf74861d0c02657675d735bfe984b66357d9137562a2a3290e5
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-distributed
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.53.3/loki-distributed-0.53.3.tgz
+    version: 0.53.3
+  - apiVersion: v2
+    appVersion: 2.6.1
     created: "2022-07-18T10:47:31.305793299Z"
     description: Helm chart for Grafana Loki in microservices mode
     digest: 96aeb776782e49693550f07b3952982de44d01e8b04de1e31a8fe0c1d21fb61d
@@ -25758,4 +25776,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-27T06:29:17.322829545Z"
+generated: "2022-07-27T15:40:27.168131243Z"
