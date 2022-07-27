@@ -1,3 +1,4 @@
+{{- if .Values.createConfigmap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,7 +11,6 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 data:
-  allow-snippet-annotations: "false"
 {{- if .Values.plugins }}
   plugins: {{ join "," .Values.plugins }}
 {{- end }}
@@ -99,4 +99,5 @@ data:
       {{- end }}
     {{- end -}}
   {{- end }}
+{{- end }}
 {{- end }}

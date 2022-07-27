@@ -15,6 +15,20 @@ image:
   # -- Docker image pull policy
   pullPolicy: IfNotPresent
 
+# -- The SecurityContext for Loki pods
+podSecurityContext:
+  fsGroup: 10001
+  runAsGroup: 10001
+  runAsNonRoot: true
+  runAsUser: 10001
+# -- The SecurityContext for Loki containers
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+  allowPrivilegeEscalation: false
+
 # -- The name of the PriorityClass for pods
 priorityClassName: null
 
