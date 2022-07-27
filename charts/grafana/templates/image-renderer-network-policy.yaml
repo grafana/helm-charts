@@ -64,10 +64,7 @@ spec:
         - port: {{ .Values.service.port }}
           protocol: TCP
       to:
-        - namespaceSelector:
-            matchLabels:
-              name: {{ template "grafana.namespace" . }}
-          podSelector:
+        - podSelector:
             matchLabels:
               {{- include "grafana.selectorLabels" . | nindent 14 }}
               {{- if .Values.podLabels }}
