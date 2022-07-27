@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.7.1](https://img.shields.io/badge/Version-1.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.8.3](https://img.shields.io/badge/Version-1.8.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -38,7 +38,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | enterprise.image.repository | string | `"grafana/enterprise-logs"` | Docker image repository |
 | enterprise.image.tag | string | `"v1.4.0"` | Overrides the image tag whose default is the chart's appVersion |
 | enterprise.license | object | `{"contents":"NOTAVALIDLICENSE"}` | Grafana Enterprise Logs license In order to use Grafana Enterprise Logs features, you will need to provide the contents of your Grafana Enterprise Logs license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt. To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'` |
-| enterprise.nginxConfig.file | string | `"worker_processes  5;  ## Default: 1\nerror_log  /dev/stderr;\npid        /tmp/nginx.pid;\nworker_rlimit_nofile 8192;\n\nevents {\n  worker_connections  4096;  ## Default: 1024\n}\n\nhttp {\n  client_body_temp_path /tmp/client_temp;\n  proxy_temp_path       /tmp/proxy_temp_path;\n  fastcgi_temp_path     /tmp/fastcgi_temp;\n  uwsgi_temp_path       /tmp/uwsgi_temp;\n  scgi_temp_path        /tmp/scgi_temp;\n\n  default_type application/octet-stream;\n  log_format   {{ .Values.gateway.nginxConfig.logFormat }}\n\n  {{- if .Values.gateway.verboseLogging }}\n  access_log   /dev/stderr  main;\n  {{- else }}\n\n  map $status $loggable {\n    ~^[23]  0;\n    default 1;\n  }\n  access_log   /dev/stderr  main  if=$loggable;\n  {{- end }}\n\n  sendfile     on;\n  tcp_nopush   on;\n  resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};\n\n  {{- with .Values.gateway.nginxConfig.httpSnippet }}\n  {{ . | nindent 2 }}\n  {{- end }}\n\n  server {\n    listen             8080;\n\n    {{- if .Values.gateway.basicAuth.enabled }}\n    auth_basic           \"Loki\";\n    auth_basic_user_file /etc/nginx/secrets/.htpasswd;\n    {{- end }}\n\n    location = / {\n      return 200 'OK';\n      auth_basic off;\n    }\n\n    location = /api/prom/push {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location = /api/prom/tail {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n      proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection \"upgrade\";\n    }\n\n    location ~ /api/prom/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /prometheus/api/v1/alerts.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /prometheus/api/v1/rules.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location = /loki/api/v1/push {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location = /loki/api/v1/tail {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n      proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection \"upgrade\";\n    }\n\n    location ~ /loki/api/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /admin/api/.* {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /compactor/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /distributor/.* {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /ring {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /ingester/.* {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /ruler/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /scheduler/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    {{- with .Values.gateway.nginxConfig.serverSnippet }}\n    {{ . | nindent 4 }}\n    {{- end }}\n  }\n}\n"` |  |
+| enterprise.nginxConfig.file | string | `"worker_processes  5;  ## Default: 1\nerror_log  /dev/stderr;\npid        /tmp/nginx.pid;\nworker_rlimit_nofile 8192;\n\nevents {\n  worker_connections  4096;  ## Default: 1024\n}\n\nhttp {\n  client_body_temp_path /tmp/client_temp;\n  proxy_temp_path       /tmp/proxy_temp_path;\n  fastcgi_temp_path     /tmp/fastcgi_temp;\n  uwsgi_temp_path       /tmp/uwsgi_temp;\n  scgi_temp_path        /tmp/scgi_temp;\n\n  proxy_http_version    1.1;\n\n  default_type application/octet-stream;\n  log_format   {{ .Values.gateway.nginxConfig.logFormat }}\n\n  {{- if .Values.gateway.verboseLogging }}\n  access_log   /dev/stderr  main;\n  {{- else }}\n\n  map $status $loggable {\n    ~^[23]  0;\n    default 1;\n  }\n  access_log   /dev/stderr  main  if=$loggable;\n  {{- end }}\n\n  sendfile     on;\n  tcp_nopush   on;\n  resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};\n\n  {{- with .Values.gateway.nginxConfig.httpSnippet }}\n  {{ . | nindent 2 }}\n  {{- end }}\n\n  server {\n    listen             8080;\n\n    {{- if .Values.gateway.basicAuth.enabled }}\n    auth_basic           \"Loki\";\n    auth_basic_user_file /etc/nginx/secrets/.htpasswd;\n    {{- end }}\n\n    location = / {\n      return 200 'OK';\n      auth_basic off;\n    }\n\n    location = /api/prom/push {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location = /api/prom/tail {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n      proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection \"upgrade\";\n    }\n\n    location ~ /api/prom/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /prometheus/api/v1/alerts.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /prometheus/api/v1/rules.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location = /loki/api/v1/push {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location = /loki/api/v1/tail {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n      proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection \"upgrade\";\n    }\n\n    location ~ /loki/api/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /admin/api/.* {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /compactor/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /distributor/.* {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /ring {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /ingester/.* {\n      proxy_pass       http://{{ include \"loki.writeFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /ruler/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    location ~ /scheduler/.* {\n      proxy_pass       http://{{ include \"loki.readFullname\" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;\n    }\n\n    {{- with .Values.gateway.nginxConfig.serverSnippet }}\n    {{ . | nindent 4 }}\n    {{- end }}\n  }\n}\n"` |  |
 | enterprise.tokengen | object | `{"adminTokenSecret":"gel-admin-token","annotations":{},"enabled":true,"env":[],"extraArgs":[],"extraVolumeMounts":[],"extraVolumes":[],"labels":{},"securityContext":{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}}` | Configuration for `tokengen` target |
 | enterprise.tokengen.adminTokenSecret | string | `"gel-admin-token"` | Name of the secret to store the admin token in |
 | enterprise.tokengen.annotations | object | `{}` | Additional annotations for the `tokengen` Job |
@@ -50,7 +50,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | enterprise.tokengen.labels | object | `{}` | Additional labels for the `tokengen` Job |
 | enterprise.tokengen.securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | Run containers as user `enterprise-logs(uid=10001)` |
 | enterprise.useExternalLicense | bool | `false` | Set to true when providing an external license |
-| enterprise.version | string | `"v1.4.0"` |  |
+| enterprise.version | string | `"v1.5.0"` |  |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
@@ -118,8 +118,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| loki.memcached | object | `{"chunk_cache":{"batch_size":256,"enabled":false,"host":"","parallelism":10,"service":"memcached-client"},"results_cache":{"default_validity":"12h","enabled":false,"host":"","service":"memcached-client","timeout":"500ms"}}` | Configure memcached as an external cache for chunk and results cache. Disabled by default must enable and specify a host for each cache you would like to use. |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
 | loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
+| loki.query_scheduler | object | `{}` | Additional query scheduler config |
 | loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
 | loki.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | loki.readinessProbe.initialDelaySeconds | int | `30` |  |
@@ -134,18 +136,31 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.gcs.requestTimeout | string | `"0s"` |  |
 | loki.storage.local.chunks_directory | string | `"/var/loki/chunks"` |  |
 | loki.storage.local.rules_directory | string | `"/var/loki/rules"` |  |
-| loki.storage.s3.accessKeyId | string | `"accesskey"` |  |
-| loki.storage.s3.endpoint | string | `"https://amazonaws.com"` |  |
+| loki.storage.s3.accessKeyId | string | `nil` |  |
+| loki.storage.s3.endpoint | string | `nil` |  |
 | loki.storage.s3.insecure | bool | `false` |  |
 | loki.storage.s3.region | string | `nil` |  |
 | loki.storage.s3.s3 | string | `nil` |  |
 | loki.storage.s3.s3ForcePathStyle | bool | `false` |  |
-| loki.storage.s3.secretAccessKey | string | `"supersecret"` |  |
+| loki.storage.s3.secretAccessKey | string | `nil` |  |
 | loki.storage.type | string | `"s3"` |  |
+| loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | minio | object | `{"accessKey":"enterprise-logs","buckets":[{"name":"chunks","policy":"none","purge":false},{"name":"ruler","policy":"none","purge":false},{"name":"admin","policy":"none","purge":false}],"enabled":false,"persistence":{"size":"5Gi"},"resources":{"requests":{"cpu":"100m","memory":"128Mi"}},"secretKey":"supersecret"}` | ----------------------------------- |
+| monitoring.alerts.annotations | object | `{}` | Additional annotations for the alerts PrometheusRule resource |
+| monitoring.alerts.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki alerting rules |
+| monitoring.alerts.labels | object | `{}` | Additional labels for the alerts PrometheusRule resource |
+| monitoring.alerts.namespace | string | `nil` | Alternative namespace to create alerting rules PrometheusRule resource in |
+| monitoring.dashboards.annotations | object | `{}` | Additional annotations for the dashboards ConfigMap |
 | monitoring.dashboards.enabled | bool | `true` | If enabled, create configmap with dashboards for monitoring Loki |
-| monitoring.dashboards.namespace | string | `nil` | Alternative namespace to create dashboards config map in |
+| monitoring.dashboards.labels | object | `{}` | Additional labels for the dashboards ConfigMap |
+| monitoring.dashboards.namespace | string | `nil` | Alternative namespace to create dashboards ConfigMap in |
+| monitoring.rules.additionalGroups | list | `[]` | Additional groups to add to the rules file |
+| monitoring.rules.alerting | bool | `true` | Include alerting rules |
+| monitoring.rules.annotations | object | `{}` | Additional annotations for the rules PrometheusRule resource |
+| monitoring.rules.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki recording rules |
+| monitoring.rules.labels | object | `{}` | Additional labels for the rules PrometheusRule resource |
+| monitoring.rules.namespace | string | `nil` | Alternative namespace to create recording rules PrometheusRule resource in |
 | monitoring.selfMonitoring.enabled | bool | `true` |  |
 | monitoring.selfMonitoring.grafanaAgent.annotations | object | `{}` | Grafana Agent annotations |
 | monitoring.selfMonitoring.grafanaAgent.enableConfigReadAPI | bool | `false` | Enable the config read api on port 8080 of the agent |
@@ -184,11 +199,6 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | networkPolicy.metrics.cidrs | list | `[]` | Specifies specific network CIDRs which are allowed to access the metrics port. In case you use namespaceSelector, you also have to specify your kubelet networks here. The metrics ports are also used for probes. |
 | networkPolicy.metrics.namespaceSelector | object | `{}` | Specifies the namespaces which are allowed to access the metrics port |
 | networkPolicy.metrics.podSelector | object | `{}` | Specifies the Pods which are allowed to access the metrics port. As this is cross-namespace communication, you also need the namespaceSelector. |
-| prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
-| prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
-| prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
-| prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
-| prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | read.affinity | string | Hard node and soft zone anti-affinity | Affinity for read pods. Passed through `tpl` and, thus, to be configured as string |
@@ -375,7 +385,7 @@ prometheusRule:
 
 ## Caching
 
-By default, this chart configures in-memory caching. If that caching does not work for your deployment, take a lot at the [distributed chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) for how to setup memcache.
+By default, this chart configures in-memory caching. If that caching does not work for your deployment, take a look at the [distributed chart](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed) for how to setup memcache.
 
 ## Monitoring
 

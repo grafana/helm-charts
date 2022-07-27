@@ -1,3 +1,4 @@
+{{- if .Values.createConfigmap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -98,4 +99,5 @@ data:
       {{- end }}
     {{- end -}}
   {{- end }}
+{{- end }}
 {{- end }}
