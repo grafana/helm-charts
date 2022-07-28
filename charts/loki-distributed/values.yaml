@@ -1215,6 +1215,8 @@ memcached:
     allowPrivilegeEscalation: false
   # -- Common annotations for all memcached services
   serviceAnnotations: {}
+  # -- Adds the appProtocol field to the memcached services. This allows memcached to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
