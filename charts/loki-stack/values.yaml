@@ -3,6 +3,8 @@ loki:
   isDefault: true
 
 promtail:
+  image:
+    tag: 2.5.0
   enabled: true
 
 fluent-bit:
