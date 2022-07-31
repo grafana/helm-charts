@@ -221,7 +221,7 @@ enterprise:
   enabled: false
 
   # Default verion of GEL to deploy
-  version: v1.4.0
+  version: v1.5.0
 
   # -- Grafana Enterprise Logs license
   # In order to use Grafana Enterprise Logs features, you will need to provide
@@ -312,6 +312,8 @@ enterprise:
         fastcgi_temp_path     /tmp/fastcgi_temp;
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
+
+        proxy_http_version    1.1;
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
@@ -841,6 +843,8 @@ gateway:
         fastcgi_temp_path     /tmp/fastcgi_temp;
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
+
+        proxy_http_version    1.1;
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
