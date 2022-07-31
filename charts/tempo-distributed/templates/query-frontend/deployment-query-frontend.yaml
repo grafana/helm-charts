@@ -7,11 +7,13 @@ metadata:
     {{- include "tempo.labels" . | nindent 4 }}
   {{- with .Values.queryFrontend.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.queryFrontend.autoscaling.enabled }}
   replicas: {{ .Values.queryFrontend.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -25,12 +27,24 @@ spec:
       labels:
         {{- include "tempo.queryFrontendLabels" . | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- with .Values.tempo.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.queryFrontend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- with .Values.tempo.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with .Values.queryFrontend.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.queryFrontend.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.queryFrontend.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:
@@ -58,12 +72,17 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
             {{- with .Values.queryFrontend.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- if .Values.queryFrontend.query.enabled }}
         - args:
             - --query.base-path=/
             - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
@@ -89,12 +108,18 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.query.resources | nindent 12 }}
+          {{- with .Values.tempo.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
             {{- with .Values.queryFrontend.query.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+      {{- end}}
+      terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
       {{- with .Values.queryFrontend.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

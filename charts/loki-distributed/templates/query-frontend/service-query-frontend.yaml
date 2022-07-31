@@ -4,9 +4,17 @@ metadata:
   name: {{ include "loki.queryFrontendFullname" . }}
   labels:
     {{- include "loki.queryFrontendLabels" . | nindent 4 }}
+    {{- with .Values.queryFrontend.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.loki.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: ClusterIP
   clusterIP: None
+  publishNotReadyAddresses: true
   ports:
     - name: http
       port: 3100
@@ -14,6 +22,10 @@ spec:
       protocol: TCP
     - name: grpc
       port: 9095
+      targetPort: grpc
+      protocol: TCP
+    - name: grpclb
+      port: 9096
       targetPort: grpc
       protocol: TCP
   selector:

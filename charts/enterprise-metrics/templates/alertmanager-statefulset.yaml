@@ -103,6 +103,8 @@ spec:
         - name: storage
           emptyDir: {}
         {{- end }}
+        - name: tmp
+          emptyDir: {}
         {{- if .Values.alertmanager.extraVolumes }}
         {{ toYaml .Values.alertmanager.extraVolumes | nindent 8 }}
         {{- end }}
@@ -110,7 +112,7 @@ spec:
         {{- if .Values.alertmanager.extraContainers }}
         {{ toYaml .Values.alertmanager.extraContainers | nindent 8 }}
         {{- end }}
-        - name: {{ .Chart.Name }}
+        - name: alertmanager
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -119,7 +121,7 @@ spec:
             - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
-            - -cluster.peer={{ template "enterprise-metrics.fullname" $ }}-alertmanager-{{ $n }}.{{ template "enterprise-metrics.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
+            - -alertmanager.cluster.peers={{ template "enterprise-metrics.fullname" $ }}-alertmanager-{{ $n }}.{{ template "enterprise-metrics.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc:{{ $clusterPort }}
             {{- end }}
             {{- end }}
             {{- if .Values.minio.enabled }}
@@ -129,13 +131,12 @@ spec:
             - -admin.client.s3.access-key-id=enterprise-metrics
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
-            - -alertmanager.storage.type=s3
-            - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-            - -alertmanager.storage.s3.buckets=enterprise-metrics-ruler
-            - -alertmanager.storage.s3.access-key-id=enterprise-metrics
-            - -alertmanager.storage.s3.secret-access-key=supersecret
-            - -alertmanager.storage.s3.insecure=true
-            - -alertmanager.storage.s3.force-path-style=true
+            - -alertmanager-storage.backend=s3
+            - -alertmanager-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -alertmanager-storage.s3.bucket-name=enterprise-metrics-ruler
+            - -alertmanager-storage.s3.access-key-id=enterprise-metrics
+            - -alertmanager-storage.s3.secret-access-key=supersecret
+            - -alertmanager-storage.s3.insecure=true
             {{- end }}
             {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -156,9 +157,14 @@ spec:
               subPath: {{ .Values.alertmanager.persistentVolume.subPath }}
               {{- else }}
               {{- end }}
+            - name: tmp
+              mountPath: /tmp
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.alertmanager.livenessProbe | nindent 12 }}

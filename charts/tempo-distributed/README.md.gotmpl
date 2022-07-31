@@ -20,6 +20,35 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart version < 0.20.0
+The image's attributes must be set under the `image` key for the Memcached service.
+```yaml
+memcached:
+  image:
+    registry: docker.io
+    repository: memcached
+    tag: "1.5.17-alpine"
+    pullPolicy: "IfNotPresent"
+```
+
+### From Chart version < 0.18.0
+Trace ingestion must now be enabled with the `enabled` key:
+```yaml
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+  zipkin:
+    enabled: true
+  jaeger:
+    thriftHttp:
+      enabled: true
+  opencensus:
+    enabled: true
+```
+
 ### From Chart versions < 0.9.0
 
 This release the component label was shortened to be more aligned with the Loki-distributed chart and the [mixin](https://github.com/grafana/tempo/tree/master/operations/tempo-mixin) dashboards.
@@ -78,10 +107,12 @@ The other components are optional and must be explicitly enabled.
 | querier | no |
 | query-frontend | no |
 | compactor | no |
+| metrics-generator | yes |
 | memcached | yes |
+| gateway | yes |
 
 
-## (Configuration)[https://grafana.com/docs/tempo/latest/configuration/]
+## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
 
@@ -93,6 +124,40 @@ The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or on
 
 Alternatively, in order to quickly test Tempo using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
 
+### Overriding configuration variables with structuredConfig
+
+tempo.structuredConfig variable can be used to alter individual values in the configuration and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
+
+Example:
+
+```yaml
+tempo:
+  structuredConfig:
+    query_frontend:
+      search:
+        max_duration: 12h0m0s
+```
+
+### Activate metrics generator
+
+Metrics-generator is disabled by default and can be activated by configuring the following values:
+
+```yaml
+metricsGenerator:
+  enabled: true
+  config:
+    storage_remote_write:
+     - url: http://cortex/api/v1/push
+       send_exemplars: true
+    #   headers:
+    #     x-scope-orgid: operations
+# Global overrides
+global_overrides:
+  metrics_generator_processors:
+    - service-graphs
+    - span-metrics
+```
+
 ----
 
 ### Directory and File Locations
@@ -100,60 +165,61 @@ Alternatively, in order to quickly test Tempo using the filestore, the [single b
 * Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
 * The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
 
+
 ### Example configuration using S3 for storage
 
 ```yaml
 config: |
-  auth_enabled: false
-    compactor:
-      compaction:
-        block_retention: 48h
+  multitenancy_enabled: false
+  compactor:
+    compaction:
+      block_retention: 48h
+    ring:
+      kvstore:
+        store: memberlist
+  distributor:
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_binary:
+            endpoint: 0.0.0.0:6832
+          thrift_compact:
+            endpoint: 0.0.0.0:6831
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+  querier:
+    frontend_worker:
+      frontend_address: {{"{{"}} include "tempo.queryFrontendFullname" . {{"}}"}}:9095
+  ingester:
+    lifecycler:
       ring:
-        kvstore:
-          store: memberlist
-    distributor:
-      receivers:
-        jaeger:
-          protocols:
-            grpc:
-              endpoint: 0.0.0.0:14250
-            thrift_binary:
-              endpoint: 0.0.0.0:6832
-            thrift_compact:
-              endpoint: 0.0.0.0:6831
-            thrift_http:
-              endpoint: 0.0.0.0:14268
-    querier:
-      frontend_worker:
-        frontend_address: {{"{{"}} include "tempo.queryFrontendFullname" . {{"}}"}}:9095
-    ingester:
-      lifecycler:
-        ring:
-          replication_factor: 1
-    memberlist:
-      abort_if_cluster_join_fails: false
-      join_members:
-        - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
-    overrides:
-      per_tenant_override_config: /conf/overrides.yaml
-    server:
-      http_listen_port: 3100
-    storage:
-      trace:       
-        backend: s3
-        s3:
-          access_key: tempo
-          bucket: tempo
-          endpoint: minio:9000
-          insecure: true
-          secret_key: supersecret
-        pool:
-          queue_depth: 2000
-        wal:
-          path: /var/tempo/wal
-        memcached:
-          consistent_hash: true
-          host: a-tempo-distributed-memcached
-          service: memcached-client
-          timeout: 500ms
+        replication_factor: 1
+  memberlist:
+    abort_if_cluster_join_fails: false
+    join_members:
+      - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
+  overrides:
+    per_tenant_override_config: /conf/overrides.yaml
+  server:
+    http_listen_port: 3100
+  storage:
+    trace:
+      backend: s3
+      s3:
+        access_key: tempo
+        bucket: tempo
+        endpoint: minio:9000
+        insecure: true
+        secret_key: supersecret
+      pool:
+        queue_depth: 2000
+      wal:
+        path: /var/tempo/wal
+      memcached:
+        consistent_hash: true
+        host: a-tempo-distributed-memcached
+        service: memcached-client
+        timeout: 500ms
 ```

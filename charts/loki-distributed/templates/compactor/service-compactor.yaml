@@ -1,11 +1,18 @@
-{{- if .Values.compactor.enabled }}
+{{- if and .Values.compactor.enabled .Values.compactor.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "loki.compactorFullname" . }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
+    {{- with .Values.compactor.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
     app.kubernetes.io/component: compactor
+  {{- with .Values.loki.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: ClusterIP
   ports:

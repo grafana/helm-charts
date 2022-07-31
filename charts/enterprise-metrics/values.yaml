@@ -1,3 +1,8 @@
+# This chart is now deprecated and will no longer be updated.
+# Grafana Enterprise Metrics v2.0.0 is included in the new `mimir-distributed` chart which implements Grafana Enterprise Metrics as an option (`enterprise.enabled: true`).
+#  To upgrade to using the new chart, see the [Grafana Enterprise Metrics migration guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/).
+
+
 # The default values specified in this file are enough to deploy all of the
 # Grafana Enterprise Metrics microservices but are not suitable for production
 # load.
@@ -8,27 +13,13 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.3.0
+  tag: v1.7.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
   # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   # pullSecrets:
   #   - myRegistryKeySecretName
-
-ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 serviceAccount:
   create: true
@@ -54,16 +45,31 @@ tokengenJob:
   extraArgs: {}
   env: []
   annotations: {}
+  initContainers: []
 
 config:
-  auth_enabled: false
-  cluster_name: CHANGEME
+  auth_enabled: true
+  auth:
+    type: enterprise
+
+  cluster_name: "{{ .Release.Name }}"
+
+  admin_api:
+    leader_election:
+      enabled: true
+      ring:
+        kvstore:
+          store: "memberlist"
 
   admin_client:
     storage:
       type: s3
 
+  api:
+    response_compression_enabled: true
+
   compactor:
+    data_dir: "/data"
     sharding_enabled: true
     sharding_ring:
       kvstore:
@@ -83,10 +89,12 @@ config:
         kvstore:
           store: memberlist
 
-  limits:
-    enforce_metric_name: false
-    reject_old_samples: true
-    reject_old_samples_max_age: 168h
+  instrumentation:
+    enabled: true
+    distributor_client:
+      address: 'dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
+
+  limits: {}
 
   server:
     http_listen_port: 8080
@@ -165,7 +173,6 @@ config:
 
   frontend:
     log_queries_longer_than: 10s
-    compress_responses: true
 
 # runtimeConfig provides a reloadable runtime configuration file for some specific configuration.
 runtimeConfig: {}
@@ -181,6 +188,8 @@ admin_api:
   service:
     annotations: {}
     labels: {}
+
+  initContainers: []
 
   strategy:
     type: RollingUpdate
@@ -198,11 +207,6 @@ admin_api:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -283,11 +287,6 @@ alertmanager:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -394,11 +393,6 @@ distributor:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -451,11 +445,6 @@ gateway:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -548,16 +537,6 @@ ingester:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -584,6 +563,56 @@ ingester:
   extraVolumeMounts: []
   extraPorts: []
   env: []
+
+overrides_exporter:
+  replicas: 1
+
+  annotations: {}
+
+  initContainers: []
+
+  service:
+    annotations: {}
+    labels: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  securityContext: {}
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  extraContainers: []
+  extraVolumes: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  terminationGracePeriodSeconds: 60
 
 ruler:
   replicas: 1
@@ -613,11 +642,6 @@ ruler:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -682,11 +706,6 @@ querier:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -751,11 +770,6 @@ query_frontend:
   persistence:
     subPath:
 
-  livenessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
   readinessProbe:
     httpGet:
       path: /ready
@@ -852,16 +866,6 @@ store_gateway:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -958,16 +962,6 @@ compactor:
     #
     # storageClass: "-"
 
-  livenessProbe:
-    failureThreshold: 20  # 10 minutes failure threshold
-    httpGet:
-      path: /ready
-      port: http-metrics
-      scheme: HTTP
-    initialDelaySeconds: 180
-    periodSeconds: 30
-    successThreshold: 1
-    timeoutSeconds: 1
   readinessProbe:
     httpGet:
       path: /ready
@@ -1002,11 +996,7 @@ memcached:
     - -c 4096
   image:
     repository: memcached
-    tag: 1.5.20
-    image:
-      registry: quay.io
-      repository: prometheus/memcached-exporter
-      tag: v0.6.0
+    tag: 1.6.9
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
@@ -1015,7 +1005,7 @@ memcached:
     image:
       registry: quay.io
       repository: prometheus/memcached-exporter
-      tag: v0.6.0
+      tag: v0.9.0
   replicaCount: 1
   resources:
     limits:
@@ -1038,7 +1028,7 @@ memcached-queries:
     - -c 1024
   image:
     repository: memcached
-    tag: 1.5.20
+    tag: 1.6.9
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '15728640'  # (* 15 (* 1024 1024))
@@ -1047,7 +1037,7 @@ memcached-queries:
     image:
       registry: quay.io
       repository: prometheus/memcached-exporter
-      tag: v0.6.0
+      tag: v0.9.0
   replicaCount: 1
   resources:
     limits:
@@ -1070,7 +1060,7 @@ memcached-metadata:
     - -c 1024
   image:
     repository: memcached
-    tag: 1.5.20
+    tag: 1.6.9
   # maxItemMemory is in bytes. Should match memcached -I flag (which is in MB)
   # It is a string to avoid https://github.com/helm/helm/issues/1707.
   maxItemMemory: '1048576'  # (* 1 (* 1024 1024))
@@ -1079,7 +1069,7 @@ memcached-metadata:
     image:
       registry: quay.io
       repository: prometheus/memcached-exporter
-      tag: v0.6.0
+      tag: v0.9.0
   replicaCount: 1
   resources:
     limits:
@@ -1110,15 +1100,3 @@ minio:
       cpu: 100m
       memory: 128Mi
   secretKey: supersecret
-
-consul:
-  enabled: false
-  client:
-    enabled: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  server:
-    replicas: 1
-    bootstrapExpect: 1
