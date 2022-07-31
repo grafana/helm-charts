@@ -465,7 +465,7 @@ querier:
   # -- Tolerations for querier pods
   tolerations: []
   # -- DNSConfig for querier pods
-  dnsConfig: { }
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
