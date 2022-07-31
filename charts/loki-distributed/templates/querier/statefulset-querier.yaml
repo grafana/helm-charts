@@ -109,7 +109,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{ - with .Values.querier.dnsConfig }}
+      {{- with .Values.querier.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
