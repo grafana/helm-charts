@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.3.1
+
+- [CHANGE] Support configuring `containerSecurityContext` for compactor and gateway targets. #1656
+
 ## 2.3.0
 
 - [CHANGE] Bump GEL version to v1.5.0
