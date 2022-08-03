@@ -24,6 +24,9 @@ spec:
       port: {{ .Values.imageRenderer.service.port }}
       protocol: TCP
       targetPort: {{ .Values.imageRenderer.service.targetPort }}
+      {{- if .Values.imageRenderer.appProtocol }}
+      appProtocol: {{ .Values.imageRenderer.appProtocol }}
+      {{- end }}
   selector:
     {{- include "grafana.imageRenderer.selectorLabels" . | nindent 4 }}
 {{ end }}
