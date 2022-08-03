@@ -102,6 +102,9 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Enable creating the grafana configmap
+createConfigmap: true
+
 # Extra configmaps to mount in grafana pods
 # Values are templated.
 extraConfigmapMounts: []

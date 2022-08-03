@@ -20,6 +20,9 @@ spec:
       port: 11211
       targetPort: http
       protocol: TCP
+      {{- if .Values.memcached.appProtocol }}
+      appProtocol: {{ .Values.memcached.appProtocol }}
+      {{- end }}
     - name: http-metrics
       port: 9150
       targetPort: http-metrics
