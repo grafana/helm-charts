@@ -102,6 +102,9 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Enable creating the grafana configmap
+createConfigmap: true
+
 # Extra configmaps to mount in grafana pods
 # Values are templated.
 extraConfigmapMounts: []
@@ -664,6 +667,8 @@ sidecar:
   enableUniqueFilenames: false
   readinessProbe: {}
   livenessProbe: {}
+  # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+  logLevel: INFO
   dashboards:
     enabled: false
     SCProvider: true
