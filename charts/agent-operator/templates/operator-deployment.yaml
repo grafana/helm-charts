@@ -3,8 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "ga-operator.fullname" . }}
   labels:
-    app.kubernetes.io/component: operator
-    {{- include "ga-operator.labels" . | nindent 4 }}
+{{ include "ga-operator.labels" . | indent 4 }}
   {{- with .Values.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -18,6 +17,9 @@ spec:
     metadata:
       labels:
 {{ include "ga-operator.selectorLabels" . | indent 8 }}
+{{- with .Values.podLabels }}
+{{- toYaml . | nindent 8 }}
+{{- end }}
 {{- with .Values.podAnnotations }}
       annotations:
 {{ toYaml . | indent 8 }}
@@ -36,9 +38,16 @@ spec:
         resources:
         {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
+        {{- if or (and .Values.kubeletService.namespace .Values.kubeletService.serviceName) (.Values.extraArgs) }}
         args:
+          {{- if and .Values.kubeletService.namespace .Values.kubeletService.serviceName }}
           - --kubelet-service={{ .Values.kubeletService.namespace }}/{{ .Values.kubeletService.serviceName }}
+          {{- end }}
+          {{- if .Values.extraArgs  }}
+          {{- range .Values.extraArgs  }}
+          - {{ . }}
+          {{- end }}
+          {{- end }}
         {{- end }}
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:

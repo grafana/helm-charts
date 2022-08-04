@@ -7,7 +7,9 @@ metadata:
     {{- include "tempo.gatewayLabels" . | nindent 4 }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -31,6 +33,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.gateway.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.gateway.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       containers:

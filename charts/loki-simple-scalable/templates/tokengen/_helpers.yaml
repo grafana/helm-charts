@@ -2,7 +2,7 @@
 tokengen fullname
 */}}
 {{- define "enterprise-logs.tokengenFullname" -}}
-{{ include "loki.fullname" . }}-tokengen
+{{ include "loki.name" . }}-tokengen
 {{- end }}
 
 {{/*

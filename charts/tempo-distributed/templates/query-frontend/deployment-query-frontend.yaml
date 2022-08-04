@@ -11,7 +11,9 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.queryFrontend.autoscaling.enabled }}
   replicas: {{ .Values.queryFrontend.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -40,6 +42,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.queryFrontend.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.queryFrontend.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:

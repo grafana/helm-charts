@@ -13,6 +13,15 @@ spec:
       partition: 0
   serviceName: {{ include "loki.readFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
+  {{- if (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) }}
+  {{/*
+    Data on the read nodes is easy to replace, so we want to always delete PVCs to make
+    operation easier, and will rely on re-fetching data when needed.
+  */}}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+  {{- end }}
   selector:
     matchLabels:
       {{- include "loki.readSelectorLabels" . | nindent 6 }}
@@ -28,6 +37,9 @@ spec:
         {{- end }}
       labels:
         {{- include "loki.readSelectorLabels" . | nindent 8 }}
+        {{- with .Values.read.selectorLabels }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
         app.kubernetes.io/part-of: memberlist
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
@@ -40,7 +52,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.read.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: read
           image: {{ include "loki.image" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -50,7 +62,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
-            - name: http
+            - name: http-metrics
               containerPort: 3100
               protocol: TCP
             - name: grpc
@@ -108,7 +120,7 @@ spec:
             secretName: {{ .Values.loki.existingSecretForConfig }}
           {{- else }}
           configMap:
-            name: {{ include "loki.fullname" . }}
+            name: {{ include "loki.name" . }}
           {{- end }}
         {{- if .Values.enterprise.enabled }}
         - name: license
