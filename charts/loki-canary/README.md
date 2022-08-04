@@ -1,6 +1,6 @@
 # loki-canary
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 0.9.2](https://img.shields.io/badge/Version-0.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 
@@ -26,6 +26,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | basicAuth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' and, if canary is enabled, 'username' and 'password' |
 | basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | basicAuth.username | string | `nil` | The basic auth username for the gateway |
+| containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | extraArgs | list | `["-labelname=pod","-labelvalue=$(POD_NAME)"]` | Additional CLI args for the canary |
 | extraEnv | list | `[]` | Environment variables to add to the canary pods |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the canary pods |
@@ -39,6 +40,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | nodeSelector | object | `{}` | Node selector for canary pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
 | podLabels | object | `{}` | Common labels for all pods |
+| podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
 | priorityClassName | string | `nil` | The name of the PriorityClass for pods |
 | resources | object | `{}` | Resource requests and limits for the canary |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |

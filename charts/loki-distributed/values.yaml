@@ -464,6 +464,8 @@ querier:
   nodeSelector: {}
   # -- Tolerations for querier pods
   tolerations: []
+  # -- DNSConfig for querier pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
@@ -599,6 +601,39 @@ tableManager:
   # -- Tolerations for table-manager pods
   tolerations: []
 
+# Use either this ingress or the gateway, but not both at once.
+# If you enable this, make sure to disable the gateway.
+# You'll need to supply authn configuration for your ingress controller.
+ingress:
+  enabled: false
+#  ingressClassName: nginx
+  annotations: {}
+#    nginx.ingress.kubernetes.io/auth-type: basic
+#    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
+#    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      proxy_set_header X-Scope-OrgID $remote_user;
+  paths:
+    distributor:
+      - /api/prom/push
+      - /loki/api/v1/push
+    querier:
+      - /api/prom/tail
+      - /loki/api/v1/tail
+    query-frontend:
+      - /loki/api
+    ruler:
+      - /api/prom/rules
+      - /loki/api/v1/rules
+      - /prometheus/api/v1/rules
+      - /prometheus/api/v1/alerts
+  hosts:
+    - loki.example.com
+#  tls:
+#    - hosts:
+#       - loki.example.com
+#      secretName: loki-distributed-tls
+
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
@@ -686,6 +721,8 @@ gateway:
   nodeSelector: {}
   # -- Tolerations for gateway pods
   tolerations: []
+  # -- DNSConfig for gateway pods
+  dnsConfig: {}
   # Gateway service configuration
   service:
     # -- Port of the gateway service
@@ -735,6 +772,7 @@ gateway:
     # -- Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function.
     # The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes
     # high CPU load.
+    # @default -- See values.yaml
     htpasswd: >-
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
@@ -753,6 +791,7 @@ gateway:
     initialDelaySeconds: 30
   nginxConfig:
     # -- NGINX log format
+    # @default -- See values.yaml
     logFormat: |-
       main '$remote_addr - $remote_user [$time_local]  $status '
               '"$request" $body_bytes_sent "$http_referer" '
@@ -824,11 +863,13 @@ gateway:
           }
 
           location = /api/prom/push {
-            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $api_prom_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $api_prom_push_backend:3100$request_uri;
           }
 
           location = /api/prom/tail {
-            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $api_prom_tail_backend http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $api_prom_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
           }
@@ -848,21 +889,25 @@ gateway:
           }
 
           location ~ /api/prom/.* {
-            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $api_prom_backend:3100$request_uri;
           }
 
           location = /loki/api/v1/push {
-            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
           }
 
           location = /loki/api/v1/tail {
-            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $loki_api_v1_tail_backend http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_v1_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
           }
 
           location ~ /loki/api/.* {
-            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_backend:3100$request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
@@ -993,6 +1038,8 @@ ruler:
   nodeSelector: {}
   # -- Tolerations for ruler pods
   tolerations: []
+  # -- DNSConfig for ruler pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs which is required when using recording rules
     enabled: false
@@ -1176,6 +1223,8 @@ memcached:
     allowPrivilegeEscalation: false
   # -- Common annotations for all memcached services
   serviceAnnotations: {}
+  # -- Adds the appProtocol field to the memcached services. This allows memcached to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
@@ -1193,6 +1242,13 @@ memcachedExporter:
   podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
+  # -- The SecurityContext for memcachedExporter containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled

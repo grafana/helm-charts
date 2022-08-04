@@ -88,6 +88,19 @@ loki:
       max_cache_freshness_per_query: 10m
       split_queries_by_interval: 15m
 
+    {{- with .Values.loki.memcached.chunk_cache }}
+    {{- if and .enabled .host }}
+    chunk_store_config:
+      chunk_cache_config:
+        memcached:
+          batch_size: {{ .batch_size }}
+          parallelism: {{ .parallelism }}
+        memcached_client:
+          host: {{ .host }}
+          service: {{ .service }}
+    {{- end }}
+    {{- end }}
+
     {{- if .Values.loki.schemaConfig}}
     schema_config:
     {{- toYaml .Values.loki.schemaConfig | nindent 2}}
@@ -112,9 +125,34 @@ loki:
     {{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") (eq .Values.loki.storage.type "gcs") }}
     ruler:
       storage:
-        s3:
-          bucketnames: {{ .Values.loki.storage.bucketNames.ruler }}
+      {{- include "loki.rulerStorageConfig" . | nindent 4}}
     {{- end -}}
+
+    {{- with .Values.loki.memcached.results_cache }}
+    query_range:
+      align_queries_with_step: true
+      {{- if and .enabled .host }}
+      cache_results: {{ .enabled }}
+      results_cache:
+        cache:
+          default_validity: {{ .default_validity }}
+          memcached_client:
+            host: {{ .host }}
+            service: {{ .service }}
+            timeout: {{ .timeout }}
+      {{- end }}
+    {{- end }}
+
+    {{- with .Values.loki.storage_config }}
+    storage_config:
+      {{- tpl (. | toYaml) $ | nindent 4 }}
+    {{- end }}
+
+    {{- with .Values.loki.query_scheduler }}
+    query_scheduler:
+      {{- tpl (. | toYaml) $ | nindent 4 }}
+    {{- end }}
+
 
   # Should authentication be enabled
   auth_enabled: true
@@ -132,10 +170,10 @@ loki:
     type: s3
     s3:
       s3: null
-      endpoint: https://amazonaws.com
+      endpoint: null
       region: null
-      secretAccessKey: supersecret
-      accessKeyId: accesskey
+      secretAccessKey: null
+      accessKeyId: null
       s3ForcePathStyle: false
       insecure: false
     gcs:
@@ -146,18 +184,44 @@ loki:
       chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
 
+  # -- Configure memcached as an external cache for chunk and results cache. Disabled by default
+  # must enable and specify a host for each cache you would like to use.
+  memcached:
+    chunk_cache:
+      enabled: false
+      host: ""
+      service: "memcached-client"
+      batch_size: 256
+      parallelism: 10
+    results_cache:
+      enabled: false
+      host: ""
+      service: "memcached-client"
+      timeout: "500ms"
+      default_validity: "12h"
+
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig: {}
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
 
+  # -- Additional query scheduler config
+  query_scheduler: {}
+
+  # -- Additional storage config
+  storage_config:
+    hedging:
+      at: "250ms"
+      max_per_second: 20
+      up_to: 3
+
 enterprise:
   # Enable enterprise features, license must be provided
   enabled: false
 
   # Default verion of GEL to deploy
-  version: v1.4.0
+  version: v1.5.0
 
   # -- Grafana Enterprise Logs license
   # In order to use Grafana Enterprise Logs features, you will need to provide
@@ -248,6 +312,8 @@ enterprise:
         fastcgi_temp_path     /tmp/fastcgi_temp;
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
+
+        proxy_http_version    1.1;
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
@@ -380,8 +446,46 @@ monitoring:
   dashboards:
     # -- If enabled, create configmap with dashboards for monitoring Loki
     enabled: true
-    # -- Alternative namespace to create dashboards config map in
+    # -- Alternative namespace to create dashboards ConfigMap in
     namespace: null
+    # -- Additional annotations for the dashboards ConfigMap
+    annotations: {}
+    # -- Additional labels for the dashboards ConfigMap
+    labels: {}
+
+  # Recording rules for monitoring Loki, required for some dashboards
+  rules:
+    # -- If enabled, create PrometheusRule resource with Loki recording rules
+    enabled: true
+    # -- Include alerting rules
+    alerting: true
+    # -- Alternative namespace to create recording rules PrometheusRule resource in
+    namespace: null
+    # -- Additional annotations for the rules PrometheusRule resource
+    annotations: {}
+    # -- Additional labels for the rules PrometheusRule resource
+    labels: {}
+    # -- Additional groups to add to the rules file
+    additionalGroups: []
+    # - name: additional-loki-rules
+    #   rules:
+    #     - record: job:loki_request_duration_seconds_bucket:sum_rate
+    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+    #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+    #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+    #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+    #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
+  # Alerting rules for monitoring Loki
+  alerts:
+    # -- If enabled, create PrometheusRule resource with Loki alerting rules
+    enabled: true
+    # -- Alternative namespace to create alerting rules PrometheusRule resource in
+    namespace: null
+    # -- Additional annotations for the alerts PrometheusRule resource
+    annotations: {}
+    # -- Additional labels for the alerts PrometheusRule resource
+    labels: {}
 
   # ServiceMonitor configuration
   serviceMonitor:
@@ -450,27 +554,6 @@ monitoring:
       annotations: {}
       # -- Additional LogsInstance labels
       labels: {}
-
-# Rules for the Prometheus Operator
-prometheusRule:
-  # -- If enabled, a PrometheusRule resource for Prometheus Operator is created
-  enabled: false
-  # -- Alternative namespace for the PrometheusRule resource
-  namespace: null
-  # -- PrometheusRule annotations
-  annotations: {}
-  # -- Additional PrometheusRule labels
-  labels: {}
-  # -- Contents of Prometheus rules file
-  groups: []
-  # - name: loki-rules
-  #   rules:
-  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
-  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
-  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
-  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
 # Configuration for the write
 write:
@@ -681,7 +764,7 @@ gateway:
     type: ClusterIP
     # -- ClusterIP of the gateway service
     clusterIP: null
-    # -- Node port if service type is NodePort
+    # -- (int) Node port if service type is NodePort
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
@@ -760,6 +843,8 @@ gateway:
         fastcgi_temp_path     /tmp/fastcgi_temp;
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
+
+        proxy_http_version    1.1;
 
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
@@ -863,7 +948,7 @@ networkPolicy:
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
   discovery:
-    # -- Specify the port used for discovery
+    # -- (int) Specify the port used for discovery
     port: null
     # -- Specifies the Pods labels used for discovery.
     # As this is cross-namespace communication, you also need the namespaceSelector.
