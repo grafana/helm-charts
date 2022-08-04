@@ -161,6 +161,8 @@ service:
   annotations: {}
   labels: {}
   portName: service
+  # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
@@ -824,6 +826,8 @@ imageRenderer:
     # image-renderer service port used by both service and deployment
     port: 8081
     targetPort: 8081
+    # Adds the appProtocol field to the image-renderer service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+    appProtocol: ""
   # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
   grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
