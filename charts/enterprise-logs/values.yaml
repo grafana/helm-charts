@@ -274,6 +274,12 @@ gateway:
     runAsGroup: 10001
     runAsUser: 10001
     fsGroup: 10001
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
   # If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
@@ -340,6 +346,12 @@ compactor:
     runAsGroup: 10001
     runAsUser: 10001
     fsGroup: 10001
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
   strategy:
     type: RollingUpdate
