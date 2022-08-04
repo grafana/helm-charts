@@ -65,7 +65,7 @@ spec:
       priorityClassName: {{ .Values.compactor.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.compactor.securityContext | nindent 8 }}
+        {{- toYaml .Values.compactor.podSecurityContext | nindent 8 }}
       initContainers:
         {{- toYaml .Values.compactor.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
