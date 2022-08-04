@@ -103,8 +103,6 @@ containerSecurityContext:
   allowPrivilegeEscalation: false
 
 rbac:
-  # -- Specifies whether RBAC resources are to be created
-  create: true
   # -- Specifies whether a PodSecurityPolicy is to be created
   pspEnabled: false
 
