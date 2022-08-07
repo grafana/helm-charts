@@ -136,9 +136,11 @@ spec:
       {{- if .Values.extraVolumes -}}
         {{ toYaml .Values.extraVolumes | nindent 6 }}
       {{- end }}
+      {{- if .Values.tempoQuery.enabled }}
       - configMap:
           name: {{ template "tempo.name" . }}-query
         name: tempo-query-conf
+      {{- end }}
       - configMap:
           name: {{ template "tempo.name" . }}
         name: tempo-conf
