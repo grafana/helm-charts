@@ -78,7 +78,7 @@ spec:
             - mountPath: /conf
               name: tempo-conf
             - mountPath: /var/tempo
-              name: tempo-store
+              name: tempo-compactor-store
             {{- with .Values.compactor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -99,7 +99,7 @@ spec:
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
-        - name: tempo-store
+        - name: tempo-compactor-store
           emptyDir: {}
         {{- with .Values.compactor.extraVolumes }}
         {{- toYaml . | nindent 8 }}

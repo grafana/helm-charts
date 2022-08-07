@@ -79,7 +79,7 @@ spec:
             - mountPath: /conf
               name: tempo-conf
             - mountPath: /var/tempo
-              name: tempo-store
+              name: tempo-querier-store
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -100,7 +100,7 @@ spec:
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
-        - name: tempo-store
+        - name: tempo-querier-store
           emptyDir: {}
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
