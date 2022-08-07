@@ -79,6 +79,8 @@ spec:
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
+            - mountPath: /var/tempo
+              name: tempo-store
             {{- with .Values.queryFrontend.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -136,6 +138,8 @@ spec:
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
+        - name: tempo-store
+          emptyDir: {}
         {{- with .Values.queryFrontend.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
