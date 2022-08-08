@@ -464,6 +464,8 @@ querier:
   nodeSelector: {}
   # -- Tolerations for querier pods
   tolerations: []
+  # -- DNSConfig for querier pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
@@ -719,6 +721,8 @@ gateway:
   nodeSelector: {}
   # -- Tolerations for gateway pods
   tolerations: []
+  # -- DNSConfig for gateway pods
+  dnsConfig: {}
   # Gateway service configuration
   service:
     # -- Port of the gateway service
@@ -731,6 +735,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
+    loadBalancerSourceRanges: []
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
@@ -768,6 +774,7 @@ gateway:
     # -- Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function.
     # The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes
     # high CPU load.
+    # @default -- See values.yaml
     htpasswd: >-
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
@@ -786,6 +793,7 @@ gateway:
     initialDelaySeconds: 30
   nginxConfig:
     # -- NGINX log format
+    # @default -- See values.yaml
     logFormat: |-
       main '$remote_addr - $remote_user [$time_local]  $status '
               '"$request" $body_bytes_sent "$http_referer" '
@@ -1032,6 +1040,8 @@ ruler:
   nodeSelector: {}
   # -- Tolerations for ruler pods
   tolerations: []
+  # -- DNSConfig for ruler pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs which is required when using recording rules
     enabled: false
@@ -1234,6 +1244,13 @@ memcachedExporter:
   podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
+  # -- The SecurityContext for memcachedExporter containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled

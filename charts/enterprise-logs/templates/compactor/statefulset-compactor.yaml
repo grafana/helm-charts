@@ -65,7 +65,7 @@ spec:
       priorityClassName: {{ .Values.compactor.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.compactor.securityContext | nindent 8 }}
+        {{- toYaml .Values.compactor.podSecurityContext | nindent 8 }}
       initContainers:
         {{- toYaml .Values.compactor.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -153,7 +153,7 @@ spec:
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
           securityContext:
-            readOnlyRootFilesystem: true
+            {{- toYaml .Values.compactor.containerSecurityContext | nindent 12 }}
           env:
             {{- if .Values.compactor.env }}
             {{- toYaml .Values.compactor.env | nindent 12 }}
