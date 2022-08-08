@@ -729,6 +729,8 @@ compactor:
   priorityClassName: null
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Specify the compactor affinity
+  affinity: {}
   # -- Labels for compactor service
   serviceLabels: {}
   # -- Additional CLI args for the compactor

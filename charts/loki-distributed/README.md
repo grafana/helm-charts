@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.36.0](https://img.shields.io/badge/Version-0.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 0.36.1](https://img.shields.io/badge/Version-0.36.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -54,6 +54,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| compactor.affinity | object | `{}` | Specify the compactor affinity |
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
@@ -103,7 +104,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
-| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | See `kubectl explain deployment.spec.strategy` for more -- ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
+| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
 | gateway.enabled | bool | `true` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
@@ -114,7 +115,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
 | gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
-| gateway.ingress.annotations | object | `{}` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 ingressClassName: nginx -- Annotations for the gateway ingress |
+| gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
