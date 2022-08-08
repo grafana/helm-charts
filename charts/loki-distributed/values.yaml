@@ -1244,6 +1244,13 @@ memcachedExporter:
   podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
+  # -- The SecurityContext for memcachedExporter containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled

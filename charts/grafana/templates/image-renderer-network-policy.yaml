@@ -19,7 +19,7 @@ spec:
     - Ingress
   ingress:
     - ports:
-        - port: {{ .Values.imageRenderer.service.port }}
+        - port: {{ .Values.imageRenderer.service.targetPort }}
           protocol: TCP
       from:
         - namespaceSelector:

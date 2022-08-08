@@ -77,7 +77,7 @@ spec:
         {{- end}}
           ports:
             - name: {{ .Values.imageRenderer.service.portName }}
-              containerPort: {{ .Values.imageRenderer.service.port }}
+              containerPort: {{ .Values.imageRenderer.service.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -85,7 +85,7 @@ spec:
               port: {{ .Values.imageRenderer.service.portName }}
           env:
             - name: HTTP_PORT
-              value: {{ .Values.imageRenderer.service.port | quote }}
+              value: {{ .Values.imageRenderer.service.targetPort | quote }}
           {{- range $key, $value := .Values.imageRenderer.env }}
             - name: {{ $key | quote }}
               value: {{ $value | quote }}

@@ -55,6 +55,14 @@ Charts should start at `1.0.0`. Any breaking (backwards incompatible) changes to
 1. Bump the MAJOR version
 2. In the README, under a section called "Upgrading", describe the manual steps necessary to upgrade to the new (specified) MAJOR version
 
+### Generate README
+
+The readme of each chart can be re-generated with the following command (run inside the chart directory):
+
+```shell
+docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+```
+
 ### Community Requirements
 
 This project is released with a [Contributor Covenant](https://www.contributor-covenant.org).
