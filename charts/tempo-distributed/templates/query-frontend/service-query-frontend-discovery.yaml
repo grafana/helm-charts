@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
-  {{- with .Values.queryFrontend.service.annotations }}
+  {{- with .Values.queryFrontend.serviceDiscovery.annotations }}
   annotations:
     {{ toYaml . | nindent 4 }}
   {{- end }}
@@ -26,5 +26,9 @@ spec:
     - name: tempo-query-metrics
       port: 16687
       targetPort: jaeger-metrics
+    - name: grpclb
+      port: 9096
+      targetPort: grpc
+      protocol: TCP
   selector:
     {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}

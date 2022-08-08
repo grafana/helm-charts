@@ -5,6 +5,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.ingesterLabels" . | nindent 4 }}
+  {{- with .Values.ingester.service.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ports:
     - name: http

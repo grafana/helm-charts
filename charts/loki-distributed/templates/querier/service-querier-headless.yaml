@@ -1,9 +1,11 @@
+{{- if not .Values.indexGateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "loki.querierFullname" . }}-headless
   labels:
     {{- include "loki.querierSelectorLabels" . | nindent 4 }}
+    prometheus.io/service-monitor: "false"
 spec:
   type: ClusterIP
   clusterIP: None
@@ -18,3 +20,4 @@ spec:
       protocol: TCP
   selector:
     {{- include "loki.querierSelectorLabels" . | nindent 4 }}
+{{- end }}

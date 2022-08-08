@@ -1,6 +1,6 @@
 # These values configure the Grafana Enterprise Metrics cluster to
 # handle production ingestion of ~10M active series using the blocks
-# storage engine.
+# storage engine scraped with a 15s interval.
 # Query requirements can vary dramatically depending on query rate and query
 # ranges. The values here satisfy a "usual" query load as seen from our
 # production clusters at this scale.
@@ -11,6 +11,14 @@
 # for more information.
 # Minio is no longer enabled and you are encouraged to use your cloud providers
 # object storage service for production deployments.
+# Ingesters are configured with a replication factor of 3 to ensure that a single ingester failur does not
+# result in data loss.
+config:
+  ingester:
+    lifecycler:
+      ring:
+        replication_factor: 3
+
 admin_api:
   replicas: 3
   resources:
@@ -45,15 +53,6 @@ compactor:
     limits:
       cpu: 2
       memory: 2Gi
-
-consul:
-  resources:
-    requests:
-      cpu: 4
-      memory: 4Gi
-  server:
-    replicas: 3
-    bootstrapExpect: 3
 
 distributor:
   replicas: 15
