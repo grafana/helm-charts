@@ -20,6 +20,29 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From chart version < 0.22.0
+
+Version 0.22.0:
+
+* Adds /var/tempo emptyDir mount for querier, queryfrontend and compactor. Previously, /var/tempo was directory inside container.
+
+* Sets queryFrontend.query.enabled to false. tempo-query is only required for grafana version <7.5 for compatibility with jaeger-ui. Please also note that tempo-query is incompatible with securityContext readOnlyRootFilesystem set to true.
+
+* Sets stricter default securityContext:
+```yaml
+tempo:
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+```
+If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
+
 ### From Chart version < 0.20.0
 The image's attributes must be set under the `image` key for the Memcached service.
 ```yaml
@@ -321,7 +344,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.query.config | string | `"backend: 127.0.0.1:3100\n"` |  |
-| queryFrontend.query.enabled | bool | `true` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
+| queryFrontend.query.enabled | bool | `false` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
 | queryFrontend.query.extraArgs | list | `[]` | Additional CLI args for tempo-query pods |
 | queryFrontend.query.extraEnv | list | `[]` | Environment variables to add to the tempo-query pods |
 | queryFrontend.query.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the tempo-query pods |
@@ -362,13 +385,13 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
-| tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"podAnnotations":{},"podLabels":{},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1},"securityContext":{},"structuredConfig":{}}` | Overrides the chart's computed fullname fullnameOverride: tempo |
+| tempo | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/tempo","tag":null},"podAnnotations":{},"podLabels":{},"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":30,"timeoutSeconds":1},"securityContext":{"capabilities":{"drop":["ALL"],"fsGroup":1000,"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}},"structuredConfig":{}}` | Overrides the chart's computed fullname fullnameOverride: tempo |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
-| tempo.securityContext | object | `{}` | SecurityContext holds pod-level security attributes and common container settings |
+| tempo.securityContext | object | `{"capabilities":{"drop":["ALL"],"fsGroup":1000,"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}}` | SecurityContext holds pod-level security attributes and common container settings |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |

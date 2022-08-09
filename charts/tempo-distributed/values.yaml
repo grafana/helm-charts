@@ -32,13 +32,16 @@ tempo:
   # -- Common annotations for all pods
   podAnnotations: {}
   # -- SecurityContext holds pod-level security attributes and common container settings
-  securityContext: {}
-  #  capabilities:
-  #    drop:
-  #    - ALL
-  #  readOnlyRootFilesystem: true
-  #  runAsNonRoot: true
-  #  runAsUser: 1000
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+
   # -- Structured tempo configuration
   structuredConfig: {}
 
@@ -418,7 +421,7 @@ querier:
 queryFrontend:
   query:
     # -- Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
-    enabled: true
+    enabled: false
     image:
       # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
       registry: null
