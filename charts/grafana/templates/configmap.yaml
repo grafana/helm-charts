@@ -86,7 +86,6 @@ data:
         {{- if $value.token }}
     -H "Authorization: token {{ $value.token }}" \
         {{- end }}
-        -H "Accept: application/json" \
         {{- if $value.gitlabToken }}
     -H "PRIVATE-TOKEN: {{ $value.token }}" \
         {{- end }}
