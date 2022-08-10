@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.4.1
+
+- [CHANGE] Bump GEL version to v1.5.1 to use version with a fix for GEL Node API.
+
 ## 2.4.0
 
 - [CHANGE] Update loki-distributed to 0.55.0
