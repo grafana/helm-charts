@@ -10,8 +10,10 @@ global:
   dnsService: "kube-dns"
   # -- configures DNS service namespace
   dnsNamespace: "kube-system"
+
 # -- Overrides the chart's computed fullname
-# fullnameOverride: tempo
+fullnameOverride: ""
+
 tempo:
   image:
     # -- The Docker registry
@@ -564,6 +566,8 @@ traces:
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
+# -- Tempo configuration file contents
+# @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
