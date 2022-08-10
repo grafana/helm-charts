@@ -156,7 +156,8 @@ enterprise:
   license:
     contents: "NOTAVALIDLICENSE"
 
-  # enterprise specific sections of the config.yaml file
+  # -- Enterprise specific sections of the config.yaml file
+  # @default -- See values.yaml
   config: |
     {{- if or .Values.minio.enabled (eq .Values.loki.storage.type "s3") (eq .Values.loki.storage.type "gcs") }}
     admin_client:
@@ -182,6 +183,8 @@ enterprise:
     pullPolicy: IfNotPresent
 
   nginxConfig:
+    # -- Enterprise Nginx config file
+    # @default -- see values.yaml
     file: |
       worker_processes  5;  ## Default: 1
       error_log  /dev/stderr;
@@ -296,7 +299,6 @@ enterprise:
         }
       }
 
-# -- Configuration for `tokengen` target
 tokengen:
   # -- Whether the job should be part of the deployment
   enable: true
@@ -812,9 +814,9 @@ networkPolicy:
     # -- Specifies the namespace the discovery Pods are running in
     namespaceSelector: {}
 
-# -------------------------------------
-# Configuration for `minio` child chart
-# -------------------------------------
+
+# -- Configuration for `minio` child chart
+# @default -- see values.yaml
 minio:
   enabled: false
   accessKey: enterprise-logs
