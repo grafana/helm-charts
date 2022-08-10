@@ -10,13 +10,17 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+{{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ .Values.ingester.replicas }}
+{{- end }}
   selector:
     matchLabels:
       {{- include "tempo.ingesterSelectorLabels" . | nindent 6}}
   serviceName: ingester
+  podManagementPolicy: Parallel
   updateStrategy:
-    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
   template:
     metadata:
       labels:
@@ -37,6 +41,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.ingester.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.ingester.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
         - args:

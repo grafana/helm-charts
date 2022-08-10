@@ -8,6 +8,10 @@ metadata:
     {{- with .Values.memcachedIndexQueries.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.memcached.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: ClusterIP
   clusterIP: None
@@ -16,6 +20,9 @@ spec:
       port: 11211
       targetPort: http
       protocol: TCP
+      {{- if .Values.memcached.appProtocol }}
+      appProtocol: {{ .Values.memcached.appProtocol }}
+      {{- end }}
     - name: http-metrics
       port: 9150
       targetPort: http-metrics

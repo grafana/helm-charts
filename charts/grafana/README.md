@@ -59,17 +59,18 @@ This version requires Helm >= 3.1.0.
 | `securityContext`                         | Deployment securityContext                    | `{"runAsUser": 472, "runAsGroup": 472, "fsGroup": 472}`  |
 | `priorityClassName`                       | Name of Priority Class to assign pods         | `nil`                                                   |
 | `image.repository`                        | Image repository                              | `grafana/grafana`                                       |
-| `image.tag`                               | Image tag (`Must be >= 5.0.0`)                | `8.2.5`                                                 |
-| `image.sha`                               | Image sha (optional)                          | `2acf04c016c77ca2e89af3536367ce847ee326effb933121881c7c89781051d3` |
+| `image.tag`                               | Overrides the Grafana image tag whose default is the chart appVersion (`Must be >= 5.0.0`) | ``                                                      |
+| `image.sha`                               | Image sha (optional)                          | ``                                                      |
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
-| `image.pullSecrets`                       | Image pull secrets                            | `{}`                                                    |
+| `image.pullSecrets`                       | Image pull secrets (can be templated)         | `[]`                                                    |
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
+| `service.appProtocol                      | Adds the appProtocol field to the service     | ``                                                      |
 | `service.targetPort`                      | Internal service is port                      | `3000`                                                  |
 | `service.nodePort`                        | Kubernetes service nodePort                   | `nil`                                                   |
-| `service.annotations`                     | Service annotations                           | `{}`                                                    |
+| `service.annotations`                     | Service annotations (can be templated)        | `{}`                                                    |
 | `service.labels`                          | Custom labels                                 | `{}`                                                    |
 | `service.clusterIP`                       | internal cluster service IP                   | `nil`                                                   |
 | `service.loadBalancerIP`                  | IP address to assign to load balancer (if supported) | `nil`                                            |
@@ -98,12 +99,12 @@ This version requires Helm >= 3.1.0.
 | `persistence.enabled`                     | Use persistent volume to store data           | `false`                                                 |
 | `persistence.type`                        | Type of persistence (`pvc` or `statefulset`)  | `pvc`                                                   |
 | `persistence.size`                        | Size of persistent volume claim               | `10Gi`                                                  |
-| `persistence.existingClaim`               | Use an existing PVC to persist data           | `nil`                                                   |
+| `persistence.existingClaim`               | Use an existing PVC to persist data (can be templated) | `nil`                                          |
 | `persistence.storageClassName`            | Type of persistent volume claim               | `nil`                                                   |
 | `persistence.accessModes`                 | Persistence access modes                      | `[ReadWriteOnce]`                                       |
 | `persistence.annotations`                 | PersistentVolumeClaim annotations             | `{}`                                                    |
 | `persistence.finalizers`                  | PersistentVolumeClaim finalizers              | `[ "kubernetes.io/pvc-protection" ]`                    |
-| `persistence.subPath`                     | Mount a sub dir of the persistent volume      | `nil`                                                   |
+| `persistence.subPath`                     | Mount a sub dir of the persistent volume (can be templated) | `nil`                                     |
 | `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
 | `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
@@ -122,7 +123,8 @@ This version requires Helm >= 3.1.0.
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
-| `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts | `[]`                                                |
+| `createConfigmap`                         | Enable creating the grafana configmap         | `true`                                                  |
+| `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts (values are templated) | `[]`                         |
 | `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
 | `plugins`                                 | Plugins to be loaded along with Grafana       | `[]`                                                    |
 | `datasources`                             | Configure grafana datasources (passed through tpl) | `{}`                                               |
@@ -141,7 +143,7 @@ This version requires Helm >= 3.1.0.
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.15.6`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.19.2`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -159,7 +161,7 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.watchMethod`          | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. | `WATCH` |
 | `sidecar.skipTlsVerify`                   | Set to true to skip tls verification for kube api calls | `nil`                                         |
 | `sidecar.dashboards.label`                | Label that config maps with dashboards should have to be added | `grafana_dashboard`                                |
-| `sidecar.dashboards.labelValue`                | Label value that config maps with dashboards should have to be added | `nil`                                |
+| `sidecar.dashboards.labelValue`                | Label value that config maps with dashboards should have to be added | `""`                                |
 | `sidecar.dashboards.folder`               | Folder in the pod that should hold the collected dashboards (unless `sidecar.dashboards.defaultFolderName` is set). This path will be mounted. | `/tmp/dashboards`    |
 | `sidecar.dashboards.folderAnnotation`     | The annotation the sidecar will look for in configmaps to override the destination folder for files | `nil`                                                  |
 | `sidecar.dashboards.defaultFolderName`    | The default folder name, it will create a subfolder under the `sidecar.dashboards.folder` and put dashboards in there instead | `nil`                                |
@@ -169,7 +171,7 @@ This version requires Helm >= 3.1.0.
 | `sidecar.dashboards.extraMounts`          | Additional dashboard sidecar volume mounts. | `[]`                               |
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
 | `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
-| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `nil`                                |
+| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `""`                                |
 | `sidecar.datasources.searchNamespace`     | Namespaces list. If specified, the sidecar will search for datasources config-maps  inside these namespaces.Otherwise the namespace in which the sidecar is running will be used.It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.datasources.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.datasources.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/datasources/reload"` |
@@ -181,7 +183,7 @@ This version requires Helm >= 3.1.0.
 | `smtp.existingSecret`                     | The name of an existing secret containing the SMTP credentials. | `""`                                  |
 | `smtp.userKey`                            | The key in the existing SMTP secret containing the username. | `"user"`                                 |
 | `smtp.passwordKey`                        | The key in the existing SMTP secret containing the password. | `"password"`                             |
-| `admin.existingSecret`                    | The name of an existing secret containing the admin credentials. | `""`                                 |
+| `admin.existingSecret`                    | The name of an existing secret containing the admin credentials (can be templated). | `""`                                 |
 | `admin.userKey`                           | The key in the existing admin secret containing the username. | `"admin-user"`                          |
 | `admin.passwordKey`                       | The key in the existing admin secret containing the password. | `"admin-password"`                      |
 | `serviceAccount.autoMount`                | Automount the service account token in the pod| `true`                                                  |
@@ -232,13 +234,14 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
 | `imageRenderer.service.portName`           | image-renderer service port name                                                   | `http`                           |
-| `imageRenderer.service.port`               | image-renderer service port used by both service and deployment                    | `8081`                           |
-| `imageRenderer.grafanaProtocol`            | Protocol to use for image renderer callback url                                    | `http`                         |
+| `imageRenderer.service.port`               | image-renderer port used by deployment                                             | `8081`                           |
+| `imageRenderer.service.targetPort`         | image-renderer service port used by service                                        | `8081`                           |
+| `imageRenderer.appProtocol`                | Adds the appProtocol field to the service                                          | ``                               |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |
 | `imageRenderer.podPortName`                | name of the image-renderer port on the pod                                         | `http`                           |
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
-| `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods  | `true`                           |
-| `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods   | `false`                          |
+| `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
+| `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods  | `false`                          |
 | `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
 | `imageRenderer.nodeSelector`               | Node labels for pod assignment                | `{}`                                                    |
 | `imageRenderer.tolerations`                | Toleration labels for pod assignment          | `[]`                                                    |
@@ -246,6 +249,9 @@ This version requires Helm >= 3.1.0.
 | `networkPolicy.enabled`                    | Enable creation of NetworkPolicy resources.                                                                              | `false`             |
 | `networkPolicy.allowExternal`              | Don't require client label for connections                                                                               | `true`              |
 | `networkPolicy.explicitNamespacesSelector` | A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed                           | `{}`                |
+| `networkPolicy.ingress`                    | Enable the creation of an ingress network policy             | `true`    |
+| `networkPolicy.egress.enabled`             | Enable the creation of an egress network policy              | `false`   |
+| `networkPolicy.egress.ports`               | An array of ports to allow for the egress                    | `[]`    |
 | `enableKubeBackwardCompatibility`          | Enable backward compatibility of kubernetes where pod's defintion version below 1.13 doesn't have the enableServiceLinks option  | `false`     |
 
 

@@ -4,7 +4,6 @@ kind: ClusterRole
 metadata:
   name: {{ include "ga-operator.fullname" . }}
   labels:
-    app.kubernetes.io/component: operator
 {{ include "ga-operator.labels" . | indent 4 }}
 rules:
 - apiGroups: [monitoring.grafana.com]
@@ -13,13 +12,28 @@ rules:
   - metricsinstances
   - logsinstances
   - podlogs
+  - integrations
   verbs: [get, list, watch]
+- apiGroups: [monitoring.grafana.com]
+  resources:
+  - grafanaagents/finalizers
+  - metricsinstances/finalizers
+  - logsinstances/finalizers
+  - podlogs/finalizers
+  - integrations/finalizers
+  verbs: [get, list, watch, update]
 - apiGroups: [monitoring.coreos.com]
   resources:
   - podmonitors
   - probes
   - servicemonitors
   verbs: [get, list, watch]
+- apiGroups: [monitoring.coreos.com]
+  resources:
+  - podmonitors/finalizers
+  - probes/finalizers
+  - servicemonitors/finalizers
+  verbs: [get, list, watch, update]
 - apiGroups: [""]
   resources:
   - namespaces
@@ -36,6 +50,6 @@ rules:
   resources:
   - statefulsets
   - daemonsets
+  - deployments
   verbs: [get, list, watch, create, update, patch, delete]
 {{- end -}}
-

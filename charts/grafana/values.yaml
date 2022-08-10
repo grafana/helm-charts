@@ -17,6 +17,7 @@ serviceAccount:
   create: true
   name:
   nameTest:
+## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
   autoMount: true
@@ -73,13 +74,15 @@ livenessProbe:
 
 image:
   repository: grafana/grafana
-  tag: 8.5.0
+  # Overrides the Grafana image tag whose default is the chart appVersion
+  tag: ""
   sha: ""
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Can be templated.
   ##
   # pullSecrets:
   #   - myRegistrKeySecretName
@@ -99,6 +102,11 @@ securityContext:
 containerSecurityContext:
   {}
 
+# Enable creating the grafana configmap
+createConfigmap: true
+
+# Extra configmaps to mount in grafana pods
+# Values are templated.
 extraConfigmapMounts: []
   # - name: certs-configmap
   #   mountPath: /etc/grafana/ssl/
@@ -153,6 +161,8 @@ service:
   annotations: {}
   labels: {}
   portName: service
+  # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
@@ -236,7 +246,7 @@ nodeSelector: {}
 ##
 tolerations: []
 
-## Affinity for pod assignment
+## Affinity for pod assignment (evaluated as template)
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
@@ -286,7 +296,9 @@ persistence:
   finalizers:
     - kubernetes.io/pvc-protection
   # selectorLabels: {}
+  ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""
+  ## Name of an existing PVC. Can be templated.
   # existingClaim:
 
   ## If persistence is not enabled, this allows to mount the
@@ -332,6 +344,7 @@ adminUser: admin
 
 # Use an existing secret for the admin user.
 admin:
+  ## Name of the secret. Can be templated.
   existingSecret: ""
   userKey: admin-user
   passwordKey: admin-password
@@ -551,6 +564,9 @@ dashboards: {}
   #     url: https://example.com/repository/test-b64.json
   #     token: ''
   #     b64content: true
+  #   local-dashboard-gitlab:
+  #     url: https://example.com/repository/test-gitlab.json
+  #     gitlabToken: ''
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
@@ -640,7 +656,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.15.6
+    tag: 1.19.2
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -656,13 +672,15 @@ sidecar:
   enableUniqueFilenames: false
   readinessProbe: {}
   livenessProbe: {}
+  # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+  logLevel: INFO
   dashboards:
     enabled: false
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
     # value of label that the configmaps with dashboards are set to
-    labelValue: null
+    labelValue: ""
     # folder in the pod that should hold the collected dashboards (unless `defaultFolderName` is set)
     folder: /tmp/dashboards
     # The default folder name, it will create a subfolder under the `folder` and put dashboards in there instead
@@ -715,7 +733,7 @@ sidecar:
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
     # value of label that the configmaps with datasources are set to
-    labelValue: null
+    labelValue: ""
     # If specified, the sidecar will search for datasource config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
@@ -737,7 +755,7 @@ sidecar:
     # label that the configmaps with plugins are marked with
     label: grafana_plugin
     # value of label that the configmaps with plugins are set to
-    labelValue: null
+    labelValue: ""
     # If specified, the sidecar will search for plugin config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
@@ -811,6 +829,8 @@ imageRenderer:
     # image-renderer service port used by both service and deployment
     port: 8081
     targetPort: 8081
+    # Adds the appProtocol field to the image-renderer service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+    appProtocol: ""
   # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
   grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
@@ -841,7 +861,7 @@ imageRenderer:
   ##
   tolerations: []
 
-  ## Affinity for pod assignment
+  ## Affinity for pod assignment (evaluated as template)
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
   affinity: {}
@@ -855,6 +875,10 @@ networkPolicy:
   ## client label will have network access to  grafana port defined.
   ## When true, grafana will accept connections from any source
   ## (with the correct destination port).
+  ##
+  ingress: true
+  ## @param networkPolicy.ingress When true enables the creation
+  ## an ingress network policy
   ##
   allowExternal: true
   ## @param networkPolicy.explicitNamespacesSelector A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed
@@ -871,10 +895,34 @@ networkPolicy:
   ##    - {key: role, operator: In, values: [frontend]}
   ##
   explicitNamespacesSelector: {}
+  ##
+  ##
+  ##
+  ##
+  ##
+  ##
+  egress:
+    ## @param networkPolicy.egress.enabled When enabled, an egress network policy will be
+    ## created allowing grafana to connect to external data sources from kubernetes cluster.
+    enabled: false
+    ##
+    ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
+    ports: []
+    ## Add ports to the egress by specifying - port: <port number>
+    ## E.X.
+    ## ports:
+      ## - port: 80
+      ## - port: 443
+  ##
+  ##
+  ##
+  ##
+  ##
+  ##
 
 # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
 enableKubeBackwardCompatibility: false
-
+useStatefulSet: false
 # Create a dynamic manifests via values:
 extraObjects: []
   # - apiVersion: "kubernetes-client.io/v1"
