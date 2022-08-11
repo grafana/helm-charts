@@ -1,6 +1,6 @@
 image:
   repository: grafana/loki
-  tag: 2.3.0
+  tag: 2.6.1
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -12,6 +12,9 @@ image:
 
 ingress:
   enabled: false
+  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+  # ingressClassName: nginx
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -44,16 +47,23 @@ tracing:
   jaegerAgentHost:
 
 config:
+  # existingSecret:
   auth_enabled: false
+
+  memberlist:
+    join_members:
+      # the value must be defined as string to be evaluated when secret manifest is being generating
+      - '{{ include "loki.fullname" . }}-memberlist'
+
   ingester:
     chunk_idle_period: 3m
     chunk_block_size: 262144
     chunk_retain_period: 1m
     max_transfer_retries: 0
+    wal:
+      dir: /data/loki/wal
     lifecycler:
       ring:
-        kvstore:
-          store: inmemory
         replication_factor: 1
 
       ## Different ring configs can be used. E.g. Consul
@@ -69,6 +79,7 @@ config:
     enforce_metric_name: false
     reject_old_samples: true
     reject_old_samples_max_age: 168h
+    max_entries_limit_per_query: 5000
   schema_config:
     configs:
     - from: 2020-10-24
@@ -80,6 +91,7 @@ config:
         period: 24h
   server:
     http_listen_port: 3100
+    grpc_listen_port: 9095
   storage_config:
     boltdb_shipper:
       active_index_directory: /data/loki/boltdb-shipper-active
@@ -96,7 +108,7 @@ config:
   compactor:
     working_directory: /data/loki/boltdb-shipper-compactor
     shared_store: filesystem
-# Needed for Alerting: https://grafana.com/docs/loki/latest/alerting/
+# Needed for Alerting: https://grafana.com/docs/loki/latest/rules/
 # This is just a simple example, for more details: https://grafana.com/docs/loki/latest/configuration/#ruler_config
 #  ruler:
 #    storage:
@@ -113,6 +125,8 @@ config:
 ## Additional Loki container arguments, e.g. log level (debug, info, warn, error)
 extraArgs: {}
   # log.level: debug
+
+extraEnvFrom: []
 
 livenessProbe:
   httpGet:
@@ -140,12 +154,14 @@ persistence:
   accessModes:
   - ReadWriteOnce
   size: 10Gi
+  labels: {}
   annotations: {}
   # selector:
   #   matchLabels:
   #     app.kubernetes.io/name: loki
   # subPath: ""
   # existingClaim:
+  # storageClassName:
 
 ## Pod Labels
 podLabels: {}
@@ -186,6 +202,9 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 10001
 
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+
 service:
   type: ClusterIP
   nodePort:
@@ -206,6 +225,11 @@ terminationGracePeriodSeconds: 4800
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
+## Topology spread constraint for multi-zone clusters
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+topologySpreadConstraints:
+  enabled: false
+
 # The values to set in the PodDisruptionBudget spec
 # If not set then a PodDisruptionBudget will not be created
 podDisruptionBudget: {}
@@ -221,6 +245,46 @@ serviceMonitor:
   additionalLabels: {}
   annotations: {}
   # scrapeTimeout: 10s
+  # path: /metrics
+  prometheusRule:
+    enabled: false
+    additionalLabels: {}
+  #  namespace:
+    rules: []
+    #  Some examples from https://awesome-prometheus-alerts.grep.to/rules.html#loki
+    #  - alert: LokiProcessTooManyRestarts
+    #    expr: changes(process_start_time_seconds{job=~"loki"}[15m]) > 2
+    #    for: 0m
+    #    labels:
+    #      severity: warning
+    #    annotations:
+    #      summary: Loki process too many restarts (instance {{ $labels.instance }})
+    #      description: "A loki process had too many restarts (target {{ $labels.instance }})\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    #  - alert: LokiRequestErrors
+    #    expr: 100 * sum(rate(loki_request_duration_seconds_count{status_code=~"5.."}[1m])) by (namespace, job, route) / sum(rate(loki_request_duration_seconds_count[1m])) by (namespace, job, route) > 10
+    #    for: 15m
+    #    labels:
+    #      severity: critical
+    #    annotations:
+    #      summary: Loki request errors (instance {{ $labels.instance }})
+    #      description: "The {{ $labels.job }} and {{ $labels.route }} are experiencing errors\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    #  - alert: LokiRequestPanic
+    #    expr: sum(increase(loki_panic_total[10m])) by (namespace, job) > 0
+    #    for: 5m
+    #    labels:
+    #      severity: critical
+    #    annotations:
+    #      summary: Loki request panic (instance {{ $labels.instance }})
+    #      description: "The {{ $labels.job }} is experiencing {{ printf \"%.2f\" $value }}% increase of panics\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    #  - alert: LokiRequestLatency
+    #    expr: (histogram_quantile(0.99, sum(rate(loki_request_duration_seconds_bucket{route!~"(?i).*tail.*"}[5m])) by (le)))  > 1
+    #    for: 5m
+    #    labels:
+    #      severity: critical
+    #    annotations:
+    #      summary: Loki request latency (instance {{ $labels.instance }})
+    #      description: "The {{ $labels.job }} {{ $labels.route }} is experiencing {{ printf \"%.2f\" $value }}s 99th percentile latency\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
 
 initContainers: []
 ## Init containers to be added to the loki pod.
@@ -264,7 +328,7 @@ extraPorts: []
 # Extra env variables to pass to the loki container
 env: []
 
-# Specify Loki Alerting rules based on this documentation: https://grafana.com/docs/loki/latest/alerting/
+# Specify Loki Alerting rules based on this documentation: https://grafana.com/docs/loki/latest/rules/
 # When specified, you also need to add a ruler config section above. An example is shown in the alerting docs.
 alerting_groups: []
 #  - name: example
@@ -272,3 +336,7 @@ alerting_groups: []
 #    - alert: HighThroughputLogStreams
 #      expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
 #      for: 2m
+
+useExistingAlertingGroup:
+  enabled: false
+  configmapName: ""

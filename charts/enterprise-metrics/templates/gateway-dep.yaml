@@ -53,7 +53,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: gateway
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -77,6 +77,7 @@ spec:
             - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-metrics.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.ruler.url=http://{{ template "enterprise-metrics.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             - -gateway.proxy.store-gateway.url=http://{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.compactor.url=http://{{ template "enterprise-metrics.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
             {{- end }}
             {{- range $key, $value := .Values.gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"

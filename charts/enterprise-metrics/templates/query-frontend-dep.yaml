@@ -53,7 +53,7 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: query-frontend
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -80,6 +80,11 @@ spec:
               mountPath: /license
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: storage
+              mountPath: /data
+              {{- if .Values.query_frontend.persistence.subPath }}
+              subPath: {{ .Values.query_frontend.persistence.subPath }}
+              {{- end }}
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
@@ -126,3 +131,5 @@ spec:
 {{- if .Values.query_frontend.extraVolumes }}
 {{ toYaml .Values.query_frontend.extraVolumes | indent 8}}
 {{- end }}
+        - name: storage
+          emptyDir: {}
