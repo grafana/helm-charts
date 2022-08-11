@@ -40,7 +40,7 @@ spec:
       priorityClassName: {{ .Values.gateway.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.gateway.securityContext | nindent 8 }}
+        {{- toYaml .Values.gateway.podSecurityContext | nindent 8 }}
       initContainers:
         {{- toYaml .Values.gateway.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
