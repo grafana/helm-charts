@@ -33,7 +33,7 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
-  # -- SecurityContext holds pod-level security attributes and common container settings
+  # -- SecurityContext holds container-level security attributes and common container settings
   securityContext:
     capabilities:
       drop:
@@ -42,8 +42,9 @@ tempo:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
+  # -- podSecurityContext holds pod-level security attributes and common container settings
+  podSecurityContext:
     fsGroup: 1000
-
   # -- Structured tempo configuration
   structuredConfig: {}
 
