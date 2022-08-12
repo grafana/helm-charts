@@ -20,6 +20,16 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart version >= 0.22.0
+Align Istio GRPC named port syntax. For example,
+
+- otlp-grpc               -> grpc-otlp
+- distributor-otlp-grpc   -> grpc-distributor-otlp
+- jaeger-grpc             -> grpc-jaeger
+- distributor-jaeger-grpc -> grpc-distributor-jaeger
+
+In case you need to rollback, please search the right hand side pattern and replace with left hand side pattern.
+
 ### From Chart version < 0.20.0
 The image's attributes must be set under the `image` key for the Memcached service.
 ```yaml
