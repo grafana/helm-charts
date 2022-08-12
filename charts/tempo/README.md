@@ -23,6 +23,7 @@ Grafana Tempo Single Binary Mode
 | persistence.size | string | `"10Gi"` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
+| priorityClassName | string | `nil` | The name of the PriorityClass |
 | replicas | int | `1` |  |
 | securityContext | object | `{}` |  |
 | service.annotations | object | `{}` |  |

@@ -6,6 +6,15 @@ kind: ConfigMap
 metadata:
   name: {{ include "loki.dashboardsName" $ }}-1
   namespace: {{ .namespace | default $.Release.Namespace }}
+  labels:
+    {{- include "loki.labels" $ | nindent 4 }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 data:
   "loki-chunks.json": |
     {{ $.Files.Get "src/dashboards/loki-chunks.json" | fromJson | toJson }}
