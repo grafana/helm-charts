@@ -10,6 +10,9 @@ annotations: {}
 # -- Annotations for the Deployment Pods
 podAnnotations: {}
 
+# -- Annotations for the Deployment Pods
+podLabels: {}
+
 # -- Pod security context (runAsUser, etc.)
 podSecurityContext: {}
 
@@ -29,17 +32,20 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.20.0
+  tag: v0.25.1
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets
   pullSecrets: []
 
 # -- If both are set, Agent Operator will create and maintain a service for scraping kubelets
-# -- https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets
+# https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets
 kubeletService:
   namespace: default
   serviceName: kubelet
+
+# -- List of additional cli arguments to configure agent-operator (example: `--log.level`)
+extraArgs: []
 
 # -- Resource limits and requests config
 resources: {}

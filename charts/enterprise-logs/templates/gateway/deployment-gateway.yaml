@@ -40,7 +40,7 @@ spec:
       priorityClassName: {{ .Values.gateway.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.gateway.securityContext | nindent 8 }}
+        {{- toYaml .Values.gateway.podSecurityContext | nindent 8 }}
       initContainers:
         {{- toYaml .Values.gateway.initContainers | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
@@ -50,7 +50,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: enterprise-logs
+        - name: gateway
           image: "{{ template "enterprise-logs.image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -58,19 +58,19 @@ spec:
             - -config.file=/etc/loki/config/config.yaml
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
-            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+            - -admin.client.s3.endpoint={{ template "enterprise-logs.minio" . }}
             - -admin.client.s3.bucket-name=enterprise-logs-admin
-            - -admin.client.s3.access-key-id=enterprise-logs
-            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.access-key-id={{ .Values.minio.accessKey }}
+            - -admin.client.s3.secret-access-key={{ .Values.minio.secretKey }}
             - -admin.client.s3.insecure=true
             {{- end }}
             {{- if .Values.gateway.useDefaultProxyURLs }}
-            - -gateway.proxy.default.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.admin-api.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.distributor.url=http://{{ template "enterprise-logs.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.ingester.url=http://{{ template "enterprise-logs.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-logs.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
-            - -gateway.proxy.ruler.url=http://{{ template "enterprise-logs.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:{{ .Values.config.server.http_listen_port }}
+            - -gateway.proxy.default.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:3100
+            - -gateway.proxy.admin-api.url=http://{{ template "enterprise-logs.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:3100
+            - -gateway.proxy.distributor.url=http://{{ template "enterprise-logs.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:3100
+            - -gateway.proxy.ingester.url=http://{{ template "enterprise-logs.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:3100
+            - -gateway.proxy.query-frontend.url=http://{{ template "enterprise-logs.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:3100
+            - -gateway.proxy.ruler.url=http://{{ template "enterprise-logs.fullname" . }}-ruler.{{ .Release.Namespace }}.svc:3100
             {{- end }}
             {{- range $key, $value := .Values.gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -88,7 +88,7 @@ spec:
             {{- end }}
           ports:
             - name: http-metrics
-              containerPort: {{ .Values.config.server.http_listen_port }}
+              containerPort: 3100
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
@@ -97,7 +97,7 @@ spec:
           resources:
             {{- toYaml .Values.gateway.resources | nindent 12 }}
           securityContext:
-            readOnlyRootFilesystem: true
+            {{- toYaml .Values.gateway.containerSecurityContext | nindent 12 }}
           env:
             {{- if .Values.gateway.env }}
             {{ toYaml .Values.gateway.env | nindent 12 }}

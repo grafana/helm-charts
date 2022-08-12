@@ -28,6 +28,9 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       containers:
       - args:
         - -config.file=/conf/tempo.yaml
@@ -63,6 +66,10 @@ spec:
           name: opencensus
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
+        {{- with .Values.tempo.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         env:
           {{- if .Values.tempo.extraEnv }}
             {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
@@ -77,6 +84,7 @@ spec:
         - mountPath: /var/tempo
           name: storage
         {{- end }}
+      {{- if .Values.tempoQuery.enabled }}
       - args:
         - --query.base-path=/
         - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
@@ -97,18 +105,27 @@ spec:
           {{- end }}
         resources:
           {{- toYaml .Values.tempoQuery.resources | nindent 10 }}
+        {{- with .Values.tempoQuery.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.tempoQuery.extraVolumeMounts -}}
           {{ toYaml .Values.tempoQuery.extraVolumeMounts | nindent 8 }}
         {{- end }}
         - mountPath: /conf
           name: tempo-query-conf
+      {{- end }}
       {{- with .Values.affinity }}
       affinity:
-        {{- toYaml . $ | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.securityContext }}
+      securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
@@ -119,9 +136,11 @@ spec:
       {{- if .Values.extraVolumes -}}
         {{ toYaml .Values.extraVolumes | nindent 6 }}
       {{- end }}
+      {{- if .Values.tempoQuery.enabled }}
       - configMap:
           name: {{ template "tempo.name" . }}-query
         name: tempo-query-conf
+      {{- end }}
       - configMap:
           name: {{ template "tempo.name" . }}
         name: tempo-conf
