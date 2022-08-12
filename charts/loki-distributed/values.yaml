@@ -738,6 +738,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
+    loadBalancerSourceRanges: []
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
@@ -1245,6 +1247,13 @@ memcachedExporter:
   podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
+  # -- The SecurityContext for memcachedExporter containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled
