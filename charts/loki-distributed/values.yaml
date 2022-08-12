@@ -234,6 +234,9 @@ serviceMonitor:
   # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
   # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
   metricRelabelings: []
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+  targetLabels: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
