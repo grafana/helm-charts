@@ -234,6 +234,9 @@ serviceMonitor:
   # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
   # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
   metricRelabelings: []
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+  targetLabels: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
@@ -731,6 +734,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
+    loadBalancerSourceRanges: []
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
