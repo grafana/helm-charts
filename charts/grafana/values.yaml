@@ -675,6 +675,7 @@ sidecar:
   # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
   logLevel: INFO
   dashboards:
+    env: {}
     enabled: false
     SCProvider: true
     # label that the configmaps with dashboards are marked with

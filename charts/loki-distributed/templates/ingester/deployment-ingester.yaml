@@ -26,6 +26,12 @@ spec:
         {{- include "loki.ingesterSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
     spec:
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.ingester.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

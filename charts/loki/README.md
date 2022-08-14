@@ -103,4 +103,3 @@ config:
 ```
 
 See [the documentation](https://grafana.com/docs/loki/latest/operations/storage/retention/) for additional options.
-
