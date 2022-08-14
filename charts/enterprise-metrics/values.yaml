@@ -1,3 +1,8 @@
+# This chart is now deprecated and will no longer be updated.
+# Grafana Enterprise Metrics v2.0.0 is included in the new `mimir-distributed` chart which implements Grafana Enterprise Metrics as an option (`enterprise.enabled: true`).
+#  To upgrade to using the new chart, see the [Grafana Enterprise Metrics migration guide](https://grafana.com/docs/enterprise-metrics/latest/migrating-from-gem-1.7/).
+
+
 # The default values specified in this file are enough to deploy all of the
 # Grafana Enterprise Metrics microservices but are not suitable for production
 # load.
@@ -8,27 +13,13 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.5.0
+  tag: v1.7.0
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
   # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   # pullSecrets:
   #   - myRegistryKeySecretName
-
-ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 serviceAccount:
   create: true
@@ -54,6 +45,7 @@ tokengenJob:
   extraArgs: {}
   env: []
   annotations: {}
+  initContainers: []
 
 config:
   auth_enabled: true
@@ -61,6 +53,13 @@ config:
     type: enterprise
 
   cluster_name: "{{ .Release.Name }}"
+
+  admin_api:
+    leader_election:
+      enabled: true
+      ring:
+        kvstore:
+          store: "memberlist"
 
   admin_client:
     storage:
@@ -95,10 +94,7 @@ config:
     distributor_client:
       address: 'dns:///{{ template "enterprise-metrics.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}'
 
-  limits:
-    enforce_metric_name: false
-    reject_old_samples: true
-    reject_old_samples_max_age: 168h
+  limits: {}
 
   server:
     http_listen_port: 8080
@@ -192,6 +188,8 @@ admin_api:
   service:
     annotations: {}
     labels: {}
+
+  initContainers: []
 
   strategy:
     type: RollingUpdate
@@ -570,6 +568,8 @@ overrides_exporter:
   replicas: 1
 
   annotations: {}
+
+  initContainers: []
 
   service:
     annotations: {}
@@ -1100,15 +1100,3 @@ minio:
       cpu: 100m
       memory: 128Mi
   secretKey: supersecret
-
-consul:
-  enabled: false
-  client:
-    enabled: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  server:
-    replicas: 1
-    bootstrapExpect: 1

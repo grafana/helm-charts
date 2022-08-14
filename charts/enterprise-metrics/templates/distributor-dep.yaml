@@ -54,16 +54,13 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: distributor
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=distributor"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
             - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
-          {{- if .Values.consul.enabled }}
-            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
-          {{- end }}
           {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
