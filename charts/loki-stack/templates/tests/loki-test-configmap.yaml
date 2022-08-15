@@ -15,18 +15,18 @@ data:
 
     function setup() {
       apk add -u curl jq
-      until (curl -s ${LOKI_URI}/api/prom/label/app/values | jq -e '.values[] | select(. == "loki")'); do
+      until (curl -s ${LOKI_URI}/loki/api/v1/label/app/values | jq -e '.values[] | select(. == "loki")'); do
         sleep 1
       done
     }
 
     @test "Has labels" {
-      curl -s ${LOKI_URI}/api/prom/label | \
+      curl -s ${LOKI_URI}/loki/api/v1/labels | \
       jq -e '.values[] | select(. == "app")'
     }
 
     @test "Query log entry" {
-      curl -sG ${LOKI_URI}/api/prom/query?limit=10 --data-urlencode 'query={app="loki"}' | \
+      curl -sG ${LOKI_URI}/loki/api/v1/query?limit=10 --data-urlencode 'query={app="loki"}' | \
       jq -e '.streams[].entries | length >= 1'
     }
 
@@ -34,9 +34,9 @@ data:
       local timestamp=$(date -Iseconds -u | sed 's/UTC/.000000000+00:00/')
       local data=$(jq -n --arg timestamp "${timestamp}" '{"streams": [{"labels": "{app=\"loki-test\"}", "entries": [{"ts": $timestamp, "line": "foobar"}]}]}')
 
-      curl -s -X POST -H "Content-Type: application/json" ${LOKI_URI}/api/prom/push -d "${data}"
+      curl -s -X POST -H "Content-Type: application/json" ${LOKI_URI}/loki/api/v1/push -d "${data}"
 
-      curl -sG ${LOKI_URI}/api/prom/query?limit=1 --data-urlencode 'query={app="loki-test"}' | \
+      curl -sG ${LOKI_URI}/loki/api/v1/query?limit=1 --data-urlencode 'query={app="loki-test"}' | \
       jq -e '.streams[].entries[].line == "foobar"'
     }
 
@@ -46,7 +46,7 @@ data:
 
       curl -s -X POST -H "Content-Type: application/json" ${LOKI_URI}/loki/api/v1/push -d "${data}"
 
-      curl -sG ${LOKI_URI}/api/prom/query?limit=1 --data-urlencode 'query={app="loki-test"}' | \
+      curl -sG ${LOKI_URI}/loki/api/v1/query?limit=1 --data-urlencode 'query={app="loki-test"}' | \
       jq -e '.streams[].entries[].line == "foobar"'
     }
 
