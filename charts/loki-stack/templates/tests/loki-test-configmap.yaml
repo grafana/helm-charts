@@ -27,7 +27,7 @@ data:
 
     @test "Query log entry" {
       curl -sG ${LOKI_URI}/loki/api/v1/query?limit=10 --data-urlencode 'query={app="loki"}' | \
-      jq -e '.streams[].entries | length >= 1'
+      jq -e '.data.result.streams[].entries | length >= 1'
     }
 
     @test "Push log entry legacy" {
@@ -37,7 +37,7 @@ data:
       curl -s -X POST -H "Content-Type: application/json" ${LOKI_URI}/loki/api/v1/push -d "${data}"
 
       curl -sG ${LOKI_URI}/loki/api/v1/query?limit=1 --data-urlencode 'query={app="loki-test"}' | \
-      jq -e '.streams[].entries[].line == "foobar"'
+      jq -e '.data.result.streams[].entries[].line == "foobar"'
     }
 
     @test "Push log entry" {
@@ -47,6 +47,6 @@ data:
       curl -s -X POST -H "Content-Type: application/json" ${LOKI_URI}/loki/api/v1/push -d "${data}"
 
       curl -sG ${LOKI_URI}/loki/api/v1/query?limit=1 --data-urlencode 'query={app="loki-test"}' | \
-      jq -e '.streams[].entries[].line == "foobar"'
+      jq -e '.data.result.streams[].entries[].line == "foobar"'
     }
 
