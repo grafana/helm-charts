@@ -86,6 +86,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
+| distributor.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection. |
+| distributor.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
@@ -201,6 +203,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
 | indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
 | ingester.affinity | object | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
+| ingester.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | ingester.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraContainers | list | `[]` | Containers to add to the ingester pods |
@@ -365,6 +369,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
+| querier.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true` |
 | querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
 | querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
@@ -394,6 +400,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| queryFrontend.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
+| queryFrontend.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
 | queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |

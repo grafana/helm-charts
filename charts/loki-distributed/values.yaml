@@ -340,6 +340,10 @@ ingester:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+  # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: ""
 
 # Configuration for the distributor
 distributor:
@@ -409,6 +413,10 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
+    # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: ""
 
 # Configuration for the querier
 querier:
@@ -491,6 +499,10 @@ querier:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+  # -- Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: ""
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -560,6 +572,10 @@ queryFrontend:
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
   tolerations: []
+  # -- Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: ""
 
 # Configuration for the query-scheduler
 queryScheduler:

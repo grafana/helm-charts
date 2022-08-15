@@ -22,5 +22,8 @@ spec:
       port: 9095
       targetPort: grpc
       protocol: TCP
+      {{- if .Values.querier.appProtocol.grpc }}
+      appProtocol: {{ .Values.querier.appProtocol.grpc }}
+      {{- end }}
   selector:
     {{- include "loki.querierSelectorLabels" . | nindent 4 }}
