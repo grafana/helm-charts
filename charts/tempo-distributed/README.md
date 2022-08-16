@@ -39,6 +39,7 @@ tempo:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
+    allowPrivilegeEscalation: false
   podSecurityContext:
     fsGroup: 1000
 ```
@@ -408,7 +409,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.readinessProbe.httpGet.port | string | `"http"` |  |
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
-| tempo.securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
+| tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |

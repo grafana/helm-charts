@@ -39,13 +39,14 @@ tempo:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
+    allowPrivilegeEscalation: false
   podSecurityContext:
     fsGroup: 1000
 ```
 If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
 
 ### From Chart version >= 0.22.0
-Align Istio GRPC named port syntax. For example, 
+Align Istio GRPC named port syntax. For example,
 
 - otlp-grpc               -> grpc-otlp
 - distributor-otlp-grpc   -> grpc-distributor-otlp
