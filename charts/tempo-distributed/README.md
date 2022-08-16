@@ -24,7 +24,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 Version 0.23.0:
 
-* Adds /var/tempo emptyDir mount for querier, queryfrontend and compactor. Previously, /var/tempo was directory inside container.
+* Adds /var/tempo emptyDir mount for querier, queryfrontend, distributor and compactor. Previously, /var/tempo was directory inside container.
 
 * Sets queryFrontend.query.enabled to false. tempo-query is only required for grafana version <7.5 for compatibility with jaeger-ui. Please also note that tempo-query is incompatible with securityContext readOnlyRootFilesystem set to true.
 
@@ -39,6 +39,7 @@ tempo:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
+  podSecurityContext:
     fsGroup: 1000
 ```
 If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
