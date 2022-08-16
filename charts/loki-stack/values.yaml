@@ -16,6 +16,8 @@ loki:
       path: /ready
       port: http-metrics
     initialDelaySeconds: 45
+  datasource:
+    jsonData: {}
 
 promtail:
   enabled: true
@@ -37,6 +39,8 @@ grafana:
 prometheus:
   enabled: false
   isDefault: false
+  datasource:
+    jsonData: {}
 
 filebeat:
   enabled: false
