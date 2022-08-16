@@ -5,7 +5,9 @@
 ***********************************************************************
 
 Installed components:
+{{- if .Values.gateway.enabled }}
 * gateway
+{{- end }}
 * ingester
 * distributor
 * querier
@@ -18,6 +20,9 @@ Installed components:
 {{- end }}
 {{- if .Values.ruler.enabled }}
 * ruler
+{{- end }}
+{{- if .Values.indexGateway.enabled }}
+* index-gateway
 {{- end }}
 {{- if .Values.memcachedChunks.enabled }}
 * memcached-chunks

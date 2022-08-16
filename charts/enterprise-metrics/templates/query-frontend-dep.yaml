@@ -53,7 +53,7 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: query-frontend
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -74,10 +74,17 @@ spec:
             {{- if .Values.query_frontend.extraVolumeMounts }}
               {{ toYaml .Values.query_frontend.extraVolumeMounts | nindent 12}}
             {{- end }}
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: storage
+              mountPath: /data
+              {{- if .Values.query_frontend.persistence.subPath }}
+              subPath: {{ .Values.query_frontend.persistence.subPath }}
+              {{- end }}
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
@@ -115,9 +122,14 @@ spec:
 {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
         - name: license
           secret:
             secretName: {{ .Values.license.secretName }}
 {{- if .Values.query_frontend.extraVolumes }}
 {{ toYaml .Values.query_frontend.extraVolumes | indent 8}}
 {{- end }}
+        - name: storage
+          emptyDir: {}

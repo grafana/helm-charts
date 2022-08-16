@@ -1,9 +1,13 @@
+{{- if .Values.gateway.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "loki.gatewayFullname" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
+    {{- with .Values.gateway.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.gateway.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -13,8 +17,14 @@ spec:
   {{- with .Values.gateway.service.clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
-  {{- if and (eq "LoadBalancer" .Values.gateway.service.type) .Values.gateway.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.gateway.service.loadBalancerIP }}
+  {{- if eq "LoadBalancer" .Values.gateway.service.type }}
+  {{- with .Values.gateway.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with .Values.gateway.service.loadBalancerSourceRanges  }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- end }}
   ports:
     - name: http
@@ -26,3 +36,4 @@ spec:
       protocol: TCP
   selector:
     {{- include "loki.gatewaySelectorLabels" . | nindent 4 }}
+{{- end }}

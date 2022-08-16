@@ -1,3 +1,4 @@
+{{ if .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -39,12 +40,15 @@ spec:
       port: {{ .Values.service.port }}
       protocol: TCP
       targetPort: {{ .Values.service.targetPort }}
-{{ if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
+      {{- if .Values.service.appProtocol }}
+      appProtocol: {{ .Values.service.appProtocol }}
+      {{- end }}
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
       nodePort: {{.Values.service.nodePort}}
-{{ end }}
+      {{- end }}
   {{- if .Values.extraExposePorts }}
   {{- tpl (toYaml .Values.extraExposePorts) . | indent 4 }}
   {{- end }}
   selector:
     {{- include "grafana.selectorLabels" . | nindent 4 }}
-
+{{ end }}

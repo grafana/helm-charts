@@ -23,6 +23,7 @@ spec:
         app: {{ template "enterprise-metrics.name" . }}-ruler
         # The name label is important for cortex-mixin compatibility which expects certain names for services.
         name: ruler
+        gossip_ring_member: "true"
         target: ruler
         release: {{ .Release.Name }}
         {{- with .Values.ruler.podLabels }}
@@ -53,18 +54,13 @@ spec:
       {{- end}}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: ruler
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ruler"
             - "-config.file=/etc/enterprise-metrics/enterprise-metrics.yaml"
-            {{- if .Values.consul.enabled }}
-            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
-            - -ruler.ring.store=consul
-            - -ruler.ring.consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc:8500
-            - -ruler.enable-sharding=true
-            {{- end }}
+            - "-memberlist.join={{ template "enterprise-metrics.fullname" . }}-gossip-ring"
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
@@ -94,10 +90,10 @@ spec:
             {{- if index .Values "memcached-metadata" "enabled" }}
             - -blocks-storage.bucket-store.metadata-cache.backend=memcached
             - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-metadata.{{ .Release.Namespace }}.svc:11211
-            - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").memcached.maxItemMemory }}
+            - -blocks-storage.bucket-store.metadata-cache.memcached.max-item-size={{ (index .Values "memcached-metadata").maxItemMemory }}
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "enterprise-metrics.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -108,6 +104,8 @@ spec:
             {{- end }}
             - name: config
               mountPath: /etc/enterprise-metrics
+            - name: runtime-config
+              mountPath: /var/enterprise-metrics
             - name: license
               mountPath: /license
             - name: storage
@@ -116,6 +114,9 @@ spec:
           ports:
             - name: http-metrics
               containerPort: {{ .Values.config.server.http_listen_port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.config.server.grpc_listen_port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.ruler.livenessProbe | nindent 12 }}
@@ -147,6 +148,9 @@ spec:
 {{- else }}
             secretName: {{ template "enterprise-metrics.fullname" . }}
 {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "enterprise-metrics.fullname" . }}-runtime
 {{- if .Values.ruler.extraVolumes }}
 {{ toYaml .Values.ruler.extraVolumes | indent 8}}
 {{- end }}

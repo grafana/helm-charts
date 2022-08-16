@@ -24,6 +24,11 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.querierSelectorLabels" $ | nindent 6 }}
+    matchExpressions:
+      - key: prometheus.io/service-monitor
+        operator: NotIn
+        values:
+          - "false"
   endpoints:
     - port: http
       {{- with .interval }}
@@ -32,6 +37,14 @@ spec:
       {{- with .scrapeTimeout }}
       scrapeTimeout: {{ . }}
       {{- end }}
+      {{- with .relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .scheme }}
       scheme: {{ . }}
       {{- end }}
@@ -39,5 +52,9 @@ spec:
       tlsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- with .targetLabels }}
+  targetLabels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}

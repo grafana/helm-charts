@@ -1,0 +1,15 @@
+{{- if .Values.metricsGenerator.enabled }}
+{{- if gt (int .Values.metricsGenerator.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "tempo.metricsGeneratorFullname" . }}
+  labels:
+    {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}
+{{- end }}

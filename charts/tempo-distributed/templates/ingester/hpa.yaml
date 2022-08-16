@@ -1,0 +1,28 @@
+{{- if .Values.ingester.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "tempo.ingesterFullname" . }}
+  labels:
+    {{- include "tempo.ingesterLabels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: {{ include "tempo.ingesterFullname" . }}
+  minReplicas: {{ .Values.ingester.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.ingester.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.ingester.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+  {{- with .Values.ingester.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+{{- end }}

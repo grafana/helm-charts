@@ -1,3 +1,4 @@
+{{- if eq .Values.ingester.kind "StatefulSet"}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -7,6 +8,7 @@ metadata:
     app.kubernetes.io/part-of: memberlist
 spec:
   replicas: {{ .Values.ingester.replicas }}
+  podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
       partition: 0
@@ -28,7 +30,19 @@ spec:
       labels:
         {{- include "loki.ingesterSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/part-of: memberlist
+        {{- with .Values.loki.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.ingester.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.ingester.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -39,7 +53,7 @@ spec:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.ingester.terminationGracePeriodSeconds }}
       containers:
-        - name: loki
+        - name: ingester
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           args:
@@ -70,6 +84,8 @@ spec:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
@@ -80,6 +96,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.ingester.resources | nindent 12 }}
+        {{- if .Values.ingester.extraContainers }}
+        {{- toYaml .Values.ingester.extraContainers | nindent 8}}
+        {{- end }}
       {{- with .Values.ingester.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
@@ -94,8 +113,13 @@ spec:
       {{- end }}
       volumes:
         - name: config
+          {{- if .Values.loki.existingSecretForConfig }}
+          secret:
+            secretName: {{ .Values.loki.existingSecretForConfig }}
+          {{- else }}
           configMap:
             name: {{ include "loki.fullname" . }}
+          {{- end }}
         {{- with .Values.ingester.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -116,3 +140,4 @@ spec:
           requests:
             storage: {{ .Values.ingester.persistence.size | quote }}
   {{- end }}
+{{- end }}

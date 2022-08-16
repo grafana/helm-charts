@@ -1,7 +1,8 @@
 apiVersion: v2
-version: 1.0.0
-appVersion: v1.1.2
-description: 'Grafana Enterprise Metrics'
+version: 1.9.0
+appVersion: v1.7.0
+deprecated: true
+description: "DEPRECATED Grafana Enterprise Metrics"
 engine: gotpl
 home: https://grafana.com/products/enterprise/metrics
 icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
@@ -10,26 +11,21 @@ name: enterprise-metrics
 dependencies:
   - name: memcached
     alias: memcached
-    version: 3.2.3
-    repository: https://charts.helm.sh/stable
+    version: 5.5.2
+    repository: https://charts.bitnami.com/bitnami
     condition: memcached.enabled
   - name: memcached
     alias: memcached-queries
-    version: 3.2.3
-    repository: https://charts.helm.sh/stable
+    version: 5.5.2
+    repository: https://charts.bitnami.com/bitnami
     condition: memcached-queries.enabled
   - name: memcached
     alias: memcached-metadata
-    version: 3.2.3
-    repository: https://charts.helm.sh/stable
+    version: 5.5.2
+    repository: https://charts.bitnami.com/bitnami
     condition: memcached-metadata.enabled
   - name: minio
     alias: minio
     version: 8.0.9
     repository: https://helm.min.io/
     condition: minio.enabled
-  - name: consul
-    alias: consul
-    version: 0.25.0
-    repository: https://helm.releases.hashicorp.com
-    condition: consul.enabled
