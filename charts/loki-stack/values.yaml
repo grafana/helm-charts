@@ -18,7 +18,7 @@ grafana:
     tag: 6.7.0
 
 prometheus:
-  enabled: false
+  enabled: true
   datasource:
     jsonData: {}
 
