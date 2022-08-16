@@ -33,7 +33,7 @@ spec:
       priorityClassName: {{ .Values.tokengen.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.tokengen.securityContext | nindent 8 }}
+        {{- toYaml .Values.tokengen.podSecurityContext | nindent 8 }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -73,6 +73,8 @@ spec:
             {{- if .Values.tokengen.env }}
               {{ toYaml .Values.tokengen.env | nindent 12 }}
             {{- end }}
+          securityContext:
+            {{- toYaml .Values.tokengen.containerSecurityContext | nindent 12 }}
       containers:
         - name: create-secret
           image: bitnami/kubectl
@@ -91,6 +93,8 @@ spec:
               mountPath: /etc/loki/config
             - name: license
               mountPath: /etc/enterprise-logs/license
+          securityContext:
+            {{- toYaml .Values.tokengen.containerSecurityContext | nindent 12 }}
       restartPolicy: OnFailure
       serviceAccount: {{ include "loki.serviceAccountName" . }}
       serviceAccountName: {{ include "loki.serviceAccountName" .  }}

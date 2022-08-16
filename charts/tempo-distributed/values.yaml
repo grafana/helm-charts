@@ -12,6 +12,7 @@ global:
   dnsNamespace: "kube-system"
 # -- Overrides the chart's computed fullname
 # fullnameOverride: tempo
+
 tempo:
   image:
     # -- The Docker registry
@@ -561,6 +562,8 @@ traces:
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
+# -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
+# @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}

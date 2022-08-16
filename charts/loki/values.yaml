@@ -1,6 +1,6 @@
 image:
   repository: grafana/loki
-  tag: 2.6.0
+  tag: 2.6.1
   pullPolicy: IfNotPresent
 
   ## Optionally specify an array of imagePullSecrets.
@@ -225,6 +225,11 @@ terminationGracePeriodSeconds: 4800
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
+## Topology spread constraint for multi-zone clusters
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+topologySpreadConstraints:
+  enabled: false
+
 # The values to set in the PodDisruptionBudget spec
 # If not set then a PodDisruptionBudget will not be created
 podDisruptionBudget: {}
@@ -324,7 +329,7 @@ extraPorts: []
 env: []
 
 # Specify Loki Alerting rules based on this documentation: https://grafana.com/docs/loki/latest/rules/
-# When specified, you also need to add a ruler config section above. An example is shown in the alerting docs.
+# When specified, you also need to add a ruler config section above. An example is shown in the rules docs.
 alerting_groups: []
 #  - name: example
 #    rules:
