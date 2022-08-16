@@ -39,7 +39,6 @@ grafana:
 prometheus:
   enabled: false
   isDefault: false
-  enabled: true
   datasource:
     jsonData: {}
 
