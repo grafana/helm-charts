@@ -46,7 +46,7 @@ Common labels
 */}}
 {{- define "tempo.labels" -}}
 helm.sh/chart: {{ include "tempo.chart" . }}
-{{ include "tempo.selectorLabels" . }}
+{{ include "tempo.selectorLabels" .ctx }}
 {{- if or .Chart.AppVersion .Values.tempo.tag }}
 app.kubernetes.io/version: {{ .Values.tempo.tag | default .Chart.AppVersion | quote }}
 {{- end }}
