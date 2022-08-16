@@ -31,7 +31,7 @@ data:
     }
 
     @test "Push log entry" {
-      local timestamp=$(date +%s%N)
+      local timestamp=$(date +s000000000)
       local data=$(jq -n --arg timestamp "${timestamp}" '{"streams": [{"stream": {"app": "loki-test"}, "values": [[$timestamp, "foobar"]]}]}')
 
       curl -s -X POST -H "Content-Type: application/json" ${LOKI_URI}/loki/api/v1/push -d "${data}"
