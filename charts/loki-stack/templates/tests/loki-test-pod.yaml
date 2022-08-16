@@ -12,7 +12,8 @@ metadata:
 spec:
   containers:
   - name: test
-    image: bats/bats:v1.1.0
+    image: "{{ .Values.test_pod.image }}"
+    imagePullPolicy: "{{ .Values.test_pod.imagePullPolicy}}"
     args:
     - /var/lib/loki/test.sh
     env:
