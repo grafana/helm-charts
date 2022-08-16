@@ -35,13 +35,13 @@ tempo:
   podAnnotations: {}
   # -- SecurityContext holds container-level security attributes and common container settings
   securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
     capabilities:
       drop:
         - ALL
     readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
   # -- podSecurityContext holds pod-level security attributes and common container settings
   podSecurityContext:
     fsGroup: 1000
