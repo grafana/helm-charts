@@ -20,9 +20,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### From chart version < 0.22.0
+### From chart version < 0.23.0
 
-Version 0.22.0:
+Version 0.23.0:
 
 * Adds /var/tempo emptyDir mount for querier, queryfrontend and compactor. Previously, /var/tempo was directory inside container.
 
@@ -42,6 +42,16 @@ tempo:
     fsGroup: 1000
 ```
 If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
+
+### From Chart version >= 0.22.0
+Align Istio GRPC named port syntax. For example,
+
+- otlp-grpc               -> grpc-otlp
+- distributor-otlp-grpc   -> grpc-distributor-otlp
+- jaeger-grpc             -> grpc-jaeger
+- distributor-jaeger-grpc -> grpc-distributor-jaeger
+
+In case you need to rollback, please search the right hand side pattern and replace with left hand side pattern.
 
 ### From Chart version < 0.20.0
 The image's attributes must be set under the `image` key for the Memcached service.
@@ -137,7 +147,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.service.annotations | object | `{}` | Annotations for compactor service |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
-| config | string | See values.yaml | Tempo configuration file contents |
+| config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |

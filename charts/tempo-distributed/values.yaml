@@ -13,6 +13,7 @@ global:
 
 # -- Overrides the chart's computed fullname
 fullnameOverride: ""
+# fullnameOverride: tempo
 
 tempo:
   image:
@@ -567,7 +568,9 @@ traces:
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
-# -- Tempo configuration file contents
+
+# -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
+
 # @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}

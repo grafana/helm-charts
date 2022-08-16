@@ -234,6 +234,9 @@ serviceMonitor:
   # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
   # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
   metricRelabelings: []
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+  targetLabels: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
@@ -299,22 +302,18 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.ingesterSelectorLabels" . | nindent 6 }}
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "loki.ingesterSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: {}
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -735,6 +734,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
+    loadBalancerSourceRanges: []
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service

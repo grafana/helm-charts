@@ -80,7 +80,7 @@ spec:
             {{- end }}
             {{- if .Values.traces.jaeger.grpc.enabled }}
             - containerPort: 14250
-              name: jaeger-grpc
+              name: grpc-jaeger
               protocol: TCP
             {{- end }}
             {{- if .Values.traces.zipkin.enabled }}
@@ -95,7 +95,7 @@ spec:
             {{- end }}
             {{- if .Values.traces.otlp.grpc.enabled }}
             - containerPort: 4317
-              name: otlp-grpc
+              name: grpc-otlp
               protocol: TCP
             {{- end }}
             {{- if .Values.traces.opencensus.enabled }}
