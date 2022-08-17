@@ -69,6 +69,9 @@ loki:
     server:
       http_listen_port: 3100
       grpc_listen_port: 9095
+      {{- if .Values.loki.extraServerConfig }}
+      {{- toYaml .Values.loki.extraServerConfig | nindent 2 }}
+      {{- end }}
 
     memberlist:
       join_members:
@@ -161,6 +164,9 @@ loki:
   commonConfig:
     path_prefix: /var/loki
     replication_factor: 3
+
+  # -- Extra server configurations. Check https://grafana.com/docs/loki/latest/configuration/#server for more info
+  extraServerConfig: {}
 
   storage:
     bucketNames:
