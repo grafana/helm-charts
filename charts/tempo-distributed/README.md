@@ -20,9 +20,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### From chart version < 0.24.0
+### From chart version < 0.23.0
 
-Version 0.24.0:
+Version 0.23.0:
 
 * Adds /var/tempo emptyDir mount for querier, queryfrontend, and compactor. Previously, /var/tempo was directory inside container.
 
