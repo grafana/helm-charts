@@ -42,33 +42,52 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Common labels
+Simple resource labels
 */}}
 {{- define "tempo.labels" -}}
-helm.sh/chart: {{ include "tempo.chart" . }}
-{{ include "tempo.selectorLabels" .ctx }}
-{{- if or .Chart.AppVersion .Values.tempo.tag }}
-app.kubernetes.io/version: {{ .Values.tempo.tag | default .Chart.AppVersion | quote }}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "tempo.name" .ctx }}-{{ .component }}
+{{- else -}}
+app: {{ include "tempo.name" .ctx }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+chart: {{ template "tempo.chart" .ctx }}
+heritage: {{ .ctx.Release.Service }}
+release: {{ .ctx.Release.Name }}
+
+{{- else -}}
+
+helm.sh/chart: {{ include "tempo.chart" .ctx }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
+{{- if .ctx.Chart.AppVersion }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- end }}
 {{- end -}}
 
 {{/*
-Selector labels
+Simple service selector labels
 */}}
 {{- define "tempo.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "tempo.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "tempo.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "tempo.fullname" .) .Values.serviceAccount.name }}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "tempo.name" .ctx }}-{{ .component }}
+{{- end }}
+release: {{ .ctx.Release.Name }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
 {{- end -}}
 {{- end -}}
 
