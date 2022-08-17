@@ -4,7 +4,7 @@ metadata:
   name: {{ template "tempo.querierFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 4 }}
   {{- with .Values.querier.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -15,7 +15,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.querierSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.querierLabels" . | nindent 8 }}
+        {{- include "tempo.labels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}

@@ -8,6 +8,6 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.distributorSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 6 }}
   maxUnavailable: 1
 {{- end }}

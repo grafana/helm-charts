@@ -4,7 +4,7 @@ metadata:
   name: {{ template "tempo.queryFrontendFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
   {{- with .Values.queryFrontend.service.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -28,4 +28,4 @@ spec:
       targetPort: jaeger-metrics
     {{- end }}
   selector:
-    {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}

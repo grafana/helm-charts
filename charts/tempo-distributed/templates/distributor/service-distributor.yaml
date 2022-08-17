@@ -4,7 +4,7 @@ metadata:
   name: {{ include "tempo.distributorFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.distributorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
   {{- with .Values.distributor.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -79,5 +79,5 @@ spec:
     {{ toYaml . | nindent 4 }}
   {{- end }}
   selector:
-    {{- include "tempo.distributorSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 4 }}
 

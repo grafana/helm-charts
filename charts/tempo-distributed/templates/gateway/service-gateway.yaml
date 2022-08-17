@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ include "tempo.gatewayFullname" . }}
   labels:
-    {{- include "tempo.gatewayLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
     {{- with .Values.gateway.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -29,5 +29,5 @@ spec:
       {{- end }}
       protocol: TCP
   selector:
-    {{- include "tempo.gatewaySelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 4 }}
 {{- end }}

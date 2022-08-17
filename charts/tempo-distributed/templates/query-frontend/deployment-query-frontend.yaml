@@ -4,7 +4,7 @@ metadata:
   name: {{ template "tempo.queryFrontendFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
   {{- with .Values.queryFrontend.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -17,7 +17,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.queryFrontendSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
@@ -25,7 +25,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.queryFrontendLabels" . | nindent 8 }}
+        {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}

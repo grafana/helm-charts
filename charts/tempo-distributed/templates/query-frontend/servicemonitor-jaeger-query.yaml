@@ -12,7 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "tempo.queryFrontendLabels" $ | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
     {{- with .labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -23,7 +23,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tempo.queryFrontendSelectorLabels" $ | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
   endpoints:
     - port: tempo-query-metrics
       {{- with .interval }}

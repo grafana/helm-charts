@@ -4,10 +4,10 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "tempo.ingesterFullname" . }}
   labels:
-    {{- include "tempo.ingesterLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "ingester") | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.ingesterSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 6 }}
   maxUnavailable: 1
 {{- end }}

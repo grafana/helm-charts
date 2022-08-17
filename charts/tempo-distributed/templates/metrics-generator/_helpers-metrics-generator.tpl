@@ -6,22 +6,6 @@ metrics-generator fullname
 {{- end }}
 
 {{/*
-metrics-generator common labels
-*/}}
-{{- define "tempo.metricsGeneratorLabels" -}}
-{{ include "tempo.labels" . }}
-app.kubernetes.io/component: metrics-generator
-{{- end }}
-
-{{/*
-metrics-generator selector labels
-*/}}
-{{- define "tempo.metricsGeneratorSelectorLabels" -}}
-{{ include "tempo.selectorLabels" . }}
-app.kubernetes.io/component: metrics-generator
-{{- end }}
-
-{{/*
 metrics-generator image
 */}}
 {{- define "tempo.metricsGeneratorImage" -}}
