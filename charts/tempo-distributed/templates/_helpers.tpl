@@ -91,6 +91,16 @@ app.kubernetes.io/component: {{ .component }}
 {{- end -}}
 {{- end -}}
 
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "tempo.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "tempo.fullname" .) .Values.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Gossip ring name
