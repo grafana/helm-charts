@@ -118,13 +118,13 @@ ingester:
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: kubernetes.io/hostname
         - weight: 75
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for ingester pods
   nodeSelector: {}
@@ -206,14 +206,14 @@ metricsGenerator:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for metrics-generator pods
   nodeSelector: {}
@@ -325,14 +325,14 @@ distributor:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.distributorSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.distributorSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for distributor pods
   nodeSelector: {}
@@ -432,14 +432,14 @@ querier:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.querierSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.querierSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for querier pods
   nodeSelector: {}
@@ -538,14 +538,14 @@ queryFrontend:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.queryFrontendSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.queryFrontendSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for query-frontend pods
   nodeSelector: {}
@@ -847,14 +847,14 @@ memcached:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.memcachedSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   service:
     # -- Annotations for memcached service
@@ -978,14 +978,14 @@ gateway:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.gatewaySelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.gatewaySelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for gateway pods
   nodeSelector: {}
