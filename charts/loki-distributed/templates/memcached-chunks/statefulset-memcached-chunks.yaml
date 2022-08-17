@@ -83,6 +83,8 @@ spec:
             - name: http-metrics
               containerPort: 9150
               protocol: TCP
+          securityContext:
+            {{- toYaml .Values.memcachedExporter.containerSecurityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.memcachedExporter.resources | nindent 12 }}
         {{- end }}

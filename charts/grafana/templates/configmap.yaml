@@ -1,3 +1,4 @@
+{{- if .Values.createConfigmap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -85,6 +86,9 @@ data:
         {{- if $value.token }}
     -H "Authorization: token {{ $value.token }}" \
         {{- end }}
+        {{- if $value.gitlabToken }}
+    -H "PRIVATE-TOKEN: {{ $value.gitlabToken }}" \
+        {{- end }}
     -H "Content-Type: application/json;charset=UTF-8" \
       {{ end }}
     {{- $dpPath := "" -}}
@@ -98,4 +102,5 @@ data:
       {{- end }}
     {{- end -}}
   {{- end }}
+{{- end }}
 {{- end }}

@@ -15,3 +15,4 @@
 /charts/enterprise-metrics/ @jdbaldry @chaudum
 /charts/enterprise-logs/ @jdbaldry @chaudum
 /charts/tempo-vulture/ @Whyeasy @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio
+/charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh @sc250024

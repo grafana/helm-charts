@@ -1,7 +1,7 @@
 apiVersion: "v2"
 name: "enterprise-logs-simple"
 type: application
-version: "1.2.0"
+version: "1.2.1"
 appVersion: "v1.4.0"
 kubeVersion: "^1.10.0-0"
 description: "DEPRECATED Grafana Enterprise Logs (Simple Scalable)"

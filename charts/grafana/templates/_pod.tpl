@@ -190,6 +190,10 @@ containers:
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
+      {{- range $key, $value := .Values.sidecar.dashboards.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+      {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
@@ -200,7 +204,7 @@ containers:
       {{- end }}
       {{- if .Values.sidecar.logLevel }}
       - name: LOG_LEVEL
-        value: {{ quote .Values.sidecar.dashboards.logLevel }}
+        value: {{ quote .Values.sidecar.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
@@ -511,11 +515,8 @@ containers:
         mountPath: {{ .mountPath }}
     {{- end }}
     ports:
-      - name: {{ .Values.service.portName }}
-        containerPort: {{ .Values.service.port }}
-        protocol: TCP
       - name: {{ .Values.podPortName }}
-        containerPort: 3000
+        containerPort: {{ .Values.service.targetPort }}
         protocol: TCP
     env:
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
