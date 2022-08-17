@@ -103,20 +103,6 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Gossip ring name
-*/}}
-{{- define "tempo.gossipRing.name" -}}
-{{ include "tempo.fullname" . }}-gossip-ring
-{{- end -}}
-
-{{/*
-Gossip ring  Selector labels
-*/}}
-{{- define "tempo.gossipRing.selectorLabels" -}}
-tempo-gossip-member: "true"
-{{- end -}}
-
-{{/*
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "tempo.ingress.apiVersion" -}}
