@@ -42,6 +42,7 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      enableServiceLinks: false
       containers:
         - args:
             - -target=metrics-generator

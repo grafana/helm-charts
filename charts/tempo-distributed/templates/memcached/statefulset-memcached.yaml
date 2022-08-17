@@ -44,6 +44,7 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      enableServiceLinks: false
       containers:
         - image: {{ include "tempo.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}

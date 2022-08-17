@@ -42,6 +42,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
+      enableServiceLinks: false
       containers:
         - name: nginx
           image: {{ include "tempo.gatewayImage" . }}
