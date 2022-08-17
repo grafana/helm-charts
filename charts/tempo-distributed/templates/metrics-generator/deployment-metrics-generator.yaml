@@ -16,7 +16,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 6 }}
   template:
     metadata:
       labels:

@@ -4,8 +4,7 @@ metadata:
   name: {{ template "tempo.gossipRing.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/component: {{ template "tempo.gossipRing.name" . }}
-    {{- include "tempo.labels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "gossip-ring") | nindent 4 }}
 spec:
   type: ClusterIP
   clusterIP: None

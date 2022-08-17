@@ -24,7 +24,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tempo.metricsGeneratorSelectorLabels" $ | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 6 }}
   endpoints:
     - port: http
       {{- with .interval }}

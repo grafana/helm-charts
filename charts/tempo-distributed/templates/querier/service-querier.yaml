@@ -4,7 +4,7 @@ metadata:
   name: {{ template "tempo.querierFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.querierLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "querier") | nindent 4 }}
   {{- with .Values.querier.service.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -20,4 +20,4 @@ spec:
       protocol: TCP
       targetPort: 9095
   selector:
-    {{- include "tempo.querierSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 4 }}

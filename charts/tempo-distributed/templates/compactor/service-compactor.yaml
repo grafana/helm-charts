@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "tempo.compactorFullname" . }}
   labels:
-    {{- include "tempo.compactorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "compactor") | nindent 4 }}
   {{- with .Values.compactor.service.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -16,4 +16,4 @@ spec:
       targetPort: http
       protocol: TCP
   selector:
-    {{- include "tempo.compactorSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 4 }}

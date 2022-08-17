@@ -4,7 +4,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "tempo.distributorFullname" . }}
   labels:
-    {{- include "tempo.distributorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

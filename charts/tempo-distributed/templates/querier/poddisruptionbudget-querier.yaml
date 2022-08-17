@@ -8,6 +8,6 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.querierSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 6 }}
   maxUnavailable: 1
 {{- end }}

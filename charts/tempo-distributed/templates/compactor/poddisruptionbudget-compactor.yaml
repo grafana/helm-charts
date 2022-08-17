@@ -4,10 +4,10 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "tempo.compactorFullname" . }}
   labels:
-    {{- include "tempo.compactorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "compactor") | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.compactorSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 6 }}
   maxUnavailable: 1
 {{- end }}

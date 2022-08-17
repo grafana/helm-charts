@@ -5,7 +5,7 @@ metadata:
   name: {{ include "tempo.memcachedFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.memcachedLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 4 }}
   {{- with .Values.memcached.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -14,7 +14,7 @@ spec:
   replicas: {{ .Values.memcached.replicas }}
   selector:
     matchLabels:
-      {{- include "tempo.memcachedSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 6 }}
   serviceName: memcached
   template:
     metadata:
@@ -28,7 +28,7 @@ spec:
         {{- end }}
       {{- end }}
       labels:
-        {{- include "tempo.memcachedLabels" . | nindent 8 }}
+        {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

@@ -5,7 +5,7 @@ metadata:
   name: {{ include "tempo.memcachedFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.memcachedLabels" . | nindent 4 }}
+  {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 4 }}
   {{- with .Values.memcached.service.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -19,5 +19,5 @@ spec:
     port: 9150
     targetPort: http-metrics
   selector:
-    {{- include "tempo.memcachedSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 4 }}
 {{- end}}

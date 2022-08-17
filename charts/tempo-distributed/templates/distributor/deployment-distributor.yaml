@@ -4,7 +4,7 @@ metadata:
   name: {{ include "tempo.distributorFullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-  {{- include "tempo.distributorLabels" . | nindent 4 }}
+  {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
   {{- with .Values.distributor.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -17,11 +17,11 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.distributorSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "tempo.distributorLabels" . | nindent 8 }}
+        {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 8 }}
         {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}

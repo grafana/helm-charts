@@ -4,7 +4,7 @@ metadata:
   name: {{ template "tempo.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.distributorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" .) | nindent 4 }}
 data:
   tempo-query.yaml: |
     {{- tpl .Values.queryFrontend.query.config . | nindent 4 }}

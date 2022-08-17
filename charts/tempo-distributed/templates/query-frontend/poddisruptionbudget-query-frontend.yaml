@@ -4,10 +4,10 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "tempo.queryFrontendFullname" . }}
   labels:
-    {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.queryFrontendSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
   maxUnavailable: 1
 {{- end }}
