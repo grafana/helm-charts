@@ -868,6 +868,7 @@ gateway:
           location = /api/prom/push {
             set $api_prom_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /api/prom/tail {
@@ -875,6 +876,7 @@ gateway:
             proxy_pass       $api_prom_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           # Ruler
@@ -894,11 +896,13 @@ gateway:
           location ~ /api/prom/.* {
             set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/push {
             set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/tail {
@@ -906,11 +910,13 @@ gateway:
             proxy_pass       $loki_api_v1_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           location ~ /loki/api/.* {
             set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
