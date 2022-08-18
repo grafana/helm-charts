@@ -78,7 +78,6 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.tag | string | `"1.5.0"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
-
 ## Chart Repo
 
 Add the following repo to use the chart:
