@@ -46,6 +46,11 @@ spec:
       priorityClassName: {{ default .Values.queryFrontend.priorityClassName .Values.global.priorityClassName }}
       {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.tempo.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: false
       containers:
         - args:
             - -target=query-frontend
@@ -79,6 +84,8 @@ spec:
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
+            - mountPath: /var/tempo
+              name: tempo-queryfrontend-store
             {{- with .Values.queryFrontend.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -136,6 +143,8 @@ spec:
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
+        - name: tempo-queryfrontend-store
+          emptyDir: {}
         {{- with .Values.queryFrontend.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

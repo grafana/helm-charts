@@ -7,7 +7,7 @@ fullnameOverride: ""
 replicas: 1
 tempo:
   repository: grafana/tempo
-  tag: 1.4.1
+  tag: 1.5.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -29,7 +29,12 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+  # -- Configuration options for the ingester
   ingester: {}
+  # -- Configuration options for the querier
+  querier: {}
+  # -- Configuration options for the query-fronted
+  queryFrontend: {}
   retention: 24h
   # Global overrides
   global_overrides:
@@ -113,12 +118,16 @@ config: |
       {{- toYaml .Values.tempo.server | nindent 6 }}
     storage:
       {{- toYaml .Values.tempo.storage | nindent 6 }}
+    querier:
+      {{- toYaml .Values.tempo.querier | nindent 6 }}
+    query_frontend:
+      {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
     overrides:
       {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 1.4.1
+  tag: 1.5.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.

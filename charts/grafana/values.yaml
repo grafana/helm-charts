@@ -564,6 +564,9 @@ dashboards: {}
   #     url: https://example.com/repository/test-b64.json
   #     token: ''
   #     b64content: true
+  #   local-dashboard-gitlab:
+  #     url: https://example.com/repository/test-gitlab.json
+  #     gitlabToken: ''
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
@@ -672,6 +675,7 @@ sidecar:
   # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
   logLevel: INFO
   dashboards:
+    env: {}
     enabled: false
     SCProvider: true
     # label that the configmaps with dashboards are marked with

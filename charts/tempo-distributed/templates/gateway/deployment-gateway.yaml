@@ -37,7 +37,12 @@ spec:
       priorityClassName: {{ default .Values.gateway.priorityClassName .Values.global.priorityClassName }}
       {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.tempo.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
+      enableServiceLinks: false
       containers:
         - name: nginx
           image: {{ include "tempo.gatewayImage" . }}
