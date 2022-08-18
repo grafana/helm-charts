@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.55.2](https://img.shields.io/badge/Version-0.55.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.55.5](https://img.shields.io/badge/Version-0.55.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -198,7 +198,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.serviceLabels | object | `{}` | Labels for index-gateway service |
 | indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
 | indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
-| ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.affinity | object | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraContainers | list | `[]` | Containers to add to the ingester pods |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
@@ -221,6 +221,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.serviceLabels | object | `{}` | Labels for ingestor service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
+| ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0] | string | `"loki.example.com"` |  |
@@ -454,6 +455,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
 | serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
