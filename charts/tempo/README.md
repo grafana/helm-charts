@@ -93,5 +93,4 @@ A major chart version change indicates that there is an incompatible breaking ch
 ### From Chart versions < 0.7.0
 
 Upgrading from pre 0.7.0 will, by default, move your trace storage from `/tmp/tempo/traces` to `/var/tempo/traces`.
-This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the
-old folder to the new.
+This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the old folder to the new.
