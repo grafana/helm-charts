@@ -126,6 +126,15 @@ spec:
   {{- if not .Values.ingester.persistence.enabled }}
         - name: data
           emptyDir: {}
+  {{- else if .Values.ingester.persistence.inMemory }}
+        - name: data
+        {{- if .Values.ingester.persistence.inMemory }}
+          emptyDir:
+            medium: Memory
+        {{- end }}
+        {{- if .Values.ingester.persistence.size }}
+            sizeLimit: {{ .Values.ingester.persistence.size }}
+        {{- end }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:
