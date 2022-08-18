@@ -44,6 +44,11 @@ spec:
       priorityClassName: {{ default .Values.querier.priorityClassName .Values.global.priorityClassName }}
       {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.tempo.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: false
       containers:
         - args:
             - -target=querier
@@ -78,6 +83,8 @@ spec:
           volumeMounts:
             - mountPath: /conf
               name: tempo-conf
+            - mountPath: /var/tempo
+              name: tempo-querier-store
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -98,6 +105,8 @@ spec:
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
+        - name: tempo-querier-store
+          emptyDir: {}
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

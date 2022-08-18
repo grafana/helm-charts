@@ -38,6 +38,11 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.tempo.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: false
       containers:
         - args:
             - -target=metrics-generator
