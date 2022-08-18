@@ -137,7 +137,9 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
-    # -- Size of persistent disk
+    # -- use emptyDir with ramdisk
+    inMemory: false
+    # -- Size of persistent or memory disk
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
