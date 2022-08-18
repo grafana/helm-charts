@@ -48,6 +48,8 @@ Grafana Tempo Single Binary Mode
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
+| tempo.querier | object | `{}` | Configuration options for the querier |
+| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
 | tempo.receivers.jaeger.protocols.thrift_binary.endpoint | string | `"0.0.0.0:6832"` |  |
 | tempo.receivers.jaeger.protocols.thrift_compact.endpoint | string | `"0.0.0.0:6831"` |  |
@@ -64,7 +66,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `"1.4.1"` |  |
+| tempo.tag | string | `"1.5.0"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
@@ -73,8 +75,9 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.securityContext | object | `{}` |  |
-| tempoQuery.tag | string | `"1.4.1"` |  |
+| tempoQuery.tag | string | `"1.5.0"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
+
 
 ## Chart Repo
 
