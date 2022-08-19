@@ -16778,6 +16778,52 @@ entries:
     version: 0.1.0
   loki-stack:
   - apiVersion: v1
+    appVersion: v2.6.1
+    created: "2022-08-19T22:50:23.003405083Z"
+    dependencies:
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.14.1
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: ^6.2.3
+    - condition: fluent-bit.enabled
+      name: fluent-bit
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.3.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~6.24.1
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~15.5.3
+    - condition: filebeat.enabled
+      name: filebeat
+      repository: https://helm.elastic.co
+      version: ~7.17.1
+    - condition: logstash.enabled
+      name: logstash
+      repository: https://helm.elastic.co
+      version: ~7.17.1
+    description: 'Loki: like Prometheus, but for logs.'
+    digest: 181dffb2300fb1d1d02df553969d4a17fb931d5625481ae9563cba5cf315a32a
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: loki-stack
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-stack-2.7.1/loki-stack-2.7.1.tgz
+    version: 2.7.1
+  - apiVersion: v1
     appVersion: v2.4.2
     created: "2022-08-16T14:52:21.82420916Z"
     dependencies:
@@ -26908,4 +26954,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-19T07:24:34.795494411Z"
+generated: "2022-08-19T22:50:23.013747286Z"
