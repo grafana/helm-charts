@@ -1142,3 +1142,12 @@ enterprise:
     # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
     tag: weekly-r57-ba853eef
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
+
+# In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
+# license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
+# To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
+# To use your own Kubernetes Secret, `--set license.external=true`.
+license:
+  contents: 'NOTAVALIDLICENSE'
+  external: false
+  secretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "license") }}'
