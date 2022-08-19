@@ -13,6 +13,23 @@ global:
 # -- Overrides the chart's computed fullname
 # fullnameOverride: tempo
 
+# -- Configuration is loaded from the secret called 'externalConfigSecretName'.
+# If 'useExternalConfig' is true, then the configuration is not generated, just
+# consumed.  Top level keys for `tempo.yaml` and `overrides.yaml` are to be
+# provided by the user.
+useExternalConfig: false
+
+# -- Defines what kind of object stores the configuration, a ConfigMap or a Secret.
+# In order to move sensitive information (such as credentials) from the ConfigMap/Secret to a more secure location (e.g. vault), it is possible to use [environment variables in the configuration](https://grafana.com/docs/mimir/latest/operators-guide/configuring/reference-configuration-parameters/#use-environment-variables-in-the-configuration).
+# Such environment variables can be then stored in a separate Secret and injected via the global.extraEnvFrom value. For details about environment injection from a Secret please see [Secrets](https://kubernetes.io/docs/concepts/configuration/secret/#use-case-as-container-environment-variables).
+configStorageType: ConfigMap
+
+# -- Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal).
+externalConfigSecretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "config") }}'
+
+# -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
+externalConfigVersion: '0'
+
 tempo:
   image:
     # -- The Docker registry
