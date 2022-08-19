@@ -36,7 +36,7 @@ spec:
         {{- with .Values.admin_api.initContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- if .Values.image.pullSecrets }}
+      {{- if .Values.tempo.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
         - name: {{ . }}
@@ -45,27 +45,25 @@ spec:
       containers:
         - name: admin-api
           image: "{{ include "tempo.imageReference" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           args:
             - "-target=admin-api"
             - "-config.expand-env=true"
-            - "-config.file=/etc/tempo/tempo.yaml"
+            - "-config.file=/conf/tempo.yaml"
             {{- range $key, $value := .Values.admin_api.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            {{- if .Values.admin_api.extraVolumeMounts }}
-              {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
-            {{- end }}
-            - name: config
-              mountPath: /etc/tempo
-            - name: runtime-config
-              mountPath: /var/{{ include "tempo.name" . }}
+            - mountPath: /conf
+              name: config
             - name: license
               mountPath: /license
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.admin_api.persistence.subPath }}
+            {{- if .Values.admin_api.extraVolumeMounts }}
+              {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
+            {{- end }}
           ports:
             - name: http-metrics
               containerPort: {{ include "tempo.serverHttpListenPort" . }}
