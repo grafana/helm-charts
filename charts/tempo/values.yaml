@@ -29,6 +29,10 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+  metricsGenerator:
+    # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
+    enabled: false
+    remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
   # -- Configuration options for the ingester
   ingester: {}
   # -- Configuration options for the querier
@@ -103,9 +107,11 @@ tempo:
   #   existingClaim: volume-claim
 
 # -- Tempo configuration file contents
+# @default -- Dynamically generated tempo configmap
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
+    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
         compacted_block_retention: {{ .Values.tempo.retention }}
@@ -124,6 +130,16 @@ config: |
       {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
     overrides:
       {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+      {{- if .Values.tempo.metricsGenerator.enabled }}
+          metrics_generator_processors:
+          - 'service-graphs'
+          - 'span-metrics'
+    metrics_generator:
+          storage:
+            path: "/tmp/tempo"
+            remote_write:
+              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+      {{- end }}
 
 tempoQuery:
   repository: grafana/tempo-query
@@ -155,7 +171,7 @@ tempoQuery:
     #    - ALL
     # readOnlyRootFilesystem: false # fails if true, do not enable
 
-# Add container securityContext
+# -- securityContext for container
 securityContext: {}
   # runAsUser: 65532
   # runAsGroup: 65532
@@ -192,28 +208,22 @@ persistence:
     - ReadWriteOnce
   size: 10Gi
 
-## Pod Annotations
+# -- Pod Annotations
 podAnnotations: {}
 
-## Pod (extra) Labels
+# -- Pod (extra) Labels
 podLabels: {}
 
 # -- Volumes to add
 extraVolumes: []
 
-## Node labels for pod assignment
-## ref: https://kubernetes.io/docs/user-guide/node-selection/
-#
+# -- Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
-## Tolerations for pod assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-##
+# -- Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
-## Affinity for pod assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-##
+# -- Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
 
 # -- The name of the PriorityClass
