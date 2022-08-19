@@ -1,6 +1,6 @@
 global:
   image:
-    # -- Overrides the Docker registry globally for all images
+    # -- Overrides the Docker registry globally for all images, excluding enterprise.
     registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
@@ -630,6 +630,31 @@ config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
   metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
+
+  {{- if .Values.enterprise.enabled }}
+  license:
+    path: "/license/license.jwt"
+
+  admin_api:
+    leader_election:
+      enabled: true
+      ring:
+        kvstore:
+          store: "memberlist"
+
+  {{- if .Values.minio.enabled }}
+  admin_client:
+    storage:
+      backend: s3
+      s3:
+        access_key_id: {{ .Values.minio.rootUser }}
+        bucket_name: enterprise-traces-admin
+        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+        insecure: true
+        secret_access_key: {{ .Values.minio.rootPassword }}
+    {{- end }}
+  {{- end }}
+
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
@@ -722,7 +747,7 @@ config: |
     {{- end }}
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}:9095
+      frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}:9095
       {{- if .Values.querier.config.frontend_worker.grpc_client_config }}
       grpc_client_config:
         {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
@@ -1303,3 +1328,156 @@ license:
   contents: 'NOTAVALIDLICENSE'
   external: false
   secretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "license") }}'
+
+# Settings for the initial admin(istrator) token generator job. Can only be enabled if
+# enterprise.enabled is true - requires license.
+tokengenJob:
+  enable: true
+  extraArgs: {}
+  env: []
+  extraEnvFrom: []
+  annotations: {}
+  initContainers: []
+  # -- The SecurityContext for tokenjobgen containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+# Settings for the admin_api service providing authentication and authorization service.
+# Can only be enabled if enterprise.enabled is true - requires license.
+admin_api:
+  replicas: 1
+
+  annotations: {}
+  service:
+    annotations: {}
+    labels: {}
+
+  initContainers: []
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  nodeSelector: {}
+  affinity: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  securityContext: {}
+
+  # -- The SecurityContext for admin_api containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  env: []
+  extraEnvFrom: []
+# Settings for the gateway service providing authentication and authorization via the admin_api.
+# Can only be enabled if enterprise.enabled is true - requires license.
+# gateway: TODO
+#   # If you want to use your own proxy URLs, set this to false.
+#   useDefaultProxyURLs: true
+#   replicas: 1
+#
+#   annotations: {}
+#   service:
+#     annotations: {}
+#     labels: {}
+#     # -- If the port is left undefined, the service will listen on the same port as the pod
+#     port: null
+#
+#   strategy:
+#     type: RollingUpdate
+#     rollingUpdate:
+#       maxSurge: 0
+#       maxUnavailable: 1
+#
+#   podLabels: {}
+#   podAnnotations: {}
+#
+#   # Pod Disruption Budget
+#   podDisruptionBudget: {}
+#
+#   nodeSelector: {}
+#   affinity: {}
+#
+#   securityContext: {}
+#
+#    # -- The SecurityContext for gateway containers
+#   containerSecurityContext:
+#     readOnlyRootFilesystem: true
+#
+#   initContainers: []
+#
+#   extraArgs: {}
+#
+#   persistence:
+#     subPath:
+#
+#   readinessProbe:
+#     httpGet:
+#       path: /ready
+#       port: http-metrics
+#     initialDelaySeconds: 45
+#
+#   resources:
+#     requests:
+#       cpu: 10m
+#       memory: 32Mi
+#
+#   terminationGracePeriodSeconds: 60
+#
+#   tolerations: []
+#   extraContainers: []
+#   extraVolumes: []
+#   extraVolumeMounts: []
+#   env: []
+#   extraEnvFrom: []
+#
+#   # Ingress configuration
+#   ingress:
+#     # -- Specifies whether an ingress for the gateway should be created
+#     enabled: false
+#     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+#     # ingressClassName: gateway
+#     # -- Annotations for the gateway ingress
+#     annotations: {}
+#     # -- Hosts configuration for the gateway ingress
+#     hosts:
+#       - host: gateway.gem.example.com
+#         paths:
+#           - path: /
+#             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+#             # pathType: Prefix
+#     # -- TLS configuration for the gateway ingress
+#     tls:
+#       - secretName: gem-gateway-tls
+#         hosts:
+#           - gateway.gem.example.com
