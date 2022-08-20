@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.55.3](https://img.shields.io/badge/Version-0.55.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.55.6](https://img.shields.io/badge/Version-0.55.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -57,6 +57,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| compactor.command | string | `nil` | Command to execute instead of defined in Docker image |
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraContainers | list | `[]` | Containers to add to the compactor pods |
@@ -89,6 +90,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
+| distributor.command | string | `nil` | Command to execute instead of defined in Docker image |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraContainers | list | `[]` | Containers to add to the distributor pods |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
@@ -198,6 +200,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
 | indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
 | ingester.affinity | object | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraContainers | list | `[]` | Containers to add to the ingester pods |
 | ingester.extraEnv | list | `[]` | Environment variables to add to the ingester pods |
@@ -235,6 +238,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingress.paths.ruler[3] | string | `"/prometheus/api/v1/alerts"` |  |
 | loki.annotations | object | `{}` | If set, these annotations are added to all of the Kubernetes controllers (Deployments, StatefulSets, etc) that this chart launches. Use this to implement something like the "Wave" controller or another controller that is monitoring top level deployment resources. |
 | loki.appProtocol | string | `""` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp" |
+| loki.command | string | `nil` | Common command override for all pods (except gateway) |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
@@ -365,6 +369,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
 | querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |
 | querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
+| querier.command | string | `nil` | Command to execute instead of defined in Docker image |
 | querier.dnsConfig | object | `{}` | DNSConfig for querier pods |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraContainers | list | `[]` | Containers to add to the querier pods |
@@ -393,6 +398,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the query-frontend |
 | queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
+| queryFrontend.command | string | `nil` | Command to execute instead of defined in Docker image |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraContainers | list | `[]` | Containers to add to the query-frontend pods |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
@@ -414,6 +420,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
+| ruler.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ruler.directories | object | `{}` | Directories containing rules files |
 | ruler.dnsConfig | object | `{}` | DNSConfig for ruler pods |
 | ruler.enabled | bool | `false` | Specifies whether the ruler should be enabled |
@@ -457,6 +464,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | tableManager.affinity | string | Hard node and soft zone anti-affinity | Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
+| tableManager.command | string | `nil` | Command to execute instead of defined in Docker image |
 | tableManager.enabled | bool | `false` | Specifies whether the table-manager should be enabled |
 | tableManager.extraArgs | list | `[]` | Additional CLI args for the table-manager |
 | tableManager.extraContainers | list | `[]` | Containers to add to the table-manager pods |

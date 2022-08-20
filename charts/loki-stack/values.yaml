@@ -2,7 +2,6 @@ test_pod:
   image: bats/bats:v1.1.0
   pullPolicy: IfNotPresent
 
-
 loki:
   enabled: true
   isDefault: true
@@ -16,11 +15,16 @@ loki:
       path: /ready
       port: http-metrics
     initialDelaySeconds: 45
+  datasource:
+    jsonData: {}
 
 promtail:
   enabled: true
   config:
-    lokiAddress: http://{{ .Release.Name }}:3100/loki/api/v1/push
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
 
 fluent-bit:
   enabled: false
@@ -37,6 +41,8 @@ grafana:
 prometheus:
   enabled: false
   isDefault: false
+  datasource:
+    jsonData: {}
 
 filebeat:
   enabled: false
