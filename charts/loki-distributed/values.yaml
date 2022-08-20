@@ -302,22 +302,18 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.ingesterSelectorLabels" . | nindent 6 }}
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "loki.ingesterSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: {}
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -870,6 +866,7 @@ gateway:
           location = /api/prom/push {
             set $api_prom_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /api/prom/tail {
@@ -877,6 +874,7 @@ gateway:
             proxy_pass       $api_prom_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           # Ruler
@@ -896,11 +894,13 @@ gateway:
           location ~ /api/prom/.* {
             set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/push {
             set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/tail {
@@ -908,11 +908,13 @@ gateway:
             proxy_pass       $loki_api_v1_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           location ~ /loki/api/.* {
             set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
