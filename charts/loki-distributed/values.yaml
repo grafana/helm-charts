@@ -318,6 +318,10 @@ ingester:
   nodeSelector: {}
   # -- Tolerations for ingester pods
   tolerations: []
+  # -- readiness probe settings for ingester pods. If empty, use `loki.readinessProbe`
+  readinessProbe: {}
+  # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
+  livenessProbe: {}
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
