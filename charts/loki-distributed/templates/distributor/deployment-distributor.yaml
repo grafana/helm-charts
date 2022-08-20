@@ -55,7 +55,8 @@ spec:
           image: {{ include "loki.distributorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.distributor.command }}
-          command: [{{ coalesce .Values.distributor.command .Values.loki.command | quote }}]
+          command:
+            - {{ coalesce .Values.distributor.command .Values.loki.command | quote }}
           {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
