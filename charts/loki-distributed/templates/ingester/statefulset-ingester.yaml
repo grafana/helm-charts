@@ -57,7 +57,8 @@ spec:
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.ingester.command }}
-          command: [{{ coalesce .Values.ingester.command .Values.loki.command | quote }}]
+          command:
+            - {{ coalesce .Values.ingester.command .Values.loki.command | quote }}
           {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
