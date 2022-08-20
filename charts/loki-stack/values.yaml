@@ -99,6 +99,6 @@ logstash:
 # loki service name, so that tests are able to communicate with the loki
 # service.
 proxy:
-  http_proxy:
-  https_proxy:
-  no_proxy:
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""

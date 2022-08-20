@@ -21,18 +21,18 @@ spec:
       value: {{ template "loki.serviceName" . }}
     - name: LOKI_PORT
       value: "{{ .Values.loki.service.port }}"
-{{- if .Values.proxy.http_proxy }}
+    {{- with .Values.proxy.http_proxy }}
     - name: HTTP_PROXY
-      value: "{{ .Values.proxy.http_proxy }}"
-{{- end }}
-{{- if .Values.proxy.https_proxy }}
+      value: "{{ . }}"
+    {{- end }}
+    {{- with .Values.proxy.https_proxy }}
     - name: HTTPS_PROXY
-      value: "{{ .Values.proxy.https_proxy }}"
-{{- end }}
-{{- if .Values.proxy.no_proxy }}
+      value: "{{ . }}"
+    {{- end }}
+    {{- with .Values.proxy.no_proxy }}
     - name: NO_PROXY
-      value: "{{ .Values.proxy.no_proxy }}"
-{{- end }}
+      value: "{{ . }}"
+    {{- end }}
     volumeMounts:
     - name: tests
       mountPath: /var/lib/loki
