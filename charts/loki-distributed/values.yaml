@@ -51,6 +51,8 @@ loki:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
+  # -- Common command override for all pods (except gateway)
+  command: null
   # -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
   # -- The SecurityContext for Loki pods
@@ -139,7 +141,7 @@ loki:
           enable_fifocache: true
           fifocache:
             max_size_items: 1024
-            validity: 24h
+            ttl: 24h
 
     frontend_worker:
       frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
@@ -276,6 +278,8 @@ ingester:
     repository: null
     # -- Docker image tag for the ingester image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
   # -- Labels for ingester pods
@@ -352,6 +356,8 @@ distributor:
     repository: null
     # -- Docker image tag for the distributor image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Labels for distributor pods
@@ -419,6 +425,8 @@ querier:
     repository: null
     # -- Docker image tag for the querier image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
   # -- Labels for querier pods
@@ -499,6 +507,8 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Labels for query-frontend pods
@@ -555,6 +565,8 @@ tableManager:
     repository: null
     # -- Docker image tag for the table-manager image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for table-manager pods
   priorityClassName: null
   # -- Labels for table-manager pods
@@ -866,6 +878,7 @@ gateway:
           location = /api/prom/push {
             set $api_prom_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /api/prom/tail {
@@ -873,6 +886,7 @@ gateway:
             proxy_pass       $api_prom_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           # Ruler
@@ -892,11 +906,13 @@ gateway:
           location ~ /api/prom/.* {
             set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/push {
             set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/tail {
@@ -904,11 +920,13 @@ gateway:
             proxy_pass       $loki_api_v1_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           location ~ /loki/api/.* {
             set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
@@ -928,12 +946,16 @@ compactor:
     repository: null
     # -- Docker image tag for the compactor image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
   # -- Labels for compactor pods
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Specify the compactor affinity
+  affinity: {}
   # -- Labels for compactor service
   serviceLabels: {}
   # -- Additional CLI args for the compactor
@@ -995,6 +1017,8 @@ ruler:
     repository: null
     # -- Docker image tag for the ruler image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for ruler pods
   priorityClassName: null
   # -- Labels for compactor pods

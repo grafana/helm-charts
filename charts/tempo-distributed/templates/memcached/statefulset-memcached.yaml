@@ -40,6 +40,11 @@ spec:
       priorityClassName: {{ default .Values.memcached.priorityClassName .Values.global.priorityClassName }}
       {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.tempo.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: false
       containers:
         - image: {{ include "tempo.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}

@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.24.2](https://img.shields.io/badge/Version-0.24.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -19,6 +19,31 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From chart version < 0.23.0
+
+Version 0.23.0:
+
+* Adds /var/tempo emptyDir mount for querier, queryfrontend, distributor and compactor. Previously, /var/tempo was directory inside container.
+
+* Sets queryFrontend.query.enabled to false. tempo-query is only required for grafana version <7.5 for compatibility with jaeger-ui. Please also note that tempo-query is incompatible with securityContext readOnlyRootFilesystem set to true.
+
+* Sets stricter default securityContext:
+```yaml
+tempo:
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+  podSecurityContext:
+    fsGroup: 1000
+```
+If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
 
 ### From Chart version >= 0.22.0
 Align Istio GRPC named port syntax. For example,
@@ -154,6 +179,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
+| fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
@@ -232,7 +258,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
-| ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
+| ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
+| ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
@@ -331,7 +358,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.query.config | string | `"backend: 127.0.0.1:3100\n"` |  |
-| queryFrontend.query.enabled | bool | `true` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
+| queryFrontend.query.enabled | bool | `false` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
 | queryFrontend.query.extraArgs | list | `[]` | Additional CLI args for tempo-query pods |
 | queryFrontend.query.extraEnv | list | `[]` | Environment variables to add to the tempo-query pods |
 | queryFrontend.query.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the tempo-query pods |
@@ -378,11 +405,12 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
+| tempo.podSecurityContext | object | `{"fsGroup":1000}` | podSecurityContext holds pod-level security attributes and common container settings |
 | tempo.readinessProbe.httpGet.path | string | `"/ready"` |  |
 | tempo.readinessProbe.httpGet.port | string | `"http"` |  |
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
-| tempo.securityContext | object | `{}` | SecurityContext holds pod-level security attributes and common container settings |
+| tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
