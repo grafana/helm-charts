@@ -10,8 +10,11 @@ global:
   dnsService: "kube-dns"
   # -- configures DNS service namespace
   dnsNamespace: "kube-system"
+
 # -- Overrides the chart's computed fullname
+fullnameOverride: ""
 # fullnameOverride: tempo
+
 tempo:
   image:
     # -- The Docker registry
@@ -31,14 +34,19 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
-  # -- SecurityContext holds pod-level security attributes and common container settings
-  securityContext: {}
-  #  capabilities:
-  #    drop:
-  #    - ALL
-  #  readOnlyRootFilesystem: true
-  #  runAsNonRoot: true
-  #  runAsUser: 1000
+  # -- SecurityContext holds container-level security attributes and common container settings
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+  # -- podSecurityContext holds pod-level security attributes and common container settings
+  podSecurityContext:
+    fsGroup: 1000
   # -- Structured tempo configuration
   structuredConfig: {}
 
@@ -129,7 +137,9 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
-    # -- Size of persistent disk
+    # -- use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart**
+    inMemory: false
+    # -- Size of persistent or memory disk
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
@@ -418,7 +428,7 @@ querier:
 queryFrontend:
   query:
     # -- Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
-    enabled: true
+    enabled: false
     image:
       # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
       registry: null
@@ -561,6 +571,10 @@ traces:
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
+
+# -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
+
+# @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}

@@ -40,7 +40,7 @@ spec:
       {{- end }}
       relabelings:
         - sourceLabels: [job]
-          replacement: "{{ $.Release.Namespace }}/write"
+          replacement: "{{ $.Release.Namespace }}/{{ include "loki.writeFullname" $ }}"
           targetLabel: job
         - replacement: "{{ include "loki.fullname" $ }}"
           targetLabel: cluster

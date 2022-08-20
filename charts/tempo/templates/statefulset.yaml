@@ -23,11 +23,15 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       containers:
       - args:
         - -config.file=/conf/tempo.yaml
@@ -133,9 +137,11 @@ spec:
       {{- if .Values.extraVolumes -}}
         {{ toYaml .Values.extraVolumes | nindent 6 }}
       {{- end }}
+      {{- if .Values.tempoQuery.enabled }}
       - configMap:
           name: {{ template "tempo.name" . }}-query
         name: tempo-query-conf
+      {{- end }}
       - configMap:
           name: {{ template "tempo.name" . }}
         name: tempo-conf
