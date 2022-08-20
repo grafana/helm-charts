@@ -20,20 +20,20 @@ deployment:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
 
-initContainer:
-  # -- Specifies whether the init container for setting inotify max user instances is to be enabled
-  enabled: false
-  image:
-    # -- The Docker registry for the init container
-    registry: docker.io
-    # -- Docker image repository for the init container
-    repository: busybox
-    # -- Docker tag for the init container
-    tag: 1.33
-    # -- Docker image pull policy for the init container image
-    pullPolicy: IfNotPresent
-  # -- The inotify max user instances to configure
-  fsInotifyMaxUserInstances: 128
+initContainer: []
+  # # -- Specifies whether the init container for setting inotify max user instances is to be enabled
+  # - name: init
+  #   # -- Docker registry, image and tag for the init container image
+  #   image: docker.io/busybox:1.33
+  #   # -- Docker image pull policy for the init container image
+  #   imagePullPolicy: IfNotPresent
+  #   # -- The inotify max user instances to configure
+  #   command:
+  #     - sh
+  #     - -c
+  #     - sysctl -w fs.inotify.max_user_instances=128
+  #   securityContext:
+  #     privileged: true
 
 image:
   # -- The Docker registry
