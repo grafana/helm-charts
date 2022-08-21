@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.15.8](https://img.shields.io/badge/Version-0.15.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.1](https://img.shields.io/badge/AppVersion-1.4.1-informational?style=flat-square)
+![Version: 0.16.1](https://img.shields.io/badge/Version-0.16.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -12,20 +12,20 @@ Grafana Tempo Single Binary Mode
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` |  |
-| config | string | `"multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}\nsearch_enabled: {{ .Values.tempo.searchEnabled }}\ncompactor:\n  compaction:\n    compacted_block_retention: {{ .Values.tempo.retention }}\ndistributor:\n  receivers:\n    {{- toYaml .Values.tempo.receivers | nindent 8 }}\ningester:\n  {{- toYaml .Values.tempo.ingester | nindent 6 }}\nserver:\n  {{- toYaml .Values.tempo.server | nindent 6 }}\nstorage:\n  {{- toYaml .Values.tempo.storage | nindent 6 }}\noverrides:\n  {{- toYaml .Values.tempo.global_overrides | nindent 6 }}\n"` | Tempo configuration file contents |
+| affinity | object | `{}` | Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity |
+| config | string | Dynamically generated tempo configmap | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
-| nodeSelector | object | `{}` |  |
+| nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"10Gi"` |  |
-| podAnnotations | object | `{}` |  |
-| podLabels | object | `{}` |  |
+| podAnnotations | object | `{}` | Pod Annotations |
+| podLabels | object | `{}` | Pod (extra) Labels |
 | priorityClassName | string | `nil` | The name of the PriorityClass |
 | replicas | int | `1` |  |
-| securityContext | object | `{}` |  |
+| securityContext | object | `{}` | securityContext for container |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
@@ -41,11 +41,15 @@ Grafana Tempo Single Binary Mode
 | tempo.extraEnv | list | `[]` | Environment variables to add |
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
-| tempo.ingester | object | `{}` |  |
+| tempo.ingester | object | `{}` | Configuration options for the ingester |
 | tempo.memBallastSizeMbs | int | `1024` |  |
+| tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
+| tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
+| tempo.querier | object | `{}` | Configuration options for the querier |
+| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
 | tempo.receivers.jaeger.protocols.thrift_binary.endpoint | string | `"0.0.0.0:6832"` |  |
 | tempo.receivers.jaeger.protocols.thrift_compact.endpoint | string | `"0.0.0.0:6831"` |  |
@@ -62,7 +66,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `"1.4.1"` |  |
+| tempo.tag | string | `"1.5.0"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
@@ -71,8 +75,8 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.securityContext | object | `{}` |  |
-| tempoQuery.tag | string | `"1.4.1"` |  |
-| tolerations | list | `[]` |  |
+| tempoQuery.tag | string | `"1.5.0"` |  |
+| tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
 ## Chart Repo
 

@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Make sure you have Helm [installed](https://helm.sh/docs/using_helm/#installing-helm) installed.
+Make sure you have Helm [installed](https://helm.sh/docs/using_helm/#installing-helm).
 
 ## Get Repo Info
 
