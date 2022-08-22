@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.55.7](https://img.shields.io/badge/Version-0.55.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.55.8](https://img.shields.io/badge/Version-0.55.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -101,6 +101,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `loki.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `loki.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
+| distributor.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.podLabels | object | `{}` | Labels for distributor pods |
@@ -144,6 +145,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.livenessProbe.httpGet.path | string | `"/"` |  |
 | gateway.livenessProbe.httpGet.port | string | `"http"` |  |
 | gateway.livenessProbe.initialDelaySeconds | int | `30` |  |
+| gateway.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | See values.yaml | NGINX log format |
@@ -188,6 +190,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.image.registry | string | `nil` | The Docker registry for the index-gateway image. Overrides `loki.image.registry` |
 | indexGateway.image.repository | string | `nil` | Docker image repository for the index-gateway image. Overrides `loki.image.repository` |
 | indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
+| indexGateway.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
 | indexGateway.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | indexGateway.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -200,7 +203,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.serviceLabels | object | `{}` | Labels for index-gateway service |
 | indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
 | indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
-| ingester.affinity | object | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ingester.extraArgs | list | `[]` | Additional CLI args for the ingester |
 | ingester.extraContainers | list | `[]` | Containers to add to the ingester pods |
@@ -212,6 +215,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
 | ingester.kind | string | `"StatefulSet"` | Kind of deployment [StatefulSet/Deployment] |
+| ingester.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -282,6 +286,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedChunks.extraContainers | list | `[]` | Containers to add to the memcached-chunks pods |
 | memcachedChunks.extraEnv | list | `[]` | Environment variables to add to memcached-chunks pods |
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
+| memcachedChunks.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
 | memcachedChunks.podAnnotations | object | `{}` | Annotations for memcached-chunks pods |
 | memcachedChunks.podLabels | object | `{}` | Labels for memcached-chunks pods |
@@ -320,6 +325,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexQueries.extraContainers | list | `[]` | Containers to add to the memcached-index-queries pods |
 | memcachedIndexQueries.extraEnv | list | `[]` | Environment variables to add to memcached-index-queries pods |
 | memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
+| memcachedIndexQueries.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
 | memcachedIndexQueries.podAnnotations | object | `{}` | Annotations for memcached-index-queries pods |
 | memcachedIndexQueries.podLabels | object | `{}` | Labels for memcached-index-queries pods |
@@ -335,6 +341,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexWrites.extraContainers | list | `[]` | Containers to add to the memcached-index-writes pods |
 | memcachedIndexWrites.extraEnv | list | `[]` | Environment variables to add to memcached-index-writes pods |
 | memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
+| memcachedIndexWrites.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
 | memcachedIndexWrites.podAnnotations | object | `{}` | Annotations for memcached-index-writes pods |
 | memcachedIndexWrites.podLabels | object | `{}` | Labels for memcached-index-writes pods |
@@ -381,6 +388,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `loki.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
+| querier.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
 | querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -409,6 +417,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `loki.image.registry` |
 | queryFrontend.image.repository | string | `nil` | Docker image repository for the query-frontend image. Overrides `loki.image.repository` |
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `loki.image.tag` |
+| queryFrontend.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for query-frontend pods |
@@ -435,6 +444,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
 | ruler.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
+| ruler.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ruler.nodeSelector | object | `{}` | Node selector for ruler pods |
 | ruler.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using recording rules |
 | ruler.persistence.size | string | `"10Gi"` | Size of persistent disk |
