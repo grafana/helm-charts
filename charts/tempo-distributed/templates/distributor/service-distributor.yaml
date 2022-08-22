@@ -38,10 +38,10 @@ spec:
       targetPort: jaeger-http
     {{- end }}
     {{- if .Values.traces.jaeger.grpc.enabled }}
-    - name: distributor-jaeger-grpc
+    - name: grpc-distributor-jaeger
       port: 14250
       protocol: TCP
-      targetPort: jaeger-grpc
+      targetPort: grpc-jaeger
     {{- end }}
     {{- if .Values.traces.zipkin.enabled }}
     - name: distributor-zipkin
@@ -51,19 +51,19 @@ spec:
     {{- end }}
     {{- if .Values.traces.otlp.http.enabled }}
     - name: distributor-otlp-http
-      port: 55681
+      port: 4318
       protocol: TCP
       targetPort: otlp-http
     {{- end }}
     {{- if .Values.traces.otlp.grpc.enabled }}
-    - name: distributor-otlp-grpc
+    - name: grpc-distributor-otlp
       port: 4317
       protocol: TCP
-      targetPort: otlp-grpc
+      targetPort: grpc-otlp
     - name: distributor-otlp-legacy
       port: 55680
       protocol: TCP
-      targetPort: otlp-grpc
+      targetPort: grpc-otlp
     {{- end }}
     {{- if .Values.traces.opencensus.enabled }}
     - name: distributor-opencensus

@@ -41,7 +41,15 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.ingester.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.ingester.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      {{- with .Values.tempo.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: false
       containers:
         - args:
             - -target=ingester
@@ -107,6 +115,15 @@ spec:
   {{- if not .Values.ingester.persistence.enabled }}
         - name: data
           emptyDir: {}
+  {{- else if .Values.ingester.persistence.inMemory }}
+        - name: data
+        {{- if .Values.ingester.persistence.inMemory }}
+          emptyDir:
+            medium: Memory
+        {{- end }}
+        {{- if .Values.ingester.persistence.size }}
+            sizeLimit: {{ .Values.ingester.persistence.size }}
+        {{- end }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:

@@ -67,6 +67,8 @@ spec:
           {{- end }}
           readinessProbe:
             {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
           securityContext:
             {{- toYaml .Values.gateway.containerSecurityContext | nindent 12 }}
           volumeMounts:
@@ -98,6 +100,10 @@ spec:
       {{- end }}
       {{- with .Values.gateway.tolerations }}
       tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.dnsConfig }}
+      dnsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:

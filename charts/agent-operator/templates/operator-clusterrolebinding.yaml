@@ -4,7 +4,6 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ include "ga-operator.fullname" . }}
   labels:
-    app.kubernetes.io/component: operator
 {{ include "ga-operator.labels" . | indent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io

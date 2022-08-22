@@ -11,9 +11,46 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 2.4.1
+
+- [CHANGE] Bump GEL version to v1.5.1 to use version with a fix for GEL Node API.
+
+## 2.4.0
+
+- [CHANGE] Update loki-distributed to 0.55.0
+- [CHANGE] Harmonized `securityContext` configs with loki-distributed:
+  - Rename `adminApi.securityContext` option to `adminApi.podSecurityContext`
+  - Add `adminApi.securityContext` option
+  - Rename `tokengen.securityContext` option to `tokengen.podSecurityContext`
+  - Add `tokengen.securityContext` option
+  - Rename `compactor.securityContext` to `compactor.podSecurityContext`
+  - Rename `gateway.securityContext` to `gateway.podSecurityContext`
+
+## 2.3.1
+
+- [CHANGE] Support configuring `containerSecurityContext` for compactor and gateway targets. #1656
+
+## 2.3.0
+
+- [CHANGE] Bump GEL version to v1.5.0
+
+## 2.2.3
+
+- [BUGFIX] Mount rw /tmp directory in Compactor to fix error about read-only filesystem. #1548
+
+## 2.2.2
+
+## 2.2.1
+
+## 2.2.0
+
+## 2.1.0
+
 ## 2.0.4
 
 - [FEATURE] Added OpenShift support. #1085
+
+## 2.0.3
 
 ## 2.0.2
 

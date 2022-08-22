@@ -33,6 +33,11 @@ loki:
       port: http
     initialDelaySeconds: 30
     timeoutSeconds: 1
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 300
   image:
     # -- The Docker registry
     registry: docker.io
@@ -46,6 +51,8 @@ loki:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
+  # -- Common command override for all pods (except gateway)
+  command: null
   # -- The number of old ReplicaSets to retain to allow rollback
   revisionHistoryLimit: 10
   # -- The SecurityContext for Loki pods
@@ -63,6 +70,10 @@ loki:
     allowPrivilegeEscalation: false
   # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
   existingSecretForConfig: ""
+  # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
+  # -- Common annotations for all loki services
+  serviceAnnotations: {}
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -130,7 +141,7 @@ loki:
           enable_fifocache: true
           fifocache:
             max_size_items: 1024
-            validity: 24h
+            ttl: 24h
 
     frontend_worker:
       frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
@@ -225,6 +236,9 @@ serviceMonitor:
   # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
   # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
   metricRelabelings: []
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+  targetLabels: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
@@ -264,6 +278,8 @@ ingester:
     repository: null
     # -- Docker image tag for the ingester image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for ingester pods
   priorityClassName: null
   # -- Labels for ingester pods
@@ -290,6 +306,15 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.ingesterSelectorLabels" . | nindent 6 }}
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -346,6 +371,8 @@ distributor:
     repository: null
     # -- Docker image tag for the distributor image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Labels for distributor pods
@@ -415,6 +442,8 @@ querier:
     repository: null
     # -- Docker image tag for the querier image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for querier pods
   priorityClassName: null
   # -- Labels for querier pods
@@ -461,6 +490,8 @@ querier:
   nodeSelector: {}
   # -- Tolerations for querier pods
   tolerations: []
+  # -- DNSConfig for querier pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs for the querier cache
     enabled: false
@@ -495,6 +526,8 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Labels for query-frontend pods
@@ -553,6 +586,8 @@ tableManager:
     repository: null
     # -- Docker image tag for the table-manager image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for table-manager pods
   priorityClassName: null
   # -- Labels for table-manager pods
@@ -597,6 +632,39 @@ tableManager:
   nodeSelector: {}
   # -- Tolerations for table-manager pods
   tolerations: []
+
+# Use either this ingress or the gateway, but not both at once.
+# If you enable this, make sure to disable the gateway.
+# You'll need to supply authn configuration for your ingress controller.
+ingress:
+  enabled: false
+#  ingressClassName: nginx
+  annotations: {}
+#    nginx.ingress.kubernetes.io/auth-type: basic
+#    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
+#    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      proxy_set_header X-Scope-OrgID $remote_user;
+  paths:
+    distributor:
+      - /api/prom/push
+      - /loki/api/v1/push
+    querier:
+      - /api/prom/tail
+      - /loki/api/v1/tail
+    query-frontend:
+      - /loki/api
+    ruler:
+      - /api/prom/rules
+      - /loki/api/v1/rules
+      - /prometheus/api/v1/rules
+      - /prometheus/api/v1/alerts
+  hosts:
+    - loki.example.com
+#  tls:
+#    - hosts:
+#       - loki.example.com
+#      secretName: loki-distributed-tls
 
 # Configuration for the gateway
 gateway:
@@ -687,6 +755,8 @@ gateway:
   nodeSelector: {}
   # -- Tolerations for gateway pods
   tolerations: []
+  # -- DNSConfig for gateway pods
+  dnsConfig: {}
   # Gateway service configuration
   service:
     # -- Port of the gateway service
@@ -699,6 +769,8 @@ gateway:
     nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
+    # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
+    loadBalancerSourceRanges: []
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
@@ -736,6 +808,7 @@ gateway:
     # -- Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function.
     # The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes
     # high CPU load.
+    # @default -- See values.yaml
     htpasswd: >-
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
@@ -747,8 +820,14 @@ gateway:
       port: http
     initialDelaySeconds: 15
     timeoutSeconds: 1
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 30
   nginxConfig:
     # -- NGINX log format
+    # @default -- See values.yaml
     logFormat: |-
       main '$remote_addr - $remote_user [$time_local]  $status '
               '"$request" $body_bytes_sent "$http_referer" '
@@ -757,6 +836,8 @@ gateway:
     serverSnippet: ""
     # -- Allows appending custom configuration to the http block
     httpSnippet: ""
+    # -- Allows overriding the DNS resolver address nginx will use.
+    resolver: ""
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -776,6 +857,8 @@ gateway:
         uwsgi_temp_path       /tmp/uwsgi_temp;
         scgi_temp_path        /tmp/scgi_temp;
 
+        proxy_http_version    1.1;
+
         default_type application/octet-stream;
         log_format   {{ .Values.gateway.nginxConfig.logFormat }}
 
@@ -792,7 +875,11 @@ gateway:
 
         sendfile     on;
         tcp_nopush   on;
+        {{- if .Values.gateway.nginxConfig.resolver }}
+        resolver {{ .Values.gateway.nginxConfig.resolver }};
+        {{- else }}
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+        {{- end }}
 
         {{- with .Values.gateway.nginxConfig.httpSnippet }}
         {{ . | nindent 2 }}
@@ -812,13 +899,17 @@ gateway:
           }
 
           location = /api/prom/push {
-            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $api_prom_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $api_prom_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /api/prom/tail {
-            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $api_prom_tail_backend http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $api_prom_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           # Ruler
@@ -836,21 +927,29 @@ gateway:
           }
 
           location ~ /api/prom/.* {
-            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $api_prom_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/push {
-            proxy_pass       http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           location = /loki/api/v1/tail {
-            proxy_pass       http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $loki_api_v1_tail_backend http://{{ include "loki.querierFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_v1_tail_backend:3100$request_uri;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
           }
 
           location ~ /loki/api/.* {
-            proxy_pass       http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_backend:3100$request_uri;
+            proxy_http_version 1.1;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
@@ -870,12 +969,16 @@ compactor:
     repository: null
     # -- Docker image tag for the compactor image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for compactor pods
   priorityClassName: null
   # -- Labels for compactor pods
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Specify the compactor affinity
+  affinity: {}
   # -- Labels for compactor service
   serviceLabels: {}
   # -- Additional CLI args for the compactor
@@ -937,6 +1040,8 @@ ruler:
     repository: null
     # -- Docker image tag for the ruler image. Overrides `loki.image.tag`
     tag: null
+  # -- Command to execute instead of defined in Docker image
+  command: null
   # -- The name of the PriorityClass for ruler pods
   priorityClassName: null
   # -- Labels for compactor pods
@@ -983,6 +1088,8 @@ ruler:
   nodeSelector: {}
   # -- Tolerations for ruler pods
   tolerations: []
+  # -- DNSConfig for ruler pods
+  dnsConfig: {}
   persistence:
     # -- Enable creating PVCs which is required when using recording rules
     enabled: false
@@ -1135,6 +1242,15 @@ indexGateway:
     storageClass: null
 
 memcached:
+  readinessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 5
+    timeoutSeconds: 1
+  livenessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 10
   image:
     # -- The Docker registry for the memcached
     registry: docker.io
@@ -1159,6 +1275,10 @@ memcached:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- Common annotations for all memcached services
+  serviceAnnotations: {}
+  # -- Adds the appProtocol field to the memcached services. This allows memcached to work with istio protocol selection. Ex: "http" or "tcp"
+  appProtocol: ""
 
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
@@ -1176,6 +1296,13 @@ memcachedExporter:
   podLabels: {}
   # -- Memcached Exporter resource requests and limits
   resources: {}
+  # -- The SecurityContext for memcachedExporter containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled

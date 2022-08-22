@@ -7,7 +7,7 @@ fullnameOverride: ""
 replicas: 1
 tempo:
   repository: grafana/tempo
-  tag: 1.4.1
+  tag: 1.5.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -29,7 +29,16 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+  metricsGenerator:
+    # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
+    enabled: false
+    remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
+  # -- Configuration options for the ingester
   ingester: {}
+  # -- Configuration options for the querier
+  querier: {}
+  # -- Configuration options for the query-fronted
+  queryFrontend: {}
   retention: 24h
   # Global overrides
   global_overrides:
@@ -41,19 +50,19 @@ tempo:
   server:
     # -- HTTP server listen port
     http_listen_port: 3100
-  # tempo storage backend
-  # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
-  ## Use s3 for example
-  # backend: s3                                         # store traces in s3
-  #  s3:
-  #    bucket: tempo                                   # store traces in this bucket
-  #    endpoint: s3.dualstack.us-east-2.amazonaws.com  # api endpoint
-  #    access_key: ...                                 # optional. access key when using static credentials.
-  #    secret_key: ...                                 # optional. secret key when using static credentials.
-  #    insecure: false                                 # optional. enable if endpoint is http
-  ## end
   storage:
     trace:
+      # tempo storage backend
+      # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
+      ## Use s3 for example
+      # backend: s3
+      # store traces in s3
+      # s3:
+      #   bucket: tempo                                   # store traces in this bucket
+      #   endpoint: s3.dualstack.us-east-2.amazonaws.com  # api endpoint
+      #   access_key: ...                                 # optional. access key when using static credentials.
+      #   secret_key: ...                                 # optional. secret key when using static credentials.
+      #   insecure: false                                 # optional. enable if endpoint is http
       backend: local
       local:
         path: /var/tempo/traces
@@ -80,6 +89,12 @@ tempo:
           endpoint: "0.0.0.0:4317"
         http:
           endpoint: "0.0.0.0:4318"
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #    - ALL
+    # readOnlyRootFilesystem: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -92,9 +107,11 @@ tempo:
   #   existingClaim: volume-claim
 
 # -- Tempo configuration file contents
+# @default -- Dynamically generated tempo configmap
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
+    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
         compacted_block_retention: {{ .Values.tempo.retention }}
@@ -107,12 +124,26 @@ config: |
       {{- toYaml .Values.tempo.server | nindent 6 }}
     storage:
       {{- toYaml .Values.tempo.storage | nindent 6 }}
+    querier:
+      {{- toYaml .Values.tempo.querier | nindent 6 }}
+    query_frontend:
+      {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
     overrides:
       {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+      {{- if .Values.tempo.metricsGenerator.enabled }}
+          metrics_generator_processors:
+          - 'service-graphs'
+          - 'span-metrics'
+    metrics_generator:
+          storage:
+            path: "/tmp/tempo"
+            remote_write:
+              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+      {{- end }}
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 1.4.1
+  tag: 1.5.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -120,6 +151,9 @@ tempoQuery:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
+
+  # -- if False the tempo-query container is not deployed
+  enabled: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -130,6 +164,19 @@ tempoQuery:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #    - ALL
+    # readOnlyRootFilesystem: false # fails if true, do not enable
+
+# -- securityContext for container
+securityContext: {}
+  # runAsUser: 65532
+  # runAsGroup: 65532
+  # fsGroup: 65532
+  # runAsNonRoot: true
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -161,26 +208,23 @@ persistence:
     - ReadWriteOnce
   size: 10Gi
 
-## Pod Annotations
+# -- Pod Annotations
 podAnnotations: {}
 
-## Pod (extra) Labels
+# -- Pod (extra) Labels
 podLabels: {}
 
 # -- Volumes to add
 extraVolumes: []
 
-## Node labels for pod assignment
-## ref: https://kubernetes.io/docs/user-guide/node-selection/
-#
+# -- Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
-## Tolerations for pod assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-##
+# -- Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
-## Affinity for pod assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-##
+# -- Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
+
+# -- The name of the PriorityClass
+priorityClassName: null

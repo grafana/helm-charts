@@ -1,11 +1,31 @@
+test_pod:
+  image: bats/bats:v1.1.0
+  pullPolicy: IfNotPresent
+
 loki:
   enabled: true
   isDefault: true
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  datasource:
+    jsonData: {}
 
 promtail:
   enabled: true
   config:
-    lokiAddress: http://{{ .Release.Name }}:3100/loki/api/v1/push
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
 
 fluent-bit:
   enabled: false
@@ -22,6 +42,9 @@ grafana:
 prometheus:
   enabled: false
   isDefault: false
+  url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
+  datasource:
+    jsonData: {}
 
 filebeat:
   enabled: false
@@ -72,3 +95,12 @@ logstash:
         }
         # stdout { codec => rubydebug }
       }
+
+# proxy is currently only used by loki test pod
+# Note: If http_proxy/https_proxy are set, then no_proxy should include the
+# loki service name, so that tests are able to communicate with the loki
+# service.
+proxy:
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""

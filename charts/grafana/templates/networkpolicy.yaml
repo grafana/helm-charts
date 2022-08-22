@@ -6,17 +6,31 @@ metadata:
   namespace: {{ template "grafana.namespace" . }}
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
-{{- if .Values.labels }}
-{{ toYaml .Values.labels | indent 4 }}
-{{- end }}
-{{- with .Values.annotations }}
+    {{- with .Values.labels }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+  policyTypes:
+    {{- if .Values.networkPolicy.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if .Values.networkPolicy.egress.enabled }}
+    - Egress
+    {{- end }}
   podSelector:
     matchLabels:
     {{- include "grafana.selectorLabels" . | nindent 6 }}
+
+  {{- if .Values.networkPolicy.egress.enabled }}
+  egress:
+    - ports:
+        {{ .Values.networkPolicy.egress.ports | toJson }}
+  {{- end }}
+  {{- if .Values.networkPolicy.ingress }}
   ingress:
     - ports:
       - port: {{ .Values.service.targetPort }}
@@ -25,13 +39,14 @@ spec:
         - podSelector:
             matchLabels:
               {{ template "grafana.fullname" . }}-client: "true"
-          {{- if .Values.networkPolicy.explicitNamespacesSelector }}
-          namespaceSelector:
-          {{ toYaml .Values.networkPolicy.explicitNamespacesSelector | indent 12 }}
-          {{- end }}
+        {{- with .Values.networkPolicy.explicitNamespacesSelector }}
+        - namespaceSelector:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
         - podSelector:
             matchLabels:
               {{- include "grafana.labels" . | nindent 14 }}
               role: read
       {{- end }}
+  {{- end }}
 {{- end }}

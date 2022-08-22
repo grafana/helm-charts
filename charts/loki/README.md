@@ -28,12 +28,20 @@ Major version upgrades listed here indicate that there is an incompatible breaki
 
 ### From 2.11.x to 2.12.0
 
-In version 2.12.0, we enabled memberlist by default and added additional kubernetes service used for members communication. 
+In version 2.12.0, we enabled memberlist by default and added additional kubernetes service used for members communication.
 
 If you already use `memberlist`, just review the config (`.Values.config.memberlist`) to make sure new `memberlist` config matches with your current configuration.
 
 If you use another implementation(`etcd`, `consul`, `inmemory`) for the ring, you can disable `memberlist` with setting `.Values.config.memberlist` to `null`. 
 It prevents from enabling `memberlist` and creating additional kubernetes service.
+
+### From 2.12.x to 2.13.0
+
+In version 2.13.0, we added custom labels to the `volumeClaimTemplates` in the `loki` Statefulset.
+
+If you want to add labels to PersistentVolumeClaim (PVC) via `persistence.labels` values, you must delete the old `loki` Statefulset in the existing release prior upgrading. Without it, the upgrade fails with the following error:
+
+> Error: UPGRADE FAILED: cannot patch "loki" with kind StatefulSet: StatefulSet.apps "loki" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', and 'updateStrategy' are forbidden
 
 ## Run Loki behind https ingress
 

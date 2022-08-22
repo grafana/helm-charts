@@ -4,20 +4,36 @@ nameOverride: null
 # -- Overrides the chart's computed fullname
 fullnameOverride: null
 
-initContainer:
-  # -- Specifies whether the init container for setting inotify max user instances is to be enabled
+daemonset:
+  # -- Deploys Promtail as a DaemonSet
+  enabled: true
+
+deployment:
+  # -- Deploys Promtail as a Deployment
   enabled: false
-  image:
-    # -- The Docker registry for the init container
-    registry: docker.io
-    # -- Docker image repository for the init container
-    repository: busybox
-    # -- Docker tag for the init container
-    tag: 1.33
-    # -- Docker image pull policy for the init container image
-    pullPolicy: IfNotPresent
-  # -- The inotify max user instances to configure
-  fsInotifyMaxUserInstances: 128
+  replicaCount: 1
+  autoscaling:
+    # -- Creates a HorizontalPodAutoscaler for the deployment
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage:
+
+initContainer: []
+  # # -- Specifies whether the init container for setting inotify max user instances is to be enabled
+  # - name: init
+  #   # -- Docker registry, image and tag for the init container image
+  #   image: docker.io/busybox:1.33
+  #   # -- Docker image pull policy for the init container image
+  #   imagePullPolicy: IfNotPresent
+  #   # -- The inotify max user instances to configure
+  #   command:
+  #     - sh
+  #     - -c
+  #     - sysctl -w fs.inotify.max_user_instances=128
+  #   securityContext:
+  #     privileged: true
 
 image:
   # -- The Docker registry
@@ -122,6 +138,9 @@ tolerations:
 # Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.
 # @default -- See `values.yaml`
 defaultVolumes:
+  - name: run
+    hostPath:
+      path: /run/promtail
   - name: containers
     hostPath:
       path: /var/lib/docker/containers
@@ -132,6 +151,8 @@ defaultVolumes:
 # -- Default volume mounts. Corresponds to `volumes`.
 # @default -- See `values.yaml`
 defaultVolumeMounts:
+  - name: run
+    mountPath: /run/promtail
   - name: containers
     mountPath: /var/lib/docker/containers
     readOnly: true
@@ -295,6 +316,10 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
+    # -- You can put here any keys that will be directly added to the config file's 'server' block.
+    # @default -- empty
+    extraServerConfigs: ""
+
     # -- You can put here any additional scrape configs you want to add to the config file.
     # @default -- empty
     extraScrapeConfigs: ""
@@ -352,9 +377,10 @@ config:
     server:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
+      {{- tpl .Values.config.snippets.extraServerConfigs . | nindent 2 }}
 
     clients:
-      {{- toYaml .Values.config.clients | nindent 2 }}
+      {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
       filename: /run/promtail/positions.yaml

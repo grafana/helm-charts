@@ -19,7 +19,7 @@ image: &image
   # -- The image repository to use
   repository: grafana/enterprise-logs
   # -- The version of Grafana Enterprise Logs
-  tag: v1.4.1
+  tag: v1.5.1
   # -- Defines the policy how and when images are pulled
   pullPolicy: IfNotPresent
   # -- Additional image pull secrets
@@ -185,11 +185,17 @@ tokengen:
   # -- Additional volume mounts for Pods
   extraVolumeMounts: []
   # -- Run containers as user `enterprise-logs(uid=10001)`
-  securityContext:
+  podSecurityContext:
     runAsNonRoot: true
     runAsGroup: 10001
     runAsUser: 10001
     fsGroup: 10001
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
 # -- Configuration for the `admin-api` target
 adminApi:
@@ -208,10 +214,16 @@ adminApi:
   # -- Run container as user `enterprise-logs(uid=10001)`
   # `fsGroup` must not be specified, because these security options are applied
   # on container level not on Pod level.
-  securityContext:
+  podSecurityContext:
     runAsNonRoot: true
     runAsGroup: 10001
     runAsUser: 10001
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
   strategy:
     type: RollingUpdate
@@ -269,11 +281,17 @@ gateway:
     labels: {}
     annotations: {}
   # -- Run container as user `enterprise-logs(uid=10001)`
-  securityContext:
+  podSecurityContext:
     runAsNonRoot: true
     runAsGroup: 10001
     runAsUser: 10001
     fsGroup: 10001
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
   # If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
@@ -335,11 +353,17 @@ compactor:
     labels: {}
     annotations: {}
   # -- Run containers as user `enterprise-logs(uid=10001)`
-  securityContext:
+  podSecurityContext:
     runAsNonRoot: true
     runAsGroup: 10001
     runAsUser: 10001
     fsGroup: 10001
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
 
   strategy:
     type: RollingUpdate

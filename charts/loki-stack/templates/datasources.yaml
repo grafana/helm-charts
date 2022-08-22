@@ -18,18 +18,25 @@ data:
     - name: Loki
       type: loki
       access: proxy
-      url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+      url: {{ tpl .Values.loki.url . | quote }}
       version: 1
-      isDefault: {{ .Values.loki.isDefault }}
+      isDefault: {{ default false .Values.loki.isDefault }}
+      {{- with .Values.loki.datasource.jsonData }}
       jsonData:
-        maxLines: {{ .Values.grafana.sidecar.datasources.maxLines }}
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
 {{- end }}
+
 {{- if .Values.prometheus.enabled }}
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
+      url: {{ tpl .Values.prometheus.url . | quote }}
       version: 1
-      isDefault: {{ .Values.prometheus.isDefault }}
+      isDefault: {{ default false .Values.prometheus.isDefault }}
+      {{- with .Values.prometheus.datasource.jsonData }}
+      jsonData:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
 {{- end }}
 {{- end }}

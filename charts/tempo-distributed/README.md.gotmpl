@@ -20,6 +20,52 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From chart version < 0.23.0
+
+Version 0.23.0:
+
+* Adds /var/tempo emptyDir mount for querier, queryfrontend, distributor and compactor. Previously, /var/tempo was directory inside container.
+
+* Sets queryFrontend.query.enabled to false. tempo-query is only required for grafana version <7.5 for compatibility with jaeger-ui. Please also note that tempo-query is incompatible with securityContext readOnlyRootFilesystem set to true.
+
+* Sets stricter default securityContext:
+```yaml
+tempo:
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+  podSecurityContext:
+    fsGroup: 1000
+```
+If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
+
+### From Chart version >= 0.22.0
+Align Istio GRPC named port syntax. For example,
+
+- otlp-grpc               -> grpc-otlp
+- distributor-otlp-grpc   -> grpc-distributor-otlp
+- jaeger-grpc             -> grpc-jaeger
+- distributor-jaeger-grpc -> grpc-distributor-jaeger
+
+In case you need to rollback, please search the right hand side pattern and replace with left hand side pattern.
+
+### From Chart version < 0.20.0
+The image's attributes must be set under the `image` key for the Memcached service.
+```yaml
+memcached:
+  image:
+    registry: docker.io
+    repository: memcached
+    tag: "1.5.17-alpine"
+    pullPolicy: "IfNotPresent"
+```
+
 ### From Chart version < 0.18.0
 Trace ingestion must now be enabled with the `enabled` key:
 ```yaml
@@ -101,7 +147,7 @@ The other components are optional and must be explicitly enabled.
 | gateway | yes |
 
 
-## (Configuration)[https://grafana.com/docs/tempo/latest/configuration/]
+## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
 
@@ -112,6 +158,20 @@ However, this setup is not fully functional.
 The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/tempo/latest/configuration/#storage.
 
 Alternatively, in order to quickly test Tempo using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/tempo) can be used.
+
+### Overriding configuration variables with structuredConfig
+
+tempo.structuredConfig variable can be used to alter individual values in the configuration and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
+
+Example:
+
+```yaml
+tempo:
+  structuredConfig:
+    query_frontend:
+      search:
+        max_duration: 12h0m0s
+```
 
 ### Activate metrics generator
 
