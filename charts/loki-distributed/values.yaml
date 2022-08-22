@@ -1223,8 +1223,6 @@ indexGateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
-  # -- Pod Disruption Budget maxUnavailable
-  maxUnavailable: null
   # -- Node selector for index-gateway pods
   nodeSelector: {}
   # -- Tolerations for index-gateway pods
