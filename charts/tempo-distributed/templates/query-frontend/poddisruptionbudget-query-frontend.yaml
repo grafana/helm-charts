@@ -2,7 +2,7 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "tempo.queryFrontendFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
 spec:

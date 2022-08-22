@@ -3,9 +3,9 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "tempo.metricsGeneratorFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metrics-generator") }}
   labels:
-    {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "metrics-generator") | nindent 4 }}
 spec:
   selector:
     matchLabels:

@@ -2,13 +2,13 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "tempo.ingesterFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "ingester") | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: {{ include "tempo.ingesterFullname" . }}
+      app: {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}
 {{ toYaml .Values.podDisruptionBudget | indent 2 }}
 {{- end }}
