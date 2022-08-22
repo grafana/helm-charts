@@ -1,10 +1,11 @@
+{{ $dict := dict "ctx" . "component" "compactor" "memberlist" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tempo.compactorFullname" . }}
+  name: {{ template "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "compactor") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.compactor.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -15,7 +16,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
@@ -23,8 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.labels" (dict "ctx" . "component" "compactor") | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -52,7 +52,7 @@ spec:
             {{- with .Values.compactor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.compactorImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: compactor
           ports:

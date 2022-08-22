@@ -1,10 +1,11 @@
+{{ $dict := dict "ctx" . "component" "distributor" "memberlist" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tempo.distributorFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-  {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
+  {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.distributor.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -17,12 +18,11 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -50,7 +50,7 @@ spec:
             {{- with .Values.distributor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.distributorImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: distributor
           ports:
