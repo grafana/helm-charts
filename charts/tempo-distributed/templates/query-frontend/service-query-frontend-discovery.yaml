@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.queryFrontendFullname" . }}-discovery
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
