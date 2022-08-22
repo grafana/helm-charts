@@ -191,8 +191,8 @@ containers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
       {{- range $key, $value := .Values.sidecar.dashboards.env }}
-            - name: "{{ $key }}"
-              value: "{{ $value }}"
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
       {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
