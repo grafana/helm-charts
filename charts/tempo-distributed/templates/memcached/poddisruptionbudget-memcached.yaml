@@ -2,7 +2,7 @@
 apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "tempo.memcachedFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "memcached") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 4 }}
 spec:
