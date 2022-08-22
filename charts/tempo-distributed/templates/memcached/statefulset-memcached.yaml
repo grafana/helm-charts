@@ -70,7 +70,7 @@ spec:
         - args:
             - --memcached.address=localhost:11211
             - --web.listen-address=0.0.0.0:9150
-          image: {{ include "tempo.memcachedExporterImage" . }}
+          image: {{ include "tempo.memcachedExporterImage" (dict "ctx" . "component" "memcached-exporter") }}
           imagePullPolicy: {{ .Values.memcachedExporter.image.pullPolicy }}
           name: exporter
           ports:
