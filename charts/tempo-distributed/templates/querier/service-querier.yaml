@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.querierFullname" . }}
+  name: {{ template "tempo.resourceName" (dict "ctx" . "component" "querier") }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "querier") | nindent 4 }}

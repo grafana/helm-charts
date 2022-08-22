@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tempo.distributorFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
