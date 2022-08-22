@@ -1,10 +1,11 @@
+{{ $dict := dict "ctx" . "component" "ingester" "memberlist" true }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "tempo.ingesterFullname" . }}
+  name: {{ template "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "ingester") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.ingester.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -15,7 +16,7 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 6}}
+      {{- include "tempo.selectorLabels" $dict | nindent 6}}
   serviceName: ingester
   podManagementPolicy: Parallel
   updateStrategy:
@@ -53,7 +54,7 @@ spec:
             {{- with .Values.ingester.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.ingesterImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: ingester
           ports:

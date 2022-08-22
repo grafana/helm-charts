@@ -1,11 +1,12 @@
 {{- if .Values.memcached.enabled }}
+{{ $dict := dict "ctx" . "component" "memcached" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "tempo.memcachedFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.memcached.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -14,7 +15,7 @@ spec:
   replicas: {{ .Values.memcached.replicas }}
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   serviceName: memcached
   template:
     metadata:
@@ -28,7 +29,7 @@ spec:
         {{- end }}
       {{- end }}
       labels:
-        {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 8 }}
+        {{- include "tempo.labels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -41,7 +42,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       containers:
-        - image: {{ include "tempo.memcachedImage" . }}
+        - image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
           name: memcached
           {{- with .Values.memcached.extraArgs }}
