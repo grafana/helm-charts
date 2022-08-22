@@ -497,7 +497,7 @@ config: |
             endpoint: 0.0.0.0:14268
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}:9095
   ingester:
     lifecycler:
       ring:

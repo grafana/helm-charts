@@ -6,7 +6,7 @@
 apiVersion: {{ include "tempo.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "tempo.gatewayFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
   {{- with .Values.gateway.ingress.annotations }}
@@ -42,11 +42,11 @@ spec:
             backend:
               {{- if $ingressApiIsStable }}
               service:
-                name: {{ include "tempo.gatewayFullname" $ }}
+                name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
                 port:
                   number: {{ $.Values.gateway.service.port }}
               {{- else }}
-              serviceName: {{ include "tempo.gatewayFullname" $ }}
+              serviceName: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
               servicePort: {{ $.Values.gateway.service.port }}
               {{- end }}
           {{- end }}
