@@ -1,11 +1,4 @@
 {{/*
-gateway fullname
-*/}}
-{{- define "tempo.gatewayFullname" -}}
-{{ include "tempo.fullname" . }}-gateway
-{{- end }}
-
-{{/*
 gateway auth secret name
 */}}
 {{- define "tempo.gatewayAuthSecret" -}}
