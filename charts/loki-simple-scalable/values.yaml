@@ -69,8 +69,8 @@ loki:
     server:
       http_listen_port: 3100
       grpc_listen_port: 9095
-      {{- if .Values.loki.extraServerConfig }}
-      {{- toYaml .Values.loki.extraServerConfig | nindent 2 }}
+      {{- with .Values.loki.extraServerConfig }}
+      {{- toYaml . | nindent 2 }}
       {{- end }}
 
     memberlist:
