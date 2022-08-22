@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.55.6](https://img.shields.io/badge/Version-0.55.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.55.7](https://img.shields.io/badge/Version-0.55.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -57,6 +57,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| compactor.affinity | object | `{}` | Specify the compactor affinity |
 | compactor.command | string | `nil` | Command to execute instead of defined in Docker image |
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
