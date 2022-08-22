@@ -563,6 +563,7 @@ queryFrontend:
 
 # Configuration for the query-scheduler
 queryScheduler:
+  # -- Specifies whether the query-scheduler should be decoupled from the query-frontend
   enabled: false
   # -- Number of replicas for the query-scheduler.
   # It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers;
