@@ -81,9 +81,13 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
             - mountPath: /var/tempo
               name: tempo-compactor-store
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- with .Values.compactor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -101,11 +105,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: config
+          {{- include "tempo.configVolume" . | nindent 10 }}
+        - name: tempo-compactor-store
+          emptyDir: {}
         - configMap:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
-        - name: tempo-compactor-store
-          emptyDir: {}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         {{- with .Values.compactor.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
