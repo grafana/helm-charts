@@ -35,9 +35,9 @@ Calculate the infix for naming
 Docker image selector for Tempo. Hierachy based on global, component, and tempo values.
 */}}
 {{- define "tempo.tempoImage" -}}
-{{- $registry := coalesce .global.registry .service.registry .tempo.registry -}}
-{{- $repository := coalesce .service.repository .tempo.repository -}}
-{{- $tag := coalesce .service.tag .tempo.tag .defaultVersion | toString -}}
+{{- $registry := coalesce .global.registry .component.registry .tempo.registry -}}
+{{- $repository := coalesce .component.repository .tempo.repository -}}
+{{- $tag := coalesce .component.tag .tempo.tag .defaultVersion | toString -}}
 {{- printf "%s/%s:%s" $registry $repository $tag -}}
 {{- end -}}
 
@@ -52,11 +52,19 @@ Create chart name and version as used by the chart label.
 Calculate image name based on whether enterprise features are requested.  Fallback to hierarchy handling in `tempo.tempoImage`.
 */}}
 {{- define "tempo.imageReference" -}}
-{{- if .Values.enterprise.enabled -}}
-{{ .Values.enterprise.image.repository }}:{{ .Values.enterprise.image.tag }}
+{{ $tempo := "" }}
+{{- if .ctx.Values.enterprise.enabled -}}
+{{ $tempo = merge .ctx.Values.enterprise.image .ctx.Values.tempo.image }}
 {{- else -}}
-{{ include "tempo.tempoImage" }}
+{{ $tempo = .ctx.Values.tempo.image }}
 {{- end -}}
+{{- $componentSection := include "tempo.componentSectionFromName" . }}
+{{- if not (hasKey .ctx.Values $componentSection) }}
+{{- print "Component section " $componentSection " does not exist" | fail }}
+{{- end }}
+{{- $component := (index .ctx.Values $componentSection).image }}
+{{- $dict := dict "tempo" $tempo "component" $component "global" .ctx.Values.global.image "defaultVersion" .ctx.Chart.AppVersion -}}
+{{- include "tempo.tempoImage" $dict -}}
 {{- end -}}
 
 {{/*
