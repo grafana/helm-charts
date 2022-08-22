@@ -1,11 +1,12 @@
 {{- if .Values.metricsGenerator.enabled }}
+{{ $dict := dict "ctx" . "component" "metrics-generator" "memberlist" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tempo.metricsGeneratorFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-  {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+  {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.metricsGenerator.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -16,12 +17,11 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "tempo.metricsGeneratorLabels" . | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -46,7 +46,7 @@ spec:
             {{- with .Values.metricsGenerator.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.metricsGeneratorImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: metrics-generator
           ports:
@@ -72,7 +72,7 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
             - mountPath: /var/tempo
               name: wal
             {{- with .Values.metricsGenerator.extraVolumeMounts }}
@@ -92,9 +92,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - configMap:
-            name: {{ template "tempo.fullname" . }}
-          name: tempo-conf
+        - name: config
+          {{- include "tempo.configVolume" . | nindent 10 }}
+        {{- if .Values.enterprise.enabled -}}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         - name: wal
           emptyDir: {}
         {{- with .Values.metricsGenerator.extraVolumes }}

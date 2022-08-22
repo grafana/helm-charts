@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tempo.gatewayFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
 spec:
@@ -59,6 +59,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/nginx
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- if .Values.gateway.basicAuth.enabled }}
             - name: auth
               mountPath: /etc/nginx/secrets
@@ -91,7 +95,12 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "tempo.gatewayFullname" . }}
+            name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+        {{- if .Values.enterprise.enabled -}}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         {{- if .Values.gateway.basicAuth.enabled }}
         - name: auth
           secret:

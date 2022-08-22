@@ -25,8 +25,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.labels" (dict "ctx" . "component" "ingester") | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -82,9 +81,13 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
             - mountPath: /var/tempo
               name: data
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- with .Values.ingester.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -102,9 +105,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - configMap:
-            name: {{ template "tempo.fullname" . }}
-          name: tempo-conf
+        - name: config
+          {{- include "tempo.configVolume" . | nindent 10 }}
         {{- with .Values.ingester.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

@@ -1,10 +1,11 @@
+{{ $dict := dict "ctx" . "component" "query-frontend" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tempo.queryFrontendFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.queryFrontend.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -17,7 +18,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
@@ -25,8 +26,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -54,7 +54,7 @@ spec:
             {{- with .Values.queryFrontend.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.queryFrontendImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: query-frontend
           ports:
@@ -78,7 +78,11 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- with .Values.queryFrontend.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -114,7 +118,7 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
             {{- with .Values.queryFrontend.query.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -133,9 +137,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - configMap:
-            name: {{ template "tempo.fullname" . }}
-          name: tempo-conf
+        - name: config
+          {{- include "tempo.configVolume" . | nindent 10 }}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         {{- with .Values.queryFrontend.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
