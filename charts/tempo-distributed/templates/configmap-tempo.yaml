@@ -1,14 +1,27 @@
+{{- if not .Values.useExternalConfig }}
 apiVersion: v1
+{{- if eq .Values.configStorageType "Secret" }}
+kind: Secret
+{{- else }}
 kind: ConfigMap
+{{- end }}
 metadata:
-  name: {{ template "tempo.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ tpl .Values.externalConfigSecretName . }}
   labels:
     {{- include "tempo.labels" (dict "ctx" .) | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+{{- if eq .Values.configStorageType "Secret" }}
+data:
+  tempo-query.yaml: {{ tpl .Values.queryFrontend.query.config . | b64enc }}
+  overrides.yaml: {{ include "tempo.calculatedOverridesConfig" . | b64enc }}
+  tempo.yaml: {{ include "tempo.calculatedConfig" . | b64enc }}
+{{- else }}
 data:
   tempo-query.yaml: |
     {{- tpl .Values.queryFrontend.query.config . | nindent 4 }}
   overrides.yaml: |
-    {{- tpl .Values.overrides . | nindent 4 }}
+    {{ include "tempo.calculatedOverridesConfig" . | nindent 4 }}
   tempo.yaml: |
-    {{- tpl (mergeOverwrite (tpl .Values.config . | fromYaml) .Values.tempo.structuredConfig | toYaml) . | nindent 4 }}
+    {{ include "tempo.calculatedConfig" . | nindent 4 }}
+{{- end -}}
+{{- end }}
