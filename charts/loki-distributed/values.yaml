@@ -567,7 +567,7 @@ queryScheduler:
   enabled: false
   # -- Number of replicas for the query-scheduler.
   # It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers;
-  # it's also recommended that this value evenly divides the latter 
+  # it's also recommended that this value evenly divides the latter
   replicas: 2
   image:
     # -- The Docker registry for the query-scheduler image. Overrides `loki.image.registry`

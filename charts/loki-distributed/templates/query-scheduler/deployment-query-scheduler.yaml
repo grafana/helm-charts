@@ -84,8 +84,10 @@ spec:
             {{- with .Values.queryScheduler.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.queryScheduler.resources }}
           resources:
-            {{- toYaml .Values.queryScheduler.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- if .Values.queryScheduler.extraContainers }}
         {{- toYaml .Values.queryScheduler.extraContainers | nindent 8}}
         {{- end }}

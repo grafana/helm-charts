@@ -433,7 +433,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryScheduler.podAnnotations | object | `{}` | Annotations for query-scheduler pods |
 | queryScheduler.podLabels | object | `{}` | Labels for query-scheduler pods |
 | queryScheduler.priorityClassName | string | `nil` | The name of the PriorityClass for query-scheduler pods |
-| queryScheduler.replicas | int | `2` | Number of replicas for the query-scheduler. It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers; it's also recommended that this value evenly divides the latter  |
+| queryScheduler.replicas | int | `2` | Number of replicas for the query-scheduler. It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers; it's also recommended that this value evenly divides the latter |
 | queryScheduler.resources | object | `{}` | Resource requests and limits for the query-scheduler |
 | queryScheduler.serviceLabels | object | `{}` | Labels for query-scheduler service |
 | queryScheduler.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-scheduler to shutdown before it is killed |
