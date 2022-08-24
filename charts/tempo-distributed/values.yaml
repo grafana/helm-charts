@@ -5,13 +5,13 @@ global:
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
-  clusterDomain: "cluster.local"
+  clusterDomain: 'cluster.local'
   # -- configures DNS service name
-  dnsService: "kube-dns"
+  dnsService: 'kube-dns'
   # -- configures DNS service namespace
-  dnsNamespace: "kube-system"
+  dnsNamespace: 'kube-system'
 # -- Overrides the chart's computed fullname
-# fullnameOverride: tempo
+fullnameOverride: null
 
 # -- Configuration is loaded from the secret called 'externalConfigSecretName'.
 # If 'useExternalConfig' is true, then the configuration is not generated, just
@@ -280,7 +280,7 @@ distributor:
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
-    loadBalancerIP: ""
+    loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
@@ -551,7 +551,7 @@ traces:
       # -- Jaeger Thrift Compact receiver config
       receiverConfig: {}
     thriftHttp:
-       # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
       enabled: false
       # -- Jaeger Thrift HTTP receiver config
       receiverConfig: {}
@@ -754,6 +754,7 @@ server:
   grpc_server_max_recv_msg_size: 4194304
   # -- Max gRPC message size that can be sent
   grpc_server_max_send_msg_size: 4194304
+
 # To configure a different storage backend instead of local storage:
 # storage:
 #   trace:
@@ -842,32 +843,112 @@ memcachedExporter:
     # -- Memcached Exporter resource requests and limits
   resources: {}
 
-# ServiceMonitor configuration
-serviceMonitor:
-  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: false
-  # -- Alternative namespace for ServiceMonitor resources
-  namespace: null
-  # -- Namespace selector for ServiceMonitor resources
-  namespaceSelector: {}
-  # -- ServiceMonitor annotations
-  annotations: {}
-  # -- Additional ServiceMonitor labels
-  labels: {}
-  # -- ServiceMonitor scrape interval
-  interval: null
-  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
-  scrapeTimeout: null
-  # -- ServiceMonitor relabel configs to apply to samples before scraping
-  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-  relabelings: []
-  # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
-  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
-  metricRelabelings: []
-  # -- ServiceMonitor will use http by default, but you can pick https as well
-  scheme: http
-  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
-  tlsConfig: null
+metaMonitoring:
+  # ServiceMonitor configuration
+  serviceMonitor:
+    # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+    enabled: false
+    # -- Alternative namespace for ServiceMonitor resources
+    namespace: null
+    # -- Namespace selector for ServiceMonitor resources
+    namespaceSelector: {}
+    # -- ServiceMonitor annotations
+    annotations: {}
+    # -- Additional ServiceMonitor labels
+    labels: {}
+    # -- ServiceMonitor scrape interval
+    interval: null
+    # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+    scrapeTimeout: null
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+    # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+    metricRelabelings: []
+    # -- ServiceMonitor will use http by default, but you can pick https as well
+    scheme: http
+    # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+    tlsConfig: null
+
+  # metaMonitoringAgent configures the built in Grafana Agent that can scrape metrics and logs and send them to a local or remote destination
+  grafanaAgent:
+    # -- Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the
+    # ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below.
+    # Note that you need to configure serviceMonitor in order to have some metrics available.
+    enabled: false
+
+    # -- Controls whether to install the Grafana Agent Operator and its CRDs.
+    # Note that helm will not install CRDs if this flag is enabled during an upgrade.
+    # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
+    installOperator: false
+
+    logs:
+      # -- Default destination for logs. The config here is translated to Promtail client
+      # configuration to write logs to this Loki-compatible remote. Optional.
+      remote:
+        # -- Full URL for Loki push endpoint. Usually ends in /loki/api/v1/push
+        url: ''
+
+        auth:
+          # -- Used to set X-Scope-OrgID header on requests. Usually not used in combination with username and password.
+          tenantId: ''
+
+          # -- Basic authentication username. Optional.
+          username: ''
+
+          # -- The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set.
+          passwordSecretName: ''
+          # -- The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set.
+          passwordSecretKey: ''
+
+      # -- Client configurations for the LogsInstance that will scrape Mimir pods. Follows the format of .remote.
+      additionalClientConfigs: []
+
+    metrics:
+      # -- Default destination for metrics. The config here is translated to remote_write
+      # configuration to push metrics to this Prometheus-compatible remote. Optional.
+      # Note that you need to configure serviceMonitor in order to have some metrics available.
+      remote:
+        # -- Full URL for Prometheus remote-write. Usually ends in /push
+        url: ''
+
+        # -- Used to add HTTP headers to remote-write requests.
+        headers: {}
+        auth:
+          # -- Basic authentication username. Optional.
+          username: ''
+
+          # -- The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set.
+          passwordSecretName: ''
+          # -- The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set.
+          passwordSecretKey: ''
+
+      # -- Additional remote-write for the MetricsInstance that will scrape Mimir pods. Follows the format of .remote.
+      additionalRemoteWriteConfigs: []
+
+      scrapeK8s:
+        # -- When grafanaAgent.enabled and serviceMonitor.enabled, controls whether to create ServiceMonitors CRs
+        # for cadvisor, kubelet, and kube-state-metrics. The scraped metrics are reduced to those pertaining to
+        # Mimir pods only.
+        enabled: true
+
+        # -- Controls service discovery of kube-state-metrics.
+        kubeStateMetrics:
+          namespace: kube-system
+          labelSelectors:
+            app.kubernetes.io/name: kube-state-metrics
+
+    # -- Sets the namespace of the resources. Leave empty or unset to use the same namespace as the Helm release.
+    namespace: ''
+
+    # -- Labels to add to all monitoring.grafana.com custom resources.
+    # Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.labels for that.
+    labels: {}
+
+    # -- Annotations to add to all monitoring.grafana.com custom resources.
+    # Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that.
+    annotations: {}
 
 # Rules for the Prometheus Operator
 prometheusRule:
@@ -889,6 +970,30 @@ prometheusRule:
   #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
   #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
   #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
+minio:
+  enabled: true
+  mode: standalone
+  rootUser: grafana-tempo
+  rootPassword: supersecret
+  buckets:
+    - name: tempo-traces
+      policy: none
+      purge: false
+    - name: enterprise-traces
+      policy: none
+      purge: false
+    - name: enterprise-traces-admin
+      policy: none
+      purge: false
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  # Changed the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root and OpenShift will not permit this.
+  configPathmc: '/tmp/minio/mc/'
 
 # Configuration for the gateway
 gateway:
@@ -1023,9 +1128,9 @@ gateway:
               '"$request" $body_bytes_sent "$http_referer" '
               '"$http_user_agent" "$http_x_forwarded_for"';
     # -- Allows appending custom configuration to the server block
-    serverSnippet: ""
+    serverSnippet: ''
     # -- Allows appending custom configuration to the http block
-    httpSnippet: ""
+    httpSnippet: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
