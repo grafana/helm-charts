@@ -227,7 +227,7 @@ Calculate values.yaml section name from component name
 Expects the component name in .component on the passed context
 */}}
 {{- define "tempo.componentSectionFromName" -}}
-{{- .component | replace "-" "_" -}}
+{{- .component | replace "-" "_" | camelcase | untitle -}}
 {{- end -}}
 
 {{/*
@@ -282,4 +282,11 @@ checksum/config: {{ include (print .ctx.Template.BasePath "/configmap-tempo.yaml
 {{ toYaml . }}
 {{- end }}
 {{- end }}
+{{- end -}}
+
+{{/*
+Cluster name that shows up in dashboard metrics
+*/}}
+{{- define "tempo.clusterName" -}}
+{{ (include "tempo.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
 {{- end -}}
