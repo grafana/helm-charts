@@ -1,10 +1,11 @@
 {{- if .Values.gateway.enabled }}
+{{ $dict := dict "ctx" . "component" "gateway" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+  name: {{ include "tempo.resourceName" $dict }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
 spec:
   minReadySeconds: 10
 {{- if not .Values.gateway.autoscaling.enabled }}
@@ -13,7 +14,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -25,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 8 }}
+        {{- include "tempo.selectorLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -45,7 +46,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: nginx
-          image: {{ include "tempo.gatewayImage" . }}
+          image: "{{ include "tempo.imageReference" $dict }}"
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           ports:
             - name: http

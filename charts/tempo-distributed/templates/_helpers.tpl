@@ -62,7 +62,7 @@ Calculate image name based on whether enterprise features are requested.  Fallba
 {{- if not (hasKey .ctx.Values $componentSection) }}
 {{- print "Component section " $componentSection " does not exist" | fail }}
 {{- end }}
-{{- $component := (index .ctx.Values $componentSection).image }}
+{{- $component := (index .ctx.Values $componentSection).image | default dict }}
 {{- $dict := dict "tempo" $tempo "component" $component "global" .ctx.Values.global.image "defaultVersion" .ctx.Chart.AppVersion -}}
 {{- include "tempo.tempoImage" $dict -}}
 {{- end -}}

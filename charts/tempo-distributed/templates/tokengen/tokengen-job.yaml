@@ -1,11 +1,12 @@
 {{- if .Values.enterprise.enabled -}}
 {{ if .Values.tokengenJob.enable }}
+{{ $dict := dict "ctx" . "component" "tokengen-job" }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "tokengen") }}
+  name: {{ include "tempo.resourceName" $dict }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "tokengen") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   annotations:
     {{- if .Values.tokengenJob.annotations }}
     {{- toYaml .Values.tokengenJob.annotations | nindent 4 }}
@@ -20,7 +21,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.podLabels" (dict "ctx" . "component" "tokengen") | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tokengenJob.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -42,7 +43,7 @@ spec:
         {{- toYaml .Values.tokengenJob.initContainers | nindent 8 }}
       containers:
         - name: tokengen
-          image: "{{ include "tempo.imageReference" . }}"
+          image: "{{ include "tempo.imageReference" $dict }}"
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           args:
             - "-target=tokengen"

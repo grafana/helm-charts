@@ -1,26 +1,26 @@
 {{- if .Values.enterprise.enabled -}}
-{{ $dict := dict "ctx" . "component" "admin-api" "memberlist" true }}
+{{ $dict := dict "ctx" . "component" "enterprise-gateway" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    {{- toYaml .Values.adminApi.annotations | nindent 4 }}
+    {{- toYaml .Values.enterpriseGateway.annotations | nindent 4 }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "admin-api" "memberlist" true) | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  replicas: {{ .Values.adminApi.replicas }}
+  replicas: {{ .Values.enterpriseGateway.replicas }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   strategy:
-    {{- toYaml .Values.adminApi.strategy | nindent 4 }}
+    {{- toYaml .Values.enterpriseGateway.strategy | nindent 4 }}
   template:
     metadata:
       labels:
         {{- include "tempo.podLabels" $dict | nindent 8 }}
-        {{- with .Values.adminApi.podLabels }}
+        {{- with .Values.enterpriseGateway.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
@@ -28,15 +28,13 @@ spec:
       namespace: {{ .Release.Namespace | quote }}
     spec:
       serviceAccountName: {{ template "tempo.serviceAccountName" . }}
-      {{- if .Values.adminApi.priorityClassName }}
-      priorityClassName: {{ .Values.adminApi.priorityClassName }}
+      {{- if .Values.enterpriseGateway.priorityClassName }}
+      priorityClassName: {{ .Values.enterpriseGateway.priorityClassName }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.adminApi.securityContext | nindent 8 }}
+        {{- toYaml .Values.enterpriseGateway.securityContext | nindent 8 }}
       initContainers:
-        {{- with .Values.adminApi.initContainers }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- toYaml .Values.enterpriseGateway.initContainers | nindent 8 }}
       {{- if .Values.tempo.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -44,77 +42,71 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: admin-api
+        - name: gateway
           image: "{{ include "tempo.imageReference" $dict }}"
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           args:
-            - "-target=admin-api"
+            - "-target=gateway"
             - "-config.expand-env=true"
             - "-config.file=/conf/tempo.yaml"
-            {{- range $key, $value := .Values.adminApi.extraArgs }}
+            {{- range $key, $value := .Values.enterpriseGateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
-            - mountPath: /conf
-              name: config
+            {{- if .Values.enterpriseGateway.extraVolumeMounts }}
+              {{ toYaml .Values.enterpriseGateway.extraVolumeMounts | nindent 12}}
+            {{- end }}
+            - name: config
+              mountPath: /conf
             - name: license
               mountPath: /license
             - name: storage
               mountPath: "/data"
-              subPath: {{ .Values.adminApi.persistence.subPath }}
-            {{- if .Values.adminApi.extraVolumeMounts }}
-              {{ toYaml .Values.adminApi.extraVolumeMounts | nindent 12}}
-            {{- end }}
+              subPath: {{ .Values.enterpriseGateway.persistence.subPath }}
           ports:
             - name: http-metrics
               containerPort: {{ include "tempo.serverHttpListenPort" . }}
               protocol: TCP
-            - name: grpc
-              containerPort: {{ include "tempo.serverGrpcListenPort" . }}
-              protocol: TCP
-            - name: memberlist
-              containerPort: {{ include "tempo.memberlistBindPort" . }}
-              protocol: TCP
           livenessProbe:
-            {{- toYaml .Values.adminApi.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.enterpriseGateway.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml .Values.adminApi.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.enterpriseGateway.readinessProbe | nindent 12 }}
           resources:
-            {{- toYaml .Values.adminApi.resources | nindent 12 }}
+            {{- toYaml .Values.enterpriseGateway.resources | nindent 12 }}
           securityContext:
-            {{- toYaml .Values.adminApi.containerSecurityContext | nindent 12 }}
+            {{- toYaml .Values.enterpriseGateway.containerSecurityContext | nindent 12 }}
           env:
             {{- with .Values.global.extraEnv }}
               {{ toYaml . | nindent 12 }}
             {{- end }}
-            {{- with .Values.adminApi.env }}
+            {{- with .Values.enterpriseGateway.env }}
               {{ toYaml . | nindent 12 }}
             {{- end }}
           envFrom:
             {{- with .Values.global.extraEnvFrom }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-            {{- with .Values.adminApi.extraEnvFrom }}
+            {{- with .Values.enterpriseGateway.extraEnvFrom }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-        {{- with .Values.adminApi.extraContainers }}
+        {{- with .Values.enterpriseGateway.extraContainers }}
         {{ toYaml . | nindent 8 }}
         {{- end }}
       nodeSelector:
-        {{- toYaml .Values.adminApi.nodeSelector | nindent 8 }}
+        {{- toYaml .Values.enterpriseGateway.nodeSelector | nindent 8 }}
       affinity:
-        {{- toYaml .Values.adminApi.affinity | nindent 8 }}
+        {{- toYaml .Values.enterpriseGateway.affinity | nindent 8 }}
       tolerations:
-        {{- toYaml .Values.adminApi.tolerations | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.adminApi.terminationGracePeriodSeconds }}
+        {{- toYaml .Values.enterpriseGateway.tolerations | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.enterpriseGateway.terminationGracePeriodSeconds }}
       volumes:
         - name: config
           {{- include "tempo.configVolume" . | nindent 10 }}
         - name: runtime-config
           configMap:
             name: {{ template "tempo.fullname" . }}-runtime
-        {{- if .Values.adminApi.extraVolumes }}
-        {{ toYaml .Values.adminApi.extraVolumes | nindent 8}}
+        {{- if .Values.enterpriseGateway.extraVolumes }}
+        {{ toYaml .Values.enterpriseGateway.extraVolumes | nindent 8}}
         {{- end }}
         - name: license
           secret:
