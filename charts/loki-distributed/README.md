@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.55.8](https://img.shields.io/badge/Version-0.55.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.56.1](https://img.shields.io/badge/Version-0.56.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -420,6 +420,26 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.serviceLabels | object | `{}` | Labels for query-frontend service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
+| queryScheduler.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string |
+| queryScheduler.enabled | bool | `false` | Specifies whether the query-scheduler should be decoupled from the query-frontend |
+| queryScheduler.extraArgs | list | `[]` | Additional CLI args for the query-scheduler |
+| queryScheduler.extraContainers | list | `[]` | Containers to add to the query-scheduler pods |
+| queryScheduler.extraEnv | list | `[]` | Environment variables to add to the query-scheduler pods |
+| queryScheduler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-scheduler pods |
+| queryScheduler.extraVolumeMounts | list | `[]` | Volume mounts to add to the query-scheduler pods |
+| queryScheduler.extraVolumes | list | `[]` | Volumes to add to the query-scheduler pods |
+| queryScheduler.image.registry | string | `nil` | The Docker registry for the query-scheduler image. Overrides `loki.image.registry` |
+| queryScheduler.image.repository | string | `nil` | Docker image repository for the query-scheduler image. Overrides `loki.image.repository` |
+| queryScheduler.image.tag | string | `nil` | Docker image tag for the query-scheduler image. Overrides `loki.image.tag` |
+| queryScheduler.nodeSelector | object | `{}` | Node selector for query-scheduler pods |
+| queryScheduler.podAnnotations | object | `{}` | Annotations for query-scheduler pods |
+| queryScheduler.podLabels | object | `{}` | Labels for query-scheduler pods |
+| queryScheduler.priorityClassName | string | `nil` | The name of the PriorityClass for query-scheduler pods |
+| queryScheduler.replicas | int | `2` | Number of replicas for the query-scheduler. It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers; it's also recommended that this value evenly divides the latter |
+| queryScheduler.resources | object | `{}` | Resource requests and limits for the query-scheduler |
+| queryScheduler.serviceLabels | object | `{}` | Labels for query-scheduler service |
+| queryScheduler.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-scheduler to shutdown before it is killed |
+| queryScheduler.tolerations | list | `[]` | Tolerations for query-scheduler pods |
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
