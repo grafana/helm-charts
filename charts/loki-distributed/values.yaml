@@ -144,11 +144,18 @@ loki:
             ttl: 24h
 
     frontend_worker:
+      {{- if .Values.queryScheduler.enabled }}
+      scheduler_address: {{ include "loki.querySchedulerFullname" . }}:9095
+      {{- else }}
       frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
+      {{- end }}
 
     frontend:
       log_queries_longer_than: 5s
       compress_responses: true
+      {{- if .Values.queryScheduler.enabled }}
+      scheduler_address: {{ include "loki.querySchedulerFullname" . }}:9095
+      {{- end }}
       tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 
     compactor:
@@ -552,6 +559,66 @@ queryFrontend:
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
+  tolerations: []
+
+# Configuration for the query-scheduler
+queryScheduler:
+  # -- Specifies whether the query-scheduler should be decoupled from the query-frontend
+  enabled: false
+  # -- Number of replicas for the query-scheduler.
+  # It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers;
+  # it's also recommended that this value evenly divides the latter
+  replicas: 2
+  image:
+    # -- The Docker registry for the query-scheduler image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the query-scheduler image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the query-scheduler image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for query-scheduler pods
+  priorityClassName: null
+  # -- Labels for query-scheduler pods
+  podLabels: {}
+  # -- Annotations for query-scheduler pods
+  podAnnotations: {}
+  # -- Labels for query-scheduler service
+  serviceLabels: {}
+  # -- Additional CLI args for the query-scheduler
+  extraArgs: []
+  # -- Environment variables to add to the query-scheduler pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the query-scheduler pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the query-scheduler pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the query-scheduler pods
+  extraVolumes: []
+  # -- Resource requests and limits for the query-scheduler
+  resources: {}
+  # -- Containers to add to the query-scheduler pods
+  extraContainers: []
+  # -- Grace period to allow the query-scheduler to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # -- Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.querySchedulerSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.querySchedulerSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Node selector for query-scheduler pods
+  nodeSelector: {}
+  # -- Tolerations for query-scheduler pods
   tolerations: []
 
 # Configuration for the table-manager

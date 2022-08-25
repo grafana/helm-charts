@@ -12,6 +12,9 @@ Installed components:
 * distributor
 * querier
 * query-frontend
+{{- if .Values.queryScheduler.enabled }}
+* query-scheduler
+{{- end }}
 {{- if .Values.tableManager.enabled }}
 * table-manager
 {{- end }}
