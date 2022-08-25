@@ -99,7 +99,7 @@ spec:
       volumes:
         - name: config
           {{- include "tempo.configVolume" . | nindent 10 }}
-        {{- if .Values.enterprise.enabled -}}
+        {{- if .Values.enterprise.enabled }}
         - name: license
           secret:
             secretName: {{ tpl .Values.license.secretName . }}
