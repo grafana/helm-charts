@@ -332,7 +332,9 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
-    # -- Size of persistent disk
+    # -- Use emptyDir with ramdisk for storage. **Please note that all data in ingester will be lost on pod restart**
+    inMemory: false
+    # -- Size of persistent or memory disk
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
@@ -1270,7 +1272,9 @@ indexGateway:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
-    # -- Size of persistent disk
+    # -- Use emptyDir with ramdisk for storage. **Please note that all data in indexGateway will be lost on pod restart**
+    inMemory: false
+    # -- Size of persistent or memory disk
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.

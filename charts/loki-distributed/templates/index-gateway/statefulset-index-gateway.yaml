@@ -118,6 +118,15 @@ spec:
   {{- if not .Values.indexGateway.persistence.enabled }}
         - name: data
           emptyDir: {}
+  {{- else if .Values.indexGateway.persistence.inMemory }}
+        - name: data
+        {{- if .Values.indexGateway.persistence.inMemory }}
+          emptyDir:
+            medium: Memory
+        {{- end }}
+        {{- if .Values.indexGateway.persistence.size }}
+            sizeLimit: {{ .Values.indexGateway.persistence.size }}
+        {{- end }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:
