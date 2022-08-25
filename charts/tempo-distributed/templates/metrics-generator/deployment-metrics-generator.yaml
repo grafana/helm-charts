@@ -80,6 +80,10 @@ spec:
               name: config
             - mountPath: /var/tempo
               name: wal
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- with .Values.metricsGenerator.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
