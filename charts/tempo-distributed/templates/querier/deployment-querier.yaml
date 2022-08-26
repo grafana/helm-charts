@@ -65,7 +65,7 @@ spec:
               name: http-memberlist
               protocol: TCP
             - containerPort: 3100
-              name: http
+              name: http-metrics
           {{- with .Values.querier.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

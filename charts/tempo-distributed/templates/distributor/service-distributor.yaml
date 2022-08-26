@@ -12,9 +12,9 @@ metadata:
 spec:
   type: {{ .Values.distributor.service.type }}
   ports:
-    - name: http
+    - name: http-metrics
       port: 3100
-      targetPort: http
+      targetPort: http-metrics
     - name: grpc
       port: 9095
       protocol: TCP

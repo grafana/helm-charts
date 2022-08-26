@@ -63,7 +63,7 @@ spec:
               name: http-memberlist
               protocol: TCP
             - containerPort: 3100
-              name: http
+              name: http-metrics
             {{- if .Values.traces.jaeger.thriftCompact.enabled }}
             - containerPort: 6831
               name: jaeger-compact

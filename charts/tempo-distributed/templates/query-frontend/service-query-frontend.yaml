@@ -12,7 +12,7 @@ metadata:
 spec:
   type: {{ .Values.queryFrontend.service.type }}
   ports:
-    - name: http
+    - name: http-metrics
       port: 3100
       targetPort: 3100
     - name: grpc

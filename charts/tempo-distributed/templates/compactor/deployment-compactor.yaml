@@ -62,7 +62,7 @@ spec:
           name: compactor
           ports:
             - containerPort: 3100
-              name: http
+              name: http-metrics
             - containerPort: 7946
               name: http-memberlist
           {{- with .Values.compactor.extraEnv }}

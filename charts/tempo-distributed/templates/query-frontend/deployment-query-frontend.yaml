@@ -64,7 +64,7 @@ spec:
           name: query-frontend
           ports:
             - containerPort: 3100
-              name: http
+              name: http-metrics
             - containerPort: 9095
               name: grpc
           {{- with .Values.queryFrontend.extraEnv }}
