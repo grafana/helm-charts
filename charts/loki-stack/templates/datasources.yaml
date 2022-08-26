@@ -18,7 +18,7 @@ data:
     - name: Loki
       type: loki
       access: proxy
-      url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+      url: {{ tpl .Values.loki.url . | quote }}
       version: 1
       isDefault: {{ default false .Values.loki.isDefault }}
       {{- with .Values.loki.datasource.jsonData }}
@@ -31,7 +31,7 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
+      url: {{ tpl .Values.prometheus.url . | quote }}
       version: 1
       isDefault: {{ default false .Values.prometheus.isDefault }}
       {{- with .Values.prometheus.datasource.jsonData }}

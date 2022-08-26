@@ -45,6 +45,10 @@ spec:
         - name: compactor
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.compactor.command }}
+          command: 
+            - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=compactor
@@ -85,6 +89,10 @@ spec:
         {{- if .Values.compactor.extraContainers }}
         {{- toYaml .Values.compactor.extraContainers | nindent 8}}
         {{- end }}
+      {{- with .Values.compactor.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.compactor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -56,6 +56,10 @@ spec:
         - name: ingester
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.ingester.command }}
+          command:
+            - {{ coalesce .Values.ingester.command .Values.loki.command | quote }}
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=ingester
@@ -126,6 +130,15 @@ spec:
   {{- if not .Values.ingester.persistence.enabled }}
         - name: data
           emptyDir: {}
+  {{- else if .Values.ingester.persistence.inMemory }}
+        - name: data
+        {{- if .Values.ingester.persistence.inMemory }}
+          emptyDir:
+            medium: Memory
+        {{- end }}
+        {{- if .Values.ingester.persistence.size }}
+            sizeLimit: {{ .Values.ingester.persistence.size }}
+        {{- end }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:

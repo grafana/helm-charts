@@ -67,7 +67,7 @@ This version requires Helm >= 3.1.0.
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
-| `service.appProtocol                      | Adds the appProtocol field to the service     | ``                                                      |
+| `service.appProtocol`                     | Adds the appProtocol field to the service     | ``                                                      |
 | `service.targetPort`                      | Internal service is port                      | `3000`                                                  |
 | `service.nodePort`                        | Kubernetes service nodePort                   | `nil`                                                   |
 | `service.annotations`                     | Service annotations (can be templated)        | `{}`                                                    |
@@ -275,7 +275,7 @@ ingress:
 ### Example of extraVolumeMounts
 
 Volume can be type persistentVolumeClaim or hostPath but not both at same time.
-If none existingClaim or hostPath argument is givent then type is emptyDir.
+If neither existingClaim or hostPath argument is given then type is emptyDir.
 
 ```yaml
 - extraVolumeMounts:
@@ -484,7 +484,7 @@ grafana.ini:
 
 ## How to securely reference secrets in grafana.ini
 
-This example uses Grafana uses [file providers](https://grafana.com/docs/grafana/latest/administration/configuration/#file-provider) for secret values and the `extraSecretMounts` configuration flag (Additional grafana server secret mounts) to mount the secrets.
+This example uses Grafana [file providers](https://grafana.com/docs/grafana/latest/administration/configuration/#file-provider) for secret values and the `extraSecretMounts` configuration flag (Additional grafana server secret mounts) to mount the secrets.
 
 In grafana.ini:
 

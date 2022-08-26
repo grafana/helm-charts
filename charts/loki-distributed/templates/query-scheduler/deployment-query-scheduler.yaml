@@ -1,18 +1,16 @@
+{{- if .Values.queryScheduler.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "loki.distributorFullname" . }}
+  name: {{ include "loki.querySchedulerFullname" . }}
   labels:
-    {{- include "loki.distributorLabels" . | nindent 4 }}
-    app.kubernetes.io/part-of: memberlist
+    {{- include "loki.querySchedulerLabels" . | nindent 4 }}
   {{- with .Values.loki.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if not .Values.distributor.autoscaling.enabled }}
-  replicas: {{ .Values.distributor.replicas }}
-{{- end }}
+  replicas: {{ .Values.queryScheduler.replicas }}
   strategy:
     rollingUpdate:
       maxSurge: 0
@@ -20,7 +18,7 @@ spec:
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
-      {{- include "loki.distributorSelectorLabels" . | nindent 6 }}
+      {{- include "loki.querySchedulerSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -28,16 +26,15 @@ spec:
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.distributor.podAnnotations }}
+        {{- with .Values.queryScheduler.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.distributorSelectorLabels" . | nindent 8 }}
-        app.kubernetes.io/part-of: memberlist
+        {{- include "loki.querySchedulerSelectorLabels" . | nindent 8 }}
         {{- with .Values.loki.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.distributor.podLabels }}
+        {{- with .Values.queryScheduler.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -46,22 +43,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- include "loki.distributorPriorityClassName" . | nindent 6 }}
+      {{- include "loki.querySchedulerPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.queryScheduler.terminationGracePeriodSeconds }}
       containers:
-        - name: distributor
-          image: {{ include "loki.distributorImage" . }}
+        - name: query-scheduler
+          image: {{ include "loki.querySchedulerImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
-          {{- if or .Values.loki.command .Values.distributor.command }}
-          command:
-            - {{ coalesce .Values.distributor.command .Values.loki.command | quote }}
-          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
-            - -target=distributor
-            {{- with .Values.distributor.extraArgs }}
+            - -target=query-scheduler
+            {{- with .Values.queryScheduler.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
@@ -71,14 +64,11 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
-            - name: http-memberlist
-              containerPort: 7946
-              protocol: TCP
-          {{- with .Values.distributor.extraEnv }}
+          {{- with .Values.queryScheduler.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.distributor.extraEnvFrom }}
+          {{- with .Values.queryScheduler.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -91,23 +81,25 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
-            {{- with .Values.distributor.extraVolumeMounts }}
+            {{- with .Values.queryScheduler.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.queryScheduler.resources }}
           resources:
-            {{- toYaml .Values.distributor.resources | nindent 12 }}
-        {{- if .Values.distributor.extraContainers }}
-        {{- toYaml .Values.distributor.extraContainers | nindent 8}}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- if .Values.queryScheduler.extraContainers }}
+        {{- toYaml .Values.queryScheduler.extraContainers | nindent 8}}
         {{- end }}
-      {{- with .Values.distributor.affinity }}
+      {{- with .Values.queryScheduler.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.distributor.nodeSelector }}
+      {{- with .Values.queryScheduler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.distributor.tolerations }}
+      {{- with .Values.queryScheduler.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -120,6 +112,7 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
-        {{- with .Values.distributor.extraVolumes }}
+        {{- with .Values.queryScheduler.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+{{- end }}

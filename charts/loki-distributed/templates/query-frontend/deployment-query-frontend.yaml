@@ -52,6 +52,10 @@ spec:
         - name: query-frontend
           image: {{ include "loki.queryFrontendImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.queryFrontend.command }}
+          command:
+            - {{ coalesce .Values.queryFrontend.command .Values.loki.command | quote }}
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=query-frontend

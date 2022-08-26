@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.8.10
+
+- [ENHANCEMENT] Loki server block can now be configured via values.yaml
+
 ## 1.8.7
 
 - [CHANGE] Bump GEL version to v1.5.1 to use version with a fix for GEL Node API.
