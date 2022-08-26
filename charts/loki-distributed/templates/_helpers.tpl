@@ -140,3 +140,27 @@ Return the appropriate apiVersion for PodDisruptionBudget.
     {{- print "policy/v1beta1" -}}
   {{- end -}}
 {{- end -}}
+
+{{- define "loki.ingester.readinessProbe" -}}
+{{- with .Values.ingester.readinessProbe }}  
+readinessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- else }}
+{{- with .Values.loki.readinessProbe }}
+readinessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{- define "loki.ingester.livenessProbe" -}}
+{{- with .Values.ingester.livenessProbe }}
+livenessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- else }}
+{{- with .Values.loki.livenessProbe }}
+livenessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
