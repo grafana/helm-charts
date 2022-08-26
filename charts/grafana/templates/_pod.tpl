@@ -191,8 +191,8 @@ containers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
       {{- range $key, $value := .Values.sidecar.dashboards.env }}
-            - name: "{{ $key }}"
-              value: "{{ $value }}"
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
       {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
@@ -754,6 +754,6 @@ volumes:
     emptyDir: {}
 {{- end -}}
 {{- if .Values.extraContainerVolumes }}
-{{ toYaml .Values.extraContainerVolumes | indent 2 }}
+{{ tpl (toYaml .Values.extraContainerVolumes) . | indent 2 }}
 {{- end }}
 {{- end }}
