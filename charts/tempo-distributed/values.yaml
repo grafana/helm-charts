@@ -317,7 +317,13 @@ distributor:
   extraVolumes: []
   config:
     # -- Enable to log every received trace id to help debug ingestion
+    # -- WARNING: Deprecated. Use log_received_spans instead.
     log_received_traces: null
+    # -- Enable to log every received span to help debug ingestion or calculate span error distributions using the logs
+    log_received_spans:
+      enabled: false
+      include_all_attributes: false
+      filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
     # -- List of tags that will not be extracted from trace data for search lookups
@@ -655,8 +661,11 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
-    {{- if .Values.distributor.config.log_received_traces }}
-    log_received_traces: {{ .Values.distributor.config.log_received_traces }}
+    {{- if or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
+    log_received_spans:
+      enabled: {{ or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
+      include_all_attributes: {{ .Values.distributor.config.log_received_spans.include_all_attributes }}
+      filter_by_status_error: {{ .Values.distributor.config.log_received_spans.filter_by_status_error }}
     {{- end }}
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
