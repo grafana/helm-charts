@@ -73,6 +73,27 @@ extensions/v1
 {{- end }}
 {{- end -}}
 
+{{/*
+Handle api versions for:
+    - podDisruptionBudget (policy/v1beta1)
+    - podSecurityPolicy (policy/v1beta1)
+*/}}
+{{- define "loki.podDisruptionBudget.apiVersion" -}}
+{{ if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" -}}
+{{- print "policy/v1" -}}
+{{- else -}}
+{{- print "policy/v1beta1" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "loki.podSecurityPolicy.apiVersion" -}}
+{{ if .Capabilities.APIVersions.Has "policy/v1/PodSecurityPolicy" -}}
+{{- print "policy/v1" -}}
+{{- else -}}
+{{- print "policy/v1beta1" -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Common labels
