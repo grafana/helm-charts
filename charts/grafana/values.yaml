@@ -504,6 +504,29 @@ datasources: {}
 #        authType: default
 #        defaultRegion: us-east-1
 
+## Configure grafana alerting
+## ref: http://docs.grafana.org/administration/provisioning/#alerting
+##
+alerting: {}
+#  rules.yaml:
+#    apiVersion: 1
+#    groups:
+#    - orgId: 1
+#      name: my_rule_group
+#      folder: my_first_folder
+#      interval: 60s
+#      rules:
+#      - uid: my_id_1
+#        ...
+#  contactpoints.yaml:
+#    apiVersion: 1
+#    contactPoints:
+#    - orgId: 1
+#      name: cp_1
+#      receivers:
+#      - uid: first_uid
+#        ...
+
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
 ##
