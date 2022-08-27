@@ -74,7 +74,7 @@ extensions/v1
 {{- end -}}
 
 {{/*
-Handle api versions for:
+Handle backwards compatible api versions for:
     - podDisruptionBudget (policy/v1beta1)
     - podSecurityPolicy (policy/v1beta1)
 */}}
