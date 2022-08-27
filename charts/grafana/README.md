@@ -67,7 +67,7 @@ This version requires Helm >= 3.1.0.
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
-| `service.appProtocol                      | Adds the appProtocol field to the service     | ``                                                      |
+| `service.appProtocol`                     | Adds the appProtocol field to the service     | ``                                                      |
 | `service.targetPort`                      | Internal service is port                      | `3000`                                                  |
 | `service.nodePort`                        | Kubernetes service nodePort                   | `nil`                                                   |
 | `service.annotations`                     | Service annotations (can be templated)        | `{}`                                                    |

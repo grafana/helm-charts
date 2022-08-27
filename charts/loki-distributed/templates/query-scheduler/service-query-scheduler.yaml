@@ -1,10 +1,11 @@
+{{- if .Values.queryScheduler.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "loki.ingesterFullname" . }}
+  name: {{ include "loki.querySchedulerFullname" . }}
   labels:
-    {{- include "loki.ingesterLabels" . | nindent 4 }}
-    {{- with .Values.ingester.serviceLabels }}
+    {{- include "loki.querySchedulerLabels" . | nindent 4 }}
+    {{- with .Values.queryScheduler.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.loki.serviceAnnotations }}
@@ -13,17 +14,17 @@ metadata:
   {{- end }}
 spec:
   type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
   ports:
     - name: http
       port: 3100
       targetPort: http
       protocol: TCP
-    - name: grpc
+    - name: grpclb
       port: 9095
       targetPort: grpc
       protocol: TCP
-      {{- if .Values.ingester.appProtocol.grpc }}
-      appProtocol: {{ .Values.ingester.appProtocol.grpc }}
-      {{- end }}
   selector:
-    {{- include "loki.ingesterSelectorLabels" . | nindent 4 }}
+    {{- include "loki.querySchedulerSelectorLabels" . | nindent 4 }}
+{{- end }}

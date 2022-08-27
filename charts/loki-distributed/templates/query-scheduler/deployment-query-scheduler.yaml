@@ -1,18 +1,24 @@
-{{- if .Values.compactor.enabled }}
+{{- if .Values.queryScheduler.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "loki.compactorFullname" . }}
+  name: {{ include "loki.querySchedulerFullname" . }}
   labels:
-    {{- include "loki.compactorLabels" . | nindent 4 }}
+    {{- include "loki.querySchedulerLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  replicas: 1
-  revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
+  replicas: {{ .Values.queryScheduler.replicas }}
   strategy:
-    type: Recreate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
-      {{- include "loki.compactorSelectorLabels" . | nindent 6 }}
+      {{- include "loki.querySchedulerSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,55 +26,49 @@ spec:
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.compactor.podAnnotations }}
+        {{- with .Values.queryScheduler.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.compactorSelectorLabels" . | nindent 8 }}
-        app.kubernetes.io/part-of: memberlist
+        {{- include "loki.querySchedulerSelectorLabels" . | nindent 8 }}
         {{- with .Values.loki.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.compactor.podLabels }}
+        {{- with .Values.queryScheduler.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ include "loki.compactorServiceAccountName" . }}
+      serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- include "loki.compactorPriorityClassName" . | nindent 6 }}
+      {{- include "loki.querySchedulerPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.queryScheduler.terminationGracePeriodSeconds }}
       containers:
-        - name: compactor
-          image: {{ include "loki.compactorImage" . }}
+        - name: query-scheduler
+          image: {{ include "loki.querySchedulerImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
-          {{- if or .Values.loki.command .Values.compactor.command }}
-          command: 
-            - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}
-          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
-            - -target=compactor
-            - -boltdb.shipper.compactor.working-directory=/var/loki/compactor
-            {{- with .Values.compactor.extraArgs }}
+            - -target=query-scheduler
+            {{- with .Values.queryScheduler.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             - name: http
               containerPort: 3100
               protocol: TCP
-            - name: http-memberlist
-              ontainerPort: 7946
+            - name: grpc
+              containerPort: 9095
               protocol: TCP
-          {{- with .Values.compactor.extraEnv }}
+          {{- with .Values.queryScheduler.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.compactor.extraEnvFrom }}
+          {{- with .Values.queryScheduler.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -79,35 +79,31 @@ spec:
           livenessProbe:
             {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
           volumeMounts:
-            - name: temp
-              mountPath: /tmp
             - name: config
               mountPath: /etc/loki/config
-            - name: data
-              mountPath: /var/loki
-            {{- with .Values.compactor.extraVolumeMounts }}
+            {{- with .Values.queryScheduler.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.queryScheduler.resources }}
           resources:
-            {{- toYaml .Values.compactor.resources | nindent 12 }}
-        {{- if .Values.compactor.extraContainers }}
-        {{- toYaml .Values.compactor.extraContainers | nindent 8}}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- if .Values.queryScheduler.extraContainers }}
+        {{- toYaml .Values.queryScheduler.extraContainers | nindent 8}}
         {{- end }}
-      {{- with .Values.compactor.affinity }}
+      {{- with .Values.queryScheduler.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.compactor.nodeSelector }}
+      {{- with .Values.queryScheduler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.compactor.tolerations }}
+      {{- with .Values.queryScheduler.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: temp
-          emptyDir: {}
         - name: config
           {{- if .Values.loki.existingSecretForConfig }}
           secret:
@@ -116,14 +112,7 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
-        - name: data
-          {{- if .Values.compactor.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: data-{{ include "loki.compactorFullname" . }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
-        {{- with .Values.compactor.extraVolumes }}
+        {{- with .Values.queryScheduler.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
 {{- end }}

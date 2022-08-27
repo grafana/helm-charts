@@ -113,5 +113,13 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: data
+        {{- if .Values.ingester.persistence.inMemory }}
+          emptyDir:
+            medium: Memory
+        {{- if .Values.ingester.persistence.size }}
+            sizeLimit: {{ .Values.ingester.persistence.size }}
+        {{- end }}
+        {{- else }}
           emptyDir: {}
+        {{- end }}
 {{- end }}
