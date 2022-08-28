@@ -62,7 +62,7 @@ spec:
               containerPort: 3100
               protocol: TCP
             - name: http-memberlist
-              ontainerPort: 7946
+              containerPort: 7946
               protocol: TCP
           {{- with .Values.compactor.extraEnv }}
           env:
