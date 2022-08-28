@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.24.2](https://img.shields.io/badge/Version-0.24.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.25.0](https://img.shields.io/badge/Version-0.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -157,7 +157,8 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
-| distributor.config.log_received_traces | string | `nil` | Enable to log every received trace id to help debug ingestion |
+| distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
+| distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
 | distributor.config.search_tags_deny_list | list | `[]` | List of tags that will not be extracted from trace data for search lookups |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
