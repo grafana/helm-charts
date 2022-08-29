@@ -47,7 +47,7 @@ spec:
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.compactor.command }}
-          command: 
+          command:
             - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}
           {{- end }}
           args:
@@ -62,7 +62,7 @@ spec:
               containerPort: 3100
               protocol: TCP
             - name: http-memberlist
-              ontainerPort: 7946
+              containerPort: 7946
               protocol: TCP
           {{- with .Values.compactor.extraEnv }}
           env:
