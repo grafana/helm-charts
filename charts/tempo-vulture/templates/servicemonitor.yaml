@@ -25,7 +25,7 @@ spec:
     matchLabels:
       {{- include "tempo-vulture.selectorLabels" $ | nindent 6 }}
   endpoints:
-    - port: prom-metrics
+    - port: http-metrics
       {{- with .interval }}
       interval: {{ . }}
       {{- end }}

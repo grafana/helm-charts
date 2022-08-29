@@ -52,7 +52,7 @@ spec:
             {{- end }}
           ports:
             - containerPort: 8080
-              name: prom-metrics
+              name: http-metrics
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -42,7 +42,7 @@ tempo:
   readinessProbe:
     httpGet:
       path: /ready
-      port: http
+      port: http-metrics
     initialDelaySeconds: 30
     timeoutSeconds: 1
   # -- Global labels for all tempo pods
@@ -252,7 +252,7 @@ metricsGenerator:
     - name: http-memberlist
       port: 7946
       service: false
-    - name: http
+    - name: http-metrics
       port: 3100
       service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
@@ -1190,7 +1190,7 @@ gateway:
   readinessProbe:
     httpGet:
       path: /
-      port: http
+      port: http-metrics
     initialDelaySeconds: 15
     timeoutSeconds: 1
   nginxConfig:

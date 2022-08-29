@@ -12,8 +12,8 @@ spec:
   type: ClusterIP
   ports:
     - port: 8080
-      targetPort: prom-metrics
+      targetPort: http-metrics
       protocol: TCP
-      name: prom-metrics
+      name: http-metrics
   selector:
     {{- include "tempo-vulture.selectorLabels" . | nindent 4 }}
