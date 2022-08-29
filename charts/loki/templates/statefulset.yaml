@@ -53,7 +53,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "-config.file=/etc/loki/loki.yaml"
+            - "-config.file=/etc/loki/local-config.yaml"
           {{- range $key, $value := .Values.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
