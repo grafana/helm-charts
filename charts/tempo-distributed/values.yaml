@@ -655,6 +655,25 @@ config: |
     {{- end }}
   {{- end }}
 
+  {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.useDefaultProxyURLs }}
+  gateway:
+    proxy:
+      admin_api:
+        url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      compactor:
+        url: http://{{ template "tempo.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      default:
+        url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      distributor:
+        url: http:///{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ include "tempo.serverGrpcListenPort" . }}
+      ingester:
+        url: http://{{ template "tempo.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      querier:
+        url: http://{{ template "tempo.fullname" . }}querier.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      query_frontend:
+        url: http://{{ template "tempo.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+  {{- end }}
+
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
