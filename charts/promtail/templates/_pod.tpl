@@ -33,7 +33,7 @@ Pod template used in Daemonset and Deployment
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "-config.file=/etc/promtail/promtail.yaml"
+            - "-config.file=/etc/promtail/config.yml"
             {{- with .Values.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
