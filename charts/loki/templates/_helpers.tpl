@@ -79,15 +79,7 @@ Handle backwards compatible api versions for:
     - podSecurityPolicy (policy/v1beta1)
 */}}
 {{- define "loki.podDisruptionBudget.apiVersion" -}}
-{{ if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" -}}
-{{- print "policy/v1" -}}
-{{- else -}}
-{{- print "policy/v1beta1" -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "loki.podSecurityPolicy.apiVersion" -}}
-{{ if .Capabilities.APIVersions.Has "policy/v1/PodSecurityPolicy" -}}
+{{ if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudgets" -}}
 {{- print "policy/v1" -}}
 {{- else -}}
 {{- print "policy/v1beta1" -}}
