@@ -32,4 +32,11 @@ spec:
     {{- if .Values.serviceMonitor.path }}
     path: {{ .Values.serviceMonitor.path }}
     {{- end }}
+    {{- with .Values.serviceMonitor.scheme }}
+    scheme: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.tlsConfig }}
+    tlsConfig: 
+        {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- end }}
