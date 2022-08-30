@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.25.0](https://img.shields.io/badge/Version-0.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.26.0](https://img.shields.io/badge/Version-0.26.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -293,8 +293,38 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.resources | object | `{}` |  |
 | metricsGenerator.affinity | string | Hard node and soft zone anti-affinity | Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string |
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
-| metricsGenerator.config.service_graphs_max_items | int | `10000` |  |
-| metricsGenerator.config.storage_remote_write | list | `[]` |  |
+| metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[0] | float | `0.1` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[1] | float | `0.2` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[2] | float | `0.4` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[3] | float | `0.8` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[4] | float | `1.6` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[5] | float | `3.2` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[6] | float | `6.4` |  |
+| metricsGenerator.config.processor.service_graphs.histogram_buckets[7] | float | `12.8` |  |
+| metricsGenerator.config.processor.service_graphs.max_items | int | `10000` |  |
+| metricsGenerator.config.processor.service_graphs.wait | string | `"10s"` |  |
+| metricsGenerator.config.processor.service_graphs.workers | int | `10` |  |
+| metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[0] | float | `0.002` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[10] | float | `2.05` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[11] | float | `4.1` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[1] | float | `0.004` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[2] | float | `0.008` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[3] | float | `0.016` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[4] | float | `0.032` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[5] | float | `0.064` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[6] | float | `0.128` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[7] | float | `0.256` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[8] | float | `0.512` |  |
+| metricsGenerator.config.processor.span_metrics.histogram_buckets[9] | float | `1.02` |  |
+| metricsGenerator.config.registry.collection_interval | string | `"15s"` |  |
+| metricsGenerator.config.registry.external_labels | object | `{}` |  |
+| metricsGenerator.config.registry.stale_duration | string | `"15m"` |  |
+| metricsGenerator.config.storage.path | string | `"/var/tempo/wal"` |  |
+| metricsGenerator.config.storage.remote_write | list | `[]` |  |
+| metricsGenerator.config.storage.remote_write_flush_deadline | string | `"1m"` |  |
+| metricsGenerator.config.storage.wal | string | `nil` |  |
 | metricsGenerator.enabled | bool | `false` | Specifies whether a metrics-generator should be deployed |
 | metricsGenerator.extraArgs | list | `[]` | Additional CLI args for the metrics-generator |
 | metricsGenerator.extraEnv | list | `[]` | Environment variables to add to the metrics-generator pods |
