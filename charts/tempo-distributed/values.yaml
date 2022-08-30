@@ -232,14 +232,33 @@ metricsGenerator:
     - name: http
       port: 3100
       service: true
+  # https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
-    #  MaxItems is the amount of edges that will be stored in the store.
-    service_graphs_max_items: 10000
-    storage_remote_write: []
-    # - url: http://cortex/api/v1/push
-    #   send_exemplars: true
-    #   headers:
-    #     x-scope-orgid: operations
+    registry:
+      collection_interval: 15s
+      external_labels: {}
+      stale_duration: 15m
+    processor:
+      service_graphs:
+        # Additional dimensions to add to the metrics. Dimensions are searched for in the
+        # resource and span attributes and are added to the metrics if present.
+        dimensions: []
+        histogram_buckets: [0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4, 12.8]
+        max_items: 10000
+        wait: 10s
+        workers: 10
+      span_metrics:
+        # Additional dimensions to add to the metrics along with the default dimensions.
+        # Dimensions are searched for in the resource and span attributes and are added to the metrics if present.
+        dimensions: []
+        histogram_buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.02, 2.05, 4.10]
+    storage:
+      path: /var/tempo/wal
+      wal:
+      remote_write_flush_deadline: 1m
+      # A list of remote write endpoints.
+      # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
+      remote_write: []
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
@@ -597,12 +616,11 @@ config: |
       kvstore:
         store: memberlist
     processor:
-      service_graphs:
-        max_items: {{ .Values.metricsGenerator.config.service_graphs_max_items }}
+      {{- toYaml .Values.metricsGenerator.config.processor | nindent 6 }}
     storage:
-      path: /var/tempo/wal
-      remote_write:
-        {{- toYaml .Values.metricsGenerator.config.storage_remote_write | nindent 6}}
+      {{- toYaml .Values.metricsGenerator.config.storage | nindent 6 }}
+    registry:
+      {{- toYaml .Values.metricsGenerator.config.registry | nindent 6 }}
   {{- end }}
   distributor:
     ring:
