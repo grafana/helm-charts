@@ -1,0 +1,145 @@
+# Default values for synthetic-monitoring-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+agent:
+  # -- **REQUIRED** API token from Grafana Cloud.
+  apiToken: ""
+  # -- Default server endpoint for receiving synthetic monitoring checks on Grafana's side.
+  # See https://grafana.com/docs/grafana-cloud/synthetic-monitoring/private-probes/#probe-api-server-url for more information.
+  apiServerAddress: "synthetic-monitoring-grpc.grafana.net:443"
+  # -- Enable / disable debug logging on the agent.
+  debug: false
+  # -- Enable / disable the HTTP /disconnect endpoint
+  enableDisconnect: false
+  # -- Enable / disable verbose logging on the agent.
+  verbose: false
+
+# -- Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`.
+replicaCount: 1
+
+image:
+  # -- Base registry to pull the container image from.
+  registry: docker.io
+  # -- Base repository for container image.
+  repository: grafana/synthetic-monitoring-agent
+  # -- Image pull policy.
+  pullPolicy: IfNotPresent
+  # -- Image tag; overrides the image tag whose default is the chart `appVersion`.
+  tag: ""
+
+# -- Docker registry secret names as an array.
+imagePullSecrets: []
+# -- Override the name of the chart.
+nameOverride: ""
+# -- Override the fullname of the chart.
+fullnameOverride: ""
+
+# -- Annotations to add to each pod.
+podAnnotations: {}
+
+# -- Labels to add to each pod.
+podLabels: {}
+
+# -- Security context on the Pod level.
+podSecurityContext:
+  fsGroup: 65534
+
+# -- Assign a PriorityClassName to pods if set
+# priorityClassName:
+
+# -- Security context for the container level.
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534
+
+# -- Default resources to apply.
+resources:
+  {}
+  # limits:
+  #   cpu: 200m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 200m
+  #   memory: 512Mi
+
+autoscaling:
+  # -- Enable autoscaling
+  enabled: false
+  # -- Minimum autoscaling replicas
+  minReplicas: 1
+  # -- Maximum autoscaling replicas
+  maxReplicas: 3
+  # -- Target CPU utilisation percentage
+  targetCPUUtilizationPercentage: 60
+  # -- Target memory utilisation percentage
+  targetMemoryUtilizationPercentage:
+
+# -- Liveness probe for the agent
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+# -- Readiness probe for the agent
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+
+service:
+  # -- Annotations for the service
+  annotations: {}
+  # -- Type of service to create.
+  type: ClusterIP
+  # -- Service port.
+  port: 4050
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- Whether to automatically mount a service account token volume.
+  automountServiceAccountToken: true
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+serviceMonitor:
+  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for ServiceMonitor resources
+  namespace: null
+  # -- Namespace selector for ServiceMonitor resources
+  namespaceSelector: {}
+  # -- ServiceMonitor annotations
+  annotations: {}
+  # -- ServiceMonitor scrape interval
+  interval: null
+  # -- Additional ServiceMonitor labels
+  labels: {}
+  # -- ServiceMonitor path to scrape
+  path: /metrics
+  # -- ServiceMonitor relabeling config
+  relabelings: []
+  # -- ServiceMonitor scheme (http or https)
+  scheme: http
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+
+# -- Node labels for pod assignment.
+nodeSelector: {}
+
+# -- List of node taints to tolerate.
+tolerations: []
+
+# -- Node affinity for pod assignment.
+affinity: {}
+
+# -- Add dynamic manifests via values:
+extraObjects: []

@@ -1,0 +1,13 @@
+{{- if gt (int .Values.memcached.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "tempo.memcachedFullname" . }}
+  labels:
+    {{- include "tempo.memcachedLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tempo.memcachedSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}

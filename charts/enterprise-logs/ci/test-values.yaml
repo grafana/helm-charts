@@ -1,0 +1,27 @@
+---
+commonConfig:
+  replication_factor: 1
+compactor:
+  persistentVolume:
+    enabled: false
+
+loki-distributed:
+  ingester:
+    replicas: 1
+    persistence:
+      enabled: false
+  distributor:
+    persistence:
+      enabled: false
+  ruler:
+    persistence:
+      enabled: false
+  querier:
+    persistence:
+      enabled: false
+  queryFrontend:
+    persistence:
+      enabled: false
+  indexGateway:
+    persistence:
+      enabled: false

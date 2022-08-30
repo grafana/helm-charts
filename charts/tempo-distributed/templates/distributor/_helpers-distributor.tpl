@@ -1,4 +1,11 @@
 {{/*
+distributor fullname
+*/}}
+{{- define "tempo.distributorFullname" -}}
+{{ include "tempo.fullname" . }}-distributor
+{{- end }}
+
+{{/*
 distributor common labels
 */}}
 {{- define "tempo.distributorLabels" -}}

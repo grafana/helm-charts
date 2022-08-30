@@ -39,8 +39,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      initContainers:
+        {{- toYaml .Values.tokengenJob.initContainers | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: tokengen
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

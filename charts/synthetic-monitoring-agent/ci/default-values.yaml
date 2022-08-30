@@ -1,0 +1,9 @@
+# Leave this file empty to ensure that CI runs builds against the default configuration in values.yaml.
+agent:
+  apiServerAddress: "localhost:4031"
+  apiToken: "mockkey"
+  enableDisconnect: true
+  verbose: true
+# This has to be null to ensure that CI jobs pass
+# The readiness probe returns a '503' if using a dummy API token
+readinessProbe: null

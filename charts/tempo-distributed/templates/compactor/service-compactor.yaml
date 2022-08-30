@@ -4,6 +4,10 @@ metadata:
   name: {{ template "tempo.compactorFullname" . }}
   labels:
     {{- include "tempo.compactorLabels" . | nindent 4 }}
+  {{- with .Values.compactor.service.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: ClusterIP
   ports:

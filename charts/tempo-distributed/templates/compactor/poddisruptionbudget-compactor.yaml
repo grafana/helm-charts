@@ -1,0 +1,13 @@
+{{- if gt (int .Values.compactor.replicas) 1 }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "tempo.compactorFullname" . }}
+  labels:
+    {{- include "tempo.compactorLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tempo.compactorSelectorLabels" . | nindent 6 }}
+  maxUnavailable: 1
+{{- end }}

@@ -109,7 +109,7 @@ spec:
         {{- if .Values.store_gateway.extraContainers }}
         {{ toYaml .Values.store_gateway.extraContainers | nindent 8 }}
         {{- end }}
-        - name: {{ .Chart.Name }}
+        - name: store-gateway
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:

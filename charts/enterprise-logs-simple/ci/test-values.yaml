@@ -1,0 +1,9 @@
+---
+commonConfig:
+  replication_factor: 1
+
+loki-simple-scalable:
+  read:
+    replicas: 1
+  write:
+    replicas: 1

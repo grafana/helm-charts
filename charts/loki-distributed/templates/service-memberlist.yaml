@@ -12,6 +12,9 @@ spec:
       port: 7946
       targetPort: http-memberlist
       protocol: TCP
+      {{- if .Values.loki.appProtocol }}
+      appProtocol: {{ .Values.loki.appProtocol }}
+      {{- end }}
   selector:
     {{- include "loki.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist

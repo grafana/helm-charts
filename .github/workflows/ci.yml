@@ -1,0 +1,11 @@
+name: CI
+
+on: pull_request
+
+jobs:
+  call-check-codeowners:
+    uses: ./.github/workflows/check-codeowners.yaml
+  call-lint:
+    uses: ./.github/workflows/linter.yml
+  call-lint-test:
+    uses: ./.github/workflows/lint-test.yaml

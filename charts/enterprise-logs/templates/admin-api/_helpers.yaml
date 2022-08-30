@@ -1,0 +1,24 @@
+{{/*
+adminApi fullname
+*/}}
+{{- define "enterprise-logs.adminApiFullname" -}}
+{{ include "enterprise-logs.fullname" . }}-admin-api
+{{- end }}
+
+{{/*
+adminApi common labels
+*/}}
+{{- define "enterprise-logs.adminApiLabels" -}}
+{{ include "enterprise-logs.labels" . }}
+app.kubernetes.io/component: admin-api
+target: admin-api
+{{- end }}
+
+{{/*
+adminApi selector labels
+*/}}
+{{- define "enterprise-logs.adminApiSelectorLabels" -}}
+{{ include "enterprise-logs.selectorLabels" . }}
+app.kubernetes.io/component: admin-api
+target: admin-api
+{{- end }}

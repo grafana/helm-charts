@@ -4,6 +4,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-namespace-only
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
 spec:
@@ -24,6 +25,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-egress-dns
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
 spec:
@@ -44,6 +46,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-egress-k8s-api
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
 spec:
@@ -69,6 +72,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-ingress-metrics
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
 spec:
@@ -103,6 +107,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "promtail.name" . }}-egress-extra-ports
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
 spec:

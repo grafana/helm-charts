@@ -1,0 +1,21 @@
+{{- if .Values.config.memberlist -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "loki.fullname" . }}-memberlist
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "loki.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: {{ .Values.config.memberlist.bind_port | default 7946 }}
+      targetPort: memberlist-port
+      protocol: TCP
+  selector:
+    app: {{ template "loki.name" . }}
+    release: {{ .Release.Name }}
+{{- end -}}

@@ -1,5 +1,5 @@
 {{- if gt (int .Values.distributor.replicas) 1 }}
-apiVersion: policy/v1beta1
+apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.distributorFullname" . }}
@@ -9,5 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.distributorSelectorLabels" . | nindent 6 }}
-  maxUnavailable: 1
+  {{- with .Values.distributor.maxUnavailable }}
+  maxUnavailable: {{ . }}
+  {{- end }}
 {{- end }}

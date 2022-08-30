@@ -19,7 +19,7 @@ spec:
     - Ingress
   ingress:
     - ports:
-        - port: {{ .Values.imageRenderer.service.port }}
+        - port: {{ .Values.imageRenderer.service.targetPort }}
           protocol: TCP
       from:
         - namespaceSelector:
@@ -64,10 +64,7 @@ spec:
         - port: {{ .Values.service.port }}
           protocol: TCP
       to:
-        - namespaceSelector:
-            matchLabels:
-              name: {{ template "grafana.namespace" . }}
-          podSelector:
+        - podSelector:
             matchLabels:
               {{- include "grafana.selectorLabels" . | nindent 14 }}
               {{- if .Values.podLabels }}

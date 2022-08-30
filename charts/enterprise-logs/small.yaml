@@ -1,0 +1,144 @@
+# These values configure the Grafana Enterprise Logs cluster to
+# handle production ingestion of ~11MiB/s
+
+# Query requirements can vary dramatically depending on query rate and query
+# ranges. The values here satisfy a "usual" query load as seen from our
+# production clusters at this scale.
+
+# -target=admin-api
+# defined in enterprise-logs chart
+adminApi:
+  replicas: 3
+  extraArgs: {
+    "admin-api.leader-election.enabled": "true",
+    "admin-api.leader-election.ring.store": "memberlist",
+  }
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+# -target=compactor
+# defined in enterprise-logs chart
+compactor:
+  replicas: 1
+  persistentVolume:
+    size: 100Gi
+  resources:
+    limits:
+      cpu: 4
+      memory: 2Gi
+    requests:
+      cpu: 2
+      memory: 1Gi
+
+# -target=gateway
+# defined in enterprise-logs chart
+gateway:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 1
+      memory: 384Mi
+
+loki-distributed:
+  # -target=distributor
+  # defined in loki-distributed chart
+  distributor:
+    replicas: 3
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        cpu: 0.5
+        memory: 500Mi
+
+  # -target=ingester
+  # defined in loki-distributed chart
+  ingester:
+    persistentVolume:
+      size: 50Gi
+    replicas: 4
+    resources:
+      limits:
+        cpu: 2
+        memory: 14Gi
+      requests:
+        cpu: 1
+        memory: 7Gi
+
+  # -target=querier
+  # defined in loki-distributed chart
+  querier:
+    replicas: 8
+    resources:
+      limits:
+        cpu: 7
+        memory: 16Gi
+      requests:
+        cpu: 4
+        memory: 6Gi
+
+  # -target=query-frontend
+  # defined in loki-distributed chart
+  queryFrontend:
+    replicas: 2
+    resources:
+      limits:
+        cpu: 3
+        memory: 10Gi
+      requests:
+        cpu: 2
+        memory: 5Gi
+
+  # -target=ruler
+  # defined in loki-distributed chart
+  ruler:
+    replicas: 2
+    resources:
+      limits:
+        cpu: 7
+        memory: 16Gi
+      requests:
+        cpu: 2
+        memory: 6Gi
+
+  # -target=index-gateway
+  # defined in loki-distributed chart
+  indexGateway:
+    replicas: 3
+    resources:
+      limits:
+        cpu: 4
+        memory: 4Gi
+      requests:
+        cpu: 2
+        memory: 2Gi
+
+  # memcached configuration is part of the loki-distributed chart
+  memcached:
+    enabled: true
+    replicas: 1
+
+  memcachedExporter:
+    enabled: true
+    replicas: 1
+
+  memcachedChunks:
+    enabled: true
+    replicas: 1
+
+  memcachedFrontend:
+    enabled: true
+    replicas: 1
+
+  memcachedIndexQueries:
+    enabled: true
+    replicas: 1
+
+# Disable minio dependency
+minio:
+  enabled: false

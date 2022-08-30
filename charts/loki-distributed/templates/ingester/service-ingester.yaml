@@ -7,6 +7,10 @@ metadata:
     {{- with .Values.ingester.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.loki.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: ClusterIP
   ports:
@@ -18,5 +22,8 @@ spec:
       port: 9095
       targetPort: grpc
       protocol: TCP
+      {{- if .Values.ingester.appProtocol.grpc }}
+      appProtocol: {{ .Values.ingester.appProtocol.grpc }}
+      {{- end }}
   selector:
     {{- include "loki.ingesterSelectorLabels" . | nindent 4 }}

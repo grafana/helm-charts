@@ -11,4 +11,4 @@ data:
   overrides.yaml: |
     {{- tpl .Values.overrides . | nindent 4 }}
   tempo.yaml: |
-    {{- tpl .Values.config . | nindent 4 }}
+    {{- tpl (mergeOverwrite (tpl .Values.config . | fromYaml) .Values.tempo.structuredConfig | toYaml) . | nindent 4 }}

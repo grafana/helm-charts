@@ -1,0 +1,14 @@
+{{- if .Values.podDisruptionBudget -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "tempo.ingesterFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.ingesterLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "tempo.ingesterFullname" . }}
+{{ toYaml .Values.podDisruptionBudget | indent 2 }}
+{{- end }}

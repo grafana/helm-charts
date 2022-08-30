@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Make sure you have Helm [installed](https://helm.sh/docs/using_helm/#installing-helm) installed.
+Make sure you have Helm [installed](https://helm.sh/docs/using_helm/#installing-helm).
 
 ## Get Repo Info
 
@@ -57,4 +57,14 @@ kubectl port-forward --namespace <YOUR-NAMESPACE> service/loki-grafana 3000:80
 ```
 
 Navigate to <http://localhost:3000> and login with `admin` and the password output above.
-Then follow the [instructions for adding the loki datasource](/docs/getting-started/grafana.md), using the URL `http://loki:3100/`.
+Then follow the [instructions for adding the loki datasource](https://grafana.com/docs/grafana/latest/datasources/loki/), using the URL `http://loki:3100/`.
+
+## Upgrade
+### Version >= 2.8.0
+Provide support configurable datasource urls [#1374](https://github.com/grafana/helm-charts/pull/1374)
+
+### Version >= 2.7.0
+Update promtail dependency to ^6.2.3 [#1692](https://github.com/grafana/helm-charts/pull/1692)
+
+### Version >=2.6.0
+Bumped grafana 8.1.6->8.3.4 [#1013](https://github.com/grafana/helm-charts/pull/1013)

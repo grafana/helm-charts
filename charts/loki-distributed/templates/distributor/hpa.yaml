@@ -1,0 +1,28 @@
+{{- if .Values.distributor.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "loki.distributorFullname" . }}
+  labels:
+    {{- include "loki.distributorLabels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "loki.distributorFullname" . }}
+  minReplicas: {{ .Values.distributor.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.distributor.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.distributor.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+  {{- with .Values.distributor.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ . }}
+  {{- end }}
+{{- end }}

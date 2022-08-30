@@ -1,0 +1,25 @@
+{{- if .Values.metricsGenerator.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "tempo.metricsGeneratorFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+  {{- with .Values.metricsGenerator.service.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ports:
+    {{- range .Values.metricsGenerator.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
+      protocol: TCP
+      targetPort: {{ .port }}
+    {{- end }}
+    {{- end }}
+  selector:
+    {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 4 }}
+{{- end }}

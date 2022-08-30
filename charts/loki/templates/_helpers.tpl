@@ -59,3 +59,40 @@ Create the app name of loki clients. Defaults to the same logic as "loki.fullnam
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Generate a right Ingress apiVersion
+*/}}
+{{- define "ingress.apiVersion" -}}
+{{- if semverCompare ">=1.20-0" .Capabilities.KubeVersion.GitVersion -}}
+networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+networking.k8s.io/v1beta1
+{{- else  -}}
+extensions/v1
+{{- end }}
+{{- end -}}
+
+{{/*
+Handle backwards compatible api versions for:
+    - podDisruptionBudget (policy/v1beta1)
+    - podSecurityPolicy (policy/v1beta1)
+*/}}
+{{- define "loki.podDisruptionBudget.apiVersion" -}}
+{{ if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudgets" -}}
+{{- print "policy/v1" -}}
+{{- else -}}
+{{- print "policy/v1beta1" -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Common labels
+*/}}
+{{- define "loki.labels" -}}
+app: {{ template "loki.name" . }}
+chart: {{ template "loki.chart" . }}
+release: {{ .Release.Name }}
+heritage: {{ .Release.Service }}
+{{- end }}
