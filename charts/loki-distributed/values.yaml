@@ -324,7 +324,22 @@ ingester:
           {{- include "loki.ingesterSelectorLabels" . | nindent 6 }}
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.ingesterSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.ingesterSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -415,6 +430,8 @@ distributor:
               matchLabels:
                 {{- include "loki.distributorSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -488,6 +505,8 @@ querier:
               matchLabels:
                 {{- include "loki.querierSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -574,6 +593,8 @@ queryFrontend:
               matchLabels:
                 {{- include "loki.queryFrontendSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -817,6 +838,8 @@ gateway:
               matchLabels:
                 {{- include "loki.gatewaySelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for gateway pods
   nodeSelector: {}
   # -- Tolerations for gateway pods
@@ -1148,6 +1171,8 @@ ruler:
               matchLabels:
                 {{- include "loki.rulerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for ruler pods
   nodeSelector: {}
   # -- Tolerations for ruler pods
@@ -1285,6 +1310,8 @@ indexGateway:
               matchLabels:
                 {{- include "loki.indexGatewaySelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for index-gateway pods
   nodeSelector: {}
   # -- Tolerations for index-gateway pods
@@ -1408,6 +1435,8 @@ memcachedChunks:
               matchLabels:
                 {{- include "loki.memcachedChunksSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for memcached-chunks pods
   nodeSelector: {}
   # -- Tolerations for memcached-chunks pods
@@ -1502,6 +1531,8 @@ memcachedIndexQueries:
               matchLabels:
                 {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for memcached-index-queries pods
   nodeSelector: {}
   # -- Tolerations for memcached-index-queries pods
@@ -1549,6 +1580,8 @@ memcachedIndexWrites:
               matchLabels:
                 {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for memcached-index-writes pods
   nodeSelector: {}
   # -- Tolerations for memcached-index-writes pods

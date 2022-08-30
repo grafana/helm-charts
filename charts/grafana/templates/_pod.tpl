@@ -470,6 +470,13 @@ containers:
         subPath: {{ . | quote }}
 {{- end }}
 {{- end }}
+{{- if .Values.alerting }}
+{{- range (keys .Values.alerting | sortAlpha) }}
+      - name: config
+        mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
+        subPath: {{ . | quote }}
+{{- end }}
+{{- end }}
 {{- if .Values.dashboardProviders }}
 {{- range (keys .Values.dashboardProviders | sortAlpha) }}
       - name: config

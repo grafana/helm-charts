@@ -11,7 +11,7 @@ data:
     @test "Test Health" {
       url="http://{{ template "grafana.fullname" . }}/api/health"
 
-      code=$(wget --server-response --spider --timeout 10 --tries 1 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
+      code=$(wget --server-response --spider --timeout 90 --tries 10 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
       [ "$code" == "200" ]
     }
 {{- end }}
