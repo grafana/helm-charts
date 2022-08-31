@@ -624,6 +624,10 @@ nodeSelector:
 affinity:
 {{ tpl (toYaml .) $root | indent 2 }}
 {{- end }}
+{{- with .Values.topologySpreadConstraints }}
+topologySpreadConstraints:
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.tolerations }}
 tolerations:
 {{ toYaml . | indent 2 }}
