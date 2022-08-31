@@ -26,6 +26,31 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+### From chart version < 0.26.0
+
+Version 0.26.0:
+
+Many changes have been introduced, including some breaking changes.
+
+The (PR)[https://github.com/grafana/helm-charts/pull/1759] includes additional details.
+
+* **BREAKING CHANGE** centralize selector label handling -- users who wish to keep old values should still be able to use the `nameOverride` and `fullNameOverride` top level keys in their values.
+
+* **BREAKING CHANGE** serviceMonitor has been nested under metaMonitoring -- metamonitoring can be used scrape services as well as install the operator with the following values.  Note also that the port names have changed from `http` to `http-metrics`.
+```yaml
+metaMonitoring:
+  serviceMonitor:
+    enabled: true
+  grafanaAgent:
+    enabled: true
+    installOperator: true
+```
+* minio can now be enabled as part of this chart using the following values
+```yaml
+minio:
+  enabled: true
+```
+* allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
 
 ### From chart version < 0.26.0
 
