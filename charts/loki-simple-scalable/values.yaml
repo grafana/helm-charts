@@ -171,7 +171,7 @@ loki:
   # -- Extra server configurations. Check https://grafana.com/docs/loki/latest/configuration/#server for more info
   extraServerConfig: {}
 
-  # -- Extra server configurations. Check https://grafana.com/docs/loki/latest/configuration/#limits_config for more info
+  # -- Extra limits_config configurations. Check https://grafana.com/docs/loki/latest/configuration/#limits_config for more info
   extraLimitsConfig: {}
 
   storage:
