@@ -11,6 +11,9 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.8.11
+
+- [ENHANCEMENT] Support for additional limits_configs
 ## 1.8.10
 
 - [ENHANCEMENT] Loki server block can now be configured via values.yaml

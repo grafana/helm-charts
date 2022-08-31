@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.8.10](https://img.shields.io/badge/Version-1.8.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.8.11](https://img.shields.io/badge/Version-1.8.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -114,6 +114,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
 | loki.extraServerConfig | object | `{}` | Extra server configurations. Check https://grafana.com/docs/loki/latest/configuration/#server for more info |
+| loki.extraLimitsConfig | object | `{}` | Extra limits configurations. Check https://grafana.com/docs/loki/latest/configuration/#limits_config  for more info |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
