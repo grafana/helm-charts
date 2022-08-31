@@ -18,6 +18,8 @@ loki:
     initialDelaySeconds: 45
   datasource:
     jsonData: {}
+    uid: ""
+
 
 promtail:
   enabled: true
