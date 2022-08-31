@@ -4,7 +4,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" . "component" "querier") }}
   labels:
-    {{- include "tempo.querierLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 4 }}
 spec:
   selector:
     matchLabels:
