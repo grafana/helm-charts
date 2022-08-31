@@ -2092,32 +2092,6 @@ entries:
   grafana:
   - apiVersion: v2
     appVersion: 9.1.1
-    created: "2022-08-31T14:14:35.669254165Z"
-    description: The leading tool for querying and visualizing time series and metrics.
-    digest: 9c7a7248751bb399c97c8d614d3b2d1e014af2d0c51743085742458b0193d97a
-    home: https://grafana.net
-    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
-    kubeVersion: ^1.8.0-0
-    maintainers:
-    - email: zanhsieh@gmail.com
-      name: zanhsieh
-    - email: rluckie@cisco.com
-      name: rtluckie
-    - email: maor.friedman@redhat.com
-      name: maorfr
-    - email: miroslav.hadzhiev@gmail.com
-      name: Xtigyro
-    - email: mail@torstenwalter.de
-      name: torstenwalter
-    name: grafana
-    sources:
-    - https://github.com/grafana/grafana
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/grafana-6.36.0/grafana-6.36.0.tgz
-    version: 6.36.0
-  - apiVersion: v2
-    appVersion: 9.1.1
     created: "2022-08-31T13:34:12.688580423Z"
     description: The leading tool for querying and visualizing time series and metrics.
     digest: 9c1530f57c74d58f49b47394e920bd5ce5a68df3f2ab716c89e5c0b9092d0bf1
@@ -14775,6 +14749,24 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.1.2/loki-canary-0.1.2.tgz
     version: 0.1.2
   loki-distributed:
+  - apiVersion: v2
+    appVersion: 2.6.1
+    created: "2022-08-31T15:49:40.91847111Z"
+    description: Helm chart for Grafana Loki in microservices mode
+    digest: 2f62491708aa3aa2c585d18a951c26d9df6a4102ca60aed9b1c8a544f77762ba
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-distributed
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-distributed-0.56.6/loki-distributed-0.56.6.tgz
+    version: 0.56.6
   - apiVersion: v2
     appVersion: 2.6.1
     created: "2022-08-29T13:33:04.221837182Z"
@@ -27705,4 +27697,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-31T14:14:35.678205004Z"
+generated: "2022-08-31T15:49:40.929906849Z"
