@@ -252,6 +252,11 @@ tolerations: []
 ##
 affinity: {}
 
+## Topology Spread Constraints
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+##
+topologySpreadConstraints: []
+
 ## Additional init containers (evaluated as template)
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
 ##
