@@ -90,6 +90,9 @@ loki:
       reject_old_samples_max_age: 168h
       max_cache_freshness_per_query: 10m
       split_queries_by_interval: 15m
+      {{- with .Values.loki.extraLimitsConfig }}
+      {{- toYaml . | nindent 2 }}
+      {{- end }}
 
     {{- with .Values.loki.memcached.chunk_cache }}
     {{- if and .enabled .host }}
@@ -167,6 +170,9 @@ loki:
 
   # -- Extra server configurations. Check https://grafana.com/docs/loki/latest/configuration/#server for more info
   extraServerConfig: {}
+
+  # -- Extra limits configurations. Check https://grafana.com/docs/loki/latest/configuration/#limits_config for more info
+  extraLimitsConfig: {}
 
   storage:
     bucketNames:
