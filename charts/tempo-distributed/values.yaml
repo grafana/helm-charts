@@ -147,6 +147,8 @@ ingester:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for ingester's persist volume claim
+    annotations: {}
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
