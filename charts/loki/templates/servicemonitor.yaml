@@ -20,7 +20,7 @@ spec:
       variant: headless
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace | quote }}
+      - {{ (include "loki.namespace" .) | quote }}
   endpoints:
   - port: http-metrics
     {{- if .Values.serviceMonitor.interval }}

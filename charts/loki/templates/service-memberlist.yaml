@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "loki.fullname" . }}-memberlist
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "loki.namespace" . }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
 spec:
