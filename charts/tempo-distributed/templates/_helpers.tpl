@@ -188,9 +188,9 @@ Calculate the config from structured and unstructured text input
 {{- end -}}
 
 {{/*
-Calculate the overrides config from structured and unstructred text input
+Renders the overrides config
 */}}
-{{- define "tempo.calculatedOverridesConfig" -}}
+{{- define "tempo.overridesConfig" -}}
 {{ tpl .Values.overrides . }}
 {{- end -}}
 
