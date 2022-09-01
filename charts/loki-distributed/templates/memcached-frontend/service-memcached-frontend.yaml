@@ -16,9 +16,9 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-    - name: http
+    - name: memcached-client
       port: 11211
-      targetPort: http
+      targetPort: 11211
       protocol: TCP
       {{- if .Values.memcached.appProtocol }}
       appProtocol: {{ .Values.memcached.appProtocol }}
