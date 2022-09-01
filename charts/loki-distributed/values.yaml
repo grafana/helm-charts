@@ -278,6 +278,17 @@ ingester:
   kind: StatefulSet
   # -- Number of replicas for the ingester
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null

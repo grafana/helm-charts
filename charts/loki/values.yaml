@@ -246,6 +246,8 @@ serviceMonitor:
   annotations: {}
   # scrapeTimeout: 10s
   # path: /metrics
+  scheme: null
+  tlsConfig: {}
   prometheusRule:
     enabled: false
     additionalLabels: {}
