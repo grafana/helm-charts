@@ -9,9 +9,10 @@ metadata:
 {{- if .Values.service.labels }}
 {{ toYaml .Values.service.labels | indent 4 }}
 {{- end }}
+{{- $root := . }}
 {{- with .Values.service.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
+{{ tpl (toYaml . | indent 4) $root }}
 {{- end }}
 spec:
 {{- if (or (eq .Values.service.type "ClusterIP") (empty .Values.service.type)) }}
