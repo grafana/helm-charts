@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.8.10](https://img.shields.io/badge/Version-1.8.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.8.11](https://img.shields.io/badge/Version-1.8.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -38,7 +38,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | enterprise.image.repository | string | `"grafana/enterprise-logs"` | Docker image repository |
 | enterprise.image.tag | string | `"v1.4.0"` | Overrides the image tag whose default is the chart's appVersion |
 | enterprise.license | object | `{"contents":"NOTAVALIDLICENSE"}` | Grafana Enterprise Logs license In order to use Grafana Enterprise Logs features, you will need to provide the contents of your Grafana Enterprise Logs license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt. To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'` |
-| enterprise.tokengen | object | `{"adminTokenSecret":"gel-admin-token","annotations":{},"enabled":true,"env":[],"extraArgs":[],"extraVolumeMounts":[],"extraVolumes":[],"labels":{},"securityContext":{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}}` | Configuration for `tokengen` target |
+| enterprise.tokengen | object | `{"adminTokenSecret":"gel-admin-token","annotations":{},"enabled":true,"env":[],"extraArgs":[],"extraVolumeMounts":[],"extraVolumes":[],"image":"bitnami/kubectl","labels":{},"securityContext":{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}}` | Configuration for `tokengen` target |
 | enterprise.tokengen.adminTokenSecret | string | `"gel-admin-token"` | Name of the secret to store the admin token in |
 | enterprise.tokengen.annotations | object | `{}` | Additional annotations for the `tokengen` Job |
 | enterprise.tokengen.enabled | bool | `true` | Whether the job should be part of the deployment |
@@ -46,6 +46,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | enterprise.tokengen.extraArgs | list | `[]` | Additional CLI arguments for the `tokengen` target |
 | enterprise.tokengen.extraVolumeMounts | list | `[]` | Additional volume mounts for Pods |
 | enterprise.tokengen.extraVolumes | list | `[]` | Additional volumes for Pods |
+| enterprise.tokengen.image | string | `"bitnami/kubectl"` | Job Create Secret Stage Image to Utilize |
 | enterprise.tokengen.labels | object | `{}` | Additional labels for the `tokengen` Job |
 | enterprise.tokengen.securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | Run containers as user `enterprise-logs(uid=10001)` |
 | enterprise.useExternalLicense | bool | `false` | Set to true when providing an external license |
