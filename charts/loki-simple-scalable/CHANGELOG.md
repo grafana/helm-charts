@@ -11,6 +11,10 @@ Entries should be ordered as follows:
 
 Entries should include a reference to the pull request that introduced the change.
 
+## 1.8.12
+
+- [ENHANCEMENT] Loki s3 http_config block can now be configured via values.yaml
+
 ## 1.8.10
 
 - [ENHANCEMENT] Loki server block can now be configured via values.yaml

@@ -1,6 +1,6 @@
 # loki-simple-scalable
 
-![Version: 1.8.11](https://img.shields.io/badge/Version-1.8.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.8.12](https://img.shields.io/badge/Version-1.8.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in simple, scalable mode
 
@@ -140,6 +140,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.s3.s3 | string | `nil` |  |
 | loki.storage.s3.s3ForcePathStyle | bool | `false` |  |
 | loki.storage.s3.secretAccessKey | string | `nil` |  |
+| loki.storage.s3.http_config | object | `{}` | Check https://grafana.com/docs/loki/latest/configuration/#s3_storage_config for more info on how to configure http_config |
 | loki.storage.type | string | `"s3"` |  |
 | loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
