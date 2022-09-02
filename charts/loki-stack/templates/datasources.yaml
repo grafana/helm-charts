@@ -21,6 +21,9 @@ data:
       url: {{ tpl .Values.loki.url . | quote }}
       version: 1
       isDefault: {{ default false .Values.loki.isDefault }}
+      {{- with .Values.loki.datasource.uid }}
+      uid: {{ . | quote }}
+      {{- end }}
       {{- with .Values.loki.datasource.jsonData }}
       jsonData:
         {{- tpl . $ | nindent 8 }}

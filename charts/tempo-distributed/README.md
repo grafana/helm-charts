@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.25.0](https://img.shields.io/badge/Version-0.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.26.0](https://img.shields.io/badge/Version-0.26.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -19,6 +19,13 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From chart version < 0.26.0
+
+Version 0.26.0
+
+* Moves metricsGenerator.config.storage_remote_write to metricsGenerator.config.storage.remote_write
+* Moves metricsGenerator.config.service_graphs_max_items to metricsGenerator.config.processor.service_graphs.max_items
 
 ### From chart version < 0.23.0
 
@@ -293,8 +300,10 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.resources | object | `{}` |  |
 | metricsGenerator.affinity | string | Hard node and soft zone anti-affinity | Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string |
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
-| metricsGenerator.config.service_graphs_max_items | int | `10000` |  |
-| metricsGenerator.config.storage_remote_write | list | `[]` |  |
+| metricsGenerator.config | object | `{"processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_flush_deadline":"1m","wal":null}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
+| metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |
+| metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | Dimensions are searched for in the resource and span attributes and are added to the metrics if present. |
+| metricsGenerator.config.storage.remote_write | list | `[]` | https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write |
 | metricsGenerator.enabled | bool | `false` | Specifies whether a metrics-generator should be deployed |
 | metricsGenerator.extraArgs | list | `[]` | Additional CLI args for the metrics-generator |
 | metricsGenerator.extraEnv | list | `[]` | Environment variables to add to the metrics-generator pods |
