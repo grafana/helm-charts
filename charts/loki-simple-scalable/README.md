@@ -30,15 +30,14 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | enterprise.adminApi | object | `{"enabled":true}` | If enabled, the correct admin_client storage will be configured. If disabled while running enterprise, make sure auth is set to `type: trust`, or that `auth_enabled` is set to `false`. |
-| enterprise.config | string | `"{{- if .Values.enterprise.adminApi.enabled }}\n{{- if or .Values.minio.enabled (eq .Values.loki.storage.type \"s3\") (eq .Values.loki.storage.type \"gcs\") }}\nadmin_client:\n  storage:\n    s3:\n      bucket_name: {{ .Values.loki.storage.bucketNames.admin }}\n{{- end }}\n{{- end }}\nauth:\n  type: {{ .Values.enterprise.adminApi.enabled | ternary \"enterprise\" \"trust\" }}\nauth_enabled: {{ .Values.loki.auth_enabled }}\ncluster_name: {{ .Release.Name }}\nlicense:\n  path: /etc/loki/license/license.jwt\n"` |  |
+| enterprise.config | string | ref: https://grafana.com/docs/loki/latest/configuration/examples/ | Enterprise specific sections of the config.yaml file |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.externalLicenseName | string | `nil` | Name of external licesne secret to use |
 | enterprise.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | enterprise.image.registry | string | `"docker.io"` | The Docker registry |
 | enterprise.image.repository | string | `"grafana/enterprise-logs"` | Docker image repository |
 | enterprise.image.tag | string | `"v1.4.0"` | Overrides the image tag whose default is the chart's appVersion |
-| enterprise.license | object | `{"contents":"NOTAVALIDLICENSE"}` | Grafana Enterprise Logs license In order to use Grafana Enterprise Logs features, you will need to provide the contents of your Grafana Enterprise Logs license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt. To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'` |
-| enterprise.tokengen | object | `{"adminTokenSecret":"gel-admin-token","annotations":{},"enabled":true,"env":[],"extraArgs":[],"extraVolumeMounts":[],"extraVolumes":[],"image":"bitnami/kubectl","labels":{},"securityContext":{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}}` | Configuration for `tokengen` target |
+| enterprise.license.contents | string | `"NOTAVALIDLICENSE"` | Grafana Enterprise Logs license In order to use Grafana Enterprise Logs features, you will need to provide the contents of your Grafana Enterprise Logs license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt. To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'` |
 | enterprise.tokengen.adminTokenSecret | string | `"gel-admin-token"` | Name of the secret to store the admin token in |
 | enterprise.tokengen.annotations | object | `{}` | Additional annotations for the `tokengen` Job |
 | enterprise.tokengen.enabled | bool | `true` | Whether the job should be part of the deployment |
@@ -48,7 +47,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | enterprise.tokengen.extraVolumes | list | `[]` | Additional volumes for Pods |
 | enterprise.tokengen.image | string | `"bitnami/kubectl"` | Job Create Secret Stage Image to Utilize |
 | enterprise.tokengen.labels | object | `{}` | Additional labels for the `tokengen` Job |
-| enterprise.tokengen.securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | Run containers as user `enterprise-logs(uid=10001)` |
+| enterprise.tokengen.securityContext | object | See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ | Run containers as user `enterprise-logs(uid=10001)` |
 | enterprise.useExternalLicense | bool | `false` | Set to true when providing an external license |
 | enterprise.version | string | `"v1.5.1"` |  |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
@@ -60,11 +59,11 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the gateway |
 | gateway.basicAuth.enabled | bool | `false` | Enables basic authentication for the gateway |
 | gateway.basicAuth.existingSecret | string | `nil` | Existing basic auth secret to use. Must contain '.htpasswd' |
-| gateway.basicAuth.htpasswd | string | `"{{ htpasswd (required \"'gateway.basicAuth.username' is required\" .Values.gateway.basicAuth.username) (required \"'gateway.basicAuth.password' is required\" .Values.gateway.basicAuth.password) }}"` | Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function. The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes high CPU load. |
+| gateway.basicAuth.htpasswd | string | See [values.yaml](values.yaml) | Uses the specified username and password to compute a htpasswd using Sprig's `htpasswd` function. The value is templated using `tpl`. Override this to use a custom htpasswd, e.g. in case the default causes high CPU load. |
 | gateway.basicAuth.password | string | `nil` | The basic auth password for the gateway |
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
-| gateway.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
-| gateway.deploymentStrategy | object | `{"type":"RollingUpdate"}` | ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
+| gateway.containerSecurityContext | object | See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ | The SecurityContext for gateway containers |
+| gateway.deploymentStrategy | object | ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy | See `kubectl explain deployment.spec.strategy` for more |
 | gateway.enabled | bool | `true` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
@@ -79,13 +78,13 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.loki.example.com"],"secretName":"loki-gateway-tls"}]` | TLS configuration for the gateway ingress |
-| gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
+| gateway.nginxConfig.file | string | See [values.yaml](values.yaml) | ref: https://docs.nginx.com/nginx/admin-guide/monitoring/logging/ |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
-| gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
+| gateway.nginxConfig.logFormat | string | ref: https://docs.nginx.com/nginx/admin-guide/monitoring/logging/ | NGINX log format |
 | gateway.nginxConfig.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
-| gateway.podSecurityContext | object | `{"fsGroup":101,"runAsGroup":101,"runAsNonRoot":true,"runAsUser":101}` | The SecurityContext for gateway containers |
+| gateway.podSecurityContext | object | See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ | The SecurityContext for gateway containers |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.readinessProbe.httpGet.path | string | `"/"` |  |
 | gateway.readinessProbe.httpGet.port | string | `"http"` |  |
@@ -112,21 +111,18 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.auth_enabled | bool | `true` |  |
 | loki.commonConfig | object | `{"path_prefix":"/var/loki","replication_factor":3}` | Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration |
 | loki.config | string | See values.yaml | Config file contents for Loki |
-| loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
+| loki.containerSecurityContext | object | See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ | The SecurityContext for Loki containers. |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
 | loki.extraServerConfig | object | `{}` | Extra server configurations. Check https://grafana.com/docs/loki/latest/configuration/#server for more info |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | loki.image.registry | string | `"docker.io"` | The Docker registry |
 | loki.image.repository | string | `"grafana/loki"` | Docker image repository |
 | loki.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
-| loki.memcached | object | `{"chunk_cache":{"batch_size":256,"enabled":false,"host":"","parallelism":10,"service":"memcached-client"},"results_cache":{"default_validity":"12h","enabled":false,"host":"","service":"memcached-client","timeout":"500ms"}}` | Configure memcached as an external cache for chunk and results cache. Disabled by default must enable and specify a host for each cache you would like to use. |
+| loki.memcached | object | ref: https://grafana.com/docs/loki/latest/configuration/ | Configure memcached as an external cache for chunk and results cache. Disabled by default must enable and specify a host for each cache you would like to use. |
 | loki.podAnnotations | object | `{}` | Common annotations for all pods |
-| loki.podSecurityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | The SecurityContext for Loki pods |
+| loki.podSecurityContext | object | See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ | The SecurityContext for Loki pods |
 | loki.query_scheduler | object | `{}` | Additional query scheduler config |
-| loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
-| loki.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
-| loki.readinessProbe.initialDelaySeconds | int | `30` |  |
-| loki.readinessProbe.timeoutSeconds | int | `1` |  |
+| loki.readinessProbe | object | ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes | Configures the readiness probe for all of the Loki pods |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | loki.schemaConfig | object | `{}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
 | loki.storage.bucketNames.admin | string | `"admin"` |  |
@@ -147,7 +143,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | loki.storage.type | string | `"s3"` |  |
 | loki.storage_config | object | `{"hedging":{"at":"250ms","max_per_second":20,"up_to":3}}` | Additional storage config |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
-| minio | object | `{"accessKey":"enterprise-logs","buckets":[{"name":"chunks","policy":"none","purge":false},{"name":"ruler","policy":"none","purge":false},{"name":"admin","policy":"none","purge":false}],"enabled":false,"persistence":{"size":"5Gi"},"resources":{"requests":{"cpu":"100m","memory":"128Mi"}},"secretKey":"supersecret"}` | ----------------------------------- |
+| minio | object | ref: https://github.com/minio/charts | Configuration for `minio` child chart |
 | monitoring.alerts.annotations | object | `{}` | Additional annotations for the alerts PrometheusRule resource |
 | monitoring.alerts.enabled | bool | `true` | If enabled, create PrometheusRule resource with Loki alerting rules |
 | monitoring.alerts.labels | object | `{}` | Additional labels for the alerts PrometheusRule resource |
