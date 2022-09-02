@@ -109,9 +109,6 @@ spec:
           {{- include "tempo.configVolume" . | nindent 10 }}
         - name: tempo-compactor-store
           emptyDir: {}
-        - configMap:
-            name: {{ template "tempo.fullname" . }}
-          name: tempo-conf
         {{- if .Values.enterprise.enabled }}
         - name: license
           secret:
