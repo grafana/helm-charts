@@ -45,6 +45,9 @@ metaMonitoring:
     enabled: true
     installOperator: true
 ```
+
+* **BREAKING CHANGE** component affinity selection has been simplified.  Values are now specified as yaml and are no longer templated.  This gains additional consistency in the appaorch.
+
 * minio can now be enabled as part of this chart using the following values
 ```yaml
 minio:
@@ -219,7 +222,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
 | configStorageType | string | `"ConfigMap"` | Defines what kind of object stores the configuration, a ConfigMap or a Secret. In order to move sensitive information (such as credentials) from the ConfigMap/Secret to a more secure location (e.g. vault), it is possible to use [environment variables in the configuration](https://grafana.com/docs/mimir/latest/operators-guide/configuring/reference-configuration-parameters/#use-environment-variables-in-the-configuration). Such environment variables can be then stored in a separate Secret and injected via the global.extraEnvFrom value. For details about environment injection from a Secret please see [Secrets](https://kubernetes.io/docs/concepts/configuration/secret/#use-case-as-container-environment-variables). |
-| distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
+| distributor.affinity | object | Hard node and soft zone anti-affinity | Affinity for distributor pods. |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
@@ -291,7 +294,7 @@ The memcached default args are removed and should be provided manually. The sett
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
 | fullnameOverride | string | `""` |  |
-| gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.affinity | object | Hard node and soft zone anti-affinity | Affinity for gateway pods. |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
 | gateway.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the gateway |
@@ -346,7 +349,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
-| ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.affinity | object | Soft node and soft zone anti-affinity | Affinity for ingester pods. |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
 | ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester |
 | ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
@@ -384,7 +387,7 @@ The memcached default args are removed and should be provided manually. The sett
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
-| memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
+| memcached.affinity | object | Hard node and soft zone anti-affinity | Affinity for memcached pods. |
 | memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
 | memcached.extraEnv | list | `[]` | Environment variables to add to memcached pods |
@@ -437,7 +440,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metaMonitoring.serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | metaMonitoring.serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | metaMonitoring.serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
-| metricsGenerator.affinity | string | Hard node and soft zone anti-affinity | Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string |
+| metricsGenerator.affinity | object | Hard node and soft zone anti-affinity | Affinity for metrics-generator pods. |
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
 | metricsGenerator.config | object | `{"processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_flush_deadline":"1m","wal":null}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
 | metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |
@@ -487,7 +490,7 @@ The memcached default args are removed and should be provided manually. The sett
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
-| querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.affinity | object | Hard node and soft zone anti-affinity | Affinity for querier pod. |
 | querier.config.frontend_worker.grpc_client_config | object | `{}` | grpc client configuration |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
@@ -506,7 +509,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.service.annotations | object | `{}` | Annotations for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
-| queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| queryFrontend.affinity | object | Hard node and soft zone anti-affinity | Affinity for query-frontend pods |
 | queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
 | queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
