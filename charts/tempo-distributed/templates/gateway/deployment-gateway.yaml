@@ -86,10 +86,8 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.gateway.affinity }}
       affinity:
-        {{- tpl . $ | nindent 8 }}
-      {{- end }}
+        {{- toYaml .Values.gateway.affinity | nindent 8 }}
       {{- with .Values.gateway.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

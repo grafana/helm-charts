@@ -93,10 +93,8 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
-      {{- with .Values.querier.affinity }}
       affinity:
-        {{- tpl . $ | nindent 8 }}
-      {{- end }}
+        {{- toYaml .Values.querier.affinity | nindent 8 }}
       {{- with .Values.querier.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

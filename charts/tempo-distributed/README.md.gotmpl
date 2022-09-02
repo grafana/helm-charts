@@ -38,6 +38,9 @@ metaMonitoring:
     enabled: true
     installOperator: true
 ```
+
+* **BREAKING CHANGE** component affinity selection has been simplified.  Values are now specified as yaml and are no longer templated.  This gains additional consistency in the appaorch.
+
 * minio can now be enabled as part of this chart using the following values
 ```yaml
 minio:
