@@ -265,7 +265,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
-| ingester.persistence.annotations | object | `{}` | Annotations for ingester's pvc |
+| ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
