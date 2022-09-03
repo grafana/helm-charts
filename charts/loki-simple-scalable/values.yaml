@@ -185,6 +185,7 @@ loki:
       accessKeyId: null
       s3ForcePathStyle: false
       insecure: false
+      # -- Check https://grafana.com/docs/loki/latest/configuration/#s3_storage_config for more info on how to configure http_config
       http_config: {}
     gcs:
       chunkBufferSize: 0
