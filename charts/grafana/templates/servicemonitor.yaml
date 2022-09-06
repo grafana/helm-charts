@@ -5,7 +5,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ template "grafana.fullname" . }}
   {{- if .Values.serviceMonitor.namespace }}
-  namespace: {{ .Values.serviceMonitor.namespace }}
+  namespace: {{ tpl .Values.serviceMonitor.namespace . }}
   {{- else }}
   namespace: {{ template "grafana.namespace" . }}
   {{- end }}
