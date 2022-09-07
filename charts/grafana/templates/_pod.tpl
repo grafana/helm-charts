@@ -321,6 +321,10 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
+      {{- if .Values.sidecar.datasources.script }}
+      - name: SCRIPT
+        value: "{{ .Values.sidecar.datasources.script }}"
+      {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
@@ -401,6 +405,10 @@ containers:
       {{- if .Values.sidecar.plugins.searchNamespace }}
       - name: NAMESPACE
         value: "{{ .Values.sidecar.plugins.searchNamespace | join "," }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.script }}
+      - name: SCRIPT
+        value: "{{ .Values.sidecar.plugins.script }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
