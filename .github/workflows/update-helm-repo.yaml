@@ -157,7 +157,12 @@ jobs:
           version=$(yq ".version" < ${changed}/Chart.yaml)
           echo "::set-output name=chartpath::${changed}"
           echo "::set-output name=desc::${description}"
-          echo "::set-output name=tagname::${name}-${version}"
+          if [[ -n "${HELM_TAG_PREFIX}" ]]; then
+            echo "::set-output name=tagname::${HELM_TAG_PREFIX}-${name}-${version}"
+          else
+            echo "::set-output name=tagname::${name}-${version}"
+          fi
+          echo "::set-output name=packagename::${name}-${version}"
 
       - name: Install CR tool
         run: |
@@ -178,12 +183,8 @@ jobs:
       - name: Create tag and check if exists on origin
         run: |
           cd source
-          tag="${{ steps.parse-chart.outputs.tagname }}"
-          if [[ -n "$HELM_TAG_PREFIX" ]]; then
-            tag="$HELM_TAG_PREFIX-${{ steps.parse-chart.outputs.tagname }}"
-          fi
-          echo "Making tag $tag"
-          git tag "$tag"
+          echo "Making tag ${{ steps.parse-chart.outputs.tagname }}"
+          git tag "${{ steps.parse-chart.outputs.tagname }}"
 
       - name: Make github release
         uses: softprops/action-gh-release@v1
@@ -195,10 +196,10 @@ jobs:
 
             Tag on source: https://github.com/${{ github.repository }}/releases/tag/${{ steps.parse-chart.outputs.tagname }}
           files: |
-            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.tagname }}.tgz
-            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.tagname }}.tgz.prov
+            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz
+            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz.prov
           repository: grafana/helm-charts
-          tag_name: ${{ steps.parse-chart.outputs.tagname }}
+          tag_name: ${{ steps.parse-chart.outputs.packagename }}
           token: ${{ secrets.helm_repo_token }}
 
       - name: Push release tag on origin
