@@ -97,6 +97,10 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
+      {{- end }}
       - name: METHOD
         value: "LIST"
       - name: LABEL
@@ -149,6 +153,10 @@ initContainers:
       {{- range $key, $value := .Values.sidecar.notifiers.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
       {{- end }}
       - name: METHOD
         value: LIST
@@ -224,6 +232,10 @@ containers:
       {{- range $key, $value := .Values.sidecar.dashboards.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
       {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
@@ -304,6 +316,10 @@ containers:
       {{- range $key, $value := .Values.sidecar.datasources.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
       {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.datasources.watchMethod }}
@@ -397,6 +413,10 @@ containers:
       {{- range $key, $value := .Values.sidecar.plugins.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
       {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.plugins.watchMethod }}
