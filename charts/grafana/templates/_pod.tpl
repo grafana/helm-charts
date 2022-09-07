@@ -146,6 +146,10 @@ initContainers:
         value: LIST
       - name: LABEL
         value: "{{ .Values.sidecar.notifiers.label }}"
+      {{- if .Values.sidecar.notifiers.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.notifiers.labelValue }}
+      {{- end }}
       {{- if .Values.sidecar.logLevel }}
       - name: LOG_LEVEL
         value: {{ quote .Values.sidecar.logLevel }}

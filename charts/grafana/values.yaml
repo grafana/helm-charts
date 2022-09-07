@@ -861,6 +861,8 @@ sidecar:
     enabled: false
     # label that the configmaps with notifiers are marked with
     label: grafana_notifier
+    # value of label that the configmaps with notifiers are set to
+    labelValue: ""
     # If specified, the sidecar will search for notifier config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
