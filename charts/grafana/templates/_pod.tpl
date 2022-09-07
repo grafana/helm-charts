@@ -341,6 +341,14 @@ containers:
       - name: REQ_METHOD
         value: POST
       {{- end }}
+      {{- if .Values.sidecar.datasources.watchServerTimeout }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.datasources.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.watchClientTimeout }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.datasources.watchClientTimeout }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -417,6 +425,14 @@ containers:
         value: {{ .Values.sidecar.plugins.reloadURL }}
       - name: REQ_METHOD
         value: POST
+      {{- end }}
+      {{- if .Values.sidecar.plugins.watchServerTimeout }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.plugins.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.watchClientTimeout }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.plugins.watchClientTimeout }}"
       {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
