@@ -157,7 +157,11 @@ jobs:
           version=$(yq ".version" < ${changed}/Chart.yaml)
           echo "::set-output name=chartpath::${changed}"
           echo "::set-output name=desc::${description}"
-          echo "::set-output name=tagname::${name}-${version}"
+          tag="${name}-${version}"
+          if [[ -n "$HELM_TAG_PREFIX" ]]; then
+            tag="$HELM_TAG_PREFIX-${name}-${version}"
+          fi
+          echo "::set-output name=tagname::${tag}"
 
       - name: Install CR tool
         run: |
@@ -179,9 +183,6 @@ jobs:
         run: |
           cd source
           tag="${{ steps.parse-chart.outputs.tagname }}"
-          if [[ -n "$HELM_TAG_PREFIX" ]]; then
-            tag="$HELM_TAG_PREFIX-${{ steps.parse-chart.outputs.tagname }}"
-          fi
           echo "Making tag $tag"
           git tag "$tag"
 
@@ -204,8 +205,9 @@ jobs:
       - name: Push release tag on origin
         run: |
           cd source
-          echo "Pushing tag ${{ steps.parse-chart.outputs.tagname }}"
-          git push origin "${{ steps.parse-chart.outputs.tagname }}"
+          tag="${{ steps.parse-chart.outputs.tagname }}"
+          echo "Pushing tag $tag"
+          git push origin "$tag"
 
       - name: Update helm repo index.yaml
         run: |
