@@ -179,7 +179,7 @@ jobs:
         run: |
           cd source
           tag="${{ steps.parse-chart.outputs.tagname }}"
-          if [[ -n "$HELM_TAG_PREFIX" ]]; do
+          if [[ -n "$HELM_TAG_PREFIX" ]]; then
             tag="$HELM_TAG_PREFIX-${{ steps.parse-chart.outputs.tagname }}"
           fi
           echo "Making tag $tag"
