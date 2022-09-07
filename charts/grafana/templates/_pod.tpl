@@ -101,6 +101,10 @@ initContainers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.datasources.labelValue }}
       {{- end }}
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.logLevel }}
+      {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
@@ -142,6 +146,10 @@ initContainers:
         value: LIST
       - name: LABEL
         value: "{{ .Values.sidecar.notifiers.label }}"
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.logLevel }}
+      {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/notifiers"
       - name: RESOURCE
@@ -289,6 +297,10 @@ containers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.datasources.labelValue }}
       {{- end }}
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.logLevel }}
+      {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
@@ -361,6 +373,10 @@ containers:
       {{- if .Values.sidecar.plugins.labelValue }}
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.plugins.labelValue }}
+      {{- end }}
+      {{- if .Values.sidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ quote .Values.sidecar.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/plugins"
