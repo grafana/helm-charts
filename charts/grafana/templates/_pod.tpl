@@ -93,6 +93,10 @@ initContainers:
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
+      {{- range $key, $value := .Values.sidecar.datasources.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
       - name: METHOD
         value: "LIST"
       - name: LABEL
@@ -142,6 +146,10 @@ initContainers:
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
+      {{- range $key, $value := .Values.sidecar.notifiers.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
       - name: METHOD
         value: LIST
       - name: LABEL
@@ -293,6 +301,10 @@ containers:
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
+      {{- range $key, $value := .Values.sidecar.datasources.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
@@ -382,6 +394,10 @@ containers:
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     env:
+      {{- range $key, $value := .Values.sidecar.plugins.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
       - name: METHOD
         value: {{ .Values.sidecar.plugins.watchMethod }}
       - name: LABEL

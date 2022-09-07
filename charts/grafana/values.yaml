@@ -759,8 +759,9 @@ sidecar:
   # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
   logLevel: INFO
   dashboards:
-    env: {}
     enabled: false
+    # Additional environment variables for the dashboards sidecar
+    env: {}
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
@@ -815,6 +816,8 @@ sidecar:
     sizeLimit: {}
   datasources:
     enabled: false
+    # Additional environment variables for the datasourcessidecar
+    env: {}
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
     # value of label that the configmaps with datasources are set to
@@ -849,6 +852,8 @@ sidecar:
     sizeLimit: {}
   plugins:
     enabled: false
+    # Additional environment variables for the plugins sidecar
+    env: {}
     # label that the configmaps with plugins are marked with
     label: grafana_plugin
     # value of label that the configmaps with plugins are set to
@@ -883,6 +888,8 @@ sidecar:
     sizeLimit: {}
   notifiers:
     enabled: false
+    # Additional environment variables for the notifierssidecar
+    env: {}
     # label that the configmaps with notifiers are marked with
     label: grafana_notifier
     # value of label that the configmaps with notifiers are set to
