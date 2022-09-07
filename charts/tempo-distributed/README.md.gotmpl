@@ -20,6 +20,12 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From chart version < 0.27.0
+
+Version 0.27.0
+
+* Switches PodDisruptionBudget from api version policy/v1beta1 to policy/v1, making it incompatible with k8s < 1.21.0
+
 ### From chart version < 0.26.0
 
 Version 0.26.0
