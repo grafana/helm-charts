@@ -199,7 +199,7 @@ jobs:
             ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz
             ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz.prov
           repository: grafana/helm-charts
-          tag_name: ${{ steps.parse-chart.outputs.packagename }}
+          tag_name: ${{ steps.parse-chart.outputs.tagname }}
           token: ${{ secrets.helm_repo_token }}
 
       - name: Push release tag on origin
