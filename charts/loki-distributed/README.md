@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.56.6](https://img.shields.io/badge/Version-0.56.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.56.7](https://img.shields.io/badge/Version-0.56.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -323,6 +323,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedFrontend.extraContainers | list | `[]` | Containers to add to the memcached-frontend pods |
 | memcachedFrontend.extraEnv | list | `[]` | Environment variables to add to memcached-frontend pods |
 | memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
+| memcachedFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
 | memcachedFrontend.podAnnotations | object | `{}` | Annotations for memcached-frontend pods |
 | memcachedFrontend.podLabels | object | `{}` | Labels for memcached-frontend pods |
@@ -455,6 +456,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryScheduler.image.registry | string | `nil` | The Docker registry for the query-scheduler image. Overrides `loki.image.registry` |
 | queryScheduler.image.repository | string | `nil` | Docker image repository for the query-scheduler image. Overrides `loki.image.repository` |
 | queryScheduler.image.tag | string | `nil` | Docker image tag for the query-scheduler image. Overrides `loki.image.tag` |
+| queryScheduler.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | queryScheduler.nodeSelector | object | `{}` | Node selector for query-scheduler pods |
 | queryScheduler.podAnnotations | object | `{}` | Annotations for query-scheduler pods |
 | queryScheduler.podLabels | object | `{}` | Labels for query-scheduler pods |
