@@ -1,4 +1,4 @@
-{{- if gt (int .Values.querier.replicas) 1 }}
+{{- if and .Values.querier.enabled (gt (int .Values.querier.replicas) 1) }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.querierSelectorLabels" . | nindent 6 }}
-  {{- with .Values.distributor.maxUnavailable }}
+  {{- with .Values.querier.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
 {{- end }}
