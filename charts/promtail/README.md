@@ -270,8 +270,8 @@ config:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
 
-    client:
-      url: {{ .Values.config.lokiAddress }}
+    clients:
+      - url: {{ .Values.config.lokiAddress }}
 
     positions:
       filename: /run/promtail/positions.yaml
