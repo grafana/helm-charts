@@ -9,5 +9,5 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.ingesterSelectorLabels" . | nindent 6 }}
-  maxUnavailable: {{ sub (.Values.ingester.replicas) (.Values.ingester.config.replication_factor) }}
+  maxUnavailable: {{ sub (.Values.ingester.replicas) (add (div .Values.ingester.config.replication_factor 2) 1) }}
 {{- end }}
