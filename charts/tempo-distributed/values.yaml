@@ -219,6 +219,8 @@ metricsGenerator:
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
   tolerations: []
+  # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
+  walEmptyDir:  {}
   # -- Extra volumes for metrics-generator pods
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
