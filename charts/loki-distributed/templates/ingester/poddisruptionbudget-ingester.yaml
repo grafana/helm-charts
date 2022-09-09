@@ -1,4 +1,4 @@
-{{- if and .Values.ingester.enabled (gt (int .Values.ingester.replicas) 1) }}
+{{- if gt (int .Values.ingester.replicas) 1 }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
