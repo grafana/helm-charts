@@ -57,6 +57,10 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
 {{- end }}
+{{- if .Values.downloadDashboards.securityContext }}
+    securityContext:
+{{- toYaml .Values.downloadDashboards.securityContext | nindent 6 }}
+{{- end }}
 {{- if .Values.downloadDashboards.envFromSecret }}
     envFrom:
       - secretRef:
