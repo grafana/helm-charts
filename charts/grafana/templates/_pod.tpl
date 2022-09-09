@@ -1,4 +1,3 @@
-
 {{- define "grafana.pod" -}}
 {{- if .Values.schedulerName }}
 schedulerName: "{{ .Values.schedulerName }}"
@@ -614,8 +613,10 @@ containers:
 {{- if .Values.lifecycleHooks }}
     lifecycle: {{ tpl (.Values.lifecycleHooks | toYaml) . | nindent 6 }}
 {{- end }}
+{{- if .Values.resources }}
     resources:
-{{ toYaml .Values.resources | indent 6 }}
+      {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- with .Values.extraContainers }}
 {{ tpl . $ | indent 2 }}
 {{- end }}
