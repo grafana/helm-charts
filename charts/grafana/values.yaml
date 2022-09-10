@@ -136,6 +136,7 @@ downloadDashboards:
   env: {}
   envFromSecret: ""
   resources: {}
+  securityContext: {}
 
 ## Pod Annotations
 # podAnnotations: {}
