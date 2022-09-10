@@ -91,6 +91,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
 | deployment.replicaCount | int | `1` |  |
 | extraArgs | list | `[]` |  |
+| extraContainers | object | `{}` |  |
 | extraEnv | list | `[]` | Extra environment variables |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
 | extraObjects | list | `[]` | Extra K8s manifests to deploy |
