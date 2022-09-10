@@ -274,10 +274,16 @@ containers:
         value: "{{ .Values.sidecar.dashboards.script }}"
       {{- end }}
       {{- if .Values.sidecar.dashboards.watchServerTimeout }}
+      {{- if ne .Values.sidecar.dashboards.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.dashboards.watchServerTimeout with .Values.sidecar.dashboards.watchMethod %s" .Values.sidecar.dashboards.watchMethod) }}
+      {{- end }}
       - name: WATCH_SERVER_TIMEOUT
         value: "{{ .Values.sidecar.dashboards.watchServerTimeout }}"
       {{- end }}
       {{- if .Values.sidecar.dashboards.watchClientTimeout }}
+      {{- if ne .Values.sidecar.dashboards.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.dashboards.watchClientTimeout with .Values.sidecar.dashboards.watchMethod %s" .Values.sidecar.dashboards.watchMethod) }}
+      {{- end }}
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.dashboards.watchClientTimeout }}"
       {{- end }}
@@ -374,10 +380,16 @@ containers:
         value: POST
       {{- end }}
       {{- if .Values.sidecar.datasources.watchServerTimeout }}
+      {{- if ne .Values.sidecar.datasources.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.datasources.watchServerTimeout with .Values.sidecar.datasources.watchMethod %s" .Values.sidecar.datasources.watchMethod) }}
+      {{- end }}
       - name: WATCH_SERVER_TIMEOUT
         value: "{{ .Values.sidecar.datasources.watchServerTimeout }}"
       {{- end }}
       {{- if .Values.sidecar.datasources.watchClientTimeout }}
+      {{- if ne .Values.sidecar.datasources.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.datasources.watchClientTimeout with .Values.sidecar.datasources.watchMethod %s" .Values.sidecar.datasources.watchMethod) }}
+      {{- end }}
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.datasources.watchClientTimeout }}"
       {{- end }}
@@ -471,10 +483,16 @@ containers:
         value: POST
       {{- end }}
       {{- if .Values.sidecar.plugins.watchServerTimeout }}
+      {{- if ne .Values.sidecar.plugins.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.plugins.watchServerTimeout with .Values.sidecar.plugins.watchMethod %s" .Values.sidecar.plugins.watchMethod) }}
+      {{- end }}
       - name: WATCH_SERVER_TIMEOUT
         value: "{{ .Values.sidecar.plugins.watchServerTimeout }}"
       {{- end }}
       {{- if .Values.sidecar.plugins.watchClientTimeout }}
+      {{- if ne .Values.sidecar.plugins.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.plugins.watchClientTimeout with .Values.sidecar.plugins.watchMethod %s" .Values.sidecar.plugins.watchMethod) }}
+      {{- end }}
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.plugins.watchClientTimeout }}"
       {{- end }}
