@@ -109,9 +109,9 @@ initContainers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.datasources.labelValue }}
       {{- end }}
-      {{- if .Values.sidecar.logLevel }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
-        value: {{ quote .Values.sidecar.logLevel }}
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
@@ -166,9 +166,9 @@ initContainers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.notifiers.labelValue }}
       {{- end }}
-      {{- if .Values.sidecar.logLevel }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       - name: LOG_LEVEL
-        value: {{ quote .Values.sidecar.logLevel }}
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/notifiers"
@@ -245,9 +245,9 @@ containers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.dashboards.labelValue }}
       {{- end }}
-      {{- if .Values.sidecar.logLevel }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
       - name: LOG_LEVEL
-        value: {{ quote .Values.sidecar.logLevel }}
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
@@ -335,9 +335,9 @@ containers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.datasources.labelValue }}
       {{- end }}
-      {{- if .Values.sidecar.logLevel }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
-        value: {{ quote .Values.sidecar.logLevel }}
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/datasources"
@@ -438,9 +438,9 @@ containers:
       - name: LABEL_VALUE
         value: {{ quote .Values.sidecar.plugins.labelValue }}
       {{- end }}
-      {{- if .Values.sidecar.logLevel }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.plugins.logLevel }}
       - name: LOG_LEVEL
-        value: {{ quote .Values.sidecar.logLevel }}
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.plugins.logLevel }}
       {{- end }}
       - name: FOLDER
         value: "/etc/grafana/provisioning/plugins"
