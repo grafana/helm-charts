@@ -94,6 +94,9 @@ data:
         {{- if $value.token }}
     -H "Authorization: token {{ $value.token }}" \
         {{- end }}
+        {{- if $value.bearerToken }}
+    -H "Authorization: Bearer {{ $value.bearerToken }}" \
+        {{- end }}
         {{- if $value.gitlabToken }}
     -H "PRIVATE-TOKEN: {{ $value.gitlabToken }}" \
         {{- end }}

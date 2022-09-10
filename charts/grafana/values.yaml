@@ -136,6 +136,7 @@ downloadDashboards:
   env: {}
   envFromSecret: ""
   resources: {}
+  securityContext: {}
 
 ## Pod Annotations
 # podAnnotations: {}
@@ -476,6 +477,13 @@ extraVolumeMounts: []
   #   mountPath: /mnt/volume1
   #   readOnly: true
   #   hostPath: /usr/shared/
+  # - name: grafana-secrets
+  #   csi: true
+  #   data:
+  #     driver: secrets-store.csi.k8s.io
+  #     readOnly: true
+  #     volumeAttributes:
+  #       secretProviderClass: "grafana-env-spc"
 
 ## Container Lifecycle Hooks. Execute a specific bash command or make an HTTP request
 lifecycleHooks: {}
@@ -638,6 +646,9 @@ dashboards: {}
   #   local-dashboard-gitlab:
   #     url: https://example.com/repository/test-gitlab.json
   #     gitlabToken: ''
+  #   local-dashboard-bitbucket:
+  #     url: https://example.com/repository/test-bitbucket.json
+  #     bearerToken: ''
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
