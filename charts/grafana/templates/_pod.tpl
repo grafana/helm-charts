@@ -4,13 +4,13 @@ schedulerName: "{{ .Values.schedulerName }}"
 {{- end }}
 serviceAccountName: {{ template "grafana.serviceAccountName" . }}
 automountServiceAccountToken: {{ .Values.serviceAccount.autoMount }}
-{{- if .Values.securityContext }}
+{{- with .Values.securityContext }}
 securityContext:
-{{ toYaml .Values.securityContext | indent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- if .Values.hostAliases }}
+{{- with .Values.hostAliases }}
 hostAliases:
-{{ toYaml .Values.hostAliases | indent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- if .Values.priorityClassName }}
 priorityClassName: {{ .Values.priorityClassName }}
@@ -30,8 +30,10 @@ initContainers:
       runAsNonRoot: false
       runAsUser: 0
     command: ["chown", "-R", "{{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }}", "/var/lib/grafana"]
+    {{- with .Values.initChownData.resources }}
     resources:
-{{ toYaml .Values.initChownData.resources | indent 6 }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: storage
         mountPath: "/var/lib/grafana"
@@ -49,17 +51,19 @@ initContainers:
     imagePullPolicy: {{ .Values.downloadDashboardsImage.pullPolicy }}
     command: ["/bin/sh"]
     args: [ "-c", "mkdir -p /var/lib/grafana/dashboards/default && /bin/sh -x /etc/grafana/download_dashboards.sh" ]
+    {{- with .Values.downloadDashboards.resources }}
     resources:
-{{ toYaml .Values.downloadDashboards.resources | indent 6 }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     env:
 {{- range $key, $value := .Values.downloadDashboards.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
 {{- end }}
-{{- if .Values.downloadDashboards.securityContext }}
+    {{- with .Values.downloadDashboards.securityContext }}
     securityContext:
-{{- toYaml .Values.downloadDashboards.securityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- if .Values.downloadDashboards.envFromSecret }}
     envFrom:
       - secretRef:
@@ -113,12 +117,14 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
+    {{- with .Values.sidecar.resources }}
     resources:
-{{ toYaml .Values.sidecar.resources | indent 6 }}
-{{- if .Values.sidecar.securityContext }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
     securityContext:
-{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
@@ -152,20 +158,22 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
-{{- if .Values.sidecar.livenessProbe }}
+    {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 6 }}
-{{- end }}
-{{- if .Values.sidecar.readinessProbe }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
     readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
     resources:
-{{ toYaml .Values.sidecar.resources | indent 6 }}
-{{- if .Values.sidecar.securityContext }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
     securityContext:
-{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
@@ -241,20 +249,22 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.dashboards.watchClientTimeout }}"
       {{- end }}
-{{- if .Values.sidecar.livenessProbe }}
+    {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 6 }}
-{{- end }}
-{{- if .Values.sidecar.readinessProbe }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
     readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
     resources:
-{{ toYaml .Values.sidecar.resources | indent 6 }}
-{{- if .Values.sidecar.securityContext }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
     securityContext:
-{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: sc-dashboard-volume
         mountPath: {{ .Values.sidecar.dashboards.folder | quote }}
@@ -315,20 +325,22 @@ containers:
       - name: REQ_METHOD
         value: POST
       {{- end }}
-{{- if .Values.sidecar.livenessProbe }}
+    {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 6 }}
-{{- end }}
-{{- if .Values.sidecar.readinessProbe }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
     readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
     resources:
-{{ toYaml .Values.sidecar.resources | indent 6 }}
-{{- if .Values.sidecar.securityContext }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
     securityContext:
-{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
@@ -386,20 +398,22 @@ containers:
       - name: REQ_METHOD
         value: POST
       {{- end }}
-{{- if .Values.sidecar.livenessProbe }}
+    {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 6 }}
-{{- end }}
-{{- if .Values.sidecar.readinessProbe }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
     readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
     resources:
-{{ toYaml .Values.sidecar.resources | indent 6 }}
-{{- if .Values.sidecar.securityContext }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
     securityContext:
-{{- toYaml .Values.sidecar.securityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: sc-plugins-volume
         mountPath: "/etc/grafana/provisioning/plugins"
@@ -417,10 +431,10 @@ containers:
       - {{ . }}
     {{- end }}
   {{- end}}
-{{- if .Values.containerSecurityContext }}
+    {{- with .Values.containerSecurityContext }}
     securityContext:
-{{- toYaml .Values.containerSecurityContext | nindent 6 }}
-{{- end }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: config
         mountPath: "/etc/grafana/grafana.ini"
@@ -606,23 +620,27 @@ containers:
           optional: {{ .optional | default false }}
     {{- end }}
     {{- end }}
+    {{- with .Values.livenessProbe }}
     livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 6 }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.readinessProbe }}
     readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 6 }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- if .Values.lifecycleHooks }}
     lifecycle: {{ tpl (.Values.lifecycleHooks | toYaml) . | nindent 6 }}
 {{- end }}
-{{- if .Values.resources }}
+    {{- with .Values.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
-{{- end }}
+    {{- end }}
 {{- with .Values.extraContainers }}
 {{ tpl . $ | indent 2 }}
 {{- end }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
-{{ toYaml . | indent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- $root := . }}
 {{- with .Values.affinity }}
@@ -631,11 +649,11 @@ affinity:
 {{- end }}
 {{- with .Values.topologySpreadConstraints }}
 topologySpreadConstraints:
-{{ toYaml . | indent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with .Values.tolerations }}
 tolerations:
-{{ toYaml . | indent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 volumes:
   - name: config
