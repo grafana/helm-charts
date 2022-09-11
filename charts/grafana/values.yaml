@@ -756,16 +756,21 @@ sidecar:
   enableUniqueFilenames: false
   readinessProbe: {}
   livenessProbe: {}
-  # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
-  logLevel: INFO
+  # Log level default for all sidecars. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. Defaults to INFO
+  # logLevel: INFO
   dashboards:
-    env: {}
     enabled: false
+    # Additional environment variables for the dashboards sidecar
+    env: {}
+    # Do not reprocess already processed unchanged resources on k8s API reconnect.
+    # ignoreAlreadyProcessed: true
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
     # value of label that the configmaps with dashboards are set to
     labelValue: ""
+    # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+    # logLevel: INFO
     # folder in the pod that should hold the collected dashboards (unless `defaultFolderName` is set)
     folder: /tmp/dashboards
     # The default folder name, it will create a subfolder under the `folder` and put dashboards in there instead
@@ -815,10 +820,16 @@ sidecar:
     sizeLimit: {}
   datasources:
     enabled: false
+    # Additional environment variables for the datasourcessidecar
+    env: {}
+    # Do not reprocess already processed unchanged resources on k8s API reconnect.
+    # ignoreAlreadyProcessed: true
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
     # value of label that the configmaps with datasources are set to
     labelValue: ""
+    # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+    # logLevel: INFO
     # If specified, the sidecar will search for datasource config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
@@ -827,8 +838,20 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # watchServerTimeout: 3600
+    #
+    # watchClientTimeout: is a client-side timeout, configuring your local socket.
+    # If you have a network outage dropping all packets with no RST/FIN,
+    # this is how long your client waits before realizing & dropping the connection.
+    # defaults to 66sec (sic!)
+    # watchClientTimeout: 60
+    #
     # Endpoint to send request to reload datasources
     reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
+    # Absolute path to shell script to execute after a datasource got reloaded
+    script: null
     skipReload: false
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
@@ -837,10 +860,16 @@ sidecar:
     sizeLimit: {}
   plugins:
     enabled: false
+    # Additional environment variables for the plugins sidecar
+    env: {}
+    # Do not reprocess already processed unchanged resources on k8s API reconnect.
+    # ignoreAlreadyProcessed: true
     # label that the configmaps with plugins are marked with
     label: grafana_plugin
     # value of label that the configmaps with plugins are set to
     labelValue: ""
+    # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+    # logLevel: INFO
     # If specified, the sidecar will search for plugin config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
@@ -849,8 +878,20 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # watchServerTimeout: 3600
+    #
+    # watchClientTimeout: is a client-side timeout, configuring your local socket.
+    # If you have a network outage dropping all packets with no RST/FIN,
+    # this is how long your client waits before realizing & dropping the connection.
+    # defaults to 66sec (sic!)
+    # watchClientTimeout: 60
+    #
     # Endpoint to send request to reload plugins
     reloadURL: "http://localhost:3000/api/admin/provisioning/plugins/reload"
+    # Absolute path to shell script to execute after a plugin got reloaded
+    script: null
     skipReload: false
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any plugins defined at startup time.
@@ -859,8 +900,16 @@ sidecar:
     sizeLimit: {}
   notifiers:
     enabled: false
+    # Additional environment variables for the notifierssidecar
+    env: {}
+    # Do not reprocess already processed unchanged resources on k8s API reconnect.
+    # ignoreAlreadyProcessed: true
     # label that the configmaps with notifiers are marked with
     label: grafana_notifier
+    # value of label that the configmaps with notifiers are set to
+    labelValue: ""
+    # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+    # logLevel: INFO
     # If specified, the sidecar will search for notifier config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
