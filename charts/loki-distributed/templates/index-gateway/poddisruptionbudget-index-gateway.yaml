@@ -1,5 +1,4 @@
-{{- if .Values.indexGateway.enabled }}
-{{- if gt (int .Values.indexGateway.replicas) 1 }}
+{{- if and .Values.indexGateway.enabled (gt (int .Values.indexGateway.replicas) 1) }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -10,8 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
-  {{- with .Values.distributor.maxUnavailable }}
+  {{- with .Values.indexGateway.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
-{{- end }}
 {{- end }}

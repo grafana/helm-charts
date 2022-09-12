@@ -188,6 +188,7 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+  automountServiceAccountToken: true
 
 service:
   type: ClusterIP

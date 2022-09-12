@@ -1,4 +1,4 @@
-{{- if and .Values.compactor.enabled .Values.compactor.enabled }}
+{{- if .Values.compactor.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
