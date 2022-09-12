@@ -1,6 +1,6 @@
 {{- if .Values.metricsGenerator.enabled }}
 {{- if gt (int .Values.metricsGenerator.replicas) 1 }}
-apiVersion: policy/v1beta1
+apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "tempo.metricsGeneratorFullname" . }}
