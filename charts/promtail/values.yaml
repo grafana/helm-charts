@@ -203,6 +203,10 @@ serviceMonitor:
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   # (defines `metric_relabel_configs`)
   metricRelabelings: []
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: ""
+  # -- ServiceMonitor will use these tlsConfig settings to make health check requests
+  tlsConfig: {}
 
 # Extra containers created as part of a Promtail Deployment resource
 # - spec for Container:

@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.4.0](https://img.shields.io/badge/Version-6.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 6.4.1](https://img.shields.io/badge/Version-6.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -135,7 +135,9 @@ The new release which will pick up again from the existing `positions.yaml`.
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig (defines `relabel_configs`) |
+| serviceMonitor.scheme | string | `""` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| serviceMonitor.tlsConfig | object | `{}` | ServiceMonitor will use these tlsConfig settings to make health check requests |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"}]` | Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes. |
 | updateStrategy | object | `{}` | The update strategy for the DaemonSet |
 
