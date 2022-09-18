@@ -123,7 +123,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.datasources.searchNamespace | join "," }}"
+        value: "{{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -180,7 +180,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.notifiers.searchNamespace | join "," }}"
+        value: "{{ tpl (.Values.sidecar.notifiers.searchNamespace | join ",") . }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -259,7 +259,7 @@ containers:
       {{- end }}
       {{- if .Values.sidecar.dashboards.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.dashboards.searchNamespace | join "," }}"
+        value: "{{ tpl (.Values.sidecar.dashboards.searchNamespace | join ",") . }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -349,7 +349,7 @@ containers:
       {{- end }}
       {{- if .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.datasources.searchNamespace | join "," }}"
+        value: "{{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -452,7 +452,7 @@ containers:
       {{- end }}
       {{- if .Values.sidecar.plugins.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ .Values.sidecar.plugins.searchNamespace | join "," }}"
+        value: "{{ tpl (.Values.sidecar.plugins.searchNamespace | join ",") . }}"
       {{- end }}
       {{- if .Values.sidecar.plugins.script }}
       - name: SCRIPT
