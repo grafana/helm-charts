@@ -320,6 +320,8 @@ ingester:
   resources: {}
   # -- Containers to add to the ingester pods
   extraContainers: []
+  # -- Init containers to add to the ingester pods
+  initContainers: []
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -498,6 +500,8 @@ querier:
   resources: {}
   # -- Containers to add to the querier pods
   extraContainers: []
+  # -- Init containers to add to the querier pods
+  initContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
@@ -1097,6 +1101,8 @@ compactor:
   resources: {}
   # -- Containers to add to the compactor pods
   extraContainers: []
+  # -- Init containers to add to the compactor pods
+  initContainers: []
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -1166,6 +1172,8 @@ ruler:
   resources: {}
   # -- Containers to add to the ruler pods
   extraContainers: []
+  # -- Init containers to add to the ruler pods
+  initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
@@ -1305,6 +1313,8 @@ indexGateway:
   resources: {}
   # -- Containers to add to the index-gateway pods
   extraContainers: []
+  # -- Init containers to add to the index-gateway pods
+  initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
