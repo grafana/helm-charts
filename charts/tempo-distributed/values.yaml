@@ -124,22 +124,23 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
-  # -- Affinity for ingester pods.
+  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/component: ingester
-          topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: ingester
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -213,22 +214,22 @@ metricsGenerator:
   # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
-  # -- Affinity for metrics-generator pods.
+  # -- Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/component: metrics-generator
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: metrics-generator
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for metrics-generator pods
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
@@ -332,22 +333,22 @@ distributor:
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- Affinity for distributor pods.
+  # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/component: distributor
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: distributor
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -439,22 +440,22 @@ querier:
   resources: {}
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- Affinity for querier pod.
+  # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/component: querier
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: querier
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -545,22 +546,22 @@ queryFrontend:
   resources: {}
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- Affinity for query-frontend pods
+  # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/component: querier-frontend
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: query-frontend
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -898,22 +899,22 @@ memcached:
   podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
-  # -- Affinity for memcached pods.
+  # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/component: memcached
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: memcached
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   service:
     # -- Annotations for memcached service
     annotations: {}
@@ -1133,22 +1134,22 @@ gateway:
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- Affinity for gateway pods.
+  # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity:
+  affinity: |
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/component: gateway
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                app.kubernetes.io/component: gateway
-            topologyKey: topology.kubernetes.io/zone
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for gateway pods
   nodeSelector: {}
   # -- Tolerations for gateway pods

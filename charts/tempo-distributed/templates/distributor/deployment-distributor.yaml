@@ -133,8 +133,10 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
+      {{- with .Values.distributor.affinity }}
       affinity:
-        {{- toYaml .Values.distributor.affinity | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
       {{- with .Values.distributor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

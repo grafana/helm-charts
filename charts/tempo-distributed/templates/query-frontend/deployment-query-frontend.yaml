@@ -131,8 +131,10 @@ spec:
             {{- end }}
       {{- end}}
       terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
+      {{- with .Values.queryFrontend.affinity }}
       affinity:
-        {{- toYaml .Values.queryFrontend.affinity | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
       {{- with .Values.queryFrontend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

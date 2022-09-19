@@ -88,8 +88,10 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.metricsGenerator.terminationGracePeriodSeconds }}
+      {{- with .Values.metricsGenerator.affinity }}
       affinity:
-        {{- toYaml .Values.metricsGenerator.affinity | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
       {{- with .Values.metricsGenerator.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
