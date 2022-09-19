@@ -1383,7 +1383,23 @@ adminApi:
   podAnnotations: {}
 
   nodeSelector: {}
-  affinity: {}
+  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Soft node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api") | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
 
   # Pod Disruption Budget
   podDisruptionBudget: {}
@@ -1446,7 +1462,23 @@ enterpriseGateway:
   podDisruptionBudget: {}
 
   nodeSelector: {}
-  affinity: {}
+  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Soft node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
 
   securityContext:
     {}
