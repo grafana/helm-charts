@@ -49,6 +49,10 @@ spec:
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.ruler.terminationGracePeriodSeconds }}
+      {{- with .Values.ruler.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: ruler
           image: {{ include "loki.rulerImage" . }}

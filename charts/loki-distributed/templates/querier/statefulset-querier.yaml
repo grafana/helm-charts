@@ -50,6 +50,10 @@ spec:
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
+      {{- with .Values.querier.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: querier
           image: {{ include "loki.querierImage" . }}
