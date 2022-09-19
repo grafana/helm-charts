@@ -42,6 +42,10 @@ spec:
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
+      {{- with .Values.compactor.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: compactor
           image: {{ include "loki.compactorImage" . }}
