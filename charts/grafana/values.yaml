@@ -522,66 +522,66 @@ datasources: {}
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting
 ##
 alerting: {}
-#  rules.yaml: |
-#    apiVersion: 1
-#    groups:
-#      - orgId: 1
-#        name: {{ .Chart.Name }}_my_rule_group
-#        folder: my_first_folder
-#        interval: 60s
-#        rules:
-#          - uid: my_id_1
-#            title: my_first_rule
-#            condition: A
-#            data:
-#              - refId: A
-#                datasourceUid: '-100'
-#                model:
-#                  conditions:
-#                    - evaluator:
-#                        params:
-#                          - 3
-#                        type: gt
-#                      operator:
-#                        type: and
-#                      query:
-#                        params:
-#                          - A
-#                      reducer:
-#                        type: last
-#                      type: query
-#                  datasource:
-#                    type: __expr__
-#                    uid: '-100'
-#                  expression: 1==0
-#                  intervalMs: 1000
-#                  maxDataPoints: 43200
-#                  refId: A
-#                  type: math
-#            dashboardUid: my_dashboard
-#            panelId: 123
-#            noDataState: Alerting
-#            for: 60s
-#            annotations:
-#              some_key: some_value
-#            labels:
-#              team: sre_team_1
-#  contactpoints.yaml: |
-#    apiVersion: 1
-#    contactPoints:
-#      - orgId: 1
-#        name: cp_1
-#        receivers:
-#          - uid: first_uid
-#            type: pagerduty
-#            settings:
-#              integrationKey: XXX
-#              severity: critical
-#              class: ping failure
-#              component: Grafana
-#              group: app-stack
-#              summary: |
-#                {{ `{{ template "default.message" . }}` }}
+  # rules.yaml:
+  #   apiVersion: 1
+  #   groups:
+  #     - orgId: 1
+  #       name: '{{ .Chart.Name }}_my_rule_group'
+  #       folder: my_first_folder
+  #       interval: 60s
+  #       rules:
+  #         - uid: my_id_1
+  #           title: my_first_rule
+  #           condition: A
+  #           data:
+  #             - refId: A
+  #               datasourceUid: '-100'
+  #               model:
+  #                 conditions:
+  #                   - evaluator:
+  #                       params:
+  #                         - 3
+  #                       type: gt
+  #                     operator:
+  #                       type: and
+  #                     query:
+  #                       params:
+  #                         - A
+  #                     reducer:
+  #                       type: last
+  #                     type: query
+  #                 datasource:
+  #                   type: __expr__
+  #                   uid: '-100'
+  #                 expression: 1==0
+  #                 intervalMs: 1000
+  #                 maxDataPoints: 43200
+  #                 refId: A
+  #                 type: math
+  #           dashboardUid: my_dashboard
+  #           panelId: 123
+  #           noDataState: Alerting
+  #           for: 60s
+  #           annotations:
+  #             some_key: some_value
+  #           labels:
+  #             team: sre_team_1
+  # contactpoints.yaml:
+  #   apiVersion: 1
+  #   contactPoints:
+  #     - orgId: 1
+  #       name: cp_1
+  #       receivers:
+  #         - uid: first_uid
+  #           type: pagerduty
+  #           settings:
+  #             integrationKey: XXX
+  #             severity: critical
+  #             class: ping failure
+  #             component: Grafana
+  #             group: app-stack
+  #             summary: |
+  #               {{ `{{ template "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
