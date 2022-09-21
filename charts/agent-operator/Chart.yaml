@@ -3,11 +3,11 @@ name: grafana-agent-operator
 description: A Helm chart for Grafana Agent Operator
 type: application
 version: 0.2.4
-appVersion: "0.26.1"
-home: https://grafana.com/docs/agent/v0.26/
-icon: https://raw.githubusercontent.com/grafana/agent/v0.26.1/docs/assets/logo_and_name.png
+appVersion: "0.27.1"
+home: https://grafana.com/docs/agent/v0.27/
+icon: https://raw.githubusercontent.com/grafana/agent/v0.27.1/docs/assets/logo_and_name.png
 sources:
-  - https://github.com/grafana/agent/tree/v0.26.1/pkg/operator
+  - https://github.com/grafana/agent/tree/v0.27.1/pkg/operator
 maintainers:
   - name: Grafana Agent Team
     email: grafana-agent-team@googlegroups.com
