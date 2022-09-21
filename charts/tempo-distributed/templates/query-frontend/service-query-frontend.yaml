@@ -27,5 +27,12 @@ spec:
       port: 16687
       targetPort: jaeger-metrics
     {{- end }}
+  {{- if .Values.queryFrontend.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.queryFrontend.service.loadBalancerIP  }}
+  {{- end }}
+  {{- with .Values.queryFrontend.service.loadBalancerSourceRanges}}
+  loadBalancerSourceRanges:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}
