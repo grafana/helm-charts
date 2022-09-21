@@ -85,6 +85,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
+            - name: runtime-config
+              mountPath: /var/{{ include "loki.name" . }}-runtime
             - name: data
               mountPath: /var/loki
             {{- with .Values.indexGateway.extraVolumeMounts }}
@@ -116,6 +118,9 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "loki.fullname" . }}-runtime
         {{- with .Values.indexGateway.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
