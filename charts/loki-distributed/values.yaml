@@ -459,7 +459,7 @@ querier:
   # -- Number of replicas for the querier
   replicas: 1
   autoscaling:
-    # -- Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true`
+    # -- Enable autoscaling for the querier, this is only used if `indexGateway.enabled: true`
     enabled: false
     # -- Minimum autoscaling replicas for the querier
     minReplicas: 1
