@@ -16,6 +16,9 @@ podLabels: {}
 # -- Pod security context (runAsUser, etc.)
 podSecurityContext: {}
 
+# -- Container security context (allowPrivilegeEscalation, etc.)
+containerSecurityContext: {}
+
 rbac:
   # -- Toggle to create ClusterRole and ClusterRoleBinding
   create: true
