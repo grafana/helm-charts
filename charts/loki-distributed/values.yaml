@@ -82,6 +82,11 @@ loki:
     server:
       http_listen_port: 3100
 
+    {{- if .Values.loki.commonConfig}}
+    common:
+    {{- toYaml .Values.loki.commonConfig | nindent 2}}
+    {{- end}}
+
     distributor:
       ring:
         kvstore:
@@ -193,6 +198,12 @@ loki:
       cache_ttl: 168h
     filesystem:
       directory: /var/loki/chunks
+
+  # common block (zone awareness)
+  commonConfig:
+    ring:
+      zone_awareness_enabled: false
+      instance_availability_zone: ''
 # -- Uncomment to configure each storage individually
 #   azure: {}
 #   gcs: {}
