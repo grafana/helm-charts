@@ -125,6 +125,9 @@ loki:
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- end}}
 
+    runtime_config:
+      file: /var/{{ include "loki.name" . }}-runtime/runtime.yaml
+
     chunk_store_config:
       max_look_back_period: 0s
 
@@ -201,6 +204,10 @@ loki:
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
+
+# -- Provides a reloadable runtime configuration file for some specific configuration
+runtimeConfig: {}
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
