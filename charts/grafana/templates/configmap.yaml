@@ -60,7 +60,7 @@ data:
 {{ $root := . }}
   {{- range $key, $value := .Values.alerting }}
   {{ $key }}: |
-{{ tpl $value $root | indent 4 }}
+{{ tpl (toYaml $value | indent 4) $root }}
   {{- end -}}
 {{- end -}}
 

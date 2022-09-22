@@ -502,6 +502,10 @@ queryFrontend:
     annotations: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
+    # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
+    loadBalancerIP: ""
+    # -- If type is LoadBalancer limit incoming traffic from IPs.
+    loadBalancerSourceRanges: []
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
