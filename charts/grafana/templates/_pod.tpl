@@ -15,7 +15,7 @@ hostAliases:
 {{- if .Values.priorityClassName }}
 priorityClassName: {{ .Values.priorityClassName }}
 {{- end }}
-{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.sidecar.notifiers.enabled .Values.extraInitContainers (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources)) }}
+{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
 initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
@@ -141,8 +141,8 @@ initContainers:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
 {{- end }}
-{{- if .Values.sidecar.notifiers.enabled }}
-  - name: {{ template "grafana.name" . }}-sc-notifiers
+{{- if and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers }}
+  - name: {{ template "grafana.name" . }}-init-sc-notifiers
     {{- if .Values.sidecar.image.sha }}
     image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -412,6 +412,109 @@ containers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+{{- end}}
+{{- if .Values.sidecar.notifiers.enabled }}
+  - name: {{ template "grafana.name" . }}-sc-notifiers
+    {{- if .Values.sidecar.image.sha }}
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    {{- else }}
+    image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    env:
+      {{- range $key, $value := .Values.sidecar.notifiers.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
+      {{- end }}
+      - name: METHOD
+        value: {{ .Values.sidecar.notifiers.watchMethod }}
+      - name: LABEL
+        value: "{{ .Values.sidecar.notifiers.label }}"
+      {{- if .Values.sidecar.notifiers.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote .Values.sidecar.notifiers.labelValue }}
+      {{- end }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
+      {{- end }}
+      - name: FOLDER
+        value: "/etc/grafana/provisioning/notifiers"
+      - name: RESOURCE
+        value: {{ quote .Values.sidecar.notifiers.resource }}
+      {{- if .Values.sidecar.enableUniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "{{ .Values.sidecar.enableUniqueFilenames }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.searchNamespace }}
+      - name: NAMESPACE
+        value: "{{ tpl (.Values.sidecar.notifiers.searchNamespace | join ",") . }}"
+      {{- end }}
+      {{- if .Values.sidecar.skipTlsVerify }}
+      - name: SKIP_TLS_VERIFY
+        value: "{{ .Values.sidecar.skipTlsVerify }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.script }}
+      - name: SCRIPT
+        value: "{{ .Values.sidecar.notifiers.script }}"
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.userKey | default "admin-user" }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- end }}
+      {{- if not .Values.sidecar.notifiers.skipReload }}
+      - name: REQ_URL
+        value: {{ .Values.sidecar.notifiers.reloadURL }}
+      - name: REQ_METHOD
+        value: POST
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.watchServerTimeout }}
+      {{- if ne .Values.sidecar.notifiers.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.notifiers.watchServerTimeout with .Values.sidecar.notifiers.watchMethod %s" .Values.sidecar.notifiers.watchMethod) }}
+      {{- end }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.notifiers.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.watchClientTimeout }}
+      {{- if ne .Values.sidecar.notifiers.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.notifiers.watchClientTimeout with .Values.sidecar.notifiers.watchMethod %s" .Values.sidecar.notifiers.watchMethod) }}
+      {{- end }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.notifiers.watchClientTimeout }}"
+      {{- end }}
+    {{- with .Values.sidecar.livenessProbe }}
+    livenessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
+    readinessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
+    securityContext:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    volumeMounts:
+      - name: sc-notifiers-volume
+        mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
 {{- if .Values.sidecar.plugins.enabled }}
   - name: {{ template "grafana.name" . }}-sc-plugins
