@@ -2,7 +2,8 @@ rbac:
   create: true
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
   # useExistingRole: name-of-some-(cluster)role
-  pspEnabled: true
+  # For GKE/EKS/AKS use 'type: psp'. For OpenShift use 'type: scc'
+  type: psp
   pspUseAppArmor: true
   namespaced: false
   extraRoleRules: []
@@ -73,7 +74,7 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: grafana/grafana
+  repository: grafana/grafana-enterprise
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -294,7 +295,7 @@ extraContainerVolumes: []
 ##
 persistence:
   type: pvc
-  enabled: false
+  enabled: enabled
   # storageClassName: default
   accessModes:
     - ReadWriteOnce
@@ -435,11 +436,11 @@ enableServiceLinks: true
 
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts: []
-  # - name: secret-files
-  #   mountPath: /etc/secrets
-  #   secretName: grafana-secret-files
-  #   readOnly: true
+extraSecretMounts: 
+    - name: ge-license
+      mountPath: /etc/grafana/license
+      secretName: ge-license
+      readOnly: true
   #   subPath: ""
   #
   # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
@@ -679,6 +680,9 @@ grafana.ini:
     url: https://grafana.net
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ .Values.ingress.hosts | first }}{{ else }}''{{ end }}"
+    root_url: 
+  enterprise:
+    license_path: /etc/grafana/license/license.jwt
 ## grafana Authentication can be enabled with the following values on grafana.ini
  # server:
       # The full public facing url you use in browser, used for redirects and emails

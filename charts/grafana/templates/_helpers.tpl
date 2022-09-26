@@ -172,3 +172,24 @@ Return if ingress supports pathType.
 {{- define "grafana.ingress.supportsPathType" -}}
   {{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) -}}
 {{- end -}}
+
+
+
+{{/* Allow KubeVersion to be overridden. */}}
+{{- define "grafana.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- end -}}
+
+{{/*
+Return if we should create a PodSecurityPoliPodSecurityPolicycy. Takes into account user values and supported kubernetes versions.
+*/}}
+{{- define "grafana.rbac.usePodSecurityPolicy" -}}
+{{- and (semverCompare "< 1.25-0" (include "grafana.kubeVersion" .)) (and .Values.rbac.create (eq .Values.rbac.type "psp")) -}}
+{{- end -}}
+
+{{/*
+Return if we should create a SecurityContextConstraints. Takes into account user values and supported openshift versions.
+*/}}
+{{- define "grafana.rbac.useSecurityContextConstraints" -}}
+{{- and .Values.rbac.create (eq .Values.rbac.type "scc") -}}
+{{- end -}}

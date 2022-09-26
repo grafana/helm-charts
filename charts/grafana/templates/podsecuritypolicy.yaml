@@ -1,4 +1,4 @@
-{{- if .Values.rbac.pspEnabled }}
+{{- if eq (include "grafana.rbac.usePodSecurityPolicy" .) "true" }}
 {{- if .Capabilities.APIVersions.Has "policy/v1beta1/PodSecurityPolicy" }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
