@@ -629,7 +629,7 @@ containers:
   {{- if .Values.command }}
     command:
     {{- range .Values.command }}
-      - {{ . }}
+      - {{ . | quote }}
     {{- end }}
   {{- end}}
     {{- with .Values.containerSecurityContext }}
