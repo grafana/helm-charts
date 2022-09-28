@@ -1021,6 +1021,14 @@ volumes:
     emptyDir: {}
 {{- end -}}
 {{- end -}}
+{{- if .Values.sidecar.alerts.enabled }}
+  - name: sc-alerts-volume
+{{- if .Values.sidecar.alerts.sizeLimit }}
+    emptyDir:
+      sizeLimit: {{ .Values.sidecar.alerts.sizeLimit }}
+{{- else }}
+    emptyDir: {}
+{{- end -}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
 {{- if .Values.sidecar.dashboards.sizeLimit }}
