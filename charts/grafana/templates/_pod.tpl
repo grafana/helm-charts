@@ -1029,6 +1029,7 @@ volumes:
 {{- else }}
     emptyDir: {}
 {{- end -}}
+{{- end -}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
 {{- if .Values.sidecar.dashboards.sizeLimit }}
