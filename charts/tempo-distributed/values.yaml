@@ -1329,11 +1329,6 @@ enterprise:
   # the enterprise gateway is used.
   enabled: false
 
-  # Whether to generate pre-2.0 Grafana Enterprise Metrics resource labels and selectors, or generate new Kubernetes standard selectors.
-  # Rolling upgrade from version 1.7.x without downtime requires this setting to be true. Fresh installation or upgrade with downtime can set
-  # it to false.
-  legacyLabels: false
-
   image:
     # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces

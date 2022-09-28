@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "tempo.name" -}}
-{{- default ( include "tempo.infixName" . ) .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default "tempo" .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -15,20 +15,13 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default ( include "tempo.infixName" . ) .Values.nameOverride -}}
+{{- $name := default "tempo" .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
-{{- end -}}
-
-{{/*
-Calculate the infix for naming
-*/}}
-{{- define "tempo.infixName" -}}
-{{- if and .Values.enterprise.enabled .Values.enterprise.legacyLabels -}}enterprise-traces{{- else -}}tempo{{- end -}}
 {{- end -}}
 
 {{/*
@@ -71,18 +64,6 @@ Calculate image name based on whether enterprise features are requested.  Fallba
 Simple resource labels
 */}}
 {{- define "tempo.labels" -}}
-{{- if .ctx.Values.enterprise.legacyLabels }}
-{{- if .component -}}
-app: {{ include "tempo.name" .ctx }}-{{ .component }}
-{{- else -}}
-app: {{ include "tempo.name" .ctx }}
-{{- end }}
-chart: {{ template "tempo.chart" .ctx }}
-heritage: {{ .ctx.Release.Service }}
-release: {{ .ctx.Release.Name }}
-
-{{- else -}}
-
 helm.sh/chart: {{ include "tempo.chart" .ctx }}
 app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
 app.kubernetes.io/instance: {{ .ctx.Release.Name }}
@@ -96,24 +77,16 @@ app.kubernetes.io/part-of: memberlist
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
-{{- end }}
 {{- end -}}
 
 {{/*
 Simple service selector labels
 */}}
 {{- define "tempo.selectorLabels" -}}
-{{- if .ctx.Values.enterprise.legacyLabels }}
-{{- if .component -}}
-app: {{ include "tempo.name" .ctx }}-{{ .component }}
-{{- end }}
-release: {{ .ctx.Release.Name }}
-{{- else -}}
 app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
 app.kubernetes.io/instance: {{ .ctx.Release.Name }}
 {{- if .component }}
 app.kubernetes.io/component: {{ .component }}
-{{- end }}
 {{- end -}}
 {{- end -}}
 
@@ -245,19 +218,6 @@ Expects the component name in .component on the passed context
 POD labels
 */}}
 {{- define "tempo.podLabels" -}}
-{{- if .ctx.Values.enterprise.legacyLabels }}
-{{- if .component -}}
-app: {{ include "tempo.name" .ctx }}-{{ .component }}
-name: {{ .component }}
-{{- end }}
-{{- if .memberlist }}
-gossip_ring_member: "true"
-{{- end -}}
-{{- if .component }}
-target: {{ .component }}
-release: {{ .ctx.Release.Name }}
-{{- end }}
-{{- else -}}
 helm.sh/chart: {{ include "tempo.chart" .ctx }}
 app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
 app.kubernetes.io/instance: {{ .ctx.Release.Name }}
@@ -268,8 +228,7 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 {{- if .memberlist }}
 app.kubernetes.io/part-of: memberlist
-{{- end }}
-{{- end }}
+{{- end -}}
 {{- end -}}
 
 {{/*

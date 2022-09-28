@@ -12,8 +12,8 @@ Grafana Tempo in MicroService mode
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.2.2 |
-| https://helm.min.io/ | minio(minio) | 8.0.9 |
 
 ## Chart Repo
 
@@ -252,7 +252,6 @@ The memcached default args are removed and should be provided manually. The sett
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
 | enterprise.image.tag | string | `"weekly-r58-94739e17"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
-| enterprise.legacyLabels | bool | `false` |  |
 | enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.annotations | object | `{}` |  |
 | enterpriseGateway.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
