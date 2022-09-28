@@ -437,10 +437,10 @@ enableServiceLinks: true
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
 extraSecretMounts: 
-    - name: ge-license
-      mountPath: /etc/grafana/license
-      secretName: ge-license
-      readOnly: true
+  # - name: ge-license
+  #   mountPath: /etc/grafana/license
+  #   secretName: ge-license
+  #   readOnly: true
   #   subPath: ""
   #
   # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
