@@ -665,13 +665,15 @@ config: |
       default:
         url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       distributor:
-        url: http:///{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ include "tempo.serverGrpcListenPort" . }}
+        url: http://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      distributor_ingest:
+        url: h2c://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4317
       ingester:
         url: http://{{ template "tempo.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       querier:
-        url: http://{{ template "tempo.fullname" . }}querier.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+        url: http://{{ template "tempo.fullname" . }}-querier.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       query_frontend:
-        url: http://{{ template "tempo.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+        url: http://{{ template "tempo.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}{{get .Values.tempo.structuredConfig "http_api_prefix"}}
   {{- end }}
 
   compactor:
