@@ -1,4 +1,6 @@
-{{- if or .Values.rbac.pspEnabled .Values.rbac.sccEnabled }}
+{{- $usePSP := (eq (include "loki.rbac.usePodSecurityPolicy" .) "true") }}
+{{- $useSCC := (eq (include "loki.rbac.useSecurityContextConstraints" .) "true") }}
+{{- if or $usePSP $useSCC }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:

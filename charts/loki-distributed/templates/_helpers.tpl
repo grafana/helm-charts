@@ -164,3 +164,22 @@ livenessProbe:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/* Allow KubeVersion to be overridden. */}}
+{{- define "loki.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- end -}}
+
+{{/*
+Return if we should create a PodSecurityPoliPodSecurityPolicycy. Takes into account user values and supported kubernetes versions.
+*/}}
+{{- define "loki.rbac.usePodSecurityPolicy" -}}
+{{- and (semverCompare "< 1.25-0" (include "loki.kubeVersion" .)) (and .Values.rbac.create (eq .Values.rbac.type "psp")) -}}
+{{- end -}}
+
+{{/*
+Return if we should create a SecurityContextConstraints. Takes into account user values and supported openshift versions.
+*/}}
+{{- define "loki.rbac.useSecurityContextConstraints" -}}
+{{- and .Values.rbac.create (eq .Values.rbac.type "scc") -}}
+{{- end -}}

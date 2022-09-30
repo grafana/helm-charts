@@ -1,4 +1,4 @@
-{{- if .Values.rbac.sccEnabled }}
+{{- if eq (include "loki.rbac.useSecurityContextConstraints" .) "true" }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
