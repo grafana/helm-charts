@@ -5,6 +5,10 @@ metadata:
   name: data-{{ include "loki.rulerFullname" . }}
   labels:
     {{- include "loki.rulerLabels" . | nindent 4 }}
+  {{- with .Values.ruler.persistence.annotations }}
+  annotations: 
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
 spec:
   accessModes:
     - ReadWriteOnce

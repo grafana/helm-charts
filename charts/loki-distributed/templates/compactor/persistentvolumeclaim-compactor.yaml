@@ -5,6 +5,10 @@ metadata:
   name: data-{{ include "loki.compactorFullname" . }}
   labels:
     {{- include "loki.compactorLabels" . | nindent 4 }}
+  {{- with .Values.ruler.persistence.annotations }}
+  annotations: 
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
 spec:
   accessModes:
     - ReadWriteOnce
