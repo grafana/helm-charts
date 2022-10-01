@@ -157,7 +157,7 @@ spec:
     - metadata:
         name: data
         {{- with .Values.ingester.persistence.annotations }}
-        annotations: 
+        annotations:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
       spec:

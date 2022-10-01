@@ -141,7 +141,7 @@ spec:
     - metadata:
         name: data
         {{- with .Values.indexGateway.persistence.annotations }}
-        annotations: 
+        annotations:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
       spec:

@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "loki.compactorLabels" . | nindent 4 }}
   {{- with .Values.compactor.persistence.annotations }}
-  annotations: 
+  annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
 spec:

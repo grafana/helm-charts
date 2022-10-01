@@ -145,7 +145,7 @@ spec:
     - metadata:
         name: data
         {{- with .Values.ruler.persistence.annotations }}
-        annotations: 
+        annotations:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
       spec:

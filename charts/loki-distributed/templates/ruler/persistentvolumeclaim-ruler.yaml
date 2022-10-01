@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "loki.rulerLabels" . | nindent 4 }}
   {{- with .Values.ruler.persistence.annotations }}
-  annotations: 
+  annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
 spec:
