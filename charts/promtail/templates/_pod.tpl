@@ -15,6 +15,7 @@ Pod template used in Daemonset and Deployment
         {{- end }}
     spec:
       serviceAccountName: {{ include "promtail.serviceAccountName" . }}
+      {{ include "promtail.enableServiceLinks" . }}
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}

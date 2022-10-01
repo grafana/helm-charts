@@ -178,6 +178,9 @@ extraEnv: []
 # -- Extra environment variables from secrets or configmaps
 extraEnvFrom: []
 
+# -- Configure enableServiceLinks in pod
+enableServiceLinks: true
+
 # ServiceMonitor configuration
 serviceMonitor:
   # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
