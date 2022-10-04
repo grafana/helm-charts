@@ -1,6 +1,6 @@
 # loki-canary
 
-![Version: 0.9.2](https://img.shields.io/badge/Version-0.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 
@@ -30,6 +30,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | extraArgs | list | `["-labelname=pod","-labelvalue=$(POD_NAME)"]` | Additional CLI args for the canary |
 | extraEnv | list | `[]` | Environment variables to add to the canary pods |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the canary pods |
+| extraVolumeMounts | list | `[]` | Volume mounts to add to the containers |
+| extraVolumes | list | `[]` | Volumes to add to the containers |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.repository | string | `"docker.io/grafana/loki-canary"` | Docker image repository |
