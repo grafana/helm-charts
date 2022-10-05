@@ -729,7 +729,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedChunksFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-frontend
@@ -748,7 +748,7 @@ loki:
             consistent_hash: true
             host: {{ include "loki.memcachedFrontendFullname" . }}
             max_idle_conns: 16
-            service: http
+            service: memcached-client
             timeout: 500ms
             update_interval: 1m
 ```
@@ -769,7 +769,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexQueriesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-index-writes
@@ -790,7 +790,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexWritesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ## Compactor
