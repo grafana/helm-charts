@@ -758,6 +758,44 @@ sidecar:
   livenessProbe: {}
   # Log level default for all sidecars. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. Defaults to INFO
   # logLevel: INFO
+  alerts:
+    enabled: false
+    # Additional environment variables for the alerts sidecar
+    env: {}
+    # Do not reprocess already processed unchanged resources on k8s API reconnect.
+    # ignoreAlreadyProcessed: true
+    # label that the configmaps with alert are marked with
+    label: grafana_alert
+    # value of label that the configmaps with alert are set to
+    labelValue: ""
+    # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+    # logLevel: INFO
+    # If specified, the sidecar will search for alert config-maps inside this namespace.
+    # Otherwise the namespace in which the sidecar is running will be used.
+    # It's also possible to specify ALL to search in all namespaces
+    searchNamespace: null
+    # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
+    watchMethod: WATCH
+    # search in configmap, secret or both
+    resource: both
+    # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
+    # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
+    # watchServerTimeout: 3600
+    #
+    # watchClientTimeout: is a client-side timeout, configuring your local socket.
+    # If you have a network outage dropping all packets with no RST/FIN,
+    # this is how long your client waits before realizing & dropping the connection.
+    # defaults to 66sec (sic!)
+    # watchClientTimeout: 60
+    #
+    # Endpoint to send request to reload alerts
+    reloadURL: "http://localhost:3000/api/admin/provisioning/alerting/reload"
+    # Absolute path to shell script to execute after a alert got reloaded
+    script: null
+    skipReload: false
+    # Deploy the alert sidecar as an initContainer in addition to a container.
+    # Sets the size limit of the alert sidecar emptyDir volume
+    sizeLimit: {}
   dashboards:
     enabled: false
     # Additional environment variables for the dashboards sidecar
