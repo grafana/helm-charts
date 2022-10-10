@@ -64,6 +64,14 @@ data:
   {{- end -}}
 {{- end -}}
 
+{{- if .Values.contactpoints }}
+{{ $root := . }}
+  {{- range $key, $value := .Values.contactpoints }}
+  {{ $key }}: |
+{{ tpl (toYaml $value | indent 4) $root }}
+  {{- end -}}
+{{- end -}}
+
 {{- if .Values.dashboardProviders }}
   {{- range $key, $value := .Values.dashboardProviders }}
   {{ $key }}: |

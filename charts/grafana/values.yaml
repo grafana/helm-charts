@@ -566,22 +566,27 @@ alerting: {}
   #             some_key: some_value
   #           labels:
   #             team: sre_team_1
-  # contactpoints.yaml:
-  #   apiVersion: 1
-  #   contactPoints:
-  #     - orgId: 1
-  #       name: cp_1
-  #       receivers:
-  #         - uid: first_uid
-  #           type: pagerduty
-  #           settings:
-  #             integrationKey: XXX
-  #             severity: critical
-  #             class: ping failure
-  #             component: Grafana
-  #             group: app-stack
-  #             summary: |
-  #               {{ `{{ template "default.message" . }}` }}
+  
+## Configure contact points
+## ref: https://grafana.com/docs/grafana/latest/administration/provisioning/#contact-points
+##
+contactpoints: {}
+#  contactpoints.yaml:
+#    apiVersion: 1
+#    contactPoints:
+#      - orgId: 1
+#        name: cp_1
+#        receivers:
+#          - uid: first_uid
+#            type: pagerduty
+#            settings:
+#              integrationKey: XXX
+#              severity: critical
+#              class: ping failure
+#              component: Grafana
+#              group: app-stack
+#              summary: |
+#                {{ `{{ template "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
