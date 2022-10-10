@@ -335,6 +335,14 @@ dashboards:
       gnetId: 2
       revision: 2
       datasource: Prometheus
+    loki-dashboard-quick-search:
+      gnetId: 12019
+      revision: 2
+      datasource:
+      - name: DS_PROMETHEUS
+        value: Prometheus
+      - name: DS_LOKI
+        value: Loki
     local-dashboard:
       url: https://raw.githubusercontent.com/user/repository/master/dashboards/dashboard.json
 ```
