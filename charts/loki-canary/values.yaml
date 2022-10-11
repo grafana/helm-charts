@@ -86,6 +86,11 @@ nodeSelector: {}
 # -- Tolerations for canary pods
 tolerations: []
 
+# -- Volume mounts to add to the containers
+extraVolumeMounts: []
+# -- Volumes to add to the containers
+extraVolumes: []
+
 # -- The Loki server URL:Port, e.g. loki:3100
 lokiAddress: null
 

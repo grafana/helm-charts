@@ -327,6 +327,10 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
+    # -- You can put here any keys that will be directly added to the config file's 'limits_config' block.
+    # @default -- empty
+    extraLimitsConfig: ""
+
     # -- You can put here any keys that will be directly added to the config file's 'server' block.
     # @default -- empty
     extraServerConfigs: ""
@@ -399,6 +403,9 @@ config:
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
       {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
+
+    limits_config:
+      {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created

@@ -34,6 +34,10 @@ spec:
       - name: {{ include "ga-operator.name" . }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.containerSecurityContext }}
+        securityContext:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- with .Values.resources }}
         resources:
         {{- toYaml . | nindent 10 }}
