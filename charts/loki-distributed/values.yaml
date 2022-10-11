@@ -884,6 +884,8 @@ gateway:
     loadBalancerIP: null
     # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
     loadBalancerSourceRanges: []
+    # -- Set appProtocol for the service
+    appProtocol: null
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
