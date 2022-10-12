@@ -19,6 +19,9 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     {{- if .Values.traces.jaeger.thriftCompact.enabled }}
     - name: distributor-jaeger-thrift-compact
       port: 6831
@@ -42,6 +45,9 @@ spec:
       port: 14250
       protocol: TCP
       targetPort: grpc-jaeger
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.zipkin.enabled }}
     - name: distributor-zipkin
@@ -60,10 +66,16 @@ spec:
       port: 4317
       protocol: TCP
       targetPort: grpc-otlp
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     - name: distributor-otlp-legacy
       port: 55680
       protocol: TCP
       targetPort: grpc-otlp
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.opencensus.enabled }}
     - name: distributor-opencensus
