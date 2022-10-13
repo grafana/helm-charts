@@ -343,6 +343,9 @@ initChownData:
   #  requests:
   #    cpu: 100m
   #    memory: 128Mi
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
 
 
 # Administrator credentials when not using an existing secret (see below)
@@ -1009,12 +1012,6 @@ imageRenderer:
   serviceAccountName: ""
   # image-renderer deployment securityContext
   securityContext: {}
-  # image-renderer deployment container securityContext
-  containerSecurityContext:
-      capabilities:
-        drop: [ 'all' ]
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class

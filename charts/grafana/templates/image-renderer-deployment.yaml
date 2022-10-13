@@ -90,9 +90,11 @@ spec:
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
           {{- end }}
-      {{- with .Values.imageRenderer.containerSecurityContext }}
           securityContext:
-{{ toYaml . | nindent 12 }}
+            capabilities:
+              drop: ['all']
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
           volumeMounts:
             - mountPath: /tmp
               name: image-renderer-tmpfs
