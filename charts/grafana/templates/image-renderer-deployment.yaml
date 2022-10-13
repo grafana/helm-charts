@@ -93,6 +93,7 @@ spec:
       {{- with .Values.imageRenderer.containerSecurityContext }}
           securityContext:
 {{ toYaml . | nindent 12 }}
+      {{- end }}
           volumeMounts:
             - mountPath: /tmp
               name: image-renderer-tmpfs
