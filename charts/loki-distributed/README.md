@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.69.16](https://img.shields.io/badge/Version-0.69.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 0.69.17](https://img.shields.io/badge/Version-0.69.17-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -173,6 +173,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | See values.yaml | NGINX log format |
 | gateway.nginxConfig.resolver | string | `""` | Allows overriding the DNS resolver address nginx will use. |
+| gateway.nginxConfig.serverListens | string | `"listen             8080;"` | Configure the server listener(s), this needs to be customised for IPv6 only clusters |
 | gateway.nginxConfig.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
