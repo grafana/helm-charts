@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.58.1](https://img.shields.io/badge/Version-0.58.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.63.1](https://img.shields.io/badge/Version-0.63.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -166,6 +166,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
+| gateway.service.appProtocol | string | `nil` | Set appProtocol for the service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
@@ -729,7 +730,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedChunksFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-frontend
@@ -748,7 +749,7 @@ loki:
             consistent_hash: true
             host: {{ include "loki.memcachedFrontendFullname" . }}
             max_idle_conns: 16
-            service: http
+            service: memcached-client
             timeout: 500ms
             update_interval: 1m
 ```
@@ -769,7 +770,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexQueriesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-index-writes
@@ -790,7 +791,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexWritesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ## Compactor

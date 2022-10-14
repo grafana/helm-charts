@@ -74,6 +74,9 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
+            - name: http-memberlist
+              containerPort: 7946
+              protocol: TCP
           {{- with .Values.ruler.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
