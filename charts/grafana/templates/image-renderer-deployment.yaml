@@ -29,7 +29,7 @@ spec:
       labels:
         {{- include "grafana.imageRenderer.selectorLabels" . | nindent 8 }}
         {{- with .Values.imageRenderer.podLabels }}
-        {{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
