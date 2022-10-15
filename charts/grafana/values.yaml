@@ -1014,10 +1014,10 @@ imageRenderer:
   securityContext: {}
   # image-renderer deployment container securityContext
   containerSecurityContext:
-      capabilities:
-        drop: ['all']
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
+    capabilities:
+      drop: ['all']
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class
