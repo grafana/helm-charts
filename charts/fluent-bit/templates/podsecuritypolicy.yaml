@@ -1,4 +1,5 @@
 {{- if .Values.rbac.pspEnabled }}
+{{- if .Capabilities.APIVersions.Has "policy/v1beta1/PodSecurityPolicy" }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
@@ -31,4 +32,5 @@ spec:
   readOnlyRootFilesystem: true
   requiredDropCapabilities:
     - ALL
+{{- end }}
 {{- end }}
