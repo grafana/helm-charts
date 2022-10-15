@@ -16,7 +16,7 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.ingesterSelectorLabels" . | nindent 6}}
-  serviceName: ingester
+  serviceName: {{ template "tempo.ingesterFullname" . }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
