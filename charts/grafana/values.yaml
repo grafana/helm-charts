@@ -990,9 +990,10 @@ revisionHistoryLimit: 10
 
 ## Add a seperate remote image renderer deployment/service
 imageRenderer:
-  deploymentStrategy: {}
+  deploymentStrategy:
+    type: RollingUpdate
   # Enable the image-renderer deployment & service
-  enabled: false
+  enabled: true
   replicas: 1
   image:
     # image-renderer Image repository

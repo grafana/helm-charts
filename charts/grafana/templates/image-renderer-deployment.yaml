@@ -19,9 +19,10 @@ spec:
   selector:
     matchLabels:
       {{- include "grafana.imageRenderer.selectorLabels" . | nindent 6 }}
+
   {{- with .Values.imageRenderer.deploymentStrategy }}
   strategy:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml . | trim | nindent 4 }}
   {{- end }}
   template:
     metadata:
