@@ -5,8 +5,8 @@ kind: PodSecurityPolicy
 metadata:
   name: {{ template "grafana.fullname" . }}-test
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
 spec:
