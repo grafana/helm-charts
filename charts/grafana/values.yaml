@@ -992,7 +992,7 @@ revisionHistoryLimit: 10
 imageRenderer:
   deploymentStrategy: {}
   # Enable the image-renderer deployment & service
-  enabled: true
+  enabled: false
   replicas: 1
   image:
     # image-renderer Image repository
