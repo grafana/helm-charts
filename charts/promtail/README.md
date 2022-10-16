@@ -91,7 +91,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
 | deployment.replicaCount | int | `1` |  |
-| enableServiceLinks | bool | `true` | Should enableServiceLinks be enabled. Default to enable |
+| enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
 | extraContainers | object | `{}` |  |
 | extraEnv | list | `[]` | Extra environment variables |
