@@ -1,6 +1,6 @@
 global:
   image:
-    # -- Overrides the Docker registry globally for all images
+  # -- Overrides the Docker registry globally for all images
     registry: null
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
@@ -10,7 +10,6 @@ global:
   dnsService: "kube-dns"
   # -- configures DNS service namespace
   dnsNamespace: "kube-system"
-
 # -- Overrides the chart's name
 nameOverride: null
 
@@ -202,8 +201,9 @@ loki:
   # common block (zone awareness)
   commonConfig:
     ring:
-      zone_awareness_enabled: false
-      instance_availability_zone: ''
+      zone_awareness_enabled: true
+      instance_availability_zone: #topologyKey: kubernetes.io/zone
+
 # -- Uncomment to configure each storage individually
 #   azure: {}
 #   gcs: {}

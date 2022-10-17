@@ -100,8 +100,8 @@ config: |
   
   common:
     ring:
-      zone_awareness_enabled: false
-      instance_availability_zone: none
+      zone_awareness_enabled: true
+      instance_availability_zone: { include "topology.kubernetes.io/region"} 
 
   frontend:
     log_queries_longer_than: 10s
