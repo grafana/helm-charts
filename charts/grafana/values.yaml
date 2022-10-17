@@ -343,6 +343,9 @@ initChownData:
   #  requests:
   #    cpu: 100m
   #    memory: 128Mi
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
 
 
 # Administrator credentials when not using an existing secret (see below)
@@ -987,6 +990,7 @@ revisionHistoryLimit: 10
 
 ## Add a seperate remote image renderer deployment/service
 imageRenderer:
+  deploymentStrategy: {}
   # Enable the image-renderer deployment & service
   enabled: false
   replicas: 1
@@ -1009,6 +1013,12 @@ imageRenderer:
   serviceAccountName: ""
   # image-renderer deployment securityContext
   securityContext: {}
+  # image-renderer deployment container securityContext
+  containerSecurityContext:
+    capabilities:
+      drop: ['all']
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class
