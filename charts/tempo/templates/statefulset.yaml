@@ -42,6 +42,10 @@ spec:
         {{- end }}
         image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
+        {{- with .Values.tempo.pullSecrets }}
+        imagePullSecrets:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         name: tempo
         ports:
         - containerPort: 3100
@@ -95,6 +99,10 @@ spec:
         {{- end }}
         image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag }}
         imagePullPolicy: {{ .Values.tempoQuery.pullPolicy }}
+        {{- with .Values.tempoQuery.pullSecrets }}
+        imagePullSecrets:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         name: tempo-query
         ports:
         - containerPort: 16686
