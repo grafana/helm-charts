@@ -49,7 +49,7 @@ Grafana Tempo Single Binary Mode
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
-| tempo.pullSecrets | list | `[]` |  Image pull secrets for tempo |
+| tempo.pullSecrets | list | `[]` |  |
 | tempo.querier | object | `{}` | Configuration options for the querier |
 | tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
@@ -75,7 +75,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
-| tempoQuery.pullSecrets | list | `[]` |  Image pull secrets for tempo-query |
+| tempoQuery.pullSecrets | list | `[]` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.securityContext | object | `{}` |  |
 | tempoQuery.tag | string | `"1.5.0"` |  |

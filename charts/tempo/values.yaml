@@ -12,9 +12,8 @@ tempo:
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ##
-  # pullSecrets:
-  #   - myRegistryKeySecretName
+  # --- Image pull secrets for tempo
+  pullSecrets: []
 
   updateStrategy: RollingUpdate
   resources: {}
@@ -148,9 +147,8 @@ tempoQuery:
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ##
-  # pullSecrets:
-  #   - myRegistryKeySecretName
+  # --- Image pull secrets for tempo
+  pullSecrets: []
 
   # -- if False the tempo-query container is not deployed
   enabled: true
