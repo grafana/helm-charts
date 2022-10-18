@@ -23014,6 +23014,29 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-4.0.0-weekly.205/mimir-distributed-4.0.0-weekly.205.tgz
     version: 4.0.0-weekly.205
   - apiVersion: v2
+    appVersion: 2.4.0
+    created: "2022-10-18T08:35:45.027970226Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 4.0.12
+    - alias: grafana-agent-operator
+      condition: metaMonitoring.grafanaAgent.installOperator
+      name: grafana-agent-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.5
+    description: Grafana Mimir
+    digest: f408fd44d4d5ca995c048627a2585b9f2f723162c407d345e8b264cf884eaa09
+    home: https://grafana.com/docs/mimir/v2.4.x/
+    icon: https://grafana.com/static/img/logos/logo-mimir.svg
+    kubeVersion: ^1.20.0-0
+    name: mimir-distributed
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/mimir-distributed-3.2.0-rc.0/mimir-distributed-3.2.0-rc.0.tgz
+    version: 3.2.0-rc.0
+  - apiVersion: v2
     appVersion: 2.3.1
     created: "2022-09-29T11:50:16.157299068Z"
     dependencies:
@@ -29683,4 +29706,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-16T04:31:54.90093094Z"
+generated: "2022-10-18T08:35:45.037996932Z"
