@@ -1,4 +1,4 @@
-# ⚠️  DEPRECATEDD - Loki  Simple Scalable chart
+# ⚠️  DEPRECATED - Loki  Simple Scalable chart
 
 This chart was moved to <https://github.com/grafana/loki/tree/main/production/helm/loki>. The new chart is published to `grafana/loki` and this chart is deprecated and no longer maintained.
 
