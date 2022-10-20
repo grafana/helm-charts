@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.5.1](https://img.shields.io/badge/Version-6.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 6.6.0](https://img.shields.io/badge/Version-6.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -100,6 +100,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
+| httpPathPrefix | string | `""` | Base path to server all API routes fro |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |
 | image.repository | string | `"grafana/promtail"` | Docker image repository |

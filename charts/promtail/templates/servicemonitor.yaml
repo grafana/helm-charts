@@ -27,6 +27,9 @@ spec:
       {{- include "promtail.selectorLabels" . | nindent 6 }}
   endpoints:
     - port: http-metrics
+      {{- with .Values.httpPathPrefix }}
+      path: {{ . }}
+      {{- end }}
       {{- with .Values.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}
