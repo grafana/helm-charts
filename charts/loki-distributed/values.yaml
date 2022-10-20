@@ -125,6 +125,9 @@ loki:
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- end}}
 
+    runtime_config:
+      file: /var/{{ include "loki.name" . }}-runtime/runtime.yaml
+
     chunk_store_config:
       max_look_back_period: 0s
 
@@ -201,6 +204,10 @@ loki:
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
+
+# -- Provides a reloadable runtime configuration file for some specific configuration
+runtimeConfig: {}
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -320,6 +327,8 @@ ingester:
   resources: {}
   # -- Containers to add to the ingester pods
   extraContainers: []
+  # -- Init containers to add to the ingester pods
+  initContainers: []
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -498,6 +507,8 @@ querier:
   resources: {}
   # -- Containers to add to the querier pods
   extraContainers: []
+  # -- Init containers to add to the querier pods
+  initContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
@@ -873,6 +884,8 @@ gateway:
     loadBalancerIP: null
     # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
     loadBalancerSourceRanges: []
+    # -- Set appProtocol for the service
+    appProtocol: null
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
@@ -1097,6 +1110,8 @@ compactor:
   resources: {}
   # -- Containers to add to the compactor pods
   extraContainers: []
+  # -- Init containers to add to the compactor pods
+  initContainers: []
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -1166,6 +1181,8 @@ ruler:
   resources: {}
   # -- Containers to add to the ruler pods
   extraContainers: []
+  # -- Init containers to add to the ruler pods
+  initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
@@ -1305,6 +1322,8 @@ indexGateway:
   resources: {}
   # -- Containers to add to the index-gateway pods
   extraContainers: []
+  # -- Init containers to add to the index-gateway pods
+  initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string

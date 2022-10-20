@@ -204,6 +204,17 @@ serviceMonitor:
   # (defines `metric_relabel_configs`)
   metricRelabelings: []
 
+# Extra containers created as part of a Promtail Deployment resource
+# - spec for Container:
+#   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#container-v1-core
+#
+# Note that the key is used as the `name` field, i.e. below will create a
+# container named `promtail-proxy`.
+extraContainers: {}
+  # promtail-proxy:
+  #   image: nginx
+  #   ...
+
 # -- Configure additional ports and services. For each configured port, a corresponding service is created.
 # See values.yaml for details
 extraPorts: {}
@@ -316,6 +327,10 @@ config:
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
 
+    # -- You can put here any keys that will be directly added to the config file's 'limits_config' block.
+    # @default -- empty
+    extraLimitsConfig: ""
+
     # -- You can put here any keys that will be directly added to the config file's 'server' block.
     # @default -- empty
     extraServerConfigs: ""
@@ -388,6 +403,9 @@ config:
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
       {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
+
+    limits_config:
+      {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created

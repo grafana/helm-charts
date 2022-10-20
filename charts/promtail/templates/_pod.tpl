@@ -81,6 +81,12 @@ Pod template used in Daemonset and Deployment
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- if .Values.deployment.enabled }}
+      {{- range $name, $values := .Values.extraContainers }}
+        - name: {{ $name }}
+      {{ toYaml $values | nindent 10 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}

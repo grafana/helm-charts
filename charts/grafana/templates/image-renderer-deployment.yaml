@@ -6,37 +6,37 @@ metadata:
   namespace: {{ template "grafana.namespace" . }}
   labels:
     {{- include "grafana.imageRenderer.labels" . | nindent 4 }}
-{{- if .Values.imageRenderer.labels }}
-{{ toYaml .Values.imageRenderer.labels | indent 4 }}
-{{- end }}
-{{- with .Values.imageRenderer.annotations }}
+    {{- if .Values.imageRenderer.labels }}
+    {{ toYaml .Values.imageRenderer.labels | indent 4 }}
+    {{- end }}
+  {{- with .Values.imageRenderer.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.imageRenderer.replicas }}
   revisionHistoryLimit: {{ .Values.imageRenderer.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "grafana.imageRenderer.selectorLabels" . | nindent 6 }}
-{{- with .Values.imageRenderer.deploymentStrategy }}
+
+  {{- with .Values.imageRenderer.deploymentStrategy }}
   strategy:
-{{ toYaml . | trim | indent 4 }}
-{{- end }}
+    {{- toYaml . | trim | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:
         {{- include "grafana.imageRenderer.selectorLabels" . | nindent 8 }}
-{{- with .Values.imageRenderer.podLabels }}
-{{ toYaml . | indent 8 }}
-{{- end }}
+        {{- with .Values.imageRenderer.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-{{- with .Values.imageRenderer.podAnnotations }}
-{{ toYaml . | indent 8 }}
-{{- end }}
+        {{- with .Values.imageRenderer.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
-
       {{- if .Values.imageRenderer.schedulerName }}
       schedulerName: "{{ .Values.imageRenderer.schedulerName }}"
       {{- end }}
@@ -90,30 +90,29 @@ spec:
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
           {{- end }}
+          {{- with .Values.imageRenderer.containerSecurityContext }}
           securityContext:
-            capabilities:
-              drop: ['all']
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /tmp
               name: image-renderer-tmpfs
-      {{- with .Values.imageRenderer.resources }}
+          {{- with .Values.imageRenderer.resources }}
           resources:
-{{ toYaml . | indent 12 }}
-      {{- end }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.imageRenderer.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- $root := . }}
       {{- with .Values.imageRenderer.affinity }}
       affinity:
-{{ tpl (toYaml .) $root | indent 8 }}
+        {{- tpl (toYaml .) $root | nindent 8 }}
       {{- end }}
       {{- with .Values.imageRenderer.tolerations }}
       tolerations:
-{{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
         - name: image-renderer-tmpfs
