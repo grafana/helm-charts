@@ -35,7 +35,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 * The default scrape configs have been updated to take new and old labels into consideration
 * The config file must be specified as string which can be templated.
   See below for details
-* The config file is now stored in a Secret and no longer in a ConfigMap because it may contain sensitive data, such as basic auth credentials. You can still choose to generate config as a ConfigMap by setting `configmap.enabled` to `true`. If you need secrets in your config, consider injecting them through environment variables using `extraEnvFrom` and setting `extraArgs: ["-config.expand-env=true"]`.
+* The config file is now stored in a Secret and no longer in a ConfigMap because it may contain sensitive data, such as basic auth credentials
 
 Due to the label changes, an existing installation cannot be upgraded without manual interaction.
 There are basically two options:
@@ -80,7 +80,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | config.snippets.extraRelabelConfigs | list | `[]` | You can put here any additional relabel_configs to "kubernetes-pods" job |
 | config.snippets.extraScrapeConfigs | string | empty | You can put here any additional scrape configs you want to add to the config file. |
 | config.snippets.extraServerConfigs | string | empty | You can put here any keys that will be directly added to the config file's 'server' block. |
-| configmap.enabled | bool | `true` | If enabled, promtail config will be created as a ConfigMap instead of a secret |
+| configmap.enabled | bool | `false` | If enabled, promtail config will be created as a ConfigMap instead of a secret |
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers |
 | daemonset.enabled | bool | `true` | Deploys Promtail as a DaemonSet |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
