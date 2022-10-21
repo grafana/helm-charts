@@ -22,7 +22,7 @@ deployment:
 
 configmap:
   # -- If enabled, promtail config will be created as a ConfigMap instead of a secret
-  enabled: true
+  enabled: false
 
 initContainer: []
   # # -- Specifies whether the init container for setting inotify max user instances is to be enabled
