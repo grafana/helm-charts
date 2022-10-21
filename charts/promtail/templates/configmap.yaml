@@ -1,12 +1,12 @@
-{{- if not .Values.configmap.enabled }}
+{{- if .Values.configmap.enabled }}
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
   name: {{ include "promtail.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
-stringData:
+data:
   promtail.yaml: |
     {{- tpl .Values.config.file . | nindent 4 }}
 {{- end }}
