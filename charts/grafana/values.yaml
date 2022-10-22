@@ -17,6 +17,8 @@ serviceAccount:
   create: true
   name:
   nameTest:
+  ## ServiceAccount labels.
+  labels: {}
 ## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
@@ -321,7 +323,7 @@ persistence:
 
 initChownData:
   ## If false, data ownership will not be reset at startup
-  ## This allows the prometheus-server to be run with an arbitrary user
+  ## This allows the grafana-server to be run with an arbitrary user
   ##
   enabled: true
 
