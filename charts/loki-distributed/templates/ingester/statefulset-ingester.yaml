@@ -11,7 +11,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+{{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ .Values.ingester.replicas }}
+{{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
