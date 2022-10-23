@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.compactorFullname" . }}
   labels:
     {{- include "loki.compactorLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
