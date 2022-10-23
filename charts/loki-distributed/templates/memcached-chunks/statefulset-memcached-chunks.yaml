@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedChunksFullname" . }}
   labels:
     {{- include "loki.memcachedChunksLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedChunks.replicas }}
   updateStrategy:
