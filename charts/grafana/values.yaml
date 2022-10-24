@@ -309,6 +309,8 @@ persistence:
   # subPath: ""
   ## Name of an existing PVC. Can be templated.
   # existingClaim:
+  ## Extra labels to apply to a PVC.
+  extraPvcLabels: {}
 
   ## If persistence is not enabled, this allows to mount the
   ## local storage in-memory to improve performance
