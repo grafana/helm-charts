@@ -101,7 +101,7 @@ spec:
             name: {{ template "tempo.fullname" . }}
           name: tempo-conf
         - name: wal
-          emptyDir: {}
+          emptyDir: {{- toYaml .Values.metricsGenerator.walEmptyDir | nindent 12 }}
         {{- with .Values.metricsGenerator.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.26.8](https://img.shields.io/badge/Version-0.26.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.26.9](https://img.shields.io/badge/Version-0.26.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -324,6 +324,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.service.annotations | object | `{}` | Annotations for Metrics Generator service |
 | metricsGenerator.terminationGracePeriodSeconds | int | `300` | Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | metricsGenerator.tolerations | list | `[]` | Tolerations for metrics-generator pods |
+| metricsGenerator.walEmptyDir | object | `{}` | The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory. |
 | multitenancyEnabled | bool | `false` |  |
 | overrides | string | `"overrides: {}\n"` |  |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
