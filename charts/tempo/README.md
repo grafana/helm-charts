@@ -8,14 +8,6 @@ Grafana Tempo Single Binary Mode
 
 * <https://github.com/grafana/tempo>
 
-## Chart Repo
-
-Add the following repo to use the chart:
-
-```console
-helm repo add grafana https://grafana.github.io/helm-charts
-```
-
 ## Values
 
 | Key | Type | Default | Description |
@@ -94,6 +86,24 @@ Add the following repo to use the chart:
 ```console
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+helm install my-release grafana/tempo
+```
+
+## Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```console
+helm delete my-release
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Upgrading
 
