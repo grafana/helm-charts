@@ -35,7 +35,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 * The default scrape configs have been updated to take new and old labels into consideration
 * The config file must be specified as string which can be templated.
   See below for details
-* The config file is now stored in a Secret and no longer in a ConfigMap because it may contain sensitive data, such as basic auth credentials
+* The config file is now stored in a Secret and no longer in a ConfigMap because it may contain sensitive data, such as basic auth credentials. You can still choose to generate config as a ConfigMap by setting `configmap.enabled` to `true`. If you need secrets in your config, consider injecting them through environment variables using `extraEnvFrom` and setting `extraArgs: ["-config.expand-env=true"]`.
 
 Due to the label changes, an existing installation cannot be upgraded without manual interaction.
 There are basically two options:
