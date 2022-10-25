@@ -24949,6 +24949,18 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/oncall-1.0.0/oncall-1.0.0.tgz
     version: 1.0.0
+  phlare:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-10-25T12:21:33.400672669Z"
+    description: "\U0001F525 horizontally-scalable, highly-available, multi-tenant
+      continuous profiling aggregation system"
+    digest: 6d3ec68c1e1a48676b61f12f9cb1e91923f6ab4071b19b26d6d347dcc8bd7e84
+    name: phlare
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/phlare-0.1.0/phlare-0.1.0.tgz
+    version: 0.1.0
   promtail:
   - apiVersion: v2
     appVersion: 2.6.1
@@ -30036,4 +30048,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-25T10:40:09.202008149Z"
+generated: "2022-10-25T12:21:33.415209842Z"
