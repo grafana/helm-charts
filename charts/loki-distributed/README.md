@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.56.8](https://img.shields.io/badge/Version-0.56.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.63.2](https://img.shields.io/badge/Version-0.63.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -69,6 +69,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `loki.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `loki.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `loki.image.tag` |
+| compactor.initContainers | list | `[]` | Init containers to add to the compactor pods |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.persistence.enabled | bool | `false` | Enable creating PVCs for the compactor |
 | compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -165,6 +166,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
+| gateway.service.appProtocol | string | `nil` | Set appProtocol for the service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
@@ -192,6 +194,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.image.registry | string | `nil` | The Docker registry for the index-gateway image. Overrides `loki.image.registry` |
 | indexGateway.image.repository | string | `nil` | Docker image repository for the index-gateway image. Overrides `loki.image.repository` |
 | indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
+| indexGateway.initContainers | list | `[]` | Init containers to add to the index-gateway pods |
 | indexGateway.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
 | indexGateway.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
@@ -224,6 +227,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `loki.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
+| ingester.initContainers | list | `[]` | Init containers to add to the ingester pods |
 | ingester.kind | string | `"StatefulSet"` | Kind of deployment [StatefulSet/Deployment] |
 | ingester.livenessProbe | object | `{}` | liveness probe settings for ingester pods. If empty use `loki.livenessProbe` |
 | ingester.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
@@ -385,7 +389,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
-| querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.affinity | object | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true` |
@@ -404,6 +408,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `loki.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
+| querier.initContainers | list | `[]` | Init containers to add to the querier pods |
 | querier.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
@@ -417,6 +422,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.serviceLabels | object | `{}` | Labels for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
+| querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -482,6 +488,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
+| ruler.initContainers | list | `[]` | Init containers to add to the ruler pods |
 | ruler.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | ruler.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ruler.nodeSelector | object | `{}` | Node selector for ruler pods |
@@ -496,6 +503,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.serviceLabels | object | `{}` | Labels for ruler service |
 | ruler.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ruler to shutdown before it is killed |
 | ruler.tolerations | list | `[]` | Tolerations for ruler pods |
+| runtimeConfig | object | `{}` | Provides a reloadable runtime configuration file for some specific configuration |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `true` | Set this toggle to false to opt out of automounting API credentials for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
@@ -722,7 +730,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedChunksFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-frontend
@@ -741,7 +749,7 @@ loki:
             consistent_hash: true
             host: {{ include "loki.memcachedFrontendFullname" . }}
             max_idle_conns: 16
-            service: http
+            service: memcached-client
             timeout: 500ms
             update_interval: 1m
 ```
@@ -762,7 +770,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexQueriesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-index-writes
@@ -783,7 +791,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexWritesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ## Compactor

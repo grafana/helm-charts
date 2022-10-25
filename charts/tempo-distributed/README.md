@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.26.4](https://img.shields.io/badge/Version-0.26.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.26.9](https://img.shields.io/badge/Version-0.26.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -324,6 +324,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.service.annotations | object | `{}` | Annotations for Metrics Generator service |
 | metricsGenerator.terminationGracePeriodSeconds | int | `300` | Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | metricsGenerator.tolerations | list | `[]` | Tolerations for metrics-generator pods |
+| metricsGenerator.walEmptyDir | object | `{}` | The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory. |
 | multitenancyEnabled | bool | `false` |  |
 | overrides | string | `"overrides: {}\n"` |  |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
@@ -382,6 +383,8 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
+| queryFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
+| queryFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
 | queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for queryFrontendDiscovery service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
@@ -393,7 +396,7 @@ The memcached default args are removed and should be provided manually. The sett
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
 | server.httpListenPort | int | `3100` | HTTP server listen host |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
-| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn error, fatal, panic |
+| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
