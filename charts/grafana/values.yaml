@@ -17,6 +17,8 @@ serviceAccount:
   create: true
   name:
   nameTest:
+  ## ServiceAccount labels.
+  labels: {}
 ## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
@@ -307,6 +309,8 @@ persistence:
   # subPath: ""
   ## Name of an existing PVC. Can be templated.
   # existingClaim:
+  ## Extra labels to apply to a PVC.
+  extraPvcLabels: {}
 
   ## If persistence is not enabled, this allows to mount the
   ## local storage in-memory to improve performance
@@ -321,7 +325,7 @@ persistence:
 
 initChownData:
   ## If false, data ownership will not be reset at startup
-  ## This allows the prometheus-server to be run with an arbitrary user
+  ## This allows the grafana-server to be run with an arbitrary user
   ##
   enabled: true
 
@@ -343,6 +347,9 @@ initChownData:
   #  requests:
   #    cpu: 100m
   #    memory: 128Mi
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
 
 
 # Administrator credentials when not using an existing secret (see below)
@@ -987,6 +994,7 @@ revisionHistoryLimit: 10
 
 ## Add a seperate remote image renderer deployment/service
 imageRenderer:
+  deploymentStrategy: {}
   # Enable the image-renderer deployment & service
   enabled: false
   replicas: 1
@@ -1009,6 +1017,12 @@ imageRenderer:
   serviceAccountName: ""
   # image-renderer deployment securityContext
   securityContext: {}
+  # image-renderer deployment container securityContext
+  containerSecurityContext:
+    capabilities:
+      drop: ['all']
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class

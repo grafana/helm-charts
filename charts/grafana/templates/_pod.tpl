@@ -26,9 +26,10 @@ initContainers:
     image: "{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.initChownData.image.pullPolicy }}
+    {{- with .Values.initChownData.securityContext }}
     securityContext:
-      runAsNonRoot: false
-      runAsUser: 0
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     command: ["chown", "-R", "{{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }}", "/var/lib/grafana"]
     {{- with .Values.initChownData.resources }}
     resources:
@@ -732,7 +733,7 @@ containers:
   {{- if .Values.command }}
     command:
     {{- range .Values.command }}
-      - {{ . }}
+      - {{ . | quote }}
     {{- end }}
   {{- end}}
     {{- with .Values.containerSecurityContext }}
