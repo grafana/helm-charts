@@ -904,10 +904,11 @@ gateway:
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the gateway ingress
-    tls:
-      - secretName: loki-gateway-tls
-        hosts:
-          - gateway.loki.example.com
+    # Disable by default otherwise will cause 308 redirect if you are not specifically setting up TLS secret for Gateway Ingress. 
+    #tls:
+    #  - secretName: loki-gateway-tls
+    #    hosts:
+    #      - gateway.loki.example.com
   # Basic auth configuration
   basicAuth:
     # -- Enables basic authentication for the gateway
