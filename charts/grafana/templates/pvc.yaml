@@ -6,6 +6,9 @@ metadata:
   namespace: {{ template "grafana.namespace" . }}
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
+    {{- with .Values.persistence.extraPvcLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.persistence.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}

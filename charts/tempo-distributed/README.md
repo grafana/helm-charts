@@ -324,6 +324,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.service.annotations | object | `{}` | Annotations for Metrics Generator service |
 | metricsGenerator.terminationGracePeriodSeconds | int | `300` | Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | metricsGenerator.tolerations | list | `[]` | Tolerations for metrics-generator pods |
+| metricsGenerator.walEmptyDir | object | `{}` | The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory. |
 | multitenancyEnabled | bool | `false` |  |
 | overrides | string | `"overrides: {}\n"` |  |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
@@ -395,7 +396,7 @@ The memcached default args are removed and should be provided manually. The sett
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
 | server.httpListenPort | int | `3100` | HTTP server listen host |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
-| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn error, fatal, panic |
+| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |

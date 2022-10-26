@@ -219,6 +219,12 @@ metricsGenerator:
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
   tolerations: []
+  # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
+  walEmptyDir: {}
+    ## Here shows how to configure 1Gi memory as emptyDir.
+    ## Ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#emptydirvolumesource-v1-core
+    # medium: "Memory"
+    # sizeLimit: 1Gi
   # -- Extra volumes for metrics-generator pods
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
@@ -773,7 +779,7 @@ config: |
 server:
   # --  HTTP server listen host
   httpListenPort: 3100
-  # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
+  # -- Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic
   logLevel: info
   # -- Log format. Can be set to logfmt (default) or json.
   logFormat: logfmt

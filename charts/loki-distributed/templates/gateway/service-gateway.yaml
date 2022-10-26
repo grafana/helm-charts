@@ -34,6 +34,9 @@ spec:
       nodePort: {{ .Values.gateway.service.nodePort }}
       {{- end }}
       protocol: TCP
+      {{- with .Values.gateway.service.appProtocol }}
+      appProtocol: {{ . }}
+      {{- end }}
   selector:
     {{- include "loki.gatewaySelectorLabels" . | nindent 4 }}
 {{- end }}
