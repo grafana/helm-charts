@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "tempo.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default "tempo" .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -15,7 +15,7 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := default "tempo" .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -25,12 +25,12 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Docker image name for Tempo
+Docker image selector for Tempo. Hierachy based on global, component, and tempo values.
 */}}
 {{- define "tempo.tempoImage" -}}
-{{- $registry := coalesce .global.registry .service.registry .tempo.registry -}}
-{{- $repository := coalesce .service.repository .tempo.repository -}}
-{{- $tag := coalesce .service.tag .tempo.tag .defaultVersion | toString -}}
+{{- $registry := coalesce .global.registry .component.registry .tempo.registry -}}
+{{- $repository := coalesce .component.repository .tempo.repository -}}
+{{- $tag := coalesce .component.tag .tempo.tag .defaultVersion | toString -}}
 {{- printf "%s/%s:%s" $registry $repository $tag -}}
 {{- end -}}
 
@@ -42,23 +42,52 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Common labels
+Calculate image name based on whether enterprise features are requested.  Fallback to hierarchy handling in `tempo.tempoImage`.
 */}}
-{{- define "tempo.labels" -}}
-helm.sh/chart: {{ include "tempo.chart" . }}
-{{ include "tempo.selectorLabels" . }}
-{{- if or .Chart.AppVersion .Values.tempo.tag }}
-app.kubernetes.io/version: {{ .Values.tempo.tag | default .Chart.AppVersion | quote }}
+{{- define "tempo.imageReference" -}}
+{{ $tempo := "" }}
+{{- if .ctx.Values.enterprise.enabled -}}
+{{ $tempo = merge .ctx.Values.enterprise.image .ctx.Values.tempo.image }}
+{{- else -}}
+{{ $tempo = .ctx.Values.tempo.image }}
+{{- end -}}
+{{- $componentSection := include "tempo.componentSectionFromName" . }}
+{{- if not (hasKey .ctx.Values $componentSection) }}
+{{- print "Component section " $componentSection " does not exist" | fail }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- $component := (index .ctx.Values $componentSection).image | default dict }}
+{{- $dict := dict "tempo" $tempo "component" $component "global" .ctx.Values.global.image "defaultVersion" .ctx.Chart.AppVersion -}}
+{{- include "tempo.tempoImage" $dict -}}
 {{- end -}}
 
 {{/*
-Selector labels
+Simple resource labels
+*/}}
+{{- define "tempo.labels" -}}
+helm.sh/chart: {{ include "tempo.chart" .ctx }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
+{{- if .ctx.Chart.AppVersion }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- end -}}
+
+{{/*
+Simple service selector labels
 */}}
 {{- define "tempo.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "tempo.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -70,21 +99,6 @@ Create the name of the service account to use
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
-{{- end -}}
-
-
-{{/*
-Gossip ring name
-*/}}
-{{- define "tempo.gossipRing.name" -}}
-{{ include "tempo.fullname" . }}-gossip-ring
-{{- end -}}
-
-{{/*
-Gossip ring  Selector labels
-*/}}
-{{- define "tempo.gossipRing.selectorLabels" -}}
-tempo-gossip-member: "true"
 {{- end -}}
 
 {{/*
@@ -130,4 +144,119 @@ Return the appropriate apiVersion for PodDisruptionBudget.
   {{- else -}}
     {{- print "policy/v1beta1" -}}
   {{- end -}}
+{{- end -}}
+
+{{/*
+Resource name template
+*/}}
+{{- define "tempo.resourceName" -}}
+{{ include "tempo.fullname" .ctx }}{{- if .component -}}-{{ .component }}{{- end -}}
+{{- end -}}
+
+{{/*
+Calculate the config from structured and unstructured text input
+*/}}
+{{- define "tempo.calculatedConfig" -}}
+{{ tpl (mergeOverwrite (tpl .Values.config . | fromYaml) .Values.tempo.structuredConfig | toYaml) . }}
+{{- end -}}
+
+{{/*
+Renders the overrides config
+*/}}
+{{- define "tempo.overridesConfig" -}}
+{{ tpl .Values.overrides . }}
+{{- end -}}
+
+{{/*
+The volume to mount for tempo configuration
+*/}}
+{{- define "tempo.configVolume" -}}
+{{- if eq .Values.configStorageType "Secret" -}}
+secret:
+  secretName: {{ tpl .Values.externalConfigSecretName . }}
+{{- else if eq .Values.configStorageType "ConfigMap" -}}
+configMap:
+  name: {{ tpl .Values.externalConfigSecretName . }}
+  items:
+    - key: "tempo.yaml"
+      path: "tempo.yaml"
+    - key: "overrides.yaml"
+      path: "overrides.yaml"
+{{- end -}}
+{{- end -}}
+
+{{/*
+Internal servers http listen port - derived from Loki default
+*/}}
+{{- define "tempo.serverHttpListenPort" -}}
+{{ (((.Values.tempo).structuredConfig).server).http_listen_port | default "3100" }}
+{{- end -}}
+
+{{/*
+Internal servers grpc listen port - derived from Tempo default
+*/}}
+{{- define "tempo.serverGrpcListenPort" -}}
+{{ (((.Values.tempo).structuredConfig).server).grpc_listen_port | default "9095" }}
+{{- end -}}
+
+{{/*
+Memberlist bind port
+*/}}
+{{- define "tempo.memberlistBindPort" -}}
+{{ (((.Values.tempo).structuredConfig).memberlist).bind_port | default "7946" }}
+{{- end -}}
+
+{{/*
+Calculate values.yaml section name from component name
+Expects the component name in .component on the passed context
+*/}}
+{{- define "tempo.componentSectionFromName" -}}
+{{- .component | replace "-" "_" | camelcase | untitle -}}
+{{- end -}}
+
+{{/*
+POD labels
+*/}}
+{{- define "tempo.podLabels" -}}
+helm.sh/chart: {{ include "tempo.chart" .ctx }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end -}}
+{{- end -}}
+
+{{/*
+POD annotations
+*/}}
+{{- define "tempo.podAnnotations" -}}
+{{- if .ctx.Values.useExternalConfig }}
+checksum/config: {{ .ctx.Values.externalConfigVersion }}
+{{- else -}}
+checksum/config: {{ include (print .ctx.Template.BasePath "/configmap-tempo.yaml") .ctx | sha256sum }}
+{{- end }}
+{{- with .ctx.Values.global.podAnnotations }}
+{{ toYaml . }}
+{{- end }}
+{{- if .component }}
+{{- $componentSection := include "tempo.componentSectionFromName" . }}
+{{- if not (hasKey .ctx.Values $componentSection) }}
+{{- print "Component section " $componentSection " does not exist" | fail }}
+{{- end }}
+{{- with (index .ctx.Values $componentSection).podAnnotations }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Cluster name that shows up in dashboard metrics
+*/}}
+{{- define "tempo.clusterName" -}}
+{{ (include "tempo.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
 {{- end -}}
