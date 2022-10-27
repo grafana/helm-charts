@@ -23,7 +23,7 @@ spec:
   ports:
     - name: http-metrics
       port: {{ .Values.gateway.service.port }}
-      targetPort: http
+      targetPort: http-metrics
       {{- if and (eq "NodePort" .Values.gateway.service.type) .Values.gateway.service.nodePort }}
       nodePort: {{ .Values.gateway.service.nodePort }}
       {{- end }}
