@@ -76,6 +76,10 @@ spec:
           {{- if .Values.tempo.extraEnv }}
             {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
           {{- end }}
+        {{- with .Values.tempo.extraEnvFrom }}
+        envFrom:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.tempo.extraVolumeMounts -}}
           {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}

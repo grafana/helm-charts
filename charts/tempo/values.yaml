@@ -99,6 +99,8 @@ tempo:
   extraArgs: {}
   # -- Environment variables to add
   extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the ingester pods
+  extraEnvFrom: []
   # -- Volume mounts to add
   extraVolumeMounts: []
   # - name: extra-volume
