@@ -42,7 +42,7 @@ spec:
             backend:
               {{- if $ingressApiIsStable }}
               service:
-                name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+                name: {{ include "tempo.resourceName" (dict "ctx" $ "component" "gateway") }}
                 port:
                   number: {{ $.Values.gateway.service.port }}
               {{- else }}
