@@ -20,6 +20,10 @@ deployment:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
 
+configmap:
+  # -- If enabled, promtail config will be created as a ConfigMap instead of a secret
+  enabled: false
+
 initContainer: []
   # # -- Specifies whether the init container for setting inotify max user instances is to be enabled
   # - name: init
@@ -203,6 +207,13 @@ serviceMonitor:
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   # (defines `metric_relabel_configs`)
   metricRelabelings: []
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
+  targetLabels: []
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: http
+  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+  tlsConfig: null
 
 # Extra containers created as part of a Promtail Deployment resource
 # - spec for Container:

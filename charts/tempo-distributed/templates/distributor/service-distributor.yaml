@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tempo.distributorFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.distributorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
   {{- with .Values.distributor.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -12,9 +12,9 @@ metadata:
 spec:
   type: {{ .Values.distributor.service.type }}
   ports:
-    - name: http
+    - name: http-metrics
       port: 3100
-      targetPort: http
+      targetPort: http-metrics
     - name: grpc
       port: 9095
       protocol: TCP
@@ -79,5 +79,5 @@ spec:
     {{ toYaml . | nindent 4 }}
   {{- end }}
   selector:
-    {{- include "tempo.distributorSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 4 }}
 

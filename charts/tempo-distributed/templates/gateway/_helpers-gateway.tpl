@@ -1,27 +1,4 @@
 {{/*
-gateway fullname
-*/}}
-{{- define "tempo.gatewayFullname" -}}
-{{ include "tempo.fullname" . }}-gateway
-{{- end }}
-
-{{/*
-gateway common labels
-*/}}
-{{- define "tempo.gatewayLabels" -}}
-{{ include "tempo.labels" . }}
-app.kubernetes.io/component: gateway
-{{- end }}
-
-{{/*
-gateway selector labels
-*/}}
-{{- define "tempo.gatewaySelectorLabels" -}}
-{{ include "tempo.selectorLabels" . }}
-app.kubernetes.io/component: gateway
-{{- end }}
-
-{{/*
 gateway auth secret name
 */}}
 {{- define "tempo.gatewayAuthSecret" -}}
