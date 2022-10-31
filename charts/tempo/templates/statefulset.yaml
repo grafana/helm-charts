@@ -73,8 +73,8 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
-          {{- if .Values.tempo.extraEnv }}
-            {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
+          {{- with .Values.tempo.extraEnv }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
         {{- with .Values.tempo.extraEnvFrom }}
         envFrom:
