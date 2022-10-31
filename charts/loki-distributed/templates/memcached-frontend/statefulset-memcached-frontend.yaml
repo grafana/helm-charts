@@ -52,9 +52,14 @@ spec:
         - name: memcached
           image: {{ include "loki.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
-          {{- with .Values.memcachedFrontend.extraArgs }}
+          {{- if or .Values.memcachedFrontend.extraArgs .Values.memcachedFrontend.persistence.enabled }}
           args:
+          {{- if .Values.memcachedFrontend.persistence.enabled }}
+            - --memory-file=/cache-state/memory_file
+          {{- end }}
+          {{- with .Values.memcachedFrontend.extraArgs }}
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           ports:
             - name: http
@@ -74,6 +79,11 @@ spec:
             {{- toYaml .Values.memcached.readinessProbe | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.memcached.livenessProbe | nindent 12 }}
+          {{- if .Values.memcachedFrontend.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /cache-state
+          {{- end }}
           resources:
             {{- toYaml .Values.memcachedFrontend.resources | nindent 12 }}
         {{- if .Values.memcachedExporter.enabled }}
@@ -107,4 +117,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.memcachedFrontend.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.memcachedFrontend.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.memcachedFrontend.persistence.size | quote }}
+  {{- end }}
 {{- end }}
