@@ -101,8 +101,13 @@ Pod template used in Daemonset and Deployment
       {{- end }}
       volumes:
         - name: config
+          {{- if .Values.configmap.enabled }}
+          configMap:
+            name: {{ include "promtail.fullname" . }}
+          {{- else }}
           secret:
             secretName: {{ include "promtail.fullname" . }}
+          {{- end }}
         {{- with .Values.defaultVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

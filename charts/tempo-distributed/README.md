@@ -1,12 +1,19 @@
 # tempo-distributed
 
-![Version: 0.26.7](https://img.shields.io/badge/Version-0.26.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.27.3](https://img.shields.io/badge/Version-0.27.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
 ## Source Code
 
 * <https://github.com/grafana/tempo>
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.2.2 |
+| https://helm.min.io/ | minio(minio) | 8.0.9 |
 
 ## Chart Repo
 
@@ -16,9 +23,52 @@ Add the following repo to use the chart:
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+helm install my-release grafana/tempo-vulture
+```
+
+## Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```console
+helm delete my-release
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
+
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+### From chart version < 0.27.0
+
+Version 0.27.0:
+
+Many changes have been introduced, including some breaking changes.
+
+The (PR)[https://github.com/grafana/helm-charts/pull/1759] includes additional details.
+
+* **BREAKING CHANGE** centralize selector label handling -- users who wish to keep old values should still be able to use the `nameOverride` and `fullNameOverride` top level keys in their values.
+
+* **BREAKING CHANGE** serviceMonitor has been nested under metaMonitoring -- metamonitoring can be used scrape services as well as install the operator with the following values.  Note also that the port names have changed from `http` to `http-metrics`.
+```yaml
+metaMonitoring:
+  serviceMonitor:
+    enabled: true
+  grafanaAgent:
+    enabled: true
+    installOperator: true
+```
+* minio can now be enabled as part of this chart using the following values
+```yaml
+minio:
+  enabled: true
+```
+* allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
 
 ### From chart version < 0.26.0
 
@@ -138,6 +188,35 @@ The memcached default args are removed and should be provided manually. The sett
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| adminApi.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| adminApi.annotations | object | `{}` |  |
+| adminApi.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for admin_api containers |
+| adminApi.env | list | `[]` |  |
+| adminApi.extraArgs | object | `{}` |  |
+| adminApi.extraContainers | list | `[]` |  |
+| adminApi.extraEnvFrom | list | `[]` |  |
+| adminApi.extraVolumeMounts | list | `[]` |  |
+| adminApi.extraVolumes | list | `[]` |  |
+| adminApi.initContainers | list | `[]` |  |
+| adminApi.nodeSelector | object | `{}` |  |
+| adminApi.persistence.subPath | string | `nil` |  |
+| adminApi.podAnnotations | object | `{}` |  |
+| adminApi.podDisruptionBudget | object | `{}` |  |
+| adminApi.podLabels | object | `{}` |  |
+| adminApi.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| adminApi.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| adminApi.readinessProbe.initialDelaySeconds | int | `45` |  |
+| adminApi.replicas | int | `1` |  |
+| adminApi.resources.requests.cpu | string | `"10m"` |  |
+| adminApi.resources.requests.memory | string | `"32Mi"` |  |
+| adminApi.securityContext | object | `{}` |  |
+| adminApi.service.annotations | object | `{}` |  |
+| adminApi.service.labels | object | `{}` |  |
+| adminApi.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| adminApi.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
+| adminApi.strategy.type | string | `"RollingUpdate"` |  |
+| adminApi.terminationGracePeriodSeconds | int | `60` |  |
+| adminApi.tolerations | list | `[]` |  |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
@@ -157,6 +236,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
+| configStorageType | string | `"ConfigMap"` | Defines what kind of object stores the configuration, a ConfigMap or a Secret. In order to move sensitive information (such as credentials) from the ConfigMap/Secret to a more secure location (e.g. vault), it is possible to use [environment variables in the configuration](https://grafana.com/docs/mimir/latest/operators-guide/configuring/reference-configuration-parameters/#use-environment-variables-in-the-configuration). Such environment variables can be then stored in a separate Secret and injected via the global.extraEnvFrom value. For details about environment injection from a Secret please see [Secrets](https://kubernetes.io/docs/concepts/configuration/secret/#use-case-as-container-environment-variables). |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
@@ -187,7 +267,47 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
-| fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| enterprise.enabled | bool | `false` |  |
+| enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
+| enterprise.image.tag | string | `"weekly-r58-94739e17"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| enterpriseGateway.annotations | object | `{}` |  |
+| enterpriseGateway.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
+| enterpriseGateway.env | list | `[]` |  |
+| enterpriseGateway.extraArgs | object | `{}` |  |
+| enterpriseGateway.extraContainers | list | `[]` |  |
+| enterpriseGateway.extraEnvFrom | list | `[]` |  |
+| enterpriseGateway.extraVolumeMounts | list | `[]` |  |
+| enterpriseGateway.extraVolumes | list | `[]` |  |
+| enterpriseGateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
+| enterpriseGateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
+| enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.gem.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
+| enterpriseGateway.ingress.tls | list | `[{"hosts":["gateway.gem.example.com"],"secretName":"gem-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| enterpriseGateway.initContainers | list | `[]` |  |
+| enterpriseGateway.nodeSelector | object | `{}` |  |
+| enterpriseGateway.persistence.subPath | string | `nil` |  |
+| enterpriseGateway.podAnnotations | object | `{}` |  |
+| enterpriseGateway.podDisruptionBudget | object | `{}` |  |
+| enterpriseGateway.podLabels | object | `{}` |  |
+| enterpriseGateway.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| enterpriseGateway.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| enterpriseGateway.readinessProbe.initialDelaySeconds | int | `45` |  |
+| enterpriseGateway.replicas | int | `1` |  |
+| enterpriseGateway.resources.requests.cpu | string | `"10m"` |  |
+| enterpriseGateway.resources.requests.memory | string | `"32Mi"` |  |
+| enterpriseGateway.securityContext | object | `{}` |  |
+| enterpriseGateway.service.annotations | object | `{}` |  |
+| enterpriseGateway.service.labels | object | `{}` |  |
+| enterpriseGateway.service.port | string | `nil` | If the port is left undefined, the service will listen on the same port as the pod |
+| enterpriseGateway.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| enterpriseGateway.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
+| enterpriseGateway.strategy.type | string | `"RollingUpdate"` |  |
+| enterpriseGateway.terminationGracePeriodSeconds | int | `60` |  |
+| enterpriseGateway.tolerations | list | `[]` |  |
+| enterpriseGateway.useDefaultProxyURLs | bool | `true` |  |
+| externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
+| externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
+| fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
@@ -222,7 +342,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.podLabels | object | `{}` | Labels for gateway pods |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.readinessProbe.httpGet.path | string | `"/"` |  |
-| gateway.readinessProbe.httpGet.port | string | `"http"` |  |
+| gateway.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | gateway.readinessProbe.initialDelaySeconds | int | `15` |  |
 | gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
@@ -240,7 +360,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
-| global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images |
+| global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
@@ -278,6 +398,9 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
+| license.contents | string | `"NOTAVALIDLICENSE"` |  |
+| license.external | bool | `false` |  |
+| license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
@@ -299,6 +422,38 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
+| metaMonitoring.grafanaAgent.annotations | object | `{}` | Annotations to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that. |
+| metaMonitoring.grafanaAgent.enabled | bool | `false` | Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below. Note that you need to configure serviceMonitor in order to have some metrics available. |
+| metaMonitoring.grafanaAgent.installOperator | bool | `false` | Controls whether to install the Grafana Agent Operator and its CRDs. Note that helm will not install CRDs if this flag is enabled during an upgrade. In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds |
+| metaMonitoring.grafanaAgent.labels | object | `{}` | Labels to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.labels for that. |
+| metaMonitoring.grafanaAgent.logs.additionalClientConfigs | list | `[]` | Client configurations for the LogsInstance that will scrape Mimir pods. Follows the format of .remote. |
+| metaMonitoring.grafanaAgent.logs.remote | object | `{"auth":{"passwordSecretKey":"","passwordSecretName":"","tenantId":"","username":""},"url":""}` | Default destination for logs. The config here is translated to Promtail client configuration to write logs to this Loki-compatible remote. Optional. |
+| metaMonitoring.grafanaAgent.logs.remote.auth.passwordSecretKey | string | `""` | The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set. |
+| metaMonitoring.grafanaAgent.logs.remote.auth.passwordSecretName | string | `""` | The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set. |
+| metaMonitoring.grafanaAgent.logs.remote.auth.tenantId | string | `""` | Used to set X-Scope-OrgID header on requests. Usually not used in combination with username and password. |
+| metaMonitoring.grafanaAgent.logs.remote.auth.username | string | `""` | Basic authentication username. Optional. |
+| metaMonitoring.grafanaAgent.logs.remote.url | string | `""` | Full URL for Loki push endpoint. Usually ends in /loki/api/v1/push |
+| metaMonitoring.grafanaAgent.metrics.additionalRemoteWriteConfigs | list | `[]` | Additional remote-write for the MetricsInstance that will scrape Mimir pods. Follows the format of .remote. |
+| metaMonitoring.grafanaAgent.metrics.remote | object | `{"auth":{"passwordSecretKey":"","passwordSecretName":"","username":""},"headers":{},"url":""}` | Default destination for metrics. The config here is translated to remote_write configuration to push metrics to this Prometheus-compatible remote. Optional. Note that you need to configure serviceMonitor in order to have some metrics available. |
+| metaMonitoring.grafanaAgent.metrics.remote.auth.passwordSecretKey | string | `""` | The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set. |
+| metaMonitoring.grafanaAgent.metrics.remote.auth.passwordSecretName | string | `""` | The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set. |
+| metaMonitoring.grafanaAgent.metrics.remote.auth.username | string | `""` | Basic authentication username. Optional. |
+| metaMonitoring.grafanaAgent.metrics.remote.headers | object | `{}` | Used to add HTTP headers to remote-write requests. |
+| metaMonitoring.grafanaAgent.metrics.remote.url | string | `""` | Full URL for Prometheus remote-write. Usually ends in /push |
+| metaMonitoring.grafanaAgent.metrics.scrapeK8s.enabled | bool | `true` | When grafanaAgent.enabled and serviceMonitor.enabled, controls whether to create ServiceMonitors CRs for cadvisor, kubelet, and kube-state-metrics. The scraped metrics are reduced to those pertaining to Mimir pods only. |
+| metaMonitoring.grafanaAgent.metrics.scrapeK8s.kubeStateMetrics | object | `{"labelSelectors":{"app.kubernetes.io/name":"kube-state-metrics"},"namespace":"kube-system"}` | Controls service discovery of kube-state-metrics. |
+| metaMonitoring.grafanaAgent.namespace | string | `""` | Sets the namespace of the resources. Leave empty or unset to use the same namespace as the Helm release. |
+| metaMonitoring.serviceMonitor.annotations | object | `{}` | ServiceMonitor annotations |
+| metaMonitoring.serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
+| metaMonitoring.serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
+| metaMonitoring.serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
+| metaMonitoring.serviceMonitor.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint |
+| metaMonitoring.serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
+| metaMonitoring.serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
+| metaMonitoring.serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
+| metaMonitoring.serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
+| metaMonitoring.serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| metaMonitoring.serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | metricsGenerator.affinity | string | Hard node and soft zone anti-affinity | Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string |
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
 | metricsGenerator.config | object | `{"processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_flush_deadline":"1m","wal":null}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
@@ -317,13 +472,31 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
-| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http","port":3100,"service":true}]` | Default ports |
+| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
 | metricsGenerator.priorityClassName | string | `nil` | The name of the PriorityClass for metrics-generator pods |
 | metricsGenerator.replicas | int | `1` | Number of replicas for the metrics-generator |
 | metricsGenerator.resources | object | `{}` | Resource requests and limits for the metrics-generator |
 | metricsGenerator.service.annotations | object | `{}` | Annotations for Metrics Generator service |
 | metricsGenerator.terminationGracePeriodSeconds | int | `300` | Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | metricsGenerator.tolerations | list | `[]` | Tolerations for metrics-generator pods |
+| metricsGenerator.walEmptyDir | object | `{}` | The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory. |
+| minio.buckets[0].name | string | `"tempo-traces"` |  |
+| minio.buckets[0].policy | string | `"none"` |  |
+| minio.buckets[0].purge | bool | `false` |  |
+| minio.buckets[1].name | string | `"enterprise-traces"` |  |
+| minio.buckets[1].policy | string | `"none"` |  |
+| minio.buckets[1].purge | bool | `false` |  |
+| minio.buckets[2].name | string | `"enterprise-traces-admin"` |  |
+| minio.buckets[2].policy | string | `"none"` |  |
+| minio.buckets[2].purge | bool | `false` |  |
+| minio.configPathmc | string | `"/tmp/minio/mc/"` |  |
+| minio.enabled | bool | `true` |  |
+| minio.mode | string | `"standalone"` |  |
+| minio.persistence.size | string | `"5Gi"` |  |
+| minio.resources.requests.cpu | string | `"100m"` |  |
+| minio.resources.requests.memory | string | `"128Mi"` |  |
+| minio.rootPassword | string | `"supersecret"` |  |
+| minio.rootUser | string | `"grafana-tempo"` |  |
 | multitenancyEnabled | bool | `false` |  |
 | overrides | string | `"overrides: {}\n"` |  |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
@@ -395,22 +568,11 @@ The memcached default args are removed and should be provided manually. The sett
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
 | server.httpListenPort | int | `3100` | HTTP server listen host |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
-| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn error, fatal, panic |
+| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| serviceMonitor.annotations | object | `{}` | ServiceMonitor annotations |
-| serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
-| serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
-| serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
-| serviceMonitor.metricRelabelings | list | `[]` | ServiceMonitor metric relabel configs to apply to samples before ingestion https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint |
-| serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
-| serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
-| serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
-| serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
-| serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
 | tempo.image.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
@@ -420,11 +582,18 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
 | tempo.podSecurityContext | object | `{"fsGroup":1000}` | podSecurityContext holds pod-level security attributes and common container settings |
 | tempo.readinessProbe.httpGet.path | string | `"/ready"` |  |
-| tempo.readinessProbe.httpGet.port | string | `"http"` |  |
+| tempo.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
 | tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
+| tokengenJob.annotations | object | `{}` |  |
+| tokengenJob.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for tokenjobgen containers |
+| tokengenJob.enable | bool | `true` |  |
+| tokengenJob.env | list | `[]` |  |
+| tokengenJob.extraArgs | object | `{}` |  |
+| tokengenJob.extraEnvFrom | list | `[]` |  |
+| tokengenJob.initContainers | list | `[]` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
 | traces.jaeger.thriftBinary.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
@@ -442,6 +611,7 @@ The memcached default args are removed and should be provided manually. The sett
 | traces.otlp.http.receiverConfig | object | `{}` | HTTP receiver advanced config |
 | traces.zipkin.enabled | bool | `false` | Enable Tempo to ingest Zipkin traces |
 | traces.zipkin.receiverConfig | object | `{}` | Zipkin receiver config |
+| useExternalConfig | bool | `false` | Configuration is loaded from the secret called 'externalConfigSecretName'. If 'useExternalConfig' is true, then the configuration is not generated, just consumed.  Top level keys for `tempo.yaml` and `overrides.yaml` are to be provided by the user. |
 
 ## Components
 
@@ -538,7 +708,7 @@ config: |
             endpoint: 0.0.0.0:14268
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}:9095
   ingester:
     lifecycler:
       ring:

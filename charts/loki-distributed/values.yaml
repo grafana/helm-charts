@@ -123,6 +123,12 @@ loki:
     {{- $_ := set .Values.loki.storageConfig.boltdb_shipper "index_gateway_client" $indexGatewayClient }}
     {{- end}}
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
+    {{- if .Values.memcachedIndexQueries.enabled }}
+      index_queries_cache_config:
+        memcached_client:
+          addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedIndexQueriesFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+          consistent_hash: true
+    {{- end}}
     {{- end}}
 
     runtime_config:
@@ -130,6 +136,19 @@ loki:
 
     chunk_store_config:
       max_look_back_period: 0s
+      {{- if .Values.memcachedChunks.enabled }}
+      chunk_cache_config:
+        enable_fifocache: false
+        memcached_client:
+          consistent_hash: true
+          addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedChunksFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+      {{- end }}
+      {{- if .Values.memcachedIndexWrites.enabled }}
+      write_dedupe_cache_config:
+        memcached_client:
+          consistent_hash: true
+          addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedIndexWritesFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+      {{- end }}
 
     table_manager:
       retention_deletes_enabled: false
@@ -141,10 +160,16 @@ loki:
       cache_results: true
       results_cache:
         cache:
+          {{- if .Values.memcachedFrontend.enabled }}
+          memcached_client:
+            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+            consistent_hash: true
+          {{- else }}
           enable_fifocache: true
           fifocache:
             max_size_items: 1024
             ttl: 24h
+          {{- end }}
 
     frontend_worker:
       {{- if .Values.queryScheduler.enabled }}
@@ -511,22 +536,18 @@ querier:
   initContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.querierSelectorLabels" . | nindent 6 }}
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "loki.querierSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "loki.querierSelectorLabels" . | nindent 12 }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: {}
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
   # -- Node selector for querier pods
@@ -1473,6 +1494,17 @@ memcachedChunks:
   nodeSelector: {}
   # -- Tolerations for memcached-chunks pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcachedFrontend:
   # -- Specifies whether the Memcached frontend cache should be enabled
@@ -1522,6 +1554,17 @@ memcachedFrontend:
   nodeSelector: {}
   # -- Tolerations for memcached-frontend pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcachedIndexQueries:
   # -- Specifies whether the Memcached index queries cache should be enabled
@@ -1571,6 +1614,17 @@ memcachedIndexQueries:
   nodeSelector: {}
   # -- Tolerations for memcached-index-queries pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcachedIndexWrites:
   # -- Specifies whether the Memcached index writes cache should be enabled
@@ -1620,6 +1674,17 @@ memcachedIndexWrites:
   nodeSelector: {}
   # -- Tolerations for memcached-index-writes pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created
