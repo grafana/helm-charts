@@ -50,6 +50,17 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.memcachedIndexWrites.terminationGracePeriodSeconds }}
       containers:
         - name: memcached
+          {{- if .Values.memcachedIndexWrites.persistence.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -ec
+                - |
+                  /usr/bin/pkill -10 memcached
+                  sleep 60s
+          {{- end }}
           image: {{ include "loki.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
           {{- if or .Values.memcachedIndexWrites.extraArgs .Values.memcachedIndexWrites.persistence.enabled }}
