@@ -25156,6 +25156,24 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/oncall-1.0.0/oncall-1.0.0.tgz
     version: 1.0.0
+  phlare:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-11-01T12:59:16.694283948Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 4.0.12
+    description: "\U0001F525 horizontally-scalable, highly-available, multi-tenant
+      continuous profiling aggregation system"
+    digest: 5aa500d39e7fd047c14b0688a62f63df7f0ffc3c76d1e581b8e455992278783f
+    name: phlare
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/phlare-0.1.0/phlare-0.1.0.tgz
+    version: 0.1.0
   promtail:
   - apiVersion: v2
     appVersion: 2.6.1
@@ -30405,4 +30423,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-01T02:24:43.052932085Z"
+generated: "2022-11-01T12:59:16.708056727Z"
