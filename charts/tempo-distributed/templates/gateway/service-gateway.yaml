@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tempo.gatewayFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
   labels:
-    {{- include "tempo.gatewayLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
     {{- with .Values.gateway.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -21,13 +21,13 @@ spec:
   loadBalancerIP: {{ .Values.gateway.service.loadBalancerIP }}
   {{- end }}
   ports:
-    - name: http
+    - name: http-metrics
       port: {{ .Values.gateway.service.port }}
-      targetPort: http
+      targetPort: http-metrics
       {{- if and (eq "NodePort" .Values.gateway.service.type) .Values.gateway.service.nodePort }}
       nodePort: {{ .Values.gateway.service.nodePort }}
       {{- end }}
       protocol: TCP
   selector:
-    {{- include "tempo.gatewaySelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 4 }}
 {{- end }}

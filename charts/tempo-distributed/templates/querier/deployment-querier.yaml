@@ -1,10 +1,11 @@
+{{ $dict := dict "ctx" . "component" "querier" "memberlist" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "tempo.querierFullname" . }}
+  name: {{ template "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" . | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.querier.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -15,7 +16,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.querierSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 0
@@ -23,8 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "tempo.querierLabels" . | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -57,7 +57,7 @@ spec:
             {{- with .Values.querier.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.querierImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: querier
           ports:
@@ -65,7 +65,7 @@ spec:
               name: http-memberlist
               protocol: TCP
             - containerPort: 3100
-              name: http
+              name: http-metrics
           {{- with .Values.querier.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -82,9 +82,13 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
             - mountPath: /var/tempo
               name: tempo-querier-store
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- with .Values.querier.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -102,11 +106,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - configMap:
-            name: {{ template "tempo.fullname" . }}
-          name: tempo-conf
+        - name: config
+          {{- include "tempo.configVolume" . | nindent 10 }}
         - name: tempo-querier-store
           emptyDir: {}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
