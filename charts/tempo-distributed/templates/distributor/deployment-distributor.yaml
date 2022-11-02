@@ -1,10 +1,11 @@
+{{ $dict := dict "ctx" . "component" "distributor" "memberlist" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tempo.distributorFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-  {{- include "tempo.distributorLabels" . | nindent 4 }}
+  {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.distributor.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -17,12 +18,11 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.distributorSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "tempo.distributorLabels" . | nindent 8 }}
-        {{- include "tempo.gossipRing.selectorLabels" . | nindent 8 }}
+        {{- include "tempo.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -55,7 +55,7 @@ spec:
             {{- with .Values.distributor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          image: {{ include "tempo.distributorImage" . }}
+          image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: distributor
           ports:
@@ -63,7 +63,7 @@ spec:
               name: http-memberlist
               protocol: TCP
             - containerPort: 3100
-              name: http
+              name: http-metrics
             {{- if .Values.traces.jaeger.thriftCompact.enabled }}
             - containerPort: 6831
               name: jaeger-compact
@@ -122,9 +122,13 @@ spec:
           {{- end }}
           volumeMounts:
             - mountPath: /conf
-              name: tempo-conf
+              name: config
             - mountPath: /var/tempo
               name: tempo-distributor-store
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- with .Values.distributor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -142,11 +146,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - configMap:
-            name: {{ template "tempo.fullname" . }}
-          name: tempo-conf
+        - name: config
+          {{- include "tempo.configVolume" . | nindent 10 }}
         - name: tempo-distributor-store
           emptyDir: {}
+        {{- if .Values.enterprise.enabled }}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         {{- with .Values.distributor.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
