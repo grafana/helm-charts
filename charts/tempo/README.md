@@ -40,6 +40,7 @@ Grafana Tempo Single Binary Mode
 | serviceMonitor.interval | string | `""` |  |
 | tempo.extraArgs | object | `{}` |  |
 | tempo.extraEnv | list | `[]` | Environment variables to add |
+| tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | tempo.ingester | object | `{}` | Configuration options for the ingester |
