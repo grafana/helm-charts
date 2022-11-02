@@ -1,11 +1,12 @@
 {{- if .Values.metricsGenerator.enabled }}
+{{- $dict := dict "ctx" . "component" "metrics-generator" "memberlist" true }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.metricsGeneratorFullname" . }}
+  name: {{ template "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.metricsGeneratorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.metricsGenerator.service.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -21,5 +22,5 @@ spec:
     {{- end }}
     {{- end }}
   selector:
-    {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 4 }}
 {{- end }}

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.queryFrontendFullname" . }}-discovery
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
   {{- with .Values.queryFrontend.serviceDiscovery.annotations }}
   annotations:
     {{ toYaml . | nindent 4 }}
@@ -33,4 +33,4 @@ spec:
       targetPort: jaeger-metrics
     {{- end }}
   selector:
-    {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
