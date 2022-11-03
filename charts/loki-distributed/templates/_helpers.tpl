@@ -164,3 +164,7 @@ livenessProbe:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{- define "loki.config.checksum" -}}
+checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
+{{- end }}
