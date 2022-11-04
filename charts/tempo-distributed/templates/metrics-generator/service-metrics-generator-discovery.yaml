@@ -28,5 +28,5 @@ spec:
     {{- end }}
     {{- end }}
   selector:
-    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 4 }}
+    {{- include "tempo.selectorLabels" $dict | nindent 4 }}
 {{- end }}

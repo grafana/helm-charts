@@ -1,10 +1,11 @@
+{{- $dict := dict "ctx" . "component" "ingester" true }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.resourceName" (dict "ctx" . "component" "ingester") }}-discovery
+  name: {{ template "tempo.resourceName" $dict }}-discovery
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "ingester") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
     prometheus.io/service-monitor: "false"
   {{- with .Values.ingester.service.annotations }}
   annotations:
@@ -26,4 +27,4 @@ spec:
       appProtocol: {{ .Values.ingester.appProtocol.grpc }}
       {{- end }}
   selector:
-    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 4 }}
+    {{- include "tempo.selectorLabels" $dict | nindent 4 }}
