@@ -13,6 +13,9 @@ spec:
       port: 7946
       protocol: TCP
       targetPort: http-memberlist
+      {{- if .Values.tempo.memberlist.appProtocol }}
+      appProtocol: {{ .Values.tempo.memberlist.appProtocol }}
+      {{- end }}
   publishNotReadyAddresses: true
   selector:
     {{- include "tempo.gossipRingSelectorLabels" (dict "ctx" .) | nindent 4 }}
