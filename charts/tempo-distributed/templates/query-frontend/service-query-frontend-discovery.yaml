@@ -20,10 +20,16 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
+      {{- if .Values.queryFrontend.appProtocol.grpc }}
+      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+      {{- end }}
     - name: grpclb
       port: 9096
       protocol: TCP
       targetPort: grpc
+      {{- if .Values.queryFrontend.appProtocol.grpc }}
+      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+      {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
     - name: tempo-query-jaeger-ui
       port: 16686
