@@ -64,6 +64,10 @@ tempo:
     fsGroup: 1000
   # -- Structured tempo configuration
   structuredConfig: {}
+  # -- Memberlist service configuration.
+  memberlist:
+    # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https".
+    appProtocol: null
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -180,6 +184,10 @@ ingester:
   service:
     # -- Annotations for ingester service
     annotations: {}
+  # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -285,6 +293,10 @@ metricsGenerator:
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
+  # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 # Configuration for the distributor
 distributor:
@@ -370,6 +382,10 @@ distributor:
     extend_writes: null
     # -- List of tags that will not be extracted from trace data for search lookups
     search_tags_deny_list: []
+  # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 compactor:
   # -- Number of replicas for the compactor
@@ -471,6 +487,10 @@ querier:
   service:
     # -- Annotations for querier service
     annotations: {}
+  # -- Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -570,6 +590,10 @@ queryFrontend:
   extraVolumeMounts: []
   # -- Extra volumes for query-frontend deployment
   extraVolumes: []
+  # -- Adds the appProtocol field to the queriyFrontend service. This allows queriyFrontend to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 search:
   # -- Enable Tempo search
