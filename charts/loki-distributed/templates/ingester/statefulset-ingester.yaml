@@ -167,4 +167,3 @@ spec:
             storage: {{ .Values.ingester.persistence.size | quote }}
   {{- end }}
 {{- end }}
-
