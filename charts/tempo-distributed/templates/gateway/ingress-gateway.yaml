@@ -3,12 +3,13 @@
 {{- $ingressApiIsStable := eq (include "tempo.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsIngressClassName := eq (include "tempo.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "tempo.ingress.supportsPathType" .) "true" -}}
+{{- $dict := dict "ctx" . "component" "gateway" -}}
 apiVersion: {{ include "tempo.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+  name: {{ include "tempo.resourceName" $dict }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.gateway.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -42,11 +43,11 @@ spec:
             backend:
               {{- if $ingressApiIsStable }}
               service:
-                name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+                name: {{ include "tempo.resourceName" $dict }}
                 port:
                   number: {{ $.Values.gateway.service.port }}
               {{- else }}
-              serviceName: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+              serviceName: {{ include "tempo.resourceName" $dict }}
               servicePort: {{ $.Values.gateway.service.port }}
               {{- end }}
           {{- end }}
