@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tempo.distributorFullname" . }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.distributorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
   {{- with .Values.distributor.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -12,13 +12,16 @@ metadata:
 spec:
   type: {{ .Values.distributor.service.type }}
   ports:
-    - name: http
+    - name: http-metrics
       port: 3100
-      targetPort: http
+      targetPort: http-metrics
     - name: grpc
       port: 9095
       protocol: TCP
       targetPort: 9095
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     {{- if .Values.traces.jaeger.thriftCompact.enabled }}
     - name: distributor-jaeger-thrift-compact
       port: 6831
@@ -42,6 +45,9 @@ spec:
       port: 14250
       protocol: TCP
       targetPort: grpc-jaeger
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.zipkin.enabled }}
     - name: distributor-zipkin
@@ -60,10 +66,16 @@ spec:
       port: 4317
       protocol: TCP
       targetPort: grpc-otlp
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     - name: distributor-otlp-legacy
       port: 55680
       protocol: TCP
       targetPort: grpc-otlp
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.opencensus.enabled }}
     - name: distributor-opencensus
@@ -79,5 +91,5 @@ spec:
     {{ toYaml . | nindent 4 }}
   {{- end }}
   selector:
-    {{- include "tempo.distributorSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 4 }}
 

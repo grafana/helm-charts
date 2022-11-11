@@ -1020,7 +1020,7 @@ imageRenderer:
   # image-renderer deployment container securityContext
   containerSecurityContext:
     capabilities:
-      drop: ['all']
+      drop: ['ALL']
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
   # image-renderer deployment Host Aliases

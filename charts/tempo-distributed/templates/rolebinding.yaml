@@ -5,7 +5,7 @@ metadata:
   name: {{ include "tempo.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" .) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
