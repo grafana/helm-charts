@@ -123,10 +123,32 @@ loki:
     {{- $_ := set .Values.loki.storageConfig.boltdb_shipper "index_gateway_client" $indexGatewayClient }}
     {{- end}}
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
+    {{- if .Values.memcachedIndexQueries.enabled }}
+      index_queries_cache_config:
+        memcached_client:
+          addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedIndexQueriesFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+          consistent_hash: true
     {{- end}}
+    {{- end}}
+
+    runtime_config:
+      file: /var/{{ include "loki.name" . }}-runtime/runtime.yaml
 
     chunk_store_config:
       max_look_back_period: 0s
+      {{- if .Values.memcachedChunks.enabled }}
+      chunk_cache_config:
+        enable_fifocache: false
+        memcached_client:
+          consistent_hash: true
+          addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedChunksFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+      {{- end }}
+      {{- if .Values.memcachedIndexWrites.enabled }}
+      write_dedupe_cache_config:
+        memcached_client:
+          consistent_hash: true
+          addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedIndexWritesFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+      {{- end }}
 
     table_manager:
       retention_deletes_enabled: false
@@ -138,10 +160,16 @@ loki:
       cache_results: true
       results_cache:
         cache:
+          {{- if .Values.memcachedFrontend.enabled }}
+          memcached_client:
+            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+            consistent_hash: true
+          {{- else }}
           enable_fifocache: true
           fifocache:
             max_size_items: 1024
             ttl: 24h
+          {{- end }}
 
     frontend_worker:
       {{- if .Values.queryScheduler.enabled }}
@@ -201,6 +229,10 @@ loki:
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
+
+# -- Provides a reloadable runtime configuration file for some specific configuration
+runtimeConfig: {}
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -278,6 +310,17 @@ ingester:
   kind: StatefulSet
   # -- Number of replicas for the ingester
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the ingester
+    enabled: false
+    # -- Minimum autoscaling replicas for the ingester
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the ingester
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the ingester
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the ingester
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -309,6 +352,8 @@ ingester:
   resources: {}
   # -- Containers to add to the ingester pods
   extraContainers: []
+  # -- Init containers to add to the ingester pods
+  initContainers: []
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -487,24 +532,22 @@ querier:
   resources: {}
   # -- Containers to add to the querier pods
   extraContainers: []
+  # -- Init containers to add to the querier pods
+  initContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.querierSelectorLabels" . | nindent 6 }}
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "loki.querierSelectorLabels" . | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "loki.querierSelectorLabels" . | nindent 12 }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
+  affinity: {}
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
   # -- Node selector for querier pods
@@ -659,6 +702,8 @@ queryScheduler:
               matchLabels:
                 {{- include "loki.querySchedulerSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for query-scheduler pods
   nodeSelector: {}
   # -- Tolerations for query-scheduler pods
@@ -860,6 +905,8 @@ gateway:
     loadBalancerIP: null
     # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
     loadBalancerSourceRanges: []
+    # -- Set appProtocol for the service
+    appProtocol: null
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
@@ -1084,6 +1131,8 @@ compactor:
   resources: {}
   # -- Containers to add to the compactor pods
   extraContainers: []
+  # -- Init containers to add to the compactor pods
+  initContainers: []
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -1153,6 +1202,8 @@ ruler:
   resources: {}
   # -- Containers to add to the ruler pods
   extraContainers: []
+  # -- Init containers to add to the ruler pods
+  initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
@@ -1292,6 +1343,8 @@ indexGateway:
   resources: {}
   # -- Containers to add to the index-gateway pods
   extraContainers: []
+  # -- Init containers to add to the index-gateway pods
+  initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -1441,6 +1494,17 @@ memcachedChunks:
   nodeSelector: {}
   # -- Tolerations for memcached-chunks pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcachedFrontend:
   # -- Specifies whether the Memcached frontend cache should be enabled
@@ -1484,10 +1548,23 @@ memcachedFrontend:
               matchLabels:
                 {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for memcached-frontend pods
   nodeSelector: {}
   # -- Tolerations for memcached-frontend pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcachedIndexQueries:
   # -- Specifies whether the Memcached index queries cache should be enabled
@@ -1537,6 +1614,17 @@ memcachedIndexQueries:
   nodeSelector: {}
   # -- Tolerations for memcached-index-queries pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 memcachedIndexWrites:
   # -- Specifies whether the Memcached index writes cache should be enabled
@@ -1586,6 +1674,17 @@ memcachedIndexWrites:
   nodeSelector: {}
   # -- Tolerations for memcached-index-writes pods
   tolerations: []
+  persistence:
+    # -- Enable creating PVCs which will persist cached data through restarts
+    enabled: false
+    # -- Size of persistent or memory disk
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created

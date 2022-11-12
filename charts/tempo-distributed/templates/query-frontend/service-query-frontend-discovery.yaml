@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.queryFrontendFullname" . }}-discovery
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.queryFrontendLabels" . | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
   {{- with .Values.queryFrontend.serviceDiscovery.annotations }}
   annotations:
     {{ toYaml . | nindent 4 }}
@@ -20,15 +20,23 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
+      {{- if .Values.queryFrontend.appProtocol.grpc }}
+      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+      {{- end }}
+    - name: grpclb
+      port: 9096
+      protocol: TCP
+      targetPort: grpc
+      {{- if .Values.queryFrontend.appProtocol.grpc }}
+      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+      {{- end }}
+    {{- if .Values.queryFrontend.query.enabled }}
     - name: tempo-query-jaeger-ui
       port: 16686
       targetPort: 16686
     - name: tempo-query-metrics
       port: 16687
       targetPort: jaeger-metrics
-    - name: grpclb
-      port: 9096
-      targetPort: grpc
-      protocol: TCP
+    {{- end }}
   selector:
-    {{- include "tempo.queryFrontendSelectorLabels" . | nindent 4 }}
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}

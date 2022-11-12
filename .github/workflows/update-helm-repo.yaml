@@ -18,6 +18,11 @@ on:
         default: ct.yaml
         required: false
         type: string
+      helm_tag_prefix:
+        description: prefix to use when publishing helm tags
+        default: ""
+        required: false
+        type: string
     secrets:
       helm_repo_token:
         description: GitHub api token to use against the helm-charts repository
@@ -33,6 +38,7 @@ env:
   CR_KEYRING: "${{ github.workspace }}/.cr-gpg/secring.gpg"
   CR_PACKAGE_PATH: "${{ github.workspace }}/.cr-release-packages"
   CR_TOOL_PATH: "${{ github.workspace }}/.cr-tool"
+  HELM_TAG_PREFIX: "${{ inputs.helm_tag_prefix }}"
 
 jobs:
   setup:
@@ -151,7 +157,12 @@ jobs:
           version=$(yq ".version" < ${changed}/Chart.yaml)
           echo "::set-output name=chartpath::${changed}"
           echo "::set-output name=desc::${description}"
-          echo "::set-output name=tagname::${name}-${version}"
+          if [[ -n "${HELM_TAG_PREFIX}" ]]; then
+            echo "::set-output name=tagname::${HELM_TAG_PREFIX}-${name}-${version}"
+          else
+            echo "::set-output name=tagname::${name}-${version}"
+          fi
+          echo "::set-output name=packagename::${name}-${version}"
 
       - name: Install CR tool
         run: |
@@ -185,8 +196,8 @@ jobs:
 
             Tag on source: https://github.com/${{ github.repository }}/releases/tag/${{ steps.parse-chart.outputs.tagname }}
           files: |
-            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.tagname }}.tgz
-            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.tagname }}.tgz.prov
+            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz
+            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz.prov
           repository: grafana/helm-charts
           tag_name: ${{ steps.parse-chart.outputs.tagname }}
           token: ${{ secrets.helm_repo_token }}

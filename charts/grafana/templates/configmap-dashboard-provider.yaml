@@ -1,4 +1,4 @@
-{{- if .Values.sidecar.dashboards.enabled }}
+{{- if and .Values.sidecar.dashboards.enabled .Values.sidecar.dashboards.SCProvider }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

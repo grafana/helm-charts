@@ -1,19 +1,34 @@
 global:
   image:
-    # -- Overrides the Docker registry globally for all images
+    # -- Overrides the Docker registry globally for all images, excluding enterprise.
     registry: docker.io
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
-  clusterDomain: "cluster.local"
+  clusterDomain: 'cluster.local'
   # -- configures DNS service name
-  dnsService: "kube-dns"
+  dnsService: 'kube-dns'
   # -- configures DNS service namespace
-  dnsNamespace: "kube-system"
-
-# -- Overrides the chart's computed fullname
-fullnameOverride: ""
+  dnsNamespace: 'kube-system'
+fullnameOverride: ''
 # fullnameOverride: tempo
+
+# -- Configuration is loaded from the secret called 'externalConfigSecretName'.
+# If 'useExternalConfig' is true, then the configuration is not generated, just
+# consumed.  Top level keys for `tempo.yaml` and `overrides.yaml` are to be
+# provided by the user.
+useExternalConfig: false
+
+# -- Defines what kind of object stores the configuration, a ConfigMap or a Secret.
+# In order to move sensitive information (such as credentials) from the ConfigMap/Secret to a more secure location (e.g. vault), it is possible to use [environment variables in the configuration](https://grafana.com/docs/mimir/latest/operators-guide/configuring/reference-configuration-parameters/#use-environment-variables-in-the-configuration).
+# Such environment variables can be then stored in a separate Secret and injected via the global.extraEnvFrom value. For details about environment injection from a Secret please see [Secrets](https://kubernetes.io/docs/concepts/configuration/secret/#use-case-as-container-environment-variables).
+configStorageType: ConfigMap
+
+# -- Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal).
+externalConfigSecretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "config") }}'
+
+# -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
+externalConfigVersion: '0'
 
 tempo:
   image:
@@ -27,7 +42,7 @@ tempo:
   readinessProbe:
     httpGet:
       path: /ready
-      port: http
+      port: http-metrics
     initialDelaySeconds: 30
     timeoutSeconds: 1
   # -- Global labels for all tempo pods
@@ -49,6 +64,10 @@ tempo:
     fsGroup: 1000
   # -- Structured tempo configuration
   structuredConfig: {}
+  # -- Memberlist service configuration.
+  memberlist:
+    # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https".
+    appProtocol: null
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -118,13 +137,13 @@ ingester:
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: kubernetes.io/hostname
         - weight: 75
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.ingesterSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for ingester pods
   nodeSelector: {}
@@ -147,6 +166,8 @@ ingester:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for ingester's persist volume claim
+    annotations: {}
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
@@ -163,6 +184,10 @@ ingester:
   service:
     # -- Annotations for ingester service
     annotations: {}
+  # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -204,19 +229,25 @@ metricsGenerator:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for metrics-generator pods
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
   tolerations: []
+  # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
+  walEmptyDir: {}
+    ## Here shows how to configure 1Gi memory as emptyDir.
+    ## Ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#emptydirvolumesource-v1-core
+    # medium: "Memory"
+    # sizeLimit: 1Gi
   # -- Extra volumes for metrics-generator pods
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
@@ -229,20 +260,43 @@ metricsGenerator:
     - name: http-memberlist
       port: 7946
       service: false
-    - name: http
+    - name: http-metrics
       port: 3100
       service: true
+  # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
-    #  MaxItems is the amount of edges that will be stored in the store.
-    service_graphs_max_items: 10000
-    storage_remote_write: []
-    # - url: http://cortex/api/v1/push
-    #   send_exemplars: true
-    #   headers:
-    #     x-scope-orgid: operations
+    registry:
+      collection_interval: 15s
+      external_labels: {}
+      stale_duration: 15m
+    processor:
+      service_graphs:
+        # -- Additional dimensions to add to the metrics. Dimensions are searched for in the
+        # -- resource and span attributes and are added to the metrics if present.
+        dimensions: []
+        histogram_buckets: [0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4, 12.8]
+        max_items: 10000
+        wait: 10s
+        workers: 10
+      span_metrics:
+        # -- Additional dimensions to add to the metrics along with the default dimensions.
+        # -- Dimensions are searched for in the resource and span attributes and are added to the metrics if present.
+        dimensions: []
+        histogram_buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.02, 2.05, 4.10]
+    storage:
+      path: /var/tempo/wal
+      wal:
+      remote_write_flush_deadline: 1m
+      # -- A list of remote write endpoints.
+      # -- https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
+      remote_write: []
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
+  # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 # Configuration for the distributor
 distributor:
@@ -272,7 +326,7 @@ distributor:
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
-    loadBalancerIP: ""
+    loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
   # -- The name of the PriorityClass for distributor pods
@@ -298,14 +352,14 @@ distributor:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.distributorSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.distributorSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for distributor pods
   nodeSelector: {}
@@ -328,6 +382,10 @@ distributor:
     extend_writes: null
     # -- List of tags that will not be extracted from trace data for search lookups
     search_tags_deny_list: []
+  # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 compactor:
   # -- Number of replicas for the compactor
@@ -405,14 +463,14 @@ querier:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.querierSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.querierSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for querier pods
   nodeSelector: {}
@@ -429,6 +487,10 @@ querier:
   service:
     # -- Annotations for querier service
     annotations: {}
+  # -- Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 # Configuration for the query-frontend
 queryFrontend:
@@ -481,6 +543,10 @@ queryFrontend:
     annotations: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
+    # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
+    loadBalancerIP: ""
+    # -- If type is LoadBalancer limit incoming traffic from IPs.
+    loadBalancerSourceRanges: []
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
@@ -507,14 +573,14 @@ queryFrontend:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.queryFrontendSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.queryFrontendSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for query-frontend pods
   nodeSelector: {}
@@ -524,6 +590,10 @@ queryFrontend:
   extraVolumeMounts: []
   # -- Extra volumes for query-frontend deployment
   extraVolumes: []
+  # -- Adds the appProtocol field to the queriyFrontend service. This allows queriyFrontend to work with istio protocol selection.
+  appProtocol:
+    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+    grpc: null
 
 search:
   # -- Enable Tempo search
@@ -549,7 +619,7 @@ traces:
       # -- Jaeger Thrift Compact receiver config
       receiverConfig: {}
     thriftHttp:
-       # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
+      # -- Enable Tempo to ingest Jaeger Thrift HTTP traces
       enabled: false
       # -- Jaeger Thrift HTTP receiver config
       receiverConfig: {}
@@ -577,7 +647,6 @@ traces:
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
 
-
 # -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
 
 # @default -- See values.yaml
@@ -585,6 +654,52 @@ config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
   search_enabled: {{ .Values.search.enabled }}
   metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
+
+  {{- if .Values.enterprise.enabled }}
+  license:
+    path: "/license/license.jwt"
+
+  admin_api:
+    leader_election:
+      enabled: true
+      ring:
+        kvstore:
+          store: "memberlist"
+
+  {{- if .Values.minio.enabled }}
+  admin_client:
+    storage:
+      backend: s3
+      s3:
+        access_key_id: {{ .Values.minio.rootUser }}
+        bucket_name: enterprise-traces-admin
+        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+        insecure: true
+        secret_access_key: {{ .Values.minio.rootPassword }}
+    {{- end }}
+  {{- end }}
+
+  {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.useDefaultProxyURLs }}
+  gateway:
+    proxy:
+      admin_api:
+        url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      compactor:
+        url: http://{{ template "tempo.fullname" . }}-compactor.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      default:
+        url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      distributor:
+        url: http://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      distributor_ingest:
+        url: h2c://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4317
+      ingester:
+        url: http://{{ template "tempo.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      querier:
+        url: http://{{ template "tempo.fullname" . }}-querier.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
+      query_frontend:
+        url: http://{{ template "tempo.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}{{get .Values.tempo.structuredConfig "http_api_prefix"}}
+  {{- end }}
+
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
@@ -597,12 +712,11 @@ config: |
       kvstore:
         store: memberlist
     processor:
-      service_graphs:
-        max_items: {{ .Values.metricsGenerator.config.service_graphs_max_items }}
+      {{- toYaml .Values.metricsGenerator.config.processor | nindent 6 }}
     storage:
-      path: /var/tempo/wal
-      remote_write:
-        {{- toYaml .Values.metricsGenerator.config.storage_remote_write | nindent 6}}
+      {{- toYaml .Values.metricsGenerator.config.storage | nindent 6 }}
+    registry:
+      {{- toYaml .Values.metricsGenerator.config.registry | nindent 6 }}
   {{- end }}
   distributor:
     ring:
@@ -678,7 +792,7 @@ config: |
     {{- end }}
   querier:
     frontend_worker:
-      frontend_address: {{ include "tempo.queryFrontendFullname" . }}-discovery:9095
+      frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}:9095
       {{- if .Values.querier.config.frontend_worker.grpc_client_config }}
       grpc_client_config:
         {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
@@ -749,7 +863,7 @@ config: |
 server:
   # --  HTTP server listen host
   httpListenPort: 3100
-  # -- Log level. Can be set to trace, debug, info (default), warn error, fatal, panic
+  # -- Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic
   logLevel: info
   # -- Log format. Can be set to logfmt (default) or json.
   logFormat: logfmt
@@ -757,6 +871,7 @@ server:
   grpc_server_max_recv_msg_size: 4194304
   # -- Max gRPC message size that can be sent
   grpc_server_max_send_msg_size: 4194304
+
 # To configure a different storage backend instead of local storage:
 # storage:
 #   trace:
@@ -817,14 +932,14 @@ memcached:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.memcachedSelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.memcachedSelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   service:
     # -- Annotations for memcached service
@@ -845,32 +960,112 @@ memcachedExporter:
     # -- Memcached Exporter resource requests and limits
   resources: {}
 
-# ServiceMonitor configuration
-serviceMonitor:
-  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: false
-  # -- Alternative namespace for ServiceMonitor resources
-  namespace: null
-  # -- Namespace selector for ServiceMonitor resources
-  namespaceSelector: {}
-  # -- ServiceMonitor annotations
-  annotations: {}
-  # -- Additional ServiceMonitor labels
-  labels: {}
-  # -- ServiceMonitor scrape interval
-  interval: null
-  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
-  scrapeTimeout: null
-  # -- ServiceMonitor relabel configs to apply to samples before scraping
-  # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-  relabelings: []
-  # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
-  # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
-  metricRelabelings: []
-  # -- ServiceMonitor will use http by default, but you can pick https as well
-  scheme: http
-  # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
-  tlsConfig: null
+metaMonitoring:
+  # ServiceMonitor configuration
+  serviceMonitor:
+    # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+    enabled: false
+    # -- Alternative namespace for ServiceMonitor resources
+    namespace: null
+    # -- Namespace selector for ServiceMonitor resources
+    namespaceSelector: {}
+    # -- ServiceMonitor annotations
+    annotations: {}
+    # -- Additional ServiceMonitor labels
+    labels: {}
+    # -- ServiceMonitor scrape interval
+    interval: null
+    # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+    scrapeTimeout: null
+    # -- ServiceMonitor relabel configs to apply to samples before scraping
+    # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    relabelings: []
+    # -- ServiceMonitor metric relabel configs to apply to samples before ingestion
+    # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+    metricRelabelings: []
+    # -- ServiceMonitor will use http by default, but you can pick https as well
+    scheme: http
+    # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
+    tlsConfig: null
+
+  # metaMonitoringAgent configures the built in Grafana Agent that can scrape metrics and logs and send them to a local or remote destination
+  grafanaAgent:
+    # -- Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the
+    # ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below.
+    # Note that you need to configure serviceMonitor in order to have some metrics available.
+    enabled: false
+
+    # -- Controls whether to install the Grafana Agent Operator and its CRDs.
+    # Note that helm will not install CRDs if this flag is enabled during an upgrade.
+    # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
+    installOperator: false
+
+    logs:
+      # -- Default destination for logs. The config here is translated to Promtail client
+      # configuration to write logs to this Loki-compatible remote. Optional.
+      remote:
+        # -- Full URL for Loki push endpoint. Usually ends in /loki/api/v1/push
+        url: ''
+
+        auth:
+          # -- Used to set X-Scope-OrgID header on requests. Usually not used in combination with username and password.
+          tenantId: ''
+
+          # -- Basic authentication username. Optional.
+          username: ''
+
+          # -- The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set.
+          passwordSecretName: ''
+          # -- The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set.
+          passwordSecretKey: ''
+
+      # -- Client configurations for the LogsInstance that will scrape Mimir pods. Follows the format of .remote.
+      additionalClientConfigs: []
+
+    metrics:
+      # -- Default destination for metrics. The config here is translated to remote_write
+      # configuration to push metrics to this Prometheus-compatible remote. Optional.
+      # Note that you need to configure serviceMonitor in order to have some metrics available.
+      remote:
+        # -- Full URL for Prometheus remote-write. Usually ends in /push
+        url: ''
+
+        # -- Used to add HTTP headers to remote-write requests.
+        headers: {}
+        auth:
+          # -- Basic authentication username. Optional.
+          username: ''
+
+          # -- The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set.
+          passwordSecretName: ''
+          # -- The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set.
+          passwordSecretKey: ''
+
+      # -- Additional remote-write for the MetricsInstance that will scrape Mimir pods. Follows the format of .remote.
+      additionalRemoteWriteConfigs: []
+
+      scrapeK8s:
+        # -- When grafanaAgent.enabled and serviceMonitor.enabled, controls whether to create ServiceMonitors CRs
+        # for cadvisor, kubelet, and kube-state-metrics. The scraped metrics are reduced to those pertaining to
+        # Mimir pods only.
+        enabled: true
+
+        # -- Controls service discovery of kube-state-metrics.
+        kubeStateMetrics:
+          namespace: kube-system
+          labelSelectors:
+            app.kubernetes.io/name: kube-state-metrics
+
+    # -- Sets the namespace of the resources. Leave empty or unset to use the same namespace as the Helm release.
+    namespace: ''
+
+    # -- Labels to add to all monitoring.grafana.com custom resources.
+    # Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.labels for that.
+    labels: {}
+
+    # -- Annotations to add to all monitoring.grafana.com custom resources.
+    # Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that.
+    annotations: {}
 
 # Rules for the Prometheus Operator
 prometheusRule:
@@ -892,6 +1087,30 @@ prometheusRule:
   #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
   #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
   #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+
+minio:
+  enabled: true
+  mode: standalone
+  rootUser: grafana-tempo
+  rootPassword: supersecret
+  buckets:
+    - name: tempo-traces
+      policy: none
+      purge: false
+    - name: enterprise-traces
+      policy: none
+      purge: false
+    - name: enterprise-traces-admin
+      policy: none
+      purge: false
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  # Changed the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root and OpenShift will not permit this.
+  configPathmc: '/tmp/minio/mc/'
 
 # Configuration for the gateway
 gateway:
@@ -948,14 +1167,14 @@ gateway:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              {{- include "tempo.gatewaySelectorLabels" . | nindent 10 }}
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 10 }}
           topologyKey: kubernetes.io/hostname
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
           podAffinityTerm:
             labelSelector:
               matchLabels:
-                {{- include "tempo.gatewaySelectorLabels" . | nindent 12 }}
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Node selector for gateway pods
   nodeSelector: {}
@@ -1016,7 +1235,7 @@ gateway:
   readinessProbe:
     httpGet:
       path: /
-      port: http
+      port: http-metrics
     initialDelaySeconds: 15
     timeoutSeconds: 1
   nginxConfig:
@@ -1026,9 +1245,9 @@ gateway:
               '"$request" $body_bytes_sent "$http_referer" '
               '"$http_user_agent" "$http_x_forwarded_for"';
     # -- Allows appending custom configuration to the server block
-    serverSnippet: ""
+    serverSnippet: ''
     # -- Allows appending custom configuration to the http block
-    httpSnippet: ""
+    httpSnippet: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -1086,39 +1305,39 @@ gateway:
           }
 
           location = /jaeger/api/traces {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:14268/api/traces;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:14268/api/traces;
           }
 
           location = /zipkin/spans {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:9411/spans;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:9411/spans;
           }
 
           location = /otlp/v1/traces {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
           }
 
           location ^~ /api {
-            proxy_pass       http://{{ include "tempo.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           location = /flush {
-            proxy_pass       http://{{ include "tempo.ingesterFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           location = /shutdown {
-            proxy_pass       http://{{ include "tempo.ingesterFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           location = /distributor/ring {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           location = /ingester/ring {
-            proxy_pass       http://{{ include "tempo.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           location = /compactor/ring {
-            proxy_pass       http://{{ include "tempo.compactorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
@@ -1126,3 +1345,213 @@ gateway:
           {{- end }}
         }
       }
+
+##############################################################################
+# The values in and after the `enterprise:` key configure the enterprise features
+enterprise:
+  # Enable enterprise features. License must be provided, nginx gateway is not installed, instead
+  # the enterprise gateway is used.
+  enabled: false
+
+  image:
+    # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
+    repository: grafana/enterprise-traces
+    # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
+    tag: weekly-r58-94739e17
+    # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
+
+# In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
+# license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
+# To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
+# To use your own Kubernetes Secret, `--set license.external=true`.
+license:
+  contents: 'NOTAVALIDLICENSE'
+  external: false
+  secretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "license") }}'
+
+# Settings for the initial admin(istrator) token generator job. Can only be enabled if
+# enterprise.enabled is true - requires license.
+tokengenJob:
+  enable: true
+  extraArgs: {}
+  env: []
+  extraEnvFrom: []
+  annotations: {}
+  initContainers: []
+  # -- The SecurityContext for tokenjobgen containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+# Settings for the admin_api service providing authentication and authorization service.
+# Can only be enabled if enterprise.enabled is true - requires license.
+adminApi:
+  replicas: 1
+
+  annotations: {}
+  service:
+    annotations: {}
+    labels: {}
+
+  initContainers: []
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  nodeSelector: {}
+  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Soft node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api") | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  securityContext: {}
+
+  # -- The SecurityContext for admin_api containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  env: []
+  extraEnvFrom: []
+
+# Settings for the gateway service providing authentication and authorization via the admin_api.
+# Can only be enabled if enterprise.enabled is true - requires license.
+enterpriseGateway:
+  # If you want to use your own proxy URLs, set this to false.
+  useDefaultProxyURLs: true
+  replicas: 1
+
+  annotations: {}
+  service:
+    annotations: {}
+    labels: {}
+    # -- If the port is left undefined, the service will listen on the same port as the pod
+    port: null
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  podLabels: {}
+  podAnnotations: {}
+
+  # Pod Disruption Budget
+  podDisruptionBudget: {}
+
+  nodeSelector: {}
+  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Soft node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
+            topologyKey: kubernetes.io/hostname
+        - weight: 75
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+
+  securityContext:
+    {}
+
+    # -- The SecurityContext for gateway containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+
+  initContainers: []
+
+  extraArgs: {}
+
+  persistence:
+    subPath:
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+  terminationGracePeriodSeconds: 60
+
+  tolerations: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  env: []
+  extraEnvFrom: []
+
+  # Ingress configuration
+  ingress:
+    # -- Specifies whether an ingress for the gateway should be created
+    enabled: false
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: gateway
+    # -- Annotations for the gateway ingress
+    annotations: {}
+    # -- Hosts configuration for the gateway ingress
+    hosts:
+      - host: gateway.gem.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the gateway ingress
+    tls:
+      - secretName: gem-gateway-tls
+        hosts:
+          - gateway.gem.example.com
