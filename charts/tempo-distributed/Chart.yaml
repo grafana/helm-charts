@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 0.26.8
+version: 0.27.7
 appVersion: 1.5.0
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
@@ -19,3 +19,15 @@ maintainers:
   - name: mapno
   - name: BitProcessor
   - name: faustodavid
+  - name: zalegrala
+dependencies:
+  - name: minio
+    alias: minio
+    version: 8.0.9
+    repository: https://helm.min.io/
+    condition: minio.enabled
+  - name: grafana-agent-operator
+    alias: grafana-agent-operator
+    version: 0.2.2
+    repository: https://grafana.github.io/helm-charts
+    condition: metaMonitoring.grafanaAgent.installOperator
