@@ -588,7 +588,7 @@ alerting: {}
   #             component: Grafana
   #             group: app-stack
   #             summary: |
-  #               {{ `{{ template "default.message" . }}` }}
+  #               {{ `{{ include "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels

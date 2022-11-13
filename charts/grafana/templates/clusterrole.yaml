@@ -8,7 +8,7 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  name: {{ template "grafana.fullname" . }}-clusterrole
+  name: {{ include "grafana.fullname" . }}-clusterrole
 {{- if or .Values.sidecar.dashboards.enabled (or .Values.rbac.extraClusterRoleRules (or .Values.sidecar.datasources.enabled .Values.sidecar.plugins.enabled)) }}
 rules:
   {{- if or .Values.sidecar.dashboards.enabled (or .Values.sidecar.datasources.enabled .Values.sidecar.plugins.enabled) }}
