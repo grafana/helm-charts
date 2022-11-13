@@ -942,7 +942,7 @@ containers:
     {{- end }}
     {{- with .Values.lifecycleHooks }}
     lifecycle:
-      {{- tpl (. | toYaml) $root | nindent 6 }}
+      {{- tpl (toYaml .) $root | nindent 6 }}
     {{- end }}
     {{- with .Values.resources }}
     resources:
