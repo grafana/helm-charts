@@ -11,8 +11,8 @@ spec:
   podSelector:
     matchLabels:
       {{- include "grafana.imageRenderer.selectorLabels" . | nindent 6 }}
-      {{- if .Values.imageRenderer.podLabels }}
-      {{- toYaml .Values.imageRenderer.podLabels | nindent 6 }}
+      {{- with .Values.imageRenderer.podLabels }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
 
   policyTypes:

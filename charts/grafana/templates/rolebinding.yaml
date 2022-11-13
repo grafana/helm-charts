@@ -1,4 +1,4 @@
-{{- if .Values.rbac.create -}}
+{{- if .Values.rbac.create }}
 apiVersion: {{ include "grafana.rbac.apiVersion" . }}
 kind: RoleBinding
 metadata:
@@ -22,4 +22,4 @@ subjects:
 - kind: ServiceAccount
   name: {{ include "grafana.serviceAccountName" . }}
   namespace: {{ include "grafana.namespace" . }}
-{{- end -}}
+{{- end }}

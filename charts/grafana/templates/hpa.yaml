@@ -1,3 +1,4 @@
+{{- $sts := list "sts" "StatefulSet" -}}
 {{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -12,7 +13,7 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    {{- if eq .Values.persistence.type "statefulset" }}
+    {{- if has .Values.persistence.type $sts }}
     kind: StatefulSet
     {{- else }}
     kind: Deployment

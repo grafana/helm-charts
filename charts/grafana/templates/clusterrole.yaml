@@ -4,10 +4,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
-{{- with .Values.annotations }}
+  {{- with .Values.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: {{ template "grafana.fullname" . }}-clusterrole
 {{- if or .Values.sidecar.dashboards.enabled (or .Values.rbac.extraClusterRoleRules (or .Values.sidecar.datasources.enabled .Values.sidecar.plugins.enabled)) }}
 rules:

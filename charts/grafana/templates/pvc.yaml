@@ -33,4 +33,4 @@ spec:
     matchLabels:
     {{- toYaml . | nindent 6 }}
   {{- end }}
-{{- end -}}
+{{- end }}

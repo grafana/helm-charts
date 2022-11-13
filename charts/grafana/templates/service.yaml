@@ -1,4 +1,4 @@
-{{ if .Values.service.enabled }}
+{{- if .Values.service.enabled }}
 {{- $root := . }}
 apiVersion: v1
 kind: Service
@@ -52,4 +52,4 @@ spec:
       {{- end }}
   selector:
     {{- include "grafana.selectorLabels" . | nindent 4 }}
-{{ end }}
+{{- end }}

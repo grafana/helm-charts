@@ -29,7 +29,7 @@ spec:
   {{- end -}}
   {{- with .Values.ingress.tls }}
   tls:
-    {{- tpl (toYaml .Values.ingress.tls) $ | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
   rules:
   {{- if .Values.ingress.hosts  }}

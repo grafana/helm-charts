@@ -6,7 +6,7 @@ metadata:
   namespace: {{ include "grafana.namespace" . }}
   labels:
     {{- include "grafana.imageRenderer.labels" . | nindent 4 }}
-    {{- if .Values.imageRenderer.service.labels }}
+    {{- with .Values.imageRenderer.service.labels }}
     {{- toYaml . | indent 4 }}
     {{- end }}
   {{- with .Values.imageRenderer.service.annotations }}

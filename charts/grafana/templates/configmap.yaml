@@ -1,4 +1,5 @@
 {{- if .Values.createConfigmap }}
+{{- $root := . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -42,7 +43,7 @@ data:
   {{- end }}
 
 {{- if .Values.datasources }}
-{{ $root := . }}
+
   {{- range $key, $value := .Values.datasources }}
   {{ $key }}: |
     {{- tpl (toYaml $value | nindent 4) $root }}
