@@ -2,8 +2,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "grafana.fullname" . }}-image-renderer
-  namespace: {{ template "grafana.namespace" . }}
+  name: {{ include "grafana.fullname" . }}-image-renderer
+  namespace: {{ include "grafana.namespace" . }}
   labels:
     {{- include "grafana.imageRenderer.labels" . | nindent 4 }}
     {{- if .Values.imageRenderer.labels }}

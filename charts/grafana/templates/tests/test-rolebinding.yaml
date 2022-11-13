@@ -1,4 +1,4 @@
-{{- if and .Values.testFramework.enabled .Values.rbac.pspEnabled -}}
+{{- if and .Values.testFramework.enabled .Values.rbac.pspEnabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -14,7 +14,7 @@ roleRef:
   kind: Role
   name: {{ include "grafana.fullname" . }}-test
 subjects:
-- kind: ServiceAccount
-  name: {{ include "grafana.serviceAccountNameTest" . }}
-  namespace: {{ include "grafana.namespace" . }}
+  - kind: ServiceAccount
+    name: {{ include "grafana.serviceAccountNameTest" . }}
+    namespace: {{ include "grafana.namespace" . }}
 {{- end }}

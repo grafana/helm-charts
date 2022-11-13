@@ -1,4 +1,5 @@
 {{- define "grafana.pod" -}}
+{{- $root := . -}}
 {{- with .Values.schedulerName }}
 schedulerName: "{{ . }}"
 {{- end }}
@@ -30,7 +31,11 @@ initContainers:
     securityContext:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    command: ["chown", "-R", "{{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }}", "/var/lib/grafana"]
+    command:
+      - chown
+      - -R
+      - {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }}
+      - /var/lib/grafana
     {{- with .Values.initChownData.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
@@ -38,8 +43,8 @@ initContainers:
     volumeMounts:
       - name: storage
         mountPath: "/var/lib/grafana"
-        {{- if .Values.persistence.subPath }}
-        subPath: {{ tpl .Values.persistence.subPath . }}
+        {{- with .Values.persistence.subPath }}
+        subPath: {{ tpl . $root }}
         {{- end }}
 {{- end }}
 {{- if .Values.dashboards }}
@@ -65,10 +70,10 @@ initContainers:
     securityContext:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- if .Values.downloadDashboards.envFromSecret }}
+    {{- with .Values.downloadDashboards.envFromSecret }}
     envFrom:
       - secretRef:
-          name: {{ tpl .Values.downloadDashboards.envFromSecret . }}
+          name: {{ tpl . $root }}
     {{- end }}
     volumeMounts:
       - name: config
@@ -76,8 +81,8 @@ initContainers:
         subPath: download_dashboards.sh
       - name: storage
         mountPath: "/var/lib/grafana"
-        {{- if .Values.persistence.subPath }}
-        subPath: {{ tpl .Values.persistence.subPath . }}
+        {{- with .Values.persistence.subPath }}
+        subPath: {{ tpl . $root }}
         {{- end }}
       {{- range .Values.extraSecretMounts }}
       - name: {{ .name }}
@@ -179,9 +184,9 @@ initContainers:
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.searchNamespace }}
+      {{- with .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.notifiers.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -207,13 +212,12 @@ initContainers:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
-{{- if .Values.extraInitContainers }}
-{{ tpl (toYaml .Values.extraInitContainers) . | indent 2 }}
+{{- with .Values.extraInitContainers }}
+  {{- tpl (toYaml .) $root | nindent 2 }}
 {{- end }}
-{{- if .Values.image.pullSecrets }}
+{{- with .Values.image.pullSecrets }}
 imagePullSecrets:
-  {{- $root := . }}
-  {{- range .Values.image.pullSecrets }}
+  {{- range . }}
   - name: {{ tpl . $root }}
   {{- end}}
 {{- end }}
@@ -345,9 +349,9 @@ containers:
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.dashboards.label }}"
-      {{- if .Values.sidecar.dashboards.labelValue }}
+      {{- with .Values.sidecar.dashboards.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote .Values.sidecar.dashboards.labelValue }}
+        value: {{ quote . }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
       - name: LOG_LEVEL
@@ -361,9 +365,9 @@ containers:
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.dashboards.searchNamespace }}
+      {{- with .Values.sidecar.dashboards.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.dashboards.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -435,9 +439,9 @@ containers:
         value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.datasources.label }}"
-      {{- if .Values.sidecar.datasources.labelValue }}
+      {{- with .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote .Values.sidecar.datasources.labelValue }}
+        value: {{ quote . }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
@@ -447,13 +451,13 @@ containers:
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.datasources.resource }}
-      {{- if .Values.sidecar.enableUniqueFilenames }}
+      {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
-        value: "{{ .Values.sidecar.enableUniqueFilenames }}"
+        value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.datasources.searchNamespace }}
+      {{- with .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -538,9 +542,9 @@ containers:
         value: {{ .Values.sidecar.notifiers.watchMethod }}
       - name: LABEL
         value: "{{ .Values.sidecar.notifiers.label }}"
-      {{- if .Values.sidecar.notifiers.labelValue }}
+      {{- with .Values.sidecar.notifiers.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote .Values.sidecar.notifiers.labelValue }}
+        value: {{ quote . }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       - name: LOG_LEVEL
@@ -556,11 +560,11 @@ containers:
       {{- end }}
       {{- if .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.notifiers.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
-      {{- if .Values.sidecar.skipTlsVerify }}
+      {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
-        value: "{{ .Values.sidecar.skipTlsVerify }}"
+        value: "{{ . }}"
       {{- end }}
       {{- if .Values.sidecar.notifiers.script }}
       - name: SCRIPT
@@ -653,21 +657,21 @@ containers:
         value: "/etc/grafana/provisioning/plugins"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.plugins.resource }}
-      {{- if .Values.sidecar.enableUniqueFilenames }}
+      {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
-        value: "{{ .Values.sidecar.enableUniqueFilenames }}"
+        value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.plugins.searchNamespace }}
+      {{- with .Values.sidecar.plugins.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.plugins.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
-      {{- if .Values.sidecar.plugins.script }}
+      {{- with .Values.sidecar.plugins.script }}
       - name: SCRIPT
-        value: "{{ .Values.sidecar.plugins.script }}"
+        value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.skipTlsVerify }}
+      {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
-        value: "{{ .Values.sidecar.skipTlsVerify }}"
+        value: "{{ . }}"
       {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
@@ -730,12 +734,12 @@ containers:
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     {{- end }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
-  {{- if .Values.command }}
+    {{- if .Values.command }}
     command:
     {{- range .Values.command }}
       - {{ . | quote }}
     {{- end }}
-  {{- end}}
+    {{- end}}
     {{- with .Values.containerSecurityContext }}
     securityContext:
       {{- toYaml . | nindent 6 }}
@@ -749,7 +753,6 @@ containers:
         mountPath: "/etc/grafana/ldap.toml"
         subPath: ldap.toml
       {{- end }}
-      {{- $root := . }}
       {{- range .Values.extraConfigmapMounts }}
       - name: {{ tpl .name $root }}
         mountPath: {{ tpl .mountPath $root }}
@@ -758,11 +761,11 @@ containers:
       {{- end }}
       - name: storage
         mountPath: "/var/lib/grafana"
-        {{- if .Values.persistence.subPath }}
-        subPath: {{ tpl .Values.persistence.subPath . }}
+        {{- with .Values.persistence.subPath }}
+        subPath: {{ tpl . $root }}
         {{- end }}
-      {{- if .Values.dashboards }}
-      {{- range $provider, $dashboards := .Values.dashboards }}
+      {{- with .Values.dashboards }}
+      {{- range $provider, $dashboards := . }}
       {{- range $key, $value := $dashboards }}
       {{- if (or (hasKey $value "json") (hasKey $value "file")) }}
       - name: dashboards-{{ $provider }}
@@ -771,36 +774,36 @@ containers:
       {{- end }}
       {{- end }}
       {{- end }}
-      {{- end -}}
-      {{- if .Values.dashboardsConfigMaps }}
-      {{- range (keys .Values.dashboardsConfigMaps | sortAlpha) }}
+      {{- end }}
+      {{- with .Values.dashboardsConfigMaps }}
+      {{- range (keys . | sortAlpha) }}
       - name: dashboards-{{ . }}
         mountPath: "/var/lib/grafana/dashboards/{{ . }}"
       {{- end }}
       {{- end }}
-      {{- if .Values.datasources }}
-      {{- range (keys .Values.datasources | sortAlpha) }}
+      {{- with .Values.datasources }}
+      {{- range (keys . | sortAlpha) }}
       - name: config
         mountPath: "/etc/grafana/provisioning/datasources/{{ . }}"
         subPath: {{ . | quote }}
       {{- end }}
       {{- end }}
-      {{- if .Values.notifiers }}
-      {{- range (keys .Values.notifiers | sortAlpha) }}
+      {{- with .Values.notifiers }}
+      {{- range (keys . | sortAlpha) }}
       - name: config
         mountPath: "/etc/grafana/provisioning/notifiers/{{ . }}"
         subPath: {{ . | quote }}
       {{- end }}
       {{- end }}
-      {{- if .Values.alerting }}
-      {{- range (keys .Values.alerting | sortAlpha) }}
+      {{- with .Values.alerting }}
+      {{- range (keys . | sortAlpha) }}
       - name: config
         mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
         subPath: {{ . | quote }}
       {{- end }}
       {{- end }}
-      {{- if .Values.dashboardProviders }}
-      {{- range (keys .Values.dashboardProviders | sortAlpha) }}
+      {{- with .Values.dashboardProviders }}
+      {{- range (keys . | sortAlpha) }}
       - name: config
         mountPath: "/etc/grafana/provisioning/dashboards/{{ . }}"
         subPath: {{ . | quote }}
@@ -937,9 +940,9 @@ containers:
     readinessProbe:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- if .Values.lifecycleHooks }}
+    {{- with .Values.lifecycleHooks }}
     lifecycle:
-      {{- tpl (.Values.lifecycleHooks | toYaml) . | nindent 6 }}
+      {{- tpl (. | toYaml) $root | nindent 6 }}
     {{- end }}
     {{- with .Values.resources }}
     resources:
@@ -952,7 +955,6 @@ containers:
 nodeSelector:
   {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- $root := . }}
 {{- with .Values.affinity }}
 affinity:
   {{- tpl (toYaml .) $root | nindent 2 }}
@@ -969,7 +971,6 @@ volumes:
   - name: config
     configMap:
       name: {{ include "grafana.fullname" . }}
-  {{- $root := . }}
   {{- range .Values.extraConfigmapMounts }}
   - name: {{ tpl .name $root }}
     configMap:
@@ -987,7 +988,6 @@ volumes:
   {{- end }}
   {{- end }}
   {{- if .Values.dashboardsConfigMaps }}
-  {{ $root := . }}
   {{- range $provider, $name := .Values.dashboardsConfigMaps }}
   - name: dashboards-{{ $provider }}
     configMap:
@@ -1019,11 +1019,11 @@ volumes:
       medium: Memory
       {{- with .Values.persistence.inMemory.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- end -}}
+      {{- end }}
     {{- else }}
     emptyDir: {}
-    {{- end -}}
-  {{- end -}}
+    {{- end }}
+  {{- end }}
   {{- if .Values.sidecar.alerts.enabled }}
   - name: sc-alerts-volume
     emptyDir:
@@ -1031,8 +1031,8 @@ volumes:
       sizeLimit: {{ . }}
       {{- else }}
       {}
-      {{- end -}}
-  {{- end -}}
+      {{- end }}
+  {{- end }}
   {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
     emptyDir:
@@ -1040,7 +1040,7 @@ volumes:
       sizeLimit: {{ . }}
       {{- else }}
       {}
-      {{- end -}}
+      {{- end }}
   {{- if .Values.sidecar.dashboards.SCProvider }}
   - name: sc-dashboard-provider
     configMap:
@@ -1054,8 +1054,8 @@ volumes:
       sizeLimit: {{ . }}
       {{- else }}
       {}
-      {{- end -}}
-  {{- end -}}
+      {{- end }}
+  {{- end }}
   {{- if .Values.sidecar.plugins.enabled }}
   - name: sc-plugins-volume
     emptyDir:
@@ -1063,8 +1063,8 @@ volumes:
       sizeLimit: {{ . }}
       {{- else }}
       {}
-      {{- end -}}
-  {{- end -}}
+      {{- end }}
+  {{- end }}
   {{- if .Values.sidecar.notifiers.enabled }}
   - name: sc-notifiers-volume
     emptyDir:
@@ -1072,23 +1072,26 @@ volumes:
       sizeLimit: {{ . }}
       {{- else }}
       {}
-      {{- end -}}
-  {{- end -}}
+      {{- end }}
+  {{- end }}
   {{- range .Values.extraSecretMounts }}
   {{- if .secretName }}
   - name: {{ .name }}
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
-      {{- if .items }}
-      items: {{ toYaml .items | nindent 6 }}
+      {{- with .items }}
+      items:
+        {{ toYaml . | nindent 8 }}
       {{- end }}
   {{- else if .projected }}
   - name: {{ .name }}
-    projected: {{- toYaml .projected | nindent 6 }}
+    projected:
+      {{- toYaml .projected | nindent 6 }}
   {{- else if .csi }}
   - name: {{ .name }}
-    csi: {{- toYaml .csi | nindent 6 }}
+    csi:
+      {{- toYaml .csi | nindent 6 }}
   {{- end }}
   {{- end }}
   {{- range .Values.extraVolumeMounts }}
@@ -1110,8 +1113,8 @@ volumes:
   {{- range .Values.extraEmptyDirMounts }}
   - name: {{ .name }}
     emptyDir: {}
-  {{- end -}}
-  {{- if .Values.extraContainerVolumes }}
-  {{- tpl (toYaml .Values.extraContainerVolumes) . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.extraContainerVolumes }}
+  {{- tpl (toYaml .) $root | nindent 2 }}
   {{- end }}
 {{- end }}

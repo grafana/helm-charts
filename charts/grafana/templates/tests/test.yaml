@@ -44,8 +44,8 @@ spec:
           name: tests
           readOnly: true
   volumes:
-  - name: tests
-    configMap:
-      name: {{ include "grafana.fullname" . }}-test
+    - name: tests
+      configMap:
+        name: {{ include "grafana.fullname" . }}-test
   restartPolicy: Never
 {{- end }}

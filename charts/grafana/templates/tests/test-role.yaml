@@ -10,8 +10,8 @@ metadata:
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
 rules:
-- apiGroups:      ['policy']
-  resources:      ['podsecuritypolicies']
-  verbs:          ['use']
-  resourceNames:  [{{ include "grafana.fullname" . }}-test]
+  - apiGroups:      ['policy']
+    resources:      ['podsecuritypolicies']
+    verbs:          ['use']
+    resourceNames:  [{{ include "grafana.fullname" . }}-test]
 {{- end }}

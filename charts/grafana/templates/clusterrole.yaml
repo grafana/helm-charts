@@ -11,14 +11,14 @@ metadata:
   name: {{ template "grafana.fullname" . }}-clusterrole
 {{- if or .Values.sidecar.dashboards.enabled (or .Values.rbac.extraClusterRoleRules (or .Values.sidecar.datasources.enabled .Values.sidecar.plugins.enabled)) }}
 rules:
-{{- if or .Values.sidecar.dashboards.enabled (or .Values.sidecar.datasources.enabled .Values.sidecar.plugins.enabled) }}
-- apiGroups: [""] # "" indicates the core API group
-  resources: ["configmaps", "secrets"]
-  verbs: ["get", "watch", "list"]
-{{- end}}
-{{- with .Values.rbac.extraClusterRoleRules }}
-{{ toYaml . | indent 0 }}
-{{- end}}
+  {{- if or .Values.sidecar.dashboards.enabled (or .Values.sidecar.datasources.enabled .Values.sidecar.plugins.enabled) }}
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "watch", "list"]
+  {{- end}}
+  {{- with .Values.rbac.extraClusterRoleRules }}
+  {{- toYaml . | nindent 2 }}
+  {{- end}}
 {{- else }}
 rules: []
 {{- end}}
