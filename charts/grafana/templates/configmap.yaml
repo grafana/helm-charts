@@ -42,35 +42,25 @@ data:
     {{- end }}
   {{- end }}
 
-{{- if .Values.datasources }}
-
   {{- range $key, $value := .Values.datasources }}
-  {{ $key }}: |
+  {{- $key | nindent 2 }}: |
     {{- tpl (toYaml $value | nindent 4) $root }}
   {{- end }}
-{{- end }}
 
-{{- if .Values.notifiers }}
   {{- range $key, $value := .Values.notifiers }}
-  {{ $key }}: |
+  {{- $key | nindent 2 }}: |
     {{- toYaml $value | nindent 4 }}
   {{- end }}
-{{- end }}
 
-{{- if .Values.alerting }}
-{{ $root := . }}
   {{- range $key, $value := .Values.alerting }}
-  {{ $key }}: |
+  {{- $key | nindent 2 }}: |
     {{- tpl (toYaml $value | indent 4) $root }}
   {{- end }}
-{{- end }}
 
-{{- if .Values.dashboardProviders }}
   {{- range $key, $value := .Values.dashboardProviders }}
-  {{ $key }}: |
+  {{- $key | nindent 2 }}: |
     {{- toYaml $value | nindent 4 }}
   {{- end }}
-{{- end }}
 
 {{- if .Values.dashboards  }}
   download_dashboards.sh: |

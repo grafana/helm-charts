@@ -816,7 +816,7 @@ containers:
       {{- if .Values.sidecar.dashboards.enabled }}
       - name: sc-dashboard-volume
         mountPath: {{ .Values.sidecar.dashboards.folder | quote }}
-      {{ if .Values.sidecar.dashboards.SCProvider }}
+      {{- if .Values.sidecar.dashboards.SCProvider }}
       - name: sc-dashboard-provider
         mountPath: "/etc/grafana/provisioning/dashboards/sc-dashboardproviders.yaml"
         subPath: provider.yaml
@@ -1082,7 +1082,7 @@ volumes:
       defaultMode: {{ .defaultMode }}
       {{- with .items }}
       items:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
   {{- else if .projected }}
   - name: {{ .name }}

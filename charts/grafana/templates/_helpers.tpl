@@ -121,7 +121,7 @@ new password and use it.
 Return the appropriate apiVersion for rbac.
 */}}
 {{- define "grafana.rbac.apiVersion" -}}
-{{- if .Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1" }}
+{{- if $.Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1" }}
 {{- print "rbac.authorization.k8s.io/v1" }}
 {{- else }}
 {{- print "rbac.authorization.k8s.io/v1beta1" }}
@@ -132,9 +132,9 @@ Return the appropriate apiVersion for rbac.
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "grafana.ingress.apiVersion" -}}
-{{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) }}
+{{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) }}
 {{- print "networking.k8s.io/v1" }}
-{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+{{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 {{- print "networking.k8s.io/v1beta1" }}
 {{- else }}
 {{- print "extensions/v1beta1" }}
