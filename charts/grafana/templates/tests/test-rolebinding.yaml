@@ -2,8 +2,8 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ template "grafana.fullname" . }}-test
-  namespace: {{ template "grafana.namespace" . }}
+  name: {{ include "grafana.fullname" . }}-test
+  namespace: {{ include "grafana.namespace" . }}
   annotations:
     "helm.sh/hook": test-success
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
@@ -12,9 +12,9 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "grafana.fullname" . }}-test
+  name: {{ include "grafana.fullname" . }}-test
 subjects:
 - kind: ServiceAccount
-  name: {{ template "grafana.serviceAccountNameTest" . }}
-  namespace: {{ template "grafana.namespace" . }}
+  name: {{ include "grafana.serviceAccountNameTest" . }}
+  namespace: {{ include "grafana.namespace" . }}
 {{- end }}

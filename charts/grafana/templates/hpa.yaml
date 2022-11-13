@@ -2,11 +2,11 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "grafana.fullname" . }}
-  namespace: {{ template "grafana.namespace" . }}
+  name: {{ include "grafana.fullname" . }}
+  namespace: {{ include "grafana.namespace" . }}
   labels:
-    app.kubernetes.io/name: {{ template "grafana.name" . }}
-    helm.sh/chart: {{ template "grafana.chart" . }}
+    app.kubernetes.io/name: {{ include "grafana.name" . }}
+    helm.sh/chart: {{ include "grafana.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
@@ -17,9 +17,9 @@ spec:
     {{- else }}
     kind: Deployment
     {{- end }}
-    name: {{ template "grafana.fullname" . }}
+    name: {{ include "grafana.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
-{{ toYaml .Values.autoscaling.metrics | indent 4 }}
+    {{- toYaml .Values.autoscaling.metrics | nindent 4 }}
 {{- end }}

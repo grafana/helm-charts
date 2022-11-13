@@ -1,4 +1,5 @@
 {{ if .Values.service.enabled }}
+{{- $root := . }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,10 +10,9 @@ metadata:
     {{- if .Values.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- $root := . }}
   {{- with .Values.service.annotations }}
   annotations:
-    {{- tpl (toYaml . | indent 4) $root }}
+    {{- tpl (toYaml . | nindent 4) $root }}
   {{- end }}
 spec:
   {{- if (or (eq .Values.service.type "ClusterIP") (empty .Values.service.type)) }}
@@ -47,8 +47,8 @@ spec:
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
-      {{- if .Values.extraExposePorts }}
-      {{- tpl (toYaml .Values.extraExposePorts) . | nindent 4 }}
+      {{- with .Values.extraExposePorts }}
+      {{- tpl (toYaml . | nindent 4) $root }}
       {{- end }}
   selector:
     {{- include "grafana.selectorLabels" . | nindent 4 }}
