@@ -4,12 +4,12 @@ kind: ConfigMap
 metadata:
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
-{{- with .Values.annotations }}
+  {{- with .Values.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-  name: {{ template "grafana.fullname" . }}-config-dashboards
-  namespace: {{ template "grafana.namespace" . }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  name: {{ include "grafana.fullname" . }}-config-dashboards
+  namespace: {{ include "grafana.namespace" . }}
 data:
   provider.yaml: |-
     apiVersion: 1
@@ -26,4 +26,4 @@ data:
       options:
         foldersFromFilesStructure: {{ .Values.sidecar.dashboards.provider.foldersFromFilesStructure }}
         path: {{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}
-{{- end}}
+{{- end }}
