@@ -1,8 +1,8 @@
 {{- define "grafana.pod" -}}
 {{- $root := . -}}
-{{- with .Values.schedulerName }}
+{{- with .Values.schedulerName -}}
 schedulerName: "{{ . }}"
-{{- end }}
+{{- end -}}
 serviceAccountName: {{ include "grafana.serviceAccountName" . }}
 automountServiceAccountToken: {{ .Values.serviceAccount.autoMount }}
 {{- with .Values.securityContext }}
