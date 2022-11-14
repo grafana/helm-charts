@@ -101,8 +101,7 @@ securityContext:
   runAsGroup: 472
   fsGroup: 472
 
-containerSecurityContext:
-  {}
+containerSecurityContext: {}
 
 # Enable creating the grafana configmap
 createConfigmap: true
