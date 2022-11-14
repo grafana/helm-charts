@@ -1,4 +1,5 @@
 test_pod:
+  enabled: true
   image: bats/bats:v1.1.0
   pullPolicy: IfNotPresent
 
