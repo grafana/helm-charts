@@ -1,4 +1,4 @@
-{{- if and (eq .Values.loki.enabled true) (eq .Values.test_pod.enabled true) }}
+{{- if and .Values.loki.enabled .Values.test_pod.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
