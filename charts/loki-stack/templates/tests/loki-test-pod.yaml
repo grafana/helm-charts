@@ -1,4 +1,4 @@
-{{- if and .Values.loki.enabled .Values.test_pod.enabled }}
+{{- if and (eq .Values.loki.enabled true) (eq .Values.test_pod.enabled true) }}
 apiVersion: v1
 kind: Pod
 metadata:
