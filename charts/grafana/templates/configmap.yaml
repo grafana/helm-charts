@@ -54,7 +54,7 @@ data:
 
   {{- range $key, $value := .Values.alerting }}
   {{- $key | nindent 2 }}: |
-    {{- tpl (toYaml $value | indent 4) $root }}
+    {{- tpl (toYaml $value | nindent 4) $root }}
   {{- end }}
 
   {{- range $key, $value := .Values.dashboardProviders }}
