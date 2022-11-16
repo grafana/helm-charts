@@ -59,6 +59,7 @@ Grafana Tempo Single Binary Mode
 | tempo.receivers.opencensus | string | `nil` |  |
 | tempo.receivers.otlp.protocols.grpc.endpoint | string | `"0.0.0.0:4317"` |  |
 | tempo.receivers.otlp.protocols.http.endpoint | string | `"0.0.0.0:4318"` |  |
+| tempo.reportingEnabled | bool | `true` | If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs |
 | tempo.repository | string | `"grafana/tempo"` |  |
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |

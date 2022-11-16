@@ -29,6 +29,8 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+  # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
+  reportingEnabled: true
   metricsGenerator:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
@@ -113,6 +115,8 @@ tempo:
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
+    usage_report:
+      reporting_enabled: {{ .Values.tempo.reportingEnabled }}
     metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:

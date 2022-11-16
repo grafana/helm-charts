@@ -1,10 +1,11 @@
 {{- if .Values.gateway.enabled }}
+{{ $dict := dict "ctx" . "component" "gateway" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tempo.gatewayFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   labels:
-    {{- include "tempo.gatewayLabels" . | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
 spec:
   minReadySeconds: 10
 {{- if not .Values.gateway.autoscaling.enabled }}
@@ -13,7 +14,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "tempo.gatewaySelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -25,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "tempo.gatewaySelectorLabels" . | nindent 8 }}
+        {{- include "tempo.selectorLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -45,10 +46,10 @@ spec:
       enableServiceLinks: false
       containers:
         - name: nginx
-          image: {{ include "tempo.gatewayImage" . }}
+          image: "{{ include "tempo.imageReference" $dict }}"
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           ports:
-            - name: http
+            - name: http-metrics
               containerPort: 8080
               protocol: TCP
           {{- with .Values.gateway.extraEnv }}
@@ -64,6 +65,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/nginx
+            {{- if .Values.enterprise.enabled }}
+            - name: license
+              mountPath: /license
+            {{- end }}
             {{- if .Values.gateway.basicAuth.enabled }}
             - name: auth
               mountPath: /etc/nginx/secrets
@@ -96,7 +101,12 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "tempo.gatewayFullname" . }}
+            name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
+        {{- if .Values.enterprise.enabled -}}
+        - name: license
+          secret:
+            secretName: {{ tpl .Values.license.secretName . }}
+        {{- end }}
         {{- if .Values.gateway.basicAuth.enabled }}
         - name: auth
           secret:
