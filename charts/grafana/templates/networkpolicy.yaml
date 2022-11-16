@@ -2,12 +2,12 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ template "grafana.fullname" . }}
-  namespace: {{ template "grafana.namespace" . }}
+  name: {{ include "grafana.fullname" . }}
+  namespace: {{ include "grafana.namespace" . }}
   labels:
     {{- include "grafana.labels" . | nindent 4 }}
     {{- with .Values.labels }}
-    {{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.annotations }}
   annotations:
@@ -23,7 +23,7 @@ spec:
     {{- end }}
   podSelector:
     matchLabels:
-    {{- include "grafana.selectorLabels" . | nindent 6 }}
+      {{- include "grafana.selectorLabels" . | nindent 6 }}
 
   {{- if .Values.networkPolicy.egress.enabled }}
   egress:
@@ -38,7 +38,7 @@ spec:
       from:
         - podSelector:
             matchLabels:
-              {{ template "grafana.fullname" . }}-client: "true"
+              {{ include "grafana.fullname" . }}-client: "true"
         {{- with .Values.networkPolicy.explicitNamespacesSelector }}
         - namespaceSelector:
             {{- toYaml . | nindent 12 }}
