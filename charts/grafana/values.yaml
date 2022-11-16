@@ -101,8 +101,7 @@ securityContext:
   runAsGroup: 472
   fsGroup: 472
 
-containerSecurityContext:
-  {}
+containerSecurityContext: {}
 
 # Enable creating the grafana configmap
 createConfigmap: true
@@ -370,11 +369,6 @@ admin:
 # - "sh"
 # - "/run.sh"
 
-## Use an alternate scheduler, e.g. "stork".
-## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-##
-# schedulerName:
-
 ## Extra environment variables that will be pass onto deployment pods
 ##
 ## to provide grafana with access to CloudWatch on AWS EKS:
@@ -588,7 +582,7 @@ alerting: {}
   #             component: Grafana
   #             group: app-stack
   #             summary: |
-  #               {{ `{{ template "default.message" . }}` }}
+  #               {{ `{{ include "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
@@ -1071,6 +1065,11 @@ imageRenderer:
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
   affinity: {}
+
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName: "default-scheduler"
 
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
