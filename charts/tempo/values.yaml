@@ -120,7 +120,7 @@ config: |
     metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
-        compacted_block_retention: {{ .Values.tempo.retention }}
+        block_retention: {{ .Values.tempo.retention }}
     distributor:
       receivers:
         {{- toYaml .Values.tempo.receivers | nindent 8 }}
