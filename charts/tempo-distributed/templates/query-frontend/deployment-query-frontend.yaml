@@ -132,6 +132,12 @@ spec:
             {{- end }}
       {{- end}}
       terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.queryFrontend.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.queryFrontend.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
