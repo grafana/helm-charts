@@ -71,8 +71,8 @@ spec:
             {{- with $ingressPath }}
             path: {{ . }}
             {{- end }}
-            {{- with $ingressSupportsPathType }}
-            pathType: {{ . }}
+            {{- if $ingressSupportsPathType }}
+            pathType: {{ $ingressPathType }}
             {{- end }}
   {{- end -}}
 {{- end }}
