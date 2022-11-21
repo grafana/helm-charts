@@ -36,6 +36,8 @@ grafana:
   enabled: false
   sidecar:
     datasources:
+      label: ""
+      labelValue: ""
       enabled: true
       maxLines: 1000
   image:

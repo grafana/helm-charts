@@ -5,6 +5,10 @@ metadata:
   name: {{ include "loki.memcachedChunksFullname" . }}
   labels:
     {{- include "loki.memcachedChunksLabels" . | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.memcachedChunks.replicas }}
   updateStrategy:
@@ -46,11 +50,27 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.memcachedChunks.terminationGracePeriodSeconds }}
       containers:
         - name: memcached
+          {{- if .Values.memcachedChunks.persistence.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -ec
+                - |
+                  /usr/bin/pkill -10 memcached
+                  sleep 60s
+          {{- end }}
           image: {{ include "loki.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
-          {{- with .Values.memcachedChunks.extraArgs }}
+          {{- if or .Values.memcachedChunks.extraArgs .Values.memcachedChunks.persistence.enabled }}
           args:
+          {{- if .Values.memcachedChunks.persistence.enabled }}
+            - --memory-file=/cache-state/memory_file
+          {{- end }}
+          {{- with .Values.memcachedChunks.extraArgs }}
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           ports:
             - name: http
@@ -70,6 +90,11 @@ spec:
             {{- toYaml .Values.memcached.readinessProbe | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.memcached.livenessProbe | nindent 12 }}
+          {{- if .Values.memcachedChunks.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /cache-state
+          {{- end }}
           resources:
             {{- toYaml .Values.memcachedChunks.resources | nindent 12 }}
         {{- if .Values.memcachedExporter.enabled }}
@@ -103,4 +128,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.memcachedChunks.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.memcachedChunks.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.memcachedChunks.persistence.size | quote }}
+  {{- end }}
 {{- end }}

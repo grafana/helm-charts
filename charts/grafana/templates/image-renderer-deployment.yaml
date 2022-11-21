@@ -1,13 +1,14 @@
 {{ if .Values.imageRenderer.enabled }}
+{{- $root := . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "grafana.fullname" . }}-image-renderer
-  namespace: {{ template "grafana.namespace" . }}
+  name: {{ include "grafana.fullname" . }}-image-renderer
+  namespace: {{ include "grafana.namespace" . }}
   labels:
     {{- include "grafana.imageRenderer.labels" . | nindent 4 }}
-    {{- if .Values.imageRenderer.labels }}
-    {{ toYaml .Values.imageRenderer.labels | indent 4 }}
+    {{- with .Values.imageRenderer.labels }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.imageRenderer.annotations }}
   annotations:
@@ -37,29 +38,28 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.imageRenderer.schedulerName }}
-      schedulerName: "{{ .Values.imageRenderer.schedulerName }}"
+      {{- with .Values.imageRenderer.schedulerName }}
+      schedulerName: "{{ . }}"
       {{- end }}
-      {{- if .Values.imageRenderer.serviceAccountName }}
-      serviceAccountName: "{{ .Values.imageRenderer.serviceAccountName }}"
+      {{- with .Values.imageRenderer.serviceAccountName }}
+      serviceAccountName: "{{ . }}"
       {{- end }}
-      {{- if .Values.imageRenderer.securityContext }}
+      {{- with .Values.imageRenderer.securityContext }}
       securityContext:
-        {{- toYaml .Values.imageRenderer.securityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.imageRenderer.hostAliases }}
+      {{- with .Values.imageRenderer.hostAliases }}
       hostAliases:
-        {{- toYaml .Values.imageRenderer.hostAliases | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.imageRenderer.priorityClassName }}
-      priorityClassName: {{ .Values.imageRenderer.priorityClassName }}
+      {{- with .Values.imageRenderer.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
-      {{- if .Values.imageRenderer.image.pullSecrets }}
+      {{- with .Values.imageRenderer.image.pullSecrets }}
       imagePullSecrets:
-      {{- $root := . }}
-      {{- range .Values.imageRenderer.image.pullSecrets }}
+        {{- range . }}
         - name: {{ tpl . $root }}
-      {{- end}}
+        {{- end}}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}-image-renderer
@@ -69,12 +69,12 @@ spec:
           image: "{{ .Values.imageRenderer.image.repository }}:{{ .Values.imageRenderer.image.tag }}"
           {{- end }}
           imagePullPolicy: {{ .Values.imageRenderer.image.pullPolicy }}
-        {{- if .Values.imageRenderer.command }}
+          {{- if .Values.imageRenderer.command }}
           command:
-          {{- range .Values.imageRenderer.command }}
+            {{- range .Values.imageRenderer.command }}
             - {{ . }}
-          {{- end }}
-        {{- end}}
+            {{- end }}
+          {{- end}}
           ports:
             - name: {{ .Values.imageRenderer.service.portName }}
               containerPort: {{ .Values.imageRenderer.service.targetPort }}
@@ -105,7 +105,6 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $root := . }}
       {{- with .Values.imageRenderer.affinity }}
       affinity:
         {{- tpl (toYaml .) $root | nindent 8 }}

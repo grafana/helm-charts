@@ -17,6 +17,8 @@ serviceAccount:
   create: true
   name:
   nameTest:
+  ## ServiceAccount labels.
+  labels: {}
 ## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
@@ -99,8 +101,7 @@ securityContext:
   runAsGroup: 472
   fsGroup: 472
 
-containerSecurityContext:
-  {}
+containerSecurityContext: {}
 
 # Enable creating the grafana configmap
 createConfigmap: true
@@ -307,6 +308,8 @@ persistence:
   # subPath: ""
   ## Name of an existing PVC. Can be templated.
   # existingClaim:
+  ## Extra labels to apply to a PVC.
+  extraPvcLabels: {}
 
   ## If persistence is not enabled, this allows to mount the
   ## local storage in-memory to improve performance
@@ -321,7 +324,7 @@ persistence:
 
 initChownData:
   ## If false, data ownership will not be reset at startup
-  ## This allows the prometheus-server to be run with an arbitrary user
+  ## This allows the grafana-server to be run with an arbitrary user
   ##
   enabled: true
 
@@ -365,11 +368,6 @@ admin:
 # command:
 # - "sh"
 # - "/run.sh"
-
-## Use an alternate scheduler, e.g. "stork".
-## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-##
-# schedulerName:
 
 ## Extra environment variables that will be pass onto deployment pods
 ##
@@ -584,7 +582,7 @@ alerting: {}
   #             component: Grafana
   #             group: app-stack
   #             summary: |
-  #               {{ `{{ template "default.message" . }}` }}
+  #               {{ `{{ include "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
@@ -992,7 +990,7 @@ revisionHistoryLimit: 10
 imageRenderer:
   deploymentStrategy: {}
   # Enable the image-renderer deployment & service
-  enabled: true
+  enabled: false
   replicas: 1
   image:
     # image-renderer Image repository
@@ -1016,7 +1014,7 @@ imageRenderer:
   # image-renderer deployment container securityContext
   containerSecurityContext:
     capabilities:
-      drop: ['all']
+      drop: ['ALL']
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
   # image-renderer deployment Host Aliases
@@ -1067,6 +1065,11 @@ imageRenderer:
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
   affinity: {}
+
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName: "default-scheduler"
 
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.

@@ -9,14 +9,14 @@ dependencies:
 - name: "promtail"
   condition: promtail.enabled
   repository: "https://grafana.github.io/helm-charts"
-  version: "^6.2.3"
+  version: "^6.6.1"
 - name: "fluent-bit"
   condition: fluent-bit.enabled
   repository: "https://grafana.github.io/helm-charts"
   version: "^2.3.0"
 - name: "grafana"
   condition: grafana.enabled
-  version: "~6.24.1"
+  version: "~6.43.0"
   repository:  "https://grafana.github.io/helm-charts"
 - name: "prometheus"
   condition: prometheus.enabled
