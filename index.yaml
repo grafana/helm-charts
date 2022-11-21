@@ -25964,6 +25964,23 @@ entries:
   phlare:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2022-11-21T15:24:04.337577908Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 4.0.12
+    description: "\U0001F525 horizontally-scalable, highly-available, multi-tenant
+      continuous profiling aggregation system"
+    digest: 96f8b28a8e13f42f88a84d8bdd85e4b7514b0d3e6ca802bc66bef8e31a87dcd9
+    name: phlare
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/phlare-0.1.1/phlare-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2022-11-01T12:59:16.694283948Z"
     dependencies:
     - alias: minio
@@ -31555,4 +31572,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-20T16:46:17.521425756Z"
+generated: "2022-11-21T15:24:04.352075614Z"
