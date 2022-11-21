@@ -3,6 +3,9 @@ dependencies:
   condition: loki.enabled
   repository: "https://grafana.github.io/helm-charts"
   version: "^2.15.2"
+  import-values:
+    - child: service.port
+      parent: loki_svc_port
 - name: "promtail"
   condition: promtail.enabled
   repository: "https://grafana.github.io/helm-charts"
