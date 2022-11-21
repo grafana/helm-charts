@@ -26,7 +26,7 @@ promtail:
     logLevel: info
     serverPort: 3101
     clients:
-      - url: http://{{ .Release.Name }}-loki:{{ .Values.loki_svc_port }}/loki/api/v1/push
+      - url: http://{{ .Release.Name }}-loki.{{ .Release.Namespace }}:{{ .Values.loki_svc_port }}/loki/api/v1/push
       # - url: http://{{ include "loki.serviceName" .Subcharts.loki }}:{{ include "loki.service.port" .Subcharts.loki }}/loki/api/v1/push
 
 fluent-bit:
