@@ -29,6 +29,8 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+  # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
+  reportingEnabled: true
   metricsGenerator:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
@@ -99,6 +101,8 @@ tempo:
   extraArgs: {}
   # -- Environment variables to add
   extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the ingester pods
+  extraEnvFrom: []
   # -- Volume mounts to add
   extraVolumeMounts: []
   # - name: extra-volume
@@ -111,10 +115,12 @@ tempo:
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
+    usage_report:
+      reporting_enabled: {{ .Values.tempo.reportingEnabled }}
     metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
-        compacted_block_retention: {{ .Values.tempo.retention }}
+        block_retention: {{ .Values.tempo.retention }}
     distributor:
       receivers:
         {{- toYaml .Values.tempo.receivers | nindent 8 }}

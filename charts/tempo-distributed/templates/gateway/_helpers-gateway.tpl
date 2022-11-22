@@ -2,7 +2,7 @@
 gateway auth secret name
 */}}
 {{- define "tempo.gatewayAuthSecret" -}}
-{{ .Values.gateway.basicAuth.existingSecret | default (include "tempo.gatewayFullname" . ) }}
+{{ .Values.gateway.basicAuth.existingSecret | default (include "tempo.resourceName" (dict "ctx" . "component" "gateway")) }}
 {{- end }}
 
 
