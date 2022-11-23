@@ -25,7 +25,7 @@ spec:
         - namespaceSelector:
             matchLabels:
               name: {{ include "grafana.namespace" . }}
-          podSelector:
+        - podSelector:
             matchLabels:
               {{- include "grafana.selectorLabels" . | nindent 14 }}
               {{- with .Values.podLabels }}
