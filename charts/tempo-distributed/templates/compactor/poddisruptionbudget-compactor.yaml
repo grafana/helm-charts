@@ -1,13 +1,14 @@
 {{- if gt (int .Values.compactor.replicas) 1 }}
+{{ $dict := dict "ctx" . "component" "compactor" "memberlist" true }}
 apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "tempo.compactorFullname" . }}
+  name: {{ include "tempo.resourceName" $dict }}
   labels:
-    {{- include "tempo.compactorLabels" . | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.compactorSelectorLabels" . | nindent 6 }}
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   maxUnavailable: 1
 {{- end }}

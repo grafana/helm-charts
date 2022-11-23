@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.58.0](https://img.shields.io/badge/Version-0.58.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.65.3](https://img.shields.io/badge/Version-0.65.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -166,6 +166,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
+| gateway.service.appProtocol | string | `nil` | Set appProtocol for the service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
@@ -304,6 +305,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
 | memcachedChunks.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
+| memcachedChunks.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
+| memcachedChunks.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
+| memcachedChunks.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | memcachedChunks.podAnnotations | object | `{}` | Annotations for memcached-chunks pods |
 | memcachedChunks.podLabels | object | `{}` | Labels for memcached-chunks pods |
 | memcachedChunks.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-chunks pods |
@@ -328,6 +332,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
 | memcachedFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
+| memcachedFrontend.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
+| memcachedFrontend.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
+| memcachedFrontend.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | memcachedFrontend.podAnnotations | object | `{}` | Annotations for memcached-frontend pods |
 | memcachedFrontend.podLabels | object | `{}` | Labels for memcached-frontend pods |
 | memcachedFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-frontend pods |
@@ -344,6 +351,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
 | memcachedIndexQueries.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
+| memcachedIndexQueries.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
+| memcachedIndexQueries.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
+| memcachedIndexQueries.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | memcachedIndexQueries.podAnnotations | object | `{}` | Annotations for memcached-index-queries pods |
 | memcachedIndexQueries.podLabels | object | `{}` | Labels for memcached-index-queries pods |
 | memcachedIndexQueries.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-index-queries pods |
@@ -360,6 +370,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
 | memcachedIndexWrites.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
+| memcachedIndexWrites.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
+| memcachedIndexWrites.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
+| memcachedIndexWrites.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | memcachedIndexWrites.podAnnotations | object | `{}` | Annotations for memcached-index-writes pods |
 | memcachedIndexWrites.podLabels | object | `{}` | Labels for memcached-index-writes pods |
 | memcachedIndexWrites.priorityClassName | string | `nil` | The name of the PriorityClass for memcached-index-writes pods |
@@ -388,10 +401,10 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
-| querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.affinity | object | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
-| querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true` |
+| querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `indexGateway.enabled: true` |
 | querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
 | querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
 | querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |
@@ -421,6 +434,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.serviceLabels | object | `{}` | Labels for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
+| querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -728,7 +742,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedChunksFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-frontend
@@ -747,7 +761,7 @@ loki:
             consistent_hash: true
             host: {{ include "loki.memcachedFrontendFullname" . }}
             max_idle_conns: 16
-            service: http
+            service: memcached-client
             timeout: 500ms
             update_interval: 1m
 ```
@@ -768,7 +782,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexQueriesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ### memcached-index-writes
@@ -789,7 +803,7 @@ loki:
         memcached_client:
           consistent_hash: true
           host: {{ include "loki.memcachedIndexWritesFullname" . }}
-          service: http
+          service: memcached-client
 ```
 
 ## Compactor
