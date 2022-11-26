@@ -362,7 +362,7 @@ ingester:
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
-      topologyKey: failure-domain.beta.kubernetes.io/zone
+      topologyKey: kubernetes.io/hostname
       whenUnsatisfiable: ScheduleAnyway
       labelSelector:
         matchLabels:
