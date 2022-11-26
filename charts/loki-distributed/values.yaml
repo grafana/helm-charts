@@ -362,7 +362,7 @@ ingester:
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
-      topologyKey: failure-domain.beta.kubernetes.io/zone
+      topologyKey: kubernetes.io/hostname
       whenUnsatisfiable: ScheduleAnyway
       labelSelector:
         matchLabels:
@@ -491,7 +491,7 @@ querier:
   # -- Number of replicas for the querier
   replicas: 1
   autoscaling:
-    # -- Enable autoscaling for the querier, this is only used if `queryIndex.enabled: true`
+    # -- Enable autoscaling for the querier, this is only used if `indexGateway.enabled: true`
     enabled: false
     # -- Minimum autoscaling replicas for the querier
     minReplicas: 1
@@ -1399,7 +1399,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.7-alpine
+    tag: 1.6.17-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   # -- Labels for memcached pods
