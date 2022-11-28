@@ -1032,6 +1032,7 @@ gateway:
           location = / {
             return 200 'OK';
             auth_basic off;
+            access_log off;
           }
 
           location = /api/prom/push {
