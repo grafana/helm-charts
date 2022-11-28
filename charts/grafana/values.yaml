@@ -138,6 +138,11 @@ downloadDashboards:
   envFromSecret: ""
   resources: {}
   securityContext: {}
+  envValueFrom: {}
+  #  ENV_NAME:
+  #    configMapKeyRef:
+  #      name: configmap-name
+  #      key: value_key
 
 ## Pod Annotations
 # podAnnotations: {}
