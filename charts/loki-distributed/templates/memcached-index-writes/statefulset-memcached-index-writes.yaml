@@ -50,11 +50,27 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.memcachedIndexWrites.terminationGracePeriodSeconds }}
       containers:
         - name: memcached
+          {{- if .Values.memcachedIndexWrites.persistence.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -ec
+                - |
+                  /usr/bin/pkill -10 memcached
+                  sleep 60s
+          {{- end }}
           image: {{ include "loki.memcachedImage" . }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
-          {{- with .Values.memcachedIndexWrites.extraArgs }}
+          {{- if or .Values.memcachedIndexWrites.extraArgs .Values.memcachedIndexWrites.persistence.enabled }}
           args:
+          {{- if .Values.memcachedIndexWrites.persistence.enabled }}
+            - --memory-file=/cache-state/memory_file
+          {{- end }}
+          {{- with .Values.memcachedIndexWrites.extraArgs }}
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           ports:
             - name: http
@@ -74,6 +90,11 @@ spec:
             {{- toYaml .Values.memcached.readinessProbe | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.memcached.livenessProbe | nindent 12 }}
+          {{- if .Values.memcachedIndexWrites.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /cache-state
+          {{- end }}
           resources:
             {{- toYaml .Values.memcachedIndexWrites.resources | nindent 12 }}
         {{- if .Values.memcachedExporter.enabled }}
@@ -107,4 +128,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.memcachedIndexWrites.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.memcachedIndexWrites.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.memcachedIndexWrites.persistence.size | quote }}
+  {{- end }}
 {{- end }}

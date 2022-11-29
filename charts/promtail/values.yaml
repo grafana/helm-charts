@@ -77,7 +77,7 @@ livenessProbe: {}
 readinessProbe:
   failureThreshold: 5
   httpGet:
-    path: /ready
+    path: "{{ printf `%s/ready` .Values.httpPathPrefix }}"
     port: http-metrics
   initialDelaySeconds: 10
   periodSeconds: 10
@@ -181,6 +181,9 @@ extraEnv: []
 
 # -- Extra environment variables from secrets or configmaps
 extraEnvFrom: []
+
+# -- Configure enableServiceLinks in pod
+enableServiceLinks: true
 
 # ServiceMonitor configuration
 serviceMonitor:
@@ -403,6 +406,9 @@ config:
     server:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
+      {{- with .Values.httpPathPrefix }}
+      http_path_prefix: {{ . }}
+      {{- end }}
       {{- tpl .Values.config.snippets.extraServerConfigs . | nindent 2 }}
 
     clients:
@@ -436,6 +442,9 @@ networkPolicy:
     port: 8443
     # -- Specifies specific network CIDRs you want to limit access to
     cidrs: []
+
+# -- Base path to server all API routes fro
+httpPathPrefix: ""
 
 # -- Extra K8s manifests to deploy
 extraObjects: []

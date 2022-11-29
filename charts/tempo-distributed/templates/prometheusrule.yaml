@@ -12,7 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "tempo.labels" $ | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" $) | nindent 4 }}
   {{- with .labels }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
