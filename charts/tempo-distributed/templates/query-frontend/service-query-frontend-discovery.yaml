@@ -13,30 +13,33 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-    - name: http
-      port: 3100
-      targetPort: 3100
-    - name: grpc
-      port: 9095
-      protocol: TCP
-      targetPort: 9095
-      {{- if .Values.queryFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+    {{- range .Values.ports.queryFrontend }}
+    {{- if .serviceDiscoverPort }}
+    - name: {{ .name }}
+      port: {{ .serviceDiscoverPort }}
+      {{- if .targetPort }}
+      targetPort: {{ .targetPort }}
+      {{- else }}
+      targetPort: {{ .name }}
       {{- end }}
-    - name: grpclb
-      port: 9096
-      protocol: TCP
-      targetPort: grpc
-      {{- if .Values.queryFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+      protocol: {{ .protocol }}
+      {{- if and (hasPrefix .name "grpc") ($.Values.queryFrontend.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.queryFrontend.appProtocol.grpc }}
       {{- end }}
+    {{- end }}
+    {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
-    - name: tempo-query-jaeger-ui
-      port: 16686
-      targetPort: 16686
-    - name: tempo-query-metrics
-      port: 16687
-      targetPort: jaeger-metrics
+    {{- range .Values.ports.tempoQuery }}
+    {{- if .servicePort }}
+    - name: {{ .name }}
+      port: {{ .servicePort }}
+      targetPort: {{ .name }}
+      protocol: {{ .protocol }}
+      {{- if and (hasPrefix .name "grpc") ($.Values.queryFrontend.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.queryFrontend.appProtocol.grpc }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
     {{- end }}
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}

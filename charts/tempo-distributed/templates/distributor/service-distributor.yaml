@@ -12,76 +12,24 @@ metadata:
 spec:
   type: {{ .Values.distributor.service.type }}
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: http-metrics
-    - name: grpc
-      port: 9095
-      protocol: TCP
-      targetPort: 9095
-      {{- if .Values.distributor.appProtocol.grpc }}
-      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
-      {{- end }}
-    {{- if .Values.traces.jaeger.thriftCompact.enabled }}
-    - name: distributor-jaeger-thrift-compact
-      port: 6831
-      protocol: UDP
-      targetPort: jaeger-compact
-    {{- end }}
-    {{- if .Values.traces.jaeger.thriftBinary.enabled }}
-    - name: distributor-jaeger-thrift-binary
-      port: 6832
-      protocol: UDP
-      targetPort: jaeger-binary
-    {{- end }}
-    {{- if .Values.traces.jaeger.thriftHttp.enabled }}
-    - name: distributor-jaeger-thrift-http
-      port: 14268
-      protocol: TCP
-      targetPort: jaeger-http
-    {{- end }}
-    {{- if .Values.traces.jaeger.grpc.enabled }}
-    - name: grpc-distributor-jaeger
-      port: 14250
-      protocol: TCP
-      targetPort: grpc-jaeger
-      {{- if .Values.distributor.appProtocol.grpc }}
-      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+    {{- range $key, $value := .Values.ports.distributor }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+      {{- if and (hasPrefix $key "grpc") ($.Values.distributor.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.distributor.appProtocol.grpc }}
       {{- end }}
     {{- end }}
-    {{- if .Values.traces.zipkin.enabled }}
-    - name: distributor-zipkin
-      port: 9411
-      protocol: TCP
-      targetPort: zipkin
     {{- end }}
-    {{- if .Values.traces.otlp.http.enabled }}
-    - name: distributor-otlp-http
-      port: 4318
-      protocol: TCP
-      targetPort: otlp-http
+    {{- range $key, $value := .Values.ports.tracesReceiver }}
+    {{- if $value.enabled }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      protocol: {{ $value.protocol }}
+      targetPort: {{ $key }}
     {{- end }}
-    {{- if .Values.traces.otlp.grpc.enabled }}
-    - name: grpc-distributor-otlp
-      port: 4317
-      protocol: TCP
-      targetPort: grpc-otlp
-      {{- if .Values.distributor.appProtocol.grpc }}
-      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
-      {{- end }}
-    - name: distributor-otlp-legacy
-      port: 55680
-      protocol: TCP
-      targetPort: grpc-otlp
-      {{- if .Values.distributor.appProtocol.grpc }}
-      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
-      {{- end }}
-    {{- end }}
-    {{- if .Values.traces.opencensus.enabled }}
-    - name: distributor-opencensus
-      port: 55678
-      protocol: TCP
-      targetPort: opencensus
     {{- end }}
   {{- if .Values.distributor.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP  }}

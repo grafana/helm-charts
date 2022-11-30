@@ -48,7 +48,7 @@ spec:
                   number: {{ $.Values.gateway.service.port }}
               {{- else }}
               serviceName: {{ include "tempo.resourceName" $dict }}
-              servicePort: {{ $.Values.gateway.service.port }}
+              servicePort: {{ $.Values.ports.gateway.http }}
               {{- end }}
           {{- end }}
     {{- end }}

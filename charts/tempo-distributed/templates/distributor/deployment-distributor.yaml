@@ -59,50 +59,19 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: distributor
           ports:
-            - containerPort: 7946
-              name: http-memberlist
-              protocol: TCP
-            - containerPort: 3100
-              name: http-metrics
-            {{- if .Values.traces.jaeger.thriftCompact.enabled }}
-            - containerPort: 6831
-              name: jaeger-compact
-              protocol: UDP
+            {{- range $key, $value := .Values.ports.distributor }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
             {{- end }}
-            {{- if .Values.traces.jaeger.thriftBinary.enabled }}
-            - containerPort: 6832
-              name: jaeger-binary
-              protocol: UDP
             {{- end }}
-            {{- if .Values.traces.jaeger.thriftHttp.enabled }}
-            - containerPort: 14268
-              name: jaeger-http
-              protocol: TCP
+            {{- range $key, $value := .Values.ports.tracesReceiver }}
+            {{- if $value.enabled }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
             {{- end }}
-            {{- if .Values.traces.jaeger.grpc.enabled }}
-            - containerPort: 14250
-              name: grpc-jaeger
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.zipkin.enabled }}
-            - containerPort: 9411
-              name: zipkin
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.otlp.http }}
-            - containerPort: 4318
-              name: otlp-http
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.otlp.grpc.enabled }}
-            - containerPort: 4317
-              name: grpc-otlp
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.opencensus.enabled }}
-            - containerPort: 55678
-              name: opencensus
-              protocol: TCP
             {{- end }}
           {{- with .Values.distributor.extraEnv }}
           env:

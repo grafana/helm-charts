@@ -11,9 +11,13 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: 3100
-      protocol: TCP
+    {{- range $key, $value := .Values.ports.compactor }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+    {{- end }}
+    {{- end }}
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 4 }}

@@ -66,15 +66,13 @@ spec:
               {{ toYaml .Values.adminApi.extraVolumeMounts | nindent 12}}
             {{- end }}
           ports:
-            - name: http-metrics
-              containerPort: {{ include "tempo.serverHttpListenPort" . }}
-              protocol: TCP
-            - name: grpc
-              containerPort: {{ include "tempo.serverGrpcListenPort" . }}
-              protocol: TCP
-            - name: memberlist
-              containerPort: {{ include "tempo.memberlistBindPort" . }}
-              protocol: TCP
+            {{- range $key, $value := .Values.ports.adminApi }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.adminApi.livenessProbe | nindent 12 }}
           readinessProbe:

@@ -61,10 +61,13 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: compactor
           ports:
-            - containerPort: 3100
-              name: http-metrics
-            - containerPort: 7946
-              name: http-memberlist
+            {{- range $key, $value := .Values.ports.compactor }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.compactor.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

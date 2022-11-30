@@ -21,13 +21,17 @@ spec:
   loadBalancerIP: {{ .Values.gateway.service.loadBalancerIP }}
   {{- end }}
   ports:
-    - name: http-metrics
-      port: {{ .Values.gateway.service.port }}
-      targetPort: http-metrics
-      {{- if and (eq "NodePort" .Values.gateway.service.type) .Values.gateway.service.nodePort }}
-      nodePort: {{ .Values.gateway.service.nodePort }}
+    {{- range $key, $value := .Values.ports.gateway }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{  $key }}
+      protocol: {{ $value.protocol }}
+      {{- if $value.nodePort }}
+      nodePort: {{ $value.nodePort }}
       {{- end }}
-      protocol: TCP
+    {{- end }}
+    {{- end }}
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 4 }}
 {{- end }}

@@ -12,23 +12,29 @@ metadata:
 spec:
   type: {{ .Values.queryFrontend.service.type }}
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: 3100
-    - name: grpc
-      port: 9095
-      protocol: TCP
-      targetPort: 9095
-      {{- if .Values.queryFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+    {{- range $key, $value := .Values.ports.queryFrontend }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ .protocol }}
+      {{- if and (hasPrefix $key "grpc") ($.Values.queryFrontend.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.queryFrontend.appProtocol.grpc }}
       {{- end }}
+    {{- end }}
+    {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
-    - name: tempo-query-jaeger-ui
-      port: 16686
-      targetPort: 16686
-    - name: tempo-query-metrics
-      port: 16687
-      targetPort: jaeger-metrics
+    {{- range $key, $value := .Values.ports.tempoQuery }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ .protocol }}
+      {{- if and (hasPrefix $key "grpc") ($.Values.queryFrontend.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.queryFrontend.appProtocol.grpc }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
     {{- end }}
   {{- if .Values.queryFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.queryFrontend.service.loadBalancerIP  }}

@@ -252,17 +252,6 @@ metricsGenerator:
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
   extraVolumes: []
-  # -- Default ports
-  ports:
-    - name: grpc
-      port: 9095
-      service: true
-    - name: http-memberlist
-      port: 7946
-      service: false
-    - name: http-metrics
-      port: 3100
-      service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
     registry:
@@ -1555,3 +1544,158 @@ enterpriseGateway:
       - secretName: gem-gateway-tls
         hosts:
           - gateway.gem.example.com
+ports:
+  gateway:
+    http:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+      nodePort: null
+  enterpriseGateway:
+    http:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+  adminApi:
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    grpc:
+      containerPort: 9095
+      servicePort: 9095
+      protocol: TCP
+    http-memberlist:
+      containerPort: 7946
+      protocol: TCP
+  distributor:
+    http:
+     containerPort: 3100
+     servicePort: 3100
+     protocol: TCP
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-memberlist:
+      containerPort: 7946
+      protocol: TCP
+    grpc:
+      containerPort: 9095
+      servicePort: 9095
+      protocol: TCP
+  ingester:
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-memberlist:
+      containerPort: 7946
+      protocol: TCP
+    grpc:
+      containerPort: 9095
+      servicePort: 9095
+      protocol: TCP
+  metricsGenerator:
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-memberlist:
+      containerPort: 7946
+      protocol: TCP
+    grpc:
+      containerPort: 9095
+      servicePort: 9095
+      protocol: TCP
+  compactor:
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-memberlist:
+      containerPort: 7946
+      protocol: TCP
+  querier:
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http-memberlist:
+      containerPort: 7946
+      protocol: TCP
+    grpc:
+      containerPort: 9095
+      servicePort: 9095
+      protocol: TCP
+  queryFrontend:
+    grpclb:
+      containerPort: 9096
+      servicePort: 9096
+      targetPort: grpc
+      protocol: TCP
+    grpc:
+      containerPort: 9095
+      servicePort: 9095
+      protocol: TCP
+    http-metrics:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+    http:
+      containerPort: 3100
+      servicePort: 3100
+      protocol: TCP
+  tempoQuery:
+    jaeger-ui:
+      containerPort: 16686
+      servicePort: 16686
+      protocol: TCP
+    jaeger-metrics:
+      containerPort: 16687
+      servicePort: 16687
+      protocol: TCP
+  tracesReceiver:
+    otlp:
+      enabled: true
+      containerPort: 4317
+      servicePort: 4317
+      protocol: TCP
+    otlp-http:
+      enabled: false
+      containerPort: 4318
+      servicePort: 4318
+      protocol: TCP
+    jaeger-compact:
+      enabled: false
+      containerPort: 6831
+      servicePort: 6831
+      protocol: UDP
+    jaeger-thrift:
+      enabled: false
+      containerPort: 14268
+      servicePort: 14268
+      protocol: TCP
+    jaeger-grpc:
+      enabled: false
+      containerPort: 14250
+      servicePort: 14250
+      protocol: TCP
+    zipkin:
+      enabled: false
+      containerPort: 9411
+      servicePort: 9411
+      protocol: TCP
+    opencensus:
+      enabled: false
+      containerPort: 55678
+      servicePort: 55678
+      protocol: TCP

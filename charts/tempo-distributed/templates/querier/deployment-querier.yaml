@@ -61,11 +61,13 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: querier
           ports:
-            - containerPort: 7946
-              name: http-memberlist
-              protocol: TCP
-            - containerPort: 3100
-              name: http-metrics
+            {{- range $key, $value := .Values.ports.querier }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.querier.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

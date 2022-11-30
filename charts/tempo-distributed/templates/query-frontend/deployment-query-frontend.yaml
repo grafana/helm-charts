@@ -63,10 +63,13 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: query-frontend
           ports:
-            - containerPort: 3100
-              name: http-metrics
-            - containerPort: 9095
-              name: grpc
+            {{- range $key, $value := .Values.ports.queryFrontend }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.queryFrontend.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -105,10 +108,13 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: tempo-query
           ports:
-            - containerPort: 16686
-              name: jaeger-ui
-            - containerPort: 16687
-              name: jaeger-metrics
+            {{- range $key, $value := .Values.ports.tempoQuery }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.queryFrontend.query.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

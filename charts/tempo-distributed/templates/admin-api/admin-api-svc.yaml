@@ -14,14 +14,14 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ include "tempo.serverHttpListenPort" . }}
-      protocol: TCP
-      name: http-metrics
-      targetPort: http-metrics
-    - port: {{ include "tempo.serverGrpcListenPort" . }}
-      protocol: TCP
-      name: grpc
-      targetPort: grpc
+    {{- range $key, $value := .Values.ports.adminApi }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+    {{- end }}
+    {{- end }}
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api" "memberlist" true) | nindent 4 }}
 {{- end -}}

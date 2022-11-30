@@ -64,9 +64,13 @@ spec:
               mountPath: "/data"
               subPath: {{ .Values.enterpriseGateway.persistence.subPath }}
           ports:
-            - name: http-metrics
-              containerPort: {{ include "tempo.serverHttpListenPort" . }}
-              protocol: TCP
+            {{- range $key, $value := .Values.ports.enterpriseGateway }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.enterpriseGateway.livenessProbe | nindent 12 }}
           readinessProbe:

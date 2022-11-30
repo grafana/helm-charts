@@ -55,9 +55,12 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: metrics-generator
           ports:
-            {{- range .Values.metricsGenerator.ports }}
-            - name: {{ .name | quote }}
-              containerPort: {{ .port }}
+            {{- range $key, $value := .Values.ports.metricsGenerator }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
             {{- end }}
           {{- with .Values.metricsGenerator.extraEnv }}
           env:

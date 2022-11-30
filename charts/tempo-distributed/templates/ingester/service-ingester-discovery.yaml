@@ -15,16 +15,16 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-    - name: http-metrics
-      port: 3100
-      protocol: TCP
-      targetPort: 3100
-    - name: grpc
-      port: 9095
-      protocol: TCP
-      targetPort: 9095
-      {{- if .Values.ingester.appProtocol.grpc }}
-      appProtocol: {{ .Values.ingester.appProtocol.grpc }}
+    {{- range $key, $value := .Values.ports.ingester }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+      {{- if and (hasPrefix $key "grpc") ($.Values.ingester.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.ingester.appProtocol.grpc }}
       {{- end }}
+    {{- end }}
+    {{- end }}
   selector:
     {{- include "tempo.selectorLabels" $dict | nindent 4 }}

@@ -15,10 +15,14 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.enterpriseGateway.service.port | default (include "tempo.serverHttpListenPort" . ) }}
-      protocol: TCP
-      name: http-metrics
-      targetPort: http-metrics
+    {{- range $key, $value := .Values.ports.enterpriseGateway }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+    {{- end }}
+    {{- end }}
   selector:
     {{- include "tempo.selectorLabels" $dict | nindent 4 }}
 {{- end -}}

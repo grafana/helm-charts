@@ -49,9 +49,13 @@ spec:
           image: "{{ include "tempo.imageReference" $dict }}"
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           ports:
-            - name: http-metrics
-              containerPort: 8080
-              protocol: TCP
+            {{- range $key, $value := .Values.ports.gateway }}
+            {{- if $value.containerPort }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.gateway.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

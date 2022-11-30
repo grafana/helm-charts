@@ -13,13 +13,13 @@ metadata:
   {{- end }}
 spec:
   ports:
-    {{- range .Values.metricsGenerator.ports }}
-    {{- if .service }}
-    - name: {{ .name | quote }}
-      port: {{ .port }}
-      protocol: TCP
-      targetPort: {{ .port }}
-      {{- if and (hasPrefix .name "grpc") ($.Values.metricsGenerator.appProtocol.grpc) }}
+    {{- range $key, $value := .Values.ports.metricsGenerator }}
+    {{- if $value.servicePort }}
+    - name: {{ $key }}
+      port: {{ $value.servicePort }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+      {{- if and (hasPrefix $key "grpc") ($.Values.metricsGenerator.appProtocol.grpc) }}
       appProtocol: {{ $.Values.metricsGenerator.appProtocol.grpc }}
       {{- end }}
     {{- end }}

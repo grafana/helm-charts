@@ -46,7 +46,7 @@ spec:
               service:
                 name: {{ include "tempo.resourceName" $dict }}
                 port:
-                  number: {{ $.Values.enterpriseGateway.service.port | default (include "tempo.serverHttpListenPort" $ ) }}
+                  number: {{ $.Values.ports.enterpriseGateway.http }}
               {{- else }}
               serviceName: {{ include "tempo.resourceName" $dict }}
               servicePort: {{ $.Values.enterpriseGateway.service.port | default (include "tempo.serverHttpListenPort" $ ) }}
