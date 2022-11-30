@@ -66,6 +66,11 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.downloadDashboards.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
     {{- with .Values.downloadDashboards.securityContext }}
     securityContext:
       {{- toYaml . | nindent 6 }}
