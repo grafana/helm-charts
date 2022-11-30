@@ -1,4 +1,4 @@
-{{- if and .Values.ruler.enabled (gt (int .Values.ruler.replicas) 1) }}
+{{- if and .Values.ruler.enabled (gt (int .Values.ruler.replicas) 1) .Values.ruler.maxUnavailable }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:

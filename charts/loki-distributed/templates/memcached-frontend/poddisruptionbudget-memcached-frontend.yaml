@@ -1,4 +1,4 @@
-{{- if and .Values.memcachedFrontend.enabled (gt (int .Values.memcachedFrontend.replicas) 1) }}
+{{- if and .Values.memcachedFrontend.enabled (gt (int .Values.memcachedFrontend.replicas) 1) .Values.memcachedFrontend.maxUnavailable }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:

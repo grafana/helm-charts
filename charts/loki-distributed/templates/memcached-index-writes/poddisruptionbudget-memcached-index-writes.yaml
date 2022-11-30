@@ -1,4 +1,4 @@
-{{- if and .Values.memcachedIndexWrites.enabled (gt (int .Values.memcachedIndexWrites.replicas) 1) }}
+{{- if and .Values.memcachedIndexWrites.enabled (gt (int .Values.memcachedIndexWrites.replicas) 1) .Values.memcachedIndexWrites.maxUnavailable }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:

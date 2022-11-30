@@ -1,4 +1,4 @@
-{{- if gt (int .Values.querier.replicas) 1 }}
+{{- if and (gt (int .Values.querier.replicas) 1) .Values.querier.maxUnavailable }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:

@@ -1,4 +1,4 @@
-{{- if and .Values.indexGateway.enabled (gt (int .Values.indexGateway.replicas) 1) }}
+{{- if and .Values.indexGateway.enabled (gt (int .Values.indexGateway.replicas) 1) .Values.indexGateway.maxUnavailable }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
