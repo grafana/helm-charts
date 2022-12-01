@@ -23,7 +23,7 @@ deployment:
 secret:
   # -- Labels for the Secret
   labels: {}
-  # -- Annotations for the Secret 
+  # -- Annotations for the Secret
   annotations: {}
 
 configmap:
