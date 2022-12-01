@@ -26438,6 +26438,27 @@ entries:
   promtail:
   - apiVersion: v2
     appVersion: 2.6.1
+    created: "2022-12-01T15:11:27.984662899Z"
+    description: Promtail is an agent which ships the contents of local logs to a
+      Loki instance
+    digest: 085b538b0998f28039f5f670bc4b34e202a883ece6155ac18b1d423f67441d08
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    - name: unguiculus
+    name: promtail
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/promtail-6.6.3/promtail-6.6.3.tgz
+    version: 6.6.3
+  - apiVersion: v2
+    appVersion: 2.6.1
     created: "2022-11-12T00:21:19.03634734Z"
     description: Promtail is an agent which ships the contents of local logs to a
       Loki instance
@@ -32047,4 +32068,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-01T11:17:57.082741221Z"
+generated: "2022-12-01T15:11:28.000375065Z"
