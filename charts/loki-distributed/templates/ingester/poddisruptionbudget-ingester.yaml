@@ -1,4 +1,7 @@
-{{- if and (gt (int .Values.ingester.replicas) 1) .Values.ingester.maxUnavailable }}
+{{- if gt (int .Values.ingester.replicas) 1 }}
+{{- if not .Values.ingester.maxUnavailable }}
+{{- fail "`.Values.ingester.maxUnavailable` must be set when `.Values.ingester.replicas` is greater than 1." }}
+{{- else }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -12,4 +15,5 @@ spec:
   {{- with .Values.ingester.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
+{{- end }}
 {{- end }}
