@@ -18,7 +18,7 @@ spec:
   {{- end }}
   {{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
   imagePullSecrets:
-    {{- include "grafana.imagePullSecrets" (dict "root" $root "imagePullSecrets" .Values.image.pullSecrets) | indent 4 }}
+    {{- include "grafana.imagePullSecrets" (dict "root" $root "imagePullSecrets" .Values.image.pullSecrets) | nindent 4 }}
   {{- end }}
   {{- with .Values.nodeSelector }}
   nodeSelector:

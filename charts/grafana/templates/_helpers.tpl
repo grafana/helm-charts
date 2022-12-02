@@ -177,12 +177,12 @@ Return if ingress supports pathType.
 Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific imagePullSecrets})
 */}}
 {{- define "grafana.imagePullSecrets" -}}
-{{- $root := .root -}}
+{{- $root := .root }}
 {{- range (concat .root.Values.global.imagePullSecrets .imagePullSecrets) }}
-  {{- if eq (typeOf .) "map[string]interface {}" }}
+{{- if eq (typeOf .) "map[string]interface {}" }}
 - {{ toYaml (dict "name" (tpl .name $root)) | trim }}
-  {{- else }}
+{{- else }}
 - name: {{ tpl . $root }}
-  {{- end }}
 {{- end }}
-{{- end -}}
+{{- end }}
+{{- end }}

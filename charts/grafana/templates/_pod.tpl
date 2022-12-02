@@ -222,7 +222,7 @@ initContainers:
 {{- end }}
 {{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
 imagePullSecrets:
-  {{- include "grafana.imagePullSecrets" (dict "root" $root "imagePullSecrets" .Values.image.pullSecrets) | indent 2 }}
+  {{- include "grafana.imagePullSecrets" (dict "root" $root "imagePullSecrets" .Values.image.pullSecrets) | nindent 2 }}
 {{- end }}
 {{- if not .Values.enableKubeBackwardCompatibility }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
