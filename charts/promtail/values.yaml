@@ -20,6 +20,12 @@ deployment:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
 
+secret:
+  # -- Labels for the Secret
+  labels: {}
+  # -- Annotations for the Secret
+  annotations: {}
+
 configmap:
   # -- If enabled, promtail config will be created as a ConfigMap instead of a secret
   enabled: false

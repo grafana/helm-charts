@@ -127,6 +127,8 @@ The new release which will pick up again from the existing `positions.yaml`.
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy is to be created |
 | readinessProbe | object | See `values.yaml` | Readiness probe |
 | resources | object | `{}` | Resource requests and limits |
+| secret.annotations | object | `{}` | Annotations for the Secret |
+| secret.labels | object | `{}` | Labels for the Secret |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
