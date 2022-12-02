@@ -180,7 +180,7 @@ Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific 
 {{- $root := .root -}}
 {{- range (concat .root.Values.global.imagePullSecrets .imagePullSecrets) }}
   {{- if eq (typeOf .) "map[string]interface {}" }}
-- {{ toYaml (tpl .name $root) | trim }}
+- {{ toYaml (dict "name" (tpl .name $root)) | trim }}
   {{- else }}
 - name: {{ tpl . $root }}
   {{- end }}
