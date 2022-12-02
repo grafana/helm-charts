@@ -220,11 +220,9 @@ initContainers:
 {{- with .Values.extraInitContainers }}
   {{- tpl (toYaml .) $root | nindent 2 }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
+{{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
 imagePullSecrets:
-  {{- range . }}
-  - name: {{ tpl . $root }}
-  {{- end}}
+  {{- include "grafana.imagePullSecrets" (dict "Values" .Values "imagePullSecrets" .Values.image.pullSecrets) | indent 2 }}
 {{- end }}
 {{- if not .Values.enableKubeBackwardCompatibility }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
