@@ -1,4 +1,7 @@
 {{- if and .Values.memcachedIndexWrites.enabled (gt (int .Values.memcachedIndexWrites.replicas) 1) }}
+{{- if not .Values.memcachedIndexWrites.maxUnavailable }}
+{{- fail "`.Values.memcachedIndexWrites.maxUnavailable` must be set when `.Values.memcachedIndexWrites.replicas` is greater than 1." }}
+{{- else }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -12,4 +15,5 @@ spec:
   {{- with .Values.memcachedIndexWrites.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
+{{- end }}
 {{- end }}
