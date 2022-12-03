@@ -1,4 +1,7 @@
 {{- if gt (int .Values.distributor.replicas) 1 }}
+{{- if not .Values.distributor.maxUnavailable }}
+{{- fail "`.Values.distributor.maxUnavailable` must be set when `.Values.distributor.replicas` is greater than 1." }}
+{{- else }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -12,4 +15,5 @@ spec:
   {{- with .Values.distributor.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
+{{- end }}
 {{- end }}
