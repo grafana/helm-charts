@@ -172,3 +172,17 @@ Return if ingress supports pathType.
 {{- define "grafana.ingress.supportsPathType" -}}
 {{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
 {{- end }}
+
+{{/*
+Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific imagePullSecrets})
+*/}}
+{{- define "grafana.imagePullSecrets" -}}
+{{- $root := .root }}
+{{- range (concat .root.Values.global.imagePullSecrets .imagePullSecrets) }}
+{{- if eq (typeOf .) "map[string]interface {}" }}
+- {{ toYaml (dict "name" (tpl .name $root)) | trim }}
+{{- else }}
+- name: {{ tpl . $root }}
+{{- end }}
+{{- end }}
+{{- end }}
