@@ -101,7 +101,7 @@ image:
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ## Can be templated.
   ##
-  # pullSecrets:
+  pullSecrets: []
   #   - myRegistrKeySecretName
 
 testFramework:
