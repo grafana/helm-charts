@@ -1,4 +1,7 @@
 {{- if gt (int .Values.querier.replicas) 1 }}
+{{- if not .Values.querier.maxUnavailable }}
+{{- fail "`.Values.querier.maxUnavailable` must be set when `.Values.querier.replicas` is greater than 1." }}
+{{- else }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -12,4 +15,5 @@ spec:
   {{- with .Values.querier.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
+{{- end }}
 {{- end }}

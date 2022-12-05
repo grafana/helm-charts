@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- include "loki.config.checksum" . | nindent 8 }}
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -66,6 +66,9 @@ spec:
               protocol: TCP
             - name: grpc
               containerPort: 9095
+              protocol: TCP
+            - name: http-memberlist
+              containerPort: 7946
               protocol: TCP
           {{- with .Values.ruler.extraEnv }}
           env:
