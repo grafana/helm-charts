@@ -4,7 +4,12 @@ nameOverride: ""
 # -- Overrides the chart's computed fullname
 fullnameOverride: ""
 
+# -- Define the amount of instances
 replicas: 1
+
+# -- Annotations for the StatefulSet
+annotations: {}
+
 tempo:
   repository: grafana/tempo
   tag: 1.5.0
@@ -103,6 +108,7 @@ tempo:
   #   existingClaim: volume-claim
 
 # -- Tempo configuration file contents
+# @default -- See `values.yaml`
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
@@ -155,7 +161,7 @@ tempoQuery:
     #    - ALL
     # readOnlyRootFilesystem: false # fails if true, do not enable
 
-# Add container securityContext
+# -- Add container securityContext
 securityContext: {}
   # runAsUser: 65532
   # runAsGroup: 65532
@@ -192,26 +198,26 @@ persistence:
     - ReadWriteOnce
   size: 10Gi
 
-## Pod Annotations
+# -- Pod Annotations
 podAnnotations: {}
 
-## Pod (extra) Labels
+# -- Pod (extra) Labels
 podLabels: {}
 
 # -- Volumes to add
 extraVolumes: []
 
-## Node labels for pod assignment
+# -- Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
 #
 nodeSelector: {}
 
-## Tolerations for pod assignment
+# -- Tolerations for pod assignment
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
 tolerations: []
 
-## Affinity for pod assignment
+# -- Affinity for pod assignment
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}

@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.16.7](https://img.shields.io/badge/Version-0.16.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -12,20 +12,21 @@ Grafana Tempo Single Binary Mode
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` |  |
-| config | string | `"multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}\nsearch_enabled: {{ .Values.tempo.searchEnabled }}\ncompactor:\n  compaction:\n    compacted_block_retention: {{ .Values.tempo.retention }}\ndistributor:\n  receivers:\n    {{- toYaml .Values.tempo.receivers | nindent 8 }}\ningester:\n  {{- toYaml .Values.tempo.ingester | nindent 6 }}\nserver:\n  {{- toYaml .Values.tempo.server | nindent 6 }}\nstorage:\n  {{- toYaml .Values.tempo.storage | nindent 6 }}\nquerier:\n  {{- toYaml .Values.tempo.querier | nindent 6 }}\nquery_frontend:\n  {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}\noverrides:\n  {{- toYaml .Values.tempo.global_overrides | nindent 6 }}\n"` | Tempo configuration file contents |
+| affinity | object | `{}` | Affinity for pod assignment |
+| annotations | object | `{}` | Annotations for the StatefulSet |
+| config | string | See `values.yaml` | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
-| nodeSelector | object | `{}` |  |
+| nodeSelector | object | `{}` | Node labels for pod assignment |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"10Gi"` |  |
-| podAnnotations | object | `{}` |  |
-| podLabels | object | `{}` |  |
+| podAnnotations | object | `{}` | Pod Annotations |
+| podLabels | object | `{}` | Pod (extra) Labels |
 | priorityClassName | string | `nil` | The name of the PriorityClass |
-| replicas | int | `1` |  |
-| securityContext | object | `{}` |  |
+| replicas | int | `1` | Define the amount of instances |
+| securityContext | object | `{}` | Add container securityContext |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
@@ -74,7 +75,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.securityContext | object | `{}` |  |
 | tempoQuery.tag | string | `"1.5.0"` |  |
-| tolerations | list | `[]` |  |
+| tolerations | list | `[]` | Tolerations for pod assignment |
 
 ## Chart Repo
 
