@@ -1,4 +1,4 @@
-{{- $sts := list "sts" "StatefulSet" -}}
+{{- $sts := list "sts" "StatefulSet" "statefulset" -}}
 {{- if or .Values.headlessService (and .Values.persistence.enabled (not .Values.persistence.existingClaim) (has .Values.persistence.type $sts)) }}
 apiVersion: v1
 kind: Service

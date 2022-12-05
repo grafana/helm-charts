@@ -1,4 +1,4 @@
-{{- $sts := list "sts" "StatefulSet" -}}
+{{- $sts := list "sts" "StatefulSet" "statefulset" -}}
 {{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
