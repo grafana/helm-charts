@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- include "loki.config.checksum" . | nindent 8 }}
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -41,6 +41,12 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
+      {{- with .Values.querier.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -50,10 +56,18 @@ spec:
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
+      {{- with .Values.querier.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: querier
           image: {{ include "loki.querierImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.querier.command }}
+          command:
+            - {{ coalesce .Values.querier.command .Values.loki.command | quote }}
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=querier
@@ -87,6 +101,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
+            - name: runtime-config
+              mountPath: /var/{{ include "loki.name" . }}-runtime
             - name: data
               mountPath: /var/loki
             {{- with .Values.querier.extraVolumeMounts }}
@@ -122,6 +138,9 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "loki.fullname" . }}-runtime
         {{- with .Values.querier.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

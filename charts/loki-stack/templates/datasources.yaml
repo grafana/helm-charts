@@ -9,7 +9,11 @@ metadata:
     chart: {{ template "loki-stack.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if .Values.grafana.sidecar.datasources.label }}
+    {{ .Values.grafana.sidecar.datasources.label }}: {{ .Values.grafana.sidecar.datasources.labelValue | quote }}
+    {{- else }}
     grafana_datasource: "1"
+    {{- end }}
 data:
   loki-stack-datasource.yaml: |-
     apiVersion: 1
@@ -18,9 +22,12 @@ data:
     - name: Loki
       type: loki
       access: proxy
-      url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+      url: {{ tpl .Values.loki.url . | quote }}
       version: 1
       isDefault: {{ default false .Values.loki.isDefault }}
+      {{- with .Values.loki.datasource.uid }}
+      uid: {{ . | quote }}
+      {{- end }}
       {{- with .Values.loki.datasource.jsonData }}
       jsonData:
         {{- tpl . $ | nindent 8 }}
@@ -31,7 +38,7 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
+      url: {{ tpl .Values.prometheus.url . | quote }}
       version: 1
       isDefault: {{ default false .Values.prometheus.isDefault }}
       {{- with .Values.prometheus.datasource.jsonData }}

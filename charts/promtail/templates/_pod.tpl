@@ -15,20 +15,13 @@ Pod template used in Daemonset and Deployment
         {{- end }}
     spec:
       serviceAccountName: {{ include "promtail.serviceAccountName" . }}
+      {{ include "promtail.enableServiceLinks" . }}
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
-      {{- if .Values.initContainer.enabled }}
+      {{- with .Values.initContainer }}
       initContainers:
-        - name: init
-          image: "{{ .Values.initContainer.image.registry }}/{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
-          imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
-          command:
-            - sh
-            - -c
-            - sysctl -w fs.inotify.max_user_instances={{ .Values.initContainer.fsInotifyMaxUserInstances }}
-          securityContext:
-            privileged: true
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -79,16 +72,22 @@ Pod template used in Daemonset and Deployment
             {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
           {{- end }}
           {{- with .Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
           {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- if .Values.deployment.enabled }}
+      {{- range $name, $values := .Values.extraContainers }}
+        - name: {{ $name }}
+      {{ toYaml $values | nindent 10 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
@@ -103,8 +102,13 @@ Pod template used in Daemonset and Deployment
       {{- end }}
       volumes:
         - name: config
+          {{- if .Values.configmap.enabled }}
+          configMap:
+            name: {{ include "promtail.fullname" . }}
+          {{- else }}
           secret:
             secretName: {{ include "promtail.fullname" . }}
+          {{- end }}
         {{- with .Values.defaultVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

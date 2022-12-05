@@ -78,3 +78,14 @@ The service name to connect to Loki. Defaults to the same logic as "loki.fullnam
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/* Configure enableServiceLinks in pod */}}
+{{- define "promtail.enableServiceLinks" -}}
+{{- if semverCompare ">=1.13-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if or (.Values.enableServiceLinks) (eq (.Values.enableServiceLinks | toString) "<nil>") -}}
+enableServiceLinks: true
+{{- else -}}
+enableServiceLinks: false
+{{- end -}}
+{{- end -}}
+{{- end -}}

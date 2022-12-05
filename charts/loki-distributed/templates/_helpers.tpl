@@ -140,3 +140,42 @@ Return the appropriate apiVersion for PodDisruptionBudget.
     {{- print "policy/v1beta1" -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Return the appropriate apiVersion for HorizontalPodAutoscaler.
+*/}}
+{{- define "loki.hpa.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">=1.23-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "autoscaling/v2" -}}
+  {{- else -}}
+    {{- print "autoscaling/v2beta1" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "loki.ingester.readinessProbe" -}}
+{{- with .Values.ingester.readinessProbe }}  
+readinessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- else }}
+{{- with .Values.loki.readinessProbe }}
+readinessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{- define "loki.ingester.livenessProbe" -}}
+{{- with .Values.ingester.livenessProbe }}
+livenessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- else }}
+{{- with .Values.loki.livenessProbe }}
+livenessProbe:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{- define "loki.config.checksum" -}}
+checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
+{{- end }}

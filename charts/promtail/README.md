@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.2.3](https://img.shields.io/badge/Version-6.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 6.7.0](https://img.shields.io/badge/Version-6.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -21,6 +21,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart Versions >= 3.0.0
+
+* Customizeable initContainer added.
 
 ### From Chart Versions < 3.0.0
 
@@ -72,9 +76,11 @@ The new release which will pick up again from the existing `positions.yaml`.
 | config.logLevel | string | `"info"` | The log level of the Promtail server Must be reference in `config.file` to configure `server.log_level` See default config in `values.yaml` |
 | config.serverPort | int | `3101` | The port of the Promtail server Must be reference in `config.file` to configure `server.http_listen_port` See default config in `values.yaml` |
 | config.snippets | object | See `values.yaml` | A section of reusable snippets that can be reference in `config.file`. Custom snippets may be added in order to reduce redundancy. This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common. |
+| config.snippets.extraLimitsConfig | string | empty | You can put here any keys that will be directly added to the config file's 'limits_config' block. |
 | config.snippets.extraRelabelConfigs | list | `[]` | You can put here any additional relabel_configs to "kubernetes-pods" job |
 | config.snippets.extraScrapeConfigs | string | empty | You can put here any additional scrape configs you want to add to the config file. |
 | config.snippets.extraServerConfigs | string | empty | You can put here any keys that will be directly added to the config file's 'server' block. |
+| configmap.enabled | bool | `false` | If enabled, promtail config will be created as a ConfigMap instead of a secret |
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers |
 | daemonset.enabled | bool | `true` | Deploys Promtail as a DaemonSet |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
@@ -86,7 +92,9 @@ The new release which will pick up again from the existing `positions.yaml`.
 | deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
 | deployment.replicaCount | int | `1` |  |
+| enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
+| extraContainers | object | `{}` |  |
 | extraEnv | list | `[]` | Extra environment variables |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
 | extraObjects | list | `[]` | Extra K8s manifests to deploy |
@@ -94,17 +102,13 @@ The new release which will pick up again from the existing `positions.yaml`.
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
+| httpPathPrefix | string | `""` | Base path to server all API routes fro |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |
 | image.repository | string | `"grafana/promtail"` | Docker image repository |
 | image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
-| initContainer.enabled | bool | `false` | Specifies whether the init container for setting inotify max user instances is to be enabled |
-| initContainer.fsInotifyMaxUserInstances | int | `128` | The inotify max user instances to configure |
-| initContainer.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy for the init container image |
-| initContainer.image.registry | string | `"docker.io"` | The Docker registry for the init container |
-| initContainer.image.repository | string | `"busybox"` | Docker image repository for the init container |
-| initContainer.image.tag | float | `1.33` | Docker tag for the init container |
+| initContainer | list | `[]` |  |
 | livenessProbe | object | `{}` | Liveness probe |
 | nameOverride | string | `nil` | Overrides the chart's name |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
@@ -123,6 +127,8 @@ The new release which will pick up again from the existing `positions.yaml`.
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy is to be created |
 | readinessProbe | object | See `values.yaml` | Readiness probe |
 | resources | object | `{}` | Resource requests and limits |
+| secret.annotations | object | `{}` | Annotations for the Secret |
+| secret.labels | object | `{}` | Labels for the Secret |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
@@ -135,7 +141,10 @@ The new release which will pick up again from the existing `positions.yaml`.
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig (defines `relabel_configs`) |
+| serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
+| serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"}]` | Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes. |
 | updateStrategy | object | `{}` | The update strategy for the DaemonSet |
 
@@ -270,8 +279,8 @@ config:
       log_level: {{ .Values.config.logLevel }}
       http_listen_port: {{ .Values.config.serverPort }}
 
-    client:
-      url: {{ .Values.config.lokiAddress }}
+    clients:
+      - url: {{ .Values.config.lokiAddress }}
 
     positions:
       filename: /run/promtail/positions.yaml

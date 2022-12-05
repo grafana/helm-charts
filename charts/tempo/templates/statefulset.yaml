@@ -29,6 +29,7 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
@@ -72,9 +73,13 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
-          {{- if .Values.tempo.extraEnv }}
-            {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
+          {{- with .Values.tempo.extraEnv }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
+        {{- with .Values.tempo.extraEnvFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.tempo.extraVolumeMounts -}}
           {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}

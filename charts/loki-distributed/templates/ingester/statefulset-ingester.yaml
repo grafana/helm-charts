@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "loki.ingesterLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.ingester.replicas }}
   podManagementPolicy: Parallel
@@ -20,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- include "loki.config.checksum" . | nindent 8 }}
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -37,7 +41,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
       {{- with .Values.ingester.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- tpl . $ | nindent 8 }}
@@ -52,10 +56,18 @@ spec:
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.ingester.terminationGracePeriodSeconds }}
+      {{- with .Values.ingester.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: ingester
           image: {{ include "loki.ingesterImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.ingester.command }}
+          command:
+            - {{ coalesce .Values.ingester.command .Values.loki.command | quote }}
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=ingester
@@ -82,20 +94,22 @@ spec:
           {{- end }}
           securityContext:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
-          readinessProbe:
-            {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
-          livenessProbe:
-            {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
+          {{- include "loki.ingester.readinessProbe" . | nindent 10 }}
+          {{- include "loki.ingester.livenessProbe" . | nindent 10 }}
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
+            - name: runtime-config
+              mountPath: /var/{{ include "loki.name" . }}-runtime
             - name: data
               mountPath: /var/loki
             {{- with .Values.ingester.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.ingester.resources }}
           resources:
-            {{- toYaml .Values.ingester.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- if .Values.ingester.extraContainers }}
         {{- toYaml .Values.ingester.extraContainers | nindent 8}}
         {{- end }}
@@ -120,12 +134,24 @@ spec:
           configMap:
             name: {{ include "loki.fullname" . }}
           {{- end }}
+        - name: runtime-config
+          configMap:
+            name: {{ template "loki.fullname" . }}-runtime
         {{- with .Values.ingester.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
   {{- if not .Values.ingester.persistence.enabled }}
         - name: data
           emptyDir: {}
+  {{- else if .Values.ingester.persistence.inMemory }}
+        - name: data
+        {{- if .Values.ingester.persistence.inMemory }}
+          emptyDir:
+            medium: Memory
+        {{- end }}
+        {{- if .Values.ingester.persistence.size }}
+            sizeLimit: {{ .Values.ingester.persistence.size }}
+        {{- end }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:
