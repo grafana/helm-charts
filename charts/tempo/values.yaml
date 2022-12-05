@@ -34,6 +34,12 @@ tempo:
   multitenancyEnabled: false
   # -- If true, enables Tempo's native search
   searchEnabled: false
+  # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
+  reportingEnabled: true
+  metricsGenerator:
+    # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
+    enabled: false
+    remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
   # -- Configuration options for the ingester
   ingester: {}
   # -- Configuration options for the querier
@@ -100,6 +106,8 @@ tempo:
   extraArgs: {}
   # -- Environment variables to add
   extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the ingester pods
+  extraEnvFrom: []
   # -- Volume mounts to add
   extraVolumeMounts: []
   # - name: extra-volume
@@ -108,13 +116,16 @@ tempo:
   #   existingClaim: volume-claim
 
 # -- Tempo configuration file contents
-# @default -- See `values.yaml`
+# @default -- Dynamically generated tempo configmap
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     search_enabled: {{ .Values.tempo.searchEnabled }}
+    usage_report:
+      reporting_enabled: {{ .Values.tempo.reportingEnabled }}
+    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
-        compacted_block_retention: {{ .Values.tempo.retention }}
+        block_retention: {{ .Values.tempo.retention }}
     distributor:
       receivers:
         {{- toYaml .Values.tempo.receivers | nindent 8 }}
@@ -130,6 +141,16 @@ config: |
       {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
     overrides:
       {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+      {{- if .Values.tempo.metricsGenerator.enabled }}
+          metrics_generator_processors:
+          - 'service-graphs'
+          - 'span-metrics'
+    metrics_generator:
+          storage:
+            path: "/tmp/tempo"
+            remote_write:
+              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+      {{- end }}
 
 tempoQuery:
   repository: grafana/tempo-query
@@ -161,7 +182,7 @@ tempoQuery:
     #    - ALL
     # readOnlyRootFilesystem: false # fails if true, do not enable
 
-# -- Add container securityContext
+# -- securityContext for container
 securityContext: {}
   # runAsUser: 65532
   # runAsGroup: 65532
@@ -178,6 +199,7 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+  automountServiceAccountToken: true
 
 service:
   type: ClusterIP
@@ -207,19 +229,13 @@ podLabels: {}
 # -- Volumes to add
 extraVolumes: []
 
-# -- Node labels for pod assignment
-## ref: https://kubernetes.io/docs/user-guide/node-selection/
-#
+# -- Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
-# -- Tolerations for pod assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-##
+# -- Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
-# -- Affinity for pod assignment
-## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-##
+# -- Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
 
 # -- The name of the PriorityClass
