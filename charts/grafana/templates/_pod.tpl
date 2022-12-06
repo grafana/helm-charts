@@ -562,7 +562,7 @@ containers:
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.searchNamespace }}
+      {{- with .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
         value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
