@@ -277,7 +277,9 @@ gateway:
   # -- Additional annotations for the `gateway` Pod
   annotations: {}
   # -- Additional labels and annotations for the `gateway` Service
+  # Service -- overriding service type 
   service:
+    type: ClusterIP
     labels: {}
     annotations: {}
   # -- Run container as user `enterprise-logs(uid=10001)`
