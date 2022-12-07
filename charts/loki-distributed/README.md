@@ -18,6 +18,20 @@ Add the following repo to use the chart:
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
+## Installing
+
+Install loki-distributed by helm:
+
+```console
+helm install loki-distributed grafana/loki-distributed -n log-loki --create-namespace
+```
+
+Uninstall loki-distributed by helm:
+
+```console
+helm uninstall loki-distributed -n log-loki
+```
+
 ## Upgrading
 
 ### Upgrading an existing Release to a new major version
