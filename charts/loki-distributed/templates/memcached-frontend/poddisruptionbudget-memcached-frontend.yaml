@@ -1,4 +1,7 @@
 {{- if and .Values.memcachedFrontend.enabled (gt (int .Values.memcachedFrontend.replicas) 1) }}
+{{- if not .Values.memcachedFrontend.maxUnavailable }}
+{{- fail "`.Values.memcachedFrontend.maxUnavailable` must be set when `.Values.memcachedFrontend.replicas` is greater than 1." }}
+{{- else }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -12,4 +15,5 @@ spec:
   {{- with .Values.memcachedFrontend.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
+{{- end }}
 {{- end }}

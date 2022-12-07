@@ -1,4 +1,5 @@
 {{- define "grafana.pod" -}}
+{{- $sts := list "sts" "StatefulSet" "statefulset" -}}
 {{- $root := . -}}
 {{- with .Values.schedulerName }}
 schedulerName: "{{ . }}"
@@ -65,6 +66,11 @@ initContainers:
       {{- range $key, $value := .Values.downloadDashboards.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.downloadDashboards.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
     {{- with .Values.downloadDashboards.securityContext }}
     securityContext:
@@ -215,11 +221,9 @@ initContainers:
 {{- with .Values.extraInitContainers }}
   {{- tpl (toYaml .) $root | nindent 2 }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
+{{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
 imagePullSecrets:
-  {{- range . }}
-  - name: {{ tpl . $root }}
-  {{- end}}
+  {{- include "grafana.imagePullSecrets" (dict "root" $root "imagePullSecrets" .Values.image.pullSecrets) | nindent 2 }}
 {{- end }}
 {{- if not .Values.enableKubeBackwardCompatibility }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
@@ -1010,8 +1014,8 @@ volumes:
   - name: storage
     persistentVolumeClaim:
       claimName: {{ tpl (.Values.persistence.existingClaim | default (include "grafana.fullname" .)) . }}
-  {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
-  # nothing
+  {{- else if and .Values.persistence.enabled (has .Values.persistence.type $sts) }}
+  {{/* nothing */}}
   {{- else }}
   - name: storage
     {{- if .Values.persistence.inMemory.enabled }}

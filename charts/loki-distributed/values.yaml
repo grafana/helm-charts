@@ -362,7 +362,7 @@ ingester:
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
-      topologyKey: failure-domain.beta.kubernetes.io/zone
+      topologyKey: kubernetes.io/hostname
       whenUnsatisfiable: ScheduleAnyway
       labelSelector:
         matchLabels:
@@ -406,6 +406,8 @@ ingester:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for ingester PVCs
+    annotations: {}
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -567,6 +569,8 @@ querier:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for querier PVCs
+    annotations: {}
   # -- Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -829,7 +833,7 @@ gateway:
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
-    tag: 1.19-alpine
+    tag: 1.20.2-alpine
     # -- The gateway image pull policy
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
@@ -1032,6 +1036,7 @@ gateway:
           location = / {
             return 200 'OK';
             auth_basic off;
+            access_log off;
           }
 
           location = /api/prom/push {
@@ -1150,6 +1155,8 @@ compactor:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for compactor PVCs
+    annotations: {}
   serviceAccount:
     create: false
     # -- The name of the ServiceAccount to use for the compactor.
@@ -1241,6 +1248,8 @@ ruler:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for ruler PVCs
+    annotations: {}
   # -- Directories containing rules files
   directories: {}
     # tenant_foo:
@@ -1382,6 +1391,8 @@ indexGateway:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+    # -- Annotations for index gateway PVCs
+    annotations: {}
 
 memcached:
   readinessProbe:
@@ -1399,7 +1410,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.7-alpine
+    tag: 1.6.17-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   # -- Labels for memcached pods

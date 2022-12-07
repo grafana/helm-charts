@@ -26,7 +26,7 @@ spec:
   {{- with .loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{- toYaml . | nindent 4 }}
-  {{- end -}}
+  {{- end }}
   {{- with .externalIPs }}
   externalIPs:
     {{- toYaml . | nindent 4 }}

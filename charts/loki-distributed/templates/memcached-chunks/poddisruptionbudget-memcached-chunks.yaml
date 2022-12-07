@@ -1,4 +1,7 @@
 {{- if and .Values.memcachedChunks.enabled (gt (int .Values.memcachedChunks.replicas) 1) }}
+{{- if not .Values.memcachedChunks.maxUnavailable }}
+{{- fail "`.Values.memcachedChunks.maxUnavailable` must be set when `.Values.memcachedChunks.replicas` is greater than 1." }}
+{{- else }}
 apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
@@ -12,4 +15,5 @@ spec:
   {{- with .Values.memcachedChunks.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
+{{- end }}
 {{- end }}
