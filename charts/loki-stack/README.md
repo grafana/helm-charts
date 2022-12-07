@@ -60,6 +60,12 @@ Navigate to <http://localhost:3000> and login with `admin` and the password outp
 Then follow the [instructions for adding the loki datasource](https://grafana.com/docs/grafana/latest/datasources/loki/), using the URL `http://loki:3100/`.
 
 ## Upgrade
+
+### Version >= 2.9.0
+Update chart dependecies and loki/promtail to 2.7.0 [#1692](https://github.com/grafana/helm-charts/pull/2055)
+
+Loki chart was updated to new major version 3.x, which introduced new posibilities. Default values were set for backward compatibility. It is possible to deploy loki-simple-scalable by overriding these default. For more info look into [upgrade-from-2.x](https://grafana.com/docs/loki/next/installation/helm/upgrade-from-2.x/).
+
 ### Version >= 2.8.0
 Provide support configurable datasource urls [#1374](https://github.com/grafana/helm-charts/pull/1374)
 

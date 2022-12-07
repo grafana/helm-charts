@@ -19,6 +19,10 @@ loki:
   datasource:
     jsonData: {}
     uid: ""
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: 'filesystem'
 
 
 promtail:
