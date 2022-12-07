@@ -236,23 +236,23 @@ serviceMonitor:
     #      severity: critical
     #    annotations:
     #      description: |
-    #        The {{ "{{ $labels.job }}" }} {{ "{{ $labels.route }}" }} is experiencing
-    #        {{ "{{ printf \"%.2f\" $value }}" }} errors.
-    #        VALUE = {{ "{{ $value }}" }}
-    #        LABELS = {{ "{{ $labels }}" }}
-    #      summary: Promtail request errors (instance {{ "{{ $labels.instance }}" }})
+    #        The {{ $labels.job }} {{ $labels.route }} is experiencing
+    #        {{ printf \"%.2f\" $value }} errors.
+    #        VALUE = {{ $value }}
+    #        LABELS = {{ $labels }}
+    #      summary: Promtail request errors (instance {{ $labels.instance }})
     #  - alert: PromtailRequestLatency
     #    expr: histogram_quantile(0.99, sum(rate(promtail_request_duration_seconds_bucket[5m])) by (le)) > 1
     #    for: 5m
     #    labels:
     #      severity: critical
     #    annotations:
-    #      summary: Promtail request latency (instance {{ "{{ $labels.instance }}" }})
+    #      summary: Promtail request latency (instance {{ $labels.instance }})
     #      description: |
-    #        The {{ "{{ $labels.job }}" }} {{ "{{ $labels.route }}" }} is experiencing
-    #        {{ "{{ printf \"%.2f\" $value }}" }}s 99th percentile latency.
-    #        VALUE = {{ "{{ $value }}" }}
-    #        LABELS = {{ "{{ $labels }}" }}
+    #        The {{ $labels.job }} {{ $labels.route }} is experiencing
+    #        {{ printf \"%.2f\" $value }}s 99th percentile latency.
+    #        VALUE = {{ $value }}
+    #        LABELS = {{ $labels }}
 
 # Extra containers created as part of a Promtail Deployment resource
 # - spec for Container:
