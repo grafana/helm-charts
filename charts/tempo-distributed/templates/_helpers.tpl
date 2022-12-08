@@ -178,6 +178,8 @@ secret:
 configMap:
   name: {{ tpl .Values.externalConfigSecretName . }}
   items:
+    - key: "tempo-query.yaml"
+      path: "tempo-query.yaml"
     - key: "tempo.yaml"
       path: "tempo.yaml"
     - key: "overrides.yaml"
