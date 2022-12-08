@@ -223,6 +223,36 @@ serviceMonitor:
   scheme: http
   # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
   tlsConfig: null
+  # -- Prometheus rules will be deployed for alerting purposes
+  prometheusRule:
+    enabled: false
+    additionalLabels: {}
+    # namespace:
+    rules: []
+    #  - alert: PromtailRequestErrors
+    #    expr: 100 * sum(rate(promtail_request_duration_seconds_count{status_code=~"5..|failed"}[1m])) by (namespace, job, route, instance) / sum(rate(promtail_request_duration_seconds_count[1m])) by (namespace, job, route, instance) > 10
+    #    for: 5m
+    #    labels:
+    #      severity: critical
+    #    annotations:
+    #      description: |
+    #        The {{ $labels.job }} {{ $labels.route }} is experiencing
+    #        {{ printf \"%.2f\" $value }} errors.
+    #        VALUE = {{ $value }}
+    #        LABELS = {{ $labels }}
+    #      summary: Promtail request errors (instance {{ $labels.instance }})
+    #  - alert: PromtailRequestLatency
+    #    expr: histogram_quantile(0.99, sum(rate(promtail_request_duration_seconds_bucket[5m])) by (le)) > 1
+    #    for: 5m
+    #    labels:
+    #      severity: critical
+    #    annotations:
+    #      summary: Promtail request latency (instance {{ $labels.instance }})
+    #      description: |
+    #        The {{ $labels.job }} {{ $labels.route }} is experiencing
+    #        {{ printf \"%.2f\" $value }}s 99th percentile latency.
+    #        VALUE = {{ $value }}
+    #        LABELS = {{ $labels }}
 
 # Extra containers created as part of a Promtail Deployment resource
 # - spec for Container:

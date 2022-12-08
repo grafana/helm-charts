@@ -1,4 +1,5 @@
 {{- define "grafana.pod" -}}
+{{- $sts := list "sts" "StatefulSet" "statefulset" -}}
 {{- $root := . -}}
 {{- with .Values.schedulerName }}
 schedulerName: "{{ . }}"
@@ -561,7 +562,7 @@ containers:
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.searchNamespace }}
+      {{- with .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
         value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
@@ -1013,8 +1014,8 @@ volumes:
   - name: storage
     persistentVolumeClaim:
       claimName: {{ tpl (.Values.persistence.existingClaim | default (include "grafana.fullname" .)) . }}
-  {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
-  # nothing
+  {{- else if and .Values.persistence.enabled (has .Values.persistence.type $sts) }}
+  {{/* nothing */}}
   {{- else }}
   - name: storage
     {{- if .Values.persistence.inMemory.enabled }}

@@ -142,6 +142,17 @@ Return the appropriate apiVersion for ingress.
 {{- end }}
 
 {{/*
+Return the appropriate apiVersion for Horizontal Pod Autoscaler.
+*/}}
+{{- define "grafana.hpa.apiVersion" -}}
+{{- if semverCompare "<1.23-0" .Capabilities.KubeVersion.Version }}
+{{- print "autoscaling/v2beta1" }}
+{{- else }}
+{{- print "autoscaling/v2" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Return the appropriate apiVersion for podDisruptionBudget.
 */}}
 {{- define "grafana.podDisruptionBudget.apiVersion" -}}
