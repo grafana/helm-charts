@@ -82,7 +82,7 @@ spec:
       resources:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- if .Values.deployment.enabled }}
+    {{- if .Values.extraContainers }}
     {{- range $name, $values := .Values.extraContainers }}
     - name: {{ $name }}
       {{ toYaml $values | nindent 6 }}
