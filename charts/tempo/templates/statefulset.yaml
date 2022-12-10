@@ -7,7 +7,7 @@ metadata:
     {{- include "tempo.labels" . | nindent 4 }}
   {{- with .Values.annotations }}
   annotations:
-    {{ toYaml . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
@@ -73,9 +73,13 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         env:
-          {{- if .Values.tempo.extraEnv }}
-            {{- toYaml .Values.tempo.extraEnv | nindent 12 }}
+          {{- with .Values.tempo.extraEnv }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
+        {{- with .Values.tempo.extraEnvFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.tempo.extraVolumeMounts -}}
           {{ toYaml .Values.tempo.extraVolumeMounts | nindent 8 }}

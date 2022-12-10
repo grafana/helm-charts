@@ -141,6 +141,17 @@ Return the appropriate apiVersion for PodDisruptionBudget.
   {{- end -}}
 {{- end -}}
 
+{{/*
+Return the appropriate apiVersion for HorizontalPodAutoscaler.
+*/}}
+{{- define "loki.hpa.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">=1.23-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "autoscaling/v2" -}}
+  {{- else -}}
+    {{- print "autoscaling/v2beta1" -}}
+  {{- end -}}
+{{- end -}}
+
 {{- define "loki.ingester.readinessProbe" -}}
 {{- with .Values.ingester.readinessProbe }}  
 readinessProbe:
@@ -164,3 +175,7 @@ livenessProbe:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{- define "loki.config.checksum" -}}
+checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
+{{- end }}

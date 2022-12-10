@@ -9,7 +9,11 @@ metadata:
     chart: {{ template "loki-stack.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if .Values.grafana.sidecar.datasources.label }}
+    {{ .Values.grafana.sidecar.datasources.label }}: {{ .Values.grafana.sidecar.datasources.labelValue | quote }}
+    {{- else }}
     grafana_datasource: "1"
+    {{- end }}
 data:
   loki-stack-datasource.yaml: |-
     apiVersion: 1
