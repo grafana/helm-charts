@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "promtail.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "promtail.namespaceName" . }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
 data:

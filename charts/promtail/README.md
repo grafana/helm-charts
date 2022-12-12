@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.7.4](https://img.shields.io/badge/Version-6.7.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
+![Version: 6.8.0](https://img.shields.io/badge/Version-6.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -111,6 +111,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | initContainer | list | `[]` |  |
 | livenessProbe | object | `{}` | Liveness probe |
 | nameOverride | string | `nil` | Overrides the chart's name |
+| namespace.name | string | `nil` | The name of the Namespace to deploy If not set, `.Release.Namespace` is used |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
 | networkPolicy.k8sApi.cidrs | list | `[]` | Specifies specific network CIDRs you want to limit access to |
 | networkPolicy.k8sApi.port | int | `8443` | Specify the k8s API endpoint port |

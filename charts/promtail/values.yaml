@@ -118,6 +118,11 @@ rbac:
   # -- Specifies whether a PodSecurityPolicy is to be created
   pspEnabled: false
 
+namespace:
+  # -- The name of the Namespace to deploy
+  # If not set, `.Release.Namespace` is used
+  name: null
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
