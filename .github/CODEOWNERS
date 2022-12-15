@@ -6,13 +6,13 @@
 # Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
 * @grafana/helm-charts-admins
 
-/charts/grafana/ @maorfr @rtluckie @torstenwalter @Xtigyro @zanhsieh
+/charts/grafana/ @maorfr @torstenwalter @Xtigyro @zanhsieh
 /charts/loki-distributed/ @unguiculus @Whyeasy
 /charts/loki-canary/ @unguiculus @Whyeasy
 /charts/promtail/ @unguiculus @Whyeasy
 /charts/tempo/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid
 /charts/tempo-distributed/ @annanay25 @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid @zalegrala
-/charts/enterprise-metrics/ @jdbaldry @chaudum
-/charts/enterprise-logs/ @jdbaldry @chaudum
+/charts/enterprise-metrics/ @chaudum
+/charts/enterprise-logs/ @chaudum
 /charts/tempo-vulture/ @Whyeasy @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio
-/charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh @sc250024
+/charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
