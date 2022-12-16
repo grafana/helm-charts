@@ -825,6 +825,11 @@ config: |
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
     {{- toYaml .Values.global_overrides | nindent 2 }}
+    {{- if .Values.tempo.metricsGenerator.enabled }}
+        metrics_generator_processors:
+        - 'service-graphs'
+        - 'span-metrics'
+    {{- end }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
