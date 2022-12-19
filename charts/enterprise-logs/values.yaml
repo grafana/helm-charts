@@ -277,7 +277,7 @@ gateway:
   # -- Additional annotations for the `gateway` Pod
   annotations: {}
   # -- Additional labels and annotations for the `gateway` Service
-  # -- Service overriding service type 
+  # -- Service overriding service type
   service:
     type: ClusterIP
     labels: {}
