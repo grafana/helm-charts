@@ -111,7 +111,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | initContainer | list | `[]` |  |
 | livenessProbe | object | `{}` | Liveness probe |
 | nameOverride | string | `nil` | Overrides the chart's name |
-| namespace.name | string | `nil` | The name of the Namespace to deploy If not set, `.Release.Namespace` is used |
+| namespace | string | `nil` | The name of the Namespace to deploy If not set, `.Release.Namespace` is used |
 | networkPolicy.enabled | bool | `false` | Specifies whether Network Policies should be created |
 | networkPolicy.k8sApi.cidrs | list | `[]` | Specifies specific network CIDRs you want to limit access to |
 | networkPolicy.k8sApi.port | int | `8443` | Specify the k8s API endpoint port |

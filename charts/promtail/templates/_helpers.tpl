@@ -54,7 +54,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the namespace
 */}}
 {{- define "promtail.namespaceName" -}}
-{{- default .Release.Namespace .Values.namespace.name }}
+{{- default .Release.Namespace .Values.namespace }}
 {{- end }}
 
 {{/*
