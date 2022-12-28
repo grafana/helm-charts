@@ -52,6 +52,7 @@ autoscaling:
   maxReplicas: 5
   targetCPU: "60"
   targetMemory: ""
+  behavior: {}
 
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/

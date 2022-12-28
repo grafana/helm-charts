@@ -46,4 +46,7 @@ spec:
           averageUtilization: {{ .Values.autoscaling.targetCPU }}
         {{- end }}
     {{- end }}
+  {{- if .Values.autoscaling.behavior }}
+  behavior: {{ toYaml .Values.autoscaling.behavior | nindent 4 }}
+  {{- end }}
 {{- end }}
