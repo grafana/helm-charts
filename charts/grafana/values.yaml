@@ -1009,6 +1009,13 @@ imageRenderer:
   # Enable the image-renderer deployment & service
   enabled: false
   replicas: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPU: "60"
+    targetMemory: ""
+    behavior: {}
   image:
     # image-renderer Image repository
     repository: grafana/grafana-image-renderer
