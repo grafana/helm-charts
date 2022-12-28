@@ -145,10 +145,12 @@ Return the appropriate apiVersion for ingress.
 Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 */}}
 {{- define "grafana.hpa.apiVersion" -}}
-{{- if semverCompare "<1.23-0" .Capabilities.KubeVersion.Version }}
-{{- print "autoscaling/v2beta1" }}
-{{- else }}
+{{- if $.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler" }}
 {{- print "autoscaling/v2" }}
+{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler" }}
+{{- print "autoscaling/v2beta2" }}
+{{- else }}
+{{- print "autoscaling/v2beta1" }}
 {{- end }}
 {{- end }}
 
