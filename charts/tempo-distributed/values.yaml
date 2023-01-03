@@ -425,6 +425,13 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+      # -- Number of traces to buffer in memory during compaction
+      iterator_buffer_size: 1000
+      # -- The maximum amount of time to spend compacting a single
+      # -- tenant before moving to the next
+      max_time_per_tenant: 5m
+      # -- The time between compaction cycles
+      compaction_cycle: 30s
   service:
     # -- Annotations for compactor service
     annotations: {}
@@ -714,6 +721,9 @@ config: |
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
+      iterator_buffer_size: {{ .Values.compactor.config.compaction.iterator_buffer_size }}
+      max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
+      compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
     ring:
       kvstore:
         store: memberlist

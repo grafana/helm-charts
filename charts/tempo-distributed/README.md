@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.27.11](https://img.shields.io/badge/Version-0.27.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.27.12](https://img.shields.io/badge/Version-0.27.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -218,6 +218,9 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
+| compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
+| compactor.config.compaction.iterator_buffer_size | int | `1000` | Number of traces to buffer in memory during compaction |
+| compactor.config.compaction.max_time_per_tenant | string | `"5m"` | tenant before moving to the next |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
