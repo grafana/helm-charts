@@ -433,6 +433,17 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the querier
+    enabled: false
+    # -- Minimum autoscaling replicas for the querier
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the querier
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the querier
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the querier
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
