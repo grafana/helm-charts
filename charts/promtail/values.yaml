@@ -154,10 +154,10 @@ tolerations:
 defaultVolumes:
   - name: run
     hostPath:
-      path: /run/promtail
+      path: /var/log
   - name: containers
     hostPath:
-      path: /var/lib/docker/containers
+      path: /var/log/containers
   - name: pods
     hostPath:
       path: /var/log/pods
@@ -166,15 +166,16 @@ defaultVolumes:
 # @default -- See `values.yaml`
 defaultVolumeMounts:
   - name: run
-    mountPath: /run/promtail
+    mountPath: /var/log
+    readOnly: true  
   - name: containers
-    mountPath: /var/lib/docker/containers
+    mountPath: /var/log/containers
     readOnly: true
   - name: pods
     mountPath: /var/log/pods
     readOnly: true
 
-# Extra volumes to be added in addition to those specified under `defaultVolumes`.
+# Extra volumes to begadded in addition to those specified under `defaultVolumes`.
 extraVolumes: []
 
 # Extra volume mounts together. Corresponds to `extraVolumes`.
@@ -455,7 +456,7 @@ config:
       {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
-      filename: /run/promtail/positions.yaml
+      filename: /var/log/positions.yaml
 
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
