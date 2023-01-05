@@ -1,4 +1,5 @@
 {{- define "grafana.pod" -}}
+{{- $sts := list "sts" "StatefulSet" "statefulset" -}}
 {{- $root := . -}}
 {{- with .Values.schedulerName }}
 schedulerName: "{{ . }}"
@@ -65,6 +66,11 @@ initContainers:
       {{- range $key, $value := .Values.downloadDashboards.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.downloadDashboards.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
     {{- with .Values.downloadDashboards.securityContext }}
     securityContext:
@@ -215,11 +221,9 @@ initContainers:
 {{- with .Values.extraInitContainers }}
   {{- tpl (toYaml .) $root | nindent 2 }}
 {{- end }}
-{{- with .Values.image.pullSecrets }}
+{{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
 imagePullSecrets:
-  {{- range . }}
-  - name: {{ tpl . $root }}
-  {{- end}}
+  {{- include "grafana.imagePullSecrets" (dict "root" $root "imagePullSecrets" .Values.image.pullSecrets) | nindent 2 }}
 {{- end }}
 {{- if not .Values.enableKubeBackwardCompatibility }}
 enableServiceLinks: {{ .Values.enableServiceLinks }}
@@ -380,6 +384,26 @@ containers:
       {{- with .Values.sidecar.dashboards.script }}
       - name: SCRIPT
         value: "{{ . }}"
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.userKey | default "admin-user" }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- end }}
+      {{- if not .Values.sidecar.dashboards.skipReload }}
+      - name: REQ_URL
+        value: {{ .Values.sidecar.dashboards.reloadURL }}
+      - name: REQ_METHOD
+        value: POST
       {{- end }}
       {{- if .Values.sidecar.dashboards.watchServerTimeout }}
       {{- if ne .Values.sidecar.dashboards.watchMethod "WATCH" }}
@@ -558,7 +582,7 @@ containers:
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.searchNamespace }}
+      {{- with .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
         value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
@@ -1010,8 +1034,8 @@ volumes:
   - name: storage
     persistentVolumeClaim:
       claimName: {{ tpl (.Values.persistence.existingClaim | default (include "grafana.fullname" .)) . }}
-  {{- else if and .Values.persistence.enabled (eq .Values.persistence.type "statefulset") }}
-  # nothing
+  {{- else if and .Values.persistence.enabled (has .Values.persistence.type $sts) }}
+  {{/* nothing */}}
   {{- else }}
   - name: storage
     {{- if .Values.persistence.inMemory.enabled }}
@@ -1104,8 +1128,7 @@ volumes:
       path: {{ .hostPath }}
     {{- else if .csi }}
     csi:
-      data:
-        {{- toYaml .data | nindent 8 }}
+      {{- toYaml .data | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}

@@ -68,7 +68,7 @@ Common labels
 helm.sh/chart: {{ include "grafana.chart" . }}
 {{ include "grafana.selectorLabels" . }}
 {{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.extraLabels }}
@@ -91,7 +91,7 @@ Common labels
 helm.sh/chart: {{ include "grafana.chart" . }}
 {{ include "grafana.imageRenderer.selectorLabels" . }}
 {{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
@@ -142,6 +142,17 @@ Return the appropriate apiVersion for ingress.
 {{- end }}
 
 {{/*
+Return the appropriate apiVersion for Horizontal Pod Autoscaler.
+*/}}
+{{- define "grafana.hpa.apiVersion" -}}
+{{- if semverCompare "<1.23-0" .Capabilities.KubeVersion.Version }}
+{{- print "autoscaling/v2beta1" }}
+{{- else }}
+{{- print "autoscaling/v2" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Return the appropriate apiVersion for podDisruptionBudget.
 */}}
 {{- define "grafana.podDisruptionBudget.apiVersion" -}}
@@ -171,4 +182,18 @@ Return if ingress supports pathType.
 */}}
 {{- define "grafana.ingress.supportsPathType" -}}
 {{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
+{{- end }}
+
+{{/*
+Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific imagePullSecrets})
+*/}}
+{{- define "grafana.imagePullSecrets" -}}
+{{- $root := .root }}
+{{- range (concat .root.Values.global.imagePullSecrets .imagePullSecrets) }}
+{{- if eq (typeOf .) "map[string]interface {}" }}
+- {{ toYaml (dict "name" (tpl .name $root)) | trim }}
+{{- else }}
+- name: {{ tpl . $root }}
+{{- end }}
+{{- end }}
 {{- end }}

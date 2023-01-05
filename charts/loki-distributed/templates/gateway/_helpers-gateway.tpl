@@ -45,3 +45,7 @@ gateway priority class name
 priorityClassName: {{ $pcn }}
 {{- end }}
 {{- end }}
+
+{{- define "loki.gatewayConfigChecksum" -}}
+checksum/config: {{ tpl .Values.gateway.nginxConfig.file . | sha256sum }}
+{{- end }}

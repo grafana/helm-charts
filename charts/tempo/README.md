@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.16.6](https://img.shields.io/badge/Version-0.16.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.16.8](https://img.shields.io/badge/Version-0.16.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -13,6 +13,7 @@ Grafana Tempo Single Binary Mode
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity |
+| annotations | object | `{}` | Annotations for the StatefulSet |
 | config | string | Dynamically generated tempo configmap | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
@@ -24,7 +25,7 @@ Grafana Tempo Single Binary Mode
 | podAnnotations | object | `{}` | Pod Annotations |
 | podLabels | object | `{}` | Pod (extra) Labels |
 | priorityClassName | string | `nil` | The name of the PriorityClass |
-| replicas | int | `1` |  |
+| replicas | int | `1` | Define the amount of instances |
 | securityContext | object | `{}` | securityContext for container |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
@@ -33,6 +34,7 @@ Grafana Tempo Single Binary Mode
 | serviceAccount.automountServiceAccountToken | bool | `true` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
+| serviceAccount.labels | object | `{}` | Labels for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | serviceMonitor.additionalLabels | object | `{}` |  |
 | serviceMonitor.annotations | object | `{}` |  |

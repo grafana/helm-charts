@@ -19,7 +19,7 @@ metadata:
 spec:
   {{- with .namespaceSelector }}
   namespaceSelector:
-  {{- toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   selector:
     matchLabels:
@@ -27,7 +27,7 @@ spec:
   endpoints:
     - port: http-metrics
       {{- with $.Values.httpPathPrefix }}
-      path: {{ . }}
+      path: {{ printf "%s/metrics" . }}
       {{- end }}
       {{- with .interval }}
       interval: {{ . }}

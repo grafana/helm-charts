@@ -17,7 +17,7 @@ loki:
       port: http-metrics
     initialDelaySeconds: 45
   datasource:
-    jsonData: {}
+    jsonData: "{}"
     uid: ""
 
 
@@ -48,7 +48,7 @@ prometheus:
   isDefault: false
   url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
   datasource:
-    jsonData: {}
+    jsonData: "{}"
 
 filebeat:
   enabled: false
