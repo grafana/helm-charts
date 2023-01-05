@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ include "promtail.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "promtail.namespaceName" . }}
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
   {{- with .Values.annotations }}

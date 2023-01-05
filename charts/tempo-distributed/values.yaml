@@ -425,6 +425,13 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+      # -- Number of traces to buffer in memory during compaction
+      iterator_buffer_size: 1000
+      # -- The maximum amount of time to spend compacting a single
+      # -- tenant before moving to the next
+      max_time_per_tenant: 5m
+      # -- The time between compaction cycles
+      compaction_cycle: 30s
   service:
     # -- Annotations for compactor service
     annotations: {}
@@ -433,6 +440,17 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the querier
+    enabled: false
+    # -- Minimum autoscaling replicas for the querier
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the querier
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the querier
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the querier
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
@@ -703,6 +721,9 @@ config: |
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
+      iterator_buffer_size: {{ .Values.compactor.config.compaction.iterator_buffer_size }}
+      max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
+      compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
     ring:
       kvstore:
         store: memberlist
@@ -1250,6 +1271,8 @@ gateway:
     serverSnippet: ''
     # -- Allows appending custom configuration to the http block
     httpSnippet: ''
+    # -- Allows overriding the DNS resolver address nginx will use
+    resolver: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -1287,7 +1310,11 @@ gateway:
 
         sendfile     on;
         tcp_nopush   on;
+        {{- if .Values.gateway.nginxConfig.resolver }}
+        resolver {{ .Values.gateway.nginxConfig.resolver }};
+        {{- else }}
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+        {{- end }}
 
         {{- with .Values.gateway.nginxConfig.httpSnippet }}
         {{ . | nindent 2 }}

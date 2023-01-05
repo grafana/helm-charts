@@ -27,7 +27,7 @@ spec:
   endpoints:
     - port: http-metrics
       {{- with $.Values.httpPathPrefix }}
-      path: {{ . }}
+      path: {{ printf "%s/metrics" . }}
       {{- end }}
       {{- with .interval }}
       interval: {{ . }}
