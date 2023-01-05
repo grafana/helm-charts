@@ -79,7 +79,7 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
-  # -- Specifies whether automountServiceAccountToken should be enabled
+  # -- Specifies whether automountServiceAccountToken should be enabled 
   automountServiceAccountToken: false
 
 rbac:
