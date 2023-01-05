@@ -1,7 +1,6 @@
 # tempo-distributed
 
-
-![Version: 0.27.11](https://img.shields.io/badge/Version-0.27.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square) 
+![Version: 0.27.14](https://img.shields.io/badge/Version-0.27.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -221,6 +220,9 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
+| compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
+| compactor.config.compaction.iterator_buffer_size | int | `1000` | Number of traces to buffer in memory during compaction |
+| compactor.config.compaction.max_time_per_tenant | string | `"5m"` | tenant before moving to the next |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
@@ -341,6 +343,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
+| gateway.nginxConfig.resolver | string | `""` | Allows overriding the DNS resolver address nginx will use |
 | gateway.nginxConfig.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
@@ -352,6 +355,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
+| gateway.service.additionalPorts | object | `{}` | Additional ports to be opneed on gateway service (e.g. for RPC connections) |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
@@ -516,6 +520,11 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier |
+| querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
+| querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
+| querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |
+| querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
 | querier.config.frontend_worker.grpc_client_config | object | `{}` | grpc client configuration |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |

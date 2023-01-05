@@ -25,6 +25,9 @@ spec:
         - namespaceSelector:
             matchLabels:
               name: {{ include "grafana.namespace" . }}
+        {{- with .Values.imageRenderer.networkPolicy.extraIngressSelectors -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
         - podSelector:
             matchLabels:
               {{- include "grafana.selectorLabels" . | nindent 14 }}

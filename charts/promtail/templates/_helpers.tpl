@@ -51,6 +51,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the namespace
+*/}}
+{{- define "promtail.namespaceName" -}}
+{{- default .Release.Namespace .Values.namespace }}
+{{- end }}
+
+{{/*
 Create the name of the service account
 */}}
 {{- define "promtail.serviceAccountName" -}}

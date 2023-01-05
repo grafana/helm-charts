@@ -86,6 +86,10 @@ spec:
           env:
             - name: HTTP_PORT
               value: {{ .Values.imageRenderer.service.targetPort | quote }}
+          {{- if .Values.imageRenderer.serviceMonitor.enabled }}
+            - name: ENABLE_METRICS
+              value: "true"
+          {{- end }}
           {{- range $key, $value := .Values.imageRenderer.env }}
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
