@@ -427,8 +427,7 @@ compactor:
       block_retention: 48h
       # -- Number of traces to buffer in memory during compaction
       iterator_buffer_size: 1000
-      # -- The maximum amount of time to spend compacting a single
-      # -- tenant before moving to the next
+      # -- The maximum amount of time to spend compacting a single tenant before moving to the next
       max_time_per_tenant: 5m
       # -- The time between compaction cycles
       compaction_cycle: 30s
@@ -1217,6 +1216,8 @@ gateway:
     annotations: {}
     # -- Labels for gateway service
     labels: {}
+    # -- Additional ports to be opneed on gateway service (e.g. for RPC connections)
+    additionalPorts: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created

@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.27.13](https://img.shields.io/badge/Version-0.27.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.27.15](https://img.shields.io/badge/Version-0.27.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -220,7 +220,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
 | compactor.config.compaction.iterator_buffer_size | int | `1000` | Number of traces to buffer in memory during compaction |
-| compactor.config.compaction.max_time_per_tenant | string | `"5m"` | tenant before moving to the next |
+| compactor.config.compaction.max_time_per_tenant | string | `"5m"` | The maximum amount of time to spend compacting a single tenant before moving to the next |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
@@ -353,6 +353,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
+| gateway.service.additionalPorts | object | `{}` | Additional ports to be opneed on gateway service (e.g. for RPC connections) |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
