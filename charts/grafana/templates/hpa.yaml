@@ -26,7 +26,7 @@ spec:
     - type: Resource
       resource:
         name: memory
-        {{- if semverCompare "<1.23-0" .Capabilities.KubeVersion.Version }}
+        {{- if eq (include "grafana.hpa.apiVersion" .) "autoscaling/v2beta1" }}
         targetAverageUtilization: {{ .Values.autoscaling.targetMemory }}
         {{- else }}
         target:
@@ -38,7 +38,7 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        {{- if semverCompare "<1.23-0" .Capabilities.KubeVersion.Version }}
+        {{- if eq (include "grafana.hpa.apiVersion" .) "autoscaling/v2beta1" }}
         targetAverageUtilization: {{ .Values.autoscaling.targetCPU }}
         {{- else }}
         target:
@@ -46,4 +46,7 @@ spec:
           averageUtilization: {{ .Values.autoscaling.targetCPU }}
         {{- end }}
     {{- end }}
+  {{- if .Values.autoscaling.behavior }}
+  behavior: {{ toYaml .Values.autoscaling.behavior | nindent 4 }}
+  {{- end }}
 {{- end }}
