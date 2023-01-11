@@ -47,6 +47,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.distributorImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=distributor
