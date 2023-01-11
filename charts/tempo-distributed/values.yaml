@@ -2,6 +2,12 @@ global:
   image:
     # -- Overrides the Docker registry globally for all images, excluding enterprise.
     registry: docker.io
+    # -- Optional list of imagePullSecrets for all images, excluding enterprise.
+    # Names of existing secrets with private container registry credentials.
+    # Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    # Example:
+    # pullSecrets: [ my-dockerconfigjson-secret ]
+    pullSecrets: []
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -34,6 +40,8 @@ tempo:
   image:
     # -- The Docker registry
     registry: docker.io
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository
     repository: grafana/tempo
     # -- Overrides the image tag whose default is the chart's appVersion
@@ -106,6 +114,8 @@ ingester:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
@@ -200,6 +210,8 @@ metricsGenerator:
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the metrics-generator image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the metrics-generator image. Overrides `tempo.image.tag`
@@ -316,6 +328,8 @@ distributor:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
@@ -393,6 +407,8 @@ compactor:
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the compactor image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the compactor image. Overrides `tempo.image.tag`
@@ -453,6 +469,8 @@ querier:
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the querier image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the querier image. Overrides `tempo.image.tag`
@@ -517,6 +535,8 @@ queryFrontend:
     image:
       # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
       registry: null
+      # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+      pullSecrets: []
       # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
       repository: grafana/tempo-query
       # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
@@ -551,6 +571,8 @@ queryFrontend:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
@@ -924,6 +946,8 @@ memcached:
   image:
     # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
@@ -971,6 +995,8 @@ memcachedExporter:
   image:
     # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -1154,6 +1180,8 @@ gateway:
   image:
     # -- The Docker registry for the gateway image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag

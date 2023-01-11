@@ -49,6 +49,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.compactorImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=compactor
