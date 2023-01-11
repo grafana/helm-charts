@@ -1,40 +1,62 @@
-{{- if .Values.serviceMonitor.enabled }}
+{{- with .Values.serviceMonitor }}
+{{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "tempo.fullname" . }}
-  labels:
-    app: {{ template "tempo.name" . }}
-    chart: {{ template "tempo.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    {{- if .Values.serviceMonitor.additionalLabels }}
-{{ toYaml .Values.serviceMonitor.additionalLabels | indent 4 }}
-    {{- end }}
-  {{- if .Values.serviceMonitor.annotations }}
+  name: {{ template "tempo.fullname" $ }}
+  {{- with .annotations }}
   annotations:
-{{ toYaml .Values.serviceMonitor.annotations | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
+  labels:
+    app: {{ template "tempo.name" $ }}
+    chart: {{ template "tempo.chart" $ }}
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    {{- with .additionalLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
-      {{- include "tempo.labels" . | nindent 6 }}
+      {{- include "tempo.labels" $ | nindent 6 }}
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace | quote }}
+      - {{ $.Release.Namespace | quote }}
   endpoints:
     - port: tempo-prom-metrics
-      {{- if .Values.serviceMonitor.interval }}
-      interval: {{ .Values.serviceMonitor.interval }}
+      {{- with .interval }}
+      interval: {{ . }}
       {{- end }}
-      {{- if .Values.serviceMonitor.scrapeTimeout }}
-      scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
       {{- end }}
+      {{- with .scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .tlsConfig }}
+      tlsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- if $.Values.tempoQuery.enabled }}
     - port: jaeger-metrics
-      {{- if .Values.serviceMonitor.interval }}
-      interval: {{ .Values.serviceMonitor.interval }}
+      {{- with .interval }}
+      interval: {{ . }}
       {{- end }}
-      {{- if .Values.serviceMonitor.scrapeTimeout }}
-      scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
       {{- end }}
+      {{- with .scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .tlsConfig }}
+      tlsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+  {{- with .targetLabels }}
+  targetLabels:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
+{{- end }}

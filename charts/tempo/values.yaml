@@ -40,6 +40,8 @@ tempo:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
+    # -- Map of HTTP headers to include in remote write requests
+    remoteWriteHeaders: {}
   # -- Configuration options for the ingester
   ingester: {}
   # -- Configuration options for the querier
@@ -118,39 +120,57 @@ tempo:
 # -- Tempo configuration file contents
 # @default -- Dynamically generated tempo configmap
 config: |
-    multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
-    search_enabled: {{ .Values.tempo.searchEnabled }}
-    usage_report:
-      reporting_enabled: {{ .Values.tempo.reportingEnabled }}
-    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
-    compactor:
-      compaction:
-        block_retention: {{ .Values.tempo.retention }}
-    distributor:
-      receivers:
-        {{- toYaml .Values.tempo.receivers | nindent 8 }}
-    ingester:
-      {{- toYaml .Values.tempo.ingester | nindent 6 }}
-    server:
-      {{- toYaml .Values.tempo.server | nindent 6 }}
+  multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
+  search_enabled: {{ .Values.tempo.searchEnabled }}
+  usage_report:
+    reporting_enabled: {{ .Values.tempo.reportingEnabled }}
+  metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
+  compactor:
+    compaction:
+      block_retention: {{ .Values.tempo.retention }}
+  distributor:
+    receivers:
+      {{- toYaml .Values.tempo.receivers | nindent 4 }}
+  {{- with .Values.tempo.ingester }}
+  ingester:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.tempo.server }}
+  server:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.tempo.storage }}
+  storage:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.tempo.querier }}
+  querier:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .Values.tempo.queryFrontend }}
+  query_frontend:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- if or .Values.tempo.global_overrides .Values.tempo.metricsGenerator.enabled }}
+  overrides:
+    {{- with .Values.tempo.global_overrides }}
+    {{- toYaml . | nindent 2 }}
+    {{- end }}
+    {{- if .Values.tempo.metricsGenerator.enabled }}
+    metrics_generator_processors:
+      - 'service-graphs'
+      - 'span-metrics'
+  metrics_generator:
     storage:
-      {{- toYaml .Values.tempo.storage | nindent 6 }}
-    querier:
-      {{- toYaml .Values.tempo.querier | nindent 6 }}
-    query_frontend:
-      {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
-    overrides:
-      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
-      {{- if .Values.tempo.metricsGenerator.enabled }}
-          metrics_generator_processors:
-          - 'service-graphs'
-          - 'span-metrics'
-    metrics_generator:
-          storage:
-            path: "/tmp/tempo"
-            remote_write:
-              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
-      {{- end }}
+      path: "/tmp/tempo"
+      remote_write:
+        - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+          {{- with  .Values.tempo.metricsGenerator.remoteWriteHeaders }}
+          headers:
+            {{- . | toYaml | nindent 10 }}
+          {{- end }}
+    {{- end }}
+  {{- end }}
 
 tempoQuery:
   repository: grafana/tempo-query
@@ -210,10 +230,22 @@ service:
 
 serviceMonitor:
   enabled: false
-  interval: ""
+  # -- ServiceMonitor scrape interval in Go duration format (e.g. 15s)
+  interval: null
+  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+  # -- ServiceMonitor will use http by default, but you can pick https as well
+  scheme: null
+  # -- ServiceMonitor will use these tlsConfig settings when scheme is https
+  tlsConfig: null
+  # -- Additional ServiceMonitor labels
   additionalLabels: {}
+  # -- ServiceMonitor annotations
   annotations: {}
-  # scrapeTimeout: 10s
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  targetLabels: []
+  # -- App protocol for the metrics port, required for Istio to work properly
+  appProtocol: null
 
 persistence:
   enabled: false
