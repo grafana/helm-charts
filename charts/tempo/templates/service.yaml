@@ -42,6 +42,9 @@ spec:
   - name: jaeger-metrics
     port: 16687
     targetPort: 16687
+    {{- with .Values.serviceMonitor.appProtocol }}
+    appProtocol: {{ . }}
+    {{- end }}
   - name: tempo-query-jaeger-ui
     port: 16686
     targetPort: 16686
