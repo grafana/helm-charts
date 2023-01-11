@@ -27,9 +27,6 @@ on:
       helm_repo_token:
         description: GitHub api token to use against the helm-charts repository
         required: true
-      gpg_key_base64:
-        description: GPG key in base64 for signing helm package with
-        required: true
 
 env:
   CR_CONFIGFILE: "${{ github.workspace }}/source/${{ inputs.cr_configfile }}"
