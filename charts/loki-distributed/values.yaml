@@ -82,6 +82,9 @@ loki:
     server:
       http_listen_port: 3100
 
+    common:
+      compactor_address: {{ include "loki.compactorFullname" . }}:3100
+
     distributor:
       ring:
         kvstore:
@@ -138,7 +141,8 @@ loki:
       max_look_back_period: 0s
       {{- if .Values.memcachedChunks.enabled }}
       chunk_cache_config:
-        enable_fifocache: false
+        embedded_cache:
+          enabled: false
         memcached_client:
           consistent_hash: true
           addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedChunksFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
@@ -165,9 +169,8 @@ loki:
             addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
             consistent_hash: true
           {{- else }}
-          enable_fifocache: true
-          fifocache:
-            max_size_items: 1024
+          embedded_cache:
+            enabled: true
             ttl: 24h
           {{- end }}
 
