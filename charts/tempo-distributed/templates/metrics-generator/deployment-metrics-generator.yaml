@@ -43,6 +43,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.metricsGeneratorImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=metrics-generator

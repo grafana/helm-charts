@@ -51,6 +51,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.queryImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=query-frontend

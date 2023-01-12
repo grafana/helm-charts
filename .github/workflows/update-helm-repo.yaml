@@ -27,15 +27,11 @@ on:
       helm_repo_token:
         description: GitHub api token to use against the helm-charts repository
         required: true
-      gpg_key_base64:
-        description: GPG key in base64 for signing helm package with
-        required: true
 
 env:
   CR_CONFIGFILE: "${{ github.workspace }}/source/${{ inputs.cr_configfile }}"
   CT_CONFIGFILE: "${{ github.workspace }}/source/${{ inputs.ct_configfile }}"
   CR_INDEX_PATH: "${{ github.workspace }}/.cr-index"
-  CR_KEYRING: "${{ github.workspace }}/.cr-gpg/secring.gpg"
   CR_PACKAGE_PATH: "${{ github.workspace }}/.cr-release-packages"
   CR_TOOL_PATH: "${{ github.workspace }}/.cr-tool"
   HELM_TAG_PREFIX: "${{ inputs.helm_tag_prefix }}"
@@ -124,14 +120,6 @@ jobs:
         uses: azure/setup-helm@v1
         with:
           version: v3.5.2
-
-      - name: Prepare GPG key
-        run: |
-          keyring_dir=$(dirname "${CR_KEYRING}")
-          mkdir "${keyring_dir}"
-          base64 -d <<< "$GPG_KEY_BASE64" > "${CR_KEYRING}"
-        env:
-          GPG_KEY_BASE64: "${{ secrets.gpg_key_base64 }}"
 
       - name: Add dependency chart repos
         # Todo replace this by https://github.com/grafana/helm-charts/issues/1534
