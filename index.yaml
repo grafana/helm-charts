@@ -14169,6 +14169,16 @@ entries:
   grafana-agent:
   - apiVersion: v2
     appVersion: v0.30.2
+    created: "2023-01-12T15:36:47.19038938Z"
+    description: Grafana Agent
+    digest: ebed0df7be60433aa08526aa2625ec44afa65196ad13fca264402557952b625c
+    name: grafana-agent
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-agent-0.2.1/grafana-agent-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: v0.30.2
     created: "2023-01-12T14:20:23.229864724Z"
     description: Grafana Agent
     digest: 9ae3ec931f0a12abb597e21044a31e5e57e619fbed69b22aeec970df0ea0984c
@@ -33576,4 +33586,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-12T15:14:17.442072707Z"
+generated: "2023-01-12T15:36:47.192901513Z"
