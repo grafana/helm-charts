@@ -24,7 +24,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
-### From 0.67.x to 0.68.0
+### From 0.68.x to 0.69.0
 The in-memory `fifocache` has been renamed to more general `embedded_cache`, which currently doesn't have a `max_size_items` attribute.
 ```yaml
 loki:
