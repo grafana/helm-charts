@@ -1,5 +1,6 @@
 {{- $sts := list "sts" "StatefulSet" "statefulset" -}}
 {{- if or .Values.headlessService (and .Values.persistence.enabled (not .Values.persistence.existingClaim) (has .Values.persistence.type $sts)) }}
+{{- $root := . }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,4 +21,7 @@ spec:
   - protocol: TCP
     port: 3000
     targetPort: {{ .Values.service.targetPort }}
+    {{- with .Values.extraExposePorts }}
+    {{- tpl (toYaml . | nindent 2) $root }}
+    {{- end }}
 {{- end }}
