@@ -758,17 +758,38 @@ config: |
         kvstore:
           store: "memberlist"
 
-  {{- if .Values.minio.enabled }}
+  auth:
+    type: enterprise
+
+  http_api_prefix: {{get .Values.tempo.structuredConfig "http_api_prefix"}}
+
   admin_client:
     storage:
-      backend: s3
+      type: {{.Values.storage.admin.backend}}
+      {{- if .Values.minio.enabled }}
+      type: s3
       s3:
         access_key_id: {{ .Values.minio.rootUser }}
-        bucket_name: enterprise-traces-admin
+        {{with (index .Values.minio.buckets 2) }}
+        bucket_name: {{ .name }}
+        {{- end}}
         endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
         insecure: true
         secret_access_key: {{ .Values.minio.rootPassword }}
-    {{- end }}
+      {{ else }}
+      {{- if eq .Values.storage.admin.backend "s3"}}
+      s3:
+        {{- toYaml .Values.storage.admin.s3 | nindent 6}}
+      {{- end}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.admin.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.admin.azure | nindent 6}}
+      {{- end}}
   {{- end }}
 
   {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.useDefaultProxyURLs }}
@@ -941,18 +962,36 @@ config: |
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
-      {{- if eq .Values.storage.trace.backend "gcs"}}
-      gcs:
-        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
-      {{- end}}
+      {{- if .Values.minio.enabled }}
+      backend: s3
+      s3:
+        access_key: {{ .Values.minio.rootUser }}
+        {{- if .Values.enterprise.enabled }}
+        {{with (index .Values.minio.buckets 1) }}
+        bucket: {{ .name }}
+        {{- end }}
+        {{ else }}
+        {{with (index .Values.minio.buckets 0) }}
+        bucket: {{ .name }}
+        {{- end }}
+        {{- end }}
+        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
+        insecure: true
+        secret_key: {{ .Values.minio.rootPassword }}
+      {{ else }}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
         {{- toYaml .Values.storage.trace.s3 | nindent 6}}
-      {{- end}}
+      {{- end }}
+      {{- end }}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end }}
       {{- if eq .Values.storage.trace.backend "azure"}}
       azure:
         {{- toYaml .Values.storage.trace.azure | nindent 6}}
-      {{- end}}
+      {{- end }}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -990,6 +1029,10 @@ server:
 storage:
   trace:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
+    backend: local
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+  admin:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
     backend: local
 
 # Global overrides
@@ -1211,12 +1254,15 @@ minio:
   rootUser: grafana-tempo
   rootPassword: supersecret
   buckets:
+    # Default Tempo storage bucket.
     - name: tempo-traces
       policy: none
       purge: false
+    # Bucket for traces storage if enterprise.enabled is true - requires license.
     - name: enterprise-traces
       policy: none
       purge: false
+    # Admin client bucket if enterprise.enabled is true - requires license.
     - name: enterprise-traces-admin
       policy: none
       purge: false
