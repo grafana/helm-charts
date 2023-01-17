@@ -175,7 +175,7 @@ defaultVolumeMounts:
     mountPath: /var/log/pods
     readOnly: true
 
-# Extra volumes to begadded in addition to those specified under `defaultVolumes`.
+# Extra volumes to be added in addition to those specified under `defaultVolumes`.
 extraVolumes: []
 
 # Extra volume mounts together. Corresponds to `extraVolumes`.
