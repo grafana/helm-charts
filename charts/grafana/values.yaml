@@ -194,6 +194,7 @@ serviceMonitor:
   tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
+  targetLabels: []
 
 extraExposePorts: []
  # - name: keycloak
@@ -1068,6 +1069,10 @@ imageRenderer:
     tlsConfig: {}
     scrapeTimeout: 30s
     relabelings: []
+    # See: https://doc.crds.dev/github.com/prometheus-operator/kube-prometheus/monitoring.coreos.com/ServiceMonitor/v1@v0.11.0#spec-targetLabels
+    targetLabels: []
+      # - targetLabel1
+      # - targetLabel2
   # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
   grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
