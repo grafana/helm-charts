@@ -78,7 +78,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.ingress.annotations | object | `{}` |  |
-| tempoQuery.ingress.enabled | bool | `true` |  |
+| tempoQuery.ingress.enabled | bool | `false` |  |
 | tempoQuery.ingress.extraPaths | list | `[]` |  |
 | tempoQuery.ingress.hosts[0] | string | `"query.tempo.example.com"` |  |
 | tempoQuery.ingress.labels | object | `{}` |  |
