@@ -441,6 +441,20 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+      # Duration to keep blocks that have been compacted elsewhere
+      compacted_block_retention: 1h
+      # -- Blocks in this time window will be compacted together
+      compaction_window: 1h
+      # -- Amount of data to buffer from input blocks
+      chunk_size_bytes: 5242880
+      # -- Flush data to backend when buffer is this large
+      flush_size_bytes: 20971520
+      # -- Maximum number of traces in a compacted block. WARNING: Deprecated. Use max_block_bytes instead.
+      max_compaction_objects: 6000000
+      # -- Maximum size of a compacted block in bytes
+      max_block_bytes: 107374182400
+      # -- Number of tenants to process in parallel during retention
+      retention_concurrency: 10
       # -- Number of traces to buffer in memory during compaction
       iterator_buffer_size: 1000
       # -- The maximum amount of time to spend compacting a single tenant before moving to the next
@@ -742,6 +756,13 @@ config: |
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
+      compacted_block_retention: {{ .Values.compactor.config.compaction.compacted_block_retention }}
+      compaction_window: {{ .Values.compactor.config.compaction.compaction_window }}
+      chunk_size_bytes: {{ .Values.compactor.config.compaction.chunk_size_bytes }}
+      flush_size_bytes: {{ .Values.compactor.config.compaction.flush_size_bytes }}
+      max_compaction_objects: {{ .Values.compactor.config.compaction.max_compaction_objects }}
+      max_block_bytes: {{ .Values.compactor.config.compaction.max_block_bytes }}
+      retention_concurrency: {{ .Values.compactor.config.compaction.retention_concurrency }}
       iterator_buffer_size: {{ .Values.compactor.config.compaction.iterator_buffer_size }}
       max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
       compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
