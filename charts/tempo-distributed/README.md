@@ -42,7 +42,6 @@ helm delete my-release
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
-
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
@@ -71,7 +70,6 @@ minio:
   enabled: true
 ```
 * allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
-
 
 ### From chart version < 0.26.0
 
@@ -674,7 +672,6 @@ The other components are optional and must be explicitly enabled.
 | memcached | yes |
 | gateway | yes |
 
-
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
@@ -727,7 +724,6 @@ global_overrides:
 
 * Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
 * The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
-
 
 ### Example configuration using S3 for storage
 
