@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 0.27.17](https://img.shields.io/badge/Version-0.27.17-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.27.18](https://img.shields.io/badge/Version-0.27.18-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -218,9 +218,16 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
+| compactor.config.compaction.chunk_size_bytes | int | `5242880` | Amount of data to buffer from input blocks |
+| compactor.config.compaction.compacted_block_retention | string | `"1h"` |  |
 | compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
+| compactor.config.compaction.compaction_window | string | `"1h"` | Blocks in this time window will be compacted together |
+| compactor.config.compaction.flush_size_bytes | int | `20971520` | Flush data to backend when buffer is this large |
 | compactor.config.compaction.iterator_buffer_size | int | `1000` | Number of traces to buffer in memory during compaction |
+| compactor.config.compaction.max_block_bytes | int | `107374182400` | Maximum size of a compacted block in bytes |
+| compactor.config.compaction.max_compaction_objects | int | `6000000` | Maximum number of traces in a compacted block. WARNING: Deprecated. Use max_block_bytes instead. |
 | compactor.config.compaction.max_time_per_tenant | string | `"5m"` | The maximum amount of time to spend compacting a single tenant before moving to the next |
+| compactor.config.compaction.retention_concurrency | int | `10` | Number of tenants to process in parallel during retention |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
