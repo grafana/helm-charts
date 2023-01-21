@@ -12,7 +12,9 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.querier.autoscaling.enabled }}
   replicas: {{ .Values.querier.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -49,6 +51,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.querierImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=querier

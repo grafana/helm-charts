@@ -165,6 +165,15 @@ tempoQuery:
 
   # -- if False the tempo-query container is not deployed
   enabled: true
+
+  resources: {}
+  #  requests:
+  #    cpu: 1000m
+  #    memory: 4Gi
+  #  limits:
+  #    cpu: 2000m
+  #    memory: 6Gi
+
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -199,6 +208,8 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+  # -- Labels for the service account
+  labels: {}
   automountServiceAccountToken: true
 
 service:

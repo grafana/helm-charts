@@ -2,6 +2,12 @@ global:
   image:
     # -- Overrides the Docker registry globally for all images, excluding enterprise.
     registry: docker.io
+    # -- Optional list of imagePullSecrets for all images, excluding enterprise.
+    # Names of existing secrets with private container registry credentials.
+    # Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    # Example:
+    # pullSecrets: [ my-dockerconfigjson-secret ]
+    pullSecrets: []
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -34,6 +40,8 @@ tempo:
   image:
     # -- The Docker registry
     registry: docker.io
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository
     repository: grafana/tempo
     # -- Overrides the image tag whose default is the chart's appVersion
@@ -106,6 +114,8 @@ ingester:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
@@ -200,6 +210,8 @@ metricsGenerator:
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the metrics-generator image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the metrics-generator image. Overrides `tempo.image.tag`
@@ -316,6 +328,8 @@ distributor:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
@@ -393,6 +407,8 @@ compactor:
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the compactor image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the compactor image. Overrides `tempo.image.tag`
@@ -425,6 +441,26 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+      # Duration to keep blocks that have been compacted elsewhere
+      compacted_block_retention: 1h
+      # -- Blocks in this time window will be compacted together
+      compaction_window: 1h
+      # -- Amount of data to buffer from input blocks
+      chunk_size_bytes: 5242880
+      # -- Flush data to backend when buffer is this large
+      flush_size_bytes: 20971520
+      # -- Maximum number of traces in a compacted block. WARNING: Deprecated. Use max_block_bytes instead.
+      max_compaction_objects: 6000000
+      # -- Maximum size of a compacted block in bytes
+      max_block_bytes: 107374182400
+      # -- Number of tenants to process in parallel during retention
+      retention_concurrency: 10
+      # -- Number of traces to buffer in memory during compaction
+      iterator_buffer_size: 1000
+      # -- The maximum amount of time to spend compacting a single tenant before moving to the next
+      max_time_per_tenant: 5m
+      # -- The time between compaction cycles
+      compaction_cycle: 30s
   service:
     # -- Annotations for compactor service
     annotations: {}
@@ -433,9 +469,22 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the querier
+    enabled: false
+    # -- Minimum autoscaling replicas for the querier
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the querier
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the querier
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the querier
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the querier image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the querier image. Overrides `tempo.image.tag`
@@ -500,6 +549,8 @@ queryFrontend:
     image:
       # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
       registry: null
+      # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+      pullSecrets: []
       # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
       repository: grafana/tempo-query
       # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
@@ -534,6 +585,8 @@ queryFrontend:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
@@ -703,6 +756,16 @@ config: |
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
+      compacted_block_retention: {{ .Values.compactor.config.compaction.compacted_block_retention }}
+      compaction_window: {{ .Values.compactor.config.compaction.compaction_window }}
+      chunk_size_bytes: {{ .Values.compactor.config.compaction.chunk_size_bytes }}
+      flush_size_bytes: {{ .Values.compactor.config.compaction.flush_size_bytes }}
+      max_compaction_objects: {{ .Values.compactor.config.compaction.max_compaction_objects }}
+      max_block_bytes: {{ .Values.compactor.config.compaction.max_block_bytes }}
+      retention_concurrency: {{ .Values.compactor.config.compaction.retention_concurrency }}
+      iterator_buffer_size: {{ .Values.compactor.config.compaction.iterator_buffer_size }}
+      max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
+      compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
     ring:
       kvstore:
         store: memberlist
@@ -825,6 +888,11 @@ config: |
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
     {{- toYaml .Values.global_overrides | nindent 2 }}
+    {{- if .Values.metricsGenerator.enabled }}
+    metrics_generator_processors:
+    - service-graphs
+    - span-metrics
+    {{- end }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
@@ -888,9 +956,6 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /conf/overrides.yaml
-  # metrics_generator_processors:
-  #   - service-graphs
-  #   - span-metrics
 
 # Per tenants overrides
 overrides: |
@@ -904,6 +969,8 @@ memcached:
   image:
     # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
@@ -951,6 +1018,8 @@ memcachedExporter:
   image:
     # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -1134,6 +1203,8 @@ gateway:
   image:
     # -- The Docker registry for the gateway image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
@@ -1196,6 +1267,8 @@ gateway:
     annotations: {}
     # -- Labels for gateway service
     labels: {}
+    # -- Additional ports to be opneed on gateway service (e.g. for RPC connections)
+    additionalPorts: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
@@ -1248,6 +1321,8 @@ gateway:
     serverSnippet: ''
     # -- Allows appending custom configuration to the http block
     httpSnippet: ''
+    # -- Allows overriding the DNS resolver address nginx will use
+    resolver: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -1285,7 +1360,11 @@ gateway:
 
         sendfile     on;
         tcp_nopush   on;
+        {{- if .Values.gateway.nginxConfig.resolver }}
+        resolver {{ .Values.gateway.nginxConfig.resolver }};
+        {{- else }}
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+        {{- end }}
 
         {{- with .Values.gateway.nginxConfig.httpSnippet }}
         {{ . | nindent 2 }}

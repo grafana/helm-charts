@@ -1128,8 +1128,7 @@ volumes:
       path: {{ .hostPath }}
     {{- else if .csi }}
     csi:
-      data:
-        {{- toYaml .data | nindent 8 }}
+      {{- toYaml .data | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}

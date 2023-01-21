@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.16.7](https://img.shields.io/badge/Version-0.16.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.16.9](https://img.shields.io/badge/Version-0.16.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -34,6 +34,7 @@ Grafana Tempo Single Binary Mode
 | serviceAccount.automountServiceAccountToken | bool | `true` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
+| serviceAccount.labels | object | `{}` | Labels for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | serviceMonitor.additionalLabels | object | `{}` |  |
 | serviceMonitor.annotations | object | `{}` |  |
@@ -78,6 +79,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
+| tempoQuery.resources | object | `{}` |  |
 | tempoQuery.securityContext | object | `{}` |  |
 | tempoQuery.tag | string | `"1.5.0"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
