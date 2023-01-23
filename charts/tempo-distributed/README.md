@@ -188,7 +188,7 @@ The memcached default args are removed and should be provided manually. The sett
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| adminApi.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| adminApi.affinity | string | Soft node and soft zone anti-affinity | Affinity for admin-api pods. Passed through `tpl` and, thus, to be configured as string |
 | adminApi.annotations | object | `{}` |  |
 | adminApi.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for admin_api containers |
 | adminApi.env | list | `[]` |  |
@@ -217,6 +217,7 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.strategy.type | string | `"RollingUpdate"` |  |
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
+| adminApi.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.config.compaction.chunk_size_bytes | int | `5242880` | Amount of data to buffer from input blocks |
 | compactor.config.compaction.compacted_block_retention | string | `"1h"` |  |
@@ -281,10 +282,11 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
+| distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
 | enterprise.image.tag | string | `"weekly-r58-94739e17"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
-| enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.annotations | object | `{}` |  |
 | enterpriseGateway.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
 | enterpriseGateway.env | list | `[]` |  |
@@ -318,6 +320,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.strategy.type | string | `"RollingUpdate"` |  |
 | enterpriseGateway.terminationGracePeriodSeconds | int | `60` |  |
 | enterpriseGateway.tolerations | list | `[]` |  |
+| enterpriseGateway.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.useDefaultProxyURLs | bool | `true` |  |
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
@@ -373,6 +376,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
+| gateway.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
@@ -419,6 +423,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
+| ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
@@ -438,6 +443,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.replicas | int | `1` |  |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |
+| memcached.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
@@ -505,6 +511,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.service.annotations | object | `{}` | Annotations for Metrics Generator service |
 | metricsGenerator.terminationGracePeriodSeconds | int | `300` | Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | metricsGenerator.tolerations | list | `[]` | Tolerations for metrics-generator pods |
+| metricsGenerator.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string |
 | metricsGenerator.walEmptyDir | object | `{}` | The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory. |
 | minio.buckets[0].name | string | `"tempo-traces"` |  |
 | minio.buckets[0].policy | string | `"none"` |  |
@@ -557,6 +564,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.service.annotations | object | `{}` | Annotations for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
+| querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the queriyFrontend service. This allows queriyFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -599,6 +607,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for queryFrontendDiscovery service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
+| queryFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | rbac.create | bool | `false` | Specifies whether RBAC manifests should be created |
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy should be created |
 | search.enabled | bool | `false` | Enable Tempo search |
