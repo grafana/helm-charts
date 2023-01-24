@@ -878,7 +878,14 @@ containers:
       - name: {{ .Values.podPortName }}
         containerPort: {{ .Values.service.targetPort }}
         protocol: TCP
+      - name: {{ .Values.gossipPortName }}
+        containerPort: 9094
+        protocol: TCP
     env:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: GF_SECURITY_ADMIN_USER
         valueFrom:
