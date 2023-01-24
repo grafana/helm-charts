@@ -598,6 +598,9 @@ grafana.ini:
   unified_alerting:
     enabled: true
     ha_peers: {{ Name }}-headless:9094
+    ha_listen_address: ${POD_IP}:9094
+    ha_advertise_address: ${POD_IP}:9094
+
   alerting:
     enabled: false
 ```
