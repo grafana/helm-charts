@@ -41,7 +41,7 @@ spec:
   namespaceSelector:
     matchNames:
       - {{ include "grafana.namespace" . }}
-  {{- with .Values.serviceMonitor.targetLabels }}
+  {{- with .Values.imageRenderer.serviceMonitor.targetLabels }}
   targetLabels:
     {{- toYaml . | nindent 4 }}
   {{- end }}
