@@ -1,5 +1,5 @@
 test_pod:
-  image: bats/bats:v1.1.0
+  image: bats/bats:v1.2.1
   pullPolicy: IfNotPresent
 
 loki:
