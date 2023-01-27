@@ -763,7 +763,13 @@ containers:
     {{- range .Values.command }}
       - {{ . | quote }}
     {{- end }}
-    {{- end}}
+    {{- end }}
+    {{- if .Values.args }}
+    args:
+    {{- range .Values.args }}
+      - {{ . | quote }}
+    {{- end }}
+    {{- end }}
     {{- with .Values.containerSecurityContext }}
     securityContext:
       {{- toYaml . | nindent 6 }}

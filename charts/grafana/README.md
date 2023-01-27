@@ -220,7 +220,8 @@ This version requires Helm >= 3.1.0.
 | `rbac.pspUseAppArmor`                     | Enforce AppArmor in created PodSecurityPolicy (requires `rbac.pspEnabled`)  | `true`                    |
 | `rbac.extraRoleRules`                     | Additional rules to add to the Role           | []                                                      |
 | `rbac.extraClusterRoleRules`              | Additional rules to add to the ClusterRole    | []                                                      |
-| `command`                     | Define command to be executed by grafana container at startup  | `nil`                                              |
+| `command`                                 | Define command to be executed by grafana container at startup | `nil`                                   |
+| `args`                                    | Define additional args if command is used     | `nil`                                                   |
 | `testFramework.enabled`                   | Whether to create test-related resources      | `true`                                                  |
 | `testFramework.image`                     | `test-framework` image repository.            | `bats/bats`                                             |
 | `testFramework.tag`                       | `test-framework` image tag.                   | `v1.4.1`                                                |
