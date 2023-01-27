@@ -13,6 +13,7 @@ config:
   batchSize: 1048576
   loglevel: warn
   lineFormat: json
+  parser: cri
   k8sLoggingExclude: "Off"
   k8sLoggingParser: "Off"
   memBufLimit: "5MB"
