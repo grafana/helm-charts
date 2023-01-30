@@ -118,7 +118,7 @@ For more details, read the [Fluent Bit documentation](../../../cmd/fluent-bit/RE
 | `volumeMounts`           | Volume mount mapping                                                                               |                                  |
 | `serviceMonitor.enabled` | Create a [Prometheus Operator](operator) serviceMonitor resource for Fluent Bit                    | `false`                          |
 | `podSecurityContext`     | Configure the pod level securityContext                                                            | `{}`                             |
-| `securityContext`        | Configure the fluent bit container securityContext                                                 | `{}`                             |
+| `securityContext`        | Configure the fluent-bit container securityContext                                                 | `{}`                             |
 
 
 
