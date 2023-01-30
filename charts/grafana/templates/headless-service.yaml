@@ -17,6 +17,6 @@ spec:
     {{- include "grafana.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
-  - name: grafana-alert
+  - name: {{ .Values.gossipPortName }}-tcp
     port: 9094
 {{- end }}
