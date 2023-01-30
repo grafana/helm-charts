@@ -83,7 +83,7 @@ loki:
       http_listen_port: 3100
 
     common:
-      compactor_address: {{ include "loki.compactorFullname" . }}:3100
+      compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
 
     distributor:
       ring:
@@ -166,7 +166,7 @@ loki:
         cache:
           {{- if .Values.memcachedFrontend.enabled }}
           memcached_client:
-            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+            host: {{ include "loki.memcachedFrontendFullname" . }}
             consistent_hash: true
           {{- else }}
           embedded_cache:

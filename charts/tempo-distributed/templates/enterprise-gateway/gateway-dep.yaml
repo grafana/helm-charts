@@ -94,6 +94,12 @@ spec:
         {{- end }}
       nodeSelector:
         {{- toYaml .Values.enterpriseGateway.nodeSelector | nindent 8 }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.enterpriseGateway.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.enterpriseGateway.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

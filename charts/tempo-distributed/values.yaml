@@ -138,6 +138,15 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 6 }}
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
   affinity: |
@@ -234,6 +243,15 @@ metricsGenerator:
   # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 6 }}
   # -- Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -359,6 +377,15 @@ distributor:
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 6 }}
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -441,6 +468,20 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+      # Duration to keep blocks that have been compacted elsewhere
+      compacted_block_retention: 1h
+      # -- Blocks in this time window will be compacted together
+      compaction_window: 1h
+      # -- Amount of data to buffer from input blocks
+      chunk_size_bytes: 5242880
+      # -- Flush data to backend when buffer is this large
+      flush_size_bytes: 20971520
+      # -- Maximum number of traces in a compacted block. WARNING: Deprecated. Use max_block_bytes instead.
+      max_compaction_objects: 6000000
+      # -- Maximum size of a compacted block in bytes
+      max_block_bytes: 107374182400
+      # -- Number of tenants to process in parallel during retention
+      retention_concurrency: 10
       # -- Number of traces to buffer in memory during compaction
       iterator_buffer_size: 1000
       # -- The maximum amount of time to spend compacting a single tenant before moving to the next
@@ -491,6 +532,15 @@ querier:
   resources: {}
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier") | nindent 6 }}
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -605,6 +655,15 @@ queryFrontend:
   resources: {}
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -742,6 +801,13 @@ config: |
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
+      compacted_block_retention: {{ .Values.compactor.config.compaction.compacted_block_retention }}
+      compaction_window: {{ .Values.compactor.config.compaction.compaction_window }}
+      chunk_size_bytes: {{ .Values.compactor.config.compaction.chunk_size_bytes }}
+      flush_size_bytes: {{ .Values.compactor.config.compaction.flush_size_bytes }}
+      max_compaction_objects: {{ .Values.compactor.config.compaction.max_compaction_objects }}
+      max_block_bytes: {{ .Values.compactor.config.compaction.max_block_bytes }}
+      retention_concurrency: {{ .Values.compactor.config.compaction.retention_concurrency }}
       iterator_buffer_size: {{ .Values.compactor.config.compaction.iterator_buffer_size }}
       max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
       compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
@@ -867,6 +933,11 @@ config: |
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
     {{- toYaml .Values.global_overrides | nindent 2 }}
+    {{- if .Values.metricsGenerator.enabled }}
+    metrics_generator_processors:
+    - service-graphs
+    - span-metrics
+    {{- end }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
@@ -930,9 +1001,6 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /conf/overrides.yaml
-  # metrics_generator_processors:
-  #   - service-graphs
-  #   - span-metrics
 
 # Per tenants overrides
 overrides: |
@@ -969,6 +1037,15 @@ memcached:
   podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
+  # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 6 }}
   # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1208,6 +1285,15 @@ gateway:
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 6 }}
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1460,7 +1546,16 @@ adminApi:
   podAnnotations: {}
 
   nodeSelector: {}
-  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api") | nindent 6 }}
+  # -- Affinity for admin-api pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -1539,7 +1634,16 @@ enterpriseGateway:
   podDisruptionBudget: {}
 
   nodeSelector: {}
-  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 6 }}
+  # -- Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
