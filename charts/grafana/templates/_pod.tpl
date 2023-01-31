@@ -884,9 +884,12 @@ containers:
       - name: {{ .Values.podPortName }}
         containerPort: {{ .Values.service.targetPort }}
         protocol: TCP
-      - name: {{ .Values.gossipPortName }}
+      - name: {{ .Values.gossipPortName }}-tcp
         containerPort: 9094
         protocol: TCP
+      - name: {{ .Values.gossipPortName }}-udp
+        containerPort: 9094
+        protocol: UDP
     env:
       - name: POD_IP
         valueFrom:

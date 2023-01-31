@@ -160,7 +160,7 @@ downloadDashboards:
 # podLabels: {}
 
 podPortName: grafana
-gossipPortName: grafana-alert
+gossipPortName: gossip
 ## Deployment annotations
 # annotations: {}
 
