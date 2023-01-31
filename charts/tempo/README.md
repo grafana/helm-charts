@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 0.16.9](https://img.shields.io/badge/Version-0.16.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.17.0](https://img.shields.io/badge/Version-0.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -65,13 +65,12 @@ Grafana Tempo Single Binary Mode
 | tempo.repository | string | `"grafana/tempo"` |  |
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |
-| tempo.searchEnabled | bool | `false` | If true, enables Tempo's native search |
 | tempo.securityContext | object | `{}` |  |
 | tempo.server.http_listen_port | int | `3100` | HTTP server listen port |
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `"1.5.0"` |  |
+| tempo.tag | string | `"2.0.0"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
@@ -81,7 +80,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.resources | object | `{}` |  |
 | tempoQuery.securityContext | object | `{}` |  |
-| tempoQuery.tag | string | `"1.5.0"` |  |
+| tempoQuery.tag | string | `"2.0.0"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
 ## Chart Repo
