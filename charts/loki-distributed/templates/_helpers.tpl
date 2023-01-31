@@ -145,9 +145,9 @@ Return the appropriate apiVersion for PodDisruptionBudget.
 Return the appropriate apiVersion for HorizontalPodAutoscaler.
 */}}
 {{- define "loki.hpa.apiVersion" -}}
-  {{- if $.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler" -}}
+  {{- if .Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler" -}}
     {{- print "autoscaling/v2" -}}
-  {{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler" -}}
+  {{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler" -}}
     {{- print "autoscaling/v2beta2" -}}
   {{- end -}}
     {{- print "autoscaling/v2beta1" -}}
