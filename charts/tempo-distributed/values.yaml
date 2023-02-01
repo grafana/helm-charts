@@ -765,22 +765,10 @@ config: |
 
   admin_client:
     storage:
-      type: {{.Values.storage.admin.backend}}
-      {{- if .Values.minio.enabled }}
-      type: s3
-      s3:
-        access_key_id: {{ .Values.minio.rootUser }}
-        {{with (index .Values.minio.buckets 2) }}
-        bucket_name: {{ .name }}
-        {{- end}}
-        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        insecure: true
-        secret_access_key: {{ .Values.minio.rootPassword }}
-      {{ else }}
+      backend: {{.Values.storage.admin.backend}}
       {{- if eq .Values.storage.admin.backend "s3"}}
       s3:
         {{- toYaml .Values.storage.admin.s3 | nindent 6}}
-      {{- end}}
       {{- end}}
       {{- if eq .Values.storage.admin.backend "gcs"}}
       gcs:
@@ -789,6 +777,14 @@ config: |
       {{- if eq .Values.storage.admin.backend "azure"}}
       azure:
         {{- toYaml .Values.storage.admin.azure | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "swift"}}
+      swift:
+        {{- toYaml .Values.storage.admin.swift | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "filesystem"}}
+      filesystem:
+        {{- toYaml .Values.storage.admin.filesystem | nindent 6}}
       {{- end}}
   {{- end }}
 
