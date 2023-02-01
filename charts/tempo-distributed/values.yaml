@@ -958,27 +958,9 @@ config: |
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
-      {{- if .Values.minio.enabled }}
-      backend: s3
-      s3:
-        access_key: {{ .Values.minio.rootUser }}
-        {{- if .Values.enterprise.enabled }}
-        {{with (index .Values.minio.buckets 1) }}
-        bucket: {{ .name }}
-        {{- end }}
-        {{ else }}
-        {{with (index .Values.minio.buckets 0) }}
-        bucket: {{ .name }}
-        {{- end }}
-        {{- end }}
-        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        insecure: true
-        secret_key: {{ .Values.minio.rootPassword }}
-      {{ else }}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
         {{- toYaml .Values.storage.trace.s3 | nindent 6}}
-      {{- end }}
       {{- end }}
       {{- if eq .Values.storage.trace.backend "gcs"}}
       gcs:
