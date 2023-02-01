@@ -1029,7 +1029,7 @@ storage:
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
-    backend: local
+    backend: filesystem
 
 # Global overrides
 global_overrides:
