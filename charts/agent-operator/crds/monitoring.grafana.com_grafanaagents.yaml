@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.8.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: grafanaagents.monitoring.grafana.com
 spec:
@@ -140,6 +140,7 @@ spec:
                                     type: object
                                   type: array
                               type: object
+                              x-kubernetes-map-type: atomic
                             weight:
                               description: Weight associated with matching the corresponding
                                 nodeSelectorTerm, in the range 1-100.
@@ -240,10 +241,12 @@ spec:
                                     type: object
                                   type: array
                               type: object
+                              x-kubernetes-map-type: atomic
                             type: array
                         required:
                         - nodeSelectorTerms
                         type: object
+                        x-kubernetes-map-type: atomic
                     type: object
                   podAffinity:
                     description: Describes pod affinity scheduling rules (e.g. co-locate
@@ -320,6 +323,7 @@ spec:
                                         The requirements are ANDed.
                                       type: object
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 namespaceSelector:
                                   description: A label query over the set of namespaces
                                     that the term applies to. The term is applied
@@ -376,6 +380,7 @@ spec:
                                         The requirements are ANDed.
                                       type: object
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 namespaces:
                                   description: namespaces specifies a static list
                                     of namespace names that the term applies to. The
@@ -474,6 +479,7 @@ spec:
                                     requirements are ANDed.
                                   type: object
                               type: object
+                              x-kubernetes-map-type: atomic
                             namespaceSelector:
                               description: A label query over the set of namespaces
                                 that the term applies to. The term is applied to the
@@ -525,6 +531,7 @@ spec:
                                     requirements are ANDed.
                                   type: object
                               type: object
+                              x-kubernetes-map-type: atomic
                             namespaces:
                               description: namespaces specifies a static list of namespace
                                 names that the term applies to. The term is applied
@@ -625,6 +632,7 @@ spec:
                                         The requirements are ANDed.
                                       type: object
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 namespaceSelector:
                                   description: A label query over the set of namespaces
                                     that the term applies to. The term is applied
@@ -681,6 +689,7 @@ spec:
                                         The requirements are ANDed.
                                       type: object
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 namespaces:
                                   description: namespaces specifies a static list
                                     of namespace names that the term applies to. The
@@ -779,6 +788,7 @@ spec:
                                     requirements are ANDed.
                                   type: object
                               type: object
+                              x-kubernetes-map-type: atomic
                             namespaceSelector:
                               description: A label query over the set of namespaces
                                 that the term applies to. The term is applied to the
@@ -830,6 +840,7 @@ spec:
                                     requirements are ANDed.
                                   type: object
                               type: object
+                              x-kubernetes-map-type: atomic
                             namespaces:
                               description: namespaces specifies a static list of namespace
                                 names that the term applies to. The term is applied
@@ -856,11 +867,11 @@ spec:
                     type: object
                 type: object
               apiServer:
-                description: APIServerConfig allows specifying a host and auth methods
-                  to access the Kubernetes API server. If left empty, the Agent will
-                  assume that it is running inside of the cluster and will discover
-                  API servers automatically and use the pod's CA certificate and bearer
-                  token file at /var/run/secrets/kubernetes.io/serviceaccount.
+                description: APIServerConfig lets you specify a host and auth methods
+                  to access the Kubernetes API server. If left empty, the Agent assumes
+                  that it is running inside of the cluster and will discover API servers
+                  automatically and use the pod's CA certificate and bearer token
+                  file at /var/run/secrets/kubernetes.io/serviceaccount.
                 properties:
                   authorization:
                     description: Authorization section for accessing apiserver
@@ -884,6 +895,7 @@ spec:
                         required:
                         - key
                         type: object
+                        x-kubernetes-map-type: atomic
                       credentialsFile:
                         description: File to read a secret from, mutually exclusive
                           with Credentials (from SafeAuthorization)
@@ -916,6 +928,7 @@ spec:
                         required:
                         - key
                         type: object
+                        x-kubernetes-map-type: atomic
                       username:
                         description: The secret in the service monitor namespace that
                           contains the username for authentication.
@@ -935,6 +948,7 @@ spec:
                         required:
                         - key
                         type: object
+                        x-kubernetes-map-type: atomic
                     type: object
                   bearerToken:
                     description: Bearer token for accessing apiserver.
@@ -950,8 +964,8 @@ spec:
                     description: TLS Config to use for accessing apiserver.
                     properties:
                       ca:
-                        description: Struct containing the CA cert to use for the
-                          targets.
+                        description: Certificate authority used when verifying server
+                          certificates.
                         properties:
                           configMap:
                             description: ConfigMap containing data to use for the
@@ -972,6 +986,7 @@ spec:
                             required:
                             - key
                             type: object
+                            x-kubernetes-map-type: atomic
                           secret:
                             description: Secret containing data to use for the targets.
                             properties:
@@ -991,14 +1006,14 @@ spec:
                             required:
                             - key
                             type: object
+                            x-kubernetes-map-type: atomic
                         type: object
                       caFile:
                         description: Path to the CA cert in the Prometheus container
                           to use for the targets.
                         type: string
                       cert:
-                        description: Struct containing the client cert file for the
-                          targets.
+                        description: Client certificate to present when doing client-authentication.
                         properties:
                           configMap:
                             description: ConfigMap containing data to use for the
@@ -1019,6 +1034,7 @@ spec:
                             required:
                             - key
                             type: object
+                            x-kubernetes-map-type: atomic
                           secret:
                             description: Secret containing data to use for the targets.
                             properties:
@@ -1038,6 +1054,7 @@ spec:
                             required:
                             - key
                             type: object
+                            x-kubernetes-map-type: atomic
                         type: object
                       certFile:
                         description: Path to the client cert file in the Prometheus
@@ -1069,6 +1086,7 @@ spec:
                         required:
                         - key
                         type: object
+                        x-kubernetes-map-type: atomic
                       serverName:
                         description: Used to verify the hostname for the targets.
                         type: string
@@ -1077,23 +1095,23 @@ spec:
                 - host
                 type: object
               configMaps:
-                description: ConfigMaps is a liset of config maps in the same namespace
+                description: ConfigMaps is a list of config maps in the same namespace
                   as the GrafanaAgent object which will be mounted into each running
                   Grafana Agent pod. The ConfigMaps are mounted into /etc/grafana-agent/extra-configmaps/<configmap-name>.
                 items:
                   type: string
                 type: array
               containers:
-                description: 'Containers allows injecting additional containers or
-                  modifying operator generated containers. This can be used to allow
-                  adding an authentication proxy to a Grafana Agent pod or to change
-                  the behavior of an operator-generated container. Containers described
-                  here modify an operator generated container if they share the same
-                  name and modifications are done via a strategic merge patch. The
-                  current container names are: `grafana-agent` and `config-reloader`.
-                  Overriding containers is entirely outside the scope of what the
-                  Grafana Agent team will support and by doing so, you accept that
-                  this behavior may break at any time without notice.'
+                description: 'Containers lets you inject additional containers or
+                  modify operator-generated containers. This can be used to add an
+                  authentication proxy to a Grafana Agent pod or to change the behavior
+                  of an operator-generated container. Containers described here modify
+                  an operator-generated container if they share the same name and
+                  if modifications are done via a strategic merge patch. The current
+                  container names are: `grafana-agent` and `config-reloader`. Overriding
+                  containers is entirely outside the scope of what the Grafana Agent
+                  team supports and by doing so, you accept that this behavior may
+                  break at any time without notice.'
                 items:
                   description: A single application container that you want to run
                     within a pod.
@@ -1171,6 +1189,7 @@ spec:
                                 required:
                                 - key
                                 type: object
+                                x-kubernetes-map-type: atomic
                               fieldRef:
                                 description: 'Selects a field of the pod: supports
                                   metadata.name, metadata.namespace, `metadata.labels[''<KEY>'']`,
@@ -1189,6 +1208,7 @@ spec:
                                 required:
                                 - fieldPath
                                 type: object
+                                x-kubernetes-map-type: atomic
                               resourceFieldRef:
                                 description: 'Selects a resource of the container:
                                   only resources limits and requests (limits.cpu,
@@ -1214,6 +1234,7 @@ spec:
                                 required:
                                 - resource
                                 type: object
+                                x-kubernetes-map-type: atomic
                               secretKeyRef:
                                 description: Selects a key of a secret in the pod's
                                   namespace
@@ -1235,6 +1256,7 @@ spec:
                                 required:
                                 - key
                                 type: object
+                                x-kubernetes-map-type: atomic
                             type: object
                         required:
                         - name
@@ -1265,6 +1287,7 @@ spec:
                                   defined
                                 type: boolean
                             type: object
+                            x-kubernetes-map-type: atomic
                           prefix:
                             description: An optional identifier to prepend to each
                               key in the ConfigMap. Must be a C_IDENTIFIER.
@@ -1281,6 +1304,7 @@ spec:
                                 description: Specify whether the Secret must be defined
                                 type: boolean
                             type: object
+                            x-kubernetes-map-type: atomic
                         type: object
                       type: array
                     image:
@@ -2311,7 +2335,7 @@ spec:
                 type: array
               disableReporting:
                 default: false
-                description: disableReporting disable reporting of enabled feature
+                description: disableReporting disables reporting of enabled feature
                   flags to Grafana.
                 type: boolean
               disableSupportBundle:
@@ -2322,17 +2346,17 @@ spec:
               enableConfigReadAPI:
                 default: false
                 description: enableConfigReadAPI enables the read API for viewing
-                  currently running config port 8080 on the agent.
+                  the currently running config port 8080 on the agent.
                 type: boolean
               image:
                 description: Image, when specified, overrides the image used to run
-                  the Agent. It should be specified along with a tag. Version must
-                  still be set to ensure the Grafana Agent Operator knows which version
+                  Agent. Specify the image along with a tag. You still need to set
+                  the version to ensure Grafana Agent Operator knows which version
                   of Grafana Agent is being configured.
                 type: string
               imagePullSecrets:
                 description: 'ImagePullSecrets holds an optional list of references
-                  to secrets within the same namespace to use for pulling the Grafana
+                  to Secrets within the same namespace used for pulling the Grafana
                   Agent image from registries. More info: https://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod'
                 items:
                   description: LocalObjectReference contains enough information to
@@ -2343,17 +2367,18 @@ spec:
                         TODO: Add other useful fields. apiVersion, kind, uid?'
                       type: string
                   type: object
+                  x-kubernetes-map-type: atomic
                 type: array
               initContainers:
-                description: 'InitContainers allows adding initContainers to the pod
+                description: 'InitContainers let you add initContainers to the pod
                   definition. These can be used to, for example, fetch secrets for
                   injection into the Grafana Agent configuration from external sources.
-                  Any errors during the execution of an initContainer will lead to
-                  a restart of the pod. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+                  Errors during the execution of an initContainer cause the pod to
+                  restart. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
                   Using initContainers for any use case other than secret fetching
                   is entirely outside the scope of what the Grafana Agent maintainers
-                  will support and by doing so, you accept that this behavior may
-                  break at any time without notice.'
+                  support and by doing so, you accept that this behavior may break
+                  at any time without notice.'
                 items:
                   description: A single application container that you want to run
                     within a pod.
@@ -2431,6 +2456,7 @@ spec:
                                 required:
                                 - key
                                 type: object
+                                x-kubernetes-map-type: atomic
                               fieldRef:
                                 description: 'Selects a field of the pod: supports
                                   metadata.name, metadata.namespace, `metadata.labels[''<KEY>'']`,
@@ -2449,6 +2475,7 @@ spec:
                                 required:
                                 - fieldPath
                                 type: object
+                                x-kubernetes-map-type: atomic
                               resourceFieldRef:
                                 description: 'Selects a resource of the container:
                                   only resources limits and requests (limits.cpu,
@@ -2474,6 +2501,7 @@ spec:
                                 required:
                                 - resource
                                 type: object
+                                x-kubernetes-map-type: atomic
                               secretKeyRef:
                                 description: Selects a key of a secret in the pod's
                                   namespace
@@ -2495,6 +2523,7 @@ spec:
                                 required:
                                 - key
                                 type: object
+                                x-kubernetes-map-type: atomic
                             type: object
                         required:
                         - name
@@ -2525,6 +2554,7 @@ spec:
                                   defined
                                 type: boolean
                             type: object
+                            x-kubernetes-map-type: atomic
                           prefix:
                             description: An optional identifier to prepend to each
                               key in the ConfigMap. Must be a C_IDENTIFIER.
@@ -2541,6 +2571,7 @@ spec:
                                 description: Specify whether the Secret must be defined
                                 type: boolean
                             type: object
+                            x-kubernetes-map-type: atomic
                         type: object
                       type: array
                     image:
@@ -3571,8 +3602,7 @@ spec:
                 type: array
               integrations:
                 description: Integrations controls the integration subsystem of the
-                  Agent and settings unique to integration-specific pods that are
-                  deployed.
+                  Agent and settings unique to deployed integration-specific pods.
                 properties:
                   namespaceSelector:
                     description: "Label selector for namespaces to search when discovering
@@ -3621,6 +3651,7 @@ spec:
                           "value". The requirements are ANDed.
                         type: object
                     type: object
+                    x-kubernetes-map-type: atomic
                   selector:
                     description: Label selector to find Integration resources to run.
                       When nil, no integration resources will be defined.
@@ -3666,6 +3697,7 @@ spec:
                           "value". The requirements are ANDed.
                         type: object
                     type: object
+                    x-kubernetes-map-type: atomic
                 type: object
               logFormat:
                 description: LogFormat controls the logging format of the generated
@@ -3726,6 +3758,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                             username:
                               description: The secret in the service monitor namespace
                                 that contains the username for authentication.
@@ -3746,6 +3779,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                           type: object
                         batchSize:
                           description: Maximum batch size (in bytes) of logs to accumulate
@@ -3785,8 +3819,8 @@ spec:
                             when the protocol of the URL is https.
                           properties:
                             ca:
-                              description: Struct containing the CA cert to use for
-                                the targets.
+                              description: Certificate authority used when verifying
+                                server certificates.
                               properties:
                                 configMap:
                                   description: ConfigMap containing data to use for
@@ -3808,6 +3842,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 secret:
                                   description: Secret containing data to use for the
                                     targets.
@@ -3829,14 +3864,15 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                             caFile:
                               description: Path to the CA cert in the Prometheus container
                                 to use for the targets.
                               type: string
                             cert:
-                              description: Struct containing the client cert file
-                                for the targets.
+                              description: Client certificate to present when doing
+                                client-authentication.
                               properties:
                                 configMap:
                                   description: ConfigMap containing data to use for
@@ -3858,6 +3894,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 secret:
                                   description: Secret containing data to use for the
                                     targets.
@@ -3879,6 +3916,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                             certFile:
                               description: Path to the client cert file in the Prometheus
@@ -3911,6 +3949,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                             serverName:
                               description: Used to verify the hostname for the targets.
                               type: string
@@ -3981,6 +4020,7 @@ spec:
                           "value". The requirements are ANDed.
                         type: object
                     type: object
+                    x-kubernetes-map-type: atomic
                   instanceSelector:
                     description: InstanceSelector determines which LogInstances should
                       be selected for running. Each instance runs its own set of Prometheus
@@ -4027,6 +4067,7 @@ spec:
                           "value". The requirements are ANDed.
                         type: object
                     type: object
+                    x-kubernetes-map-type: atomic
                   logsExternalLabelName:
                     description: LogsExternalLabelName is the name of the external
                       label used to denote Grafana Agent cluster. Defaults to "cluster."
@@ -4041,7 +4082,7 @@ spec:
                   arbitraryFSAccessThroughSMs:
                     description: ArbitraryFSAccessThroughSMs configures whether configuration
                       based on a ServiceMonitor can access arbitrary files on the
-                      file system of the Grafana Agent container e.g. bearer token
+                      file system of the Grafana Agent container, e.g., bearer token
                       files.
                     properties:
                       deny:
@@ -4050,17 +4091,16 @@ spec:
                   enforcedNamespaceLabel:
                     description: EnforcedNamespaceLabel enforces adding a namespace
                       label of origin for each metric that is user-created. The label
-                      value will always be the namespace of the object that is being
-                      created.
+                      value is always the namespace of the object that is being created.
                     type: string
                   enforcedSampleLimit:
-                    description: EnforcedSampleLimit defines global limit on the number
-                      of scraped samples that will be accepted. This overrides any
-                      SampleLimit set per ServiceMonitor and/or PodMonitor. It is
-                      meant to be used by admins to enforce the SampleLimit to keep
-                      the overall number of samples and series under the desired limit.
-                      Note that if a SampleLimit from a ServiceMonitor or PodMonitor
-                      is lower, that value will be used instead.
+                    description: EnforcedSampleLimit defines a global limit on the
+                      number of scraped samples that are accepted. This overrides
+                      any SampleLimit set per ServiceMonitor and/or PodMonitor. It
+                      is meant to be used by admins to enforce the SampleLimit to
+                      keep the overall number of samples and series under the desired
+                      limit. Note that if a SampleLimit from a ServiceMonitor or PodMonitor
+                      is lower, that value is used instead.
                     format: int64
                     type: integer
                   enforcedTargetLimit:
@@ -4069,8 +4109,8 @@ spec:
                       per ServiceMonitor and/or PodMonitor. It is meant to be used
                       by admins to enforce the TargetLimit to keep the overall number
                       of targets under the desired limit. Note that if a TargetLimit
-                      from a ServiceMonitor or PodMonitor is higher, that value will
-                      be used instead.
+                      from a ServiceMonitor or PodMonitor is higher, that value is
+                      used instead.
                     format: int64
                     type: integer
                   externalLabels:
@@ -4080,14 +4120,14 @@ spec:
                       when sending data over remote_write.
                     type: object
                   ignoreNamespaceSelectors:
-                    description: IgnoreNamespaceSelectors, if true, will ignore NamespaceSelector
-                      settings from the PodMonitor and ServiceMonitor configs, and
-                      they will only discover endpoints within their current namespace.
+                    description: IgnoreNamespaceSelectors, if true, ignores NamespaceSelector
+                      settings from the PodMonitor and ServiceMonitor configs, so
+                      that they only discover endpoints within their current namespace.
                     type: boolean
                   instanceNamespaceSelector:
-                    description: InstanceNamespaceSelector are the set of labels to
-                      determine which namespaces to watch for MetricsInstances. If
-                      not provided, only checks own namespace.
+                    description: InstanceNamespaceSelector is the set of labels that
+                      determines which namespaces to watch for MetricsInstances. If
+                      not provided, it only checks its own namespace.
                     properties:
                       matchExpressions:
                         description: matchExpressions is a list of label selector
@@ -4130,6 +4170,7 @@ spec:
                           "value". The requirements are ANDed.
                         type: object
                     type: object
+                    x-kubernetes-map-type: atomic
                   instanceSelector:
                     description: InstanceSelector determines which MetricsInstances
                       should be selected for running. Each instance runs its own set
@@ -4177,23 +4218,25 @@ spec:
                           "value". The requirements are ANDed.
                         type: object
                     type: object
+                    x-kubernetes-map-type: atomic
                   metricsExternalLabelName:
                     description: MetricsExternalLabelName is the name of the external
                       label used to denote Grafana Agent cluster. Defaults to "cluster."
-                      External label will _not_ be added when value is set to the
+                      The external label is _not_ added when the value is set to the
                       empty string.
                     type: string
                   overrideHonorLabels:
                     description: OverrideHonorLabels, if true, overrides all configured
-                      honor_labels read from ServiceMonitor or PodMonitor to false.
+                      honor_labels read from ServiceMonitor or PodMonitor and sets
+                      them to false.
                     type: boolean
                   overrideHonorTimestamps:
-                    description: OverrideHonorTimestamps allows to globally enforce
-                      honoring timestamps in all scrape configs.
+                    description: OverrideHonorTimestamps allows global enforcement
+                      for honoring timestamps in all scrape configs.
                     type: boolean
                   remoteWrite:
                     description: RemoteWrite controls default remote_write settings
-                      for all instances. If an instance does not provide its own remoteWrite
+                      for all instances. If an instance does not provide its own RemoteWrite
                       settings, these will be used instead.
                     items:
                       description: RemoteWriteSpec defines the remote_write configuration
@@ -4222,6 +4265,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                             username:
                               description: The secret in the service monitor namespace
                                 that contains the username for authentication.
@@ -4242,6 +4286,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                           type: object
                         bearerToken:
                           description: BearerToken used for remote_write.
@@ -4302,6 +4347,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 secret:
                                   description: Secret containing data to use for the
                                     targets.
@@ -4323,6 +4369,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                             clientSecret:
                               description: The secret containing the OAuth2 client
@@ -4344,6 +4391,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                             endpointParams:
                               additionalProperties:
                                 type: string
@@ -4372,11 +4420,11 @@ spec:
                           properties:
                             batchSendDeadline:
                               description: BatchSendDeadline is the maximum time a
-                                sample will wait in buffer.
+                                sample will wait in the buffer.
                               type: string
                             capacity:
                               description: Capacity is the number of samples to buffer
-                                per shard before we start dropping them.
+                                per shard before samples start being dropped.
                               type: integer
                             maxBackoff:
                               description: MaxBackoff is the maximum retry delay.
@@ -4391,15 +4439,15 @@ spec:
                               type: integer
                             maxShards:
                               description: MaxShards is the maximum number of shards,
-                                i.e. amount of concurrency.
+                                i.e., the amount of concurrency.
                               type: integer
                             minBackoff:
                               description: MinBackoff is the initial retry delay.
-                                Gets doubled for every retry.
+                                MinBackoff is doubled for every retry.
                               type: string
                             minShards:
                               description: MinShards is the minimum number of shards,
-                                i.e. amount of concurrency.
+                                i.e., the amount of concurrency.
                               type: integer
                             retryOnRateLimit:
                               description: RetryOnRateLimit retries requests when
@@ -4412,12 +4460,12 @@ spec:
                           type: string
                         sigv4:
                           description: SigV4 configures SigV4-based authentication
-                            to the remote_write endpoint. Will be used if SigV4 is
-                            defined, even with an empty object.
+                            to the remote_write endpoint. SigV4-based authentication
+                            is used if SigV4 is defined, even with an empty object.
                           properties:
                             accessKey:
                               description: AccessKey holds the secret of the AWS API
-                                access key to use for signing. If not provided, The
+                                access key to use for signing. If not provided, the
                                 environment variable AWS_ACCESS_KEY_ID is used.
                               properties:
                                 key:
@@ -4436,6 +4484,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                             profile:
                               description: Profile is the named AWS profile to use
                                 for authentication.
@@ -4470,13 +4519,14 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                           type: object
                         tlsConfig:
                           description: TLSConfig to use for remote_write.
                           properties:
                             ca:
-                              description: Struct containing the CA cert to use for
-                                the targets.
+                              description: Certificate authority used when verifying
+                                server certificates.
                               properties:
                                 configMap:
                                   description: ConfigMap containing data to use for
@@ -4498,6 +4548,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 secret:
                                   description: Secret containing data to use for the
                                     targets.
@@ -4519,14 +4570,15 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                             caFile:
                               description: Path to the CA cert in the Prometheus container
                                 to use for the targets.
                               type: string
                             cert:
-                              description: Struct containing the client cert file
-                                for the targets.
+                              description: Client certificate to present when doing
+                                client-authentication.
                               properties:
                                 configMap:
                                   description: ConfigMap containing data to use for
@@ -4548,6 +4600,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 secret:
                                   description: Secret containing data to use for the
                                     targets.
@@ -4569,6 +4622,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                             certFile:
                               description: Path to the client cert file in the Prometheus
@@ -4601,6 +4655,7 @@ spec:
                               required:
                               - key
                               type: object
+                              x-kubernetes-map-type: atomic
                             serverName:
                               description: Used to verify the hostname for the targets.
                               type: string
@@ -4621,15 +4676,27 @@ spec:
                               action:
                                 default: replace
                                 description: Action to perform based on regex matching.
-                                  Default is 'replace'
+                                  Default is 'replace'. uppercase and lowercase actions
+                                  require Prometheus >= 2.36.
                                 enum:
                                 - replace
+                                - Replace
                                 - keep
+                                - Keep
                                 - drop
+                                - Drop
                                 - hashmod
+                                - HashMod
                                 - labelmap
+                                - LabelMap
                                 - labeldrop
+                                - LabelDrop
                                 - labelkeep
+                                - LabelKeep
+                                - lowercase
+                                - Lowercase
+                                - uppercase
+                                - Uppercase
                                 type: string
                               modulus:
                                 description: Modulus to take of the hash of the source
@@ -4675,9 +4742,9 @@ spec:
                     type: array
                   replicaExternalLabelName:
                     description: ReplicaExternalLabelName is the name of the metrics
-                      external label used to denote replica name. Defaults to __replica__.
-                      External label will _not_ be added when value is set to the
-                      empty string.
+                      external label used to denote the replica name. Defaults to
+                      __replica__. The external label is _not_ added when the value
+                      is set to the empty string.
                     type: string
                   replicas:
                     description: Replicas of each shard to deploy for metrics pods.
@@ -4695,9 +4762,9 @@ spec:
                   shards:
                     description: Shards to distribute targets onto. Number of replicas
                       multiplied by the number of shards is the total number of pods
-                      created. Note that scaling down shards will not reshard data
-                      onto remaining instances, it must be manually moved. Increasing
-                      shards will not reshard data either but it will continue to
+                      created. Note that scaling down shards does not reshard data
+                      onto remaining instances; it must be manually moved. Increasing
+                      shards does not reshard data either, but it will continue to
                       be available from the same instances. Sharding is performed
                       on the content of the __address__ target meta-label.
                     format: int32
@@ -5056,6 +5123,7 @@ spec:
                                 - kind
                                 - name
                                 type: object
+                                x-kubernetes-map-type: atomic
                               dataSourceRef:
                                 description: 'dataSourceRef specifies the object from
                                   which to populate the volume with data, if a non-empty
@@ -5100,6 +5168,7 @@ spec:
                                 - kind
                                 - name
                                 type: object
+                                x-kubernetes-map-type: atomic
                               resources:
                                 description: 'resources represents the minimum resources
                                   the volume should have. If RecoverVolumeExpansionFailure
@@ -5181,6 +5250,7 @@ spec:
                                       The requirements are ANDed.
                                     type: object
                                 type: object
+                                x-kubernetes-map-type: atomic
                               storageClassName:
                                 description: 'storageClassName is the name of the
                                   StorageClass required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1'
@@ -5280,6 +5350,7 @@ spec:
                             - kind
                             - name
                             type: object
+                            x-kubernetes-map-type: atomic
                           dataSourceRef:
                             description: 'dataSourceRef specifies the object from
                               which to populate the volume with data, if a non-empty
@@ -5319,6 +5390,7 @@ spec:
                             - kind
                             - name
                             type: object
+                            x-kubernetes-map-type: atomic
                           resources:
                             description: 'resources represents the minimum resources
                               the volume should have. If RecoverVolumeExpansionFailure
@@ -5397,6 +5469,7 @@ spec:
                                   contains only "value". The requirements are ANDed.
                                 type: object
                             type: object
+                            x-kubernetes-map-type: atomic
                           storageClassName:
                             description: 'storageClassName is the name of the StorageClass
                               required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1'
@@ -5598,6 +5671,7 @@ spec:
                             only "value". The requirements are ANDed.
                           type: object
                       type: object
+                      x-kubernetes-map-type: atomic
                     matchLabelKeys:
                       description: MatchLabelKeys is a set of pod label keys to select
                         the pods over which spreading will be calculated. The keys
@@ -5717,10 +5791,10 @@ spec:
                 description: Version of Grafana Agent to be deployed.
                 type: string
               volumeMounts:
-                description: VolumeMounts allows configuration of additional VolumeMounts
-                  on the output StatefulSet definition. VolumEMounts specified will
-                  be appended to other VolumeMounts in the Grafana Agent container
-                  that are generated as a result of StorageSpec objects.
+                description: VolumeMounts lets you configure additional VolumeMounts
+                  on the output StatefulSet definition. Specified VolumeMounts are
+                  appended to other VolumeMounts generated as a result of StorageSpec
+                  objects in the Grafana Agent container.
                 items:
                   description: VolumeMount describes a mounting of a Volume within
                     a container.
@@ -5760,7 +5834,7 @@ spec:
                 type: array
               volumes:
                 description: Volumes allows configuration of additional volumes on
-                  the output StatefulSet definition. Volumes specified will be appended
+                  the output StatefulSet definition. The volumes specified are appended
                   to other volumes that are generated as a result of StorageSpec objects.
                 items:
                   description: Volume represents a named volume in a pod that may
@@ -5888,6 +5962,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         user:
                           description: 'user is optional: User is the rados user name,
                             default is admin More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it'
@@ -5919,6 +5994,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         volumeID:
                           description: 'volumeID used to identify the volume in cinder.
                             More info: https://examples.k8s.io/mysql-cinder-pd/README.md'
@@ -5990,6 +6066,7 @@ spec:
                             keys must be defined
                           type: boolean
                       type: object
+                      x-kubernetes-map-type: atomic
                     csi:
                       description: csi (Container Storage Interface) represents ephemeral
                         storage that is handled by certain external CSI drivers (Beta
@@ -6020,6 +6097,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         readOnly:
                           description: readOnly specifies a read-only configuration
                             for the volume. Defaults to false (read/write).
@@ -6073,6 +6151,7 @@ spec:
                                 required:
                                 - fieldPath
                                 type: object
+                                x-kubernetes-map-type: atomic
                               mode:
                                 description: 'Optional: mode bits used to set permissions
                                   on this file, must be an octal value between 0000
@@ -6116,6 +6195,7 @@ spec:
                                 required:
                                 - resource
                                 type: object
+                                x-kubernetes-map-type: atomic
                             required:
                             - path
                             type: object
@@ -6232,6 +6312,7 @@ spec:
                                   - kind
                                   - name
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 dataSourceRef:
                                   description: 'dataSourceRef specifies the object
                                     from which to populate the volume with data, if
@@ -6277,6 +6358,7 @@ spec:
                                   - kind
                                   - name
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 resources:
                                   description: 'resources represents the minimum resources
                                     the volume should have. If RecoverVolumeExpansionFailure
@@ -6361,6 +6443,7 @@ spec:
                                         The requirements are ANDed.
                                       type: object
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 storageClassName:
                                   description: 'storageClassName is the name of the
                                     StorageClass required by the claim. More info:
@@ -6451,6 +6534,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                       required:
                       - driver
                       type: object
@@ -6628,6 +6712,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         targetPortal:
                           description: targetPortal is iSCSI Target Portal. The Portal
                             is either an IP or ip_addr:port if the port is other than
@@ -6798,6 +6883,7 @@ spec:
                                       or its keys must be defined
                                     type: boolean
                                 type: object
+                                x-kubernetes-map-type: atomic
                               downwardAPI:
                                 description: downwardAPI information about the downwardAPI
                                   data to project
@@ -6827,6 +6913,7 @@ spec:
                                           required:
                                           - fieldPath
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         mode:
                                           description: 'Optional: mode bits used to
                                             set permissions on this file, must be
@@ -6875,6 +6962,7 @@ spec:
                                           required:
                                           - resource
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - path
                                       type: object
@@ -6940,6 +7028,7 @@ spec:
                                       Secret or its key must be defined
                                     type: boolean
                                 type: object
+                                x-kubernetes-map-type: atomic
                               serviceAccountToken:
                                 description: serviceAccountToken is information about
                                   the serviceAccountToken data to project
@@ -7056,6 +7145,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         user:
                           description: 'user is the rados user name. Default is admin.
                             More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it'
@@ -7095,6 +7185,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         sslEnabled:
                           description: sslEnabled Flag enable/disable SSL communication
                             with Gateway, default false
@@ -7210,6 +7301,7 @@ spec:
                                 TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
                           type: object
+                          x-kubernetes-map-type: atomic
                         volumeName:
                           description: volumeName is the human-readable name of the
                             StorageOS volume.  Volume names are only unique within
@@ -7259,9 +7351,3 @@ spec:
         type: object
     served: true
     storage: true
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
