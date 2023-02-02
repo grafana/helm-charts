@@ -34,9 +34,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.podSecurityContext }}
+      {{- with .Values.podSecurityContext }}
       securityContext:
-      {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end}}
       serviceAccountName: {{ template "fluent-bit-loki.serviceAccountName" . }}
       {{- if .Values.priorityClassName }}
@@ -52,9 +52,9 @@ spec:
         - name: fluent-bit-loki
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.securityContext }}
+          {{- with .Values.securityContext }}
           securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: config
