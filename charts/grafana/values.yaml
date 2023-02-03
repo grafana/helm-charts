@@ -384,6 +384,14 @@ admin:
 # - "sh"
 # - "/run.sh"
 
+## Optionally define args if command is used
+## Needed if using `hashicorp/envconsul` to manage secrets
+## By default no arguments are set
+# args:
+# - "-secret"
+# - "secret/grafana"
+# - "./grafana"
+
 ## Extra environment variables that will be pass onto deployment pods
 ##
 ## to provide grafana with access to CloudWatch on AWS EKS:
