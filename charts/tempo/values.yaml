@@ -12,7 +12,7 @@ annotations: {}
 
 tempo:
   repository: grafana/tempo
-  tag: 1.5.0
+  tag: 2.0.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -32,8 +32,6 @@ tempo:
 
   memBallastSizeMbs: 1024
   multitenancyEnabled: false
-  # -- If true, enables Tempo's native search
-  searchEnabled: false
   # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
   reportingEnabled: true
   metricsGenerator:
@@ -119,10 +117,8 @@ tempo:
 # @default -- Dynamically generated tempo configmap
 config: |
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
-    search_enabled: {{ .Values.tempo.searchEnabled }}
     usage_report:
       reporting_enabled: {{ .Values.tempo.reportingEnabled }}
-    metrics_generator_enabled: {{ .Values.tempo.metricsGenerator.enabled }}
     compactor:
       compaction:
         block_retention: {{ .Values.tempo.retention }}
@@ -154,7 +150,7 @@ config: |
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 1.5.0
+  tag: 2.0.0
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -165,6 +161,15 @@ tempoQuery:
 
   # -- if False the tempo-query container is not deployed
   enabled: true
+
+  resources: {}
+  #  requests:
+  #    cpu: 1000m
+  #    memory: 4Gi
+  #  limits:
+  #    cpu: 2000m
+  #    memory: 6Gi
+
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add

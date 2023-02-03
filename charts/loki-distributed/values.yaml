@@ -82,6 +82,9 @@ loki:
     server:
       http_listen_port: 3100
 
+    common:
+      compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
+
     distributor:
       ring:
         kvstore:
@@ -138,7 +141,8 @@ loki:
       max_look_back_period: 0s
       {{- if .Values.memcachedChunks.enabled }}
       chunk_cache_config:
-        enable_fifocache: false
+        embedded_cache:
+          enabled: false
         memcached_client:
           consistent_hash: true
           addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedChunksFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
@@ -162,12 +166,11 @@ loki:
         cache:
           {{- if .Values.memcachedFrontend.enabled }}
           memcached_client:
-            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+            host: {{ include "loki.memcachedFrontendFullname" . }}
             consistent_hash: true
           {{- else }}
-          enable_fifocache: true
-          fifocache:
-            max_size_items: 1024
+          embedded_cache:
+            enabled: true
             ttl: 24h
           {{- end }}
 
@@ -1068,7 +1071,7 @@ gateway:
           }
 
           location ~ /api/prom/.* {
-            set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_backend:3100$request_uri;
             proxy_http_version 1.1;
           }
@@ -1088,7 +1091,7 @@ gateway:
           }
 
           location ~ /loki/api/.* {
-            set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_backend:3100$request_uri;
             proxy_http_version 1.1;
           }

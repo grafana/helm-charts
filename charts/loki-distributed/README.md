@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.67.2](https://img.shields.io/badge/Version-0.67.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.69.3](https://img.shields.io/badge/Version-0.69.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,25 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.68.x to 0.69.0
+The in-memory `fifocache` has been renamed to more general `embedded_cache`, which currently doesn't have a `max_size_items` attribute.
+```yaml
+loki:
+  config: |
+    chunk_store_config:
+      chunk_cache_config:
+        embedded_cache:
+          enabled: false
+```
+
+`compactor_address` has to be explicitly set in the `common` section of the config.
+```yaml
+loki:
+  config: |
+    common:
+      compactor_address: {{ include "loki.compactorFullname" . }}:3100
+```
 
 ### From 0.41.x to 0.42.0
 All containers were previously named "loki". This version changes the container names to make the chart compatible with the loki-mixin. Now the container names correctly reflect the component (querier, distributor, ingester, ...). If you are using custom prometheus rules that use the container name you probably have to change them.

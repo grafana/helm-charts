@@ -52,6 +52,7 @@ autoscaling:
   maxReplicas: 5
   targetCPU: "60"
   targetMemory: ""
+  behavior: {}
 
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -159,7 +160,7 @@ downloadDashboards:
 # podLabels: {}
 
 podPortName: grafana
-
+gossipPortName: gossip
 ## Deployment annotations
 # annotations: {}
 
@@ -193,6 +194,7 @@ serviceMonitor:
   tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
+  targetLabels: []
 
 extraExposePorts: []
  # - name: keycloak
@@ -381,6 +383,14 @@ admin:
 # command:
 # - "sh"
 # - "/run.sh"
+
+## Optionally define args if command is used
+## Needed if using `hashicorp/envconsul` to manage secrets
+## By default no arguments are set
+# args:
+# - "-secret"
+# - "secret/grafana"
+# - "./grafana"
 
 ## Extra environment variables that will be pass onto deployment pods
 ##
@@ -754,7 +764,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.21.0
+    tag: 1.22.0
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -1008,6 +1018,13 @@ imageRenderer:
   # Enable the image-renderer deployment & service
   enabled: false
   replicas: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPU: "60"
+    targetMemory: ""
+    behavior: {}
   image:
     # image-renderer Image repository
     repository: grafana/grafana-image-renderer
@@ -1060,6 +1077,10 @@ imageRenderer:
     tlsConfig: {}
     scrapeTimeout: 30s
     relabelings: []
+    # See: https://doc.crds.dev/github.com/prometheus-operator/kube-prometheus/monitoring.coreos.com/ServiceMonitor/v1@v0.11.0#spec-targetLabels
+    targetLabels: []
+      # - targetLabel1
+      # - targetLabel2
   # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
   grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
