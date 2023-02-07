@@ -758,17 +758,34 @@ config: |
         kvstore:
           store: "memberlist"
 
-  {{- if .Values.minio.enabled }}
+  auth:
+    type: enterprise
+
+  http_api_prefix: {{get .Values.tempo.structuredConfig "http_api_prefix"}}
+
   admin_client:
     storage:
-      backend: s3
+      backend: {{.Values.storage.admin.backend}}
+      {{- if eq .Values.storage.admin.backend "s3"}}
       s3:
-        access_key_id: {{ .Values.minio.rootUser }}
-        bucket_name: enterprise-traces-admin
-        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        insecure: true
-        secret_access_key: {{ .Values.minio.rootPassword }}
-    {{- end }}
+        {{- toYaml .Values.storage.admin.s3 | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.admin.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.admin.azure | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "swift"}}
+      swift:
+        {{- toYaml .Values.storage.admin.swift | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "filesystem"}}
+      filesystem:
+        {{- toYaml .Values.storage.admin.filesystem | nindent 6}}
+      {{- end}}
   {{- end }}
 
   {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.useDefaultProxyURLs }}
@@ -941,18 +958,18 @@ config: |
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
-      {{- if eq .Values.storage.trace.backend "gcs"}}
-      gcs:
-        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
-      {{- end}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
         {{- toYaml .Values.storage.trace.s3 | nindent 6}}
-      {{- end}}
+      {{- end }}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end }}
       {{- if eq .Values.storage.trace.backend "azure"}}
       azure:
         {{- toYaml .Values.storage.trace.azure | nindent 6}}
-      {{- end}}
+      {{- end }}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -991,6 +1008,10 @@ storage:
   trace:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+  admin:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
+    backend: filesystem
 
 # Global overrides
 global_overrides:
@@ -1211,12 +1232,15 @@ minio:
   rootUser: grafana-tempo
   rootPassword: supersecret
   buckets:
+    # Default Tempo storage bucket.
     - name: tempo-traces
       policy: none
       purge: false
+    # Bucket for traces storage if enterprise.enabled is true - requires license.
     - name: enterprise-traces
       policy: none
       purge: false
+    # Admin client bucket if enterprise.enabled is true - requires license.
     - name: enterprise-traces-admin
       policy: none
       purge: false
