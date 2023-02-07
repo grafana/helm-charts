@@ -146,7 +146,7 @@ This version requires Helm >= 3.1.0.
 | `podPortName`                             | Name of the grafana port on the pod           | `grafana`                                               |
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.repository`                | Sidecar image repository                      | `quay.io/kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.19.2`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.22.0`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -220,7 +220,8 @@ This version requires Helm >= 3.1.0.
 | `rbac.pspUseAppArmor`                     | Enforce AppArmor in created PodSecurityPolicy (requires `rbac.pspEnabled`)  | `true`                    |
 | `rbac.extraRoleRules`                     | Additional rules to add to the Role           | []                                                      |
 | `rbac.extraClusterRoleRules`              | Additional rules to add to the ClusterRole    | []                                                      |
-| `command`                     | Define command to be executed by grafana container at startup  | `nil`                                              |
+| `command`                                 | Define command to be executed by grafana container at startup | `nil`                                   |
+| `args`                                    | Define additional args if command is used     | `nil`                                                   |
 | `testFramework.enabled`                   | Whether to create test-related resources      | `true`                                                  |
 | `testFramework.image`                     | `test-framework` image repository.            | `bats/bats`                                             |
 | `testFramework.tag`                       | `test-framework` image tag.                   | `v1.4.1`                                                |
@@ -598,6 +599,9 @@ grafana.ini:
   unified_alerting:
     enabled: true
     ha_peers: {{ Name }}-headless:9094
+    ha_listen_address: ${POD_IP}:9094
+    ha_advertise_address: ${POD_IP}:9094
+
   alerting:
     enabled: false
 ```

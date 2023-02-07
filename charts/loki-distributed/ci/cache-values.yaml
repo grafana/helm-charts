@@ -5,6 +5,9 @@ loki:
     server:
       http_listen_port: 3100
 
+    common:
+      compactor_address: {{ include "loki.compactorFullname" . }}:3100
+
     distributor:
       ring:
         kvstore:

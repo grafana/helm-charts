@@ -46,6 +46,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.memcachedExporterImagePullSecrets" . | nindent 6 -}}
       containers:
         - image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
@@ -88,6 +89,12 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
         {{- end }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.memcached.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.memcached.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

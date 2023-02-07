@@ -25,15 +25,15 @@ spec:
         - namespaceSelector:
             matchLabels:
               name: {{ include "grafana.namespace" . }}
-        {{- with .Values.imageRenderer.networkPolicy.extraIngressSelectors -}}
-        {{ toYaml . | nindent 8 }}
-        {{- end }}
-        - podSelector:
+          podSelector:
             matchLabels:
               {{- include "grafana.selectorLabels" . | nindent 14 }}
               {{- with .Values.podLabels }}
               {{- toYaml . | nindent 14 }}
               {{- end }}
+        {{- with .Values.imageRenderer.networkPolicy.extraIngressSelectors -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
 {{- end }}
 
 {{- if and .Values.imageRenderer.enabled .Values.imageRenderer.networkPolicy.limitEgress }}
@@ -64,10 +64,13 @@ spec:
           protocol: TCP
     # talk only to grafana
     - ports:
-        - port: {{ .Values.service.port }}
+        - port: {{ .Values.service.targetPort }}
           protocol: TCP
       to:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              name: {{ include "grafana.namespace" . }}
+          podSelector:
             matchLabels:
               {{- include "grafana.selectorLabels" . | nindent 14 }}
               {{- with .Values.podLabels }}

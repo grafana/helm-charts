@@ -15,7 +15,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if and (not .Values.imageRenderer.autoscaling.enabled) (.Values.imageRenderer.replicas) }}
   replicas: {{ .Values.imageRenderer.replicas }}
+  {{- end }}
   revisionHistoryLimit: {{ .Values.imageRenderer.revisionHistoryLimit }}
   selector:
     matchLabels:

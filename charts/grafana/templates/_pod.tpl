@@ -763,7 +763,13 @@ containers:
     {{- range .Values.command }}
       - {{ . | quote }}
     {{- end }}
-    {{- end}}
+    {{- end }}
+    {{- if .Values.args }}
+    args:
+    {{- range .Values.args }}
+      - {{ . | quote }}
+    {{- end }}
+    {{- end }}
     {{- with .Values.containerSecurityContext }}
     securityContext:
       {{- toYaml . | nindent 6 }}
@@ -878,7 +884,17 @@ containers:
       - name: {{ .Values.podPortName }}
         containerPort: {{ .Values.service.targetPort }}
         protocol: TCP
+      - name: {{ .Values.gossipPortName }}-tcp
+        containerPort: 9094
+        protocol: TCP
+      - name: {{ .Values.gossipPortName }}-udp
+        containerPort: 9094
+        protocol: UDP
     env:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: GF_SECURITY_ADMIN_USER
         valueFrom:

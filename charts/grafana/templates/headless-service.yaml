@@ -17,7 +17,6 @@ spec:
     {{- include "grafana.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
-  - protocol: TCP
-    port: 3000
-    targetPort: {{ .Values.service.targetPort }}
+  - name: {{ .Values.gossipPortName }}-tcp
+    port: 9094
 {{- end }}
