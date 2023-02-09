@@ -2,7 +2,7 @@ apiVersion: v2
 name: grafana-agent-operator
 description: A Helm chart for Grafana Agent Operator
 type: application
-version: 0.2.11
+version: 0.3.0
 appVersion: "0.31.2"
 home: https://grafana.com/docs/agent/v0.30/
 icon: https://raw.githubusercontent.com/grafana/agent/v0.31.2/docs/sources/assets/logo_and_name.png
