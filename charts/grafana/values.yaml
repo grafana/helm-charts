@@ -160,7 +160,7 @@ downloadDashboards:
 # podLabels: {}
 
 podPortName: grafana
-gossipPortName: grafana-alert
+gossipPortName: gossip
 ## Deployment annotations
 # annotations: {}
 
@@ -383,6 +383,14 @@ admin:
 # command:
 # - "sh"
 # - "/run.sh"
+
+## Optionally define args if command is used
+## Needed if using `hashicorp/envconsul` to manage secrets
+## By default no arguments are set
+# args:
+# - "-secret"
+# - "secret/grafana"
+# - "./grafana"
 
 ## Extra environment variables that will be pass onto deployment pods
 ##
