@@ -6,6 +6,7 @@ apiVersion: {{ include "loki.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.querySchedulerFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.querySchedulerLabels" . | nindent 4 }}
 spec:
