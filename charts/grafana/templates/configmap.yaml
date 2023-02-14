@@ -53,8 +53,13 @@ data:
   {{- end }}
 
   {{- range $key, $value := .Values.alerting }}
+  {{- if (hasKey $value "file") }}
+  {{- $key | nindent 2 }}:
+  {{- toYaml ( $files.Get $value.file ) | nindent 4}}
+  {{- else }}
   {{- $key | nindent 2 }}: |
     {{- tpl (toYaml $value | nindent 4) $root }}
+  {{- end }}
   {{- end }}
 
   {{- range $key, $value := .Values.dashboardProviders }}
