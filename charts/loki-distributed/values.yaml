@@ -802,10 +802,10 @@ ingress:
       - /prometheus/api/v1/alerts
   hosts:
     - loki.example.com
-#  tls:
-#    - hosts:
-#       - loki.example.com
-#      secretName: loki-distributed-tls
+  # tls:
+  #   - secretName: loki-distributed-tls
+  #     hosts:
+  #       - loki.example.com
 
 # Configuration for the gateway
 gateway:
@@ -936,10 +936,12 @@ gateway:
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the gateway ingress
-    tls:
-      - secretName: loki-gateway-tls
-        hosts:
-          - gateway.loki.example.com
+    tls: []
+    # tls:
+    #   - secretName: loki-gateway-tls
+    #     hosts:
+    #       - gateway.loki.example.com
+
   # Basic auth configuration
   basicAuth:
     # -- Enables basic authentication for the gateway
