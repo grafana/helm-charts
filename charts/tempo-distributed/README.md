@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -553,6 +553,11 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |
 | querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
 | querier.config.frontend_worker.grpc_client_config | object | `{}` | grpc client configuration |
+| querier.config.search.external_endpoints | list | `[]` | A list of external endpoints that the querier will use to offload backend search requests |
+| querier.config.search.external_hedge_requests_at | string | `"8s"` | If set to a non-zero value a second request will be issued at the provided duration. Recommended to be set to p99 of external search requests to reduce long tail latency. |
+| querier.config.search.external_hedge_requests_up_to | int | `2` | The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. |
+| querier.config.search.prefer_self | int | `10` | If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries. |
+| querier.config.search.query_timeout | string | `"30s"` | Timeout for search requests |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
