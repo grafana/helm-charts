@@ -158,7 +158,7 @@ Option 1
 Uninstall the old release and re-install the new one. There will be no data loss, as the collectors/agents can cache for a short period.
 
 Option 2
-Add new selector labels to the existing pods. This option will make your pods also temporarely unavailable, option 1 is faster:
+Add new selector labels to the existing pods. This option will make your pods also temporarily unavailable, option 1 is faster:
 
 ```
 kubectl label pod -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> app.kubernetes.io/component=<component> --overwrite
@@ -174,7 +174,7 @@ Perform a regular Helm upgrade on the existing release. The new Deployment/State
 
 ### From Chart versions < 0.8.0
 
-By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+By default, all tracing protocols are disabled, and you need to specify which protocols to enable for ingestion.
 
 For example to enable Jaeger grpc thrift http and zipkin protocols:
 ```yaml
@@ -373,7 +373,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
-| gateway.service.additionalPorts | object | `{}` | Additional ports to be opneed on gateway service (e.g. for RPC connections) |
+| gateway.service.additionalPorts | object | `{}` | Additional ports to be opened on gateway service (e.g. for RPC connections) |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
@@ -435,7 +435,7 @@ The memcached default args are removed and should be provided manually. The sett
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
-| memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
+| memcached.enabled | bool | `true` | Specified whether the memcached cache should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
 | memcached.extraEnv | list | `[]` | Environment variables to add to memcached pods |
 | memcached.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached pods |
@@ -706,7 +706,7 @@ Alternatively, in order to quickly test Tempo using the filestore, the [single b
 
 ### Overriding configuration variables with structuredConfig
 
-tempo.structuredConfig variable can be used to alter individual values in the configuration and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
+tempo.structuredConfig variable can be used to alter individual values in the configuration, and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
 
 Example:
 

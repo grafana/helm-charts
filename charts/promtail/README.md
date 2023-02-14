@@ -24,7 +24,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 ### From Chart Versions >= 3.0.0
 
-* Customizeable initContainer added.
+* Customizable initContainer added.
 
 ### From Chart Versions < 3.0.0
 

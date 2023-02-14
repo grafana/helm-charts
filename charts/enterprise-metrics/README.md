@@ -54,7 +54,7 @@ per node so that a single node failure does not cause data loss. Zone aware
 replication can be configured to ensure data replication spans availability
 zones. Refer to [Zone Aware Replication](https://cortexmetrics.io/docs/guides/zone-aware-replication/)
 for more information.
-Minio is no longer enabled and you are encouraged to use your cloud providers
+Minio is no longer enabled, and you are encouraged to use your cloud providers
 object storage service for production deployments.
 
 To deploy a cluster using `small.yaml` values file:
@@ -76,7 +76,7 @@ per node so that a single node failure does not cause data loss. Zone aware
 replication can be configured to ensure data replication spans availability
 zones. Refer to [Zone Aware Replication](https://cortexmetrics.io/docs/guides/zone-aware-replication/)
 for more information.
-Minio is no longer enabled and you are encouraged to use your cloud providers
+Minio is no longer enabled, and you are encouraged to use your cloud providers
 object storage service for production deployments.
 
 To deploy a cluster using the `large.yaml` values file:

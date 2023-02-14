@@ -617,8 +617,8 @@ The chart creates a headless service for the memberlist which ingester, distribu
 In its default configuration, the chart uses `boltdb-shipper` and `filesystem` as storage.
 The reason for this is that the chart can be validated and installed in a CI pipeline.
 However, this setup is not fully functional.
-Querying will not be possible (or limited to the ingesters' in-memory caches) because that would otherwise require shared storage between ingesters and queriers
-which the chart does not support and would require a volume that supports `ReadWriteMany` access mode anyways.
+Querying will not be possible (or limited to the ingesters in-memory caches) because that would otherwise require shared storage between ingesters and queriers
+which the chart does not support and would require a volume that supports `ReadWriteMany` access mode anyway.
 The recommendation is to use object storage, such as S3, GCS, MinIO, etc., or one of the other options documented at https://grafana.com/docs/loki/latest/storage/.
 
 Alternatively, in order to quickly test Loki using the filestore, the [single binary chart](https://github.com/grafana/helm-charts/tree/main/charts/loki) can be used.
@@ -661,13 +661,13 @@ loki:
 
 The above configuration selectively overrides default values found in the `loki.config` template file.
 
-Using `loki.structuredConfig` it is possible to externally set most any configuration parameter (special considerations for elements of an array).
+Using `loki.structuredConfig` it is possible to externally set almost any configuration parameter (special considerations for elements of an array).
 
 ```
 helm upgrade loki-distributed --install -f values.yaml --set loki.structuredConfig.storage_config.aws.bucketnames=my-loki-bucket
 ```
 
-`loki.config`, `loki.schemaConfig` and `loki.storageConfig` may also be used in conjuction with `loki.structuredConfig`. Values found in `loki.structuredConfig` will take precedence. Array values, such as those found in `loki.schema_config` will be overridden wholesale and not amended to.
+`loki.config`, `loki.schemaConfig` and `loki.storageConfig` may also be used in conjunction with `loki.structuredConfig`. Values found in `loki.structuredConfig` will take precedence. Array values, such as those found in `loki.schema_config` will be overridden wholesale and not amended to.
 
 For `loki.schema_config` its generally expected that this will always be configured per usage as its values over time are in reference to the history of loki schema versions and schema configurations throughout the lifetime of a given loki instance.
 
@@ -693,7 +693,7 @@ helm upgrade loki-distributed --install -f values.yaml --set bucketnames=my-loki
 
 ## Gateway
 
-By default and inspired by Grafana's [Tanka setup](https://github.com/grafana/loki/tree/master/production/ksonnet/loki), the chart installs the gateway component which is an NGINX that exposes Loki's API
+By default, and inspired by Grafana's [Tanka setup](https://github.com/grafana/loki/tree/master/production/ksonnet/loki), the chart installs the gateway component which is an NGINX that exposes Loki's API
 and automatically proxies requests to the correct Loki components (distributor, querier, query-frontend).
 The gateway must be enabled if an Ingress is required, since the Ingress exposes the gateway only.
 If the gateway is enabled, Grafana and log shipping agents, such as Promtail, should be configured to use the gateway.
