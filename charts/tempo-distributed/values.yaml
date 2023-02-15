@@ -929,7 +929,7 @@ config: |
         {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
       {{- end }}
     search:
-      external_endpoints: {{ .Values.querier.config.search.external_endpoints }}
+      external_endpoints: {{- toYaml .Values.querier.config.search.external_endpoints | nindent 6 }}
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
       prefer_self: {{ .Values.querier.config.search.prefer_self }}
       external_hedge_requests_at: {{ .Values.querier.config.search.external_hedge_requests_at }}
