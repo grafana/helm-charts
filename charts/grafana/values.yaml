@@ -673,6 +673,9 @@ dashboards: {}
   #   local-dashboard-bitbucket:
   #     url: https://example.com/repository/test-bitbucket.json
   #     bearerToken: ''
+  #   local-dashboard-azure:
+  #     url: https://example.com/repository/test-azure.json
+  #     basic: '
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
