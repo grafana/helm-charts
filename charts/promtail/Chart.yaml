@@ -2,8 +2,8 @@ apiVersion: v2
 name: promtail
 description: Promtail is an agent which ships the contents of local logs to a Loki instance
 type: application
-appVersion: 2.7.2
-version: 6.8.3
+appVersion: 2.7.3
+version: 6.8.4
 home: https://grafana.com/loki
 sources:
   - https://github.com/grafana/loki
