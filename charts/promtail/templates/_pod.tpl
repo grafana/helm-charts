@@ -9,7 +9,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
+    {{- if not .Values.sidecar.configReloader.enabled }}
     checksum/config: {{ include (print .Template.BasePath "/secret.yaml") . | sha256sum }}
+    {{- end }}
     {{- with .Values.podAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -35,6 +37,9 @@ spec:
       imagePullPolicy: {{ .Values.image.pullPolicy }}
       args:
         - "-config.file=/etc/promtail/promtail.yaml"
+        {{- if .Values.sidecar.configReloader.enabled }}
+        - "-server.enable-runtime-reload"
+        {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -82,6 +87,47 @@ spec:
       resources:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+    {{- if .Values.sidecar.configReloader.enabled }}
+    - name: config-reloader
+      image: "{{ .Values.sidecar.configReloader.image.registry }}/{{ .Values.sidecar.configReloader.image.repository }}:{{ .Values.sidecar.configReloader.image.tag }}"
+      imagePullPolicy: {{ .Values.sidecar.configReloader.image.pullPolicy }}
+      args:
+        - '-web.listen-address=:{{ .Values.sidecar.configReloader.config.serverPort }}'
+        - '-volume-dir=/etc/promtail/'
+        - '-webhook-method=GET'
+        - '-webhook-url=http://127.0.0.1:{{ .Values.config.serverPort }}/reload'
+      {{- range .Values.sidecar.configReloader.extraArgs }}
+        - {{ . }}
+      {{- end }}
+      ports:
+        - name: reloader
+          containerPort: {{ .Values.sidecar.configReloader.config.serverPort }}
+          protocol: TCP
+      {{- with .Values.sidecar.configReloader.extraEnv }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sidecar.configReloader.extraEnvFrom }}
+      envFrom:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.sidecar.configReloader.containerSecurityContext | nindent 8 }}
+      {{- with .Values.sidecar.configReloader.livenessProbe }}
+      livenessProbe:
+        {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sidecar.configReloader.readinessProbe }}
+      readinessProbe:
+        {{- tpl (toYaml .) $ | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sidecar.configReloader.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumeMounts:
+        - name: config
+          mountPath: /etc/promtail
+    {{- end }}
     {{- if .Values.extraContainers }}
     {{- range $name, $values := .Values.extraContainers }}
     - name: {{ $name }}

@@ -486,6 +486,49 @@ networkPolicy:
 # -- Base path to server all API routes fro
 httpPathPrefix: ""
 
+sidecar:
+  configReloader:
+    enabled: false
+    image:
+      # -- The Docker registry for sidecar config-reloader
+      registry: docker.io
+      # -- Docker image repository for sidecar config-reloader
+      repository: jimmidyson/configmap-reload
+      # -- Docker image tag for sidecar config-reloader
+      tag: v0.8.0
+      # -- Docker image pull policy for sidecar config-reloader
+      pullPolicy: IfNotPresent
+    # Extra args for the config-reloader container.
+    extraArgs: []
+    # -- Extra environment variables for sidecar config-reloader
+    extraEnv: []
+    # -- Extra environment variables from secrets or configmaps for sidecar config-reloader
+    extraEnvFrom: []
+    # -- The security context for containers for sidecar config-reloader
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+    # -- Readiness probe for sidecar config-reloader
+    readinessProbe: {}
+    # -- Liveness probe for sidecar config-reloader
+    livenessProbe: {}
+    # -- Resource requests and limits for sidecar config-reloader
+    resources: {}
+    #  limits:
+    #    cpu: 200m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 100m
+    #    memory: 128Mi
+    config:
+      # -- The port of the config-reloader server
+      serverPort: 9533
+    serviceMonitor:
+      enabled: true
+
 # -- Extra K8s manifests to deploy
 extraObjects: []
   # - apiVersion: "kubernetes-client.io/v1"

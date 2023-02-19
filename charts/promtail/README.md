@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.8.3](https://img.shields.io/badge/Version-6.8.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
+![Version: 6.9.0](https://img.shields.io/badge/Version-6.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -147,6 +147,20 @@ The new release which will pick up again from the existing `positions.yaml`.
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
+| sidecar.configReloader.config.serverPort | int | `9533` | The port of the config-reloader server |
+| sidecar.configReloader.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers for sidecar config-reloader |
+| sidecar.configReloader.enabled | bool | `false` |  |
+| sidecar.configReloader.extraArgs | list | `[]` |  |
+| sidecar.configReloader.extraEnv | list | `[]` | Extra environment variables for sidecar config-reloader |
+| sidecar.configReloader.extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps for sidecar config-reloader |
+| sidecar.configReloader.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy for sidecar config-reloader |
+| sidecar.configReloader.image.registry | string | `"docker.io"` | The Docker registry for sidecar config-reloader |
+| sidecar.configReloader.image.repository | string | `"jimmidyson/configmap-reload"` | Docker image repository for sidecar config-reloader |
+| sidecar.configReloader.image.tag | string | `"v0.8.0"` | Docker image tag for sidecar config-reloader |
+| sidecar.configReloader.livenessProbe | object | `{}` | Liveness probe for sidecar config-reloader |
+| sidecar.configReloader.readinessProbe | object | `{}` | Readiness probe for sidecar config-reloader |
+| sidecar.configReloader.resources | object | `{}` | Resource requests and limits for sidecar config-reloader |
+| sidecar.configReloader.serviceMonitor.enabled | bool | `true` |  |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"}]` | Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes. |
 | updateStrategy | object | `{}` | The update strategy for the DaemonSet |
 
