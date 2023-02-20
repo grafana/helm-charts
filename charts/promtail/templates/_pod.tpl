@@ -25,7 +25,7 @@ spec:
   initContainers:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.imagePullSecrets }}
+  {{- with .Values.global.imagePullSecrets | default .Values.imagePullSecrets }}
   imagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -33,7 +33,7 @@ spec:
     {{- toYaml .Values.podSecurityContext | nindent 4 }}
   containers:
     - name: promtail
-      image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      image: "{{ .Values.global.imageRegistry | default .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
       imagePullPolicy: {{ .Values.image.pullPolicy }}
       args:
         - "-config.file=/etc/promtail/promtail.yaml"
