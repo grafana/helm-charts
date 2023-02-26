@@ -44,6 +44,7 @@ spec:
       {{- end }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       enableServiceLinks: false
+      {{- include "tempo.gatewayImagePullSecrets" . | nindent 6 -}}
       containers:
         - name: nginx
           image: "{{ include "tempo.imageReference" $dict }}"
@@ -86,6 +87,12 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.gateway.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.gateway.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

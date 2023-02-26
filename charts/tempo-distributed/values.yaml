@@ -2,6 +2,12 @@ global:
   image:
     # -- Overrides the Docker registry globally for all images, excluding enterprise.
     registry: docker.io
+    # -- Optional list of imagePullSecrets for all images, excluding enterprise.
+    # Names of existing secrets with private container registry credentials.
+    # Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    # Example:
+    # pullSecrets: [ my-dockerconfigjson-secret ]
+    pullSecrets: []
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -34,6 +40,8 @@ tempo:
   image:
     # -- The Docker registry
     registry: docker.io
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository
     repository: grafana/tempo
     # -- Overrides the image tag whose default is the chart's appVersion
@@ -106,6 +114,8 @@ ingester:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
@@ -128,6 +138,15 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 6 }}
   # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
   affinity: |
@@ -200,6 +219,8 @@ metricsGenerator:
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the metrics-generator image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the metrics-generator image. Overrides `tempo.image.tag`
@@ -222,6 +243,15 @@ metricsGenerator:
   # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 6 }}
   # -- Affinity for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -316,6 +346,8 @@ distributor:
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
@@ -345,6 +377,15 @@ distributor:
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 6 }}
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -393,6 +434,8 @@ compactor:
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the compactor image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the compactor image. Overrides `tempo.image.tag`
@@ -425,6 +468,26 @@ compactor:
     compaction:
       # -- Duration to keep blocks
       block_retention: 48h
+      # Duration to keep blocks that have been compacted elsewhere
+      compacted_block_retention: 1h
+      # -- Blocks in this time window will be compacted together
+      compaction_window: 1h
+      # -- Amount of data to buffer from input blocks
+      v2_in_buffer_bytes: 5242880
+      # -- Flush data to backend when buffer is this large
+      v2_out_buffer_bytes: 20971520
+      # -- Maximum number of traces in a compacted block. WARNING: Deprecated. Use max_block_bytes instead.
+      max_compaction_objects: 6000000
+      # -- Maximum size of a compacted block in bytes
+      max_block_bytes: 107374182400
+      # -- Number of tenants to process in parallel during retention
+      retention_concurrency: 10
+      # -- Number of traces to buffer in memory during compaction
+      v2_prefetch_traces_count: 1000
+      # -- The maximum amount of time to spend compacting a single tenant before moving to the next
+      max_time_per_tenant: 5m
+      # -- The time between compaction cycles
+      compaction_cycle: 30s
   service:
     # -- Annotations for compactor service
     annotations: {}
@@ -433,9 +496,22 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  autoscaling:
+    # -- Enable autoscaling for the querier
+    enabled: false
+    # -- Minimum autoscaling replicas for the querier
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the querier
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the querier
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the querier
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the querier image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the querier image. Overrides `tempo.image.tag`
@@ -456,6 +532,15 @@ querier:
   resources: {}
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier") | nindent 6 }}
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -484,6 +569,20 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+    search:
+      # -- A list of external endpoints that the querier will use to offload backend search requests
+      external_endpoints: []
+      # -- Timeout for search requests
+      query_timeout: 30s
+      # -- If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries.
+      prefer_self: 10
+      # -- If set to a non-zero value a second request will be issued at the provided duration. Recommended to be set to p99 of external search requests to reduce long tail latency.
+      external_hedge_requests_at: 8s
+      # -- The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set.
+      external_hedge_requests_up_to: 2
+    # -- This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries.
+    max_concurrent_queries: 20
+
   service:
     # -- Annotations for querier service
     annotations: {}
@@ -500,6 +599,8 @@ queryFrontend:
     image:
       # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
       registry: null
+      # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+      pullSecrets: []
       # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
       repository: grafana/tempo-query
       # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
@@ -520,6 +621,12 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  config:
+    search:
+      # -- The number of concurrent jobs to execute when searching the backend
+      concurrent_jobs: 1000
+      # -- The target number of bytes for each job to handle when performing a backend search
+      target_bytes_per_job: 104857600
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -534,6 +641,8 @@ queryFrontend:
   image:
     # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
     # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
@@ -566,6 +675,15 @@ queryFrontend:
   resources: {}
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 6 }}
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -594,10 +712,6 @@ queryFrontend:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
-
-search:
-  # -- Enable Tempo search
-  enabled: false
 
 multitenancyEnabled: false
 
@@ -652,8 +766,6 @@ traces:
 # @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
-  search_enabled: {{ .Values.search.enabled }}
-  metrics_generator_enabled: {{ .Values.metricsGenerator.enabled }}
 
   {{- if .Values.enterprise.enabled }}
   license:
@@ -666,17 +778,34 @@ config: |
         kvstore:
           store: "memberlist"
 
-  {{- if .Values.minio.enabled }}
+  auth:
+    type: enterprise
+
+  http_api_prefix: {{get .Values.tempo.structuredConfig "http_api_prefix"}}
+
   admin_client:
     storage:
-      backend: s3
+      backend: {{.Values.storage.admin.backend}}
+      {{- if eq .Values.storage.admin.backend "s3"}}
       s3:
-        access_key_id: {{ .Values.minio.rootUser }}
-        bucket_name: enterprise-traces-admin
-        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        insecure: true
-        secret_access_key: {{ .Values.minio.rootPassword }}
-    {{- end }}
+        {{- toYaml .Values.storage.admin.s3 | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.admin.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.admin.azure | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "swift"}}
+      swift:
+        {{- toYaml .Values.storage.admin.swift | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "filesystem"}}
+      filesystem:
+        {{- toYaml .Values.storage.admin.filesystem | nindent 6}}
+      {{- end}}
   {{- end }}
 
   {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.useDefaultProxyURLs }}
@@ -703,6 +832,16 @@ config: |
   compactor:
     compaction:
       block_retention: {{ .Values.compactor.config.compaction.block_retention }}
+      compacted_block_retention: {{ .Values.compactor.config.compaction.compacted_block_retention }}
+      compaction_window: {{ .Values.compactor.config.compaction.compaction_window }}
+      v2_in_buffer_bytes: {{ .Values.compactor.config.compaction.v2_in_buffer_bytes }}
+      v2_out_buffer_bytes: {{ .Values.compactor.config.compaction.v2_out_buffer_bytes }}
+      max_compaction_objects: {{ .Values.compactor.config.compaction.max_compaction_objects }}
+      max_block_bytes: {{ .Values.compactor.config.compaction.max_block_bytes }}
+      retention_concurrency: {{ .Values.compactor.config.compaction.retention_concurrency }}
+      v2_prefetch_traces_count: {{ .Values.compactor.config.compaction.v2_prefetch_traces_count }}
+      max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
+      compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
     ring:
       kvstore:
         store: memberlist
@@ -797,6 +936,18 @@ config: |
       grpc_client_config:
         {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
       {{- end }}
+    search:
+      external_endpoints: {{- toYaml .Values.querier.config.search.external_endpoints | nindent 6 }}
+      query_timeout: {{ .Values.querier.config.search.query_timeout }}
+      prefer_self: {{ .Values.querier.config.search.prefer_self }}
+      external_hedge_requests_at: {{ .Values.querier.config.search.external_hedge_requests_at }}
+      external_hedge_requests_up_to: {{ .Values.querier.config.search.external_hedge_requests_up_to }}
+    max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
+  query_frontend:
+    search:
+      target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
+      concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+
   ingester:
     lifecycler:
       ring:
@@ -825,6 +976,11 @@ config: |
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
     {{- toYaml .Values.global_overrides | nindent 2 }}
+    {{- if .Values.metricsGenerator.enabled }}
+    metrics_generator_processors:
+    - service-graphs
+    - span-metrics
+    {{- end }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
@@ -834,18 +990,18 @@ config: |
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
-      {{- if eq .Values.storage.trace.backend "gcs"}}
-      gcs:
-        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
-      {{- end}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
         {{- toYaml .Values.storage.trace.s3 | nindent 6}}
-      {{- end}}
+      {{- end }}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end }}
       {{- if eq .Values.storage.trace.backend "azure"}}
       azure:
         {{- toYaml .Values.storage.trace.azure | nindent 6}}
-      {{- end}}
+      {{- end }}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -877,20 +1033,21 @@ server:
 #   trace:
 #     backend: azure
 #     azure:
-#       container-name:
-#       storage-account-name:
-#       storage-account-key:
+#       container_name:
+#       storage_account_name:
+#       storage_account_key:
 storage:
   trace:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+  admin:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
+    backend: filesystem
 
 # Global overrides
 global_overrides:
   per_tenant_override_config: /conf/overrides.yaml
-  # metrics_generator_processors:
-  #   - service-graphs
-  #   - span-metrics
 
 # Per tenants overrides
 overrides: |
@@ -904,6 +1061,8 @@ memcached:
   image:
     # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
@@ -925,6 +1084,15 @@ memcached:
   podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
+  # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 6 }}
   # -- Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -951,6 +1119,8 @@ memcachedExporter:
   image:
     # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
@@ -1094,12 +1264,15 @@ minio:
   rootUser: grafana-tempo
   rootPassword: supersecret
   buckets:
+    # Default Tempo storage bucket.
     - name: tempo-traces
       policy: none
       purge: false
+    # Bucket for traces storage if enterprise.enabled is true - requires license.
     - name: enterprise-traces
       policy: none
       purge: false
+    # Admin client bucket if enterprise.enabled is true - requires license.
     - name: enterprise-traces-admin
       policy: none
       purge: false
@@ -1134,6 +1307,8 @@ gateway:
   image:
     # -- The Docker registry for the gateway image. Overrides `global.image.registry`
     registry: null
+    # -- Optional list of imagePullSecrets. Overrides `global.image.pullSecrets`
+    pullSecrets: []
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
@@ -1160,6 +1335,15 @@ gateway:
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 6 }}
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1196,6 +1380,8 @@ gateway:
     annotations: {}
     # -- Labels for gateway service
     labels: {}
+    # -- Additional ports to be opneed on gateway service (e.g. for RPC connections)
+    additionalPorts: {}
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
@@ -1248,6 +1434,8 @@ gateway:
     serverSnippet: ''
     # -- Allows appending custom configuration to the http block
     httpSnippet: ''
+    # -- Allows overriding the DNS resolver address nginx will use
+    resolver: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -1285,7 +1473,11 @@ gateway:
 
         sendfile     on;
         tcp_nopush   on;
+        {{- if .Values.gateway.nginxConfig.resolver }}
+        resolver {{ .Values.gateway.nginxConfig.resolver }};
+        {{- else }}
         resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+        {{- end }}
 
         {{- with .Values.gateway.nginxConfig.httpSnippet }}
         {{ . | nindent 2 }}
@@ -1404,7 +1596,16 @@ adminApi:
   podAnnotations: {}
 
   nodeSelector: {}
-  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "admin-api") | nindent 6 }}
+  # -- Affinity for admin-api pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:
@@ -1483,7 +1684,16 @@ enterpriseGateway:
   podDisruptionBudget: {}
 
   nodeSelector: {}
-  # -- Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 6 }}
+  # -- Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Soft node and soft zone anti-affinity
   affinity: |
     podAntiAffinity:

@@ -47,6 +47,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.distributorImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=distributor
@@ -133,6 +134,12 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.distributor.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.distributor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
