@@ -102,8 +102,6 @@ The new release which will pick up again from the existing `positions.yaml`.
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
-| global.imageRegistry | string | `""` | Global Docker image registry |
-| global.imagePullSecrets | list | `[]` | Global Docker registry secret names as an array |
 | httpPathPrefix | string | `""` | Base path to server all API routes fro |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |
