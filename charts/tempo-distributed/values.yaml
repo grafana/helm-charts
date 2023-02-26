@@ -569,6 +569,20 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+    search:
+      # -- A list of external endpoints that the querier will use to offload backend search requests
+      external_endpoints: []
+      # -- Timeout for search requests
+      query_timeout: 30s
+      # -- If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries.
+      prefer_self: 10
+      # -- If set to a non-zero value a second request will be issued at the provided duration. Recommended to be set to p99 of external search requests to reduce long tail latency.
+      external_hedge_requests_at: 8s
+      # -- The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set.
+      external_hedge_requests_up_to: 2
+    # -- This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries.
+    max_concurrent_queries: 20
+
   service:
     # -- Annotations for querier service
     annotations: {}
@@ -607,6 +621,12 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  config:
+    search:
+      # -- The number of concurrent jobs to execute when searching the backend
+      concurrent_jobs: 1000
+      # -- The target number of bytes for each job to handle when performing a backend search
+      target_bytes_per_job: 104857600
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -758,17 +778,34 @@ config: |
         kvstore:
           store: "memberlist"
 
-  {{- if .Values.minio.enabled }}
+  auth:
+    type: enterprise
+
+  http_api_prefix: {{get .Values.tempo.structuredConfig "http_api_prefix"}}
+
   admin_client:
     storage:
-      backend: s3
+      backend: {{.Values.storage.admin.backend}}
+      {{- if eq .Values.storage.admin.backend "s3"}}
       s3:
-        access_key_id: {{ .Values.minio.rootUser }}
-        bucket_name: enterprise-traces-admin
-        endpoint: {{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc:9000
-        insecure: true
-        secret_access_key: {{ .Values.minio.rootPassword }}
-    {{- end }}
+        {{- toYaml .Values.storage.admin.s3 | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.admin.gcs | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "azure"}}
+      azure:
+        {{- toYaml .Values.storage.admin.azure | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "swift"}}
+      swift:
+        {{- toYaml .Values.storage.admin.swift | nindent 6}}
+      {{- end}}
+      {{- if eq .Values.storage.admin.backend "filesystem"}}
+      filesystem:
+        {{- toYaml .Values.storage.admin.filesystem | nindent 6}}
+      {{- end}}
   {{- end }}
 
   {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.useDefaultProxyURLs }}
@@ -899,6 +936,18 @@ config: |
       grpc_client_config:
         {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
       {{- end }}
+    search:
+      external_endpoints: {{- toYaml .Values.querier.config.search.external_endpoints | nindent 6 }}
+      query_timeout: {{ .Values.querier.config.search.query_timeout }}
+      prefer_self: {{ .Values.querier.config.search.prefer_self }}
+      external_hedge_requests_at: {{ .Values.querier.config.search.external_hedge_requests_at }}
+      external_hedge_requests_up_to: {{ .Values.querier.config.search.external_hedge_requests_up_to }}
+    max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
+  query_frontend:
+    search:
+      target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
+      concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+
   ingester:
     lifecycler:
       ring:
@@ -941,18 +990,18 @@ config: |
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
-      {{- if eq .Values.storage.trace.backend "gcs"}}
-      gcs:
-        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
-      {{- end}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
         {{- toYaml .Values.storage.trace.s3 | nindent 6}}
-      {{- end}}
+      {{- end }}
+      {{- if eq .Values.storage.trace.backend "gcs"}}
+      gcs:
+        {{- toYaml .Values.storage.trace.gcs | nindent 6}}
+      {{- end }}
       {{- if eq .Values.storage.trace.backend "azure"}}
       azure:
         {{- toYaml .Values.storage.trace.azure | nindent 6}}
-      {{- end}}
+      {{- end }}
       blocklist_poll: 5m
       local:
         path: /var/tempo/traces
@@ -991,6 +1040,10 @@ storage:
   trace:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+  admin:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
+    backend: filesystem
 
 # Global overrides
 global_overrides:
@@ -1211,12 +1264,15 @@ minio:
   rootUser: grafana-tempo
   rootPassword: supersecret
   buckets:
+    # Default Tempo storage bucket.
     - name: tempo-traces
       policy: none
       purge: false
+    # Bucket for traces storage if enterprise.enabled is true - requires license.
     - name: enterprise-traces
       policy: none
       purge: false
+    # Admin client bucket if enterprise.enabled is true - requires license.
     - name: enterprise-traces-admin
       policy: none
       purge: false
