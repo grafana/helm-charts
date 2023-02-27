@@ -1031,6 +1031,7 @@ volumes:
   {{- range $provider, $name := .Values.dashboardsConfigMaps }}
   - name: dashboards-{{ $provider }}
     configMap:
+      optional: true
       name: {{ tpl $name $root }}
   {{- end }}
   {{- end }}
