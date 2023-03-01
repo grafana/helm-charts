@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.9.0](https://img.shields.io/badge/Version-6.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
+![Version: 6.9.1](https://img.shields.io/badge/Version-6.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -108,6 +108,14 @@ The new release which will pick up again from the existing `positions.yaml`.
 | image.repository | string | `"grafana/promtail"` | Docker image repository |
 | image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.extraPaths | list | `[]` |  |
+| ingress.hosts[0] | string | `"chart-example.local"` |  |
+| ingress.labels | object | `{}` |  |
+| ingress.path | string | `"/"` |  |
+| ingress.pathType | string | `"Prefix"` |  |
+| ingress.tls | list | `[]` |  |
 | initContainer | list | `[]` |  |
 | livenessProbe | object | `{}` | Liveness probe |
 | nameOverride | string | `nil` | Overrides the chart's name |

@@ -1,0 +1,55 @@
+{{- if .Values.ingress.enabled }}
+{{- $ingressApiIsStable := eq (include "promtail.ingress.isStable" .) "true" -}}
+{{- $ingressSupportsIngressClassName := eq (include "promtail.ingress.supportsIngressClassName" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "promtail.ingress.supportsPathType" .) "true" -}}
+apiVersion: {{ include "promtail.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "promtail.fullname" . }}
+  labels:
+    {{- include "promtail.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and $ingressSupportsIngressClassName .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  {{- end -}}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- with .secretName }}
+      secretName: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range $.Values.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          {{- range $svcName, $paths := $.Values.ingress.paths }}
+            {{- range $paths }}
+          - path: {{ . }}
+            {{- if $ingressSupportsPathType }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if $ingressApiIsStable }}
+              service:
+                name: {{ include "promtail.fullname" $ }}-{{ $svcName }}
+                port:
+                  number: 3100
+              {{- else }}
+              serviceName: {{ include "promtail.fullname" $ }}-{{ $svcName }}
+              servicePort: 3100
+              {{- end }}
+              {{- end }}
+           {{- end }}
+    {{- end }}
+{{- end }}
