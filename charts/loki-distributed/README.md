@@ -1,6 +1,7 @@
 # loki-distributed
 
-![Version: 0.69.6](https://img.shields.io/badge/Version-0.69.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
+
+![Version: 0.69.7](https://img.shields.io/badge/Version-0.69.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square) 
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -9,6 +10,8 @@ Helm chart for Grafana Loki in microservices mode
 * <https://github.com/grafana/loki>
 * <https://grafana.com/oss/loki/>
 * <https://grafana.com/docs/loki/latest/>
+
+
 
 ## Chart Repo
 
@@ -32,7 +35,7 @@ loki:
     chunk_store_config:
       chunk_cache_config:
         embedded_cache:
-          enabled: false
+          enabled: false 
 ```
 
 `compactor_address` has to be explicitly set in the `common` section of the config.
