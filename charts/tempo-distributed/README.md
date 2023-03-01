@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.2.2](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -530,7 +530,7 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.buckets[2].policy | string | `"none"` |  |
 | minio.buckets[2].purge | bool | `false` |  |
 | minio.configPathmc | string | `"/tmp/minio/mc/"` |  |
-| minio.enabled | bool | `true` |  |
+| minio.enabled | bool | `false` |  |
 | minio.mode | string | `"standalone"` |  |
 | minio.persistence.size | string | `"5Gi"` |  |
 | minio.resources.requests.cpu | string | `"100m"` |  |
