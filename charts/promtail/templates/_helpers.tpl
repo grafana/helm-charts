@@ -102,7 +102,7 @@ Configure enableServiceLinks in pod
 {{/*
 Return the appropriate apiVersion for ingress.
 */}}
-{{- define "grafana.ingress.apiVersion" -}}
+{{- define "promtail.ingress.apiVersion" -}}
 {{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) }}
 {{- print "networking.k8s.io/v1" }}
 {{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
@@ -115,20 +115,20 @@ Return the appropriate apiVersion for ingress.
 {{/*
 Return if ingress is stable.
 */}}
-{{- define "grafana.ingress.isStable" -}}
-{{- eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1" }}
+{{- define "promtail.ingress.isStable" -}}
+{{- eq (include "promtail.ingress.apiVersion" .) "networking.k8s.io/v1" }}
 {{- end }}
 
 {{/*
 Return if ingress supports ingressClassName.
 */}}
-{{- define "grafana.ingress.supportsIngressClassName" -}}
-{{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
+{{- define "promtail.ingress.supportsIngressClassName" -}}
+{{- or (eq (include "promtail.ingress.isStable" .) "true") (and (eq (include "promtail.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
 {{- end }}
 
 {{/*
 Return if ingress supports pathType.
 */}}
-{{- define "grafana.ingress.supportsPathType" -}}
-{{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
+{{- define "promtail.ingress.supportsPathType" -}}
+{{- or (eq (include "promtail.ingress.isStable" .) "true") (and (eq (include "promtail.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
 {{- end }}
