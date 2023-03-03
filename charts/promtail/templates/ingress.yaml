@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled }}
 {{- $ingressApiIsStable := eq (include "grafana.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsIngressClassName := eq (include "grafana.ingress.supportsIngressClassName" .) "true" -}}
-{{- $ingressSupportsPathType := eq (include "grafana.ingress.supportsPathType" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "grafana.ingress.supportsPathType" .) "true" -}} 
 apiVersion: {{ include "grafana.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
