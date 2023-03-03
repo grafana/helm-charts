@@ -30,7 +30,9 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   labels: {}
-  path: /
+  paths:
+    logpush:
+      - "/"
 
   # pathType is only for k8s >= 1.1=
   pathType: Prefix
