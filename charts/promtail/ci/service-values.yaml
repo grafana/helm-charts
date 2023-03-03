@@ -8,6 +8,9 @@ extraPorts:
   httpPush:
     name: http-push
     containerPort: 3500
+    ingress:
+      hosts:
+        - chart-example.local
   grpcPush:
     name: grpc-push
     containerPort: 3600
@@ -18,8 +21,7 @@ config:
       - job_name: syslog
         syslog:
           listen_address: 0.0.0.0:{{ .Values.extraPorts.syslog.containerPort }}
-          labels:
-            job: syslog
+          labels:            job: syslog
         relabel_configs:
           - source_labels:
               - __syslog_message_hostname
