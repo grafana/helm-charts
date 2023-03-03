@@ -1,5 +1,5 @@
 {{ range $key, $values := .Values.extraPorts }}
-{{ if .ingress.enabled }}
+{{ if .ingress }}
 {{ $ingressApiIsStable := eq (include "promtail.ingress.isStable" $ ) "true" }}
 {{ $ingressSupportsIngressClassName := eq (include "promtail.ingress.supportsIngressClassName" $ ) "true" }}
 {{ $ingressSupportsPathType := eq (include "promtail.ingress.supportsPathType" $ ) "true" }}
@@ -44,10 +44,18 @@ spec:
               service:
                 name: {{ include "promtail.fullname" $ }}-{{ $key }}
                 port:
-                  number: {{ $values.service.port | default $values.containerPort }}
+                  {{- if $values.service }}
+                  number: {{ $values.service.port }}
+                  {{ else }}
+                  number: {{ $values.containerPort }}
+                  {{ end }}
               {{- else }}
               serviceName: {{ include "promtail.fullname" $ }}-{{ $key }}
-              servicePort: {{ $values.service.port | default $values.containerPort }}
+              {{- if $values.service }}
+              servicePort: {{ $values.service.port }}
+              {{ else }}
+              number: {{ $values.containerPort }}
+              {{ end }}
               {{- end }}
     {{- end }}
 {{- end }}
