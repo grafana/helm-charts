@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- $ingressApiIsStable := eq (include "promtail.ingress.isStable" .) "true" -}}
+{{- $ingressApiIsStable := eq (include "grafana.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsIngressClassName := eq (include "promtail.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "promtail.ingress.supportsPathType" .) "true" -}}
 apiVersion: {{ include "promtail.ingress.apiVersion" . }}
