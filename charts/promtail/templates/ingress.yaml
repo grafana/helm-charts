@@ -7,7 +7,7 @@
 apiVersion: {{ include "promtail.ingress.apiVersion" $ }}
 kind: Ingress
 metadata:
-  name: {{ include "promtail.fullname" $ }}-{{ $key }}
+  name: {{ include "promtail.fullname" $ }}-{{ $key | lower }}
   labels:
     {{- include "promtail.labels" $ | nindent 4 }}
   {{- with .ingress.annotations }}
@@ -42,7 +42,7 @@ spec:
             backend:
               {{- if $ingressApiIsStable }}
               service:
-                name: {{ include "promtail.fullname" $ }}-{{ $key }}
+                name: {{ include "promtail.fullname" $ }}-{{ $key | lower }}
                 port:
                   {{- if $values.service }}
                   number: {{ $values.service.port }}
@@ -50,7 +50,7 @@ spec:
                   number: {{ $values.containerPort }}
                   {{ end }}
               {{- else }}
-              serviceName: {{ include "promtail.fullname" $ }}-{{ $key }}
+              serviceName: {{ include "promtail.fullname" $ }}-{{ $key | lower }}
               {{- if $values.service }}
               servicePort: {{ $values.service.port }}
               {{ else }}
