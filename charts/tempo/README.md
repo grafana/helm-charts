@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -70,7 +70,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `"2.0.0"` |  |
+| tempo.tag | string | `"2.0.1"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
@@ -80,7 +80,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.resources | object | `{}` |  |
 | tempoQuery.securityContext | object | `{}` |  |
-| tempoQuery.tag | string | `"2.0.0"` |  |
+| tempoQuery.tag | string | `"2.0.1"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
 ## Chart Repo
