@@ -118,7 +118,18 @@ loki:
     {{- if .Values.loki.schemaConfig}}
     schema_config:
     {{- toYaml .Values.loki.schemaConfig | nindent 2}}
-    {{- end}}
+    {{- else }}
+    schema_config:
+      configs:
+        - from: 2022-01-11
+          store: boltdb-shipper
+          object_store: {{ .Values.loki.storageConfig.boltdb_shipper.shared_store }}
+          schema: v12
+          index:
+            prefix: loki_index_
+            period: 24h
+    {{- end }}
+
     {{- if .Values.loki.storageConfig}}
     storage_config:
     {{- if .Values.indexGateway.enabled}}
@@ -205,15 +216,7 @@ loki:
       external_url: https://alertmanager.xx
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
-  schemaConfig:
-    configs:
-    - from: 2020-09-07
-      store: boltdb-shipper
-      object_store: filesystem
-      schema: v11
-      index:
-        prefix: loki_index_
-        period: 24h
+  schemaConfig: {}
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
   storageConfig:
