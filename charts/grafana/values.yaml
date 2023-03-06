@@ -676,6 +676,7 @@ dashboards: {}
   #   local-dashboard-azure:
   #     url: https://example.com/repository/test-azure.json
   #     basic: ''
+  #     acceptHeader: '*/*'
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.

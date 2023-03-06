@@ -87,7 +87,11 @@ data:
     --connect-timeout 60 \
     --max-time 60 \
       {{- if not $value.b64content }}
+        {{- if not $value.acceptHeader }}
     -H "Accept: application/json" \
+        {{- else }}
+    -H "Accept: {{ $value.acceptHeader }}" \
+        {{- end }}
         {{- if $value.token }}
     -H "Authorization: token {{ $value.token }}" \
         {{- end }}
@@ -95,7 +99,7 @@ data:
     -H "Authorization: Bearer {{ $value.bearerToken }}" \
         {{- end }}
         {{- if $value.basic }}
-    -H "Basic: {{ $value.basic }}" \
+    -H "Authorization: Basic {{ $value.basic }}" \
         {{- end }}
         {{- if $value.gitlabToken }}
     -H "PRIVATE-TOKEN: {{ $value.gitlabToken }}" \
