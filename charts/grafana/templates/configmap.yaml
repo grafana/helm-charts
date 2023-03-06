@@ -1,4 +1,5 @@
 {{- if .Values.createConfigmap }}
+{{- $files := .Files }}
 {{- $root := . -}}
 apiVersion: v1
 kind: ConfigMap
@@ -53,8 +54,13 @@ data:
   {{- end }}
 
   {{- range $key, $value := .Values.alerting }}
+  {{- if (hasKey $value "file") }}
+  {{- $key | nindent 2 }}:
+  {{- toYaml ( $files.Get $value.file ) | nindent 4}}
+  {{- else }}
   {{- $key | nindent 2 }}: |
     {{- tpl (toYaml $value | nindent 4) $root }}
+  {{- end }}
   {{- end }}
 
   {{- range $key, $value := .Values.dashboardProviders }}
@@ -87,6 +93,9 @@ data:
         {{- end }}
         {{- if $value.bearerToken }}
     -H "Authorization: Bearer {{ $value.bearerToken }}" \
+        {{- end }}
+        {{- if $value.basic }}
+    -H "Basic: {{ $value.basic }}" \
         {{- end }}
         {{- if $value.gitlabToken }}
     -H "PRIVATE-TOKEN: {{ $value.gitlabToken }}" \

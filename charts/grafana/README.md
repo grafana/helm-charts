@@ -277,11 +277,10 @@ This version requires Helm >= 3.1.0.
 | `networkPolicy.egress.ports`               | An array of ports to allow for the egress                    | `[]`    |
 | `enableKubeBackwardCompatibility`          | Enable backward compatibility of kubernetes where pod's defintion version below 1.13 doesn't have the enableServiceLinks option  | `false`     |
 
-
-
 ### Example ingress with path
 
 With grafana 6.3 and above
+
 ```yaml
 grafana.ini:
   server:
@@ -491,6 +490,51 @@ delete_notifiers:
   - name: notification-channel-2
     # default org_id: 1
 ```
+
+## Provision alert rules, contact points, notification policies and notification templates
+
+There are two methods to provision alerting configuration in Grafana. Below are some examples and explanations as to how to use each method:
+
+```yaml
+alerting:
+  team1-alert-rules.yaml:
+    file: alerting/team1/rules.yaml
+  team2-alert-rules.yaml:
+    file: alerting/team2/rules.yaml
+  team3-alert-rules.yaml:
+    file: alerting/team3/rules.yaml
+  notification-policies.yaml:
+    file: alerting/shared/notification-policies.yaml
+  notification-templates.yaml:
+    file: alerting/shared/notification-templates.yaml
+  contactpoints.yaml:
+    apiVersion: 1
+    contactPoints:
+      - orgId: 1
+        name: Slack channel
+        receivers:
+          - uid: default-receiver
+            type: slack
+            settings:
+              # Webhook URL to be filled in
+              url: ""
+              # We need to escape double curly braces for the tpl function.
+              text: '{{ `{{ template "default.message" . }}` }}'
+              title: '{{ `{{ template "default.title" . }}` }}'
+```
+
+There are two possibilities:
+
+* Inlining the file contents as described in the example `values.yaml` and the official [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/).
+* Importing a file using a relative path starting from the chart root directory.
+
+### Important notes on file provisioning
+
+* The chart supports importing YAML and JSON files.
+* The filename must be unique, otherwise one volume mount will overwrite the other.
+* In case of inlining, double curly braces that arise from the Grafana configuration format and are not intended as templates for the chart must be escaped.
+* The number of total files under `alerting:` is not limited. Each file will end up as a volume mount in the corresponding provisioning folder of the deployed Grafana instance.
+* The file size for each import is limited by what the function `.Files.Get` can handle, which suffices for most cases.
 
 ## How to serve Grafana with a path prefix (/grafana)
 

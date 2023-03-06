@@ -90,6 +90,10 @@ spec:
         - mountPath: /var/tempo
           name: storage
         {{- end }}
+        {{- if .Values.tempo.metricsGenerator.enabled }}
+        - mountPath: /tmp
+          name: tmp
+        {{- end }}
       {{- if .Values.tempoQuery.enabled }}
       - args:
         - --query.base-path=/
@@ -150,6 +154,10 @@ spec:
       - configMap:
           name: {{ template "tempo.name" . }}
         name: tempo-conf
+      {{- if .Values.tempo.metricsGenerator.enabled }}
+      - name: tmp
+        emptyDir: {}
+      {{- end }}
   updateStrategy:
     type: {{- toYaml .Values.tempo.updateStrategy | nindent 6 }}
   {{- if .Values.persistence.enabled }}
