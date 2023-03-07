@@ -4,6 +4,11 @@ nameOverride: ""
 # -- Overrides the chart's computed fullname
 fullnameOverride: ""
 
+namespace:
+  # -- The name of the Namespace to deploy
+  # If not set, `.Release.Namespace` is used
+  name: null
+
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 

@@ -51,6 +51,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the namespace
+*/}}
+{{- define "loki-canary.namespaceName" -}}
+{{- default .Release.Namespace .Values.namespace.name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "loki-canary.serviceAccountName" -}}

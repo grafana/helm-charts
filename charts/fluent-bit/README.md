@@ -117,6 +117,9 @@ For more details, read the [Fluent Bit documentation](../../../cmd/fluent-bit/RE
 | `volumes`                | [Volume]([volumes]) to mount                                                                       | `host containers log`            |
 | `volumeMounts`           | Volume mount mapping                                                                               |                                  |
 | `serviceMonitor.enabled` | Create a [Prometheus Operator](operator) serviceMonitor resource for Fluent Bit                    | `false`                          |
+| `podSecurityContext`     | Configure the pod level securityContext                                                            | `{}`                             |
+| `securityContext`        | Configure the fluent-bit container securityContext                                                 | `{}`                             |
+
 
 
 [toleration]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
