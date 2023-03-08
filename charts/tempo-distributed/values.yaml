@@ -1259,7 +1259,7 @@ prometheusRule:
   #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
 minio:
-  enabled: true
+  enabled: false
   mode: standalone
   rootUser: grafana-tempo
   rootPassword: supersecret
