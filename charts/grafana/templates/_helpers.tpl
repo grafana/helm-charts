@@ -118,10 +118,17 @@ new password and use it.
 {{- end }}
 
 {{/*
+Allow Kube Version override.
+*/}}
+{{- define "grafana.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersion -}}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for rbac.
 */}}
 {{- define "grafana.rbac.apiVersion" -}}
-{{- if $.Capabilities.APIVersions.Has "rbac.authorization.k8s.io/v1" }}
+{{- if semverCompare ">=1.17-0" (include "grafana.kubeVersion" .) }}
 {{- print "rbac.authorization.k8s.io/v1" }}
 {{- else }}
 {{- print "rbac.authorization.k8s.io/v1beta1" }}
@@ -132,9 +139,9 @@ Return the appropriate apiVersion for rbac.
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "grafana.ingress.apiVersion" -}}
-{{- if and ($.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version) }}
+{{- if semverCompare ">=1.19-0" (include "grafana.kubeVersion" .) }}
 {{- print "networking.k8s.io/v1" }}
-{{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+{{- else if semverCompare ">=1.14-0" (include "grafana.kubeVersion" .) }}
 {{- print "networking.k8s.io/v1beta1" }}
 {{- else }}
 {{- print "extensions/v1beta1" }}
@@ -145,9 +152,9 @@ Return the appropriate apiVersion for ingress.
 Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 */}}
 {{- define "grafana.hpa.apiVersion" -}}
-{{- if $.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler" }}
+{{- if semverCompare ">=1.23-0" (include "grafana.kubeVersion" .) }}
 {{- print "autoscaling/v2" }}
-{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler" }}
+{{- else if semverCompare ">=1.12-0" (include "grafana.kubeVersion" .) }}
 {{- print "autoscaling/v2beta2" }}
 {{- else }}
 {{- print "autoscaling/v2beta1" }}
@@ -158,7 +165,7 @@ Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 Return the appropriate apiVersion for podDisruptionBudget.
 */}}
 {{- define "grafana.podDisruptionBudget.apiVersion" -}}
-{{- if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
+{{- if semverCompare ">=1.21-0" (include "common.capabilities.kubeVersion" .) }}
 {{- print "policy/v1" }}
 {{- else }}
 {{- print "policy/v1beta1" }}
@@ -176,14 +183,14 @@ Return if ingress is stable.
 Return if ingress supports ingressClassName.
 */}}
 {{- define "grafana.ingress.supportsIngressClassName" -}}
-{{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
+{{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" (include "grafana.kubeVersion" .))) }}
 {{- end }}
 
 {{/*
 Return if ingress supports pathType.
 */}}
 {{- define "grafana.ingress.supportsPathType" -}}
-{{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" .Capabilities.KubeVersion.Version)) }}
+{{- or (eq (include "grafana.ingress.isStable" .) "true") (and (eq (include "grafana.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" (include "grafana.kubeVersion" .))) }}
 {{- end }}
 
 {{/*

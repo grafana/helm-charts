@@ -13,6 +13,13 @@ global:
   #   - pullSecret2
   imagePullSecrets: []
 
+## Overrides the Kubernetes Version used.
+# Configuring this is especially using when using `kustomize` or `helm template`
+# as no real cluster is used under the hood.
+# Set to a specific value, e.g. `1.25.6`, if an override is necessary. Otherwise
+# set it to null.
+kubeVersion: null
+
 rbac:
   create: true
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
