@@ -33,4 +33,7 @@ spec:
     matchLabels:
     {{- toYaml . | nindent 6 }}
   {{- end }}
+  {{- with .Values.persistence.persistentVolumeReclaimPolicy }}
+  persistentVolumeReclaimPolicy: {{ . }}
+  {{- end }}
 {{- end }}
