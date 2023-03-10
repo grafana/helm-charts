@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.69.7](https://img.shields.io/badge/Version-0.69.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.4](https://img.shields.io/badge/AppVersion-2.7.4-informational?style=flat-square)
+![Version: 0.69.8](https://img.shields.io/badge/Version-0.69.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.4](https://img.shields.io/badge/AppVersion-2.7.4-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
