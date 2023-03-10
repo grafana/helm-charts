@@ -165,7 +165,7 @@ Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 Return the appropriate apiVersion for podDisruptionBudget.
 */}}
 {{- define "grafana.podDisruptionBudget.apiVersion" -}}
-{{- if semverCompare ">=1.21-0" (include "common.capabilities.kubeVersion" .) }}
+{{- if semverCompare ">=1.21-0" (include "grafana.kubeVersion" .) }}
 {{- print "policy/v1" }}
 {{- else }}
 {{- print "policy/v1beta1" }}
