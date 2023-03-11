@@ -318,6 +318,7 @@ persistence:
   # annotations: {}
   finalizers:
     - kubernetes.io/pvc-protection
+  persistentVolumeReclaimPolicy: Delete
   # selectorLabels: {}
   ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""

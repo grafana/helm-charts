@@ -106,6 +106,7 @@ This version requires Helm >= 3.1.0.
 | `persistence.finalizers`                  | PersistentVolumeClaim finalizers              | `[ "kubernetes.io/pvc-protection" ]`                    |
 | `persistence.extraPvcLabels`              | Extra labels to apply to a PVC.               | `{}`                                                    |
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume (can be templated) | `nil`                                     |
+| `persistence.persistentVolumeReclaimPolicy` | persistentVolumeReclaimPolicy of the persistent volume | `Delete`                                     |
 | `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
 | `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
