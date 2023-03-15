@@ -520,6 +520,9 @@ lifecycleHooks: {}
 plugins: []
   # - digrich-bubblechart-panel
   # - grafana-clock-panel
+  ## You can also use other plugin download URL, as long as they are valid zip files,
+  ## and specify the name of the plugin after the semicolon. Like this:
+  # - https://grafana.com/api/plugins/marcusolsson-json-datasource/versions/1.3.2/download;marcusolsson-json-datasource
 
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
