@@ -28,7 +28,7 @@ secret:
 
 configmap:
   # -- If enabled, promtail config will be created as a ConfigMap instead of a secret
-  enabled: false
+  enabled: true
 
 initContainer: []
   # # -- Specifies whether the init container for setting inotify max user instances is to be enabled
@@ -333,6 +333,10 @@ podSecurityPolicy:
 # which is a templated string that references the other values and snippets below this key.
 # @default -- See `values.yaml`
 config:
+  # -- Enable Promtail config from Helm chart
+  # Set `configmap.enabled: true` and this to `false` to manage your own Promtail config
+  # See default config in `values.yaml`
+  enabled: true
   # -- The log level of the Promtail server
   # Must be reference in `config.file` to configure `server.log_level`
   # See default config in `values.yaml`
