@@ -36,6 +36,9 @@ externalConfigSecretName: '{{ include "tempo.resourceName" (dict "ctx" . "compon
 # -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
 externalConfigVersion: '0'
 
+# -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
+reportingEnabled: true
+
 tempo:
   image:
     # -- The Docker registry
@@ -766,6 +769,9 @@ traces:
 # @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
+
+  usage_report:
+    reporting_enabled: {{ .Values.reportingEnabled }}
 
   {{- if .Values.enterprise.enabled }}
   license:
