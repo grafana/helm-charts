@@ -1007,8 +1007,9 @@ config: |
     {{- toYaml .Values.global_overrides | nindent 2 }}
     {{- if .Values.metricsGenerator.enabled }}
     metrics_generator_processors:
-    - service-graphs
-    - span-metrics
+    {{- range .Values.global_overrides.metrics_generator_processors }}
+    - {{ . }}
+    {{- end }}
     {{- end }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
@@ -1085,6 +1086,9 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /conf/overrides.yaml
+  metrics_generator_processors:
+    - service-graphs
+    - span-metrics
 
 # Per tenants overrides
 overrides: |
