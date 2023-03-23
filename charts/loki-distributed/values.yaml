@@ -166,7 +166,7 @@ loki:
         cache:
           {{- if .Values.memcachedFrontend.enabled }}
           memcached_client:
-            host: {{ include "loki.memcachedFrontendFullname" . }}
+            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
             consistent_hash: true
           {{- else }}
           embedded_cache:
@@ -1786,3 +1786,4 @@ networkPolicy:
     podSelector: {}
     # -- Specifies the namespace the discovery Pods are running in
     namespaceSelector: {}
+
