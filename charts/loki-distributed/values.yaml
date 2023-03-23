@@ -122,8 +122,8 @@ loki:
     {{- if .Values.loki.storageConfig}}
     storage_config:
     {{- if .Values.indexGateway.enabled}}
-    {{- $indexGatewayClient := dict "server_address" (printf "dns:///%s:9095" (include "loki.indexGatewayFullname" .)) }}
-    {{- $_ := set .Values.loki.storageConfig.boltdb_shipper "index_gateway_client" $indexGatewayClient }}
+      index_gateway_client:
+        server_address: dns:///{{ include "loki.indexGatewayFullname" .}}:9095
     {{- end}}
     {{- toYaml .Values.loki.storageConfig | nindent 2}}
     {{- if .Values.memcachedIndexQueries.enabled }}
