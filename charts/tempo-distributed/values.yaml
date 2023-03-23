@@ -572,6 +572,9 @@ querier:
     frontend_worker:
       # -- grpc client configuration
       grpc_client_config: {}
+    trace_by_id:
+      # -- Timeout for trace lookup requests
+      query_timeout: 10s
     search:
       # -- A list of external endpoints that the querier will use to offload backend search requests
       external_endpoints: []
@@ -625,11 +628,23 @@ queryFrontend:
   # -- Number of replicas for the query-frontend
   replicas: 1
   config:
+    # -- Number of times to retry a request sent to a querier
+    max_retries: 2
+    # -- Number of block queries that are tolerated to error before considering the entire query as failed. Numbers greater than 0 make possible for a read to return partial results
+    tolerate_failed_blocks: 0
     search:
       # -- The number of concurrent jobs to execute when searching the backend
       concurrent_jobs: 1000
       # -- The target number of bytes for each job to handle when performing a backend search
       target_bytes_per_job: 104857600
+    # -- Trace by ID lookup configuration
+    trace_by_id:
+      # -- The number of shards to split a trace by id query into.
+      query_shards: 50
+      # -- If set to a non-zero value, a second request will be issued at the provided duration. Recommended to be set to p99 of search requests to reduce long-tail latency.
+      hedge_requests_at: 2s
+      # -- The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. Must be greater than 0.
+      hedge_requests_up_to: 2
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -942,6 +957,8 @@ config: |
       grpc_client_config:
         {{- toYaml .Values.querier.config.frontend_worker.grpc_client_config | nindent 6 }}
       {{- end }}
+    trace_by_id:
+      query_timeout: {{ .Values.querier.config.trace_by_id.query_timeout }}
     search:
       external_endpoints: {{- toYaml .Values.querier.config.search.external_endpoints | nindent 6 }}
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
@@ -950,9 +967,15 @@ config: |
       external_hedge_requests_up_to: {{ .Values.querier.config.search.external_hedge_requests_up_to }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
+    max_retries: {{ .Values.queryFrontend.config.max_retries }}
+    tolerate_failed_blocks: {{ .Values.queryFrontend.config.tolerate_failed_blocks }}
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+    trace_by_id:
+      query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
+      hedge_requests_at: {{ .Values.queryFrontend.config.trace_by_id.hedge_requests_at }}
+      hedge_requests_up_to: {{ .Values.queryFrontend.config.trace_by_id.hedge_requests_up_to }}
 
   ingester:
     lifecycler:
@@ -993,6 +1016,8 @@ config: |
     log_format: {{ .Values.server.logFormat }}
     grpc_server_max_recv_msg_size: {{ .Values.server.grpc_server_max_recv_msg_size }}
     grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
+    http_server_read_timeout: {{ .Values.server.http_server_read_timeout }}
+    http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   storage:
     trace:
       backend: {{.Values.storage.trace.backend}}
@@ -1013,12 +1038,14 @@ config: |
         path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
+      {{- if .Values.memcached.enabled }}
       cache: memcached
       memcached:
         consistent_hash: true
         host: {{ include "tempo.fullname" . }}-memcached
         service: memcached-client
         timeout: 500ms
+      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1033,6 +1060,10 @@ server:
   grpc_server_max_recv_msg_size: 4194304
   # -- Max gRPC message size that can be sent
   grpc_server_max_send_msg_size: 4194304
+  # -- Read timeout for HTTP server
+  http_server_read_timeout: 30s
+  # -- Write timeout for HTTP server
+  http_server_write_timeout: 30s
 
 # To configure a different storage backend instead of local storage:
 # storage:
