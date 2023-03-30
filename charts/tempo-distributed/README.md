@@ -1,6 +1,7 @@
 # tempo-distributed
 
-![Version: 1.2.7](https://img.shields.io/badge/Version-1.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
+
+![Version: 1.2.8](https://img.shields.io/badge/Version-1.2.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square) 
 
 Grafana Tempo in MicroService mode
 
@@ -41,6 +42,7 @@ helm delete my-release
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
+
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
@@ -76,6 +78,7 @@ minio:
   enabled: true
 ```
 * allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
+
 
 ### From chart version < 0.26.0
 
@@ -236,6 +239,9 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.config.compaction.v2_in_buffer_bytes | int | `5242880` | Amount of data to buffer from input blocks |
 | compactor.config.compaction.v2_out_buffer_bytes | int | `20971520` | Flush data to backend when buffer is this large |
 | compactor.config.compaction.v2_prefetch_traces_count | int | `1000` | Number of traces to buffer in memory during compaction |
+| compactor.dnsConfigOverides.dnsConfig.options[0].name | string | `"ndots"` |  |
+| compactor.dnsConfigOverides.dnsConfig.options[0].value | string | `"3"` |  |
+| compactor.dnsConfigOverides.enabled | bool | `false` |  |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
@@ -707,6 +713,7 @@ The other components are optional and must be explicitly enabled.
 | memcached | yes |
 | gateway | yes |
 
+
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
@@ -759,6 +766,7 @@ global_overrides:
 
 * Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
 * The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
+
 
 ### Example configuration using S3 for storage
 
