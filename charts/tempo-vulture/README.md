@@ -78,4 +78,3 @@ tempoAddress:
 | tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor |
 | tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
 | tolerations | list | `[]` | Tolerations for vulture pods |
-
