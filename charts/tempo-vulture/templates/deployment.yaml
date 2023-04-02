@@ -24,6 +24,9 @@ spec:
       labels:
         {{- include "tempo-vulture.labels" . | nindent 8 }}
     spec:
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
