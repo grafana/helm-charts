@@ -119,6 +119,7 @@ For more details, read the [Fluent Bit documentation](../../../cmd/fluent-bit/RE
 | `serviceMonitor.enabled` | Create a [Prometheus Operator](operator) serviceMonitor resource for Fluent Bit                    | `false`                          |
 | `podSecurityContext`     | Configure the pod level securityContext                                                            | `{}`                             |
 | `securityContext`        | Configure the fluent-bit container securityContext                                                 | `{}`                             |
+| `automountServiceAccountToken `  | Configure the fluent-bit container automountServiceAccountToken                            | `true`                           |
 
 
 
