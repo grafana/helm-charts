@@ -58,7 +58,7 @@ tempo:
   storage:
     trace:
       # tempo storage backend
-      # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
+      # refer https://grafana.com/docs/tempo/latest/configuration/
       ## Use s3 for example
       # backend: s3
       # store traces in s3

@@ -48,6 +48,8 @@ affinity: {}
 
 annotations: {}
 
+automountServiceAccountToken: true
+
 deploymentStrategy: RollingUpdate
 
 image:
