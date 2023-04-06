@@ -4,7 +4,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "promtail.fullname" $ }}-{{ $key | lower }}
-  namespace: {{ $.Release.Namespace }}
+  namespace: {{ include "promtail.namespaceName" $ }}
   labels:
     {{- include "promtail.labels" $ | nindent 4 }}
     {{- with .labels }}

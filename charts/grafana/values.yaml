@@ -17,8 +17,8 @@ rbac:
   create: true
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
   # useExistingRole: name-of-some-(cluster)role
-  pspEnabled: true
-  pspUseAppArmor: true
+  pspEnabled: false
+  pspUseAppArmor: false
   namespaced: false
   extraRoleRules: []
   # - apiGroups: []
@@ -52,6 +52,7 @@ autoscaling:
   maxReplicas: 5
   targetCPU: "60"
   targetMemory: ""
+  behavior: {}
 
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -159,7 +160,7 @@ downloadDashboards:
 # podLabels: {}
 
 podPortName: grafana
-
+gossipPortName: gossip
 ## Deployment annotations
 # annotations: {}
 
@@ -193,6 +194,7 @@ serviceMonitor:
   tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
+  targetLabels: []
 
 extraExposePorts: []
  # - name: keycloak
@@ -382,6 +384,14 @@ admin:
 # - "sh"
 # - "/run.sh"
 
+## Optionally define args if command is used
+## Needed if using `hashicorp/envconsul` to manage secrets
+## By default no arguments are set
+# args:
+# - "-secret"
+# - "secret/grafana"
+# - "./grafana"
+
 ## Extra environment variables that will be pass onto deployment pods
 ##
 ## to provide grafana with access to CloudWatch on AWS EKS:
@@ -510,6 +520,9 @@ lifecycleHooks: {}
 plugins: []
   # - digrich-bubblechart-panel
   # - grafana-clock-panel
+  ## You can also use other plugin download URL, as long as they are valid zip files,
+  ## and specify the name of the plugin after the semicolon. Like this:
+  # - https://grafana.com/api/plugins/marcusolsson-json-datasource/versions/1.3.2/download;marcusolsson-json-datasource
 
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
@@ -663,6 +676,10 @@ dashboards: {}
   #   local-dashboard-bitbucket:
   #     url: https://example.com/repository/test-bitbucket.json
   #     bearerToken: ''
+  #   local-dashboard-azure:
+  #     url: https://example.com/repository/test-azure.json
+  #     basic: ''
+  #     acceptHeader: '*/*'
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
@@ -754,7 +771,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.21.0
+    tag: 1.22.0
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -1008,6 +1025,13 @@ imageRenderer:
   # Enable the image-renderer deployment & service
   enabled: false
   replicas: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPU: "60"
+    targetMemory: ""
+    behavior: {}
   image:
     # image-renderer Image repository
     repository: grafana/grafana-image-renderer
@@ -1047,6 +1071,23 @@ imageRenderer:
     targetPort: 8081
     # Adds the appProtocol field to the image-renderer service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
     appProtocol: ""
+  serviceMonitor:
+    ## If true, a ServiceMonitor CRD is created for a prometheus operator
+    ## https://github.com/coreos/prometheus-operator
+    ##
+    enabled: false
+    path: /metrics
+    #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
+    labels: {}
+    interval: 1m
+    scheme: http
+    tlsConfig: {}
+    scrapeTimeout: 30s
+    relabelings: []
+    # See: https://doc.crds.dev/github.com/prometheus-operator/kube-prometheus/monitoring.coreos.com/ServiceMonitor/v1@v0.11.0#spec-targetLabels
+    targetLabels: []
+      # - targetLabel1
+      # - targetLabel2
   # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
   grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
@@ -1060,6 +1101,8 @@ imageRenderer:
     limitIngress: true
     # Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods
     limitEgress: false
+    # Allow additional services to access image-renderer (eg. Prometheus operator when ServiceMonitor is enabled)
+    extraIngressSelectors: []
   resources: {}
 #   limits:
 #     cpu: 100m

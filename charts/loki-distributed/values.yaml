@@ -82,6 +82,9 @@ loki:
     server:
       http_listen_port: 3100
 
+    common:
+      compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
+
     distributor:
       ring:
         kvstore:
@@ -138,7 +141,8 @@ loki:
       max_look_back_period: 0s
       {{- if .Values.memcachedChunks.enabled }}
       chunk_cache_config:
-        enable_fifocache: false
+        embedded_cache:
+          enabled: false
         memcached_client:
           consistent_hash: true
           addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedChunksFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
@@ -162,12 +166,11 @@ loki:
         cache:
           {{- if .Values.memcachedFrontend.enabled }}
           memcached_client:
-            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+            host: {{ include "loki.memcachedFrontendFullname" . }}
             consistent_hash: true
           {{- else }}
-          enable_fifocache: true
-          fifocache:
-            max_size_items: 1024
+          embedded_cache:
+            enabled: true
             ttl: 24h
           {{- end }}
 
@@ -295,14 +298,58 @@ prometheusRule:
   labels: {}
   # -- Contents of Prometheus rules file
   groups: []
-  # - name: loki-rules
-  #   rules:
-  #     - record: job:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
-  #     - record: job_route:loki_request_duration_seconds_bucket:sum_rate
-  #       expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
-  #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
-  #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
+  #  - name: loki_rules
+  #    rules:
+  #      - expr: histogram_quantile(0.99, sum(rate(loki_request_duration_seconds_bucket[1m]))
+  #          by (le, cluster, job))
+  #        record: cluster_job:loki_request_duration_seconds:99quantile
+  #      - expr: histogram_quantile(0.50, sum(rate(loki_request_duration_seconds_bucket[1m]))
+  #          by (le, cluster, job))
+  #        record: cluster_job:loki_request_duration_seconds:50quantile
+  #      - expr: sum(rate(loki_request_duration_seconds_sum[1m])) by (cluster, job) / sum(rate(loki_request_duration_seconds_count[1m]))
+  #          by (cluster, job)
+  #        record: cluster_job:loki_request_duration_seconds:avg
+  #      - expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, cluster, job)
+  #        record: cluster_job:loki_request_duration_seconds_bucket:sum_rate
+  #      - expr: sum(rate(loki_request_duration_seconds_sum[1m])) by (cluster, job)
+  #        record: cluster_job:loki_request_duration_seconds_sum:sum_rate
+  #      - expr: sum(rate(loki_request_duration_seconds_count[1m])) by (cluster, job)
+  #        record: cluster_job:loki_request_duration_seconds_count:sum_rate
+  #      - expr: histogram_quantile(0.99, sum(rate(loki_request_duration_seconds_bucket[1m]))
+  #          by (le, cluster, job, route))
+  #        record: cluster_job_route:loki_request_duration_seconds:99quantile
+  #      - expr: histogram_quantile(0.50, sum(rate(loki_request_duration_seconds_bucket[1m]))
+  #          by (le, cluster, job, route))
+  #        record: cluster_job_route:loki_request_duration_seconds:50quantile
+  #      - expr: sum(rate(loki_request_duration_seconds_sum[1m])) by (cluster, job, route)
+  #          / sum(rate(loki_request_duration_seconds_count[1m])) by (cluster, job, route)
+  #        record: cluster_job_route:loki_request_duration_seconds:avg
+  #      - expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, cluster, job,
+  #          route)
+  #        record: cluster_job_route:loki_request_duration_seconds_bucket:sum_rate
+  #      - expr: sum(rate(loki_request_duration_seconds_sum[1m])) by (cluster, job, route)
+  #        record: cluster_job_route:loki_request_duration_seconds_sum:sum_rate
+  #      - expr: sum(rate(loki_request_duration_seconds_count[1m])) by (cluster, job, route)
+  #        record: cluster_job_route:loki_request_duration_seconds_count:sum_rate
+  #      - expr: histogram_quantile(0.99, sum(rate(loki_request_duration_seconds_bucket[1m]))
+  #          by (le, cluster, namespace, job, route))
+  #        record: cluster_namespace_job_route:loki_request_duration_seconds:99quantile
+  #      - expr: histogram_quantile(0.50, sum(rate(loki_request_duration_seconds_bucket[1m]))
+  #          by (le, cluster, namespace, job, route))
+  #        record: cluster_namespace_job_route:loki_request_duration_seconds:50quantile
+  #      - expr: sum(rate(loki_request_duration_seconds_sum[1m])) by (cluster, namespace,
+  #          job, route) / sum(rate(loki_request_duration_seconds_count[1m])) by (cluster,
+  #          namespace, job, route)
+  #        record: cluster_namespace_job_route:loki_request_duration_seconds:avg
+  #      - expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, cluster, namespace,
+  #          job, route)
+  #        record: cluster_namespace_job_route:loki_request_duration_seconds_bucket:sum_rate
+  #      - expr: sum(rate(loki_request_duration_seconds_sum[1m])) by (cluster, namespace,
+  #          job, route)
+  #        record: cluster_namespace_job_route:loki_request_duration_seconds_sum:sum_rate
+  #      - expr: sum(rate(loki_request_duration_seconds_count[1m])) by (cluster, namespace,
+  #          job, route)
+  #        record: cluster_namespace_job_route:loki_request_duration_seconds_count:sum_rate
 
 # Configuration for the ingester
 ingester:
@@ -799,10 +846,10 @@ ingress:
       - /prometheus/api/v1/alerts
   hosts:
     - loki.example.com
-#  tls:
-#    - hosts:
-#       - loki.example.com
-#      secretName: loki-distributed-tls
+  # tls:
+  #   - secretName: loki-distributed-tls
+  #     hosts:
+  #       - loki.example.com
 
 # Configuration for the gateway
 gateway:
@@ -933,10 +980,12 @@ gateway:
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the gateway ingress
-    tls:
-      - secretName: loki-gateway-tls
-        hosts:
-          - gateway.loki.example.com
+    tls: []
+    # tls:
+    #   - secretName: loki-gateway-tls
+    #     hosts:
+    #       - gateway.loki.example.com
+
   # Basic auth configuration
   basicAuth:
     # -- Enables basic authentication for the gateway
@@ -1068,7 +1117,7 @@ gateway:
           }
 
           location ~ /api/prom/.* {
-            set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            set $api_prom_backend http://{{ include "loki.queryFrontendFullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $api_prom_backend:3100$request_uri;
             proxy_http_version 1.1;
           }
@@ -1088,7 +1137,7 @@ gateway:
           }
 
           location ~ /loki/api/.* {
-            set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            set $loki_api_backend http://{{ include "loki.queryFrontendFullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_backend:3100$request_uri;
             proxy_http_version 1.1;
           }

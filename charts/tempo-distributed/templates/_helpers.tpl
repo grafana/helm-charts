@@ -35,6 +35,19 @@ Docker image selector for Tempo. Hierachy based on global, component, and tempo 
 {{- end -}}
 
 {{/*
+Optional list of imagePullSecrets for Tempo docker images
+*/}}
+{{- define "tempo.imagePullSecrets" -}}
+{{- $imagePullSecrets := coalesce .global.pullSecrets .component.pullSecrets .tempo.pullSecrets -}}
+{{- if $imagePullSecrets  -}}
+imagePullSecrets:
+{{- range $imagePullSecrets }}
+  - name: {{ . }}
+{{ end }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "tempo.chart" -}}
@@ -143,6 +156,17 @@ Return the appropriate apiVersion for PodDisruptionBudget.
     {{- print "policy/v1" -}}
   {{- else -}}
     {{- print "policy/v1beta1" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Return the appropriate apiVersion for HorizontalPodAutoscaler.
+*/}}
+{{- define "tempo.hpa.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">=1.23-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "autoscaling/v2" -}}
+  {{- else -}}
+    {{- print "autoscaling/v2beta1" -}}
   {{- end -}}
 {{- end -}}
 

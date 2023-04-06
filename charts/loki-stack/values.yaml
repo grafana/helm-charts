@@ -1,5 +1,6 @@
 test_pod:
-  image: bats/bats:v1.1.0
+  enabled: true
+  image: bats/bats:1.8.2
   pullPolicy: IfNotPresent
 
 loki:
@@ -17,7 +18,7 @@ loki:
       port: http-metrics
     initialDelaySeconds: 45
   datasource:
-    jsonData: {}
+    jsonData: "{}"
     uid: ""
   commonConfig:
     replication_factor: 1
@@ -52,7 +53,7 @@ prometheus:
   isDefault: false
   url: http://{{ include "prometheus.fullname" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}
   datasource:
-    jsonData: {}
+    jsonData: "{}"
 
 filebeat:
   enabled: false

@@ -1,10 +1,11 @@
+{{- $dict := dict "ctx" . "component" "distributor" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}
+  name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "distributor") | nindent 4 }}
+    {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.distributor.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -91,5 +92,5 @@ spec:
     {{ toYaml . | nindent 4 }}
   {{- end }}
   selector:
-    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 4 }}
+    {{- include "tempo.selectorLabels" $dict | nindent 4 }}
 

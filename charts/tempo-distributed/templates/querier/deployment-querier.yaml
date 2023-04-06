@@ -12,7 +12,9 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: 10
+{{- if not .Values.querier.autoscaling.enabled }}
   replicas: {{ .Values.querier.replicas }}
+{{- end }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -49,6 +51,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
+      {{- include "tempo.querierImagePullSecrets" . | nindent 6 -}}
       containers:
         - args:
             - -target=querier
@@ -93,6 +96,12 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.querier.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.querier.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

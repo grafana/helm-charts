@@ -28,6 +28,12 @@ spec:
       nodePort: {{ .Values.gateway.service.nodePort }}
       {{- end }}
       protocol: TCP
+    {{ range .Values.gateway.service.additionalPorts }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: {{ .protocol }}
+    {{ end }}
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 4 }}
 {{- end }}
