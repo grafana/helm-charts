@@ -398,8 +398,40 @@ filters out the ones with a label as defined in `sidecar.datasources.label`. The
 those secrets are written to a folder and accessed by grafana on startup. Using these yaml files,
 the data sources in grafana can be imported.
 
+Should you aim for reloading datasources in Grafana each time the config is changed, set `sidecar.datasources.skipReload: false` and adjust `sidecar.datasources.reloadURL` to `http://<svc-name>.<namespace>.svc.cluster.local/api/admin/provisioning/datasources/reload`.
+
 Secrets are recommended over configmaps for this usecase because datasources usually contain private
 data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
+
+Example values to add a postgres datasource as a kubernetes secret:
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-datasources
+  labels:
+    grafana_datasource: 'true' # default value for: sidecar.datasources.label
+stringData:
+  pg-db.yaml: |-
+    apiVersion: 1
+    datasources:
+      - name: My pg db datasource
+        type: postgres
+        url: my-postgresql-db:5432
+        user: db-readonly-user
+        secureJsonData:
+          password: 'SUperSEcretPa$$word'
+        jsonData:
+          database: my_datase
+          sslmode: 'disable' # disable/require/verify-ca/verify-full
+          maxOpenConns: 0 # Grafana v5.4+
+          maxIdleConns: 2 # Grafana v5.4+
+          connMaxLifetime: 14400 # Grafana v5.4+
+          postgresVersion: 1000 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10
+          timescaledb: false
+        # <bool> allow users to edit datasources from the UI.
+        editable: false
+```
 
 Example values to add a datasource adapted from [Grafana](http://docs.grafana.org/administration/provisioning/#example-datasource-config-file):
 
