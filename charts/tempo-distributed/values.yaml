@@ -803,7 +803,7 @@ memberlist:
   rejoin_interval: "0s"
   left_ingesters_timeout: "5m"
   leave_timeout: "5s"
-  bind_addr: ""
+  bind_addr: []
   bind_port: 7946
   packet_dial_timeout: "5s"
   packet_write_timeout: "5s"
