@@ -1052,6 +1052,8 @@ config: |
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   storage:
     trace:
+      block:
+        version: {{.Values.storage.trace.block.version}}
       backend: {{.Values.storage.trace.backend}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
@@ -1107,6 +1109,10 @@ server:
 #       storage_account_key:
 storage:
   trace:
+    # Settings for the block storage backend and buckets.
+    block:
+      # -- The supported block versions are v2 and vParquet, as specified in https://grafana.com/docs/tempo/latest/configuration/parquet/
+      version: vParquet
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
