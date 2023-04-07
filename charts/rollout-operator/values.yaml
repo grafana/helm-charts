@@ -54,6 +54,8 @@ tolerations: []
 
 affinity: {}
 
+priorityClassName: ""
+
 serviceMonitor:
   # -- Create ServiceMonitor to scrape metrics for Prometheus
   enabled: false

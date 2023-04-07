@@ -51,6 +51,7 @@ It is not a highly available application and runs as a single pod.
 | podAnnotations | object | `{}` | Pod Annotations |
 | podLabels | object | `{}` | Pod (extra) Labels |
 | podSecurityContext | object | `{}` |  |
+| priorityClassName | string | `""` |  |
 | resources.limits.cpu | string | `"1"` |  |
 | resources.limits.memory | string | `"200Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
