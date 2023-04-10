@@ -37,6 +37,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if or (.Values.metricsGenerator.priorityClassName) (.Values.global.priorityClassName) }}
+      priorityClassName: {{ default .Values.metricsGenerator.priorityClassName .Values.global.priorityClassName }}
+      {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
       {{- with .Values.tempo.podSecurityContext }}
       securityContext:
@@ -89,6 +92,12 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.metricsGenerator.terminationGracePeriodSeconds }}
+      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- with .Values.metricsGenerator.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       {{- with .Values.metricsGenerator.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

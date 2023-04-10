@@ -15,6 +15,8 @@ image:
 
 # -- Number of replicas of Tempo Vulture
 replicas: 1
+# -- Common labels for all pods
+podLabels: {}
 # -- Common annotations for all pods
 podAnnotations: {}
 # -- Common annotations for the deployment and service
