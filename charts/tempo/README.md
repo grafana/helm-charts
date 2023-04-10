@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -76,10 +76,19 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.extraArgs | object | `{}` |  |
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
+| tempoQuery.ingress.annotations | object | `{}` |  |
+| tempoQuery.ingress.enabled | bool | `false` |  |
+| tempoQuery.ingress.extraPaths | list | `[]` |  |
+| tempoQuery.ingress.hosts[0] | string | `"query.tempo.example.com"` |  |
+| tempoQuery.ingress.labels | object | `{}` |  |
+| tempoQuery.ingress.path | string | `"/"` |  |
+| tempoQuery.ingress.pathType | string | `"Prefix"` |  |
+| tempoQuery.ingress.tls | list | `[]` |  |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.resources | object | `{}` |  |
 | tempoQuery.securityContext | object | `{}` |  |
+| tempoQuery.service.port | int | `16686` |  |
 | tempoQuery.tag | string | `"2.0.1"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
