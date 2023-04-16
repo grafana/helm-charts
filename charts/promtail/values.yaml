@@ -478,8 +478,7 @@ config:
       JAEGER_SAMPLER_MAX_OPERATIONS: 0
       JAEGER_PROPAGATION: "w3c"               # b3, jaeger, w3c
       JAEGER_TRACEID_128BIT: false
-      JAEGER_RPC_METRICS: false 
-
+      JAEGER_RPC_METRICS: false
 
   # -- Config file contents for Promtail.
   # Must be configured as string.
