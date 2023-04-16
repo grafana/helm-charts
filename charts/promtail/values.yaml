@@ -455,7 +455,7 @@ config:
           {{- toYaml . | nindent 4 }}
           {{- end }}
 
-    traceConfigs: |
+    tracingConfigs: |
       # Current only support configure via enviroment variables
       # See also https://www.jaegertracing.io/docs/1.16/client-features/
       enabled: false
