@@ -186,7 +186,10 @@ extraArgs: []
 # -- extraArgs:
 # --   - -client.external-labels=hostname=$(HOSTNAME)
 
-# -- Extra environment variables
+# -- Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true.
+# Tracing currently only support configure via environment variables. See:
+# https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config
+# https://www.jaegertracing.io/docs/1.16/client-features/
 extraEnv: []
 
 # -- Extra environment variables from secrets or configmaps
@@ -346,6 +349,8 @@ config:
   # @default -- See `values.yaml`
   clients:
     - url: http://loki-gateway/loki/api/v1/push
+  # -- The config to enable tracing
+  enableTracing: false
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -455,31 +460,6 @@ config:
           {{- toYaml . | nindent 4 }}
           {{- end }}
 
-    tracingConfigs: |
-      # Current only support configure via enviroment variables
-      # See also https://www.jaegertracing.io/docs/1.16/client-features/
-      enabled: false
-      JAEGER_SERVICE_NAME: ""
-      JAEGER_TAGS: ""                         # hostname=foobar,my.app.version=1.2.3
-      JAEGER_DISABLED: false
-      JAEGER_AGENT_HOST: ""
-      JAEGER_AGENT_PORT: ""
-      JAEGER_ENDPOINT: ""
-      JAEGER_AUTH_TOKEN: ""
-      JAEGER_USER: ""
-      JAEGER_PASSWORD: ""
-      JAEGER_REPORTER_LOG_SPANS: ""
-      JAEGER_REPORTER_MAX_QUEUE_SIZE: 0
-      JAEGER_REPORTER_FLUSH_INTERVAL: 0
-      JAEGER_SAMPLER_TYPE: ""                 # const, probabilistic
-      JAEGER_SAMPLER_PARAM: ""                # probability=0.001
-      JAEGER_SAMPLER_MANAGER_HOST_PORT: ""
-      JAEGER_SAMPLER_REFRESH_INTERVAL: 0
-      JAEGER_SAMPLER_MAX_OPERATIONS: 0
-      JAEGER_PROPAGATION: "w3c"               # b3, jaeger, w3c
-      JAEGER_TRACEID_128BIT: false
-      JAEGER_RPC_METRICS: false
-
   # -- Config file contents for Promtail.
   # Must be configured as string.
   # It is templated so it can be assembled from reusable snippets in order to avoid redundancy.
@@ -507,7 +487,7 @@ config:
       {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
 
     tracing:
-      {{- tpl .Values.config.snippets.tracingConfigs . | nindent 2 }}
+      enabled: {{ tpl .Values.config.enableTracing . }}
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created

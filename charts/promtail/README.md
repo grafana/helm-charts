@@ -72,6 +72,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | annotations | object | `{}` | Annotations for the DaemonSet |
 | config | object | See `values.yaml` | Section for crafting Promtails config file. The only directly relevant value is `config.file` which is a templated string that references the other values and snippets below this key. |
 | config.clients | list | See `values.yaml` | The config of clients of the Promtail server Must be reference in `config.file` to configure `clients` |
+| config.enableTracing | bool | `false` | The config to enable tracing |
 | config.file | string | See `values.yaml` | Config file contents for Promtail. Must be configured as string. It is templated so it can be assembled from reusable snippets in order to avoid redundancy. |
 | config.logLevel | string | `"info"` | The log level of the Promtail server Must be reference in `config.file` to configure `server.log_level` See default config in `values.yaml` |
 | config.serverPort | int | `3101` | The port of the Promtail server Must be reference in `config.file` to configure `server.http_listen_port` See default config in `values.yaml` |
@@ -95,7 +96,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
 | extraContainers | object | `{}` |  |
-| extraEnv | list | `[]` | Extra environment variables |
+| extraEnv | list | `[]` | Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true. Tracing currently only support configure via environment variables. See: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config https://www.jaegertracing.io/docs/1.16/client-features/ |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
 | extraObjects | list | `[]` | Extra K8s manifests to deploy |
 | extraPorts | object | `{}` | Configure additional ports and services. For each configured port, a corresponding service is created. See values.yaml for details |
