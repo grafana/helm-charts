@@ -178,7 +178,7 @@ loki:
       {{- if .Values.queryScheduler.enabled }}
       scheduler_address: {{ include "loki.querySchedulerFullname" . }}:9095
       {{- else }}
-      frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "loki.queryFrontendFullname" . }}-headless:9095
       {{- end }}
 
     frontend:
