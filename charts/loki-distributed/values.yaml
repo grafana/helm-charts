@@ -74,13 +74,18 @@ loki:
   appProtocol: ""
   # -- Common annotations for all loki services
   serviceAnnotations: {}
+  # Loki server configuration
+  # Refers to https://grafana.com/docs/loki/latest/configuration/#server
+  server:
+    # -- HTTP server listen port
+    http_listen_port: 3100
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
     auth_enabled: false
 
     server:
-      http_listen_port: 3100
+      {{- toYaml .Values.loki.server | nindent 6 }}
 
     common:
       compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
