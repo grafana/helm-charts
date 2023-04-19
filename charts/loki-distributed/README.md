@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.69.11](https://img.shields.io/badge/Version-0.69.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.0](https://img.shields.io/badge/AppVersion-2.8.0-informational?style=flat-square)
+![Version: 0.69.12](https://img.shields.io/badge/Version-0.69.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.0](https://img.shields.io/badge/AppVersion-2.8.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -302,6 +302,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | loki.schemaConfig | object | `{"configs":[{"from":"2020-09-07","index":{"period":"24h","prefix":"loki_index_"},"object_store":"filesystem","schema":"v11","store":"boltdb-shipper"}]}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
+| loki.server.http_listen_port | int | `3100` | HTTP server listen port |
 | loki.serviceAnnotations | object | `{}` | Common annotations for all loki services |
 | loki.storageConfig | object | `{"boltdb_shipper":{"active_index_directory":"/var/loki/index","cache_location":"/var/loki/cache","cache_ttl":"168h","shared_store":"filesystem"},"filesystem":{"directory":"/var/loki/chunks"}}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
