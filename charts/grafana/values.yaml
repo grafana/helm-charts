@@ -84,7 +84,7 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: grafana/grafana
+  repository: docker.io/grafana/grafana
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -100,17 +100,23 @@ image:
 
 testFramework:
   enabled: true
-  image: "bats/bats"
+  image: docker.io/bats/bats
   tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
 securityContext:
+  runAsNonRoot: true
   runAsUser: 472
   runAsGroup: 472
   fsGroup: 472
 
-containerSecurityContext: {}
+containerSecurityContext:
+  capabilities:
+    drop:
+    - ALL
+  seccompProfile:
+    type: RuntimeDefault
 
 # Enable creating the grafana configmap
 createConfigmap: true
@@ -137,7 +143,7 @@ extraLabels: {}
 # priorityClassName:
 
 downloadDashboardsImage:
-  repository: curlimages/curl
+  repository: docker.io/curlimages/curl
   tag: 7.85.0
   sha: ""
   pullPolicy: IfNotPresent
@@ -346,7 +352,7 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    repository: busybox
+    repository: docker.io/library/busybox
     tag: "1.31.1"
     sha: ""
     pullPolicy: IfNotPresent
@@ -1034,7 +1040,7 @@ imageRenderer:
     behavior: {}
   image:
     # image-renderer Image repository
-    repository: grafana/grafana-image-renderer
+    repository: docker.io/grafana/grafana-image-renderer
     # image-renderer Image tag
     tag: latest
     # image-renderer Image sha (optional)

@@ -74,13 +74,18 @@ loki:
   appProtocol: ""
   # -- Common annotations for all loki services
   serviceAnnotations: {}
+  # Loki server configuration
+  # Refers to https://grafana.com/docs/loki/latest/configuration/#server
+  server:
+    # -- HTTP server listen port
+    http_listen_port: 3100
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
     auth_enabled: false
 
     server:
-      http_listen_port: 3100
+      {{- toYaml .Values.loki.server | nindent 6 }}
 
     common:
       compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
@@ -178,7 +183,7 @@ loki:
       {{- if .Values.queryScheduler.enabled }}
       scheduler_address: {{ include "loki.querySchedulerFullname" . }}:9095
       {{- else }}
-      frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "loki.queryFrontendFullname" . }}-headless:9095
       {{- end }}
 
     frontend:
