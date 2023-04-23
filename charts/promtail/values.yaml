@@ -186,7 +186,10 @@ extraArgs: []
 # -- extraArgs:
 # --   - -client.external-labels=hostname=$(HOSTNAME)
 
-# -- Extra environment variables
+# -- Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true.
+# Tracing currently only support configure via environment variables. See:
+# https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config
+# https://www.jaegertracing.io/docs/1.16/client-features/
 extraEnv: []
 
 # -- Extra environment variables from secrets or configmaps
@@ -346,6 +349,8 @@ config:
   # @default -- See `values.yaml`
   clients:
     - url: http://loki-gateway/loki/api/v1/push
+  # -- The config to enable tracing
+  enableTracing: false
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -480,6 +485,9 @@ config:
 
     limits_config:
       {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
+
+    tracing:
+      enabled: {{ .Values.config.enableTracing }}
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created
