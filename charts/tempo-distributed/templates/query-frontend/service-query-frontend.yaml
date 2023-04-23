@@ -24,8 +24,8 @@ spec:
       {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
     - name: tempo-query-jaeger-ui
-      port: 16686
-      targetPort: 16686
+      port: {{ .Values.queryFrontend.service.port }}
+      targetPort: {{ .Values.queryFrontend.service.port }}
     - name: tempo-query-metrics
       port: 16687
       targetPort: jaeger-metrics
