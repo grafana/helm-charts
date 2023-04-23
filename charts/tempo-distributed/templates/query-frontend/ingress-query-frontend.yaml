@@ -1,5 +1,4 @@
-{{- if .Values.queryFrontend.query.enabled -}}
-{{- if .Values.queryFrontend.ingress.enabled -}}
+{{- if and .Values.queryFrontend.query.enabled .Values.queryFrontend.ingress.enabled -}}
 {{ $dict := dict "ctx" . "component" "queryFrontend"  }}
 {{- $ingressApiIsStable := eq (include "tempo.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsIngressClassName := eq (include "tempo.ingress.supportsIngressClassName" .) "true" -}}
@@ -52,5 +51,4 @@ spec:
               {{- end }}
           {{- end }}
     {{- end }}
-{{- end }}
 {{- end }}
