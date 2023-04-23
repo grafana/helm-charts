@@ -84,7 +84,7 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: grafana/grafana
+  repository: docker.io/grafana/grafana
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -100,7 +100,7 @@ image:
 
 testFramework:
   enabled: true
-  image: "bats/bats"
+  image: docker.io/bats/bats
   tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
@@ -143,7 +143,7 @@ extraLabels: {}
 # priorityClassName:
 
 downloadDashboardsImage:
-  repository: curlimages/curl
+  repository: docker.io/curlimages/curl
   tag: 7.85.0
   sha: ""
   pullPolicy: IfNotPresent
@@ -152,7 +152,13 @@ downloadDashboards:
   env: {}
   envFromSecret: ""
   resources: {}
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    seccompProfile:
+      type: RuntimeDefault
   envValueFrom: {}
   #  ENV_NAME:
   #    configMapKeyRef:
@@ -352,7 +358,7 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    repository: busybox
+    repository: docker.io/library/busybox
     tag: "1.31.1"
     sha: ""
     pullPolicy: IfNotPresent
@@ -370,7 +376,11 @@ initChownData:
   securityContext:
     runAsNonRoot: false
     runAsUser: 0
-
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      add:
+        - CHOWN
 
 # Administrator credentials when not using an existing secret (see below)
 adminUser: admin
@@ -787,7 +797,13 @@ sidecar:
 #   requests:
 #     cpu: 50m
 #     memory: 50Mi
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    seccompProfile:
+      type: RuntimeDefault
   # skipTlsVerify Set to true to skip tls verification for kube api calls
   # skipTlsVerify: true
   enableUniqueFilenames: false
@@ -1040,7 +1056,7 @@ imageRenderer:
     behavior: {}
   image:
     # image-renderer Image repository
-    repository: grafana/grafana-image-renderer
+    repository: docker.io/grafana/grafana-image-renderer
     # image-renderer Image tag
     tag: latest
     # image-renderer Image sha (optional)
@@ -1059,6 +1075,8 @@ imageRenderer:
   securityContext: {}
   # image-renderer deployment container securityContext
   containerSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
     capabilities:
       drop: ['ALL']
     allowPrivilegeEscalation: false
