@@ -106,7 +106,7 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: tempo-query
           ports:
-            - containerPort: 16686
+            - containerPort: {{ .Values.queryFrontend.service.port }}
               name: jaeger-ui
             - containerPort: 16687
               name: jaeger-metrics
