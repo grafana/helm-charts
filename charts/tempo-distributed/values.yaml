@@ -673,6 +673,8 @@ queryFrontend:
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
   service:
+    # -- Port of the query-frontend service
+    port: 16686
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Type of service for the queryFrontend
@@ -684,6 +686,25 @@ queryFrontend:
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
+  ingress:
+    # -- Specifies whether an ingress for the Jaeger should be created
+    enabled: false
+    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
+    # ingressClassName: nginx
+    # -- Annotations for the Jaeger ingress
+    annotations: {}
+    # -- Hosts configuration for the Jaeger ingress
+    hosts:
+      - host: query.tempo.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Jaeger ingress
+    tls:
+      - secretName: tempo-query-tls
+        hosts:
+          - query.tempo.example.com
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Labels for queryFrontend pods
