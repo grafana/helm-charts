@@ -33820,29 +33820,6 @@ entries:
     version: 0.1.0
   tempo:
   - apiVersion: v2
-    appVersion: 2.1.1
-    created: "2023-04-28T23:16:37.559940612Z"
-    description: Grafana Tempo Single Binary Mode
-    digest: 9dd36a7e08465e451aba6990fee7e730cf551cd9966ff924c1ced978b57462c6
-    home: https://grafana.net
-    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
-    maintainers:
-    - email: number101010@gmail.com
-      name: joe-elliott
-    - email: 9215868@gmail.com
-      name: swartz-k
-    - name: annanay25
-    - name: mdisibio
-    - name: dgzlopes
-    - name: mapno
-    name: tempo
-    sources:
-    - https://github.com/grafana/tempo
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/tempo-1.2.0/tempo-1.2.0.tgz
-    version: 1.2.0
-  - apiVersion: v2
     appVersion: 2.0.1
     created: "2023-04-10T20:41:08.43277054Z"
     description: Grafana Tempo Single Binary Mode
@@ -35172,6 +35149,42 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/tempo-0.5.0/tempo-0.5.0.tgz
     version: 0.5.0
   tempo-distributed:
+  - apiVersion: v2
+    appVersion: 2.1.1
+    created: "2023-04-28T23:17:30.522587598Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    - alias: grafana-agent-operator
+      condition: metaMonitoring.grafanaAgent.installOperator
+      name: grafana-agent-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.2
+    description: Grafana Tempo in MicroService mode
+    digest: 35ba0345b6b5e72e6f568bc3e6dcc825125af3a4ec38869c1e8ee50d262d1427
+    home: https://grafana.com/docs/tempo/latest/
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: mapno
+    - name: BitProcessor
+    - name: faustodavid
+    - name: zalegrala
+    name: tempo-distributed
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-1.3.0/tempo-distributed-1.3.0.tgz
+    version: 1.3.0
   - apiVersion: v2
     appVersion: 2.0.1
     created: "2023-04-24T00:20:17.415263037Z"
@@ -38798,4 +38811,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-28T23:16:37.576493059Z"
+generated: "2023-04-28T23:17:30.54295134Z"
