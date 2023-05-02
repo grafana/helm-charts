@@ -277,6 +277,8 @@ extraContainers: {}
 extraPorts: {}
 #  syslog:
 #    name: tcp-syslog
+#    annotations: {}
+#    labels: {}
 #    containerPort: 1514
 #    protocol: TCP
 #    service:
@@ -285,8 +287,6 @@ extraPorts: {}
 #      port: 1514
 #      externalIPs: []
 #      nodePort: null
-#      annotations: {}
-#      labels: {}
 #      loadBalancerIP: null
 #      loadBalancerSourceRanges: []
 #      externalTrafficPolicy: null
