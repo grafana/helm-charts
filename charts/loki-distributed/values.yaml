@@ -455,12 +455,12 @@ ingester:
     claims:
       - name: data
         size: 10Gi
-      #   -- Storage class to be used.
-      #   If defined, storageClassName: <storageClass>.
-      #   If set to "-", storageClassName: "", which disables dynamic provisioning.
-      #   If empty or set to null, no storageClassName spec is
-      #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-      storageClass: null
+        #   -- Storage class to be used.
+        #   If defined, storageClassName: <storageClass>.
+        #   If set to "-", storageClassName: "", which disables dynamic provisioning.
+        #   If empty or set to null, no storageClassName spec is
+        #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+        storageClass: null
       # - name: wal
       #   size: 150Gi
 
