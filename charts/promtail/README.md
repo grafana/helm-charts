@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.10.1](https://img.shields.io/badge/Version-6.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.4](https://img.shields.io/badge/AppVersion-2.7.4-informational?style=flat-square)
+![Version: 6.11.0](https://img.shields.io/badge/Version-6.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.4](https://img.shields.io/badge/AppVersion-2.7.4-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -96,7 +96,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
 | extraContainers | object | `{}` |  |
-| extraEnv | list | `[]` | Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true. Tracing currently only support configure via environment variables. See: <https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config> <https://www.jaegertracing.io/docs/1.16/client-features/> |
+| extraEnv | list | `[]` | Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true. Tracing currently only support configure via environment variables. See: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config https://www.jaegertracing.io/docs/1.16/client-features/ |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
 | extraObjects | list | `[]` | Extra K8s manifests to deploy |
 | extraPorts | object | `{}` | Configure additional ports and services. For each configured port, a corresponding service is created. See values.yaml for details |

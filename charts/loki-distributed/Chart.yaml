@@ -2,13 +2,8 @@ apiVersion: v2
 name: loki-distributed
 description: Helm chart for Grafana Loki in microservices mode
 type: application
-<<<<<<< HEAD
 appVersion: 2.8.0
 version: 0.69.15
-=======
-appVersion: 2.7.5
-version: 0.69.11
->>>>>>> e33c69a2 ([loki-distributed] update version)
 home: https://grafana.github.io/helm-charts
 sources:
   - https://github.com/grafana/loki
