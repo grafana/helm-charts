@@ -452,8 +452,8 @@ ingester:
     inMemory: false
 
     claims:
-      # - name: data
-      #   size: 10Gi
+      - name: data
+        size: 10Gi
       #   -- Storage class to be used.
       #   If defined, storageClassName: <storageClass>.
       #   If set to "-", storageClassName: "", which disables dynamic provisioning.
