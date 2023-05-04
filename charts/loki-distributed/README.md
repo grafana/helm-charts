@@ -1,6 +1,10 @@
 # loki-distributed
 
+<<<<<<< HEAD
 ![Version: 0.69.14](https://img.shields.io/badge/Version-0.69.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.0](https://img.shields.io/badge/AppVersion-2.8.0-informational?style=flat-square)
+=======
+![Version: 0.69.11](https://img.shields.io/badge/Version-0.69.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.5](https://img.shields.io/badge/AppVersion-2.7.5-informational?style=flat-square)
+>>>>>>> e33c69a2 ([loki-distributed] update version)
 
 Helm chart for Grafana Loki in microservices mode
 
