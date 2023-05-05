@@ -139,14 +139,14 @@ The new release which will pick up again from the existing `positions.yaml`.
 | serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
 | serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
 | serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
-| serviceMonitor.metricRelabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples as the last step before ingestion <https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig> (defines `metric_relabel_configs`) |
+| serviceMonitor.metricRelabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples as the last step before ingestion https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig (defines `metric_relabel_configs`) |
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.prometheusRule | object | `{"additionalLabels":{},"enabled":false,"rules":[]}` | Prometheus rules will be deployed for alerting purposes |
-| serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping <https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig> (defines `relabel_configs`) |
+| serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig (defines `relabel_configs`) |
 | serviceMonitor.scheme | string | `"http"` | ServiceMonitor will use http by default, but you can pick https as well |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric <https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec> |
+| serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
 | sidecar.configReloader.config.serverPort | int | `9533` | The port of the config-reloader server |
 | sidecar.configReloader.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers for sidecar config-reloader |
@@ -177,7 +177,7 @@ Also, the following examples make use of this feature.
 
 For additional reference, please refer to Promtail's docs:
 
-<https://grafana.com/docs/loki/latest/clients/promtail/configuration/>
+https://grafana.com/docs/loki/latest/clients/promtail/configuration/
 
 ### Syslog Support
 
@@ -219,7 +219,7 @@ config:
 
 Find additional source labels in the Promtail's docs:
 
-<https://grafana.com/docs/loki/latest/clients/promtail/configuration/#syslog>
+https://grafana.com/docs/loki/latest/clients/promtail/configuration/#syslog
 
 ### Journald Support
 
@@ -269,15 +269,15 @@ extraVolumeMounts:
 
 Find additional configuration options in Promtail's docs:
 
-<https://grafana.com/docs/loki/latest/clients/promtail/configuration/#journal>
+https://grafana.com/docs/loki/latest/clients/promtail/configuration/#journal
 
-More journal source labels can be found here <https://www.freedesktop.org/software/systemd/man/systemd.journal-fields.html>.
+More journal source labels can be found here https://www.freedesktop.org/software/systemd/man/systemd.journal-fields.html.
 > Note that each message from the journal may have a different set of fields and software may write an arbitrary set of custom fields for their logged messages. [(related issue)](https://github.com/grafana/loki/issues/2048#issuecomment-626234611)
 
 The machine-id needs to be available in the container as it is required for scraping.
 This is described in Promtail's scraping docs:
 
-<https://grafana.com/docs/loki/latest/clients/promtail/scraping/#journal-scraping-linux-only>
+https://grafana.com/docs/loki/latest/clients/promtail/scraping/#journal-scraping-linux-only
 
 ### Push API Support
 
