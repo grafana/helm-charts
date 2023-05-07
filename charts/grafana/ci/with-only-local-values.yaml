@@ -1,0 +1,4 @@
+service:
+  enabled: true
+  type: LoadBalancer
+  port: 3000
