@@ -25,6 +25,9 @@ spec:
 {{ toYaml . | indent 8 }}
 {{- end }}
     spec:
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ template "ga-operator.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:

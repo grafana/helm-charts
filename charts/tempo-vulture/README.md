@@ -1,6 +1,6 @@
 # tempo-vulture
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.0](https://img.shields.io/badge/AppVersion-1.3.0-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.0](https://img.shields.io/badge/AppVersion-1.3.0-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
 
@@ -61,6 +61,7 @@ tempoAddress:
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node selector for vulture pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
+| podLabels | object | `{}` | Common labels for all pods |
 | replicas | int | `1` | Number of replicas of Tempo Vulture |
 | resources | object | `{}` | Resource requests and limits for the vulture |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |

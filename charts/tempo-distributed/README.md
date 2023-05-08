@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -44,6 +44,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.3.0
+
+Please be aware that we've updated the minor version to Tempo 2.1, which includes breaking changes.
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.1.0/) before upgrading.
 
 ### From Chart versions < 1.0.0
 
@@ -236,6 +241,9 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.config.compaction.v2_in_buffer_bytes | int | `5242880` | Amount of data to buffer from input blocks |
 | compactor.config.compaction.v2_out_buffer_bytes | int | `20971520` | Flush data to backend when buffer is this large |
 | compactor.config.compaction.v2_prefetch_traces_count | int | `1000` | Number of traces to buffer in memory during compaction |
+| compactor.dnsConfigOverides.dnsConfig.options[0].name | string | `"ndots"` |  |
+| compactor.dnsConfigOverides.dnsConfig.options[0].value | string | `"3"` |  |
+| compactor.dnsConfigOverides.enabled | bool | `false` |  |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
@@ -267,7 +275,6 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
 | distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
 | distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
-| distributor.config.search_tags_deny_list | list | `[]` | List of tags that will not be extracted from trace data for search lookups |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
@@ -292,7 +299,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
-| enterprise.image.tag | string | `"weekly-r58-94739e17"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterprise.image.tag | string | `"v2.0.1"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.annotations | object | `{}` |  |
 | enterpriseGateway.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
@@ -391,6 +398,8 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
+| global_overrides.metrics_generator_processors[0] | string | `"service-graphs"` |  |
+| global_overrides.metrics_generator_processors[1] | string | `"span-metrics"` |  |
 | global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
@@ -530,7 +539,7 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.buckets[2].policy | string | `"none"` |  |
 | minio.buckets[2].purge | bool | `false` |  |
 | minio.configPathmc | string | `"/tmp/minio/mc/"` |  |
-| minio.enabled | bool | `true` |  |
+| minio.enabled | bool | `false` |  |
 | minio.mode | string | `"standalone"` |  |
 | minio.persistence.size | string | `"5Gi"` |  |
 | minio.resources.requests.cpu | string | `"100m"` |  |
@@ -559,6 +568,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.config.search.external_hedge_requests_up_to | int | `2` | The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. |
 | querier.config.search.prefer_self | int | `10` | If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries. |
 | querier.config.search.query_timeout | string | `"30s"` | Timeout for search requests |
+| querier.config.trace_by_id.query_timeout | string | `"10s"` | Timeout for trace lookup requests |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
 | querier.extraEnv | list | `[]` | Environment variables to add to the querier pods |
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
@@ -586,8 +596,14 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the query-frontend |
 | queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
+| queryFrontend.config.max_retries | int | `2` | Number of times to retry a request sent to a querier |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
+| queryFrontend.config.tolerate_failed_blocks | int | `0` | Number of block queries that are tolerated to error before considering the entire query as failed. Numbers greater than 0 make possible for a read to return partial results |
+| queryFrontend.config.trace_by_id | object | `{"hedge_requests_at":"2s","hedge_requests_up_to":2,"query_shards":50}` | Trace by ID lookup configuration |
+| queryFrontend.config.trace_by_id.hedge_requests_at | string | `"2s"` | If set to a non-zero value, a second request will be issued at the provided duration. Recommended to be set to p99 of search requests to reduce long-tail latency. |
+| queryFrontend.config.trace_by_id.hedge_requests_up_to | int | `2` | The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. Must be greater than 0. |
+| queryFrontend.config.trace_by_id.query_shards | int | `50` | The number of shards to split a trace by id query into. |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
@@ -597,6 +613,10 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `tempo.image.registry` |
 | queryFrontend.image.repository | string | `nil` | Docker image repository for the query-frontend image. Overrides `tempo.image.repository` |
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `tempo.image.tag` |
+| queryFrontend.ingress.annotations | object | `{}` | Annotations for the Jaeger ingress |
+| queryFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
+| queryFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
+| queryFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
@@ -618,6 +638,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
 | queryFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | queryFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| queryFrontend.service.port | int | `16686` | Port of the query-frontend service |
 | queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for queryFrontendDiscovery service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
@@ -625,9 +646,12 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | rbac.create | bool | `false` | Specifies whether RBAC manifests should be created |
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy should be created |
+| reportingEnabled | bool | `true` | If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs |
 | server.grpc_server_max_recv_msg_size | int | `4194304` | Max gRPC message size that can be received |
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
 | server.httpListenPort | int | `3100` | HTTP server listen host |
+| server.http_server_read_timeout | string | `"30s"` | Read timeout for HTTP server |
+| server.http_server_write_timeout | string | `"30s"` | Write timeout for HTTP server |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
 | server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
@@ -636,6 +660,7 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | storage.admin.backend | string | `"filesystem"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config |
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
+| storage.trace.block.version | string | `"vParquet"` | The supported block versions are v2 and vParquet, as specified in https://grafana.com/docs/tempo/latest/configuration/parquet/ |
 | tempo.image.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
