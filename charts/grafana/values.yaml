@@ -1069,6 +1069,21 @@ imageRenderer:
     # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
     # IGNORE_HTTPS_ERRORS: true
+
+  ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
+  ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
+  ## Renders in container spec as:
+  ##   env:
+  ##     ...
+  ##     - name: <key>
+  ##       valueFrom:
+  ##         <value rendered as YAML>
+  envValueFrom: {}
+    #  ENV_NAME:
+    #    configMapKeyRef:
+    #      name: configmap-name
+    #      key: value_key
+
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
   # image-renderer deployment securityContext
