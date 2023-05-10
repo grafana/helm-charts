@@ -70,7 +70,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `"2.0.1"` |  |
+| tempo.tag | string | `"2.1.1"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.enabled | bool | `false` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
@@ -89,7 +89,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.resources | object | `{}` |  |
 | tempoQuery.securityContext | object | `{}` |  |
 | tempoQuery.service.port | int | `16686` |  |
-| tempoQuery.tag | string | `"2.0.1"` |  |
+| tempoQuery.tag | string | `"2.1.1"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
 ## Chart Repo
