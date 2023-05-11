@@ -13,6 +13,10 @@ spec:
     name: {{ include "tempo.resourceName" (dict "ctx" . "component" "gateway") }}
   minReplicas: {{ .Values.gateway.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.gateway.autoscaling.maxReplicas }}
+  {{- if .Values.gateway.autoscaling.behavior }}
+  behavior:
+    {{- toYaml .Values.gateway.autoscaling.behavior | nindent 4 }}
+  {{- end }}
   metrics:
   {{- with .Values.gateway.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
