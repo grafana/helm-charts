@@ -2190,32 +2190,6 @@ entries:
     version: 0.0.1
   grafana:
   - apiVersion: v2
-    appVersion: 9.5.2
-    created: "2023-05-11T22:17:19.32817375Z"
-    description: The leading tool for querying and visualizing time series and metrics.
-    digest: e955cc7fbffe571add90026ab44058069d651690c46e65c6a3c85bf064a706f6
-    home: https://grafana.net
-    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
-    kubeVersion: ^1.8.0-0
-    maintainers:
-    - email: zanhsieh@gmail.com
-      name: zanhsieh
-    - email: rluckie@cisco.com
-      name: rtluckie
-    - email: maor.friedman@redhat.com
-      name: maorfr
-    - email: miroslav.hadzhiev@gmail.com
-      name: Xtigyro
-    - email: mail@torstenwalter.de
-      name: torstenwalter
-    name: grafana
-    sources:
-    - https://github.com/grafana/grafana
-    type: application
-    urls:
-    - https://github.com/grafana/helm-charts/releases/download/grafana-6.56.3/grafana-6.56.3.tgz
-    version: 6.56.3
-  - apiVersion: v2
     appVersion: 9.5.1
     created: "2023-05-09T05:27:29.558203717Z"
     description: The leading tool for querying and visualizing time series and metrics.
@@ -35607,6 +35581,42 @@ entries:
   tempo-distributed:
   - apiVersion: v2
     appVersion: 2.1.1
+    created: "2023-05-11T22:25:18.972719653Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.9
+    - alias: grafana-agent-operator
+      condition: metaMonitoring.grafanaAgent.installOperator
+      name: grafana-agent-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.2
+    description: Grafana Tempo in MicroService mode
+    digest: 225fbe660d235558dd2d07533f4a0b9d0f6f3f3b4388509b8f2c549f9092a4d8
+    home: https://grafana.com/docs/tempo/latest/
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: mapno
+    - name: BitProcessor
+    - name: faustodavid
+    - name: zalegrala
+    name: tempo-distributed
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-1.4.0/tempo-distributed-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
+    appVersion: 2.1.1
     created: "2023-04-28T23:17:30.522587598Z"
     dependencies:
     - alias: minio
@@ -39267,4 +39277,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-11T22:17:19.35133572Z"
+generated: "2023-05-11T22:25:18.989939822Z"
