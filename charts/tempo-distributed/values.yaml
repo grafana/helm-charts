@@ -424,8 +424,6 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
-    # -- List of tags that will not be extracted from trace data for search lookups
-    search_tags_deny_list: []
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -971,12 +969,6 @@ config: |
     {{- end }}
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
-    {{- end }}
-    {{- if .Values.distributor.config.search_tags_deny_list }}
-    search_tags_deny_list:
-      {{- with .Values.distributor.config.search_tags_deny_list }}
-      {{- toYaml . | nindent 4 }}
-      {{- end }}
     {{- end }}
   querier:
     frontend_worker:
@@ -1624,7 +1616,7 @@ enterprise:
     # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.0.1
+    tag: v2.1.0
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces

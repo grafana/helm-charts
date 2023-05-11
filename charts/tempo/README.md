@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
+![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -72,7 +72,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `"2.0.1"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
-| tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
+| tempoQuery.enabled | bool | `false` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
@@ -121,6 +121,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.2.0
+
+Please be aware that we've updated the minor version to Tempo 2.1, which includes breaking changes.
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.1.0/) before upgrading.
 
 ### From Chart versions < 1.0.0
 
