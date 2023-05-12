@@ -38,5 +38,6 @@ spec:
       port: 16687
       targetPort: jaeger-metrics
     {{- end }}
+  publishNotReadyAddresses: true
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 4 }}
