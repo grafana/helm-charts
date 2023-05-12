@@ -112,6 +112,7 @@ securityContext:
   fsGroup: 472
 
 containerSecurityContext:
+  allowPrivilegeEscalation: false
   capabilities:
     drop:
     - ALL
