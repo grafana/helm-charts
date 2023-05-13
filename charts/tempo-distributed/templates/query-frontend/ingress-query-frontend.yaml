@@ -1,5 +1,5 @@
 {{- if and .Values.queryFrontend.query.enabled .Values.queryFrontend.ingress.enabled -}}
-{{ $dict := dict "ctx" . "component" "queryFrontend"  }}
+{{ $dict := dict "ctx" . "component" "query-frontend"  }}
 {{- $ingressApiIsStable := eq (include "tempo.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsIngressClassName := eq (include "tempo.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "tempo.ingress.supportsPathType" .) "true" -}}
