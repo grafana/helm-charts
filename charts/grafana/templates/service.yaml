@@ -29,6 +29,10 @@ spec:
   loadBalancerSourceRanges:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- else if eq .Values.service.type "NodePort" }}
+  type: NodePort
+  nodePort: {{ .Values.service.nodePort }}
+  {{- end }}
   {{- else }}
   type: {{ .Values.service.type }}
   {{- end }}
