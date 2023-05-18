@@ -1,6 +1,6 @@
 apiVersion: v2
 name: grafana
-version: 6.56.4
+version: 6.56.5
 appVersion: 9.5.2
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
@@ -8,6 +8,13 @@ home: https://grafana.net
 icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
 sources:
   - https://github.com/grafana/grafana
+  - https://github.com/grafana/helm-charts
+annotations:
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/grafana/helm-charts
+    - name: Upstream Project
+      url: https://github.com/grafana/grafana
 maintainers:
   - name: zanhsieh
     email: zanhsieh@gmail.com
