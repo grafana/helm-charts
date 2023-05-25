@@ -152,7 +152,7 @@ Return if ingress supports pathType.
 Return the appropriate apiVersion for PodDisruptionBudget.
 */}}
 {{- define "tempo.pdb.apiVersion" -}}
-  {{- if .Capabilities.APIVersions.Has "policy/v1" -}}
+  {{- if .Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" -}}
     {{- print "policy/v1" -}}
   {{- else -}}
     {{- print "policy/v1beta1" -}}
