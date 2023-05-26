@@ -2197,6 +2197,39 @@ entries:
           url: https://github.com/grafana/grafana
     apiVersion: v2
     appVersion: 9.5.2
+    created: "2023-05-26T04:26:56.649925497Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: f7ff282c76a6136022d52c740c28de356d8a7b2392f268476b18b0eab0b405a7
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    - https://github.com/grafana/helm-charts
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-6.56.6/grafana-6.56.6.tgz
+    version: 6.56.6
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/grafana/helm-charts
+        - name: Upstream Project
+          url: https://github.com/grafana/grafana
+    apiVersion: v2
+    appVersion: 9.5.2
     created: "2023-05-18T01:58:50.346286583Z"
     description: The leading tool for querying and visualizing time series and metrics.
     digest: 71f284f9fde8b5942cee80a4986c69e985c993ca66f6bb927a496a08563386e7
@@ -39945,4 +39978,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-25T14:37:28.514608244Z"
+generated: "2023-05-26T04:26:56.669798069Z"
