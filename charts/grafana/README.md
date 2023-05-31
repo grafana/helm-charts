@@ -121,7 +121,7 @@ This version requires Helm >= 3.1.0.
 | `envFromSecret`                           | Name of a Kubernetes secret (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `""` |
 | `envFromSecrets`                          | List of Kubernetes secrets (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `[]` |
 | `envFromConfigMaps`                       | List of Kubernetes ConfigMaps (must be manually created in the same namespace) containing values to be added to the environment. Can be templated | `[]` |
-| `envRenderSecret`                         | Sensible environment variables passed to pods and stored as secret | `{}`                               |
+| `envRenderSecret`                         | Sensible environment variables passed to pods and stored as secret. (passed through [tpl](https://helm.sh/docs/howto/charts_tips_and_tricks/#using-the-tpl-function))   | `{}`                               |
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
