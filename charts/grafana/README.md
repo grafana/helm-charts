@@ -267,7 +267,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
 | `imageRenderer.networkPolicy.limitEgress`  | Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods  | `false`                          |
-| `imageRenderer.resources`                  | Set resource limits for image-renderer pdos                                        | `{}`                             |
+| `imageRenderer.resources`                  | Set resource limits for image-renderer pods                                        | `{}`                             |
 | `imageRenderer.nodeSelector`               | Node labels for pod assignment                | `{}`                                                    |
 | `imageRenderer.tolerations`                | Toleration labels for pod assignment          | `[]`                                                    |
 | `imageRenderer.affinity`                   | Affinity settings for pod assignment          | `{}`                                                    |
