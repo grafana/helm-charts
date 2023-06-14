@@ -217,7 +217,6 @@ configMap:
     - key: "overrides.yaml"
       path: "overrides.yaml"
 {{- end -}}
-{{- end -}}
 
 {{/*
 Internal servers http listen port - derived from Loki default
