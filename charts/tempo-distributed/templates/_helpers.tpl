@@ -204,6 +204,16 @@ configMap:
   items:
     - key: "tempo.yaml"
       path: "tempo.yaml"
+{{- end -}}
+{{- end -}}
+
+{{/*
+The volume to mount for tempo runtime configuration
+*/}}
+{{- define "tempo.runtimeVolume" -}}
+configMap:
+  name: {{ tpl .Values.externalRuntimeConfigName . }}
+  items:
     - key: "overrides.yaml"
       path: "overrides.yaml"
 {{- end -}}
