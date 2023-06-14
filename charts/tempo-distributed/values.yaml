@@ -33,6 +33,9 @@ configStorageType: ConfigMap
 # -- Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal).
 externalConfigSecretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "config") }}'
 
+# -- Name of the Secret or ConfigMap that contains the runtime configuration (used for naming even if config is internal).
+externalRuntimeConfigName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "runtime") }}'
+
 # -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
 externalConfigVersion: '0'
 
@@ -1119,7 +1122,7 @@ storage:
 
 # Global overrides
 global_overrides:
-  per_tenant_override_config: /conf/overrides.yaml
+  per_tenant_override_config: /runtime-config/overrides.yaml
   metrics_generator_processors:
     - service-graphs
     - span-metrics
