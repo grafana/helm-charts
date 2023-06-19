@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "federation-frontend-discovery") }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" (dict "ctx" . "component" "federation-frontend") | nindent 4 }}
+  {{- with .Values.federationFrontend.serviceDiscovery.annotations }}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http
+      port: 3100
+      targetPort: 3100
+    - name: grpc
+      port: 9095
+      protocol: TCP
+      targetPort: 9095
+      {{- if .Values.federationFrontend.appProtocol.grpc }}
+      appProtocol: {{ .Values.federationFrontend.appProtocol.grpc }}
+      {{- end }}
+    - name: grpclb
+      port: 9096
+      protocol: TCP
+      targetPort: grpc
+      {{- if .Values.federationFrontend.appProtocol.grpc }}
+      appProtocol: {{ .Values.federationFrontend.appProtocol.grpc }}
+      {{- end }}
+    {{- if .Values.federationFrontend.enabled }}
+    - name: tempo-query-jaeger-ui
+      port: {{ .Values.federationFrontend.service.port }}
+      targetPort: {{ .Values.federationFrontend.service.port }}
+    - name: tempo-query-metrics
+      port: 16687
+      targetPort: jaeger-metrics
+    {{- end }}
+  publishNotReadyAddresses: true
+  selector:
+    {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 4 }}
