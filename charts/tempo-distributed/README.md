@@ -338,6 +338,44 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.useDefaultProxyURLs | bool | `true` |  |
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
+| federationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| federationFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the federationFrontend service. This allows federationFrontend to work with istio protocol selection. |
+| federationFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| federationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
+| federationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
+| federationFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the federation-frontend |
+| federationFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the federation-frontend |
+| federationFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the federation-frontend |
+| federationFrontend.enabled | bool | `false` | Specifies whether a federation-frontend should be deployed |
+| federationFrontend.extraArgs | list | `[]` | Additional CLI args for the federation-frontend |
+| federationFrontend.extraEnv | list | `[]` | Environment variables to add to the federation-frontend pods |
+| federationFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the federation-frontend pods |
+| federationFrontend.extraVolumeMounts | list | `[]` | Extra volumes for federation-frontend pods |
+| federationFrontend.extraVolumes | list | `[]` | Extra volumes for federation-frontend deployment |
+| federationFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| federationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
+| federationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
+| federationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
+| federationFrontend.ingress.annotations | object | `{}` | Annotations for the Jaeger ingress |
+| federationFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
+| federationFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
+| federationFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
+| federationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
+| federationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
+| federationFrontend.podLabels | object | `{}` | Labels for federationFrontend pods |
+| federationFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for federation-frontend pods |
+| federationFrontend.proxy_targets | list | `[]` |  |
+| federationFrontend.replicas | int | `1` | Number of replicas for the federation-frontend |
+| federationFrontend.resources | object | `{}` | Resource requests and limits for the federation-frontend |
+| federationFrontend.service.annotations | object | `{}` | Annotations for federationFrontend service |
+| federationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
+| federationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| federationFrontend.service.port | int | `16686` | Port of the federation-frontend service |
+| federationFrontend.service.type | string | `"ClusterIP"` | Type of service for the federationFrontend |
+| federationFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for federationFrontendDiscovery service |
+| federationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
+| federationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
+| federationFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
@@ -589,7 +627,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
-| queryFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the queriyFrontend service. This allows queriyFrontend to work with istio protocol selection. |
+| queryFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
 | queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
