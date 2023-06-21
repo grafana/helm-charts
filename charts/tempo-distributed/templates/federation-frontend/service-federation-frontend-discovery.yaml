@@ -30,14 +30,6 @@ spec:
       {{- if .Values.federationFrontend.appProtocol.grpc }}
       appProtocol: {{ .Values.federationFrontend.appProtocol.grpc }}
       {{- end }}
-    {{- if .Values.federationFrontend.enabled }}
-    - name: tempo-query-jaeger-ui
-      port: {{ .Values.federationFrontend.service.port }}
-      targetPort: {{ .Values.federationFrontend.service.port }}
-    - name: tempo-query-metrics
-      port: 16687
-      targetPort: jaeger-metrics
-    {{- end }}
   publishNotReadyAddresses: true
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 4 }}
