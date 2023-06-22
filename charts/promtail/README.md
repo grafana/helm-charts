@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.11.4](https://img.shields.io/badge/Version-6.11.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 6.11.5](https://img.shields.io/badge/Version-6.11.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
