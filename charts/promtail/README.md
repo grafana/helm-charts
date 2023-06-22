@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.8.4](https://img.shields.io/badge/Version-6.8.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
+![Version: 6.11.4](https://img.shields.io/badge/Version-6.11.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -72,8 +72,10 @@ The new release which will pick up again from the existing `positions.yaml`.
 | annotations | object | `{}` | Annotations for the DaemonSet |
 | config | object | See `values.yaml` | Section for crafting Promtails config file. The only directly relevant value is `config.file` which is a templated string that references the other values and snippets below this key. |
 | config.clients | list | See `values.yaml` | The config of clients of the Promtail server Must be reference in `config.file` to configure `clients` |
+| config.enableTracing | bool | `false` | The config to enable tracing |
 | config.file | string | See `values.yaml` | Config file contents for Promtail. Must be configured as string. It is templated so it can be assembled from reusable snippets in order to avoid redundancy. |
 | config.logLevel | string | `"info"` | The log level of the Promtail server Must be reference in `config.file` to configure `server.log_level` See default config in `values.yaml` |
+| config.positions | object | `{"filename":"/run/promtail/positions.yaml"}` | Configures where Promtail will save it's positions file, to resume reading after restarts. Must be referenced in `config.file` to configure `positions` |
 | config.serverPort | int | `3101` | The port of the Promtail server Must be reference in `config.file` to configure `server.http_listen_port` See default config in `values.yaml` |
 | config.snippets | object | See `values.yaml` | A section of reusable snippets that can be reference in `config.file`. Custom snippets may be added in order to reduce redundancy. This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common. |
 | config.snippets.extraLimitsConfig | string | empty | You can put here any keys that will be directly added to the config file's 'limits_config' block. |
@@ -96,7 +98,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
 | extraContainers | object | `{}` |  |
-| extraEnv | list | `[]` | Extra environment variables |
+| extraEnv | list | `[]` | Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true. Tracing currently only support configure via environment variables. See: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config https://www.jaegertracing.io/docs/1.16/client-features/ |
 | extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps |
 | extraObjects | list | `[]` | Extra K8s manifests to deploy |
 | extraPorts | object | `{}` | Configure additional ports and services. For each configured port, a corresponding service is created. See values.yaml for details |
@@ -148,6 +150,20 @@ The new release which will pick up again from the existing `positions.yaml`.
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | serviceMonitor.targetLabels | list | `[]` | ServiceMonitor will add labels from the service to the Prometheus metric https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec |
 | serviceMonitor.tlsConfig | string | `nil` | ServiceMonitor will use these tlsConfig settings to make the health check requests |
+| sidecar.configReloader.config.serverPort | int | `9533` | The port of the config-reloader server |
+| sidecar.configReloader.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers for sidecar config-reloader |
+| sidecar.configReloader.enabled | bool | `false` |  |
+| sidecar.configReloader.extraArgs | list | `[]` |  |
+| sidecar.configReloader.extraEnv | list | `[]` | Extra environment variables for sidecar config-reloader |
+| sidecar.configReloader.extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps for sidecar config-reloader |
+| sidecar.configReloader.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy for sidecar config-reloader |
+| sidecar.configReloader.image.registry | string | `"docker.io"` | The Docker registry for sidecar config-reloader |
+| sidecar.configReloader.image.repository | string | `"jimmidyson/configmap-reload"` | Docker image repository for sidecar config-reloader |
+| sidecar.configReloader.image.tag | string | `"v0.8.0"` | Docker image tag for sidecar config-reloader |
+| sidecar.configReloader.livenessProbe | object | `{}` | Liveness probe for sidecar config-reloader |
+| sidecar.configReloader.readinessProbe | object | `{}` | Readiness probe for sidecar config-reloader |
+| sidecar.configReloader.resources | object | `{}` | Resource requests and limits for sidecar config-reloader |
+| sidecar.configReloader.serviceMonitor.enabled | bool | `true` |  |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"}]` | Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes. |
 | updateStrategy | object | `{}` | The update strategy for the DaemonSet |
 

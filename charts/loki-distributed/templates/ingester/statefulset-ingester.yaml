@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "loki.ingesterFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.ingesterLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
@@ -156,20 +157,22 @@ spec:
         {{- end }}
   {{- else }}
   volumeClaimTemplates:
+  {{- range .Values.ingester.persistence.claims }}
     - metadata:
-        name: data
-        {{- with .Values.ingester.persistence.annotations }}
+        name: {{ .name }}
+        {{- with .annotations }}
         annotations:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.ingester.persistence.storageClass }}
+        {{- with .storageClass }}
         storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
         resources:
           requests:
-            storage: {{ .Values.ingester.persistence.size | quote }}
+            storage: {{ .size | quote }}
+  {{- end }}
   {{- end }}
 {{- end }}

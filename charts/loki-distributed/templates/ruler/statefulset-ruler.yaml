@@ -102,6 +102,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.ruler.resources | nindent 12 }}
+        {{- with .Values.ruler.extraContainers }}
+        {{- toYaml . | nindent 8}}
+        {{- end }}
       {{- with .Values.ruler.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

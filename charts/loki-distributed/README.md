@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.69.6](https://img.shields.io/badge/Version-0.69.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.3](https://img.shields.io/badge/AppVersion-2.7.3-informational?style=flat-square)
+![Version: 0.69.16](https://img.shields.io/badge/Version-0.69.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -253,11 +253,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.livenessProbe | object | `{}` | liveness probe settings for ingester pods. If empty use `loki.livenessProbe` |
 | ingester.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
-| ingester.persistence.annotations | object | `{}` | Annotations for ingester PVCs |
+| ingester.persistence.claims | list | `[{"name":"data","size":"10Gi","storageClass":null}]` | List of the ingester PVCs @notationType -- list |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | Use emptyDir with ramdisk for storage. **Please note that all data in ingester will be lost on pod restart** |
-| ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
-| ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
@@ -302,6 +300,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.readinessProbe.timeoutSeconds | int | `1` |  |
 | loki.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | loki.schemaConfig | object | `{"configs":[{"from":"2020-09-07","index":{"period":"24h","prefix":"loki_index_"},"object_store":"filesystem","schema":"v11","store":"boltdb-shipper"}]}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
+| loki.server.http_listen_port | int | `3100` | HTTP server listen port |
 | loki.serviceAnnotations | object | `{}` | Common annotations for all loki services |
 | loki.storageConfig | object | `{"boltdb_shipper":{"active_index_directory":"/var/loki/index","cache_location":"/var/loki/cache","cache_ttl":"168h","shared_store":"filesystem"},"filesystem":{"directory":"/var/loki/chunks"}}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |

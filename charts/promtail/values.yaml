@@ -190,7 +190,10 @@ extraArgs: []
 # -- extraArgs:
 # --   - -client.external-labels=hostname=$(HOSTNAME)
 
-# -- Extra environment variables
+# -- Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true.
+# Tracing currently only support configure via environment variables. See:
+# https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config
+# https://www.jaegertracing.io/docs/1.16/client-features/
 extraEnv: []
 
 # -- Extra environment variables from secrets or configmaps
@@ -278,6 +281,8 @@ extraContainers: {}
 extraPorts: {}
 #  syslog:
 #    name: tcp-syslog
+#    annotations: {}
+#    labels: {}
 #    containerPort: 1514
 #    protocol: TCP
 #    service:
@@ -286,11 +291,26 @@ extraPorts: {}
 #      port: 1514
 #      externalIPs: []
 #      nodePort: null
-#      annotations: {}
-#      labels: {}
 #      loadBalancerIP: null
 #      loadBalancerSourceRanges: []
 #      externalTrafficPolicy: null
+#    ingress:
+#      # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+#      # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+#      # ingressClassName: nginx
+#      # Values can be templated
+#      annotations: {}
+#        # kubernetes.io/ingress.class: nginx
+#        # kubernetes.io/tls-acme: "true"
+#      paths: "/"
+#      hosts:
+#        - chart-example.local
+#
+#      tls: []
+#      #  - secretName: chart-example-tls
+#      #    hosts:
+#      #      - chart-example.local
+
 
 # -- PodSecurityPolicy configuration.
 # @default -- See `values.yaml`
@@ -333,6 +353,12 @@ config:
   # @default -- See `values.yaml`
   clients:
     - url: http://loki-gateway/loki/api/v1/push
+  # -- Configures where Promtail will save it's positions file, to resume reading after restarts.
+  # Must be referenced in `config.file` to configure `positions`
+  positions:
+    filename: /run/promtail/positions.yaml
+  # -- The config to enable tracing
+  enableTracing: false
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -459,7 +485,7 @@ config:
       {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
-      filename: /run/promtail/positions.yaml
+      {{- tpl (toYaml .Values.config.positions) . | nindent 2 }}
 
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
@@ -467,6 +493,9 @@ config:
 
     limits_config:
       {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
+
+    tracing:
+      enabled: {{ .Values.config.enableTracing }}
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created
@@ -489,6 +518,49 @@ networkPolicy:
 
 # -- Base path to server all API routes fro
 httpPathPrefix: ""
+
+sidecar:
+  configReloader:
+    enabled: false
+    image:
+      # -- The Docker registry for sidecar config-reloader
+      registry: docker.io
+      # -- Docker image repository for sidecar config-reloader
+      repository: jimmidyson/configmap-reload
+      # -- Docker image tag for sidecar config-reloader
+      tag: v0.8.0
+      # -- Docker image pull policy for sidecar config-reloader
+      pullPolicy: IfNotPresent
+    # Extra args for the config-reloader container.
+    extraArgs: []
+    # -- Extra environment variables for sidecar config-reloader
+    extraEnv: []
+    # -- Extra environment variables from secrets or configmaps for sidecar config-reloader
+    extraEnvFrom: []
+    # -- The security context for containers for sidecar config-reloader
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+    # -- Readiness probe for sidecar config-reloader
+    readinessProbe: {}
+    # -- Liveness probe for sidecar config-reloader
+    livenessProbe: {}
+    # -- Resource requests and limits for sidecar config-reloader
+    resources: {}
+    #  limits:
+    #    cpu: 200m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 100m
+    #    memory: 128Mi
+    config:
+      # -- The port of the config-reloader server
+      serverPort: 9533
+    serviceMonitor:
+      enabled: true
 
 # -- Extra K8s manifests to deploy
 extraObjects: []
