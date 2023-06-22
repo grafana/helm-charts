@@ -20,6 +20,10 @@ deployment:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
 
+    # -- Set deployment object update strategy
+    strategy:
+      type: RollingUpdate
+
 secret:
   # -- Labels for the Secret
   labels: {}
