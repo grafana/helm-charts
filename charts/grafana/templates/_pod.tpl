@@ -331,6 +331,9 @@ containers:
     volumeMounts:
       - name: sc-alerts-volume
         mountPath: "/etc/grafana/provisioning/alerting"
+      {{- with .Values.sidecar.alerts.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}        
 {{- end}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ include "grafana.name" . }}-sc-dashboard

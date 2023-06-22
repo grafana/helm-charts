@@ -63,6 +63,8 @@ spec:
         - containerPort: 4317
           name: otlp-grpc
         - containerPort: 55681
+          name: otlp-httplegacy
+        - containerPort: 4318
           name: otlp-http
         - containerPort: 55678
           name: opencensus
