@@ -38,7 +38,7 @@ jobs:
           helm repo add minio https://helm.min.io
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.0
+        uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: charts
           config: cr.yaml
