@@ -13,9 +13,9 @@ spec:
     name: {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}
   minReplicas: {{ .Values.ingester.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.ingester.autoscaling.maxReplicas }}
-  {{- if .Values.ingester.autoscaling.behavior }}
+  {{- with .Values.ingester.autoscaling.behavior }}
   behavior:
-    {{- toYaml .Values.ingester.autoscaling.behavior | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   metrics:
   {{- with .Values.ingester.autoscaling.targetMemoryUtilizationPercentage }}
