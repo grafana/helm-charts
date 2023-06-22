@@ -110,6 +110,8 @@ ingester:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the ingester
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the ingester
+    behavior: {}
     # -- Target CPU utilisation percentage for the ingester
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
@@ -342,6 +344,8 @@ distributor:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the distributor
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the distributor
+    behavior: {}
     # -- Target CPU utilisation percentage for the distributor
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
@@ -511,6 +515,8 @@ querier:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the querier
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the querier
+    behavior: {}
     # -- Target CPU utilisation percentage for the querier
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
@@ -657,6 +663,8 @@ queryFrontend:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the query-frontend
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the query-frontend
+    behavior: {}
     # -- Target CPU utilisation percentage for the query-frontend
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the query-frontend
@@ -1365,6 +1373,8 @@ gateway:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the gateway
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the gateway
+    behavior: {}
     # -- Target CPU utilisation percentage for the gateway
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
