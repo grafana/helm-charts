@@ -452,7 +452,9 @@ envValueFrom: {}
 envFromSecret: ""
 
 ## Sensible environment variables that will be rendered as new secret object
-## This can be useful for auth tokens, etc
+## This can be useful for auth tokens, etc.
+## If the secret values contains "{{", they'll need to be properly escaped so that they are not interpreted by Helm
+## ref: https://helm.sh/docs/howto/charts_tips_and_tricks/#using-the-tpl-function
 envRenderSecret: {}
 
 ## The names of secrets in the same kubernetes namespace which contain values to be added to the environment
@@ -848,6 +850,8 @@ sidecar:
     script: null
     skipReload: false
     # Deploy the alert sidecar as an initContainer in addition to a container.
+    # Additional alert sidecar volume mounts
+    extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
     sizeLimit: {}
   dashboards:
