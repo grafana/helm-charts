@@ -33,6 +33,9 @@ configStorageType: ConfigMap
 # -- Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal).
 externalConfigSecretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "config") }}'
 
+# -- Name of the Secret or ConfigMap that contains the runtime configuration (used for naming even if config is internal).
+externalRuntimeConfigName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "runtime") }}'
+
 # -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
 externalConfigVersion: '0'
 
@@ -110,6 +113,8 @@ ingester:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the ingester
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the ingester
+    behavior: {}
     # -- Target CPU utilisation percentage for the ingester
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
@@ -323,6 +328,7 @@ metricsGenerator:
       # -- A list of remote write endpoints.
       # -- https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
       remote_write: []
+    metrics_ingestion_time_range_slack: 30s
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
@@ -342,6 +348,8 @@ distributor:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the distributor
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the distributor
+    behavior: {}
     # -- Target CPU utilisation percentage for the distributor
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
@@ -511,6 +519,8 @@ querier:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the querier
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the querier
+    behavior: {}
     # -- Target CPU utilisation percentage for the querier
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
@@ -657,6 +667,8 @@ queryFrontend:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the query-frontend
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the query-frontend
+    behavior: {}
     # -- Target CPU utilisation percentage for the query-frontend
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the query-frontend
@@ -903,6 +915,7 @@ config: |
       {{- toYaml .Values.metricsGenerator.config.storage | nindent 6 }}
     registry:
       {{- toYaml .Values.metricsGenerator.config.registry | nindent 6 }}
+    metrics_ingestion_time_range_slack: {{ .Values.metricsGenerator.config.metrics_ingestion_time_range_slack }}
   {{- end }}
   distributor:
     ring:
@@ -1111,7 +1124,7 @@ storage:
 
 # Global overrides
 global_overrides:
-  per_tenant_override_config: /conf/overrides.yaml
+  per_tenant_override_config: /runtime-config/overrides.yaml
   metrics_generator_processors:
     - service-graphs
     - span-metrics
@@ -1365,6 +1378,8 @@ gateway:
     minReplicas: 1
     # -- Maximum autoscaling replicas for the gateway
     maxReplicas: 3
+    # -- Autoscaling behavior configuration for the gateway
+    behavior: {}
     # -- Target CPU utilisation percentage for the gateway
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
