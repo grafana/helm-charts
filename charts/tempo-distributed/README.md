@@ -300,6 +300,44 @@ The memcached default args are removed and should be provided manually. The sett
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
 | enterprise.image.tag | string | `"v2.1.0"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| enterpriseFederationFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the enterpriseFederationFrontend service. This allows enterpriseFederationFrontend to work with istio protocol selection. |
+| enterpriseFederationFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the federation-frontend |
+| enterpriseFederationFrontend.enabled | bool | `false` | Specifies whether a federation-frontend should be deployed |
+| enterpriseFederationFrontend.extraArgs | list | `[]` | Additional CLI args for the federation-frontend |
+| enterpriseFederationFrontend.extraEnv | list | `[]` | Environment variables to add to the federation-frontend pods |
+| enterpriseFederationFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the federation-frontend pods |
+| enterpriseFederationFrontend.extraVolumeMounts | list | `[]` | Extra volumes for federation-frontend pods |
+| enterpriseFederationFrontend.extraVolumes | list | `[]` | Extra volumes for federation-frontend deployment |
+| enterpriseFederationFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| enterpriseFederationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
+| enterpriseFederationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
+| enterpriseFederationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
+| enterpriseFederationFrontend.ingress.annotations | object | `{}` | Annotations for the Jaeger ingress |
+| enterpriseFederationFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
+| enterpriseFederationFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
+| enterpriseFederationFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
+| enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
+| enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
+| enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
+| enterpriseFederationFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for federation-frontend pods |
+| enterpriseFederationFrontend.proxy_targets | list | `[]` |  |
+| enterpriseFederationFrontend.replicas | int | `1` | Number of replicas for the federation-frontend |
+| enterpriseFederationFrontend.resources | object | `{}` | Resource requests and limits for the federation-frontend |
+| enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
+| enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
+| enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| enterpriseFederationFrontend.service.port | int | `16686` | Port of the federation-frontend service |
+| enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
+| enterpriseFederationFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for enterpriseFederationFrontendDiscovery service |
+| enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
+| enterpriseFederationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
+| enterpriseFederationFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.annotations | object | `{}` |  |
 | enterpriseGateway.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
@@ -338,44 +376,6 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.useDefaultProxyURLs | bool | `true` |  |
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
-| federationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
-| federationFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the federationFrontend service. This allows federationFrontend to work with istio protocol selection. |
-| federationFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
-| federationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
-| federationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
-| federationFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the federation-frontend |
-| federationFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the federation-frontend |
-| federationFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the federation-frontend |
-| federationFrontend.enabled | bool | `false` | Specifies whether a federation-frontend should be deployed |
-| federationFrontend.extraArgs | list | `[]` | Additional CLI args for the federation-frontend |
-| federationFrontend.extraEnv | list | `[]` | Environment variables to add to the federation-frontend pods |
-| federationFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the federation-frontend pods |
-| federationFrontend.extraVolumeMounts | list | `[]` | Extra volumes for federation-frontend pods |
-| federationFrontend.extraVolumes | list | `[]` | Extra volumes for federation-frontend deployment |
-| federationFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
-| federationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
-| federationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
-| federationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
-| federationFrontend.ingress.annotations | object | `{}` | Annotations for the Jaeger ingress |
-| federationFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
-| federationFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
-| federationFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
-| federationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
-| federationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
-| federationFrontend.podLabels | object | `{}` | Labels for federationFrontend pods |
-| federationFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for federation-frontend pods |
-| federationFrontend.proxy_targets | list | `[]` |  |
-| federationFrontend.replicas | int | `1` | Number of replicas for the federation-frontend |
-| federationFrontend.resources | object | `{}` | Resource requests and limits for the federation-frontend |
-| federationFrontend.service.annotations | object | `{}` | Annotations for federationFrontend service |
-| federationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
-| federationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
-| federationFrontend.service.port | int | `16686` | Port of the federation-frontend service |
-| federationFrontend.service.type | string | `"ClusterIP"` | Type of service for the federationFrontend |
-| federationFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for federationFrontendDiscovery service |
-| federationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
-| federationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
-| federationFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |

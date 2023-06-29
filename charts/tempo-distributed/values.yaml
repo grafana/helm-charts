@@ -758,7 +758,8 @@ queryFrontend:
     grpc: null
 
 # Configuration for the federation-frontend
-federationFrontend:
+# Can only be enabled if enterprise.enabled is true - requires license.
+enterpriseFederationFrontend:
   # -- Specifies whether a federation-frontend should be deployed
   enabled: false
   # -- Number of replicas for the federation-frontend
@@ -795,16 +796,16 @@ federationFrontend:
   service:
     # -- Port of the federation-frontend service
     port: 16686
-    # -- Annotations for federationFrontend service
+    # -- Annotations for enterpriseFederationFrontend service
     annotations: {}
-    # -- Type of service for the federationFrontend
+    # -- Type of service for the enterpriseFederationFrontend
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
     loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
   serviceDiscovery:
-    # -- Annotations for federationFrontendDiscovery service
+    # -- Annotations for enterpriseFederationFrontendDiscovery service
     annotations: {}
   ingress:
     # -- Specifies whether an ingress for the Jaeger should be created
@@ -827,7 +828,7 @@ federationFrontend:
           - query.tempo.example.com
   # -- The name of the PriorityClass for federation-frontend pods
   priorityClassName: null
-  # -- Labels for federationFrontend pods
+  # -- Labels for enterpriseFederationFrontend pods
   podLabels: {}
   # -- Annotations for federation-frontend pods
   podAnnotations: {}
@@ -874,7 +875,7 @@ federationFrontend:
   extraVolumeMounts: []
   # -- Extra volumes for federation-frontend deployment
   extraVolumes: []
-  # -- Adds the appProtocol field to the federationFrontend service. This allows federationFrontend to work with istio protocol selection.
+  # -- Adds the appProtocol field to the enterpriseFederationFrontend service. This allows enterpriseFederationFrontend to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
@@ -1014,10 +1015,10 @@ config: |
     ring:
       kvstore:
         store: memberlist
-  {{- if .Values.federationFrontend.enabled }}
+  {{- if .Values.enterpriseFederationFrontend.enabled }}
   federation:
     proxy_targets:
-      {{- toYaml .Values.federationFrontend.proxy_targets | nindent 6 }}
+      {{- toYaml .Values.enterpriseFederationFrontend.proxy_targets | nindent 6 }}
   {{- end }}
   {{- if .Values.metricsGenerator.enabled }}
   metrics_generator:
