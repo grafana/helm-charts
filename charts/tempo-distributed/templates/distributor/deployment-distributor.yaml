@@ -90,7 +90,7 @@ spec:
               name: zipkin
               protocol: TCP
             {{- end }}
-            {{- if .Values.traces.otlp.http }}
+            {{- if .Values.traces.otlp.http.enabled }}
             - containerPort: 4318
               name: otlp-http
               protocol: TCP
