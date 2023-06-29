@@ -820,20 +820,20 @@ enterpriseFederationFrontend:
     # -- Annotations for enterpriseFederationFrontendDiscovery service
     annotations: {}
   ingress:
-    # -- Specifies whether an ingress for the Jaeger should be created
+    # -- Specifies whether an ingress for the federation-frontend should be created
     enabled: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: nginx
-    # -- Annotations for the Jaeger ingress
+    # -- Annotations for the federation-frontend ingress
     annotations: {}
-    # -- Hosts configuration for the Jaeger ingress
+    # -- Hosts configuration for the federation-frontend ingress
     hosts:
       - host: query.tempo.example.com
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
-    # -- TLS configuration for the Jaeger ingress
+    # -- TLS configuration for the federation-frontend ingress
     tls:
       - secretName: tempo-query-tls
         hosts:
