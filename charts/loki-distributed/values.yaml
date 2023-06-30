@@ -373,6 +373,23 @@ ingester:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- deine scale down policies
+      scaleDown:
+        stabilizationWindowSeconds: 1800
+        policies:
+          - type: Pods
+            value: 1
+            periodSeconds: 300
+      # -- deine scale up policies
+      scaleUp:
+        stabilizationWindowSeconds: 1800
+        policies:
+          - type: Pods
+            value: 1
+            periodSeconds: 300
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
