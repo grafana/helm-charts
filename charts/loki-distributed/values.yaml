@@ -376,20 +376,10 @@ ingester:
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
-      # -- deine scale down policies, must conform to HPAScalingRules
-      scaleDown:
-        stabilizationWindowSeconds: 1200
-        policies:
-          - type: Pods
-            value: 1
-            periodSeconds: 120
-      # -- deine scale up policies, must conform to HPAScalingRules
-      scaleUp:
-        stabilizationWindowSeconds: 1200
-        policies:
-          - type: Pods
-            value: 1
-            periodSeconds: 120
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -504,9 +494,9 @@ distributor:
     behavior:
       # -- Enable autoscaling behaviours
       enabled: true
-      # -- deine scale down policies, must conform to HPAScalingRules
+      # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
-      # -- deine scale up policies, must conform to HPAScalingRules
+      # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
@@ -586,9 +576,9 @@ querier:
     behavior:
       # -- Enable autoscaling behaviours
       enabled: true
-      # -- deine scale down policies, must conform to HPAScalingRules
+      # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
-      # -- deine scale up policies, must conform to HPAScalingRules
+      # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
@@ -681,9 +671,9 @@ queryFrontend:
     behavior:
       # -- Enable autoscaling behaviours
       enabled: true
-      # -- deine scale down policies, must conform to HPAScalingRules
+      # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
-      # -- deine scale up policies, must conform to HPAScalingRules
+      # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
@@ -920,9 +910,9 @@ gateway:
     behavior:
       # -- Enable autoscaling behaviours
       enabled: true
-      # -- deine scale down policies, must conform to HPAScalingRules
+      # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
-      # -- deine scale up policies, must conform to HPAScalingRules
+      # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
   # -- See `kubectl explain deployment.spec.strategy` for more,
   # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
