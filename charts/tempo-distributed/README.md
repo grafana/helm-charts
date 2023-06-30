@@ -302,8 +302,6 @@ The memcached default args are removed and should be provided manually. The sett
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
 | enterprise.image.tag | string | `"v2.1.0"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
-| enterpriseFederationFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the enterpriseFederationFrontend service. This allows enterpriseFederationFrontend to work with istio protocol selection. |
-| enterpriseFederationFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the federation-frontend |
@@ -333,9 +331,8 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
 | enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
-| enterpriseFederationFrontend.service.port | int | `16686` | Port of the federation-frontend service |
+| enterpriseFederationFrontend.service.port | int | `3100` | Port of the federation-frontend service |
 | enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
-| enterpriseFederationFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for enterpriseFederationFrontendDiscovery service |
 | enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
 | enterpriseFederationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
 | enterpriseFederationFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |

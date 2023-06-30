@@ -807,7 +807,7 @@ enterpriseFederationFrontend:
     tag: null
   service:
     # -- Port of the federation-frontend service
-    port: 16686
+    port: 3100
     # -- Annotations for enterpriseFederationFrontend service
     annotations: {}
     # -- Type of service for the enterpriseFederationFrontend
@@ -816,9 +816,6 @@ enterpriseFederationFrontend:
     loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
-  serviceDiscovery:
-    # -- Annotations for enterpriseFederationFrontendDiscovery service
-    annotations: {}
   ingress:
     # -- Specifies whether an ingress for the federation-frontend should be created
     enabled: false
@@ -887,10 +884,6 @@ enterpriseFederationFrontend:
   extraVolumeMounts: []
   # -- Extra volumes for federation-frontend deployment
   extraVolumes: []
-  # -- Adds the appProtocol field to the enterpriseFederationFrontend service. This allows enterpriseFederationFrontend to work with istio protocol selection.
-  appProtocol:
-    # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
-    grpc: null
 
 multitenancyEnabled: false
 
@@ -1027,7 +1020,7 @@ config: |
     ring:
       kvstore:
         store: memberlist
-  {{- if .Values.enterprise.enabled .Values.enterpriseFederationFrontend.enabled }}
+  {{- if and .Values.enterprise.enabled .Values.enterpriseFederationFrontend.enabled }}
   federation:
     proxy_targets:
       {{- toYaml .Values.enterpriseFederationFrontend.proxy_targets | nindent 6 }}

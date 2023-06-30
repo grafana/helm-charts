@@ -15,13 +15,6 @@ spec:
     - name: http-metrics
       port: 3100
       targetPort: 3100
-    - name: grpc
-      port: 9095
-      protocol: TCP
-      targetPort: 9095
-      {{- if .Values.enterpriseFederationFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.enterpriseFederationFrontend.appProtocol.grpc }}
-      {{- end }}
   {{- if .Values.enterpriseFederationFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.enterpriseFederationFrontend.service.loadBalancerIP  }}
   {{- end }}
