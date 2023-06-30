@@ -1027,7 +1027,7 @@ config: |
     ring:
       kvstore:
         store: memberlist
-  {{- if .Values.enterpriseFederationFrontend.enabled }}
+  {{- if .Values.enterprise.enabled .Values.enterpriseFederationFrontend.enabled }}
   federation:
     proxy_targets:
       {{- toYaml .Values.enterpriseFederationFrontend.proxy_targets | nindent 6 }}
