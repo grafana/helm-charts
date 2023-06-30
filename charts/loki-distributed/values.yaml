@@ -376,20 +376,20 @@ ingester:
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
-      # -- deine scale down policies
+      # -- deine scale down policies, must conform to HPAScalingRules
       scaleDown:
-        stabilizationWindowSeconds: 1800
+        stabilizationWindowSeconds: 1200
         policies:
           - type: Pods
             value: 1
-            periodSeconds: 300
-      # -- deine scale up policies
+            periodSeconds: 120
+      # -- deine scale up policies, must conform to HPAScalingRules
       scaleUp:
-        stabilizationWindowSeconds: 1800
+        stabilizationWindowSeconds: 1200
         policies:
           - type: Pods
             value: 1
-            periodSeconds: 300
+            periodSeconds: 120
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -501,6 +501,13 @@ distributor:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: true
+      # -- deine scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- deine scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
@@ -576,6 +583,13 @@ querier:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: true
+      # -- deine scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- deine scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
@@ -664,6 +678,13 @@ queryFrontend:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the query-frontend
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: true
+      # -- deine scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- deine scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
@@ -896,6 +917,13 @@ gateway:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: true
+      # -- deine scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- deine scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   # -- See `kubectl explain deployment.spec.strategy` for more,
   # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
