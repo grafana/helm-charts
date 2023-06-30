@@ -39,4 +39,14 @@ spec:
         targetAverageUtilization: {{ . }}
         {{- end }}
   {{- end }}
+  {{- if .Values.ingester.autoscaling.behavior }}
+  behavior:
+    {{- with .Values.ingester.autoscaling.behavior.scaleDown }}
+    scaleDown:
+      {{ . }}
+    {{- end }}
+    {{- with .Values.ingester.autoscaling.behavior.scaleUp }}
+      {{ . }}
+    {{- end }}
+  {{- end }}
 {{- end }}
