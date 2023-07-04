@@ -379,7 +379,7 @@ ingester:
       # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
-      scaleUp: {}
+      scaleUp: {}our
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -493,7 +493,7 @@ distributor:
     targetMemoryUtilizationPercentage:
     behavior:
       # -- Enable autoscaling behaviours
-      enabled: true
+      enabled: false
       # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
@@ -575,7 +575,7 @@ querier:
     targetMemoryUtilizationPercentage:
     behavior:
       # -- Enable autoscaling behaviours
-      enabled: true
+      enabled: false
       # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
@@ -670,7 +670,7 @@ queryFrontend:
     targetMemoryUtilizationPercentage:
     behavior:
       # -- Enable autoscaling behaviours
-      enabled: true
+      enabled: false
       # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
@@ -909,7 +909,7 @@ gateway:
     targetMemoryUtilizationPercentage:
     behavior:
       # -- Enable autoscaling behaviours
-      enabled: true
+      enabled: false
       # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
