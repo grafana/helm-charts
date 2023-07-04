@@ -109,7 +109,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection. |
 | distributor.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
-| distributor.autoscaling.behavior.enabled | bool | `true` | Enable autoscaling behaviours |
+| distributor.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
 | distributor.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
 | distributor.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
@@ -139,7 +139,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
-| gateway.autoscaling.behavior.enabled | bool | `true` | Enable autoscaling behaviours |
+| gateway.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
 | gateway.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
 | gateway.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
@@ -434,7 +434,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.affinity | object | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
-| querier.autoscaling.behavior.enabled | bool | `true` | Enable autoscaling behaviours |
+| querier.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
 | querier.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
 | querier.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `indexGateway.enabled: true` |
@@ -472,7 +472,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
-| queryFrontend.autoscaling.behavior.enabled | bool | `true` | Enable autoscaling behaviours |
+| queryFrontend.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
 | queryFrontend.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
 | queryFrontend.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
