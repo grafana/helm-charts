@@ -317,10 +317,6 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
 | enterpriseFederationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
 | enterpriseFederationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
-| enterpriseFederationFrontend.ingress.annotations | object | `{}` | Annotations for the federation-frontend ingress |
-| enterpriseFederationFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the federation-frontend should be created |
-| enterpriseFederationFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the federation-frontend ingress |
-| enterpriseFederationFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the federation-frontend ingress |
 | enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
 | enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
 | enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
