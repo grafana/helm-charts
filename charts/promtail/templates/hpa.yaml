@@ -36,8 +36,8 @@ spec:
           averageUtilization: {{ . }}
     {{- end }}
   {{- end }}
-{{- if .Values.deployment.autoscaling.hpaBehaviorOverride }}
+  {{- with .Values.deployment.autoscaling.behavior }}
   behavior:
-    {{- include .Values.deployment.autoscaling.hpaBehaviorOverride . | nindent 4 }}
-{{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
