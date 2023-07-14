@@ -179,7 +179,7 @@ Perform a regular Helm upgrade on the existing release. The new Deployment/State
 
 ### From Chart versions < 0.8.0
 
-By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+By default, all tracing protocols are disabled, and you need to specify which protocols to enable for ingestion.
 
 For example to enable Jaeger grpc thrift http and zipkin protocols:
 ```yaml
@@ -771,7 +771,7 @@ Alternatively, in order to quickly test Tempo using the filestore, the [single b
 
 ### Overriding configuration variables with structuredConfig
 
-tempo.structuredConfig variable can be used to alter individual values in the configuration and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
+tempo.structuredConfig variable can be used to alter individual values in the configuration, and it's structured YAML instead of text. It takes precedence over all other variable adjustments inside tempo.yaml config file, ie s3 storage settings.
 
 Example:
 
