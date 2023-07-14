@@ -179,7 +179,7 @@ Perform a regular Helm upgrade on the existing release. The new Deployment/State
 
 ### From Chart versions < 0.8.0
 
-By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
+By default, all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
 
 For example to enable Jaeger grpc thrift http and zipkin protocols:
 ```yaml

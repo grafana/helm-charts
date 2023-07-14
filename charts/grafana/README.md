@@ -300,7 +300,7 @@ ingress:
 ### Example of extraVolumeMounts
 
 Volume can be type persistentVolumeClaim or hostPath but not both at same time.
-If neither existingClaim or hostPath argument is given then type is emptyDir.
+If neither existingClaim nor hostPath argument is given then type is emptyDir.
 
 ```yaml
 - extraVolumeMounts:
@@ -660,7 +660,7 @@ imageRenderer:
 
 ### Image Renderer NetworkPolicy
 
-By default the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance
+By default, the image-renderer pods will have a network policy which only allows ingress traffic from the created grafana instance
 
 ### High Availability for unified alerting
 

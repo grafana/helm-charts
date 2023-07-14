@@ -471,7 +471,7 @@ config:
 
   # -- Config file contents for Promtail.
   # Must be configured as string.
-  # It is templated so it can be assembled from reusable snippets in order to avoid redundancy.
+  # It is templated, so it can be assembled from reusable snippets in order to avoid redundancy.
   # @default -- See `values.yaml`
   file: |
     server:
