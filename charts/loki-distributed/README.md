@@ -47,7 +47,7 @@ loki:
 All containers were previously named "loki". This version changes the container names to make the chart compatible with the loki-mixin. Now the container names correctly reflect the component (querier, distributor, ingester, ...). If you are using custom prometheus rules that use the container name you probably have to change them.
 
 ### From 0.34.x to 0.35.0
-This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regards to the ingress configuration section and its new structure.
+This version updates the `Ingress` API Version of the Loki Gateway component to `networking.k8s.io/v1` of course given that the cluster supports it. Here it's important to notice the change in the `values.yml` with regard to the ingress configuration section and its new structure.
 ```yaml
 gateway:
   ingress:
@@ -692,7 +692,7 @@ helm upgrade loki-distributed --install -f values.yaml --set bucketnames=my-loki
 
 ## Gateway
 
-By default and inspired by Grafana's [Tanka setup](https://github.com/grafana/loki/tree/master/production/ksonnet/loki), the chart installs the gateway component which is an NGINX that exposes Loki's API
+By default, and inspired by Grafana's [Tanka setup](https://github.com/grafana/loki/tree/master/production/ksonnet/loki), the chart installs the gateway component which is an NGINX that exposes Loki's API
 and automatically proxies requests to the correct Loki components (distributor, querier, query-frontend).
 The gateway must be enabled if an Ingress is required, since the Ingress exposes the gateway only.
 If the gateway is enabled, Grafana and log shipping agents, such as Promtail, should be configured to use the gateway.

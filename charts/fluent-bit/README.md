@@ -54,7 +54,7 @@ helm upgrade --install my-release grafana/loki-stack \
     --set fluent-bit.enabled=true,promtail.enabled=false
 ```
 
-This will automatically configured the `loki.serviceName` configuration field to the newly created Loki instance.
+This will automatically configure the `loki.serviceName` configuration field to the newly created Loki instance.
 
 ## RBAC
 
