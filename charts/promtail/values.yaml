@@ -19,6 +19,7 @@ deployment:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
+    # behavior: {}
 
     # -- Set deployment object update strategy
     strategy:
