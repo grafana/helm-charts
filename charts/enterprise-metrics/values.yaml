@@ -6,7 +6,7 @@
 # The default values specified in this file are enough to deploy all of the
 # Grafana Enterprise Metrics microservices but are not suitable for production
 # load.
-# To configure the resources for production load, refer to the the small.yaml or
+# To configure the resources for production load, refer to the small.yaml or
 # large.yaml values files.
 
 # Container image settings.
