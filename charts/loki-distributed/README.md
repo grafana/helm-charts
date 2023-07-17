@@ -77,6 +77,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | compactor.affinity | object | `{}` | Specify the compactor affinity |
+| compactor.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the compactor service. This allows compactor to work with istio protocol selection. |
+| compactor.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | compactor.command | string | `nil` | Command to execute instead of defined in Docker image |
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
