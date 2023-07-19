@@ -1305,9 +1305,7 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
-  metrics_generator_processors:
-    - service-graphs
-    - span-metrics
+  metrics_generator_processors: []
 
 # Per tenants overrides
 overrides: |
