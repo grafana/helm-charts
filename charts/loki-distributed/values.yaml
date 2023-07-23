@@ -249,6 +249,8 @@ serviceAccount:
   name: null
   # -- Image pull secrets for the service account
   imagePullSecrets: []
+  # -- Labels for the service account
+  labels: {}
   # -- Annotations for the service account
   annotations: {}
   # -- Set this toggle to false to opt out of automounting API credentials for the service account

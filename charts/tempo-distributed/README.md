@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.4.1](https://img.shields.io/badge/Version-1.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
+![Version: 1.4.13](https://img.shields.io/badge/Version-1.4.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -12,8 +12,8 @@ Grafana Tempo in MicroService mode
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.2.2 |
-| https://helm.min.io/ | minio(minio) | 8.0.9 |
 
 ## Chart Repo
 
@@ -267,6 +267,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection. |
 | distributor.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| distributor.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the distributor |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
@@ -291,15 +292,48 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.service.annotations | object | `{}` | Annotations for distributor service |
+| distributor.service.labels | object | `{}` | Labels for distributor service |
 | distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
+| distributor.serviceDiscovery.labels | object | `{}` | Labels for distributorDiscovery service |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
 | enterprise.image.tag | string | `"v2.1.0"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the federation-frontend |
+| enterpriseFederationFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the federation-frontend |
+| enterpriseFederationFrontend.enabled | bool | `false` | Specifies whether a federation-frontend should be deployed |
+| enterpriseFederationFrontend.extraArgs | list | `[]` | Additional CLI args for the federation-frontend |
+| enterpriseFederationFrontend.extraEnv | list | `[]` | Environment variables to add to the federation-frontend pods |
+| enterpriseFederationFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the federation-frontend pods |
+| enterpriseFederationFrontend.extraVolumeMounts | list | `[]` | Extra volumes for federation-frontend pods |
+| enterpriseFederationFrontend.extraVolumes | list | `[]` | Extra volumes for federation-frontend deployment |
+| enterpriseFederationFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| enterpriseFederationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
+| enterpriseFederationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
+| enterpriseFederationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
+| enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
+| enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
+| enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
+| enterpriseFederationFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for federation-frontend pods |
+| enterpriseFederationFrontend.proxy_targets | list | `[]` |  |
+| enterpriseFederationFrontend.replicas | int | `1` | Number of replicas for the federation-frontend |
+| enterpriseFederationFrontend.resources | object | `{}` | Resource requests and limits for the federation-frontend |
+| enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
+| enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
+| enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| enterpriseFederationFrontend.service.port | int | `3100` | Port of the federation-frontend service |
+| enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
+| enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
+| enterpriseFederationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
+| enterpriseFederationFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.affinity | string | Soft node and soft zone anti-affinity | Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseGateway.annotations | object | `{}` |  |
 | enterpriseGateway.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for gateway containers |
@@ -338,8 +372,10 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.useDefaultProxyURLs | bool | `true` |  |
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
+| externalRuntimeConfigName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"runtime\") }}"` | Name of the Secret or ConfigMap that contains the runtime configuration (used for naming even if config is internal). |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the gateway |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
 | gateway.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the gateway |
@@ -400,11 +436,12 @@ The memcached default args are removed and should be provided manually. The sett
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global_overrides.metrics_generator_processors[0] | string | `"service-graphs"` |  |
 | global_overrides.metrics_generator_processors[1] | string | `"span-metrics"` |  |
-| global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
+| global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
 | ingester.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
 | ingester.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| ingester.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the ingester |
 | ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester |
 | ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
 | ingester.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the ingester |
@@ -443,6 +480,7 @@ The memcached default args are removed and should be provided manually. The sett
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
+| memberlist | object | `{"abort_if_cluster_join_fails":false,"bind_addr":[],"bind_port":7946,"gossip_interval":"1s","gossip_nodes":2,"gossip_to_dead_nodes_time":"30s","leave_timeout":"5s","left_ingesters_timeout":"5m","max_join_backoff":"1m","max_join_retries":10,"min_join_backoff":"1s","node_name":"","packet_dial_timeout":"5s","packet_write_timeout":"5s","pull_push_interval":"30s","randomize_node_name":true,"rejoin_interval":"0s","retransmit_factor":2,"stream_timeout":"10s"}` | Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
@@ -503,7 +541,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
 | metricsGenerator.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection. |
 | metricsGenerator.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
-| metricsGenerator.config | object | `{"processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_flush_deadline":"1m","wal":null}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
+| metricsGenerator.config | object | `{"metrics_ingestion_time_range_slack":"30s","processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_flush_deadline":"1m","wal":null}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
 | metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |
 | metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | Dimensions are searched for in the resource and span attributes and are added to the metrics if present. |
 | metricsGenerator.config.storage.remote_write | list | `[]` | https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write |
@@ -556,6 +594,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| querier.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the querier |
 | querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier |
 | querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
 | querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
@@ -589,8 +628,9 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
-| queryFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the queriyFrontend service. This allows queriyFrontend to work with istio protocol selection. |
+| queryFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| queryFrontend.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the query-frontend |
 | queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
 | queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
@@ -636,11 +676,13 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
+| queryFrontend.service.labels | object | `{}` | Labels for queryFrontend service |
 | queryFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | queryFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
 | queryFrontend.service.port | int | `16686` | Port of the query-frontend service |
 | queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for queryFrontendDiscovery service |
+| queryFrontend.serviceDiscovery.labels | object | `{}` | Labels for queryFrontendDiscovery service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | queryFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
@@ -808,7 +850,7 @@ config: |
     join_members:
       - {{ include "tempo.fullname" . }}-memberlist
   overrides:
-    per_tenant_override_config: /conf/overrides.yaml
+    per_tenant_override_config: /runtime-config/overrides.yaml
   server:
     http_listen_port: 3100
   storage:

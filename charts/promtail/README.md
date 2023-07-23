@@ -76,6 +76,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | config.file | string | See `values.yaml` | Config file contents for Promtail. Must be configured as string. It is templated so it can be assembled from reusable snippets in order to avoid redundancy. |
 | config.logFormat | string | `"logfmt"` | The log format of the Promtail server Must be reference in `config.file` to configure `server.log_format` Valid formats: `logfmt, json` See default config in `values.yaml` |
 | config.logLevel | string | `"info"` | The log level of the Promtail server Must be reference in `config.file` to configure `server.log_level` See default config in `values.yaml` |
+| config.positions | object | `{"filename":"/run/promtail/positions.yaml"}` | Configures where Promtail will save it's positions file, to resume reading after restarts. Must be referenced in `config.file` to configure `positions` |
 | config.serverPort | int | `3101` | The port of the Promtail server Must be reference in `config.file` to configure `server.http_listen_port` See default config in `values.yaml` |
 | config.snippets | object | See `values.yaml` | A section of reusable snippets that can be reference in `config.file`. Custom snippets may be added in order to reduce redundancy. This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common. |
 | config.snippets.extraLimitsConfig | string | empty | You can put here any keys that will be directly added to the config file's 'limits_config' block. |
@@ -90,6 +91,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | deployment.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for the deployment |
 | deployment.autoscaling.maxReplicas | int | `10` |  |
 | deployment.autoscaling.minReplicas | int | `1` |  |
+| deployment.autoscaling.strategy | object | `{"type":"RollingUpdate"}` | Set deployment object update strategy |
 | deployment.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
