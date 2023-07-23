@@ -366,12 +366,17 @@ distributor:
   service:
     # -- Annotations for distributor service
     annotations: {}
+    # -- Labels for distributor service
+    labels: {}
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
     loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
+  serviceDiscovery:
+    # -- Labels for distributorDiscovery service
+    labels: {}
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Labels for distributor pods
@@ -687,6 +692,8 @@ queryFrontend:
     port: 16686
     # -- Annotations for queryFrontend service
     annotations: {}
+    # -- Labels for queryFrontend service
+    labels: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
@@ -696,6 +703,8 @@ queryFrontend:
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
+    # -- Labels for queryFrontendDiscovery service
+    labels: {}
   ingress:
     # -- Specifies whether an ingress for the Jaeger should be created
     enabled: false
