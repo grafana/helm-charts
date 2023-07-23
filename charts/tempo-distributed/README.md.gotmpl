@@ -300,7 +300,7 @@ config: |
     join_members:
       - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
   overrides:
-    per_tenant_override_config: /conf/overrides.yaml
+    per_tenant_override_config: /runtime-config/overrides.yaml
   server:
     http_listen_port: 3100
   storage:

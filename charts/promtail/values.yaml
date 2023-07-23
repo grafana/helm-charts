@@ -19,6 +19,11 @@ deployment:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
+    # behavior: {}
+
+    # -- Set deployment object update strategy
+    strategy:
+      type: RollingUpdate
 
 secret:
   # -- Labels for the Secret
@@ -349,6 +354,10 @@ config:
   # @default -- See `values.yaml`
   clients:
     - url: http://loki-gateway/loki/api/v1/push
+  # -- Configures where Promtail will save it's positions file, to resume reading after restarts.
+  # Must be referenced in `config.file` to configure `positions`
+  positions:
+    filename: /run/promtail/positions.yaml
   # -- The config to enable tracing
   enableTracing: false
   # -- A section of reusable snippets that can be reference in `config.file`.
@@ -441,7 +450,7 @@ config:
             target_label: app
           - source_labels:
               - __meta_kubernetes_pod_label_app_kubernetes_io_instance
-              - __meta_kubernetes_pod_label_release
+              - __meta_kubernetes_pod_label_instance
             regex: ^;*([^;]+)(;.*)?$
             action: replace
             target_label: instance
@@ -477,7 +486,7 @@ config:
       {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
-      filename: /run/promtail/positions.yaml
+      {{- tpl (toYaml .Values.config.positions) . | nindent 2 }}
 
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
