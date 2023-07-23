@@ -157,20 +157,22 @@ spec:
         {{- end }}
   {{- else }}
   volumeClaimTemplates:
+  {{- range .Values.ingester.persistence.claims }}
     - metadata:
-        name: data
-        {{- with .Values.ingester.persistence.annotations }}
+        name: {{ .name }}
+        {{- with .annotations }}
         annotations:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.ingester.persistence.storageClass }}
+        {{- with .storageClass }}
         storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
         resources:
           requests:
-            storage: {{ .Values.ingester.persistence.size | quote }}
+            storage: {{ .size | quote }}
+  {{- end }}
   {{- end }}
 {{- end }}
