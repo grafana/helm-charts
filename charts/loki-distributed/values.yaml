@@ -379,7 +379,7 @@ ingester:
       # -- define scale down policies, must conform to HPAScalingRules
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
-      scaleUp: {}our
+      scaleUp: {}
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
