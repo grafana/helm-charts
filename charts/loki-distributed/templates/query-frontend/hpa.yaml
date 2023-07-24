@@ -4,6 +4,7 @@ apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "loki.queryFrontendFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.queryFrontendLabels" . | nindent 4 }}
 spec:

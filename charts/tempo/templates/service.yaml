@@ -40,8 +40,8 @@ spec:
     port: 16687
     targetPort: 16687
   - name: tempo-query-jaeger-ui
-    port: 16686
-    targetPort: 16686
+    port: {{ .Values.tempoQuery.service.port }}
+    targetPort: {{ .Values.tempoQuery.service.port }}
   {{- end }}
   - name: tempo-jaeger-thrift-compact
     port: 6831

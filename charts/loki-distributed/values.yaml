@@ -74,13 +74,18 @@ loki:
   appProtocol: ""
   # -- Common annotations for all loki services
   serviceAnnotations: {}
+  # Loki server configuration
+  # Refers to https://grafana.com/docs/loki/latest/configuration/#server
+  server:
+    # -- HTTP server listen port
+    http_listen_port: 3100
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
     auth_enabled: false
 
     server:
-      http_listen_port: 3100
+      {{- toYaml .Values.loki.server | nindent 6 }}
 
     common:
       compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
@@ -166,7 +171,7 @@ loki:
         cache:
           {{- if .Values.memcachedFrontend.enabled }}
           memcached_client:
-            host: {{ include "loki.memcachedFrontendFullname" . }}
+            addresses: dnssrv+_memcached-client._tcp.{{ include "loki.memcachedFrontendFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
             consistent_hash: true
           {{- else }}
           embedded_cache:
@@ -178,7 +183,7 @@ loki:
       {{- if .Values.queryScheduler.enabled }}
       scheduler_address: {{ include "loki.querySchedulerFullname" . }}:9095
       {{- else }}
-      frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
+      frontend_address: {{ include "loki.queryFrontendFullname" . }}-headless:9095
       {{- end }}
 
     frontend:
@@ -244,6 +249,8 @@ serviceAccount:
   name: null
   # -- Image pull secrets for the service account
   imagePullSecrets: []
+  # -- Labels for the service account
+  labels: {}
   # -- Annotations for the service account
   annotations: {}
   # -- Set this toggle to false to opt out of automounting API credentials for the service account
@@ -445,16 +452,20 @@ ingester:
     enabled: false
     # -- Use emptyDir with ramdisk for storage. **Please note that all data in ingester will be lost on pod restart**
     inMemory: false
-    # -- Size of persistent or memory disk
-    size: 10Gi
-    # -- Storage class to be used.
-    # If defined, storageClassName: <storageClass>.
-    # If set to "-", storageClassName: "", which disables dynamic provisioning.
-    # If empty or set to null, no storageClassName spec is
-    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: null
-    # -- Annotations for ingester PVCs
-    annotations: {}
+      # -- List of the ingester PVCs
+      # @notationType -- list
+    claims:
+      - name: data
+        size: 10Gi
+        #   -- Storage class to be used.
+        #   If defined, storageClassName: <storageClass>.
+        #   If set to "-", storageClassName: "", which disables dynamic provisioning.
+        #   If empty or set to null, no storageClassName spec is
+        #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+        storageClass: null
+      # - name: wal
+      #   size: 150Gi
+
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"

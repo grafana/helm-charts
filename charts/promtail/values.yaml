@@ -25,6 +25,11 @@ deployment:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
+    # behavior: {}
+
+    # -- Set deployment object update strategy
+    strategy:
+      type: RollingUpdate
 
 secret:
   # -- Labels for the Secret
@@ -192,7 +197,10 @@ extraArgs: []
 # -- extraArgs:
 # --   - -client.external-labels=hostname=$(HOSTNAME)
 
-# -- Extra environment variables
+# -- Extra environment variables. Set up tracing enviroment variables here if .Values.config.enableTracing is true.
+# Tracing currently only support configure via environment variables. See:
+# https://grafana.com/docs/loki/latest/clients/promtail/configuration/#tracing_config
+# https://www.jaegertracing.io/docs/1.16/client-features/
 extraEnv: []
 
 # -- Extra environment variables from secrets or configmaps
@@ -280,6 +288,8 @@ extraContainers: {}
 extraPorts: {}
 #  syslog:
 #    name: tcp-syslog
+#    annotations: {}
+#    labels: {}
 #    containerPort: 1514
 #    protocol: TCP
 #    service:
@@ -288,8 +298,6 @@ extraPorts: {}
 #      port: 1514
 #      externalIPs: []
 #      nodePort: null
-#      annotations: {}
-#      labels: {}
 #      loadBalancerIP: null
 #      loadBalancerSourceRanges: []
 #      externalTrafficPolicy: null
@@ -343,6 +351,11 @@ config:
   # Must be reference in `config.file` to configure `server.log_level`
   # See default config in `values.yaml`
   logLevel: info
+  # -- The log format of the Promtail server
+  # Must be reference in `config.file` to configure `server.log_format`
+  # Valid formats: `logfmt, json`
+  # See default config in `values.yaml`
+  logFormat: logfmt
   # -- The port of the Promtail server
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
@@ -352,6 +365,12 @@ config:
   # @default -- See `values.yaml`
   clients:
     - url: http://loki-gateway/loki/api/v1/push
+  # -- Configures where Promtail will save it's positions file, to resume reading after restarts.
+  # Must be referenced in `config.file` to configure `positions`
+  positions:
+    filename: /run/promtail/positions.yaml
+  # -- The config to enable tracing
+  enableTracing: false
   # -- A section of reusable snippets that can be reference in `config.file`.
   # Custom snippets may be added in order to reduce redundancy.
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
@@ -442,7 +461,7 @@ config:
             target_label: app
           - source_labels:
               - __meta_kubernetes_pod_label_app_kubernetes_io_instance
-              - __meta_kubernetes_pod_label_release
+              - __meta_kubernetes_pod_label_instance
             regex: ^;*([^;]+)(;.*)?$
             action: replace
             target_label: instance
@@ -468,6 +487,7 @@ config:
   file: |
     server:
       log_level: {{ .Values.config.logLevel }}
+      log_format: {{ .Values.config.logFormat }}
       http_listen_port: {{ .Values.config.serverPort }}
       {{- with .Values.httpPathPrefix }}
       http_path_prefix: {{ . }}
@@ -478,7 +498,7 @@ config:
       {{- tpl (toYaml .Values.config.clients) . | nindent 2 }}
 
     positions:
-      filename: /run/promtail/positions.yaml
+      {{- tpl (toYaml .Values.config.positions) . | nindent 2 }}
 
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
@@ -486,6 +506,9 @@ config:
 
     limits_config:
       {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
+
+    tracing:
+      enabled: {{ .Values.config.enableTracing }}
 
 networkPolicy:
   # -- Specifies whether Network Policies should be created

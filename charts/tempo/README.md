@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
+![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -70,17 +70,26 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
-| tempo.tag | string | `"2.0.1"` |  |
+| tempo.tag | string | `nil` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
-| tempoQuery.enabled | bool | `true` | if False the tempo-query container is not deployed |
+| tempoQuery.enabled | bool | `false` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |
 | tempoQuery.extraEnv | list | `[]` | Environment variables to add |
 | tempoQuery.extraVolumeMounts | list | `[]` | Volume mounts to add |
+| tempoQuery.ingress.annotations | object | `{}` |  |
+| tempoQuery.ingress.enabled | bool | `false` |  |
+| tempoQuery.ingress.extraPaths | list | `[]` |  |
+| tempoQuery.ingress.hosts[0] | string | `"query.tempo.example.com"` |  |
+| tempoQuery.ingress.labels | object | `{}` |  |
+| tempoQuery.ingress.path | string | `"/"` |  |
+| tempoQuery.ingress.pathType | string | `"Prefix"` |  |
+| tempoQuery.ingress.tls | list | `[]` |  |
 | tempoQuery.pullPolicy | string | `"IfNotPresent"` |  |
 | tempoQuery.repository | string | `"grafana/tempo-query"` |  |
 | tempoQuery.resources | object | `{}` |  |
 | tempoQuery.securityContext | object | `{}` |  |
-| tempoQuery.tag | string | `"2.0.1"` |  |
+| tempoQuery.service.port | int | `16686` |  |
+| tempoQuery.tag | string | `nil` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
 
 ## Chart Repo
@@ -112,6 +121,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.2.0
+
+Please be aware that we've updated the minor version to Tempo 2.1, which includes breaking changes.
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.1.0/) before upgrading.
 
 ### From Chart versions < 1.0.0
 

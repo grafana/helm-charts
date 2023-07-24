@@ -24,6 +24,9 @@ serviceAccount:
 # -- Pod Annotations
 podAnnotations: {}
 
+# -- Pod (extra) Labels
+podLabels: {}
+
 podSecurityContext: {}
   # fsGroup: 2000
 
@@ -50,6 +53,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+priorityClassName: ""
 
 serviceMonitor:
   # -- Create ServiceMonitor to scrape metrics for Prometheus

@@ -40,7 +40,7 @@ spec:
         {{- range $key, $value := .Values.tempo.extraArgs }}
         - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
-        image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag }}
+        image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
         name: tempo
         ports:
@@ -63,6 +63,8 @@ spec:
         - containerPort: 4317
           name: otlp-grpc
         - containerPort: 55681
+          name: otlp-httplegacy
+        - containerPort: 4318
           name: otlp-http
         - containerPort: 55678
           name: opencensus
@@ -101,7 +103,7 @@ spec:
         {{- range $key, $value := .Values.tempoQuery.extraArgs }}
         - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
-        image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag }}
+        image: {{ .Values.tempoQuery.repository }}:{{ .Values.tempoQuery.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.tempoQuery.pullPolicy }}
         name: tempo-query
         ports:

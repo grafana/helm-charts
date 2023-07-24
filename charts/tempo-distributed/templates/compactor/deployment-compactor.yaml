@@ -83,6 +83,8 @@ spec:
           volumeMounts:
             - mountPath: /conf
               name: config
+            - mountPath: /runtime-config
+              name: runtime-config
             - mountPath: /var/tempo
               name: tempo-compactor-store
             {{- if .Values.enterprise.enabled }}
@@ -111,9 +113,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.compactor.dnsConfigOverides.enabled }}
+      {{- with .Values.compactor.dnsConfigOverides.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       volumes:
         - name: config
           {{- include "tempo.configVolume" . | nindent 10 }}
+        - name: runtime-config
+          {{- include "tempo.runtimeVolume" . | nindent 10 }}
         - name: tempo-compactor-store
           emptyDir: {}
         {{- if .Values.enterprise.enabled }}

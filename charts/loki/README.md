@@ -1,4 +1,4 @@
-# ⚠️  DEPRECATEDD - Loki chart
+# ⚠️  DEPRECATED - Loki chart
 
 This chart was moved to <https://github.com/grafana/loki/tree/main/production/helm/loki>.
 
