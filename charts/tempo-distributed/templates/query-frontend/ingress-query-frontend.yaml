@@ -1,4 +1,4 @@
-{{- if and .Values.queryFrontend.query.enabled .Values.queryFrontend.ingress.enabled -}}
+{{- if .Values.queryFrontend.ingress.enabled -}}
 {{ $dict := dict "ctx" . "component" "query-frontend"  }}
 {{- $ingressApiIsStable := eq (include "tempo.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsIngressClassName := eq (include "tempo.ingress.supportsIngressClassName" .) "true" -}}
@@ -41,10 +41,17 @@ spec:
             {{- end }}
             backend:
               {{- if $ingressApiIsStable }}
+              {{- if $.Values.queryFrontend.ingress.custom }}
+              service:
+                name: {{ .backend.service.name }}
+                port:
+                  number: {{ .backend.service.port.number }}
+              {{- else }}
               service:
                 name: {{ include "tempo.resourceName" $dict }}
                 port:
                   number: {{ $.Values.queryFrontend.service.port }}
+              {{- end }}
               {{- else }}
               serviceName: {{ include "tempo.resourceName" $dict }}
               servicePort: {{ $.Values.queryFrontend.service.port }}
