@@ -4,6 +4,12 @@ nameOverride: null
 # -- Overrides the chart's computed fullname
 fullnameOverride: null
 
+global:
+  # -- Allow parent charts to override registry hostname
+  imageRegistry: ""
+  # -- Allow parent charts to override registry credentials
+  imagePullSecrets: []
+
 daemonset:
   # -- Deploys Promtail as a DaemonSet
   enabled: true
@@ -19,6 +25,7 @@ deployment:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage:
+    # behavior: {}
 
     # -- Set deployment object update strategy
     strategy:
@@ -344,6 +351,11 @@ config:
   # Must be reference in `config.file` to configure `server.log_level`
   # See default config in `values.yaml`
   logLevel: info
+  # -- The log format of the Promtail server
+  # Must be reference in `config.file` to configure `server.log_format`
+  # Valid formats: `logfmt, json`
+  # See default config in `values.yaml`
+  logFormat: logfmt
   # -- The port of the Promtail server
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
@@ -449,7 +461,7 @@ config:
             target_label: app
           - source_labels:
               - __meta_kubernetes_pod_label_app_kubernetes_io_instance
-              - __meta_kubernetes_pod_label_release
+              - __meta_kubernetes_pod_label_instance
             regex: ^;*([^;]+)(;.*)?$
             action: replace
             target_label: instance
@@ -475,6 +487,7 @@ config:
   file: |
     server:
       log_level: {{ .Values.config.logLevel }}
+      log_format: {{ .Values.config.logFormat }}
       http_listen_port: {{ .Values.config.serverPort }}
       {{- with .Values.httpPathPrefix }}
       http_path_prefix: {{ . }}
