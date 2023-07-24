@@ -706,8 +706,10 @@ queryFrontend:
     # -- Labels for queryFrontendDiscovery service
     labels: {}
   ingress:
-    # -- Specifies whether an ingress for the Jaeger should be created
+    # -- Specifies whether an ingress should be created for the query-frontned. By default for a Jaeger UI
     enabled: false
+    # -- Specifies whether a custom ingress should be created. 
+    custom: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: nginx
     # -- Annotations for the Jaeger ingress
