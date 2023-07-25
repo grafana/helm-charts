@@ -20605,6 +20605,24 @@ entries:
     version: 0.5.0
   loki-canary:
   - apiVersion: v2
+    appVersion: 2.8.3
+    created: "2023-07-25T08:34:55.461330063Z"
+    description: Helm chart for Grafana Loki Canary
+    digest: 679ce840804fac16cca04b7246784779cbae862fdbad9b3141d7208d1b80f693
+    home: https://github.com/grafana/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: unguiculus
+    name: loki-canary
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-canary-0.12.1/loki-canary-0.12.1.tgz
+    version: 0.12.1
+  - apiVersion: v2
     appVersion: 2.8.2
     created: "2023-06-04T22:31:07.010974799Z"
     description: Helm chart for Grafana Loki Canary
@@ -43517,4 +43535,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-25T02:27:14.636223846Z"
+generated: "2023-07-25T08:34:55.464563279Z"
