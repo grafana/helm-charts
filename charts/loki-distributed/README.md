@@ -76,7 +76,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| compactor.affinity | object | `{}` | Specify the compactor affinity |
+| compactor.affinity | string | Hard node and soft zone anti-affinity | Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string |
 | compactor.command | string | `nil` | Command to execute instead of defined in Docker image |
 | compactor.enabled | bool | `false` | Specifies whether compactor should be enabled |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
@@ -109,6 +109,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection. |
 | distributor.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| distributor.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
+| distributor.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
+| distributor.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
@@ -136,6 +139,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
+| gateway.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
+| gateway.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
 | gateway.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the gateway |
@@ -233,6 +239,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
 | ingester.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| ingester.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
+| ingester.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
+| ingester.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester |
 | ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
 | ingester.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the ingester |
@@ -423,9 +432,12 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
-| querier.affinity | object | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| querier.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
+| querier.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
+| querier.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier, this is only used if `indexGateway.enabled: true` |
 | querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
 | querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
@@ -461,6 +473,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| queryFrontend.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
+| queryFrontend.autoscaling.behavior.scaleDown | object | `{}` | define scale down policies, must conform to HPAScalingRules |
+| queryFrontend.autoscaling.behavior.scaleUp | object | `{}` | define scale up policies, must conform to HPAScalingRules |
 | queryFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the query-frontend |
 | queryFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |

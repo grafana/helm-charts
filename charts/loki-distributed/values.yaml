@@ -375,6 +375,13 @@ ingester:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -488,6 +495,13 @@ distributor:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
@@ -563,6 +577,13 @@ querier:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
@@ -609,7 +630,20 @@ querier:
           {{- include "loki.querierSelectorLabels" . | nindent 6 }}
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.querierSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.querierSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
   # -- Node selector for querier pods
@@ -651,6 +685,13 @@ queryFrontend:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the query-frontend
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
@@ -883,6 +924,13 @@ gateway:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   # -- See `kubectl explain deployment.spec.strategy` for more,
   # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
@@ -1180,8 +1228,22 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
-  # -- Specify the compactor affinity
-  affinity: {}
+  # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.compactorSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.compactorSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Labels for compactor service
   serviceLabels: {}
   # -- Additional CLI args for the compactor

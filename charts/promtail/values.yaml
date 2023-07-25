@@ -4,6 +4,12 @@ nameOverride: null
 # -- Overrides the chart's computed fullname
 fullnameOverride: null
 
+global:
+  # -- Allow parent charts to override registry hostname
+  imageRegistry: ""
+  # -- Allow parent charts to override registry credentials
+  imagePullSecrets: []
+
 daemonset:
   # -- Deploys Promtail as a DaemonSet
   enabled: true
