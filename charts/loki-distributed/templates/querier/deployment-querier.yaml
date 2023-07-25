@@ -17,7 +17,7 @@ spec:
 {{- end }}
   strategy:
     rollingUpdate:
-      maxSurge: 0
+      maxSurge: {{ .Values.querier.maxSurge }}
       maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:

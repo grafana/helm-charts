@@ -439,6 +439,8 @@ ingester:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Max Surge for ingester pods
+  maxSurge: 0
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -537,6 +539,8 @@ distributor:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Max Surge for distributor pods
+  maxSurge: 0
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -623,6 +627,8 @@ querier:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Max Surge for querier pods
+  maxSurge: 0
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
