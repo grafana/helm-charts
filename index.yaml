@@ -16252,6 +16252,43 @@ entries:
   k8s-monitoring:
   - apiVersion: v2
     appVersion: 1.1.6
+    created: "2023-07-25T19:48:11.517626482Z"
+    dependencies:
+    - name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: ~0.16.0
+    - condition: kube-state-metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~5.8.1
+    - condition: prometheus-node-exporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.18.1
+    - condition: prometheus-operator-crds.enabled
+      name: prometheus-operator-crds
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~5.0.0
+    - condition: opencost.enabled
+      name: opencost
+      repository: https://opencost.github.io/opencost-helm-chart
+      version: ~1.16.1
+    description: A Helm chart for gathering, scraping, and forwarding Kubernetes infrastructure
+      metrics and logs to a Grafana Stack.
+    digest: 7df07cbf57be0870a4543fe0b10030f4abf88867eb3509841b789144acd31e9f
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: stephen.lang@grafana.com
+      name: skl
+    name: k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-0.0.11/k8s-monitoring-0.0.11.tgz
+    version: 0.0.11
+  - apiVersion: v2
+    appVersion: 1.1.6
     created: "2023-07-21T22:57:50.194897662Z"
     dependencies:
     - name: grafana-agent
@@ -43601,4 +43638,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-25T14:20:43.613209285Z"
+generated: "2023-07-25T19:48:11.520536265Z"
