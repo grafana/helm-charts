@@ -172,6 +172,11 @@ structuredConfig: {}
 tokengen:
   # -- Whether the job should be part of the deployment
   enable: true
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Additional CLI arguments for the `tokengen` target
   extraArgs: {}
   # -- Additional Kubernetes environment
@@ -201,6 +206,11 @@ tokengen:
 adminApi:
   # -- Define the amount of instances
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Additional CLI arguments for the `admin-api` target
   extraArgs: {}
   # -- Additional labels for the `admin-api` Deployment
@@ -270,6 +280,11 @@ adminApi:
 gateway:
   # -- Define the amount of instances
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Additional CLI arguments for the `gateway` target
   extraArgs: {}
   # -- Additional labels for the `gateway` Pod
@@ -344,6 +359,11 @@ gateway:
 compactor:
   # -- Define the amount of instances
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Additional CLI arguments for the `compactor` target
   extraArgs: {}
   # -- Additional labels for the `compactor` Pod
