@@ -69,6 +69,12 @@ image:
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
+# -- hostAliases to add
+hostAliases: [ ]
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
 # -- Annotations for the DaemonSet
 annotations: {}
 
