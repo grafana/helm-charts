@@ -43,7 +43,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.hostAliases }}
+      {{- with .Values.compactor.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
