@@ -106,6 +106,11 @@ ingester:
   annotations: {}
   # -- Number of replicas for the ingester
   replicas: 3
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the ingester
     enabled: false
@@ -224,6 +229,11 @@ metricsGenerator:
   annotations: {}
   # -- Number of replicas for the metrics-generator
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
@@ -341,6 +351,11 @@ metricsGenerator:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the distributor
     enabled: false
@@ -446,6 +461,11 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
@@ -517,6 +537,11 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the querier
     enabled: false
@@ -647,6 +672,11 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   config:
     # -- Number of times to retry a request sent to a querier
     max_retries: 2
@@ -785,6 +815,11 @@ enterpriseFederationFrontend:
   enabled: false
   # -- Number of replicas for the federation-frontend
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # proxy_targets:
   #   - name: own-data-center
   #     url: http://get/tempo
@@ -1331,6 +1366,11 @@ memcached:
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
     registry: null
@@ -1506,6 +1546,11 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the gateway
     enabled: false
@@ -1782,6 +1827,11 @@ license:
 # enterprise.enabled is true - requires license.
 tokengenJob:
   enable: true
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   extraArgs: {}
   env: []
   extraEnvFrom: []
@@ -1795,6 +1845,11 @@ tokengenJob:
 # Can only be enabled if enterprise.enabled is true - requires license.
 adminApi:
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   annotations: {}
   service:
@@ -1880,6 +1935,11 @@ enterpriseGateway:
   # If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   annotations: {}
   service:
