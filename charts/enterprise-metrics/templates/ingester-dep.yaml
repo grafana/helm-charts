@@ -53,6 +53,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- with .Values.ingester.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: ingester
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

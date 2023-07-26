@@ -42,6 +42,11 @@ license:
 
 tokengenJob:
   enable: true
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   extraArgs: {}
   env: []
   annotations: {}
@@ -182,6 +187,11 @@ rbac:
   pspEnabled: true
 
 admin_api:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   annotations: {}
@@ -227,6 +237,11 @@ admin_api:
 
 alertmanager:
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   statefulSet:
     enabled: true
@@ -358,6 +373,11 @@ alertmanager:
 
 distributor:
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   service:
     annotations: {}
@@ -422,6 +442,11 @@ gateway:
   # If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   annotations: {}
   service:
@@ -464,6 +489,11 @@ gateway:
   terminationGracePeriodSeconds: 60
 
 ingester:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   statefulSet:
@@ -565,6 +595,11 @@ ingester:
   env: []
 
 overrides_exporter:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   annotations: {}
@@ -615,6 +650,11 @@ overrides_exporter:
   terminationGracePeriodSeconds: 60
 
 ruler:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   service:
@@ -668,6 +708,11 @@ ruler:
   env: []
 
 querier:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 2
 
   service:
@@ -732,6 +777,11 @@ querier:
   env: []
 
 query_frontend:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   service:
@@ -796,6 +846,11 @@ query_frontend:
   env: []
 
 store_gateway:
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   service:
@@ -890,6 +945,11 @@ store_gateway:
 
 compactor:
   enabled: true
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   replicas: 1
 
   service:
