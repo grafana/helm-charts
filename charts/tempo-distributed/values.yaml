@@ -366,12 +366,17 @@ distributor:
   service:
     # -- Annotations for distributor service
     annotations: {}
+    # -- Labels for distributor service
+    labels: {}
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
     loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
+  serviceDiscovery:
+    # -- Labels for distributorDiscovery service
+    labels: {}
   # -- The name of the PriorityClass for distributor pods
   priorityClassName: null
   # -- Labels for distributor pods
@@ -687,6 +692,8 @@ queryFrontend:
     port: 16686
     # -- Annotations for queryFrontend service
     annotations: {}
+    # -- Labels for queryFrontend service
+    labels: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
@@ -696,6 +703,8 @@ queryFrontend:
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
+    # -- Labels for queryFrontendDiscovery service
+    labels: {}
   ingress:
     # -- Specifies whether an ingress for the Jaeger should be created
     enabled: false
@@ -913,6 +922,28 @@ traces:
     receiverConfig: {}
   # -- Enable Tempo to ingest traces from Kafka. Reference: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kafkareceiver
   kafka: {}
+
+# -- Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist
+memberlist:
+  node_name: ""
+  randomize_node_name: true
+  stream_timeout: "10s"
+  retransmit_factor: 2
+  pull_push_interval: "30s"
+  gossip_interval: "1s"
+  gossip_nodes: 2
+  gossip_to_dead_nodes_time: "30s"
+  min_join_backoff: "1s"
+  max_join_backoff: "1m"
+  max_join_retries: 10
+  abort_if_cluster_join_fails: false
+  rejoin_interval: "0s"
+  left_ingesters_timeout: "5m"
+  leave_timeout: "5s"
+  bind_addr: []
+  bind_port: 7946
+  packet_dial_timeout: "5s"
+  packet_write_timeout: "5s"
 
 # -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
 
@@ -1135,7 +1166,9 @@ config: |
     complete_block_timeout: {{ .Values.ingester.config.complete_block_timeout }}
     {{- end }}
   memberlist:
-    abort_if_cluster_join_fails: false
+    {{- with .Values.memberlist }}
+      {{- toYaml . | nindent 2 }}
+    {{- end }}
     join_members:
       - {{ include "tempo.fullname" . }}-gossip-ring
   overrides:
