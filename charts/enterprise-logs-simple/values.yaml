@@ -164,6 +164,11 @@ structuredConfig: {}
 tokengen:
   # -- Whether the job should be part of the deployment
   enable: true
+  # -- hostAliases to add
+  hostAliases: [ ]
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Name of the secret to store the admin token in
   adminTokenSecret: "gel-admin-token"
   # -- Additional CLI arguments for the `tokengen` target
