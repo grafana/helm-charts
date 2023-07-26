@@ -20,6 +20,12 @@ fullnameOverride: null
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
 loki:
   # -- If set, these annotations are added to all of the Kubernetes controllers
   # (Deployments, StatefulSets, etc) that this chart launches. Use this to
