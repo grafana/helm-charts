@@ -43,7 +43,7 @@ license:
 tokengenJob:
   enable: true
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -188,7 +188,7 @@ rbac:
 
 admin_api:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -374,7 +374,7 @@ alertmanager:
 distributor:
   replicas: 1
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -443,7 +443,7 @@ gateway:
   useDefaultProxyURLs: true
   replicas: 1
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -490,7 +490,7 @@ gateway:
 
 ingester:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -596,7 +596,7 @@ ingester:
 
 overrides_exporter:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -651,7 +651,7 @@ overrides_exporter:
 
 ruler:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -709,7 +709,7 @@ ruler:
 
 querier:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -778,7 +778,7 @@ querier:
 
 query_frontend:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -847,7 +847,7 @@ query_frontend:
 
 store_gateway:
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -946,7 +946,7 @@ store_gateway:
 compactor:
   enabled: true
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
