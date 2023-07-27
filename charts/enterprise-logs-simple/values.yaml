@@ -165,7 +165,7 @@ tokengen:
   # -- Whether the job should be part of the deployment
   enable: true
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
