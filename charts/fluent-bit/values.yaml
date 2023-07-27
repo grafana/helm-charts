@@ -45,7 +45,7 @@ config:
   #     json_date_format: time
 
 # -- hostAliases to add
-hostAliases: [ ]
+hostAliases: []
 #  - ip: 1.2.3.4
 #    hostnames:
   #      - domain.tld
