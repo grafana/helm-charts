@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.4.13](https://img.shields.io/badge/Version-1.4.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -209,6 +209,7 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.extraEnvFrom | list | `[]` |  |
 | adminApi.extraVolumeMounts | list | `[]` |  |
 | adminApi.extraVolumes | list | `[]` |  |
+| adminApi.hostAliases | list | `[]` | hostAliases to add |
 | adminApi.initContainers | list | `[]` |  |
 | adminApi.nodeSelector | object | `{}` |  |
 | adminApi.persistence.subPath | string | `nil` |  |
@@ -249,6 +250,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
 | compactor.extraVolumeMounts | list | `[]` | Extra volumes for compactor pods |
 | compactor.extraVolumes | list | `[]` | Extra volumes for compactor deployment |
+| compactor.hostAliases | list | `[]` | hostAliases to add |
 | compactor.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `tempo.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
@@ -281,6 +283,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
 | distributor.extraVolumeMounts | list | `[]` | Extra volumes for distributor pods |
 | distributor.extraVolumes | list | `[]` | Extra volumes for distributor deployment |
+| distributor.hostAliases | list | `[]` | hostAliases to add |
 | distributor.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | distributor.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `tempo.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
@@ -315,6 +318,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the federation-frontend pods |
 | enterpriseFederationFrontend.extraVolumeMounts | list | `[]` | Extra volumes for federation-frontend pods |
 | enterpriseFederationFrontend.extraVolumes | list | `[]` | Extra volumes for federation-frontend deployment |
+| enterpriseFederationFrontend.hostAliases | list | `[]` | hostAliases to add |
 | enterpriseFederationFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | enterpriseFederationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
 | enterpriseFederationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
@@ -343,6 +347,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.extraEnvFrom | list | `[]` |  |
 | enterpriseGateway.extraVolumeMounts | list | `[]` |  |
 | enterpriseGateway.extraVolumes | list | `[]` |  |
+| enterpriseGateway.hostAliases | list | `[]` | hostAliases to add |
 | enterpriseGateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | enterpriseGateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.gem.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
@@ -392,6 +397,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
 | gateway.extraVolumes | list | `[]` | Volumes to add to the gateway pods |
+| gateway.hostAliases | list | `[]` | hostAliases to add |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` | The gateway image pull policy |
 | gateway.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | gateway.image.registry | string | `nil` | The Docker registry for the gateway image. Overrides `global.image.registry` |
@@ -458,6 +464,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | ingester.extraVolumeMounts | list | `[]` | Extra volumes for ingester pods |
 | ingester.extraVolumes | list | `[]` | Extra volumes for ingester deployment |
+| ingester.hostAliases | list | `[]` | hostAliases to add |
 | ingester.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `tempo.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
@@ -499,6 +506,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |
 | memcached.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
+| memcachedExporter.hostAliases | list | `[]` | hostAliases to add |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcachedExporter.image.registry | string | `nil` | The Docker registry for the Memcached Exporter image. Overrides `global.image.registry` |
@@ -551,6 +559,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the metrics-generator pods |
 | metricsGenerator.extraVolumeMounts | list | `[]` | Extra volumes for metrics-generator pods |
 | metricsGenerator.extraVolumes | list | `[]` | Extra volumes for metrics-generator deployment |
+| metricsGenerator.hostAliases | list | `[]` | hostAliases to add |
 | metricsGenerator.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | metricsGenerator.image.registry | string | `nil` | The Docker registry for the metrics-generator image. Overrides `tempo.image.registry` |
 | metricsGenerator.image.repository | string | `nil` | Docker image repository for the metrics-generator image. Overrides `tempo.image.repository` |
@@ -613,6 +622,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
 | querier.extraVolumeMounts | list | `[]` | Extra volumes for querier pods |
 | querier.extraVolumes | list | `[]` | Extra volumes for querier deployment |
+| querier.hostAliases | list | `[]` | hostAliases to add |
 | querier.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
@@ -649,6 +659,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
 | queryFrontend.extraVolumeMounts | list | `[]` | Extra volumes for query-frontend pods |
 | queryFrontend.extraVolumes | list | `[]` | Extra volumes for query-frontend deployment |
+| queryFrontend.hostAliases | list | `[]` | hostAliases to add |
 | queryFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `tempo.image.registry` |
 | queryFrontend.image.repository | string | `nil` | Docker image repository for the query-frontend image. Overrides `tempo.image.repository` |
@@ -725,6 +736,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.env | list | `[]` |  |
 | tokengenJob.extraArgs | object | `{}` |  |
 | tokengenJob.extraEnvFrom | list | `[]` |  |
+| tokengenJob.hostAliases | list | `[]` | hostAliases to add |
 | tokengenJob.initContainers | list | `[]` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
