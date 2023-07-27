@@ -173,7 +173,7 @@ tokengen:
   # -- Whether the job should be part of the deployment
   enable: true
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -207,7 +207,7 @@ adminApi:
   # -- Define the amount of instances
   replicas: 1
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -281,7 +281,7 @@ gateway:
   # -- Define the amount of instances
   replicas: 1
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
@@ -360,7 +360,7 @@ compactor:
   # -- Define the amount of instances
   replicas: 1
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
