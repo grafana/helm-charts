@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.70.5](https://img.shields.io/badge/Version-0.70.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
+![Version: 0.71.0](https://img.shields.io/badge/Version-0.71.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -85,6 +85,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
 | compactor.extraVolumeMounts | list | `[]` | Volume mounts to add to the compactor pods |
 | compactor.extraVolumes | list | `[]` | Volumes to add to the compactor pods |
+| compactor.hostAliases | list | `[]` | hostAliases to add |
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `loki.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `loki.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `loki.image.tag` |
@@ -124,6 +125,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
 | distributor.extraVolumeMounts | list | `[]` | Volume mounts to add to the distributor pods |
 | distributor.extraVolumes | list | `[]` | Volumes to add to the distributor pods |
+| distributor.hostAliases | list | `[]` | hostAliases to add |
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `loki.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `loki.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
@@ -162,6 +164,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
 | gateway.extraVolumes | list | `[]` | Volumes to add to the gateway pods |
+| gateway.hostAliases | list | `[]` | hostAliases to add |
 | gateway.image.pullPolicy | string | `"IfNotPresent"` | The gateway image pull policy |
 | gateway.image.registry | string | `"docker.io"` | The Docker registry for the gateway image |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
@@ -208,6 +211,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
+| hostAliases | list | `[]` | hostAliases to add |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | indexGateway.enabled | bool | `false` | Specifies whether the index-gateway should be enabled |
@@ -217,6 +221,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the index-gateway pods |
 | indexGateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the index-gateway pods |
 | indexGateway.extraVolumes | list | `[]` | Volumes to add to the index-gateway pods |
+| indexGateway.hostAliases | list | `[]` | hostAliases to add |
 | indexGateway.image.registry | string | `nil` | The Docker registry for the index-gateway image. Overrides `loki.image.registry` |
 | indexGateway.image.repository | string | `nil` | Docker image repository for the index-gateway image. Overrides `loki.image.repository` |
 | indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
@@ -254,6 +259,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | ingester.extraVolumeMounts | list | `[]` | Volume mounts to add to the ingester pods |
 | ingester.extraVolumes | list | `[]` | Volumes to add to the ingester pods |
+| ingester.hostAliases | list | `[]` | hostAliases to add |
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `loki.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `loki.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `loki.image.tag` |
@@ -333,6 +339,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedChunks.extraContainers | list | `[]` | Containers to add to the memcached-chunks pods |
 | memcachedChunks.extraEnv | list | `[]` | Environment variables to add to memcached-chunks pods |
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
+| memcachedChunks.hostAliases | list | `[]` | hostAliases to add |
 | memcachedChunks.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
 | memcachedChunks.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
@@ -360,6 +367,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedFrontend.extraContainers | list | `[]` | Containers to add to the memcached-frontend pods |
 | memcachedFrontend.extraEnv | list | `[]` | Environment variables to add to memcached-frontend pods |
 | memcachedFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-frontend pods |
+| memcachedFrontend.hostAliases | list | `[]` | hostAliases to add |
 | memcachedFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcachedFrontend.nodeSelector | object | `{}` | Node selector for memcached-frontend pods |
 | memcachedFrontend.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
@@ -379,6 +387,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexQueries.extraContainers | list | `[]` | Containers to add to the memcached-index-queries pods |
 | memcachedIndexQueries.extraEnv | list | `[]` | Environment variables to add to memcached-index-queries pods |
 | memcachedIndexQueries.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-queries pods |
+| memcachedIndexQueries.hostAliases | list | `[]` | hostAliases to add |
 | memcachedIndexQueries.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedIndexQueries.nodeSelector | object | `{}` | Node selector for memcached-index-queries pods |
 | memcachedIndexQueries.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
@@ -398,6 +407,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexWrites.extraContainers | list | `[]` | Containers to add to the memcached-index-writes pods |
 | memcachedIndexWrites.extraEnv | list | `[]` | Environment variables to add to memcached-index-writes pods |
 | memcachedIndexWrites.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-index-writes pods |
+| memcachedIndexWrites.hostAliases | list | `[]` | hostAliases to add |
 | memcachedIndexWrites.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedIndexWrites.nodeSelector | object | `{}` | Node selector for memcached-index-writes pods |
 | memcachedIndexWrites.persistence.enabled | bool | `false` | Enable creating PVCs which will persist cached data through restarts |
@@ -450,6 +460,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the querier pods |
 | querier.extraVolumeMounts | list | `[]` | Volume mounts to add to the querier pods |
 | querier.extraVolumes | list | `[]` | Volumes to add to the querier pods |
+| querier.hostAliases | list | `[]` | hostAliases to add |
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `loki.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
@@ -487,6 +498,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
 | queryFrontend.extraVolumeMounts | list | `[]` | Volume mounts to add to the query-frontend pods |
 | queryFrontend.extraVolumes | list | `[]` | Volumes to add to the query-frontend pods |
+| queryFrontend.hostAliases | list | `[]` | hostAliases to add |
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `loki.image.registry` |
 | queryFrontend.image.repository | string | `nil` | Docker image repository for the query-frontend image. Overrides `loki.image.repository` |
 | queryFrontend.image.tag | string | `nil` | Docker image tag for the query-frontend image. Overrides `loki.image.tag` |
@@ -508,6 +520,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryScheduler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-scheduler pods |
 | queryScheduler.extraVolumeMounts | list | `[]` | Volume mounts to add to the query-scheduler pods |
 | queryScheduler.extraVolumes | list | `[]` | Volumes to add to the query-scheduler pods |
+| queryScheduler.hostAliases | list | `[]` | hostAliases to add |
 | queryScheduler.image.registry | string | `nil` | The Docker registry for the query-scheduler image. Overrides `loki.image.registry` |
 | queryScheduler.image.repository | string | `nil` | Docker image repository for the query-scheduler image. Overrides `loki.image.repository` |
 | queryScheduler.image.tag | string | `nil` | Docker image tag for the query-scheduler image. Overrides `loki.image.tag` |
@@ -534,6 +547,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ruler pods |
 | ruler.extraVolumeMounts | list | `[]` | Volume mounts to add to the ruler pods |
 | ruler.extraVolumes | list | `[]` | Volumes to add to the ruler pods |
+| ruler.hostAliases | list | `[]` | hostAliases to add |
 | ruler.image.registry | string | `nil` | The Docker registry for the ruler image. Overrides `loki.image.registry` |
 | ruler.image.repository | string | `nil` | Docker image repository for the ruler image. Overrides `loki.image.repository` |
 | ruler.image.tag | string | `nil` | Docker image tag for the ruler image. Overrides `loki.image.tag` |
@@ -581,6 +595,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | tableManager.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the table-manager pods |
 | tableManager.extraVolumeMounts | list | `[]` | Volume mounts to add to the table-manager pods |
 | tableManager.extraVolumes | list | `[]` | Volumes to add to the table-manager pods |
+| tableManager.hostAliases | list | `[]` | hostAliases to add |
 | tableManager.image.registry | string | `nil` | The Docker registry for the table-manager image. Overrides `loki.image.registry` |
 | tableManager.image.repository | string | `nil` | Docker image repository for the table-manager image. Overrides `loki.image.repository` |
 | tableManager.image.tag | string | `nil` | Docker image tag for the table-manager image. Overrides `loki.image.tag` |
