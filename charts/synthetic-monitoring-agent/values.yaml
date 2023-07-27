@@ -31,7 +31,7 @@ image:
 # -- Docker registry secret names as an array.
 imagePullSecrets: []
 # -- hostAliases to add
-hostAliases: [ ]
+hostAliases: []
 #  - ip: 1.2.3.4
 #    hostnames:
 #      - domain.tld
