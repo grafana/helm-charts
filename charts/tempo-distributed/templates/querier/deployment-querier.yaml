@@ -83,6 +83,8 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           volumeMounts:
             - mountPath: /conf
               name: config
