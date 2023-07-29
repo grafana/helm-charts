@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.70.5](https://img.shields.io/badge/Version-0.70.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
+![Version: 0.70.7](https://img.shields.io/badge/Version-0.70.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -127,6 +127,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `loki.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `loki.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
+| distributor.maxSurge | int | `0` | Max Surge for distributor pods |
 | distributor.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
@@ -261,6 +262,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.kind | string | `"StatefulSet"` | Kind of deployment [StatefulSet/Deployment] |
 | ingester.lifecycle | object | `{}` | Lifecycle for the ingester container |
 | ingester.livenessProbe | object | `{}` | liveness probe settings for ingester pods. If empty use `loki.livenessProbe` |
+| ingester.maxSurge | int | `0` | Max Surge for ingester pods |
 | ingester.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.claims | list | `[{"name":"data","size":"10Gi","storageClass":null}]` | List of the ingester PVCs @notationType -- list |
@@ -455,6 +457,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
 | querier.initContainers | list | `[]` | Init containers to add to the querier pods |
+| querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.persistence.annotations | object | `{}` | Annotations for querier PVCs |
