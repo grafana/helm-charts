@@ -1320,6 +1320,9 @@ compactor:
   nodeSelector: {}
   # -- Tolerations for compactor pods
   tolerations: []
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
   persistence:
     # -- Enable creating PVCs for the compactor
     enabled: false

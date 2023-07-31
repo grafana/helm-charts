@@ -60,7 +60,7 @@ spec:
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.compactor.command }}
-          command: 
+          command:
             - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}
           {{- end }}
           args:
@@ -73,6 +73,9 @@ spec:
           ports:
             - name: http
               containerPort: 3100
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946
