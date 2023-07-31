@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 1.5.1](https://img.shields.io/badge/Version-1.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -442,7 +442,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
 | ingester.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | ingester.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the ingester |
-| ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester |
+| ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing. |
 | ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
 | ingester.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the ingester |
 | ingester.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the ingester |
@@ -701,7 +701,7 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | storage.admin.backend | string | `"filesystem"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config |
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
-| storage.trace.block.version | string | `"vParquet"` | The supported block versions are v2 and vParquet, as specified in https://grafana.com/docs/tempo/latest/configuration/parquet/ |
+| storage.trace.block.version | string | `nil` | The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/ |
 | tempo.image.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |

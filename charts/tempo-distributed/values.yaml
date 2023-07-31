@@ -107,7 +107,7 @@ ingester:
   # -- Number of replicas for the ingester
   replicas: 3
   autoscaling:
-    # -- Enable autoscaling for the ingester
+    # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
     enabled: false
     # -- Minimum autoscaling replicas for the ingester
     minReplicas: 1
@@ -1186,8 +1186,10 @@ config: |
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   storage:
     trace:
+      {{- if .Values.storage.trace.block.version }}
       block:
         version: {{.Values.storage.trace.block.version}}
+      {{- end }}
       backend: {{.Values.storage.trace.backend}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
@@ -1245,8 +1247,8 @@ storage:
   trace:
     # Settings for the block storage backend and buckets.
     block:
-      # -- The supported block versions are v2 and vParquet, as specified in https://grafana.com/docs/tempo/latest/configuration/parquet/
-      version: vParquet
+      # -- The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/
+      version: null
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
