@@ -521,6 +521,7 @@ extraVolumeMounts: []
   #   readOnly: true
   #   hostPath: /usr/shared/
   # - name: grafana-secrets
+  #   mountPath: /mnt/volume2
   #   csi: true
   #   data:
   #     driver: secrets-store.csi.k8s.io
@@ -563,6 +564,8 @@ datasources: {}
 #      jsonData:
 #        authType: default
 #        defaultRegion: us-east-1
+#    deleteDatasources: []
+#    - name: Prometheus
 
 ## Configure grafana alerting (can be templated)
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting

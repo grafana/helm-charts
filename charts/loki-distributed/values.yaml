@@ -20,6 +20,12 @@ fullnameOverride: null
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
 loki:
   # -- If set, these annotations are added to all of the Kubernetes controllers
   # (Deployments, StatefulSets, etc) that this chart launches. Use this to
@@ -249,6 +255,8 @@ serviceAccount:
   name: null
   # -- Image pull secrets for the service account
   imagePullSecrets: []
+  # -- Labels for the service account
+  labels: {}
   # -- Annotations for the service account
   annotations: {}
   # -- Set this toggle to false to opt out of automounting API credentials for the service account
@@ -362,6 +370,11 @@ ingester:
   kind: StatefulSet
   # -- Number of replicas for the ingester
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the ingester
     enabled: false
@@ -373,6 +386,13 @@ ingester:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -410,6 +430,8 @@ ingester:
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
+  # -- Lifecycle for the ingester container
+  lifecycle: {}
   # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
@@ -437,6 +459,8 @@ ingester:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Max Surge for ingester pods
+  maxSurge: 0
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -473,6 +497,11 @@ ingester:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the distributor
     enabled: false
@@ -484,6 +513,13 @@ distributor:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
@@ -535,6 +571,8 @@ distributor:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Max Surge for distributor pods
+  maxSurge: 0
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -548,6 +586,11 @@ distributor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the querier, this is only used if `indexGateway.enabled: true`
     enabled: false
@@ -559,6 +602,13 @@ querier:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
@@ -605,9 +655,24 @@ querier:
           {{- include "loki.querierSelectorLabels" . | nindent 6 }}
   # -- Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
-  affinity: {}
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.querierSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.querierSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Max Surge for querier pods
+  maxSurge: 0
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -636,6 +701,11 @@ querier:
 queryFrontend:
   # -- Number of replicas for the query-frontend
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -647,6 +717,13 @@ queryFrontend:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the query-frontend
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
@@ -715,6 +792,11 @@ queryScheduler:
   # It should be lower than `-querier.max-concurrent` to avoid generating back-pressure in queriers;
   # it's also recommended that this value evenly divides the latter
   replicas: 2
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the query-scheduler image. Overrides `loki.image.registry`
     registry: null
@@ -773,6 +855,11 @@ queryScheduler:
 tableManager:
   # -- Specifies whether the table-manager should be enabled
   enabled: false
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the table-manager image. Overrides `loki.image.registry`
     registry: null
@@ -864,6 +951,11 @@ ingress:
 gateway:
   # -- Specifies whether the gateway should be enabled
   enabled: true
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Number of replicas for the gateway
   replicas: 1
   # -- Enable logging of 2xx and 3xx HTTP requests
@@ -879,6 +971,13 @@ gateway:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
     targetMemoryUtilizationPercentage:
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   # -- See `kubectl explain deployment.spec.strategy` for more,
   # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
   deploymentStrategy:
@@ -1161,6 +1260,11 @@ gateway:
 compactor:
   # -- Specifies whether compactor should be enabled
   enabled: false
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the compactor image. Overrides `loki.image.registry`
     registry: null
@@ -1176,8 +1280,22 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
-  # -- Specify the compactor affinity
-  affinity: {}
+  # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.compactorSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.compactorSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Labels for compactor service
   serviceLabels: {}
   # -- Additional CLI args for the compactor
@@ -1239,6 +1357,11 @@ ruler:
   kind: Deployment
   # -- Number of replicas for the ruler
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the ruler image. Overrides `loki.image.registry`
     registry: null
@@ -1384,6 +1507,11 @@ indexGateway:
   enabled: false
   # -- Number of replicas for the index-gateway
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the index-gateway image. Overrides `loki.image.registry`
     registry: null
@@ -1521,6 +1649,11 @@ memcachedExporter:
 memcachedChunks:
   # -- Specifies whether the Memcached chunks cache should be enabled
   enabled: false
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Number of replicas for memcached-chunks
   replicas: 1
   # -- The name of the PriorityClass for memcached-chunks pods
@@ -1581,6 +1714,11 @@ memcachedChunks:
 memcachedFrontend:
   # -- Specifies whether the Memcached frontend cache should be enabled
   enabled: false
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- Number of replicas for memcached-frontend
   replicas: 1
   # -- The name of the PriorityClass for memcached-frontend pods
@@ -1643,6 +1781,11 @@ memcachedIndexQueries:
   enabled: false
   # -- Number of replicas for memcached-index-queries
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- The name of the PriorityClass for memcached-index-queries pods
   priorityClassName: null
   # -- Labels for memcached-index-queries pods
@@ -1703,6 +1846,11 @@ memcachedIndexWrites:
   enabled: false
   # -- Number of replicas for memcached-index-writes
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # -- The name of the PriorityClass for memcached-index-writes pods
   priorityClassName: null
   # -- Labels for memcached-index-writes pods
