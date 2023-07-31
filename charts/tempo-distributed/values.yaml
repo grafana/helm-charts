@@ -1186,10 +1186,10 @@ config: |
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   storage:
     trace:
+      {{- if .Values.storage.trace.block.version }}
       block:
-        {{- if .Values.storage.trace.block.version }}
         version: {{.Values.storage.trace.block.version}}
-        {{- end }}
+      {{- end }}
       backend: {{.Values.storage.trace.backend}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
