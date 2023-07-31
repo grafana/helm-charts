@@ -15,6 +15,10 @@ spec:
 {{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ .Values.ingester.replicas }}
 {{- end }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.ingester.maxSurge }}
+      maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:

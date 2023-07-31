@@ -129,6 +129,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `loki.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `loki.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `loki.image.tag` |
+| distributor.maxSurge | int | `0` | Max Surge for distributor pods |
 | distributor.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
@@ -266,6 +267,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.initContainers | list | `[]` | Init containers to add to the ingester pods |
 | ingester.kind | string | `"StatefulSet"` | Kind of deployment [StatefulSet/Deployment] |
 | ingester.livenessProbe | object | `{}` | liveness probe settings for ingester pods. If empty use `loki.livenessProbe` |
+| ingester.maxSurge | int | `0` | Max Surge for ingester pods |
 | ingester.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.claims | list | `[{"name":"data","size":"10Gi","storageClass":null}]` | List of the ingester PVCs @notationType -- list |
@@ -465,6 +467,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `loki.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
 | querier.initContainers | list | `[]` | Init containers to add to the querier pods |
+| querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.persistence.annotations | object | `{}` | Annotations for querier PVCs |
