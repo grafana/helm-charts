@@ -650,8 +650,6 @@ queryFrontend:
   config:
     # -- Number of times to retry a request sent to a querier
     max_retries: 2
-    # -- Number of block queries that are tolerated to error before considering the entire query as failed. Numbers greater than 0 make possible for a read to return partial results
-    tolerate_failed_blocks: 0
     search:
       # -- The number of concurrent jobs to execute when searching the backend
       concurrent_jobs: 1000
@@ -1134,7 +1132,6 @@ config: |
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
-    tolerate_failed_blocks: {{ .Values.queryFrontend.config.tolerate_failed_blocks }}
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
