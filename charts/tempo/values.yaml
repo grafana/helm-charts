@@ -12,7 +12,7 @@ annotations: {}
 
 tempo:
   repository: grafana/tempo
-  tag: 2.0.1
+  tag: null
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -58,7 +58,7 @@ tempo:
   storage:
     trace:
       # tempo storage backend
-      # refer https://github.com/grafana/tempo/tree/master/docs/tempo/website/configuration
+      # refer https://grafana.com/docs/tempo/latest/configuration/
       ## Use s3 for example
       # backend: s3
       # store traces in s3
@@ -150,7 +150,7 @@ config: |
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 2.0.1
+  tag: null
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -160,7 +160,48 @@ tempoQuery:
   #   - myRegistryKeySecretName
 
   # -- if False the tempo-query container is not deployed
-  enabled: true
+  enabled: false
+
+  service:
+    port: 16686
+
+  ingress:
+    enabled: false
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+
+    # pathType is only for k8s >= 1.1=
+    pathType: Prefix
+
+    hosts:
+      - query.tempo.example.com
+    ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+    extraPaths: []
+    # - path: /*
+    #   backend:
+    #     serviceName: ssl-redirect
+    #     servicePort: use-annotation
+    ## Or for k8s > 1.19
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
+
+
+    tls: []
+    #  - secretName: tempo-query-tls
+    #    hosts:
+    #      - query.tempo.example.com
 
   resources: {}
   #  requests:

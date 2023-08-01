@@ -4,6 +4,11 @@ nameOverride: ""
 fullnameOverride: ""
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
 
 image:
   # -- Docker image repository
@@ -15,6 +20,8 @@ image:
 
 # -- Number of replicas of Tempo Vulture
 replicas: 1
+# -- Common labels for all pods
+podLabels: {}
 # -- Common annotations for all pods
 podAnnotations: {}
 # -- Common annotations for the deployment and service
