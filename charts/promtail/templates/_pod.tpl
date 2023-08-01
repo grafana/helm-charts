@@ -33,6 +33,10 @@ spec:
   imagePullSecrets:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.hostAliases }}
+  hostAliases:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   securityContext:
     {{- toYaml .Values.podSecurityContext | nindent 4 }}
   containers:

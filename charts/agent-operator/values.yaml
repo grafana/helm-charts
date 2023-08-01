@@ -37,11 +37,17 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.35.1
+  tag: v0.35.2
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets
   pullSecrets: []
+
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
 
 # -- If both are set, Agent Operator will create and maintain a service for scraping kubelets
 # https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets
