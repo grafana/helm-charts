@@ -30,6 +30,11 @@ image:
 
 # -- Docker registry secret names as an array.
 imagePullSecrets: []
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
 # -- Override the name of the chart.
 nameOverride: ""
 # -- Override the fullname of the chart.
