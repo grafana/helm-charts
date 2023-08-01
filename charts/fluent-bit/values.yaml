@@ -44,6 +44,12 @@ config:
   #     Format: json
   #     json_date_format: time
 
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+  #      - domain.tld
+
 affinity: {}
 
 annotations: {}
