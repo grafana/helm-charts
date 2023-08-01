@@ -112,6 +112,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | global.imagePullSecrets | list | `[]` | Allow parent charts to override registry credentials |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
+| hostAliases | list | `[]` | hostAliases to add |
 | httpPathPrefix | string | `""` | Base path to server all API routes fro |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |
