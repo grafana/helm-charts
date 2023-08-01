@@ -43,6 +43,12 @@ image:
   # -- Image pull secrets
   pullSecrets: []
 
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
 # -- If both are set, Agent Operator will create and maintain a service for scraping kubelets
 # https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets
 kubeletService:
