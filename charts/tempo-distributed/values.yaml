@@ -1367,7 +1367,7 @@ memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
