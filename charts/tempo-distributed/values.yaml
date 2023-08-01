@@ -230,7 +230,7 @@ metricsGenerator:
   # -- Number of replicas for the metrics-generator
   replicas: 1
   # -- hostAliases to add
-  hostAliases: [ ]
+  hostAliases: []
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
