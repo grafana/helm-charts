@@ -11,6 +11,6 @@ dependencies:
   version: "0.55.0"
   repository: "https://grafana.github.io/helm-charts"
 - name: "minio"
-  version: "8.0.10"
+  version: "5.0.13"
   repository: "https://charts.min.io/"
   condition: minio.enabled
