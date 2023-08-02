@@ -1,6 +1,6 @@
 # loki-canary
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.13.0](https://img.shields.io/badge/Version-0.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 
@@ -33,12 +33,14 @@ helm repo add grafana https://grafana.github.io/helm-charts
 | extraVolumeMounts | list | `[]` | Volume mounts to add to the containers |
 | extraVolumes | list | `[]` | Volumes to add to the containers |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.repository | string | `"docker.io/grafana/loki-canary"` | Docker image repository |
 | image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | lokiAddress | string | `nil` | The Loki server URL:Port, e.g. loki:3100 |
 | nameOverride | string | `""` | Overrides the chart's name |
+| namespace.name | string | `nil` | The name of the Namespace to deploy If not set, `.Release.Namespace` is used |
 | nodeSelector | object | `{}` | Node selector for canary pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
 | podLabels | object | `{}` | Common labels for all pods |

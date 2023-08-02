@@ -42,6 +42,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.ruler.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- include "loki.rulerPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
@@ -102,6 +106,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.ruler.resources | nindent 12 }}
+        {{- with .Values.ruler.extraContainers }}
+        {{- toYaml . | nindent 8}}
+        {{- end }}
       {{- with .Values.ruler.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}

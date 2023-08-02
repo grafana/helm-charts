@@ -1,6 +1,6 @@
 # synthetic-monitoring-agent
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
@@ -39,6 +39,7 @@ Kubernetes: `^1.16.0-0`
 | autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage |
 | extraObjects | list | `[]` | Add dynamic manifests via values: |
 | fullnameOverride | string | `""` | Override the fullname of the chart. |
+| hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy. |
 | image.registry | string | `"docker.io"` | Base registry to pull the container image from. |
 | image.repository | string | `"grafana/synthetic-monitoring-agent"` | Base repository for container image. |

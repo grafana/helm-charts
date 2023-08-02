@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "loki.querierFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
     app.kubernetes.io/part-of: memberlist
@@ -16,7 +17,7 @@ spec:
 {{- end }}
   strategy:
     rollingUpdate:
-      maxSurge: 0
+      maxSurge: {{ .Values.querier.maxSurge }}
       maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
@@ -51,6 +52,10 @@ spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.querier.hostAliases }}
+      hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "loki.querierPriorityClassName" . | nindent 6 }}

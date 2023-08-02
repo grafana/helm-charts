@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "loki.memcachedChunksFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.memcachedChunksLabels" . | nindent 4 }}
   {{- with .Values.loki.annotations }}
@@ -42,6 +43,10 @@ spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.memcachedChunks.hostAliases }}
+      hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "loki.memcachedChunksPriorityClassName" . | nindent 6 }}

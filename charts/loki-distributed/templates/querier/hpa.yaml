@@ -4,6 +4,7 @@ apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "loki.querierFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.querierLabels" . | nindent 4 }}
 spec:
@@ -37,5 +38,14 @@ spec:
         {{- else }}
         targetAverageUtilization: {{ . }}
         {{- end }}
+  {{- end }}
+  {{- if .Values.querier.autoscaling.behavior.enabled }}
+  behavior:
+    {{- with .Values.querier.autoscaling.behavior.scaleDown }}
+    scaleDown: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.querier.autoscaling.behavior.scaleUp }}
+    scaleUp: {{ toYaml . | nindent 6 }}
+    {{- end }}
   {{- end }}
 {{- end }}

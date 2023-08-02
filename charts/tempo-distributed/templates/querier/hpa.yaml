@@ -1,5 +1,6 @@
 {{- if .Values.querier.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+{{- $apiVersion := include "tempo.hpa.apiVersion" . -}}
+apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" . "component" "querier") }}
@@ -12,17 +13,33 @@ spec:
     name: {{ include "tempo.resourceName" (dict "ctx" . "component" "querier") }}
   minReplicas: {{ .Values.querier.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.querier.autoscaling.maxReplicas }}
+  {{- with .Values.querier.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   metrics:
   {{- with .Values.querier.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
+        {{- if (eq $apiVersion "autoscaling/v2") }}
+        target:
+          type: Utilization
+          averageUtilization: {{ . }}
+        {{- else }}
         targetAverageUtilization: {{ . }}
+        {{- end }}
   {{- end }}
   {{- with .Values.querier.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
+        {{- if (eq $apiVersion "autoscaling/v2") }}
+        target:
+          type: Utilization
+          averageUtilization: {{ . }}
+        {{- else }}
         targetAverageUtilization: {{ . }}
+        {{- end }}
   {{- end }}
 {{- end }}

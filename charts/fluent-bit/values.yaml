@@ -44,9 +44,17 @@ config:
   #     Format: json
   #     json_date_format: time
 
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+  #      - domain.tld
+
 affinity: {}
 
 annotations: {}
+
+automountServiceAccountToken: true
 
 deploymentStrategy: RollingUpdate
 
@@ -91,6 +99,11 @@ resources:
 serviceAccount:
   create: true
   name:
+
+
+podSecurityContext: {}
+
+securityContext: {}
 
 ## Tolerations for pod assignment
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/

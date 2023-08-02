@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "loki.memcachedFrontendFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.memcachedFrontendLabels" . | nindent 4 }}
   {{- with .Values.loki.annotations }}
@@ -42,6 +43,10 @@ spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.memcachedFrontend.hostAliases }}
+      hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "loki.memcachedFrontendPriorityClassName" . | nindent 6 }}

@@ -160,6 +160,17 @@ Return the appropriate apiVersion for PodDisruptionBudget.
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for HorizontalPodAutoscaler.
+*/}}
+{{- define "tempo.hpa.apiVersion" -}}
+  {{- if and (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">=1.23-0" .Capabilities.KubeVersion.Version) -}}
+    {{- print "autoscaling/v2" -}}
+  {{- else -}}
+    {{- print "autoscaling/v2beta1" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
 Resource name template
 */}}
 {{- define "tempo.resourceName" -}}
@@ -193,9 +204,18 @@ configMap:
   items:
     - key: "tempo.yaml"
       path: "tempo.yaml"
+{{- end -}}
+{{- end -}}
+
+{{/*
+The volume to mount for tempo runtime configuration
+*/}}
+{{- define "tempo.runtimeVolume" -}}
+configMap:
+  name: {{ tpl .Values.externalRuntimeConfigName . }}
+  items:
     - key: "overrides.yaml"
       path: "overrides.yaml"
-{{- end -}}
 {{- end -}}
 
 {{/*

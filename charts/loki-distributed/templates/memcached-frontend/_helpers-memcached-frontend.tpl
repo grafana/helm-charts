@@ -6,7 +6,7 @@ memcached-frontend fullname
 {{- end }}
 
 {{/*
-memcached-frontend fullname
+memcached-frontend labels
 */}}
 {{- define "loki.memcachedFrontendLabels" -}}
 {{ include "loki.labels" . }}
