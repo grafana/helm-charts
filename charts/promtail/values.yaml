@@ -485,7 +485,7 @@ config:
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
       - job_name: kubernetes-pods
         pipeline_stages:
-          {{- toYaml .Values.config.snippets.pipelineStages | nindent 4 }}
+          {{- tpl (toYaml .Values.config.snippets.pipelineStages) . | nindent 4 }}
         kubernetes_sd_configs:
           - role: pod
         relabel_configs:
