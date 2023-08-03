@@ -108,6 +108,9 @@ hostAliases: []
 # -- Annotations for the DaemonSet
 annotations: {}
 
+# -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+# revisionHistoryLimit: 1
+
 # -- The update strategy for the DaemonSet
 updateStrategy: {}
 
