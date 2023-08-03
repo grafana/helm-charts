@@ -1,0 +1,5 @@
+apiVersion: v2
+name: snyk-exporter
+description: Prometheus exporter for Snyk.
+version: 0.1.0
+appVersion: v1.2
