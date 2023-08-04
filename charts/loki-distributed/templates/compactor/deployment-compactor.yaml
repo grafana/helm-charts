@@ -43,6 +43,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.compactor.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- include "loki.compactorPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
@@ -56,7 +60,7 @@ spec:
           image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.compactor.command }}
-          command: 
+          command:
             - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}
           {{- end }}
           args:
@@ -69,6 +73,9 @@ spec:
           ports:
             - name: http
               containerPort: 3100
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
               protocol: TCP
             - name: http-memberlist
               containerPort: 7946
@@ -106,7 +113,7 @@ spec:
         {{- end }}
       {{- with .Values.compactor.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl . $ | nindent 8 }}
       {{- end }}
       {{- with .Values.compactor.nodeSelector }}
       nodeSelector:

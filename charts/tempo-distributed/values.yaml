@@ -106,8 +106,13 @@ ingester:
   annotations: {}
   # -- Number of replicas for the ingester
   replicas: 3
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
-    # -- Enable autoscaling for the ingester
+    # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
     enabled: false
     # -- Minimum autoscaling replicas for the ingester
     minReplicas: 1
@@ -224,6 +229,11 @@ metricsGenerator:
   annotations: {}
   # -- Number of replicas for the metrics-generator
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
@@ -341,6 +351,11 @@ metricsGenerator:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the distributor
     enabled: false
@@ -446,6 +461,11 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
@@ -517,6 +537,11 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the querier
     enabled: false
@@ -596,8 +621,6 @@ querier:
       # -- Timeout for trace lookup requests
       query_timeout: 10s
     search:
-      # -- A list of external endpoints that the querier will use to offload backend search requests
-      external_endpoints: []
       # -- Timeout for search requests
       query_timeout: 30s
       # -- If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries.
@@ -606,6 +629,14 @@ querier:
       external_hedge_requests_at: 8s
       # -- The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set.
       external_hedge_requests_up_to: 2
+      # -- A list of external endpoints that the querier will use to offload backend search requests
+      external_endpoints: []
+      # -- The serverless backend to use. The default value of "" omits
+      # -- credentials when querying the external backend.
+      external_backend: ""
+      # -- Google Cloud Run configuration. Will be used only if the value of
+      # -- external_backend is "google_cloud_run".
+      google_cloud_run: {}
     # -- This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries.
     max_concurrent_queries: 20
 
@@ -647,11 +678,14 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   config:
     # -- Number of times to retry a request sent to a querier
     max_retries: 2
-    # -- Number of block queries that are tolerated to error before considering the entire query as failed. Numbers greater than 0 make possible for a read to return partial results
-    tolerate_failed_blocks: 0
     search:
       # -- The number of concurrent jobs to execute when searching the backend
       concurrent_jobs: 1000
@@ -787,6 +821,11 @@ enterpriseFederationFrontend:
   enabled: false
   # -- Number of replicas for the federation-frontend
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   # proxy_targets:
   #   - name: own-data-center
   #     url: http://get/tempo
@@ -1133,10 +1172,14 @@ config: |
       prefer_self: {{ .Values.querier.config.search.prefer_self }}
       external_hedge_requests_at: {{ .Values.querier.config.search.external_hedge_requests_at }}
       external_hedge_requests_up_to: {{ .Values.querier.config.search.external_hedge_requests_up_to }}
+      external_backend: {{ .Values.querier.config.search.external_backend }}
+      {{- if .Values.querier.config.search.google_cloud_run }}
+      google_cloud_run:
+        {{- toYaml .Values.querier.config.search.google_cloud_run | nindent 6 }}
+      {{- end }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
-    tolerate_failed_blocks: {{ .Values.queryFrontend.config.tolerate_failed_blocks }}
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
@@ -1172,7 +1215,7 @@ config: |
       {{- toYaml . | nindent 2 }}
     {{- end }}
     join_members:
-      - {{ include "tempo.fullname" . }}-gossip-ring
+      - dns+{{ include "tempo.fullname" . }}-gossip-ring:{{ .Values.memberlist.bind_port }}
   overrides:
     {{- toYaml .Values.global_overrides | nindent 2 }}
     {{- if .Values.metricsGenerator.enabled }}
@@ -1191,8 +1234,10 @@ config: |
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   storage:
     trace:
+      {{- if .Values.storage.trace.block.version }}
       block:
         version: {{.Values.storage.trace.block.version}}
+      {{- end }}
       backend: {{.Values.storage.trace.backend}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
@@ -1250,8 +1295,8 @@ storage:
   trace:
     # Settings for the block storage backend and buckets.
     block:
-      # -- The supported block versions are v2 and vParquet, as specified in https://grafana.com/docs/tempo/latest/configuration/parquet/
-      version: vParquet
+      # -- The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/
+      version: null
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
@@ -1262,9 +1307,7 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
-  metrics_generator_processors:
-    - service-graphs
-    - span-metrics
+  metrics_generator_processors: []
 
 # Per tenants overrides
 overrides: |
@@ -1333,6 +1376,11 @@ memcached:
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   image:
     # -- The Docker registry for the Memcached Exporter image. Overrides `global.image.registry`
     registry: null
@@ -1508,6 +1556,11 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   autoscaling:
     # -- Enable autoscaling for the gateway
     enabled: false
@@ -1784,6 +1837,11 @@ license:
 # enterprise.enabled is true - requires license.
 tokengenJob:
   enable: true
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
   extraArgs: {}
   env: []
   extraEnvFrom: []
@@ -1797,6 +1855,11 @@ tokengenJob:
 # Can only be enabled if enterprise.enabled is true - requires license.
 adminApi:
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   annotations: {}
   service:
@@ -1882,6 +1945,11 @@ enterpriseGateway:
   # If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
   replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
 
   annotations: {}
   service:

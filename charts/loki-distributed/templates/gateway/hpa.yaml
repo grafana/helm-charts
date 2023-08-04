@@ -38,4 +38,13 @@ spec:
         targetAverageUtilization: {{ . }}
         {{- end }}
   {{- end }}
+  {{- if .Values.gateway.autoscaling.behavior.enabled }}
+  behavior:
+    {{- with .Values.gateway.autoscaling.behavior.scaleDown }}
+    scaleDown: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.gateway.autoscaling.behavior.scaleUp }}
+    scaleUp: {{ toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end }}

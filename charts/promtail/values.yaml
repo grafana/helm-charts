@@ -13,6 +13,36 @@ global:
 daemonset:
   # -- Deploys Promtail as a DaemonSet
   enabled: true
+  autoscaling:
+    # -- Creates a VerticalPodAutoscaler for the daemonset
+    enabled: false
+
+    # Recommender responsible for generating recommendation for the object.
+    # List should be empty (then the default recommender will generate the recommendation)
+    # or contain exactly one recommender.
+    # recommenders:
+    # - name: custom-recommender-performance
+
+    # -- List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+    controlledResources: []
+    # Specifies which resource values should be controlled: RequestsOnly or RequestsAndLimits.
+    # controlledValues: RequestsAndLimits
+
+    # -- Defines the max allowed resources for the pod
+    maxAllowed: {}
+    # cpu: 200m
+    # memory: 100Mi
+    # -- Defines the min allowed resources for the pod
+    minAllowed: {}
+    # cpu: 200m
+    # memory: 100Mi
+
+    # updatePolicy:
+      # Specifies minimal number of replicas which need to be alive for VPA Updater to attempt pod eviction
+      # minReplicas: 1
+      # Specifies whether recommended updates are applied when a Pod is started and whether recommended updates
+      # are applied during the life of a Pod. Possible values are "Off", "Initial", "Recreate", and "Auto".
+      # updateMode: Auto
 
 deployment:
   # -- Deploys Promtail as a Deployment
@@ -69,8 +99,17 @@ image:
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
 # -- Annotations for the DaemonSet
 annotations: {}
+
+# -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+# revisionHistoryLimit: 1
 
 # -- The update strategy for the DaemonSet
 updateStrategy: {}
@@ -347,6 +386,10 @@ podSecurityPolicy:
 # which is a templated string that references the other values and snippets below this key.
 # @default -- See `values.yaml`
 config:
+  # -- Enable Promtail config from Helm chart
+  # Set `configmap.enabled: true` and this to `false` to manage your own Promtail config
+  # See default config in `values.yaml`
+  enabled: true
   # -- The log level of the Promtail server
   # Must be reference in `config.file` to configure `server.log_level`
   # See default config in `values.yaml`
@@ -442,7 +485,7 @@ config:
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
       - job_name: kubernetes-pods
         pipeline_stages:
-          {{- toYaml .Values.config.snippets.pipelineStages | nindent 4 }}
+          {{- tpl (toYaml .Values.config.snippets.pipelineStages) . | nindent 4 }}
         kubernetes_sd_configs:
           - role: pod
         relabel_configs:
