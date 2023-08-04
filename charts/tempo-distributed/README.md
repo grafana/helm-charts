@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.5.4](https://img.shields.io/badge/Version-1.5.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -44,6 +44,10 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.6.0
+
+The metrics generator component in the chart has been disabled by default, but the configuration for the processors was not empty, resulting error sin the distributor log.  Here we align the default metrics generator config settings to both disable the generator and remove processors.  Users who wish to keep the their processors enabled, will need to update their values.
 
 ### From Chart versions < 1.5.0
 
@@ -445,8 +449,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
-| global_overrides.metrics_generator_processors[0] | string | `"service-graphs"` |  |
-| global_overrides.metrics_generator_processors[1] | string | `"span-metrics"` |  |
+| global_overrides.metrics_generator_processors | list | `[]` |  |
 | global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |

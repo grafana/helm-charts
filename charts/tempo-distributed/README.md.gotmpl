@@ -39,6 +39,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.6.0
+
+The metrics generator component in the chart has been disabled by default, but the configuration for the processors was not empty, resulting error sin the distributor log.  Here we align the default metrics generator config settings to both disable the generator and remove processors.  Users who wish to keep the their processors enabled, will need to update their values.
+
 ### From Chart versions < 1.5.0
 
 Please be aware that we've updated the minor version to Tempo 2.2, which includes breaking changes.
