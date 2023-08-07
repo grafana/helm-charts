@@ -245,7 +245,9 @@ This version requires Helm >= 3.1.0.
 | `serviceMonitor.tlsConfig`                | TLS configuration block for the endpoint      | `{}`                                                    |
 | `serviceMonitor.labels`                   | Labels for the servicemonitor passed to Prometheus Operator      |  `{}`                                |
 | `serviceMonitor.scrapeTimeout`            | Timeout after which the scrape is ended       | `30s`                                                   |
-| `serviceMonitor.relabelings`              | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
+| `serviceMonitor.relabelings`              | RelabelConfigs to apply to samples before scraping.     | `[]`                                      |
+| `serviceMonitor.metricRelabelings`        | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
+
 | `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
 | `imageRenderer.enabled`                    | Enable the image-renderer deployment & service                                     | `false`                          |
 | `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `grafana/grafana-image-renderer` |
