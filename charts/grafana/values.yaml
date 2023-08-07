@@ -207,6 +207,7 @@ serviceMonitor:
   tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
+  metricRelabelings: []
   targetLabels: []
 
 extraExposePorts: []
