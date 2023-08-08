@@ -214,6 +214,8 @@ ingester:
     max_block_duration: null
     # -- Duration to keep blocks in the ingester after they have been flushed
     complete_block_timeout: null
+    # -- Flush all traces to backend when ingester is stopped
+    flush_all_on_shutdown: false
   service:
     # -- Annotations for ingester service
     annotations: {}
@@ -1208,6 +1210,9 @@ config: |
     {{- end }}
     {{- if .Values.ingester.config.complete_block_timeout }}
     complete_block_timeout: {{ .Values.ingester.config.complete_block_timeout }}
+    {{- end }}
+    {{- if .Values.ingester.config.flush_all_on_shutdown }}
+    flush_all_on_shutdown: {{ .Values.ingester.config.flush_all_on_shutdown }}
     {{- end }}
   memberlist:
     {{- with .Values.memberlist }}

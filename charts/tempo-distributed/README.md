@@ -462,6 +462,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the ingester |
 | ingester.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the ingester |
 | ingester.config.complete_block_timeout | string | `nil` | Duration to keep blocks in the ingester after they have been flushed |
+| ingester.config.flush_all_on_shutdown | bool | `false` | Flush all traces to backend when ingester is stopped |
 | ingester.config.flush_check_period | string | `nil` | How often to sweep all tenants and move traces from live -> wal -> completed blocks. |
 | ingester.config.max_block_bytes | string | `nil` | Maximum size of a block before cutting it |
 | ingester.config.max_block_duration | string | `nil` | Maximum length of time before cutting a block |
