@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 1.6.1](https://img.shields.io/badge/Version-1.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -717,6 +717,7 @@ The memcached default args are removed and should be provided manually. The sett
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
 | server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
+| serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
