@@ -214,7 +214,6 @@ extraExposePorts: []
  # - name: keycloak
  #   port: 8080
  #   targetPort: 8080
- #   type: ClusterIP
 
 # overrides pod.spec.hostAliases in the grafana deployment's pods
 hostAliases: []
