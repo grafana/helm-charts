@@ -22,6 +22,9 @@ metadata:
 spec:
   serviceAccountName: {{ include "promtail.serviceAccountName" . }}
   {{- include "promtail.enableServiceLinks" . | nindent 2 }}
+  {{- with .Values.hostNetwork }}
+  hostNetwork: {{ . }}
+  {{- end }}
   {{- with .Values.priorityClassName }}
   priorityClassName: {{ . }}
   {{- end }}
