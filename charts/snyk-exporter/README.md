@@ -1,6 +1,6 @@
 # snyk-exporter
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: v1.2](https://img.shields.io/badge/AppVersion-v1.2-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: v1.4.1](https://img.shields.io/badge/AppVersion-v1.4.1-informational?style=flat-square)
 
 Prometheus exporter for Snyk.
 
@@ -56,7 +56,7 @@ END
 | nameOverride | string | `nil` | Helm chart name override |
 | nodeSelector | object | `{}` | Node selector |
 | podAnnotations | object | `{}` | Pod annotations |
-| podSecurityContext | object | `{}` | Pod security context |
+| podSecurityContext | object | See the [`values.yaml`](values.yaml) file | Pod security context |
 | replicas | int | `1` | Number of replicas to run |
 | resources | object | `{}` | Pod resources |
 | secret.annotations | object | `{}` |  |
@@ -65,7 +65,7 @@ END
 | secret.key | string | `"snykApiToken"` | Key under which the Snyk API key will be stored in the Secret |
 | secret.labels | object | `{}` | Labels for the secret |
 | secret.name | string | `""` | Name of the secret. Automatically generated if not set. |
-| securityContext | object | `{}` | Container security context |
+| securityContext | object | See the [`values.yaml`](values.yaml) file | Container security context |
 | service.port | string | `nil` | Service port. If not specified, the `exporter.port` is used by default. |
 | service.type | string | `"ClusterIP"` | Service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |

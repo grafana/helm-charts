@@ -18,36 +18,24 @@ image:
 # -- List of Docker image pull sercrets
 imagePullSecrets: []
 
-serviceAccount:
-  # -- Specifies whether a service account should be created
-  create: true
-  # -- Annotations to add to the service account
-  annotations: {}
-  # -- The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: null
-
-service:
-  # -- Service type
-  type: ClusterIP
-  # -- Service port. If not specified, the `exporter.port` is used by default.
-  port: null
-
 # -- Pod annotations
 podAnnotations: {}
 
 # -- Pod security context
-podSecurityContext: {}
-#  fsGroup: 2000
+# @default -- See the [`values.yaml`](values.yaml) file
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- Container security context
-securityContext: {}
-#  capabilities:
-#    drop:
-#      - ALL
-#  readOnlyRootFilesystem: true
-#  runAsNonRoot: true
-#  runAsUser: 1000
+# @default -- See the [`values.yaml`](values.yaml) file
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
 
 # -- Pod resources
 resources: {}
@@ -66,6 +54,21 @@ tolerations: []
 
 # -- Pod affinity
 affinity: {}
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: null
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port. If not specified, the `exporter.port` is used by default.
+  port: null
 
 secret:
   # -- Whether the secret holding the Snyk API key will be created or not
