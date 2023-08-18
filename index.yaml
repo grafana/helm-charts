@@ -39604,6 +39604,21 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/rollout-operator-0.1.0/rollout-operator-0.1.0.tgz
     version: 0.1.0
+  snyk-exporter:
+  - apiVersion: v2
+    appVersion: v1.4.1
+    created: "2023-08-18T08:12:20.427789752Z"
+    description: Prometheus exporter for Snyk.
+    digest: 13bf321237af9d0d8c2203726a387f2602a2557a0fbc39c500da5e619929f298
+    home: https://github.com/grafana/snyk_exporter
+    icon: https://res.cloudinary.com/snyk/image/upload/v1537346326/press-kit/brand/avatar.png
+    maintainers:
+    - email: jiri.tyr@gmail.com
+      name: jtyr
+    name: snyk-exporter
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/snyk-exporter-0.1.0/snyk-exporter-0.1.0.tgz
+    version: 0.1.0
   synthetic-monitoring-agent:
   - apiVersion: v2
     appVersion: v0.9.3-0-gcd7aadd
@@ -45585,4 +45600,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-18T07:53:27.89552522Z"
+generated: "2023-08-18T08:12:20.433022696Z"
