@@ -1,0 +1,21 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pr:
+- "*"
+
+pool:
+  vmImage: "Self Hosted Linux Build "
+
+jobs:
+- job: DeployToNutanixK8s
+  steps:
+  - script: |
+
+
+  displayName: 'Deploy Helm Chart to Natanix K8s'
