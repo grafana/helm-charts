@@ -67,5 +67,8 @@ jobs:
           if [[ "$changed" == "charts/enterprise-metrics" ]]; then
             # Do not run `ct install` for enterprise-metrics
             exit 0
+          elif [[ "$changed" == "charts/snyk-exporter" ]]; then
+            # Do not run `ct install` for snyk-exporter as it requires Snyk API token
+            exit 0
           fi
           ct install --config "${CT_CONFIGFILE}"
