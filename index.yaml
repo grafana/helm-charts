@@ -16544,6 +16544,52 @@ entries:
   k8s-monitoring:
   - apiVersion: v2
     appVersion: 1.2.0
+    created: "2023-08-24T14:55:11.236404476Z"
+    dependencies:
+    - name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.19.0
+    - alias: grafana-agent-logs
+      condition: logs.pod_logs.enabled
+      name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.19.0
+    - condition: kube-state-metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.10.1
+    - condition: prometheus-node-exporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.21.0
+    - condition: prometheus-operator-crds.enabled
+      name: prometheus-operator-crds
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.0.0
+    - condition: prometheus-windows-exporter.enabled
+      name: prometheus-windows-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 0.1.0
+    - condition: opencost.enabled
+      name: opencost
+      repository: https://opencost.github.io/opencost-helm-chart
+      version: 1.18.0
+    description: A Helm chart for gathering, scraping, and forwarding Kubernetes infrastructure
+      metrics and logs to a Grafana Stack.
+    digest: 7e114d569c2fbc7f93963dd3630e73c3f6fe62f7aaa78105104d33cb61698be4
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: stephen.lang@grafana.com
+      name: skl
+    name: k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-0.1.10/k8s-monitoring-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 1.2.0
     created: "2023-08-23T21:43:23.913271086Z"
     dependencies:
     - name: grafana-agent
@@ -46151,4 +46197,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-23T21:43:23.917932131Z"
+generated: "2023-08-24T14:55:11.240382297Z"
