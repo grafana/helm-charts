@@ -25,6 +25,7 @@ daemonset:
 
     # -- List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
     controlledResources: []
+
     # Specifies which resource values should be controlled: RequestsOnly or RequestsAndLimits.
     # controlledValues: RequestsAndLimits
 
@@ -104,6 +105,9 @@ hostAliases: []
 #  - ip: 1.2.3.4
 #    hostnames:
 #      - domain.tld
+
+# -- Controls whether the pod has the `hostNetwork` flag set.
+hostNetwork: null
 
 # -- Annotations for the DaemonSet
 annotations: {}
@@ -273,7 +277,7 @@ serviceMonitor:
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   # (defines `metric_relabel_configs`)
   metricRelabelings: []
-  # --ServiceMonitor will add labels from the service to the Prometheus metric
+  # -- ServiceMonitor will add labels from the service to the Prometheus metric
   # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
   targetLabels: []
   # -- ServiceMonitor will use http by default, but you can pick https as well

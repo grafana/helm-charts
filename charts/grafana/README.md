@@ -53,6 +53,7 @@ This version requires Helm >= 3.1.0.
 | `replicas`                                | Number of nodes                               | `1`                                                     |
 | `podDisruptionBudget.minAvailable`        | Pod disruption minimum available              | `nil`                                                   |
 | `podDisruptionBudget.maxUnavailable`      | Pod disruption maximum unavailable            | `nil`                                                   |
+| `podDisruptionBudget.apiVersion`          | Pod disruption apiVersion                     | `nil`                                                   |
 | `deploymentStrategy`                      | Deployment strategy                           | `{ "type": "RollingUpdate" }`                           |
 | `livenessProbe`                           | Liveness Probe settings                       | `{ "httpGet": { "path": "/api/health", "port": 3000 } "initialDelaySeconds": 60, "timeoutSeconds": 30, "failureThreshold": 10 }` |
 | `readinessProbe`                          | Readiness Probe settings                      | `{ "httpGet": { "path": "/api/health", "port": 3000 } }`|
