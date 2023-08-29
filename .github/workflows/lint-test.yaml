@@ -18,6 +18,11 @@ on:
         default: v3.8.2
         required: false
         type: string
+      k8s_version:
+        description: version of the kubectl binary used for the kind cluster
+        default: v1.26.4
+        required: false
+        type: string
 
 env:
   CT_CONFIGFILE: ${{ inputs.ct_configfile }}
@@ -60,6 +65,8 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.8.0
         if: steps.list-changed.outputs.changed == 'true'
+        with:
+          kubectl_version: ${{ inputs.k8s_version }}
 
       - name: Run chart-testing (install)
         run: |
