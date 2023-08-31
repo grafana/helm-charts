@@ -18,9 +18,14 @@ on:
         default: v3.8.2
         required: false
         type: string
-      k8s_version:
+      kind_kubectl_version:
         description: version of the kubectl binary used for the kind cluster
         default: v1.26.4
+        required: false
+        type: string
+      kind_node_image:
+        description: image reference for the node containers in the kind_cluster
+        default: kindest/node:v1.27.3
         required: false
         type: string
 
@@ -66,7 +71,8 @@ jobs:
         uses: helm/kind-action@v1.8.0
         if: steps.list-changed.outputs.changed == 'true'
         with:
-          kubectl_version: ${{ inputs.k8s_version }}
+          kubectl_version: ${{ inputs.kind_kubectl_version }}
+          node_image: ${{ inputs.kind_node_image }}
 
       - name: Run chart-testing (install)
         run: |
