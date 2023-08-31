@@ -20,12 +20,10 @@ on:
         type: string
       kind_kubectl_version:
         description: version of the kubectl binary used for the kind cluster
-        default: v1.26.4
         required: false
         type: string
       kind_node_image:
         description: image reference for the node containers in the kind_cluster
-        default: kindest/node:v1.27.3
         required: false
         type: string
 
