@@ -1,0 +1,10 @@
+apiVersion: v2
+name: snyk-exporter
+description: Prometheus exporter for Snyk.
+version: 0.1.0
+appVersion: v1.4.1
+home: https://github.com/grafana/snyk_exporter
+icon: https://res.cloudinary.com/snyk/image/upload/v1537346326/press-kit/brand/avatar.png
+maintainers:
+  - name: jtyr
+    email: jiri.tyr@gmail.com

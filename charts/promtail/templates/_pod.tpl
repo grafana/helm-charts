@@ -22,6 +22,9 @@ metadata:
 spec:
   serviceAccountName: {{ include "promtail.serviceAccountName" . }}
   {{- include "promtail.enableServiceLinks" . | nindent 2 }}
+  {{- with .Values.hostNetwork }}
+  hostNetwork: {{ . }}
+  {{- end }}
   {{- with .Values.priorityClassName }}
   priorityClassName: {{ . }}
   {{- end }}
@@ -31,6 +34,10 @@ spec:
   {{- end }}
   {{- with .Values.global.imagePullSecrets | default .Values.imagePullSecrets }}
   imagePullSecrets:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.hostAliases }}
+  hostAliases:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   securityContext:
