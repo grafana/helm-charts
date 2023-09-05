@@ -15,6 +15,10 @@ spec:
 {{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ .Values.ingester.replicas }}
 {{- end }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.ingester.maxSurge }}
+      maxUnavailable: 1
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -42,6 +46,10 @@ spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ingester.hostAliases }}
+      hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "loki.ingesterPriorityClassName" . | nindent 6 }}
@@ -98,6 +106,10 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.ingester.resources | nindent 12 }}
+          {{- with .Values.ingester.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- if .Values.ingester.extraContainers }}
         {{- toYaml .Values.ingester.extraContainers | nindent 8}}
         {{- end }}

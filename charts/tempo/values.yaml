@@ -7,6 +7,9 @@ fullnameOverride: ""
 # -- Define the amount of instances
 replicas: 1
 
+# -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+# revisionHistoryLimit: 1
+
 # -- Annotations for the StatefulSet
 annotations: {}
 
