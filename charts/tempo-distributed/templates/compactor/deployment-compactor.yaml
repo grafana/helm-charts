@@ -50,6 +50,10 @@ spec:
       {{- end }}
       enableServiceLinks: false
       {{- include "tempo.compactorImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.compactor.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - args:
             - -target=compactor
