@@ -214,7 +214,7 @@ loki-simple-scalable:
   # RBAC configuration
   rbac:
     # -- If enabled, a PodSecurityPolicy is created
-    pspEnabled: true
+    pspEnabled: false
 
   # -- Override gateway nginx.conf to include admin-api routes
   gateway:
