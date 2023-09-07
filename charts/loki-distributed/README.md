@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.71.1](https://img.shields.io/badge/Version-0.71.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
+![Version: 0.73.0](https://img.shields.io/badge/Version-0.73.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -343,6 +343,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedChunks.extraContainers | list | `[]` | Containers to add to the memcached-chunks pods |
 | memcachedChunks.extraEnv | list | `[]` | Environment variables to add to memcached-chunks pods |
 | memcachedChunks.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached-chunks pods |
+| memcachedChunks.extraVolumeMounts | list | `[]` | List of additional volumes to be mounted for the memcached-chunks statefulset |
 | memcachedChunks.hostAliases | list | `[]` | hostAliases to add |
 | memcachedChunks.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | memcachedChunks.nodeSelector | object | `{}` | Node selector for memcached-chunks pods |
@@ -357,6 +358,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedChunks.serviceLabels | object | `{}` | Labels for memcached-chunks service |
 | memcachedChunks.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-chunks to shutdown before it is killed |
 | memcachedChunks.tolerations | list | `[]` | Tolerations for memcached-chunks pods |
+| memcachedChunks.volumeClaimTemplates | list | `[]` | List of additional PVCs to be created for the memcached-chunks statefulset |
 | memcachedExporter.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcachedExporter containers |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
