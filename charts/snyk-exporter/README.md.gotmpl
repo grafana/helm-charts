@@ -1,0 +1,31 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+## Usage
+
+The Helm chart can be installed like this:
+
+```shell
+helm upgrade --install myrelease .
+```
+
+The Helm chart can be configured by providing an extra values:
+
+```shell
+cat <<END | helm upgrade --install --values - myrelease .
+# This is an example how to configure the Snyk exporter for kube-prometheus-stack
+exporter:
+  apiToken: 87654321-432104321-4321-210987654321
+  organizations:
+    - 12345678-1234-1234-1234-123456789012
+  origins:
+    - kubernetes
+  projectFilter: attributes.imageCluster=my-prod-cluster
+  timeout: 30
+END
+```
+
+{{ template "chart.valuesSection" . }}

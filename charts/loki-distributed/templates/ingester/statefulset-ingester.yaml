@@ -55,6 +55,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.ingester.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- include "loki.ingesterPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
@@ -111,6 +115,10 @@ spec:
             {{- end }}
           {{- with .Values.ingester.resources }}
           resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ingester.lifecycle }}
+          lifecycle:
             {{- toYaml . | nindent 12 }}
           {{- end }}
         {{- if .Values.ingester.extraContainers }}

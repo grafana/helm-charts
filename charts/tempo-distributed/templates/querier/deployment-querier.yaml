@@ -52,6 +52,10 @@ spec:
       {{- end }}
       enableServiceLinks: false
       {{- include "tempo.querierImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.querier.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - args:
             - -target=querier
@@ -81,6 +85,10 @@ spec:
             {{- toYaml .Values.querier.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
           securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tempo.readinessProbe }}
+          readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
