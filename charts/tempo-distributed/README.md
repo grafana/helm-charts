@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 1.6.3](https://img.shields.io/badge/Version-1.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.2](https://img.shields.io/badge/AppVersion-2.2.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -462,6 +462,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the ingester |
 | ingester.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the ingester |
 | ingester.config.complete_block_timeout | string | `nil` | Duration to keep blocks in the ingester after they have been flushed |
+| ingester.config.flush_all_on_shutdown | bool | `false` | Flush all traces to backend when ingester is stopped |
 | ingester.config.flush_check_period | string | `nil` | How often to sweep all tenants and move traces from live -> wal -> completed blocks. |
 | ingester.config.max_block_bytes | string | `nil` | Maximum size of a block before cutting it |
 | ingester.config.max_block_duration | string | `nil` | Maximum length of time before cutting a block |
@@ -717,6 +718,7 @@ The memcached default args are removed and should be provided manually. The sett
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
 | server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
+| serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |

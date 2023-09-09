@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "this.fullname" . }}
+  labels: {{- include "this.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels: {{- include "this.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels: {{- include "this.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ template "this.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            {{- with .Values.exporter.apiURL }}
+            - --snyk.api-url={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.restAPIURL }}
+            - --snyk.rest-api-url={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.restAPIVersion }}
+            - --snyk.rest-api-version={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.interval }}
+            - --snyk.interval={{ . }}
+            {{- end }}
+            {{- range .Values.exporter.organizations }}
+            - --snyk.organization={{ . }}
+            {{- end }}
+            {{- range .Values.exporter.targets }}
+            - --snyk.target={{ . }}
+            {{- end }}
+            {{- range .Values.exporter.origins }}
+            - --snyk.origin={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.projectFilter }}
+            - --snyk.project-filter={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.timeout }}
+            - --snyk.timeout={{ . }}
+            {{- end }}
+            - --web.listen-address=:{{ .Values.exporter.port }}
+            {{- with .Values.exporter.logLevel }}
+            - --log.level={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.logFormat }}
+            - --log.format={{ . }}
+            {{- end }}
+            {{- with .Values.exporter.argsFile }}
+            - {{ printf "@%s" . | quote }}
+            {{- end }}
+            {{- range .Values.exporter.extraArgs }}
+            - {{ . }}
+            {{- end }}
+          {{- if or (and .Values.secret.asEnv .Values.secret.create .Values.exporter.apiToken) (and .Values.secret.asEnv (not .Values.secret.create)) }}
+          env:
+            - name: SNYK_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "this.secretName" . }}
+                  key: {{ .Values.secret.key }}
+          {{- end }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.exporter.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: metrics
+          {{- with .Values.resources }}
+          resources: {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}

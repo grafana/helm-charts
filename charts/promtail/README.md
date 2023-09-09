@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.14.1](https://img.shields.io/badge/Version-6.14.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
+![Version: 6.15.1](https://img.shields.io/badge/Version-6.15.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.4](https://img.shields.io/badge/AppVersion-2.8.4-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -114,6 +114,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | global.imagePullSecrets | list | `[]` | Allow parent charts to override registry credentials |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
 | hostAliases | list | `[]` | hostAliases to add |
+| hostNetwork | string | `nil` | Controls whether the pod has the `hostNetwork` flag set. |
 | httpPathPrefix | string | `""` | Base path to server all API routes fro |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |

@@ -76,6 +76,8 @@ loki:
     allowPrivilegeEscalation: false
   # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
   existingSecretForConfig: ""
+  # -- Store the loki configuration as a secret.
+  configAsSecret: false
   # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
   # -- Common annotations for all loki services
@@ -1714,6 +1716,10 @@ memcachedChunks:
     # If empty or set to null, no storageClassName spec is
     # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
     storageClass: null
+  # -- List of additional PVCs to be created for the memcached-chunks statefulset
+  volumeClaimTemplates: []
+  # -- List of additional volumes to be mounted for the memcached-chunks statefulset
+  extraVolumeMounts: []
 
 memcachedFrontend:
   # -- Specifies whether the Memcached frontend cache should be enabled
