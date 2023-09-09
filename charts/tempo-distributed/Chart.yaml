@@ -23,7 +23,7 @@ maintainers:
 dependencies:
   - name: minio
     alias: minio
-    version: 4.0.12
+    version: 8.0.9
     repository: https://helm.min.io/
     condition: minio.enabled
   - name: grafana-agent-operator
