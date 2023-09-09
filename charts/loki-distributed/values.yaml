@@ -76,6 +76,8 @@ loki:
     allowPrivilegeEscalation: false
   # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
   existingSecretForConfig: ""
+  # -- Store the loki configuration as a secret.
+  configAsSecret: false
   # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
   # -- Common annotations for all loki services
