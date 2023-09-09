@@ -104,7 +104,7 @@ loki:
     memberlist:
       join_members:
         - {{ include "loki.fullname" . }}-memberlist
-    
+
     ingester_client:
       grpc_client_config:
         grpc_compression: gzip
