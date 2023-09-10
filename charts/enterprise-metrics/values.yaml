@@ -1047,7 +1047,7 @@ compactor:
 memcached:
   enabled: false
   architecture: high-availability
-  arguments:
+  args:
     - -m 8192
     - -o
     - modern
@@ -1079,7 +1079,7 @@ memcached:
 memcached-queries:
   enabled: false
   architecture: high-availability
-  arguments:
+  args:
     - -m 2048
     - -o
     - modern
@@ -1111,7 +1111,7 @@ memcached-queries:
 memcached-metadata:
   enabled: false
   architecture: high-availability
-  arguments:
+  args:
     - -m 512
     - -o
     - modern
