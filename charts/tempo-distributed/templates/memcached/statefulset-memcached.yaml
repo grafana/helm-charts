@@ -47,6 +47,10 @@ spec:
       {{- end }}
       enableServiceLinks: false
       {{- include "tempo.memcachedExporterImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.memcachedExporter.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}

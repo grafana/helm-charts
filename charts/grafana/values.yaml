@@ -57,6 +57,7 @@ autoscaling:
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 podDisruptionBudget: {}
+#  apiVersion: ""
 #  minAvailable: 1
 #  maxUnavailable: 1
 
@@ -112,6 +113,7 @@ securityContext:
   fsGroup: 472
 
 containerSecurityContext:
+  allowPrivilegeEscalation: false
   capabilities:
     drop:
     - ALL
@@ -206,13 +208,13 @@ serviceMonitor:
   tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
+  metricRelabelings: []
   targetLabels: []
 
 extraExposePorts: []
  # - name: keycloak
  #   port: 8080
  #   targetPort: 8080
- #   type: ClusterIP
 
 # overrides pod.spec.hostAliases in the grafana deployment's pods
 hostAliases: []
@@ -451,7 +453,9 @@ envValueFrom: {}
 envFromSecret: ""
 
 ## Sensible environment variables that will be rendered as new secret object
-## This can be useful for auth tokens, etc
+## This can be useful for auth tokens, etc.
+## If the secret values contains "{{", they'll need to be properly escaped so that they are not interpreted by Helm
+## ref: https://helm.sh/docs/howto/charts_tips_and_tricks/#using-the-tpl-function
 envRenderSecret: {}
 
 ## The names of secrets in the same kubernetes namespace which contain values to be added to the environment
@@ -518,6 +522,7 @@ extraVolumeMounts: []
   #   readOnly: true
   #   hostPath: /usr/shared/
   # - name: grafana-secrets
+  #   mountPath: /mnt/volume2
   #   csi: true
   #   data:
   #     driver: secrets-store.csi.k8s.io
@@ -560,6 +565,8 @@ datasources: {}
 #      jsonData:
 #        authType: default
 #        defaultRegion: us-east-1
+#    deleteDatasources: []
+#    - name: Prometheus
 
 ## Configure grafana alerting (can be templated)
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting
@@ -787,7 +794,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.22.0
+    tag: 1.25.1
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -847,6 +854,8 @@ sidecar:
     script: null
     skipReload: false
     # Deploy the alert sidecar as an initContainer in addition to a container.
+    # Additional alert sidecar volume mounts
+    extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
     sizeLimit: {}
   dashboards:
@@ -1069,6 +1078,21 @@ imageRenderer:
     # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
     # IGNORE_HTTPS_ERRORS: true
+
+  ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
+  ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
+  ## Renders in container spec as:
+  ##   env:
+  ##     ...
+  ##     - name: <key>
+  ##       valueFrom:
+  ##         <value rendered as YAML>
+  envValueFrom: {}
+    #  ENV_NAME:
+    #    configMapKeyRef:
+    #      name: configmap-name
+    #      key: value_key
+
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
   # image-renderer deployment securityContext

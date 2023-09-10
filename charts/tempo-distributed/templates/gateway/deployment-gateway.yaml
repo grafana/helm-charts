@@ -45,6 +45,10 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       enableServiceLinks: false
       {{- include "tempo.gatewayImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.gateway.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: nginx
           image: "{{ include "tempo.imageReference" $dict }}"

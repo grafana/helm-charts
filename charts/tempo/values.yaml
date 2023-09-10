@@ -7,12 +7,15 @@ fullnameOverride: ""
 # -- Define the amount of instances
 replicas: 1
 
+# -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+# revisionHistoryLimit: 1
+
 # -- Annotations for the StatefulSet
 annotations: {}
 
 tempo:
   repository: grafana/tempo
-  tag: 2.0.1
+  tag: null
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -150,7 +153,7 @@ config: |
 
 tempoQuery:
   repository: grafana/tempo-query
-  tag: 2.0.1
+  tag: null
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -160,7 +163,7 @@ tempoQuery:
   #   - myRegistryKeySecretName
 
   # -- if False the tempo-query container is not deployed
-  enabled: true
+  enabled: false
 
   service:
     port: 16686
