@@ -9,6 +9,7 @@ metadata:
   labels:
     {{- include "grafana.labels" $ | nindent 4 }}
     dashboard-provider: {{ $provider }}
+    {{ $.Values.sidecar.dashboards.label }}: {{ $.Values.sidecar.dashboards.labelValue }}
 {{- if $dashboards }}
 data:
 {{- $dashboardFound := false }}
