@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.74.4](https://img.shields.io/badge/Version-0.74.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
+![Version: 0.74.5](https://img.shields.io/badge/Version-0.74.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -332,7 +332,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
 | memcached.image.registry | string | `"docker.io"` | The Docker registry for the memcached |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.17-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.21-alpine"` | Memcached Docker image tag |
 | memcached.livenessProbe.initialDelaySeconds | int | `10` |  |
 | memcached.livenessProbe.tcpSocket.port | string | `"http"` |  |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
@@ -368,7 +368,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
 | memcachedExporter.image.registry | string | `"docker.io"` | The Docker registry for the Memcached Exporter |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
-| memcachedExporter.image.tag | string | `"v0.6.0"` | Memcached Exporter Docker image tag |
+| memcachedExporter.image.tag | string | `"v0.13.0"` | Memcached Exporter Docker image tag |
 | memcachedExporter.podLabels | object | `{}` | Labels for memcached-exporter pods |
 | memcachedExporter.resources | object | `{}` | Memcached Exporter resource requests and limits |
 | memcachedFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
