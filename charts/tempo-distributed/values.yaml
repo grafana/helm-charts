@@ -116,7 +116,7 @@ ingester:
     # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
     enabled: false
     # -- Minimum autoscaling replicas for the ingester
-    minReplicas: 1
+    minReplicas: 2
     # -- Maximum autoscaling replicas for the ingester
     maxReplicas: 3
     # -- Autoscaling behavior configuration for the ingester
