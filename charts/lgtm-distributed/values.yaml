@@ -1,6 +1,6 @@
 ---
 grafana:
-  # -- Deploy Grafana if enabled
+  # -- Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference.
   enabled: true
 
   # -- Grafana data sources config. Connects to all three by default
@@ -37,13 +37,13 @@ grafana:
               datasourceUid: prom
 
 loki:
-  # -- Deploy Loki if enabled
+  # -- Deploy Loki if enabled.  See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed#values) for full values reference.
   enabled: true
 
 mimir:
-  # -- Deploy Mimir if enabled
+  # -- Deploy Mimir if enabled. See [upstream values.yaml](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml) for full values reference.
   enabled: true
 
 tempo:
-  # -- Deploy Tempo if enabled
+  # -- Deploy Tempo if enabled.  See [upstream readme](https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/README.md#values) for full values reference.
   enabled: true
