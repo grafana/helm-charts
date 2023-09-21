@@ -18410,6 +18410,36 @@ entries:
   loki:
   - apiVersion: v2
     appVersion: 2.9.1
+    created: "2023-09-21T15:45:19.51438547Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 4.0.12
+    - alias: grafana-agent-operator
+      condition: monitoring.selfMonitoring.grafanaAgent.installOperator
+      name: grafana-agent-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.16
+    description: Helm chart for Grafana Loki in simple, scalable mode
+    digest: d42d8d98a56c5877be55c76b85d99d032fb55a8cdc1a344f262d3efffd07e1e6
+    home: https://grafana.github.io/helm-charts
+    icon: https://grafana.com/docs/loki/latest/logo_and_name.png
+    maintainers:
+    - name: trevorwhitney
+    - name: jeschkies
+    name: loki
+    sources:
+    - https://github.com/grafana/loki
+    - https://grafana.com/oss/loki/
+    - https://grafana.com/docs/loki/latest/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/helm-loki-5.22.2/loki-5.22.2.tgz
+    version: 5.22.2
+  - apiVersion: v2
+    appVersion: 2.9.1
     created: "2023-09-21T13:21:05.462974387Z"
     dependencies:
     - alias: minio
@@ -48334,4 +48364,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-09-21T13:21:05.479948268Z"
+generated: "2023-09-21T15:45:19.53206558Z"
