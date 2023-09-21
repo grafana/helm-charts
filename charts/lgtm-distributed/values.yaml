@@ -1,8 +1,10 @@
 ---
 grafana:
+  # -- Deploy Grafana if enabled
   enabled: true
+
+  # -- Grafana data sources config. Connects to all three by default
   datasources:
-    enabled: true
     datasources.yaml:
       apiVersion: 1
       datasources:
@@ -35,10 +37,13 @@ grafana:
               datasourceUid: prom
 
 loki:
+  # -- Deploy Loki if enabled
   enabled: true
 
 mimir:
+  # -- Deploy Mimir if enabled
   enabled: true
 
 tempo:
+  # -- Deploy Tempo if enabled
   enabled: true
