@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.74.5](https://img.shields.io/badge/Version-0.74.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
+![Version: 0.74.6](https://img.shields.io/badge/Version-0.74.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -231,10 +231,13 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
 | indexGateway.persistence.annotations | object | `{}` | Annotations for index gateway PVCs |
+| indexGateway.persistence.enableStatefulSetAutoDeletePVC | bool | `false` | Enable StatefulSetAutoDeletePVC feature |
 | indexGateway.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | indexGateway.persistence.inMemory | bool | `false` | Use emptyDir with ramdisk for storage. **Please note that all data in indexGateway will be lost on pod restart** |
 | indexGateway.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | indexGateway.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| indexGateway.persistence.whenDeleted | string | `"Retain"` |  |
+| indexGateway.persistence.whenScaled | string | `"Retain"` |  |
 | indexGateway.podAnnotations | object | `{}` | Annotations for index-gateway pods |
 | indexGateway.podLabels | object | `{}` | Labels for index-gateway pods |
 | indexGateway.priorityClassName | string | `nil` | The name of the PriorityClass for index-gateway pods |
