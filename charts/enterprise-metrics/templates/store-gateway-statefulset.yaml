@@ -77,6 +77,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- with .Values.store_gateway.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       nodeSelector:
         {{- toYaml .Values.store_gateway.nodeSelector | nindent 8 }}
       affinity:

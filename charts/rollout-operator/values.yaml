@@ -9,6 +9,13 @@ image:
   tag: ""
 
 imagePullSecrets: []
+
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -23,6 +30,9 @@ serviceAccount:
 
 # -- Pod Annotations
 podAnnotations: {}
+
+# -- Pod (extra) Labels
+podLabels: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
