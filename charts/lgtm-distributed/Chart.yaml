@@ -29,6 +29,9 @@ annotations:
     - name: Tempo
       url: https://github.com/grafana/tempo
 
+maintainers:
+  - name: timberhill
+
 dependencies:
   - name: grafana
     alias: grafana
