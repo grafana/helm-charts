@@ -493,6 +493,10 @@ ingester:
         storageClass: null
       # - name: wal
       #   size: 150Gi
+    # -- Enable StatefulSetAutoDeletePVC feature
+    enableStatefulSetAutoDeletePVC: false
+    whenDeleted: Retain
+    whenScaled: Retain
 
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
@@ -1605,7 +1609,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.17-alpine
+    tag: 1.6.21-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   # -- Labels for memcached pods
@@ -1637,7 +1641,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.6.0
+    tag: v0.13.0
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
   # -- Labels for memcached-exporter pods
