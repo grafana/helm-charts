@@ -5,13 +5,12 @@
 Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
 **Homepage:** <https://grafana.com/oss/>
- 
+
 ## Maintainers
 
 | Name | Email | Url |
 | ---- | ------ | --- |
 | timberhill |  |  |
-
 
 ## Source Code
 
