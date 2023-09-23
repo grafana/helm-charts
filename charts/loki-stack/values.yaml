@@ -21,10 +21,12 @@ loki:
     jsonData: "{}"
     uid: ""
   commonConfig:
-    replication_factor: 1
+    replication_factor: 3
   storage:
-    type: 'filesystem'
-
+    type: filesystem
+    filesystem:
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
 
 promtail:
   enabled: true
