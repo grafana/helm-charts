@@ -1,8 +1,4 @@
-{{- define "test.var_dump" -}}
-{{- . | mustToPrettyJson | printf "\nThe JSON output of the dumped var is: \n%s" | fail }}
-{{- end -}}
-
-{{/*
+ {{/*
 Create a default fully qualified app name without trimming it at all.
 If release name contains chart name it will be used as a full name.
 This value is essentially the same as "mimir.fullname" in the upstream chart.
