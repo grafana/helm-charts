@@ -1592,6 +1592,10 @@ indexGateway:
     storageClass: null
     # -- Annotations for index gateway PVCs
     annotations: {}
+    # -- Enable StatefulSetAutoDeletePVC feature
+    enableStatefulSetAutoDeletePVC: false
+    whenDeleted: Retain
+    whenScaled: Retain
 
 memcached:
   readinessProbe:
