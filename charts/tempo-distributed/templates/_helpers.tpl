@@ -204,6 +204,10 @@ configMap:
   items:
     - key: "tempo.yaml"
       path: "tempo.yaml"
+{{- if .Values.queryFrontend.query.enabled }}
+    - key: "tempo-query.yaml"
+      path: "tempo-query.yaml"
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
