@@ -393,6 +393,8 @@ distributor:
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
   serviceDiscovery:
+    # -- Annotations for distributorDiscovery service
+    annotations: {}
     # -- Labels for distributorDiscovery service
     labels: {}
   # -- The name of the PriorityClass for distributor pods
