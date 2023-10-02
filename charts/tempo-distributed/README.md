@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.6.7](https://img.shields.io/badge/Version-1.6.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.3](https://img.shields.io/badge/AppVersion-2.2.3-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.3](https://img.shields.io/badge/AppVersion-2.2.3-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -308,6 +308,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
+| distributor.serviceDiscovery.annotations | object | `{}` | Annotations for distributorDiscovery service |
 | distributor.serviceDiscovery.labels | object | `{}` | Labels for distributorDiscovery service |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
