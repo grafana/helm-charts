@@ -18689,6 +18689,60 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-0.0.3/k8s-monitoring-0.0.3.tgz
     version: 0.0.3
+  lgtm-distributed:
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/grafana/helm-charts
+        - name: Grafana
+          url: https://github.com/grafana/grafana
+        - name: Loki
+          url: https://github.com/grafana/loki
+        - name: Mimir
+          url: https://github.com/grafana/mimir
+        - name: Tempo
+          url: https://github.com/grafana/tempo
+    apiVersion: v2
+    appVersion: 6.59.4
+    created: "2023-10-03T22:40:56.199824645Z"
+    dependencies:
+    - alias: grafana
+      condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ^6.59.4
+    - alias: loki
+      condition: loki.enabled
+      name: loki-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: ^0.74.3
+    - alias: mimir
+      condition: mimir.enabled
+      name: mimir-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: ^5.0.0
+    - alias: tempo
+      condition: tempo.enabled
+      name: tempo-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: ^1.6.4
+    description: Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
+    digest: 6a212295e2bc39eee37a71867b35a3d9c5cd20696919ee992e009719f34808a8
+    home: https://grafana.com/oss/
+    icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
+    maintainers:
+    - name: timberhill
+    name: lgtm-distributed
+    sources:
+    - https://grafana.github.io/helm-charts
+    - https://github.com/grafana/grafana
+    - https://github.com/grafana/loki
+    - https://github.com/grafana/mimir
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/lgtm-distributed-1.0.0/lgtm-distributed-1.0.0.tgz
+    version: 1.0.0
   loki:
   - apiVersion: v2
     appVersion: 2.9.1
@@ -49011,4 +49065,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-03T21:42:37.567393528Z"
+generated: "2023-10-03T22:40:56.202898491Z"
