@@ -10,7 +10,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     prometheus.io/service-monitor: "false"
-  {{- with .Values.distributor.service.annotations }}
+  {{- with .Values.distributor.serviceDiscovery.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
