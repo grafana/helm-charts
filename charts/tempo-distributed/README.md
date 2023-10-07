@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.6.9](https://img.shields.io/badge/Version-1.6.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.3](https://img.shields.io/badge/AppVersion-2.2.3-informational?style=flat-square)
+![Version: 1.6.10](https://img.shields.io/badge/Version-1.6.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.3](https://img.shields.io/badge/AppVersion-2.2.3-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -71,7 +71,7 @@ Version 0.27.0:
 
 Many changes have been introduced, including some breaking changes.
 
-The (PR)[https://github.com/grafana/helm-charts/pull/1759] includes additional details.
+The [PR](https://github.com/grafana/helm-charts/pull/1759) includes additional details.
 
 * **BREAKING CHANGE** centralize selector label handling -- users who wish to keep old values should still be able to use the `nameOverride` and `fullNameOverride` top level keys in their values.
 
