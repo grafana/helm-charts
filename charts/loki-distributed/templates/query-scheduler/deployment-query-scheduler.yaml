@@ -38,6 +38,7 @@ spec:
         {{- with .Values.queryScheduler.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/part-of: memberlist
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -68,6 +69,9 @@ spec:
               protocol: TCP
             - name: grpc
               containerPort: 9095
+              protocol: TCP
+            - name: http-memberlist
+              containerPort: 7946
               protocol: TCP
           {{- with .Values.queryScheduler.extraEnv }}
           env:
