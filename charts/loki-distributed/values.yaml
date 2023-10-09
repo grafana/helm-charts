@@ -1517,6 +1517,8 @@ indexGateway:
   enabled: false
   # -- Number of replicas for the index-gateway
   replicas: 1
+  # -- Whether the index gateway should join the memberlist hashring
+  joinMemberlist: true
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
