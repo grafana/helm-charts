@@ -1446,6 +1446,9 @@ ruler:
     storageClass: null
     # -- Annotations for ruler PVCs
     annotations: {}
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
   # -- Directories containing rules files
   directories: {}
     # tenant_foo:

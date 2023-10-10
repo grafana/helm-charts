@@ -554,6 +554,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
+| ruler.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | ruler.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ruler.directories | object | `{}` | Directories containing rules files |
 | ruler.dnsConfig | object | `{}` | DNSConfig for ruler pods |
