@@ -216,6 +216,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | hostAliases | list | `[]` | hostAliases to add |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| indexGateway.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | indexGateway.enabled | bool | `false` | Specifies whether the index-gateway should be enabled |
 | indexGateway.extraArgs | list | `[]` | Additional CLI args for the index-gateway |
 | indexGateway.extraContainers | list | `[]` | Containers to add to the index-gateway pods |
@@ -528,6 +529,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | queryScheduler.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string |
+| queryScheduler.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | queryScheduler.enabled | bool | `false` | Specifies whether the query-scheduler should be decoupled from the query-frontend |
 | queryScheduler.extraArgs | list | `[]` | Additional CLI args for the query-scheduler |
 | queryScheduler.extraContainers | list | `[]` | Containers to add to the query-scheduler pods |
