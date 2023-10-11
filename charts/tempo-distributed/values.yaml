@@ -1308,7 +1308,7 @@ storage:
       version: null
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
-    # -- The worker pool is used primarily when finding traces by id, but is also used by other.
+    # The worker pool is used primarily when finding traces by id, but is also used by other.
     pool:
       # -- Total number of workers pulling jobs from the queue
       max_workers: 400
