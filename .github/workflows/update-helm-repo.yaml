@@ -108,7 +108,7 @@ jobs:
           fetch-depth: 0
           repository: grafana/helm-charts
           path: helm-charts
-          token: ${{ secrets.helm_repo_token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git for helm-charts
         run: |
