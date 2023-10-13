@@ -33,7 +33,7 @@ loki:
     index_gateway:
       mode: ring
     query_scheduler:
-      use_scheduler_ring: false
+      use_scheduler_ring: true
 ```
 
 ### From 0.68.x to 0.69.0
