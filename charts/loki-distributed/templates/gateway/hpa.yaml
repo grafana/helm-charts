@@ -38,6 +38,9 @@ spec:
         targetAverageUtilization: {{ . }}
         {{- end }}
   {{- end }}
+  {{- with .Values.gateway.autoscaling.customMetrics }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.gateway.autoscaling.behavior.enabled }}
   behavior:
     {{- with .Values.gateway.autoscaling.behavior.scaleDown }}
