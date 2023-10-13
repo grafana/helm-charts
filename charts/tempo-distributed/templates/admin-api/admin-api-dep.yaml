@@ -43,6 +43,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- with .Values.adminApi.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: admin-api
           image: "{{ include "tempo.imageReference" $dict }}"
@@ -102,7 +106,7 @@ spec:
         {{- end }}
       nodeSelector:
         {{- toYaml .Values.adminApi.nodeSelector | nindent 8 }}
-      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.adminApi.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- tpl . $ | nindent 8 }}

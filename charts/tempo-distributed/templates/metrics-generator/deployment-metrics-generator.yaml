@@ -47,6 +47,10 @@ spec:
       {{- end }}
       enableServiceLinks: false
       {{- include "tempo.metricsGeneratorImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.metricsGenerator.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - args:
             - -target=metrics-generator
@@ -94,7 +98,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.metricsGenerator.terminationGracePeriodSeconds }}
-      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.metricsGenerator.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- tpl . $ | nindent 8 }}

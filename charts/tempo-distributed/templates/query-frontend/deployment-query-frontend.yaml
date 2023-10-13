@@ -52,6 +52,10 @@ spec:
       {{- end }}
       enableServiceLinks: false
       {{- include "tempo.queryImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.queryFrontend.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - args:
             - -target=query-frontend
@@ -134,7 +138,7 @@ spec:
             {{- end }}
       {{- end}}
       terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
-      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.queryFrontend.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- tpl . $ | nindent 8 }}

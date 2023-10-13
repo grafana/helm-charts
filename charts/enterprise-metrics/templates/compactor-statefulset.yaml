@@ -78,6 +78,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- with .Values.compactor.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       nodeSelector:
         {{- toYaml .Values.compactor.nodeSelector | nindent 8 }}
       affinity:

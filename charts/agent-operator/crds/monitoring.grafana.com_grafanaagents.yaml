@@ -1097,10 +1097,19 @@ spec:
               configMaps:
                 description: ConfigMaps is a list of config maps in the same namespace
                   as the GrafanaAgent object which will be mounted into each running
-                  Grafana Agent pod. The ConfigMaps are mounted into /etc/grafana-agent/extra-configmaps/<configmap-name>.
+                  Grafana Agent pod. The ConfigMaps are mounted into /var/lib/grafana-agent/extra-configmaps/<configmap-name>.
                 items:
                   type: string
                 type: array
+              configReloaderImage:
+                description: Image, when specified, overrides the image used to run
+                  Config Reloader. Specify the image along with a tag. You still need
+                  to set the version to ensure Grafana Agent Operator knows which
+                  version of Grafana Agent is being configured.
+                type: string
+              configReloaderVersion:
+                description: Version of Config Reloader to be deployed.
+                type: string
               containers:
                 description: 'Containers lets you inject additional containers or
                   modify operator-generated containers. This can be used to add an
@@ -1362,7 +1371,9 @@ spec:
                                       to be used in HTTP probes
                                     properties:
                                       name:
-                                        description: The header field name
+                                        description: The header field name. This will
+                                          be canonicalized upon output, so case-variant
+                                          names will be understood as the same header.
                                         type: string
                                       value:
                                         description: The header field value
@@ -1458,7 +1469,9 @@ spec:
                                       to be used in HTTP probes
                                     properties:
                                       name:
-                                        description: The header field name
+                                        description: The header field name. This will
+                                          be canonicalized upon output, so case-variant
+                                          names will be understood as the same header.
                                         type: string
                                       value:
                                         description: The header field value
@@ -1538,8 +1551,6 @@ spec:
                           type: integer
                         grpc:
                           description: GRPC specifies an action involving a GRPC port.
-                            This is a beta field and requires enabling GRPCContainerProbe
-                            feature gate.
                           properties:
                             port:
                               description: Port number of the gRPC service. Number
@@ -1571,7 +1582,9 @@ spec:
                                   to be used in HTTP probes
                                 properties:
                                   name:
-                                    description: The header field name
+                                    description: The header field name. This will
+                                      be canonicalized upon output, so case-variant
+                                      names will be understood as the same header.
                                     type: string
                                   value:
                                     description: The header field value
@@ -1740,8 +1753,6 @@ spec:
                           type: integer
                         grpc:
                           description: GRPC specifies an action involving a GRPC port.
-                            This is a beta field and requires enabling GRPCContainerProbe
-                            feature gate.
                           properties:
                             port:
                               description: Port number of the gRPC service. Number
@@ -1773,7 +1784,9 @@ spec:
                                   to be used in HTTP probes
                                 properties:
                                   name:
-                                    description: The header field name
+                                    description: The header field name. This will
+                                      be canonicalized upon output, so case-variant
+                                      names will be understood as the same header.
                                     type: string
                                   value:
                                     description: The header field value
@@ -1862,6 +1875,26 @@ spec:
                           format: int32
                           type: integer
                       type: object
+                    resizePolicy:
+                      description: Resources resize policy for the container.
+                      items:
+                        description: ContainerResizePolicy represents resource resize
+                          policy for the container.
+                        properties:
+                          resourceName:
+                            description: 'Name of the resource to which this resource
+                              resize policy applies. Supported values: cpu, memory.'
+                            type: string
+                          restartPolicy:
+                            description: Restart policy to apply when specified resource
+                              is resized. If not specified, it defaults to NotRequired.
+                            type: string
+                        required:
+                        - resourceName
+                        - restartPolicy
+                        type: object
+                      type: array
+                      x-kubernetes-list-type: atomic
                     resources:
                       description: 'Compute Resources required by this container.
                         Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
@@ -1870,7 +1903,8 @@ spec:
                           description: "Claims lists the names of resources, defined
                             in spec.resourceClaims, that are used by this container.
                             \n This is an alpha field and requires enabling the DynamicResourceAllocation
-                            feature gate. \n This field is immutable."
+                            feature gate. \n This field is immutable. It can only
+                            be set for containers."
                           items:
                             description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                             properties:
@@ -1907,10 +1941,29 @@ spec:
                           description: 'Requests describes the minimum amount of compute
                             resources required. If Requests is omitted for a container,
                             it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                            otherwise to an implementation-defined value. Requests
+                            cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                           type: object
                       type: object
+                    restartPolicy:
+                      description: 'RestartPolicy defines the restart behavior of
+                        individual containers in a pod. This field may only be set
+                        for init containers, and the only allowed value is "Always".
+                        For non-init containers or when this field is not specified,
+                        the restart behavior is defined by the Pod''s restart policy
+                        and the container type. Setting the RestartPolicy as "Always"
+                        for the init container will have the following effect: this
+                        init container will be continually restarted on exit until
+                        all regular containers have terminated. Once all regular containers
+                        have completed, all init containers with restartPolicy "Always"
+                        will be shut down. This lifecycle differs from normal init
+                        containers and is often referred to as a "sidecar" container.
+                        Although this init container still starts in the init container
+                        sequence, it does not wait for the container to complete before
+                        proceeding to the next init container. Instead, the next init
+                        container starts immediately after this init container is
+                        started, or after any startupProbe has successfully completed.'
+                      type: string
                     securityContext:
                       description: 'SecurityContext defines the security options the
                         container should be run with. If set, the fields of SecurityContext
@@ -2032,8 +2085,8 @@ spec:
                                 in a file on the node should be used. The profile
                                 must be preconfigured on the node to work. Must be
                                 a descending path, relative to the kubelet's configured
-                                seccomp profile location. Must only be set if type
-                                is "Localhost".
+                                seccomp profile location. Must be set if type is "Localhost".
+                                Must NOT be set for any other type.
                               type: string
                             type:
                               description: "type indicates which kind of seccomp profile
@@ -2066,16 +2119,12 @@ spec:
                               type: string
                             hostProcess:
                               description: HostProcess determines if a container should
-                                be run as a 'Host Process' container. This field is
-                                alpha-level and will only be honored by components
-                                that enable the WindowsHostProcessContainers feature
-                                flag. Setting this field without the feature flag
-                                will result in errors when validating the Pod. All
-                                of a Pod's containers must have the same effective
-                                HostProcess value (it is not allowed to have a mix
-                                of HostProcess containers and non-HostProcess containers).  In
-                                addition, if HostProcess is true then HostNetwork
-                                must also be set to true.
+                                be run as a 'Host Process' container. All of a Pod's
+                                containers must have the same effective HostProcess
+                                value (it is not allowed to have a mix of HostProcess
+                                containers and non-HostProcess containers). In addition,
+                                if HostProcess is true then HostNetwork must also
+                                be set to true.
                               type: boolean
                             runAsUserName:
                               description: The UserName in Windows to run the entrypoint
@@ -2121,8 +2170,6 @@ spec:
                           type: integer
                         grpc:
                           description: GRPC specifies an action involving a GRPC port.
-                            This is a beta field and requires enabling GRPCContainerProbe
-                            feature gate.
                           properties:
                             port:
                               description: Port number of the gRPC service. Number
@@ -2154,7 +2201,9 @@ spec:
                                   to be used in HTTP probes
                                 properties:
                                   name:
-                                    description: The header field name
+                                    description: The header field name. This will
+                                      be canonicalized upon output, so case-variant
+                                      names will be understood as the same header.
                                     type: string
                                   value:
                                     description: The header field value
@@ -2650,7 +2699,9 @@ spec:
                                       to be used in HTTP probes
                                     properties:
                                       name:
-                                        description: The header field name
+                                        description: The header field name. This will
+                                          be canonicalized upon output, so case-variant
+                                          names will be understood as the same header.
                                         type: string
                                       value:
                                         description: The header field value
@@ -2746,7 +2797,9 @@ spec:
                                       to be used in HTTP probes
                                     properties:
                                       name:
-                                        description: The header field name
+                                        description: The header field name. This will
+                                          be canonicalized upon output, so case-variant
+                                          names will be understood as the same header.
                                         type: string
                                       value:
                                         description: The header field value
@@ -2826,8 +2879,6 @@ spec:
                           type: integer
                         grpc:
                           description: GRPC specifies an action involving a GRPC port.
-                            This is a beta field and requires enabling GRPCContainerProbe
-                            feature gate.
                           properties:
                             port:
                               description: Port number of the gRPC service. Number
@@ -2859,7 +2910,9 @@ spec:
                                   to be used in HTTP probes
                                 properties:
                                   name:
-                                    description: The header field name
+                                    description: The header field name. This will
+                                      be canonicalized upon output, so case-variant
+                                      names will be understood as the same header.
                                     type: string
                                   value:
                                     description: The header field value
@@ -3028,8 +3081,6 @@ spec:
                           type: integer
                         grpc:
                           description: GRPC specifies an action involving a GRPC port.
-                            This is a beta field and requires enabling GRPCContainerProbe
-                            feature gate.
                           properties:
                             port:
                               description: Port number of the gRPC service. Number
@@ -3061,7 +3112,9 @@ spec:
                                   to be used in HTTP probes
                                 properties:
                                   name:
-                                    description: The header field name
+                                    description: The header field name. This will
+                                      be canonicalized upon output, so case-variant
+                                      names will be understood as the same header.
                                     type: string
                                   value:
                                     description: The header field value
@@ -3150,6 +3203,26 @@ spec:
                           format: int32
                           type: integer
                       type: object
+                    resizePolicy:
+                      description: Resources resize policy for the container.
+                      items:
+                        description: ContainerResizePolicy represents resource resize
+                          policy for the container.
+                        properties:
+                          resourceName:
+                            description: 'Name of the resource to which this resource
+                              resize policy applies. Supported values: cpu, memory.'
+                            type: string
+                          restartPolicy:
+                            description: Restart policy to apply when specified resource
+                              is resized. If not specified, it defaults to NotRequired.
+                            type: string
+                        required:
+                        - resourceName
+                        - restartPolicy
+                        type: object
+                      type: array
+                      x-kubernetes-list-type: atomic
                     resources:
                       description: 'Compute Resources required by this container.
                         Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
@@ -3158,7 +3231,8 @@ spec:
                           description: "Claims lists the names of resources, defined
                             in spec.resourceClaims, that are used by this container.
                             \n This is an alpha field and requires enabling the DynamicResourceAllocation
-                            feature gate. \n This field is immutable."
+                            feature gate. \n This field is immutable. It can only
+                            be set for containers."
                           items:
                             description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                             properties:
@@ -3195,10 +3269,29 @@ spec:
                           description: 'Requests describes the minimum amount of compute
                             resources required. If Requests is omitted for a container,
                             it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                            otherwise to an implementation-defined value. Requests
+                            cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                           type: object
                       type: object
+                    restartPolicy:
+                      description: 'RestartPolicy defines the restart behavior of
+                        individual containers in a pod. This field may only be set
+                        for init containers, and the only allowed value is "Always".
+                        For non-init containers or when this field is not specified,
+                        the restart behavior is defined by the Pod''s restart policy
+                        and the container type. Setting the RestartPolicy as "Always"
+                        for the init container will have the following effect: this
+                        init container will be continually restarted on exit until
+                        all regular containers have terminated. Once all regular containers
+                        have completed, all init containers with restartPolicy "Always"
+                        will be shut down. This lifecycle differs from normal init
+                        containers and is often referred to as a "sidecar" container.
+                        Although this init container still starts in the init container
+                        sequence, it does not wait for the container to complete before
+                        proceeding to the next init container. Instead, the next init
+                        container starts immediately after this init container is
+                        started, or after any startupProbe has successfully completed.'
+                      type: string
                     securityContext:
                       description: 'SecurityContext defines the security options the
                         container should be run with. If set, the fields of SecurityContext
@@ -3320,8 +3413,8 @@ spec:
                                 in a file on the node should be used. The profile
                                 must be preconfigured on the node to work. Must be
                                 a descending path, relative to the kubelet's configured
-                                seccomp profile location. Must only be set if type
-                                is "Localhost".
+                                seccomp profile location. Must be set if type is "Localhost".
+                                Must NOT be set for any other type.
                               type: string
                             type:
                               description: "type indicates which kind of seccomp profile
@@ -3354,16 +3447,12 @@ spec:
                               type: string
                             hostProcess:
                               description: HostProcess determines if a container should
-                                be run as a 'Host Process' container. This field is
-                                alpha-level and will only be honored by components
-                                that enable the WindowsHostProcessContainers feature
-                                flag. Setting this field without the feature flag
-                                will result in errors when validating the Pod. All
-                                of a Pod's containers must have the same effective
-                                HostProcess value (it is not allowed to have a mix
-                                of HostProcess containers and non-HostProcess containers).  In
-                                addition, if HostProcess is true then HostNetwork
-                                must also be set to true.
+                                be run as a 'Host Process' container. All of a Pod's
+                                containers must have the same effective HostProcess
+                                value (it is not allowed to have a mix of HostProcess
+                                containers and non-HostProcess containers). In addition,
+                                if HostProcess is true then HostNetwork must also
+                                be set to true.
                               type: boolean
                             runAsUserName:
                               description: The UserName in Windows to run the entrypoint
@@ -3409,8 +3498,6 @@ spec:
                           type: integer
                         grpc:
                           description: GRPC specifies an action involving a GRPC port.
-                            This is a beta field and requires enabling GRPCContainerProbe
-                            feature gate.
                           properties:
                             port:
                               description: Port number of the gRPC service. Number
@@ -3442,7 +3529,9 @@ spec:
                                   to be used in HTTP probes
                                 properties:
                                   name:
-                                    description: The header field name
+                                    description: The header field name. This will
+                                      be canonicalized upon output, so case-variant
+                                      names will be understood as the same header.
                                     type: string
                                   value:
                                     description: The header field value
@@ -4830,6 +4919,10 @@ spec:
                                 - Lowercase
                                 - uppercase
                                 - Uppercase
+                                - keepequal
+                                - KeepEqual
+                                - dropequal
+                                - DropEqual
                                 type: string
                               modulus:
                                 description: Modulus to take of the hash of the source
@@ -4955,7 +5048,8 @@ spec:
                     description: "Claims lists the names of resources, defined in
                       spec.resourceClaims, that are used by this container. \n This
                       is an alpha field and requires enabling the DynamicResourceAllocation
-                      feature gate. \n This field is immutable."
+                      feature gate. \n This field is immutable. It can only be set
+                      for containers."
                     items:
                       description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                       properties:
@@ -4991,7 +5085,8 @@ spec:
                     description: 'Requests describes the minimum amount of compute
                       resources required. If Requests is omitted for a container,
                       it defaults to Limits if that is explicitly specified, otherwise
-                      to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                      to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                     type: object
                 type: object
               runtimeClassName:
@@ -5000,7 +5095,7 @@ spec:
               secrets:
                 description: Secrets is a list of secrets in the same namespace as
                   the GrafanaAgent object which will be mounted into each running
-                  Grafana Agent pod. The secrets are mounted into /etc/grafana-agent/extra-secrets/<secret-name>.
+                  Grafana Agent pod. The secrets are mounted into /var/lib/grafana-agent/extra-secrets/<secret-name>.
                 items:
                   type: string
                 type: array
@@ -5092,7 +5187,8 @@ spec:
                           in a file on the node should be used. The profile must be
                           preconfigured on the node to work. Must be a descending
                           path, relative to the kubelet's configured seccomp profile
-                          location. Must only be set if type is "Localhost".
+                          location. Must be set if type is "Localhost". Must NOT be
+                          set for any other type.
                         type: string
                       type:
                         description: "type indicates which kind of seccomp profile
@@ -5156,14 +5252,11 @@ spec:
                         type: string
                       hostProcess:
                         description: HostProcess determines if a container should
-                          be run as a 'Host Process' container. This field is alpha-level
-                          and will only be honored by components that enable the WindowsHostProcessContainers
-                          feature flag. Setting this field without the feature flag
-                          will result in errors when validating the Pod. All of a
-                          Pod's containers must have the same effective HostProcess
-                          value (it is not allowed to have a mix of HostProcess containers
-                          and non-HostProcess containers).  In addition, if HostProcess
-                          is true then HostNetwork must also be set to true.
+                          be run as a 'Host Process' container. All of a Pod's containers
+                          must have the same effective HostProcess value (it is not
+                          allowed to have a mix of HostProcess containers and non-HostProcess
+                          containers). In addition, if HostProcess is true then HostNetwork
+                          must also be set to true.
                         type: boolean
                       runAsUserName:
                         description: The UserName in Windows to run the entrypoint
@@ -5182,14 +5275,13 @@ spec:
                 description: Storage spec to specify how storage will be used.
                 properties:
                   disableMountSubPath:
-                    description: 'Deprecated: subPath usage will be disabled by default
-                      in a future release, this option will become unnecessary. DisableMountSubPath
-                      allows to remove any subPath usage in volume mounts.'
+                    description: '*Deprecated: subPath usage will be removed in a
+                      future release.*'
                     type: boolean
                   emptyDir:
                     description: 'EmptyDirVolumeSource to be used by the StatefulSet.
-                      If specified, used in place of any volumeClaimTemplate. More
-                      info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir'
+                      If specified, it takes precedence over `ephemeral` and `volumeClaimTemplate`.
+                      More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir'
                     properties:
                       medium:
                         description: 'medium represents what type of storage medium
@@ -5207,14 +5299,14 @@ spec:
                           medium EmptyDir would be the minimum value between the SizeLimit
                           specified here and the sum of memory limits of all containers
                           in a pod. The default is nil which means that the limit
-                          is undefined. More info: http://kubernetes.io/docs/user-guide/volumes#emptydir'
+                          is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir'
                         pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                         x-kubernetes-int-or-string: true
                     type: object
                   ephemeral:
                     description: 'EphemeralVolumeSource to be used by the StatefulSet.
-                      This is a beta field in k8s 1.21, for lower versions, starting
-                      with k8s 1.19, it requires enabling the GenericEphemeralVolume
+                      This is a beta field in k8s 1.21 and GA in 1.15. For lower versions,
+                      starting with k8s 1.19, it requires enabling the GenericEphemeralVolume
                       feature gate. More info: https://kubernetes.io/docs/concepts/storage/ephemeral-volumes/#generic-ephemeral-volumes'
                     properties:
                       volumeClaimTemplate:
@@ -5362,7 +5454,8 @@ spec:
                                       defined in spec.resourceClaims, that are used
                                       by this container. \n This is an alpha field
                                       and requires enabling the DynamicResourceAllocation
-                                      feature gate. \n This field is immutable."
+                                      feature gate. \n This field is immutable. It
+                                      can only be set for containers."
                                     items:
                                       description: ResourceClaim references one entry
                                         in PodSpec.ResourceClaims.
@@ -5401,8 +5494,8 @@ spec:
                                       of compute resources required. If Requests is
                                       omitted for a container, it defaults to Limits
                                       if that is explicitly specified, otherwise to
-                                      an implementation-defined value. More info:
-                                      https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                      an implementation-defined value. Requests cannot
+                                      exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                                     type: object
                                 type: object
                               selector:
@@ -5473,10 +5566,10 @@ spec:
                         type: object
                     type: object
                   volumeClaimTemplate:
-                    description: A PVC spec to be used by the StatefulSet. The easiest
-                      way to use a volume that cannot be automatically provisioned
-                      (for whatever reason) is to use a label selector alongside manually
-                      created PersistentVolumes.
+                    description: Defines the PVC spec to be used by the Prometheus
+                      StatefulSets. The easiest way to use a volume that cannot be
+                      automatically provisioned is to use a label selector alongside
+                      manually created PersistentVolumes.
                     properties:
                       apiVersion:
                         description: 'APIVersion defines the versioned schema of this
@@ -5521,8 +5614,8 @@ spec:
                             type: string
                         type: object
                       spec:
-                        description: 'Spec defines the desired characteristics of
-                          a volume requested by a pod author. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims'
+                        description: 'Defines the desired characteristics of a volume
+                          requested by a pod author. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims'
                         properties:
                           accessModes:
                             description: 'accessModes contains the desired access
@@ -5629,7 +5722,8 @@ spec:
                                   defined in spec.resourceClaims, that are used by
                                   this container. \n This is an alpha field and requires
                                   enabling the DynamicResourceAllocation feature gate.
-                                  \n This field is immutable."
+                                  \n This field is immutable. It can only be set for
+                                  containers."
                                 items:
                                   description: ResourceClaim references one entry
                                     in PodSpec.ResourceClaims.
@@ -5668,7 +5762,8 @@ spec:
                                   of compute resources required. If Requests is omitted
                                   for a container, it defaults to Limits if that is
                                   explicitly specified, otherwise to an implementation-defined
-                                  value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                  value. Requests cannot exceed Limits. More info:
+                                  https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                                 type: object
                             type: object
                           selector:
@@ -5733,8 +5828,7 @@ spec:
                             type: string
                         type: object
                       status:
-                        description: 'Status represents the current information/status
-                          of a persistent volume claim. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims'
+                        description: '*Deprecated: this field is never set.*'
                         properties:
                           accessModes:
                             description: 'accessModes contains the actual access modes
@@ -5742,6 +5836,51 @@ spec:
                             items:
                               type: string
                             type: array
+                          allocatedResourceStatuses:
+                            additionalProperties:
+                              description: When a controller receives persistentvolume
+                                claim update with ClaimResourceStatus for a resource
+                                that it does not recognizes, then it should ignore
+                                that update and let other controllers handle it.
+                              type: string
+                            description: "allocatedResourceStatuses stores status
+                              of resource being resized for the given PVC. Key names
+                              follow standard Kubernetes label syntax. Valid values
+                              are either: * Un-prefixed keys: - storage - the capacity
+                              of the volume. * Custom resources must use implementation-defined
+                              prefixed names such as \"example.com/my-custom-resource\"
+                              Apart from above values - keys that are unprefixed or
+                              have kubernetes.io prefix are considered reserved and
+                              hence may not be used. \n ClaimResourceStatus can be
+                              in any of following states: - ControllerResizeInProgress:
+                              State set when resize controller starts resizing the
+                              volume in control-plane. - ControllerResizeFailed: State
+                              set when resize has failed in resize controller with
+                              a terminal error. - NodeResizePending: State set when
+                              resize controller has finished resizing the volume but
+                              further resizing of volume is needed on the node. -
+                              NodeResizeInProgress: State set when kubelet starts
+                              resizing the volume. - NodeResizeFailed: State set when
+                              resizing has failed in kubelet with a terminal error.
+                              Transient errors don't set NodeResizeFailed. For example:
+                              if expanding a PVC for more capacity - this field can
+                              be one of the following states: - pvc.status.allocatedResourceStatus['storage']
+                              = \"ControllerResizeInProgress\" - pvc.status.allocatedResourceStatus['storage']
+                              = \"ControllerResizeFailed\" - pvc.status.allocatedResourceStatus['storage']
+                              = \"NodeResizePending\" - pvc.status.allocatedResourceStatus['storage']
+                              = \"NodeResizeInProgress\" - pvc.status.allocatedResourceStatus['storage']
+                              = \"NodeResizeFailed\" When this field is not set, it
+                              means that no resize operation is in progress for the
+                              given PVC. \n A controller that receives PVC update
+                              with previously unknown resourceName or ClaimResourceStatus
+                              should ignore the update for the purpose it was designed.
+                              For example - a controller that only is responsible
+                              for resizing capacity of the volume, should ignore PVC
+                              updates that change other valid resources associated
+                              with PVC. \n This is an alpha field and requires enabling
+                              RecoverVolumeExpansionFailure feature."
+                            type: object
+                            x-kubernetes-map-type: granular
                           allocatedResources:
                             additionalProperties:
                               anyOf:
@@ -5749,19 +5888,31 @@ spec:
                               - type: string
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
-                            description: allocatedResources is the storage resource
-                              within AllocatedResources tracks the capacity allocated
-                              to a PVC. It may be larger than the actual capacity
-                              when a volume expansion operation is requested. For
-                              storage quota, the larger value from allocatedResources
-                              and PVC.spec.resources is used. If allocatedResources
-                              is not set, PVC.spec.resources alone is used for quota
-                              calculation. If a volume expansion capacity request
-                              is lowered, allocatedResources is only lowered if there
-                              are no expansion operations in progress and if the actual
-                              volume capacity is equal or lower than the requested
-                              capacity. This is an alpha field and requires enabling
-                              RecoverVolumeExpansionFailure feature.
+                            description: "allocatedResources tracks the resources
+                              allocated to a PVC including its capacity. Key names
+                              follow standard Kubernetes label syntax. Valid values
+                              are either: * Un-prefixed keys: - storage - the capacity
+                              of the volume. * Custom resources must use implementation-defined
+                              prefixed names such as \"example.com/my-custom-resource\"
+                              Apart from above values - keys that are unprefixed or
+                              have kubernetes.io prefix are considered reserved and
+                              hence may not be used. \n Capacity reported here may
+                              be larger than the actual capacity when a volume expansion
+                              operation is requested. For storage quota, the larger
+                              value from allocatedResources and PVC.spec.resources
+                              is used. If allocatedResources is not set, PVC.spec.resources
+                              alone is used for quota calculation. If a volume expansion
+                              capacity request is lowered, allocatedResources is only
+                              lowered if there are no expansion operations in progress
+                              and if the actual volume capacity is equal or lower
+                              than the requested capacity. \n A controller that receives
+                              PVC update with previously unknown resourceName should
+                              ignore the update for the purpose it was designed. For
+                              example - a controller that only is responsible for
+                              resizing capacity of the volume, should ignore PVC updates
+                              that change other valid resources associated with PVC.
+                              \n This is an alpha field and requires enabling RecoverVolumeExpansionFailure
+                              feature."
                             type: object
                           capacity:
                             additionalProperties:
@@ -5778,7 +5929,7 @@ spec:
                               volume claim. If underlying persistent volume is being
                               resized then the Condition will be set to 'ResizeStarted'.
                             items:
-                              description: PersistentVolumeClaimCondition contails
+                              description: PersistentVolumeClaimCondition contains
                                 details about state of pvc
                               properties:
                                 lastProbeTime:
@@ -5815,13 +5966,6 @@ spec:
                             type: array
                           phase:
                             description: phase represents the current phase of PersistentVolumeClaim.
-                            type: string
-                          resizeStatus:
-                            description: resizeStatus stores status of resize operation.
-                              ResizeStatus is not set by default but when expansion
-                              is complete resizeStatus is set to empty string by resize
-                              controller or kubelet. This is an alpha field and requires
-                              enabling RecoverVolumeExpansionFailure feature.
                             type: string
                         type: object
                     type: object
@@ -5921,14 +6065,18 @@ spec:
                       type: object
                       x-kubernetes-map-type: atomic
                     matchLabelKeys:
-                      description: MatchLabelKeys is a set of pod label keys to select
+                      description: "MatchLabelKeys is a set of pod label keys to select
                         the pods over which spreading will be calculated. The keys
                         are used to lookup values from the incoming pod labels, those
                         key-value labels are ANDed with labelSelector to select the
                         group of existing pods over which spreading will be calculated
-                        for the incoming pod. Keys that don't exist in the incoming
-                        pod labels will be ignored. A null or empty list means only
-                        match against labelSelector.
+                        for the incoming pod. The same key is forbidden to exist in
+                        both MatchLabelKeys and LabelSelector. MatchLabelKeys cannot
+                        be set when LabelSelector isn't set. Keys that don't exist
+                        in the incoming pod labels will be ignored. A null or empty
+                        list means only match against labelSelector. \n This is a
+                        beta field and requires the MatchLabelKeysInPodTopologySpread
+                        feature gate to be enabled (enabled by default)."
                       items:
                         type: string
                       type: array
@@ -6469,7 +6617,7 @@ spec:
                             medium EmptyDir would be the minimum value between the
                             SizeLimit specified here and the sum of memory limits
                             of all containers in a pod. The default is nil which means
-                            that the limit is undefined. More info: http://kubernetes.io/docs/user-guide/volumes#emptydir'
+                            that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir'
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                       type: object
@@ -6641,7 +6789,8 @@ spec:
                                         defined in spec.resourceClaims, that are used
                                         by this container. \n This is an alpha field
                                         and requires enabling the DynamicResourceAllocation
-                                        feature gate. \n This field is immutable."
+                                        feature gate. \n This field is immutable.
+                                        It can only be set for containers."
                                       items:
                                         description: ResourceClaim references one
                                           entry in PodSpec.ResourceClaims.
@@ -6681,8 +6830,8 @@ spec:
                                         amount of compute resources required. If Requests
                                         is omitted for a container, it defaults to
                                         Limits if that is explicitly specified, otherwise
-                                        to an implementation-defined value. More info:
-                                        https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                        to an implementation-defined value. Requests
+                                        cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                                       type: object
                                   type: object
                                 selector:

@@ -11,6 +11,9 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
+  {{- if .Values.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" . | nindent 6 }}
@@ -32,6 +35,17 @@ spec:
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
+      {{- end }}
+      {{- if or .Values.tempo.pullSecrets  ( and .Values.tempoQuery.enabled .Values.tempoQuery.pullSecrets ) }}
+      imagePullSecrets:
+      {{- range .Values.tempo.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- if and .Values.tempoQuery.enabled .Values.tempoQuery.pullSecrets }}
+      {{- range .Values.tempoQuery.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       containers:
       - args:

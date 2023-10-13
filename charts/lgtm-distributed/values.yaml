@@ -1,0 +1,108 @@
+---
+grafana:
+  # -- Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference.
+  enabled: true
+
+  # -- Grafana data sources config. Connects to all three by default
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      # -- Datasources linked to the Grafana instance. Override if you disable any components.
+      datasources:
+        # https://grafana.com/docs/grafana/latest/datasources/loki/#provision-the-loki-data-source
+        - name: Loki
+          uid: loki
+          type: loki
+          url: http://{{ .Release.Name }}-loki-gateway
+          isDefault: false
+        # https://grafana.com/docs/grafana/latest/datasources/prometheus/#provision-the-data-source
+        - name: Mimir
+          uid: prom
+          type: prometheus
+          url: http://{{ .Release.Name }}-mimir-nginx/prometheus
+          isDefault: true
+        # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#provision-the-data-source
+        - name: Tempo
+          uid: tempo
+          type: tempo
+          url: http://{{ .Release.Name }}-tempo-query-frontend:3100
+          isDefault: false
+          jsonData:
+            tracesToLogsV2:
+              datasourceUid: loki
+            lokiSearch:
+              datasourceUid: loki
+            tracesToMetrics:
+              datasourceUid: prom
+            serviceMap:
+              datasourceUid: prom
+
+loki:
+  # -- Deploy Loki if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed#values) for full values reference.
+  enabled: true
+
+# -- Mimir chart values. Resources are set to a minimum by default.
+mimir:
+  # -- Deploy Mimir if enabled. See [upstream values.yaml](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml) for full values reference.
+  enabled: true
+  alertmanager:
+    resources:
+      requests:
+        cpu: 20m
+  compactor:
+    resources:
+      requests:
+        cpu: 20m
+  distributor:
+    resources:
+      requests:
+        cpu: 20m
+  ingester:
+    replicas: 2
+    zoneAwareReplication:
+      enabled: false
+    resources:
+      requests:
+        cpu: 20m
+  overrides_exporter:
+    resources:
+      requests:
+        cpu: 20m
+  querier:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 20m
+  query_frontend:
+    resources:
+      requests:
+        cpu: 20m
+  query_scheduler:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 20m
+  ruler:
+    resources:
+      requests:
+        cpu: 20m
+  store_gateway:
+    zoneAwareReplication:
+      enabled: false
+    resources:
+      requests:
+        cpu: 20m
+  minio:
+    resources:
+      requests:
+        cpu: 20m
+  rollout_operator:
+    resources:
+      requests:
+        cpu: 20m
+
+tempo:
+  # -- Deploy Tempo if enabled.  See [upstream readme](https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/README.md#values) for full values reference.
+  enabled: true
+  ingester:
+    replicas: 1

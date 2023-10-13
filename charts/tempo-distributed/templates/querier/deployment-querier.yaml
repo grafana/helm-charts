@@ -52,6 +52,10 @@ spec:
       {{- end }}
       enableServiceLinks: false
       {{- include "tempo.querierImagePullSecrets" . | nindent 6 -}}
+      {{- with .Values.querier.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - args:
             - -target=querier
@@ -83,6 +87,10 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.tempo.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: config
@@ -98,7 +106,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       terminationGracePeriodSeconds: {{ .Values.querier.terminationGracePeriodSeconds }}
-      {{- if ge (.Capabilities.KubeVersion.Minor|int) 19 }}
+      {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.querier.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- tpl . $ | nindent 8 }}

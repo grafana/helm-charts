@@ -16,7 +16,8 @@ global:
 rbac:
   create: true
   ## Use an existing ClusterRole/Role (depending on rbac.namespaced false/true)
-  # useExistingRole: name-of-some-(cluster)role
+  # useExistingRole: name-of-some-role
+  # useExistingClusterRole: name-of-some-clusterRole
   pspEnabled: false
   pspUseAppArmor: false
   namespaced: false
@@ -57,6 +58,7 @@ autoscaling:
 ## See `kubectl explain poddisruptionbudget.spec` for more
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 podDisruptionBudget: {}
+#  apiVersion: ""
 #  minAvailable: 1
 #  maxUnavailable: 1
 
@@ -207,13 +209,13 @@ serviceMonitor:
   tlsConfig: {}
   scrapeTimeout: 30s
   relabelings: []
+  metricRelabelings: []
   targetLabels: []
 
 extraExposePorts: []
  # - name: keycloak
  #   port: 8080
  #   targetPort: 8080
- #   type: ClusterIP
 
 # overrides pod.spec.hostAliases in the grafana deployment's pods
 hostAliases: []
@@ -521,6 +523,7 @@ extraVolumeMounts: []
   #   readOnly: true
   #   hostPath: /usr/shared/
   # - name: grafana-secrets
+  #   mountPath: /mnt/volume2
   #   csi: true
   #   data:
   #     driver: secrets-store.csi.k8s.io
@@ -563,6 +566,8 @@ datasources: {}
 #      jsonData:
 #        authType: default
 #        defaultRegion: us-east-1
+#    deleteDatasources: []
+#    - name: Prometheus
 
 ## Configure grafana alerting (can be templated)
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting
@@ -613,21 +618,22 @@ alerting: {}
   #           labels:
   #             team: sre_team_1
   # contactpoints.yaml:
-  #   apiVersion: 1
-  #   contactPoints:
-  #     - orgId: 1
-  #       name: cp_1
-  #       receivers:
-  #         - uid: first_uid
-  #           type: pagerduty
-  #           settings:
-  #             integrationKey: XXX
-  #             severity: critical
-  #             class: ping failure
-  #             component: Grafana
-  #             group: app-stack
-  #             summary: |
-  #               {{ `{{ include "default.message" . }}` }}
+  #   secret:
+  #     apiVersion: 1
+  #     contactPoints:
+  #       - orgId: 1
+  #         name: cp_1
+  #         receivers:
+  #           - uid: first_uid
+  #             type: pagerduty
+  #             settings:
+  #               integrationKey: XXX
+  #               severity: critical
+  #               class: ping failure
+  #               component: Grafana
+  #               group: app-stack
+  #               summary: |
+  #                 {{ `{{ include "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
@@ -790,7 +796,7 @@ smtp:
 sidecar:
   image:
     repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.24.6
+    tag: 1.25.1
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}

@@ -73,6 +73,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- with .Values.admin_api.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: admin-api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

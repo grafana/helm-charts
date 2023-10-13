@@ -158,7 +158,9 @@ Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 Return the appropriate apiVersion for podDisruptionBudget.
 */}}
 {{- define "grafana.podDisruptionBudget.apiVersion" -}}
-{{- if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
+{{- if $.Values.podDisruptionBudget.apiVersion }}
+{{- print $.Values.podDisruptionBudget.apiVersion }}
+{{- else if $.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
 {{- print "policy/v1" }}
 {{- else }}
 {{- print "policy/v1beta1" }}
@@ -199,3 +201,27 @@ Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific 
 {{- end }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+ Checks whether or not the configSecret secret has to be created
+ */}}
+{{- define "grafana.shouldCreateConfigSecret" -}}
+{{- $secretFound := false -}}
+{{- range $key, $value := .Values.datasources }}
+  {{- if hasKey $value "secret" }}
+    {{- $secretFound = true}}
+  {{- end }}
+{{- end }}
+{{- range $key, $value := .Values.notifiers }}
+  {{- if hasKey $value "secret" }}
+    {{- $secretFound = true}}
+  {{- end }}
+{{- end }}
+{{- range $key, $value := .Values.alerting }}
+  {{- if (or (hasKey $value "secret") (hasKey $value "secretFile")) }}
+    {{- $secretFound = true}}
+  {{- end }}
+{{- end }}
+{{- $secretFound}}
+{{- end -}}
