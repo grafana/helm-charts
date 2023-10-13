@@ -1050,15 +1050,21 @@ config: |
       default:
         url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       distributor:
-        url: http://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
-      distributor_ingest:
-        url: h2c://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4317
+        otlp/grpc:
+          url: h2c://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4317
+        otlp/http:
+          url: http://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4318
       ingester:
         url: http://{{ template "tempo.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       querier:
         url: http://{{ template "tempo.fullname" . }}-querier.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       query_frontend:
         url: http://{{ template "tempo.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}{{get .Values.tempo.structuredConfig "http_api_prefix"}}
+  {{else}}
+  {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.proxy }}
+  gateway:
+    proxy: {{- toYaml .Values.enterpriseGateway.proxy | nindent 6 }}
+  {{- end }}
   {{- end }}
 
   compactor:
@@ -1838,7 +1844,7 @@ enterprise:
     # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.2.1
+    tag: v2.3.0
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
@@ -1959,8 +1965,10 @@ adminApi:
 # Settings for the gateway service providing authentication and authorization via the admin_api.
 # Can only be enabled if enterprise.enabled is true - requires license.
 enterpriseGateway:
-  # If you want to use your own proxy URLs, set this to false.
+  # -- If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
+  # -- Proxy URLs defined in this object will be used if useDefaultProxyURLs is set to false.
+  proxy: {}
   replicas: 1
   # -- hostAliases to add
   hostAliases: []
