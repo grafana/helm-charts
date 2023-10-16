@@ -16,6 +16,7 @@ Grafana Tempo Single Binary Mode
 | annotations | object | `{}` | Annotations for the StatefulSet |
 | config | string | Dynamically generated tempo configmap | Tempo configuration file contents |
 | extraVolumes | list | `[]` | Volumes to add |
+| extraLabels | object | `{}` | Custom labels for all manifests |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
