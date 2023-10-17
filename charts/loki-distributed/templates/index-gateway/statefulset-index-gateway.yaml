@@ -46,6 +46,9 @@ spec:
         {{- with .Values.indexGateway.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.indexGateway.joinMemberlist }}
+        app.kubernetes.io/part-of: memberlist
+        {{- end }}
     spec:
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
@@ -81,6 +84,11 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
+            {{- if .Values.indexGateway.joinMemberlist }}
+            - name: http-memberlist
+              containerPort: 7946
+              protocol: TCP
+            {{- end }}
           {{- with .Values.indexGateway.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

@@ -497,7 +497,6 @@ ingester:
     enableStatefulSetAutoDeletePVC: false
     whenDeleted: Retain
     whenScaled: Retain
-
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -860,6 +859,9 @@ queryScheduler:
   nodeSelector: {}
   # -- Tolerations for query-scheduler pods
   tolerations: []
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
 
 # Configuration for the table-manager
 tableManager:
@@ -1444,6 +1446,9 @@ ruler:
     storageClass: null
     # -- Annotations for ruler PVCs
     annotations: {}
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
   # -- Directories containing rules files
   directories: {}
     # tenant_foo:
@@ -1517,6 +1522,8 @@ indexGateway:
   enabled: false
   # -- Number of replicas for the index-gateway
   replicas: 1
+  # -- Whether the index gateway should join the memberlist hashring
+  joinMemberlist: true
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -1596,6 +1603,9 @@ indexGateway:
     enableStatefulSetAutoDeletePVC: false
     whenDeleted: Retain
     whenScaled: Retain
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
 
 memcached:
   readinessProbe:

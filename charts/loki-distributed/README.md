@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.74.6](https://img.shields.io/badge/Version-0.74.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
+![Version: 0.75.0](https://img.shields.io/badge/Version-0.75.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -216,6 +216,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | hostAliases | list | `[]` | hostAliases to add |
 | imagePullSecrets | list | `[]` | Image pull secrets for Docker images |
 | indexGateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| indexGateway.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | indexGateway.enabled | bool | `false` | Specifies whether the index-gateway should be enabled |
 | indexGateway.extraArgs | list | `[]` | Additional CLI args for the index-gateway |
 | indexGateway.extraContainers | list | `[]` | Containers to add to the index-gateway pods |
@@ -228,6 +229,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.image.repository | string | `nil` | Docker image repository for the index-gateway image. Overrides `loki.image.repository` |
 | indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
 | indexGateway.initContainers | list | `[]` | Init containers to add to the index-gateway pods |
+| indexGateway.joinMemberlist | bool | `true` | Whether the index gateway should join the memberlist hashring |
 | indexGateway.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
 | indexGateway.persistence.annotations | object | `{}` | Annotations for index gateway PVCs |
@@ -527,6 +529,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
 | queryScheduler.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string |
+| queryScheduler.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | queryScheduler.enabled | bool | `false` | Specifies whether the query-scheduler should be decoupled from the query-frontend |
 | queryScheduler.extraArgs | list | `[]` | Additional CLI args for the query-scheduler |
 | queryScheduler.extraContainers | list | `[]` | Containers to add to the query-scheduler pods |
@@ -551,6 +554,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
+| ruler.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | ruler.command | string | `nil` | Command to execute instead of defined in Docker image |
 | ruler.directories | object | `{}` | Directories containing rules files |
 | ruler.dnsConfig | object | `{}` | DNSConfig for ruler pods |
