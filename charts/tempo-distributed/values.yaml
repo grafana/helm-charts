@@ -1244,6 +1244,9 @@ config: |
       block:
         version: {{.Values.storage.trace.block.version}}
       {{- end }}
+      pool:
+        max_workers: {{ .Values.storage.trace.pool.max_workers }}
+        queue_depth: {{ .Values.storage.trace.pool.queue_depth }}
       backend: {{.Values.storage.trace.backend}}
       {{- if eq .Values.storage.trace.backend "s3"}}
       s3:
