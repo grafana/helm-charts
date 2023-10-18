@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.6.3](https://img.shields.io/badge/Version-1.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.3](https://img.shields.io/badge/AppVersion-2.2.3-informational?style=flat-square)
+![Version: 1.6.3](https://img.shields.io/badge/Version-1.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.3](https://img.shields.io/badge/AppVersion-2.2.3-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -15,8 +15,8 @@ Grafana Tempo Single Binary Mode
 | affinity | object | `{}` | Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity |
 | annotations | object | `{}` | Annotations for the StatefulSet |
 | config | string | Dynamically generated tempo configmap | Tempo configuration file contents |
+| extraLabels | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
-| extraLabels | object | `{}` | Custom labels for all manifests |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
