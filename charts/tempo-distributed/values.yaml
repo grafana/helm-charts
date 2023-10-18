@@ -2064,3 +2064,15 @@ enterpriseGateway:
       - secretName: gem-gateway-tls
         hosts:
           - gateway.gem.example.com
+
+# -- Create extra manifests via values. 
+extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: tempo-secrets
+  #   spec:
+  #     backendType: aws
+  #     data:
+  #       - key: secret-access-key
+  #         name: awssm-secret
