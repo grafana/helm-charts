@@ -2065,7 +2065,7 @@ enterpriseGateway:
         hosts:
           - gateway.gem.example.com
 
-# -- Create extra manifests via values. 
+# -- Create extra manifests via values.
 extraObjects: []
   # - apiVersion: "kubernetes-client.io/v1"
   #   kind: ExternalSecret
