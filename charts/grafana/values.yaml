@@ -1,4 +1,8 @@
 global:
+  image:
+    # -- Overrides the Docker registry globally for all images
+    registry: null
+
   # To help compatibility with other charts which use global.imagePullSecrets.
   # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
   # Can be tempalted.
@@ -86,7 +90,10 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: docker.io/grafana/grafana
+  # -- The Docker registry
+  registry: docker.io
+  # -- Docker image repository
+  repository: grafana/grafana
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -102,8 +109,11 @@ image:
 
 testFramework:
   enabled: true
-  image: docker.io/bats/bats
-  tag: "v1.4.1"
+  image:
+    # -- The Docker registry
+    registry: docker.io
+    repository: bats/bats
+    tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
@@ -146,7 +156,9 @@ extraLabels: {}
 # priorityClassName:
 
 downloadDashboardsImage:
-  repository: docker.io/curlimages/curl
+  # -- The Docker registry
+  registry: docker.io
+  repository: curlimages/curl
   tag: 7.85.0
   sha: ""
   pullPolicy: IfNotPresent
@@ -204,7 +216,7 @@ serviceMonitor:
   path: /metrics
   #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
   labels: {}
-  interval: 1m
+  interval: 30s
   scheme: http
   tlsConfig: {}
   scrapeTimeout: 30s
@@ -361,7 +373,9 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    repository: docker.io/library/busybox
+    # -- The Docker registry
+    registry: docker.io
+    repository: library/busybox
     tag: "1.31.1"
     sha: ""
     pullPolicy: IfNotPresent
@@ -795,7 +809,9 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: quay.io/kiwigrid/k8s-sidecar
+    # -- The Docker registry
+    registry: quay.io
+    repository: kiwigrid/k8s-sidecar
     tag: 1.25.1
     sha: ""
   imagePullPolicy: IfNotPresent
@@ -1066,8 +1082,10 @@ imageRenderer:
     targetMemory: ""
     behavior: {}
   image:
+    # -- The Docker registry
+    registry: docker.io
     # image-renderer Image repository
-    repository: docker.io/grafana/grafana-image-renderer
+    repository: grafana/grafana-image-renderer
     # image-renderer Image tag
     tag: latest
     # image-renderer Image sha (optional)
