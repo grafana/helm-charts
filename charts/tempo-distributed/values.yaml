@@ -16,6 +16,18 @@ global:
   dnsService: 'kube-dns'
   # -- configures DNS service namespace
   dnsNamespace: 'kube-system'
+  # -- Common environment variables to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-gateway, federation-frontend, gateway, memcached, querier, query-frontend, tokengen-job
+  extraEnv: []
+
+  # -- Common source of environment injections to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-gateway, federation-frontend, gateway, memcached, querier, query-frontend, tokengen-job
+  # For example to inject values from a Secret, use:
+  # extraEnvFrom:
+  #   - secretRef:
+  #       name: mysecret
+  extraEnvFrom: []
+
 fullnameOverride: ''
 # fullnameOverride: tempo
 

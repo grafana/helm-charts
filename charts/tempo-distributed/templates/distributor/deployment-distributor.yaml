@@ -109,14 +109,20 @@ spec:
               name: opencensus
               protocol: TCP
             {{- end }}
-          {{- with .Values.distributor.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.distributor.extraEnvFrom }}
+            {{- with .Values.global.extraEnv }}
+              {{ toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.distributor.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.distributor.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:
