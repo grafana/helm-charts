@@ -62,6 +62,10 @@ Navigate to <http://localhost:3000> and login with `admin` and the password outp
 Then follow the [instructions for adding the loki datasource](https://grafana.com/docs/grafana/latest/datasources/loki/), using the URL `http://loki:3100/`.
 
 ## Upgrade
+### Version >= 3.0.0
+Update Prometheus 15.5.3->18.0.0 to update `kube-state-metrics` to 2.7.0 to ensure compatibility with Kubernetes 1.25, 
+update Kubernetes to at least 1.24 [#2727](https://github.com/grafana/helm-charts/pull/2727)
+
 ### Version >= 2.8.0
 Provide support configurable datasource urls [#1374](https://github.com/grafana/helm-charts/pull/1374)
 
