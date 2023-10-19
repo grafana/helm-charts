@@ -52,6 +52,9 @@ helm.sh/chart: {{ include "tempo.chart" . }}
 app.kubernetes.io/version: {{ .Values.tempo.tag | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.extraLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end -}}
 
 {{/*
