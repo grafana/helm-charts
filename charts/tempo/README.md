@@ -137,5 +137,6 @@ and [1.5 -> 2.0 upgrade guide](https://grafana.com/docs/tempo/latest/setup/upgra
 ### From Chart versions < 0.7.0
 
 Upgrading from pre 0.7.0 will, by default, move your trace storage from `/tmp/tempo/traces` to `/var/tempo/traces`.
-This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the 
+This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the
 old folder to the new.
+
