@@ -197,6 +197,7 @@ gossipPortName: gossip
 ##
 service:
   enabled: true
+  {{- if (or (eq .Values.service.type "ClusterIP") (empty .Values.service.type)) }}
   type: ClusterIP
   port: 80
   targetPort: 3000
@@ -207,6 +208,14 @@ service:
   portName: service
   # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
+  {{- end }}
+  {{- else if eq .Values.service.type "LoadBalancer" }}
+  type: LoadBalancer  # If .Values.service.type is "LoadBalancer," set the type to LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.0.2.127
+  {{- end }}
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
