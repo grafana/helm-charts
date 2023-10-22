@@ -195,9 +195,17 @@ gossipPortName: gossip
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
+
 service:
   enabled: true
   type: ClusterIP
+  loadBalancer:
+    enabled: true
+    type: LoadBalancer
+    status:
+      loadBalancer:
+        ingress:
+          - ip: 192.0.2.127
   port: 80
   targetPort: 3000
     # targetPort: 4181 To be used with a proxy extraContainer
@@ -207,12 +215,6 @@ service:
   portName: service
   # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
-
-  type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - ip: 192.0.2.127
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
