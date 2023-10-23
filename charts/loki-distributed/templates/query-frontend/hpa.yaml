@@ -39,6 +39,9 @@ spec:
         targetAverageUtilization: {{ . }}
         {{- end }}
   {{- end }}
+  {{- with .Values.queryFrontend.autoscaling.customMetrics }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.queryFrontend.autoscaling.behavior.enabled }}
   behavior:
     {{- with .Values.queryFrontend.autoscaling.behavior.scaleDown }}
