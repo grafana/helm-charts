@@ -65,3 +65,6 @@ gateway:
           target:
             type: Values
             averageValue: 10k
+
+serviceMonitor:
+  enabled: true
