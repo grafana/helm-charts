@@ -24,9 +24,15 @@ on:
         required: false
         type: string
     secrets:
+      github_app_id:
+        description: Github App ID to authenticate with
+        required: false
+      github_app_pem:
+        description: GitHub APP pem to authenticate with
+        required: false
       helm_repo_token:
         description: GitHub api token to use against the helm-charts repository
-        required: true
+        required: false
 
 env:
   CR_CONFIGFILE: "${{ github.workspace }}/source/${{ inputs.cr_configfile }}"
@@ -87,8 +93,26 @@ jobs:
   release:
     needs: [ setup ]
     runs-on: ubuntu-latest
+    env:
+      github_app_id: ${{ secrets.github_app_id }}
     if: needs.setup.outputs.changed == 'true'
     steps:
+      - name: Create a GitHub App installation access token
+        if: env.github_app_id != ''
+        uses: tibdex/github-app-token@v2
+        id: app-token
+        with:
+          app_id: ${{ secrets.github_app_id }}
+          private_key: ${{ secrets.github_app_pem }}
+
+      - name: Set the correct token (Github App or PAT)
+        run: |
+          if [[ "${{ env.github_app_id }}" == '' ]]; then
+            echo "AUTHTOKEN=${{ secrets.helm_repo_token }}" >> $GITHUB_ENV
+          else
+            echo "AUTHTOKEN=${{ steps.app-token.outputs.token }}" >> $GITHUB_ENV
+          fi
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -108,7 +132,7 @@ jobs:
           fetch-depth: 0
           repository: grafana/helm-charts
           path: helm-charts
-          token: ${{ secrets.helm_repo_token }}
+          token: ${{ env.AUTHTOKEN  }}
 
       - name: Configure Git for helm-charts
         run: |
@@ -188,7 +212,7 @@ jobs:
             ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz.prov
           repository: grafana/helm-charts
           tag_name: ${{ steps.parse-chart.outputs.tagname }}
-          token: ${{ secrets.helm_repo_token }}
+          token: ${{ env.AUTHTOKEN }}
 
       - name: Push release tag on origin
         run: |
@@ -199,4 +223,4 @@ jobs:
       - name: Update helm repo index.yaml
         run: |
           cd helm-charts
-          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ secrets.helm_repo_token }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
+          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
