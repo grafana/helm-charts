@@ -71,8 +71,8 @@ Common labels
 {{- define "tempo.imageRenderer.labels" -}}
 helm.sh/chart: {{ include "tempo.chart" . }}
 {{ include "tempo.imageRenderer.selectorLabels" . }}
-{{- if or .Chart.AppVersion .Values.tempo.tag }}
-app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.tempo.tag "" | default .Chart.AppVersion | quote }}
+{{- if or .Chart.AppVersion .Values.image.tag }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
