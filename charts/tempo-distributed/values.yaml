@@ -1305,6 +1305,12 @@ storage:
       version: null
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
+    # The worker pool is used primarily when finding traces by id, but is also used by other.
+    pool:
+      # -- Total number of workers pulling jobs from the queue
+      max_workers: 400
+      # -- Length of job queue. imporatant for querier as it queues a job for every block it has to search
+      queue_depth: 20000
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
