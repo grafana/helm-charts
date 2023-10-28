@@ -224,7 +224,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
-    - from: 2020-09-07
+    - from: "2020-09-07"
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
