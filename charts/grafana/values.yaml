@@ -77,7 +77,7 @@ readinessProbe:
     port: 3000
   initialDelaySeconds: 60
   timeoutSeconds: 30
-  
+
 livenessProbe:
   httpGet:
     path: /api/health
