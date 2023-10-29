@@ -38,6 +38,9 @@ spec:
         targetAverageUtilization: {{ . }}
         {{- end }}
   {{- end }}
+  {{- with .Values.distributor.autoscaling.customMetrics }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.distributor.autoscaling.behavior.enabled }}
   behavior:
     {{- with .Values.distributor.autoscaling.behavior.scaleDown }}

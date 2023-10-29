@@ -277,6 +277,9 @@ podAnnotations: {}
 # -- Pod (extra) Labels
 podLabels: {}
 
+# Apply extra labels to common labels.
+extraLabels: {}
+
 # -- Volumes to add
 extraVolumes: []
 
