@@ -7,12 +7,12 @@
 * @grafana/helm-charts-admins
 
 /charts/grafana/ @maorfr @torstenwalter @Xtigyro @zanhsieh
-/charts/loki-distributed/ @unguiculus @Whyeasy
-/charts/loki-canary/ @unguiculus @Whyeasy
-/charts/promtail/ @unguiculus @Whyeasy
-/charts/tempo/ @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid
-/charts/tempo-distributed/ @annanay25 @joe-elliott @mapno @mdisibio @swartz-k @BitProcessor @faustodavid @zalegrala
-/charts/enterprise-metrics/ @chaudum
-/charts/enterprise-logs/ @chaudum
-/charts/tempo-vulture/ @Whyeasy @annanay25 @dgzlopes @joe-elliott @mapno @mdisibio
+/charts/loki-distributed/ @grafana/loki-squad @unguiculus @Whyeasy
+/charts/loki-canary/ @grafana/loki-squad @unguiculus @Whyeasy
+/charts/promtail/ @grafana/loki-squad @unguiculus @Whyeasy
+/charts/tempo/ @grafana/tempo @dgzlopes @swartz-k @BitProcessor @faustodavid
+/charts/tempo-distributed/ @grafana/tempo @mapno @swartz-k @BitProcessor @faustodavid
+/charts/enterprise-metrics/ @grafana/mimir-maintainers 
+/charts/enterprise-logs/ @grafana/loki-squad
+/charts/tempo-vulture/ @grafana/tempo @Whyeasy @dgzlopes
 /charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
