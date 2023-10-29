@@ -1,7 +1,6 @@
 global:
-  image:
-    # -- Overrides the Docker registry globally for all images
-    registry: null
+  # -- Overrides the Docker registry globally for all images
+  imageRegistry: null
 
   # To help compatibility with other charts which use global.imagePullSecrets.
   # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
@@ -199,7 +198,7 @@ gossipPortName: gossip
 
 service:
   enabled: true
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
   targetPort: 3000
     # targetPort: 4181 To be used with a proxy extraContainer
@@ -209,6 +208,11 @@ service:
   portName: service
   # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
+  # Adds LoadBalancer field to the service
+  LoadBalancer:
+    loadBalancerIP: ""
+    loadBalancerClass: ""
+    loadBalancerSourceRanges: []
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
@@ -1127,6 +1131,8 @@ imageRenderer:
       drop: ['ALL']
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
+  ## image-renderer pod annotation
+  podAnnotations: {}
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class
