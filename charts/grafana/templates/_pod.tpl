@@ -222,8 +222,19 @@ initContainers:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
-{{- with .Values.extraInitContainers }}
-  {{- tpl (toYaml .) $root | nindent 2 }}
+{{- if .Values.extraInitContainers }}
+{{- range $eic := .Values.extraInitContainers }}
+  - name: {{ $eic.name }}
+    {{- $registry := $.Values.global.imageRegistry | default $eic.image.registry -}}
+    {{- if $eic.image.sha }}
+    image: "{{ $registry }}/{{ $eic.image.repository }}:{{ $eic.image.tag }}@sha256:{{ $eic.image.sha }}"
+    {{- else }}
+    image: "{{ $registry }}/{{ $eic.image.repository }}:{{ $eic.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ $eic.image.pullPolicy }}
+    volumeMounts:
+{{ toYaml $eic.volumeMounts | indent 6 }}
+{{- end }}
 {{- end }}
 {{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
 imagePullSecrets:
