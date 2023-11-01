@@ -1,7 +1,6 @@
 global:
-  image:
-    # -- Overrides the Docker registry globally for all images
-    registry: null
+  # -- Overrides the Docker registry globally for all images
+  imageRegistry: null
 
   # To help compatibility with other charts which use global.imagePullSecrets.
   # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
@@ -1125,6 +1124,8 @@ imageRenderer:
       drop: ['ALL']
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
+  ## image-renderer pod annotation
+  podAnnotations: {}
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class
