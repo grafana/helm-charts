@@ -22,7 +22,7 @@ initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
   - name: init-chown-data
-    {{- $registry := .Values.global.image.registry | default .Values.initChownData.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.initChownData.image.registry -}}
     {{- if .Values.initChownData.image.sha }}
     image: "{{ $registry }}/{{ .Values.initChownData.image.repository }}:{{ .Values.initChownData.image.tag }}@sha256:{{ .Values.initChownData.image.sha }}"
     {{- else }}
@@ -51,7 +51,7 @@ initContainers:
 {{- end }}
 {{- if .Values.dashboards }}
   - name: download-dashboards
-    {{- $registry := .Values.global.image.registry | default .Values.downloadDashboardsImage.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.downloadDashboardsImage.registry -}}
     {{- if .Values.downloadDashboardsImage.sha }}
     image: "{{ $registry }}/{{ .Values.downloadDashboardsImage.repository }}:{{ .Values.downloadDashboardsImage.tag }}@sha256:{{ .Values.downloadDashboardsImage.sha }}"
     {{- else }}
@@ -100,7 +100,7 @@ initContainers:
 {{- end }}
 {{- if and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources }}
   - name: {{ include "grafana.name" . }}-init-sc-datasources
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -158,7 +158,7 @@ initContainers:
 {{- end }}
 {{- if and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers }}
   - name: {{ include "grafana.name" . }}-init-sc-notifiers
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -222,8 +222,19 @@ initContainers:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
 {{- end}}
-{{- with .Values.extraInitContainers }}
-  {{- tpl (toYaml .) $root | nindent 2 }}
+{{- if .Values.extraInitContainers }}
+{{- range $eic := .Values.extraInitContainers }}
+  - name: {{ $eic.name }}
+    {{- $registry := $.Values.global.imageRegistry | default $eic.image.registry -}}
+    {{- if $eic.image.sha }}
+    image: "{{ $registry }}/{{ $eic.image.repository }}:{{ $eic.image.tag }}@sha256:{{ $eic.image.sha }}"
+    {{- else }}
+    image: "{{ $registry }}/{{ $eic.image.repository }}:{{ $eic.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ $eic.image.pullPolicy }}
+    volumeMounts:
+{{ toYaml $eic.volumeMounts | indent 6 }}
+{{- end }}
 {{- end }}
 {{- if or .Values.image.pullSecrets .Values.global.imagePullSecrets }}
 imagePullSecrets:
@@ -235,7 +246,7 @@ enableServiceLinks: {{ .Values.enableServiceLinks }}
 containers:
 {{- if .Values.sidecar.alerts.enabled }}
   - name: {{ include "grafana.name" . }}-sc-alerts
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -342,7 +353,7 @@ containers:
 {{- end}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ include "grafana.name" . }}-sc-dashboard
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -453,7 +464,7 @@ containers:
 {{- end}}
 {{- if .Values.sidecar.datasources.enabled }}
   - name: {{ include "grafana.name" . }}-sc-datasources
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -557,7 +568,7 @@ containers:
 {{- end}}
 {{- if .Values.sidecar.notifiers.enabled }}
   - name: {{ include "grafana.name" . }}-sc-notifiers
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -661,7 +672,7 @@ containers:
 {{- end}}
 {{- if .Values.sidecar.plugins.enabled }}
   - name: {{ include "grafana.name" . }}-sc-plugins
-    {{- $registry := .Values.global.image.registry | default .Values.sidecar.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
     {{- else }}
@@ -764,7 +775,7 @@ containers:
         mountPath: "/etc/grafana/provisioning/plugins"
 {{- end}}
   - name: {{ .Chart.Name }}
-    {{- $registry := .Values.global.image.registry | default .Values.image.registry -}}
+    {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
     {{- if .Values.image.sha }}
     image: "{{ $registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
     {{- else }}
@@ -1147,17 +1158,20 @@ volumes:
       {{- toYaml .csi | nindent 6 }}
   {{- end }}
   {{- end }}
-  {{- range .Values.extraVolumeMounts }}
+  {{- range .Values.extraVolumes }}
   - name: {{ .name }}
     {{- if .existingClaim }}
     persistentVolumeClaim:
       claimName: {{ .existingClaim }}
     {{- else if .hostPath }}
     hostPath:
-      path: {{ .hostPath }}
+      {{ toYaml .hostPath | nindent 6 }}
     {{- else if .csi }}
     csi:
       {{- toYaml .data | nindent 6 }}
+    {{- else if .configMap }}
+    configMap:
+      {{- toYaml .configMap | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}
@@ -1170,3 +1184,4 @@ volumes:
   {{- tpl (toYaml .) $root | nindent 2 }}
   {{- end }}
 {{- end }}
+
