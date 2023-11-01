@@ -74,7 +74,6 @@ readinessProbe:
   httpGet:
     path: /api/health
     port: 3000
-  initialDelaySeconds: 30
 
 livenessProbe:
   httpGet:
@@ -208,11 +207,8 @@ service:
   portName: service
   # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
-  # Adds LoadBalancer field to the service
-  LoadBalancer:
-    loadBalancerIP: ""
-    loadBalancerClass: ""
-    loadBalancerSourceRanges: []
+  ## Adds LoadBalancer field to the service
+  type: LoadBalancer
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
