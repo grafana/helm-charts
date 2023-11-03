@@ -871,7 +871,7 @@ sidecar:
     script: null
     skipReload: false
     # This is needed if skipReload is true, to load any alerts defined at startup time.
-    # Deploy the alert sidecar as an initContainer in addition to a container.
+    # Deploy the alert sidecar as an initContainer.
     initAlerts: false
     # Additional alert sidecar volume mounts
     extraMounts: []
