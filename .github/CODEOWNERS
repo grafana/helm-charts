@@ -12,7 +12,8 @@
 /charts/promtail/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/tempo/ @grafana/tempo @dgzlopes @swartz-k @BitProcessor @faustodavid
 /charts/tempo-distributed/ @grafana/tempo @mapno @swartz-k @BitProcessor @faustodavid
-/charts/enterprise-metrics/ @grafana/mimir-maintainers 
+/charts/enterprise-metrics/ @grafana/mimir-maintainers
+/charts/rollout-operator/ @grafana/mimir-maintainers
 /charts/enterprise-logs/ @grafana/loki-squad
 /charts/tempo-vulture/ @grafana/tempo @Whyeasy @dgzlopes
 /charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
