@@ -35,28 +35,28 @@ spec:
   {{- else }}
   type: {{ .type }}
   {{- end }}
-  {{- end }}
-  {{- with .Values.service.externalIPs }}
+  {{- with .externalIPs }}
   externalIPs:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.service.externalTrafficPolicy }}
+  {{- with $.Values.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}
   {{- end }}
   ports:
-    - name: {{ .Values.service.portName }}
-      port: {{ .Values.service.port }}
+    - name: {{ .portName }}
+      port: {{ .port }}
       protocol: TCP
-      targetPort: {{ .Values.service.targetPort }}
-      {{- with .Values.service.appProtocol }}
+      targetPort: {{ .targetPort }}
+      {{- with .appProtocol }}
       appProtocol: {{ . }}
       {{- end }}
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
-      nodePort: {{ .Values.service.nodePort }}
+      {{- if (and (eq .type "NodePort") (not (empty .nodePort))) }}
+      nodePort: {{ .nodePort }}
       {{- end }}
-      {{- with .Values.extraExposePorts }}
+      {{- with $.Values.extraExposePorts }}
       {{- tpl (toYaml . | nindent 4) $root }}
       {{- end }}
   selector:
-    {{- include "grafana.selectorLabels" . | nindent 4 }}
+    {{- include "grafana.selectorLabels" $ | nindent 4 }}
+{{- end }}
 {{- end }}
