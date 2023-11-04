@@ -197,18 +197,18 @@ gossipPortName: gossip
 
 service:
   enabled: true
-  type: ClusterIP
-  port: 80
-  targetPort: 3000
-    # targetPort: 4181 To be used with a proxy extraContainer
-  ## Service annotations. Can be templated.
-  annotations: {}
-  labels: {}
-  portName: service
-  # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
-  appProtocol: ""
-  ## Adds LoadBalancer field to the service
-  type: LoadBalancer
+  serviceTypes:
+    - type: "ClusterIP"
+      port: 80
+      targetPort: 3000
+      # targetPort: 4181 To be used with a proxy extraContainer
+      ## Service annotations. Can be templated.
+      annotations: {}
+      labels: {}
+      portName: service
+      # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+      appProtocol: ""
+    - type: "LoadBalancer"
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator

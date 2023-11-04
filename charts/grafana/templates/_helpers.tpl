@@ -65,13 +65,13 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 Common labels
 */}}
 {{- define "grafana.labels" -}}
-helm.sh/chart: {{ include "grafana.chart" . }}
-{{ include "grafana.selectorLabels" . }}
-{{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
+helm.sh/chart: {{ include "grafana.chart" $ }}
+{{ include "grafana.selectorLabels" $ }}
+{{- if or $.Chart.AppVersion $.Values.image.tag }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" $.Values.image.tag "" | default $.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- with .Values.extraLabels }}
+{{- with $.Values.extraLabels }}
 {{ toYaml . }}
 {{- end }}
 {{- end }}

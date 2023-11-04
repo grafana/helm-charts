@@ -30,18 +30,20 @@
      {{- end }}
 {{- else }}
    Get the Grafana URL to visit by running these commands in the same shell:
-   {{- if contains "NodePort" .Values.service.type }}
-     export NODE_PORT=$(kubectl get --namespace {{ include "grafana.namespace" . }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "grafana.fullname" . }})
-     export NODE_IP=$(kubectl get nodes --namespace {{ include "grafana.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
-     echo http://$NODE_IP:$NODE_PORT
-   {{- else if contains "LoadBalancer" .Values.service.type }}
-   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-        You can watch the status of by running 'kubectl get svc --namespace {{ include "grafana.namespace" . }} -w {{ include "grafana.fullname" . }}'
-     export SERVICE_IP=$(kubectl get svc --namespace {{ include "grafana.namespace" . }} {{ include "grafana.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-     http://$SERVICE_IP:{{ .Values.service.port -}}
-   {{- else if contains "ClusterIP"  .Values.service.type }}
-     export POD_NAME=$(kubectl get pods --namespace {{ include "grafana.namespace" . }} -l "app.kubernetes.io/name={{ include "grafana.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-     kubectl --namespace {{ include "grafana.namespace" . }} port-forward $POD_NAME 3000
+   {{- range .Values.service.serviceTypes }}
+      {{- if contains "NodePort" .type }}
+        export NODE_PORT=$(kubectl get --namespace {{ include "grafana.namespace" . }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "grafana.fullname" . }})
+        export NODE_IP=$(kubectl get nodes --namespace {{ include "grafana.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+        echo http://$NODE_IP:$NODE_PORT
+      {{- else if contains "LoadBalancer" .type }}
+      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+            You can watch the status of by running 'kubectl get svc --namespace {{ include "grafana.namespace" $ }} -w {{ include "grafana.fullname" $ }}'
+        export SERVICE_IP=$(kubectl get svc --namespace {{ include "grafana.namespace" $ }} {{ include "grafana.fullname" $ }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        http://$SERVICE_IP:{{ .port -}}
+      {{- else if contains "ClusterIP" .type }}
+        export POD_NAME=$(kubectl get pods --namespace {{ include "grafana.namespace" $ }} -l "app.kubernetes.io/name={{ include "grafana.name" $ }},app.kubernetes.io/instance={{ $.Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+        kubectl --namespace {{ include "grafana.namespace" $ }} port-forward $POD_NAME 3000
+      {{- end }}
    {{- end }}
 {{- end }}
 
