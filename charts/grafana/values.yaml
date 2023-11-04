@@ -209,6 +209,14 @@ service:
       # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
       appProtocol: ""
     - type: "LoadBalancer"
+      port: 80
+      targetPort: 3000
+      ## Service annotations. Can be templated.
+      annotations: {}
+      labels: {}
+      portName: service
+      # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+      appProtocol: ""
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
