@@ -48,8 +48,4 @@ spec:
         {{- end }}
     spec:
       {{- include "grafana.pod" . | nindent 6 }}
-      containers:
-        - name: grafana
-          ports:
-          - containerPort: 3000
 {{- end }}
