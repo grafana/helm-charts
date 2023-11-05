@@ -210,7 +210,8 @@ service:
       appProtocol: ""
     - type: "LoadBalancer"
       port: 80
-      targetPort: 9376
+      targetPort: 3000
+      portName: service
 
 serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
