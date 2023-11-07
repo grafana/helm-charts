@@ -17,7 +17,7 @@ hostAliases:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
-{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
+{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.alerts.enabled. Values.sidecar.alerts.initAlerts) (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
 initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
@@ -97,6 +97,79 @@ initContainers:
         mountPath: {{ .mountPath }}
         readOnly: {{ .readOnly }}
       {{- end }}
+{{- end }}
+{{- if and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts }}
+  - name: {{ include "grafana.name" . }}-sc-alerts
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
+    {{- if .Values.sidecar.image.sha }}
+    image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    {{- else }}
+    image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    env:
+      {{- range $key, $value := .Values.sidecar.alerts.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
+      {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
+      {{- end }}
+      - name: METHOD
+        value: {{ .Values.sidecar.alerts.watchMethod }}
+      - name: LABEL
+        value: "{{ .Values.sidecar.alerts.label }}"
+      {{- with .Values.sidecar.alerts.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote . }}
+      {{- end }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.alerts.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.alerts.logLevel }}
+      {{- end }}
+      - name: FOLDER
+        value: "/etc/grafana/provisioning/alerting"
+      - name: RESOURCE
+        value: {{ quote .Values.sidecar.alerts.resource }}
+      {{- with .Values.sidecar.enableUniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "{{ . }}"
+      {{- end }}
+      {{- with .Values.sidecar.alerts.searchNamespace }}
+      - name: NAMESPACE
+        value: {{ . | join "," | quote }}
+      {{- end }}
+      {{- with .Values.sidecar.alerts.skipTlsVerify }}
+      - name: SKIP_TLS_VERIFY
+        value: {{ quote . }}
+      {{- end }}
+      {{- with .Values.sidecar.alerts.script }}
+      - name: SCRIPT
+        value: {{ quote . }}
+      {{- end }}
+    {{- with .Values.sidecar.livenessProbe }}
+    livenessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
+    readinessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
+    securityContext:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    volumeMounts:
+      - name: sc-alerts-volume
+        mountPath: "/etc/grafana/provisioning/alerting"
+      {{- with .Values.sidecar.alerts.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}        
 {{- end }}
 {{- if and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources }}
   - name: {{ include "grafana.name" . }}-init-sc-datasources
@@ -233,7 +306,7 @@ imagePullSecrets:
 enableServiceLinks: {{ .Values.enableServiceLinks }}
 {{- end }}
 containers:
-{{- if .Values.sidecar.alerts.enabled }}
+{{- if and .Values.sidecar.alerts.enabled (not .Values.sidecar.alerts.initAlerts) }}
   - name: {{ include "grafana.name" . }}-sc-alerts
     {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
