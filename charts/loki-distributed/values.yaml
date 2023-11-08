@@ -89,6 +89,8 @@ loki:
     http_listen_port: 3100
   # -- Enables authentication through the X-Scope-OrgID header, which must be present if true. If false, the OrgID will always be set to 'fake'.
   authEnabled: false
+  # -- Allows appending custom YAML configuration to the "common" Loki block
+  extraCommonConfig: ""
   # -- Config file contents for Loki
   # @default -- See values.yaml
   config: |
@@ -99,6 +101,9 @@ loki:
 
     common:
       compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
+    {{- with .Values.loki.extraCommonConfig }}
+    {{ . | nindent 2 }}
+    {{- end }}
 
     distributor:
       ring:
