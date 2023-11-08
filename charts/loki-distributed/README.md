@@ -322,6 +322,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingress.paths.ruler[3] | string | `"/prometheus/api/v1/alerts"` |  |
 | loki.annotations | object | `{}` | If set, these annotations are added to all of the Kubernetes controllers (Deployments, StatefulSets, etc) that this chart launches. Use this to implement something like the "Wave" controller or another controller that is monitoring top level deployment resources. |
 | loki.appProtocol | string | `""` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp" |
+| loki.authEnabled | bool | `false` | Enables authentication through the X-Scope-OrgID header, which must be present if true. If false, the OrgID will always be set to 'fake'. |
 | loki.command | string | `nil` | Common command override for all pods (except gateway) |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.configAsSecret | bool | `false` | Store the loki configuration as a secret. |
