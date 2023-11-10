@@ -13,6 +13,12 @@ spec:
       targetPort: http-metrics
       protocol: TCP
       name: http-metrics
+    {{- if .Values.serverTLS.enabled}}
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8443
+    {{- end -}}
   selector:
     {{- include "rollout-operator.selectorLabels" . | nindent 4 }}
 {{- end -}}
