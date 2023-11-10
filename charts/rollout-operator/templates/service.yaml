@@ -1,4 +1,4 @@
-{{- if .Values.serviceMonitor.enabled }}
+{{- if or (eq .Values.serviceMonitor.enabled  true) (eq .Values.serverTLS.enabled true) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,16 +9,18 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
+    {{- if .Values.serviceMonitor.enabled }}
     - port: 8001
       targetPort: http-metrics
       protocol: TCP
       name: http-metrics
-    {{- if .Values.serverTLS.enabled}}
+    {{- end }}
+    {{- if .Values.serverTLS.enabled }}
     - name: https
       port: 443
       protocol: TCP
       targetPort: 8443
-    {{- end -}}
+    {{- end }}
   selector:
     {{- include "rollout-operator.selectorLabels" . | nindent 4 }}
 {{- end -}}
