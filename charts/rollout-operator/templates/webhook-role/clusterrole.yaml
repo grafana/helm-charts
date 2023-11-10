@@ -1,0 +1,14 @@
+{{- if .Values.serverTLS.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "rollout-operator.fullname" .}}-clusterrole
+rules:
+- apiGroups: 
+  - admissionregistration.k8s.io
+  resources:
+  - validatingwebhookconfigurations
+  verbs:
+  - list
+  - patch
+{{- end -}}
