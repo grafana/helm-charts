@@ -11,3 +11,11 @@ sources:
 maintainers:
   - name: Grafana Agent Team
     email: grafana-agent-team@googlegroups.com
+
+dependencies:
+  - name: agent-crds
+    version: "0.0.0"
+    condition: crds.agent.create
+  - name: prometheus-crds
+    version: "0.0.0"
+    condition: crds.prometheus.create

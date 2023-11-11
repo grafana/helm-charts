@@ -19,6 +19,13 @@ podSecurityContext: {}
 # -- Container security context (allowPrivilegeEscalation, etc.)
 containerSecurityContext: {}
 
+crds:
+  # -- Whether to install CRDs for monitoring.
+  agent:
+    create: true
+  prometheus:
+    create: true
+
 rbac:
   # -- Toggle to create ClusterRole and ClusterRoleBinding
   create: true

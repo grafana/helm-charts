@@ -1,4 +1,5 @@
 /charts/*/charts
+!/charts/agent-operator/charts/
 .idea
 .vscode
 .project
