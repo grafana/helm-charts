@@ -99,7 +99,7 @@ initContainers:
       {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts }}
-  - name: {{ include "grafana.name" . }}-sc-alerts
+  - name: {{ include "grafana.name" . }}-init-sc-alerts
     {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
@@ -117,7 +117,7 @@ initContainers:
         value: "true"
       {{- end }}
       - name: METHOD
-        value: {{ .Values.sidecar.alerts.watchMethod }}
+        value: "LIST"
       - name: LABEL
         value: "{{ .Values.sidecar.alerts.label }}"
       {{- with .Values.sidecar.alerts.labelValue }}
