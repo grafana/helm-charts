@@ -49,7 +49,7 @@ Common labels
 helm.sh/chart: {{ include "tempo.chart" . }}
 {{ include "tempo.selectorLabels" . }}
 {{- if or .Chart.AppVersion .Values.tempo.tag }}
-app.kubernetes.io/version: {{ .Values.tempo.tag | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.tempo.tag "" | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.extraLabels }}
@@ -72,8 +72,8 @@ Common labels
 helm.sh/chart: {{ include "tempo.chart" . }}
 {{ include "tempo.imageRenderer.selectorLabels" . }}
 {{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
+{{- end }}`
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
