@@ -870,7 +870,9 @@ sidecar:
     # Absolute path to shell script to execute after a alert got reloaded
     script: null
     skipReload: false
-    # Deploy the alert sidecar as an initContainer in addition to a container.
+    # This is needed if skipReload is true, to load any alerts defined at startup time.
+    # Deploy the alert sidecar as an initContainer.
+    initAlerts: false
     # Additional alert sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
