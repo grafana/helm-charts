@@ -46,6 +46,13 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 
 This version requires Helm >= 3.1.0.
 
+### To 7.0.0
+
+For consistency with other Helm charts, the `global.image.registry` parameter was renamed 
+to `global.imageRegistry`. If you were not previously setting `global.image.registry`, no action
+is required on upgrade. If you were previously setting `global.image.registry`, you will
+need to instead set `global.imageRegistry`.
+
 ## Configuration
 
 | Parameter                                 | Description                                   | Default                                                 |
@@ -140,7 +147,7 @@ This version requires Helm >= 3.1.0.
 | `dashboards`                              | Dashboards to import                          | `{}`                                                    |
 | `dashboardsConfigMaps`                    | ConfigMaps reference that contains dashboards | `{}`                                                    |
 | `grafana.ini`                             | Grafana's primary configuration               | `{}`                                                    |
-| `global.image.registry`                   | Global image pull registry for all images.    | `null`                                   |
+| `global.imageRegistry`                    | Global image pull registry for all images.    | `null`                                   |
 | `global.imagePullSecrets`                 | Global image pull secrets (can be templated). Allows either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).  | `[]`                                                    |
 | `ldap.enabled`                            | Enable LDAP authentication                    | `false`                                                 |
 | `ldap.existingSecret`                     | The name of an existing secret containing the `ldap.toml` file, this must have the key `ldap-toml`. | `""` |
@@ -266,6 +273,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.envValueFrom`               | Environment variables for image-renderer from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
 | `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
+| `imageRenderer.podAnnotations `            | image-renderer image-renderer pod annotation                                       | `{}`                             |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
