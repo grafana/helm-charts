@@ -524,7 +524,7 @@ containers:
       {{- toYaml . | trim | nindent 6 }}
       {{- end }}
 {{- end}}
-{{- if .Values.sidecar.datasources.enabled }}
+{{- if and .Values.sidecar.datasources.enabled (not .Values.sidecar.datasources.initDatasources) }}
   - name: {{ include "grafana.name" . }}-sc-datasources
     {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
