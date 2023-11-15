@@ -68,5 +68,5 @@ It is not a highly available application and runs as a single pod.
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| webhooks| bool| `false` | Needed for Webhooks |
 | tolerations | list | `[]` |  |
+| webhooks.enabled | bool | `false` | Needed for using server Webhooks https://github.com/grafana/rollout-operator#webhooks |
