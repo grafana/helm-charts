@@ -434,7 +434,7 @@ ingester:
   podLabels: {}
   # -- Annotations for ingester pods
   podAnnotations: {}
-  # -- Labels for ingestor service
+  # -- Labels for ingester service
   serviceLabels: {}
   # -- Additional CLI args for the ingester
   extraArgs: []
@@ -452,7 +452,7 @@ ingester:
   extraContainers: []
   # -- Init containers to add to the ingester pods
   initContainers: []
-  # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
+  # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingester,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
