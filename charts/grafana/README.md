@@ -594,9 +594,11 @@ data:
         uid: 16624780-6564-45dc-825c-8bded4ad92d3
 ```
 
-## Provision alert rules, contact points, notification policies and notification templates
+## Statically provision alerting resources
+If you don't need to change alerting resources (alert rules, contact points, notification policies and notification templates) regularly you could use the `alerting` config option instead of the sidecar option above.
+This will grab the alerting config and apply it statically at build time for the helm file.
 
-There are two methods to provision alerting configuration in Grafana. Below are some examples and explanations as to how to use each method:
+There are two methods to statically provision alerting configuration in Grafana. Below are some examples and explanations as to how to use each method:
 
 ```yaml
 alerting:
@@ -626,7 +628,7 @@ alerting:
               title: '{{ `{{ template "default.title" . }}` }}'
 ```
 
-There are two possibilities:
+The two possibilities for static alerting resource provisioning are:
 
 * Inlining the file contents as described in the example `values.yaml` and the official [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/).
 * Importing a file using a relative path starting from the chart root directory.
