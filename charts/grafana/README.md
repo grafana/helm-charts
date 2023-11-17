@@ -544,6 +544,56 @@ delete_notifiers:
     # default org_id: 1
 ```
 
+## Sidecar for alerting resources
+
+If the parameter `sidecar.alerts.enabled` is set, a sidecar container is deployed in the grafana
+pod. This container watches all configmaps (or secrets) in the cluster (namespace defined by `sidecar.alerts.searchNamespace`) and filters out the ones with
+a label as defined in `sidecar.alerts.label` (default is `grafana_alert`). The files defined in those configmaps are written
+to a folder and accessed by grafana. Changes to the configmaps are monitored and the imported alerting resources are updated, however, deletions are a little more complicated (see below).
+
+This sidecar can be used to provision alert rules, contact points, notification policies, notification templates and mute timings as shown in [Grafana Documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/).
+
+To fetch the alert config which will be provisioned, use the alert provisioning API ([Grafana Documentation](https://grafana.com/docs/grafana/next/developers/http_api/alerting_provisioning/)).
+You can use either JSON or YAML format.
+
+Example config for an alert rule:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-grafana-alert
+  labels:
+     grafana_alert: "1"
+data:
+  k8s-alert.yml: |-
+    apiVersion: 1
+    groups:
+        - orgId: 1
+          name: k8s-alert
+          [...]
+```
+
+To delete provisioned alert rules is a two step process, you need to delete the configmap which defined the alert rule
+and then create a configuration which deletes the alert rule.
+
+Example deletion configuration:
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: delete-sample-grafana-alert
+  namespace: monitoring
+  labels:
+    grafana_alert: "1"
+data:
+  delete-k8s-alert.yml: |-
+    apiVersion: 1
+    deleteRules:
+      - orgId: 1
+        uid: 16624780-6564-45dc-825c-8bded4ad92d3
+```
+
 ## Provision alert rules, contact points, notification policies and notification templates
 
 There are two methods to provision alerting configuration in Grafana. Below are some examples and explanations as to how to use each method:
