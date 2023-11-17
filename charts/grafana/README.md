@@ -630,11 +630,12 @@ alerting:
 
 The two possibilities for static alerting resource provisioning are:
 
-* Inlining the file contents as described in the example `values.yaml` and the official [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/).
-* Importing a file using a relative path starting from the chart root directory.
+* Inlining the file contents as shown for contact points in the above example.
+* Importing a file using a relative path starting from the chart root directory as shown for the alert rules in the above example.
 
 ### Important notes on file provisioning
 
+* The format of the files is defined in the [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/) on file provisioning.
 * The chart supports importing YAML and JSON files.
 * The filename must be unique, otherwise one volume mount will overwrite the other.
 * In case of inlining, double curly braces that arise from the Grafana configuration format and are not intended as templates for the chart must be escaped.
