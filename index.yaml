@@ -16652,6 +16652,21 @@ entries:
     version: 0.2.0
   grafana-agent:
   - apiVersion: v2
+    appVersion: v0.38.0
+    created: "2023-11-21T14:35:01.694630856Z"
+    dependencies:
+    - condition: crds.create
+      name: crds
+      repository: ""
+      version: 0.0.0
+    description: Grafana Agent
+    digest: 041a9c6aca67ed8d97b8a3a772555e3b17455cc40fb2663bfbb81c39a6aebd33
+    name: grafana-agent
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-agent-0.28.0/grafana-agent-0.28.0.tgz
+    version: 0.28.0
+  - apiVersion: v2
     appVersion: v0.37.4
     created: "2023-11-07T12:06:37.100502596Z"
     dependencies:
@@ -52000,4 +52015,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-21T13:22:04.285290984Z"
+generated: "2023-11-21T14:35:01.699754644Z"
