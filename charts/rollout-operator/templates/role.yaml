@@ -26,3 +26,4 @@ rules:
   - statefulsets/status
   verbs:
   - update
+  
