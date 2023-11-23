@@ -24,6 +24,11 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.queryFrontendSelectorLabels" $ | nindent 6 }}
+    matchExpressions:
+      - key: prometheus.io/service-monitor
+        operator: NotIn
+        values:
+          - "false"
   endpoints:
     - port: http
       {{- with .interval }}
