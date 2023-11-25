@@ -47303,6 +47303,42 @@ entries:
   tempo-distributed:
   - apiVersion: v2
     appVersion: 2.3.0
+    created: "2023-11-25T22:35:12.904783541Z"
+    dependencies:
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 4.0.12
+    - alias: grafana-agent-operator
+      condition: metaMonitoring.grafanaAgent.installOperator
+      name: grafana-agent-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.2
+    description: Grafana Tempo in MicroService mode
+    digest: 5e953443fe3a9e60eef2664e38e94f3fa172524cb08b2a3d9bf509c11c85370c
+    home: https://grafana.com/docs/tempo/latest/
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: mapno
+    - name: BitProcessor
+    - name: faustodavid
+    - name: zalegrala
+    name: tempo-distributed
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-distributed-1.7.1/tempo-distributed-1.7.1.tgz
+    version: 1.7.1
+  - apiVersion: v2
+    appVersion: 2.3.0
     created: "2023-11-01T18:37:11.270373454Z"
     dependencies:
     - alias: minio
@@ -52327,4 +52363,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-24T14:36:25.689022547Z"
+generated: "2023-11-25T22:35:12.907400546Z"
