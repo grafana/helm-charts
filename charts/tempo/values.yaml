@@ -15,7 +15,7 @@ annotations: {}
 
 tempo:
   repository: grafana/tempo
-  tag: null
+  tag: ""
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -276,6 +276,9 @@ podAnnotations: {}
 
 # -- Pod (extra) Labels
 podLabels: {}
+
+# Apply extra labels to common labels.
+extraLabels: {}
 
 # -- Volumes to add
 extraVolumes: []
