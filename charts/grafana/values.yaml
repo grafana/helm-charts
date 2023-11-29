@@ -1241,14 +1241,25 @@ networkPolicy:
     ## created allowing grafana to connect to external data sources from kubernetes cluster.
     enabled: false
     ##
+    ## @param networkPolicy.egress.blockDNSResolution When enabled, DNS resolution will be blocked
+    ## for all pods in the grafana namespace.
+    blockDNSResolution: false
+    ##
     ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
     ports: []
     ## Add ports to the egress by specifying - port: <port number>
     ## E.X.
-    ## ports:
-      ## - port: 80
-      ## - port: 443
-  ##
+    ## - port: 80
+    ## - port: 443
+    ##
+    ## @param networkPolicy.egress.to Allow egress traffic to specific destinations
+    to: []
+    ## Add destinations to the egress by specifying - ipBlock: <CIDR>
+    ## E.X.
+    ## to:
+    ##  - namespaceSelector:
+    ##    matchExpressions:
+  ##    - {key: role, operator: In, values: [grafana]}
   ##
   ##
   ##
