@@ -133,6 +133,8 @@ spec:
           volumeMounts:
             - mountPath: /conf
               name: config
+            - mountPath: /tmp
+              name: tempo-queryfrontend-tmp
             {{- with .Values.queryFrontend.query.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -163,6 +165,10 @@ spec:
           {{- include "tempo.runtimeVolume" . | nindent 10 }}
         - name: tempo-queryfrontend-store
           emptyDir: {}
+        {{- if .Values.queryFrontend.query.enabled }}
+        - name: tempo-queryfrontend-tmp
+          emptyDir: {}
+        {{- end }}
         {{- if .Values.enterprise.enabled }}
         - name: license
           secret:
