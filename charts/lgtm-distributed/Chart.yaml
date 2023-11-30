@@ -16,7 +16,14 @@ sources:
   - https://github.com/grafana/mimir
   - https://github.com/grafana/tempo
 
+keywords:
+  - monitoring
+  - traces
+  - metrics
+  - logs
+
 annotations:
+  "artifacthub.io/license": AGPL-3.0-only
   "artifacthub.io/links": |
     - name: Chart Source
       url: https://github.com/grafana/helm-charts
