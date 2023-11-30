@@ -3,7 +3,7 @@ apiVersion: v2
 name: lgtm-distributed
 description: Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "6.59.4"
 
 home: https://grafana.com/oss/
