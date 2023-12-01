@@ -1,11 +1,11 @@
 apiVersion: v2
 name: grafana
-version: 7.0.11
+version: 7.0.12
 appVersion: 10.2.2
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
-home: https://grafana.net
-icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+home: https://grafana.com
+icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
 sources:
   - https://github.com/grafana/grafana
   - https://github.com/grafana/helm-charts
