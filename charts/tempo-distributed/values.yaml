@@ -493,7 +493,7 @@ compactor:
       # - type: prometheus
       #   metadata:
       #     serverAddress: "http://<prometheus-host>:9090"
-      #     threshold: 250
+      #     threshold: "250"
       #     query: |-
       #       sum by (cluster, namespace, tenant) (
       #         tempodb_compaction_outstanding_blocks{container="compactor", namespace=~".*"}
