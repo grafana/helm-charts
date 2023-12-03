@@ -901,7 +901,7 @@ containers:
       {{- $datasources := . }}
       {{- range (keys . | sortAlpha) }}
       {{- if (or (hasKey (index $datasources .) "secret")) }} {{/*check if current datasource should be handeled as secret */}}
-      - name: configSecret
+      - name: config-secret
         mountPath: "/etc/grafana/provisioning/datasources/{{ . }}"
         subPath: {{ . | quote }}
       {{- else }}
@@ -915,7 +915,7 @@ containers:
       {{- $notifiers := . }}
       {{- range (keys . | sortAlpha) }}
       {{- if (or (hasKey (index $notifiers .) "secret")) }} {{/*check if current notifier should be handeled as secret */}}
-      - name: configSecret
+      - name: config-secret
         mountPath: "/etc/grafana/provisioning/notifiers/{{ . }}"
         subPath: {{ . | quote }}
       {{- else }}
@@ -929,7 +929,7 @@ containers:
       {{- $alertingmap := .}}
       {{- range (keys . | sortAlpha) }}
       {{- if (or (hasKey (index $.Values.alerting .) "secret") (hasKey (index $.Values.alerting .) "secretFile")) }} {{/*check if current alerting entry should be handeled as secret */}}
-      - name: configSecret
+      - name: config-secret
         mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
         subPath: {{ . | quote }}
       {{- else }}
@@ -1120,9 +1120,9 @@ volumes:
       name: {{ include "grafana.fullname" . }}
   {{- $createConfigSecret := eq (include "grafana.shouldCreateConfigSecret" .) "true" -}}
   {{- if and .Values.createConfigmap $createConfigSecret }}
-  - name: configSecret
+  - name: config-secret
     secret:
-      name: {{ include "grafana.fullname" . }}-config-secret
+      secretName: {{ include "grafana.fullname" . }}-config-secret
   {{- end }}
   {{- range .Values.extraConfigmapMounts }}
   - name: {{ tpl .name $root }}
