@@ -17,7 +17,7 @@ spec:
   - type: {{ .type | quote }}
     metadata:
       serverAddress: {{ .metadata.serverAddress }}
-      threshold: {{ .metadata.threshold }}
+      threshold: {{ .metadata.threshold | quote }}
       query: |
         {{- .metadata.query | nindent 8 }}
   {{- end }}
