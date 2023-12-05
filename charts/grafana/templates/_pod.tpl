@@ -169,7 +169,7 @@ initContainers:
         mountPath: "/etc/grafana/provisioning/alerting"
       {{- with .Values.sidecar.alerts.extraMounts }}
       {{- toYaml . | trim | nindent 6 }}
-      {{- end }}        
+      {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources }}
   - name: {{ include "grafana.name" . }}-init-sc-datasources
@@ -411,7 +411,7 @@ containers:
         mountPath: "/etc/grafana/provisioning/alerting"
       {{- with .Values.sidecar.alerts.extraMounts }}
       {{- toYaml . | trim | nindent 6 }}
-      {{- end }}        
+      {{- end }}
 {{- end}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ include "grafana.name" . }}-sc-dashboard
@@ -1257,7 +1257,7 @@ volumes:
       {{ toYaml .hostPath | nindent 6 }}
     {{- else if .csi }}
     csi:
-      {{- toYaml .data | nindent 6 }}
+      {{- toYaml .csi | nindent 6 }}
     {{- else if .configMap }}
     configMap:
       {{- toYaml .configMap | nindent 6 }}
@@ -1273,4 +1273,3 @@ volumes:
   {{- tpl (toYaml .) $root | nindent 2 }}
   {{- end }}
 {{- end }}
-
