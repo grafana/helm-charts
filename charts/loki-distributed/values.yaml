@@ -283,6 +283,12 @@ serviceMonitor:
   namespace: null
   # -- Namespace selector for ServiceMonitor resources
   namespaceSelector: {}
+  # -- Optional expressions to match on
+  matchExpressions: []
+    # - key: prometheus.io/service-monitor
+    #   operator: NotIn
+    #   values:
+    #     - "false"
   # -- ServiceMonitor annotations
   annotations: {}
   # -- Additional ServiceMonitor labels
