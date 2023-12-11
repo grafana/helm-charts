@@ -17949,6 +17949,30 @@ entries:
     version: 0.1.0
   k6-operator:
   - apiVersion: v1
+    appVersion: 0.0.12
+    created: "2023-12-11T07:46:45.03001436Z"
+    description: A Helm chart to install the k6-operator
+    digest: 9517238fa3ef681db92c03b47e6741b8f9059e40e8b2a9f83c63d6f07af102f4
+    home: https://k6.io
+    icon: https://raw.githubusercontent.com/grafana/k6-docs/main/static/images/icon.png
+    keywords:
+    - load-testing
+    - smoke-testing
+    - stress-testing
+    - soak-testing
+    - kubernetes
+    - distributed-testing
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: olha@k6.io
+      name: yorugac
+    name: k6-operator
+    sources:
+    - https://github.com/grafana/k6-operator
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/helm-k6-operator-3.3.0/k6-operator-3.3.0.tgz
+    version: 3.3.0
+  - apiVersion: v1
     appVersion: 0.0.11
     created: "2023-11-29T15:33:15.301710739Z"
     description: A Helm chart to install the k6-operator
@@ -52832,4 +52856,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-08T16:46:45.141104801Z"
+generated: "2023-12-11T07:46:45.04399709Z"
