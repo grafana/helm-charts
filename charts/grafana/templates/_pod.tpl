@@ -14,6 +14,13 @@ securityContext:
 hostAliases:
   {{- toYaml . | nindent 2 }}
 {{- end }}
+{{- if .Values.dnsPolicy }}
+dnsPolicy: {{ .Values.dnsPolicy }}
+{{- end }}
+{{- with .Values.dnsConfig }}
+dnsConfig:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
@@ -169,7 +176,7 @@ initContainers:
         mountPath: "/etc/grafana/provisioning/alerting"
       {{- with .Values.sidecar.alerts.extraMounts }}
       {{- toYaml . | trim | nindent 6 }}
-      {{- end }}        
+      {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources }}
   - name: {{ include "grafana.name" . }}-init-sc-datasources
@@ -411,7 +418,7 @@ containers:
         mountPath: "/etc/grafana/provisioning/alerting"
       {{- with .Values.sidecar.alerts.extraMounts }}
       {{- toYaml . | trim | nindent 6 }}
-      {{- end }}        
+      {{- end }}
 {{- end}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ include "grafana.name" . }}-sc-dashboard
