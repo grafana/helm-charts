@@ -1264,7 +1264,7 @@ volumes:
       {{ toYaml .hostPath | nindent 6 }}
     {{- else if .csi }}
     csi:
-      {{- toYaml .data | nindent 6 }}
+      {{- toYaml .csi | nindent 6 }}
     {{- else if .configMap }}
     configMap:
       {{- toYaml .configMap | nindent 6 }}
@@ -1280,4 +1280,3 @@ volumes:
   {{- tpl (toYaml .) $root | nindent 2 }}
   {{- end }}
 {{- end }}
-
