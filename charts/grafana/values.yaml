@@ -116,6 +116,16 @@ testFramework:
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
+# dns configuration for pod
+dnsPolicy: ~
+dnsConfig: {}
+  # nameservers:
+  #   - 8.8.8.8
+  #   options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
+
 securityContext:
   runAsNonRoot: true
   runAsUser: 472
