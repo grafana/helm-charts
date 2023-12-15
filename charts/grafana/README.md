@@ -48,7 +48,7 @@ This version requires Helm >= 3.1.0.
 
 ### To 7.0.0
 
-For consistency with other Helm charts, the `global.image.registry` parameter was renamed 
+For consistency with other Helm charts, the `global.image.registry` parameter was renamed
 to `global.imageRegistry`. If you were not previously setting `global.image.registry`, no action
 is required on upgrade. If you were previously setting `global.image.registry`, you will
 need to instead set `global.imageRegistry`.
@@ -136,6 +136,7 @@ need to instead set `global.imageRegistry`.
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
+| `extraVolumes`                            | Additional Grafana server volumes             | `[]`                                                    |
 | `createConfigmap`                         | Enable creating the grafana configmap         | `true`                                                  |
 | `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts (values are templated) | `[]`                         |
 | `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
@@ -315,23 +316,34 @@ ingress:
   path: "/grafana"
 ```
 
-### Example of extraVolumeMounts
+### Example of extraVolumeMounts and extraVolumes
 
-Volume can be type persistentVolumeClaim or hostPath but not both at same time.
-If neither existingClaim or hostPath argument is given then type is emptyDir.
+Configure additional volumes with `extraVolumes` and volume mounts with `extraVolumeMounts`.
+
+Example for `extraVolumeMounts` and corresponding `extraVolumes`:
 
 ```yaml
-- extraVolumeMounts:
+extraVolumeMounts:
   - name: plugins
     mountPath: /var/lib/grafana/plugins
     subPath: configs/grafana/plugins
-    existingClaim: existing-grafana-claim
     readOnly: false
   - name: dashboards
     mountPath: /var/lib/grafana/dashboards
     hostPath: /usr/shared/grafana/dashboards
     readOnly: false
+
+extraVolumes:
+  - name: plugins
+    existingClaim: existing-grafana-claim
+  - name: dashboards
+    hostPath: /usr/shared/grafana/dashboards
 ```
+
+Volumes default to `emptyDir`. Set to `persistentVolumeClaim`,
+`hostPath`, `csi`, or `configMap` for other types. For a
+`persistentVolumeClaim`, specify an existing claim name with
+`existingClaim`.
 
 ## Import dashboards
 
