@@ -2029,3 +2029,13 @@ networkPolicy:
     podSelector: {}
     # -- Specifies the namespace the discovery Pods are running in
     namespaceSelector: {}
+
+# Create a dynamic manifests via values:
+extraObjects: []
+  # - apiVersion: objectbucket.io/v1alpha1
+  #   kind: ObjectBucketClaim
+  #   metadata:
+  #     name: loki-storage
+  #   spec:
+  #     generateBucketName: loki-storage
+  #     storageClassName: rook-ceph-rgw-bucket
