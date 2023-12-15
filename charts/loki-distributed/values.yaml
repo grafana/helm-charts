@@ -76,6 +76,9 @@ loki:
     allowPrivilegeEscalation: false
   # -- Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config`
   existingSecretForConfig: ""
+  # -- When 'existingSecretForConfig' is not empty, then changing 'externalConfigVersion' triggers restart of services -
+  # otherwise changes to the configuration cause a restart.
+  externalConfigVersion: '0'
   # -- Store the loki configuration as a secret.
   configAsSecret: false
   # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"

@@ -177,7 +177,11 @@ livenessProbe:
 {{- end -}}
 
 {{- define "loki.config.checksum" -}}
+{{- if .Values.loki.existingSecretForConfig }}
+checksum/config: {{ .Values.loki.externalConfigVersion }}
+{{- else }}
 checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -191,9 +195,6 @@ secret:
 {{- else }}
 configMap:
   name: {{ .Values.loki.existingSecretForConfig }}
-  items:
-    - key: "config.yaml"
-      path: "config.yaml"
 {{- end }}
 {{- else if .Values.loki.configAsSecret }}
 secret:
@@ -201,8 +202,5 @@ secret:
 {{- else }}
 configMap:
   name: {{ include "loki.fullname" . }}
-  items:
-    - key: "config.yaml"
-      path: "config.yaml"
 {{- end }}
 {{- end -}}
