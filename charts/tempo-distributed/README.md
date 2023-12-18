@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 1.7.3](https://img.shields.io/badge/Version-1.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -388,6 +388,7 @@ The memcached default args are removed and should be provided manually. The sett
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
 | externalRuntimeConfigName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"runtime\") }}"` | Name of the Secret or ConfigMap that contains the runtime configuration (used for naming even if config is internal). |
+| extraObjects | list | `[]` | Create extra manifests via values. |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the gateway |
@@ -450,7 +451,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
-| global_overrides.metrics_generator_processors | list | `[]` |  |
+| global_overrides.metrics_generator_processors | list | `[]` | List of enabled metrics generator processors ([service-graphs, span-metrics]) |
 | global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
@@ -560,6 +561,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection. |
 | metricsGenerator.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | metricsGenerator.config | object | `{"metrics_ingestion_time_range_slack":"30s","processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_flush_deadline":"1m","wal":null}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
+| metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics] |
 | metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |
 | metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | Dimensions are searched for in the resource and span attributes and are added to the metrics if present. |
 | metricsGenerator.config.storage.remote_write | list | `[]` | https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write |
