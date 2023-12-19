@@ -551,7 +551,9 @@ extraVolumes: []
   # - name: extra-volume-0
   #   existingClaim: volume-claim
   # - name: extra-volume-1
-  #   hostPath: /usr/shared/
+  #   hostPath:
+  #     path: /usr/shared/
+  #     type: ""
   # - name: grafana-secrets
   #   csi:
   #     driver: secrets-store.csi.k8s.io
@@ -990,8 +992,8 @@ sidecar:
     # Absolute path to shell script to execute after a datasource got reloaded
     script: null
     skipReload: false
-    # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
+    # Deploy the datasources sidecar as an initContainer.
     initDatasources: false
     # Sets the size limit of the datasource sidecar emptyDir volume
     sizeLimit: {}
