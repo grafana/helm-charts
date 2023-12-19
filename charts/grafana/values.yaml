@@ -551,7 +551,9 @@ extraVolumes: []
   # - name: extra-volume-0
   #   existingClaim: volume-claim
   # - name: extra-volume-1
-  #   hostPath: /usr/shared/
+  #   hostPath:
+  #     path: /usr/shared/
+  #     type: ""
   # - name: grafana-secrets
   #   csi:
   #     driver: secrets-store.csi.k8s.io
