@@ -2,6 +2,7 @@
  Generate config map data
  */}}
 {{- define "grafana.configData" -}}
+{{ include "grafana.assertNoLeakedSecrets" . }}
 {{- $files := .Files }}
 {{- $root := . -}}
 {{- with .Values.plugins }}
