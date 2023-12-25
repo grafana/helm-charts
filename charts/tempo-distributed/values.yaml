@@ -321,6 +321,7 @@ metricsGenerator:
       external_labels: {}
       stale_duration: 15m
     processor:
+      # -- For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics]
       service_graphs:
         # -- Additional dimensions to add to the metrics. Dimensions are searched for in the
         # -- resource and span attributes and are added to the metrics if present.
@@ -1322,6 +1323,7 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
+  # -- List of enabled metrics generator processors ([service-graphs, span-metrics])
   metrics_generator_processors: []
 
 # Per tenants overrides
