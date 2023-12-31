@@ -103,14 +103,22 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `loki.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `loki.image.tag` |
 | compactor.initContainers | list | `[]` | Init containers to add to the compactor pods |
+| compactor.kind | string | `"StatefulSet"` | Kind of deployment [StatefulSet/Deployment] |
+| compactor.livenessProbe | object | `{}` | liveness probe settings for ingester pods. If empty use `loki.livenessProbe` |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.persistence.annotations | object | `{}` | Annotations for compactor PVCs |
+| compactor.persistence.claims | list | `[{"name":"data","size":"10Gi","storageClass":null}]` | List of the compactor PVCs @notationType -- list |
+| compactor.persistence.enableStatefulSetAutoDeletePVC | bool | `false` | Enable StatefulSetAutoDeletePVC feature |
 | compactor.persistence.enabled | bool | `false` | Enable creating PVCs for the compactor |
 | compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
 | compactor.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| compactor.persistence.whenDeleted | string | `"Retain"` |  |
+| compactor.persistence.whenScaled | string | `"Retain"` |  |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.podLabels | object | `{}` | Labels for compactor pods |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
+| compactor.readinessProbe | object | `{}` | readiness probe settings for ingester pods. If empty, use `loki.readinessProbe` |
+| compactor.replicas | int | `1` | Number of replicas for the compactor |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.serviceAccount.annotations | object | `{}` | Annotations for the compactor service account |
 | compactor.serviceAccount.automountServiceAccountToken | bool | `true` | Set this toggle to false to opt out of automounting API credentials for the service account |
