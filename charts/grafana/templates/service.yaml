@@ -21,7 +21,7 @@ spec:
   clusterIP: {{ . }}
   {{- end }}
   {{- else if eq .Values.service.type "LoadBalancer" }}
-  type: {{ .Values.service.type }}
+  type: LoadBalancer
   {{- with .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}
