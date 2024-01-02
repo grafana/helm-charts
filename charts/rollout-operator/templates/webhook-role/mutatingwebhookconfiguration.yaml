@@ -16,7 +16,11 @@ webhooks:
       namespace: {{.Release.Namespace}}
       path: /admission/prepare-downscale
       port: 443
+  {{- if eq((lookup "v1" "MutatingWebhookConfiguration" "{{.Release.Namespace}}" "prepare-downscale-{{.Release.Namespace}}") "" ) }}
+  failurePolicy: Ignore
+  {{- else }}
   failurePolicy: Fail
+  {{- end }}
   matchPolicy: Equivalent
   name: prepare-downscale-{{.Release.Namespace}}.grafana.com
   rules:
