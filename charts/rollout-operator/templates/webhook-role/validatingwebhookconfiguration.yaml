@@ -16,7 +16,8 @@ webhooks:
       namespace: {{.Release.Namespace}}
       path: /admission/no-downscale
       port: 443
-  {{- if eq((lookup "v1" "ValidatingWebhookConfiguration" "{{.Release.Namespace}}" "no-downscale-{{.Release.Namespace}}") "" ) }}
+  {{- $failpol := (lookup "v1" "ValidatingWebhookConfiguration" "{{.Release.Namespace}}" "no-downscale-{{.Release.Namespace}}") -}}
+  {{- if empty $failpol }}
   failurePolicy: Ignore
   {{- else }}
   failurePolicy: Fail
