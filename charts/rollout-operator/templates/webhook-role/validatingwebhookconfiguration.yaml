@@ -20,7 +20,8 @@ webhooks:
   failurePolicy: Ignore
   {{- else }}
   failurePolicy: Fail
-  {{- end }}  matchPolicy: Equivalent
+  {{- end }}  
+  matchPolicy: Equivalent
   rules:
   - apiGroups: [apps]
     apiVersions: [v1]
