@@ -16,23 +16,15 @@ spec:
   type: ClusterIP
   publishNotReadyAddresses: true
   ports:
-    - name: http
-      port: 3100
-      targetPort: http
-      protocol: TCP
-    - name: grpc
-      port: 9095
-      targetPort: grpc
-      protocol: TCP
-      {{- if .Values.queryFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
-      {{- end }}
-    - name: grpclb
-      port: 9096
-      targetPort: grpc
-      protocol: TCP
-      {{- if .Values.queryFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
-      {{- end }}
+  - appProtocol: http
+    name: http
+    port: 3100
+    protocol: TCP
+    targetPort: http
+  - appProtocol: tcp
+    name: grpclb
+    port: 9095
+    protocol: TCP
+    targetPort: grpc
   selector:
     {{- include "loki.queryFrontendSelectorLabels" . | nindent 4 }}

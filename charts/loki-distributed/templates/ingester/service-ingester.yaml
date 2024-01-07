@@ -19,12 +19,10 @@ spec:
       port: 3100
       targetPort: http
       protocol: TCP
-    - name: grpc
+    - appProtocol: tcp
+      name: grpc
       port: 9095
       targetPort: grpc
       protocol: TCP
-      {{- if .Values.ingester.appProtocol.grpc }}
-      appProtocol: {{ .Values.ingester.appProtocol.grpc }}
-      {{- end }}
   selector:
     {{- include "loki.ingesterSelectorLabels" . | nindent 4 }}
