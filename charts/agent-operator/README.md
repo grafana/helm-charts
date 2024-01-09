@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.3.12](https://img.shields.io/badge/Version-0.3.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.38.1](https://img.shields.io/badge/AppVersion-0.38.1-informational?style=flat-square)
+![Version: 0.3.13](https://img.shields.io/badge/Version-0.3.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.38.1](https://img.shields.io/badge/AppVersion-0.38.1-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -16,7 +16,7 @@ To learn how to deploy these resources, please see Grafana's [Agent Operator get
 
 ## CRDs
 
-The CRDs are synced into this chart manually (for now) from the Grafana Agent [GitHub repo](https://github.com/grafana/agent/tree/main/production/operator/crds). To learn more about how Helm manages CRDs, please see [Custom Resource Definitions](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) from the Helm docs.
+The CRDs are synced into this chart manually (for now) from the Grafana Agent [GitHub repo](https://github.com/grafana/agent/tree/main/operations/agent-static-operator/crds). To learn more about how Helm manages CRDs, please see [Custom Resource Definitions](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) from the Helm docs.
 
 ## Get Repo Info
 
