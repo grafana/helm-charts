@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.7.3](https://img.shields.io/badge/Version-1.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -240,6 +240,16 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
 | adminApi.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string |
+| compactor.autoscaling | object | `{"enabled":false,"hpa":{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null},"keda":{"enabled":false,"triggers":[]},"maxReplicas":3,"minReplicas":1}` | Autoscaling configurations |
+| compactor.autoscaling.enabled | bool | `false` | Enable autoscaling for the compactor |
+| compactor.autoscaling.hpa | object | `{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null}` | Autoscaling via HPA object |
+| compactor.autoscaling.hpa.behavior | object | `{}` | Autoscaling behavior configuration for the compactor |
+| compactor.autoscaling.hpa.targetCPUUtilizationPercentage | int | `100` | Target CPU utilisation percentage for the compactor |
+| compactor.autoscaling.hpa.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the compactor |
+| compactor.autoscaling.keda | object | `{"enabled":false,"triggers":[]}` | Autoscaling via keda/ScaledObject |
+| compactor.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the compactor |
+| compactor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the compactor |
+| compactor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the compactor |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.config.compaction.compacted_block_retention | string | `"1h"` |  |
 | compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
