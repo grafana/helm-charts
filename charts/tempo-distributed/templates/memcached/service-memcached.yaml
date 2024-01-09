@@ -11,12 +11,16 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  type: ClusterIP
+  clusterIP: None
   ports:
   - name: memcached-client
     port: 11211
+    protocol: TCP
     targetPort: 11211
   - name: http-metrics
     port: 9150
+    protocol: TCP
     targetPort: http-metrics
   selector:
     {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 4 }}
