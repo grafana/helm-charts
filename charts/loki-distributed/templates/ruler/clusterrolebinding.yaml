@@ -1,0 +1,22 @@
+{{- if and .Values.ruler.enabled .Values.ruler.sidecar.enabled }}
+{{- if not .Values.ruler.sidecar.rbac.namespaced }}
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "loki.rulerFullname" . }}-clusterrolebinding
+  labels:
+    {{- include "loki.rulerLabels" $ | nindent 4 }}
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "loki.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "loki.rulerFullname" . }}-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}
+{{- end -}}
