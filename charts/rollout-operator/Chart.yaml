@@ -2,11 +2,7 @@ apiVersion: v2
 name: rollout-operator
 description: "Grafana rollout-operator"
 type: application
-<<<<<<< HEAD
 version: 0.11.1
-=======
-version: 0.10.1
->>>>>>> 3680c2e2 ([rollout-operator] version update post rebase)
 appVersion: v0.9.0
 home: https://github.com/grafana/rollout-operator
 kubeVersion: ^1.10.0-0
