@@ -1300,3 +1300,13 @@ extraObjects: []
   #     data:
   #       - key: grafana-admin-password
   #         name: adminPassword
+
+# assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
+# values are not exposed in the rendered grafana.ini configmap. It is enabled by default.
+#
+# To pass values into grafana.ini without exposing them in a configmap, use variable expansion:
+# https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#variable-expansion
+#
+# Alternatively, if you wish to allow secret values to be exposed in the rendered grafana.ini configmap,
+# you can disable this check by setting assertNoLeakedSecrets to false.
+assertNoLeakedSecrets: true
