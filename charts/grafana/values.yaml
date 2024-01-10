@@ -1,4 +1,7 @@
 global:
+  # -- Overrides the Docker registry globally for all images
+  imageRegistry: null
+
   # To help compatibility with other charts which use global.imagePullSecrets.
   # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
   # Can be tempalted.
@@ -86,7 +89,10 @@ livenessProbe:
 # schedulerName: "default-scheduler"
 
 image:
-  repository: docker.io/grafana/grafana
+  # -- The Docker registry
+  registry: docker.io
+  # -- Docker image repository
+  repository: grafana/grafana
   # Overrides the Grafana image tag whose default is the chart appVersion
   tag: ""
   sha: ""
@@ -102,10 +108,23 @@ image:
 
 testFramework:
   enabled: true
-  image: docker.io/bats/bats
-  tag: "v1.4.1"
+  image:
+    # -- The Docker registry
+    registry: docker.io
+    repository: bats/bats
+    tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
+
+# dns configuration for pod
+dnsPolicy: ~
+dnsConfig: {}
+  # nameservers:
+  #   - 8.8.8.8
+  #   options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
 
 securityContext:
   runAsNonRoot: true
@@ -146,7 +165,9 @@ extraLabels: {}
 # priorityClassName:
 
 downloadDashboardsImage:
-  repository: docker.io/curlimages/curl
+  # -- The Docker registry
+  registry: docker.io
+  repository: curlimages/curl
   tag: 7.85.0
   sha: ""
   pullPolicy: IfNotPresent
@@ -186,6 +207,9 @@ gossipPortName: gossip
 service:
   enabled: true
   type: ClusterIP
+  loadBalancerIP: ""
+  loadBalancerClass: ""
+  loadBalancerSourceRanges: []
   port: 80
   targetPort: 3000
     # targetPort: 4181 To be used with a proxy extraContainer
@@ -204,7 +228,7 @@ serviceMonitor:
   path: /metrics
   #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
   labels: {}
-  interval: 1m
+  interval: 30s
   scheme: http
   tlsConfig: {}
   scrapeTimeout: 30s
@@ -361,7 +385,9 @@ initChownData:
   ## initChownData container image
   ##
   image:
-    repository: docker.io/library/busybox
+    # -- The Docker registry
+    registry: docker.io
+    repository: library/busybox
     tag: "1.31.1"
     sha: ""
     pullPolicy: IfNotPresent
@@ -517,15 +543,22 @@ extraVolumeMounts: []
   # - name: extra-volume-0
   #   mountPath: /mnt/volume0
   #   readOnly: true
-  #   existingClaim: volume-claim
   # - name: extra-volume-1
   #   mountPath: /mnt/volume1
   #   readOnly: true
-  #   hostPath: /usr/shared/
   # - name: grafana-secrets
   #   mountPath: /mnt/volume2
-  #   csi: true
-  #   data:
+
+## Additional Grafana server volumes
+extraVolumes: []
+  # - name: extra-volume-0
+  #   existingClaim: volume-claim
+  # - name: extra-volume-1
+  #   hostPath:
+  #     path: /usr/shared/
+  #     type: ""
+  # - name: grafana-secrets
+  #   csi:
   #     driver: secrets-store.csi.k8s.io
   #     readOnly: true
   #     volumeAttributes:
@@ -795,8 +828,10 @@ smtp:
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
 sidecar:
   image:
-    repository: quay.io/kiwigrid/k8s-sidecar
-    tag: 1.25.1
+    # -- The Docker registry
+    registry: quay.io
+    repository: kiwigrid/k8s-sidecar
+    tag: 1.25.2
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -855,7 +890,9 @@ sidecar:
     # Absolute path to shell script to execute after a alert got reloaded
     script: null
     skipReload: false
-    # Deploy the alert sidecar as an initContainer in addition to a container.
+    # This is needed if skipReload is true, to load any alerts defined at startup time.
+    # Deploy the alert sidecar as an initContainer.
+    initAlerts: false
     # Additional alert sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
@@ -958,8 +995,8 @@ sidecar:
     # Absolute path to shell script to execute after a datasource got reloaded
     script: null
     skipReload: false
-    # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
+    # Deploy the datasources sidecar as an initContainer.
     initDatasources: false
     # Sets the size limit of the datasource sidecar emptyDir volume
     sizeLimit: {}
@@ -1066,8 +1103,10 @@ imageRenderer:
     targetMemory: ""
     behavior: {}
   image:
+    # -- The Docker registry
+    registry: docker.io
     # image-renderer Image repository
-    repository: docker.io/grafana/grafana-image-renderer
+    repository: grafana/grafana-image-renderer
     # image-renderer Image tag
     tag: latest
     # image-renderer Image sha (optional)
@@ -1107,6 +1146,8 @@ imageRenderer:
       drop: ['ALL']
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
+  ## image-renderer pod annotation
+  podAnnotations: {}
   # image-renderer deployment Host Aliases
   hostAliases: []
   # image-renderer deployment priority class
@@ -1220,14 +1261,25 @@ networkPolicy:
     ## created allowing grafana to connect to external data sources from kubernetes cluster.
     enabled: false
     ##
+    ## @param networkPolicy.egress.blockDNSResolution When enabled, DNS resolution will be blocked
+    ## for all pods in the grafana namespace.
+    blockDNSResolution: false
+    ##
     ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
     ports: []
     ## Add ports to the egress by specifying - port: <port number>
     ## E.X.
-    ## ports:
-      ## - port: 80
-      ## - port: 443
-  ##
+    ## - port: 80
+    ## - port: 443
+    ##
+    ## @param networkPolicy.egress.to Allow egress traffic to specific destinations
+    to: []
+    ## Add destinations to the egress by specifying - ipBlock: <CIDR>
+    ## E.X.
+    ## to:
+    ##  - namespaceSelector:
+    ##    matchExpressions:
+  ##    - {key: role, operator: In, values: [grafana]}
   ##
   ##
   ##
@@ -1248,3 +1300,13 @@ extraObjects: []
   #     data:
   #       - key: grafana-admin-password
   #         name: adminPassword
+
+# assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
+# values are not exposed in the rendered grafana.ini configmap. It is enabled by default.
+#
+# To pass values into grafana.ini without exposing them in a configmap, use variable expansion:
+# https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#variable-expansion
+#
+# Alternatively, if you wish to allow secret values to be exposed in the rendered grafana.ini configmap,
+# you can disable this check by setting assertNoLeakedSecrets to false.
+assertNoLeakedSecrets: true

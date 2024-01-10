@@ -224,7 +224,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
-    - from: 2020-09-07
+    - from: "2020-09-07"
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
@@ -283,6 +283,12 @@ serviceMonitor:
   namespace: null
   # -- Namespace selector for ServiceMonitor resources
   namespaceSelector: {}
+  # -- Optional expressions to match on
+  matchExpressions: []
+    # - key: prometheus.io/service-monitor
+    #   operator: NotIn
+    #   values:
+    #     - "false"
   # -- ServiceMonitor annotations
   annotations: {}
   # -- Additional ServiceMonitor labels
@@ -391,7 +397,16 @@ ingester:
     # -- Target CPU utilisation percentage for the ingester
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
-    targetMemoryUtilizationPercentage:
+    targetMemoryUtilizationPercentage: null
+    # -- Allows one to define custom metrics using the HPA/v2 schema (for example, Pods, Object or External metrics)
+    customMetrics: []
+    # - type: Pods
+    #   pods:
+    #     metric:
+    #       name: loki_lines_total
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 10k
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
@@ -497,7 +512,6 @@ ingester:
     enableStatefulSetAutoDeletePVC: false
     whenDeleted: Retain
     whenScaled: Retain
-
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -522,7 +536,16 @@ distributor:
     # -- Target CPU utilisation percentage for the distributor
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
-    targetMemoryUtilizationPercentage:
+    targetMemoryUtilizationPercentage: null
+    # -- Allows one to define custom metrics using the HPA/v2 schema (for example, Pods, Object or External metrics)
+    customMetrics: []
+    # - type: Pods
+    #   pods:
+    #     metric:
+    #       name: loki_lines_total
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 10k
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
@@ -611,7 +634,16 @@ querier:
     # -- Target CPU utilisation percentage for the querier
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
-    targetMemoryUtilizationPercentage:
+    targetMemoryUtilizationPercentage: null
+    # -- Allows one to define custom metrics using the HPA/v2 schema (for example, Pods, Object or External metrics)
+    customMetrics: []
+    # - type: External
+    #   external:
+    #     metric:
+    #       name: loki_inflight_queries
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 12
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
@@ -726,7 +758,16 @@ queryFrontend:
     # -- Target CPU utilisation percentage for the query-frontend
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the query-frontend
-    targetMemoryUtilizationPercentage:
+    targetMemoryUtilizationPercentage: null
+    # -- Allows one to define custom metrics using the HPA/v2 schema (for example, Pods, Object or External metrics)
+    customMetrics: []
+    # - type: Pods
+    #   pods:
+    #     metric:
+    #       name: loki_query_rate
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 100
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
@@ -860,6 +901,9 @@ queryScheduler:
   nodeSelector: {}
   # -- Tolerations for query-scheduler pods
   tolerations: []
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
 
 # Configuration for the table-manager
 tableManager:
@@ -980,7 +1024,20 @@ gateway:
     # -- Target CPU utilisation percentage for the gateway
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the gateway
-    targetMemoryUtilizationPercentage:
+    targetMemoryUtilizationPercentage: null
+    # -- Allows one to define custom metrics using the HPA/v2 schema (for example, Resource, Object or External metrics)
+    customMetrics: []
+    # - type: Object
+    #   object:
+    #     metric:
+    #       name: requests-per-second
+    #     describedObject:
+    #       apiVersion: networking.k8s.io/v1
+    #       kind: Ingress
+    #       name: main-route
+    #     target:
+    #       type: Values
+    #       averageValue: 10k
     behavior:
       # -- Enable autoscaling behaviours
       enabled: false
@@ -1268,6 +1325,10 @@ gateway:
 
 # Configuration for the compactor
 compactor:
+  # -- Kind of deployment [StatefulSet/Deployment]
+  kind: StatefulSet
+  # -- Number of replicas for the compactor
+  replicas: 1
   # -- Specifies whether compactor should be enabled
   enabled: false
   # -- hostAliases to add
@@ -1318,6 +1379,10 @@ compactor:
   extraVolumeMounts: []
   # -- Volumes to add to the compactor pods
   extraVolumes: []
+  # -- readiness probe settings for ingester pods. If empty, use `loki.readinessProbe`
+  readinessProbe: {}
+  # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
+  livenessProbe: {}
   # -- Resource requests and limits for the compactor
   resources: {}
   # -- Containers to add to the compactor pods
@@ -1346,6 +1411,24 @@ compactor:
     storageClass: null
     # -- Annotations for compactor PVCs
     annotations: {}
+    # -- List of the compactor PVCs
+    # @notationType -- list
+    claims:
+      - name: data
+        size: 10Gi
+        #   -- Storage class to be used.
+        #   If defined, storageClassName: <storageClass>.
+        #   If set to "-", storageClassName: "", which disables dynamic provisioning.
+        #   If empty or set to null, no storageClassName spec is
+        #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+        storageClass: null
+      # - name: wal
+      #   size: 150Gi
+    # -- Enable StatefulSetAutoDeletePVC feature
+    enableStatefulSetAutoDeletePVC: false
+    whenDeleted: Retain
+    whenScaled: Retain
+
   serviceAccount:
     create: false
     # -- The name of the ServiceAccount to use for the compactor.
@@ -1444,6 +1527,9 @@ ruler:
     storageClass: null
     # -- Annotations for ruler PVCs
     annotations: {}
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
   # -- Directories containing rules files
   directories: {}
     # tenant_foo:
@@ -1517,6 +1603,8 @@ indexGateway:
   enabled: false
   # -- Number of replicas for the index-gateway
   replicas: 1
+  # -- Whether the index gateway should join the memberlist hashring
+  joinMemberlist: true
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -1596,6 +1684,9 @@ indexGateway:
     enableStatefulSetAutoDeletePVC: false
     whenDeleted: Retain
     whenScaled: Retain
+  # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
+  appProtocol:
+    grpc: ""
 
 memcached:
   readinessProbe:

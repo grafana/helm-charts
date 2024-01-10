@@ -1,33 +1,33 @@
-{{- if .Values.indexGateway.enabled }}
+{{- if .Values.compactor.enabled }}
+{{- if eq .Values.compactor.kind "StatefulSet"}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "loki.indexGatewayFullname" . }}
+  name: {{ include "loki.compactorFullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "loki.indexGatewayLabels" . | nindent 4 }}
+    {{- include "loki.compactorLabels" . | nindent 4 }}
+    app.kubernetes.io/part-of: memberlist
   {{- with .Values.loki.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ .Values.indexGateway.replicas }}
+  replicas: {{ .Values.compactor.replicas }}
+  podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:
       partition: 0
-  serviceName: {{ include "loki.indexGatewayFullname" . }}-headless
+  serviceName: {{ include "loki.compactorFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
-  {{- if and (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) (.Values.indexGateway.persistence.enableStatefulSetAutoDeletePVC)  }}
-  {{/*
-    Data on the read nodes is easy to replace, so we want to always delete PVCs to make
-    operation easier, and will rely on re-fetching data when needed.
-  */}}
+  {{- if and (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) (.Values.compactor.persistence.enableStatefulSetAutoDeletePVC)  }}
   persistentVolumeClaimRetentionPolicy:
-    whenDeleted: {{ .Values.indexGateway.persistence.whenDeleted }}
-    whenScaled: {{ .Values.indexGateway.persistence.whenScaled }}
+    whenDeleted: {{ .Values.compactor.persistence.whenDeleted }}
+    whenScaled: {{ .Values.compactor.persistence.whenScaled }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
+      {{- include "loki.compactorSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -35,46 +35,54 @@ spec:
         {{- with .Values.loki.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.indexGateway.podAnnotations }}
+        {{- with .Values.compactor.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "loki.indexGatewaySelectorLabels" . | nindent 8 }}
+        {{- include "loki.compactorSelectorLabels" . | nindent 8 }}
+        app.kubernetes.io/part-of: memberlist
         {{- with .Values.loki.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.indexGateway.podLabels }}
+        {{- with .Values.compactor.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.indexGateway.joinMemberlist }}
-        app.kubernetes.io/part-of: memberlist
-        {{- end }}
     spec:
+      {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
+      {{- with .Values.compactor.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
+      {{- end }}
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.indexGateway.hostAliases }}
+      {{- with .Values.compactor.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- include "loki.indexGatewayPriorityClassName" . | nindent 6 }}
+      {{- include "loki.compactorPriorityClassName" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.loki.podSecurityContext | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.indexGateway.terminationGracePeriodSeconds }}
-      {{- with .Values.indexGateway.initContainers }}
+      terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
+      {{- with .Values.compactor.initContainers }}
       initContainers:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: index-gateway
-          image: {{ include "loki.indexGatewayImage" . }}
+        - name: compactor
+          image: {{ include "loki.compactorImage" . }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          {{- if or .Values.loki.command .Values.compactor.command }}
+          command:
+            - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}
+          {{- end }}
           args:
             - -config.file=/etc/loki/config/config.yaml
-            - -target=index-gateway
-            {{- with .Values.indexGateway.extraArgs }}
+            - -target=compactor
+            {{- with .Values.compactor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
@@ -84,53 +92,59 @@ spec:
             - name: grpc
               containerPort: 9095
               protocol: TCP
-            {{- if .Values.indexGateway.joinMemberlist }}
             - name: http-memberlist
               containerPort: 7946
               protocol: TCP
-            {{- end }}
-          {{- with .Values.indexGateway.extraEnv }}
+          {{- with .Values.compactor.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.indexGateway.extraEnvFrom }}
+          {{- with .Values.compactor.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.loki.containerSecurityContext | nindent 12 }}
-          readinessProbe:
-            {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
-          livenessProbe:
-            {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
+          {{- include "loki.compactor.readinessProbe" . | nindent 10 }}
+          {{- include "loki.compactor.livenessProbe" . | nindent 10 }}
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: config
               mountPath: /etc/loki/config
             - name: runtime-config
               mountPath: /var/{{ include "loki.name" . }}-runtime
             - name: data
               mountPath: /var/loki
-            {{- with .Values.indexGateway.extraVolumeMounts }}
+            {{- with .Values.compactor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.compactor.resources }}
           resources:
-            {{- toYaml .Values.indexGateway.resources | nindent 12 }}
-        {{- if .Values.indexGateway.extraContainers }}
-        {{- toYaml .Values.indexGateway.extraContainers | nindent 8}}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.compactor.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- if .Values.compactor.extraContainers }}
+        {{- toYaml .Values.compactor.extraContainers | nindent 8}}
         {{- end }}
-      {{- with .Values.indexGateway.affinity }}
+      {{- with .Values.compactor.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.indexGateway.nodeSelector }}
+      {{- with .Values.compactor.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.indexGateway.tolerations }}
+      {{- with .Values.compactor.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: config
           {{- if .Values.loki.existingSecretForConfig }}
           secret:
@@ -145,37 +159,32 @@ spec:
         - name: runtime-config
           configMap:
             name: {{ template "loki.fullname" . }}-runtime
-        {{- with .Values.indexGateway.extraVolumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-  {{- if not .Values.indexGateway.persistence.enabled }}
+        {{- if not .Values.compactor.persistence.enabled }}
         - name: data
           emptyDir: {}
-  {{- else if .Values.indexGateway.persistence.inMemory }}
-        - name: data
-        {{- if .Values.indexGateway.persistence.inMemory }}
-          emptyDir:
-            medium: Memory
         {{- end }}
-        {{- if .Values.indexGateway.persistence.size }}
-            sizeLimit: {{ .Values.indexGateway.persistence.size }}
+        {{- with .Values.compactor.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
-  {{- else }}
+  {{- if .Values.compactor.persistence.enabled }}
   volumeClaimTemplates:
+  {{- range .Values.compactor.persistence.claims }}
     - metadata:
-        name: data
-        {{- with .Values.indexGateway.persistence.annotations }}
+        name: {{ .name }}
+        {{- with .annotations }}
         annotations:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.indexGateway.persistence.storageClass }}
+        {{- with .storageClass }}
         storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
         {{- end }}
         resources:
           requests:
-            storage: {{ .Values.indexGateway.persistence.size | quote }}
+            storage: {{ .size | quote }}
   {{- end }}
+  {{- end }}
+{{- end }}
 {{- end }}
