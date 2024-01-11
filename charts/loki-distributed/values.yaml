@@ -78,6 +78,10 @@ loki:
   existingSecretForConfig: ""
   # -- Store the loki configuration as a secret.
   configAsSecret: false
+  # -- Annotations for the secret with loki configuration.
+  configSecretAnnotations: {}
+  # -- Additional labels for the secret with loki configuration.
+  configSecretLabels: {}
   # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
   # -- Common annotations for all loki services
