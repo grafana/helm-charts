@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.78.0](https://img.shields.io/badge/Version-0.78.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.2](https://img.shields.io/badge/AppVersion-2.9.2-informational?style=flat-square)
+![Version: 0.78.1](https://img.shields.io/badge/Version-0.78.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.2](https://img.shields.io/badge/AppVersion-2.9.2-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -333,6 +333,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.command | string | `nil` | Common command override for all pods (except gateway) |
 | loki.config | string | See values.yaml | Config file contents for Loki |
 | loki.configAsSecret | bool | `false` | Store the loki configuration as a secret. |
+| loki.configSecretAnnotations | object | `{}` | Annotations for the secret with loki configuration. |
+| loki.configSecretLabels | object | `{}` | Additional labels for the secret with loki configuration. |
 | loki.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for Loki containers |
 | loki.existingSecretForConfig | string | `""` | Specify an existing secret containing loki configuration. If non-empty, overrides `loki.config` |
 | loki.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
