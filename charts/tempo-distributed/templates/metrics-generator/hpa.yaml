@@ -1,0 +1,45 @@
+{{- if .Values.metricsGenerator.autoscaling.enabled }}
+{{- $apiVersion := include "tempo.hpa.apiVersion" . -}}
+apiVersion: {{ $apiVersion }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metrics-generator") }}
+  labels:
+    {{- include "tempo.labels" (dict "ctx" . "component" "metrics-generator") | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metrics-generator") }}
+  minReplicas: {{ .Values.metricsGenerator.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.metricsGenerator.autoscaling.maxReplicas }}
+  {{- with .Values.metricsGenerator.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  metrics:
+  {{- with .Values.metricsGenerator.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        {{- if (eq $apiVersion "autoscaling/v2") }}
+        target:
+          type: Utilization
+          averageUtilization: {{ . }}
+        {{- else }}
+        targetAverageUtilization: {{ . }}
+        {{- end }}
+  {{- end }}
+  {{- with .Values.metricsGenerator.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        {{- if (eq $apiVersion "autoscaling/v2") }}
+        target:
+          type: Utilization
+          averageUtilization: {{ . }}
+        {{- else }}
+        targetAverageUtilization: {{ . }}
+        {{- end }}
+  {{- end }}
+{{- end }}
