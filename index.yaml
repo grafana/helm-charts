@@ -21673,6 +21673,65 @@ entries:
     version: 0.0.3
   lgtm-distributed:
   - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/grafana/helm-charts
+        - name: Grafana
+          url: https://github.com/grafana/grafana
+        - name: Loki
+          url: https://github.com/grafana/loki
+        - name: Mimir
+          url: https://github.com/grafana/mimir
+        - name: Tempo
+          url: https://github.com/grafana/tempo
+    apiVersion: v2
+    appVersion: 6.59.4
+    created: "2024-01-16T13:46:23.803727113Z"
+    dependencies:
+    - alias: grafana
+      condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ^6.59.4
+    - alias: loki
+      condition: loki.enabled
+      name: loki-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: ^0.74.3
+    - alias: mimir
+      condition: mimir.enabled
+      name: mimir-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: ^5.0.0
+    - alias: tempo
+      condition: tempo.enabled
+      name: tempo-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: ^1.6.4
+    description: Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
+    digest: bf9ac84219507d31eb7009f79b5ac8fd35bfe75d84205c37c8b962324cd0c8fb
+    home: https://grafana.com/oss/
+    icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
+    keywords:
+    - monitoring
+    - traces
+    - metrics
+    - logs
+    maintainers:
+    - name: timberhill
+    name: lgtm-distributed
+    sources:
+    - https://grafana.github.io/helm-charts
+    - https://github.com/grafana/grafana
+    - https://github.com/grafana/loki
+    - https://github.com/grafana/mimir
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/lgtm-distributed-1.0.1/lgtm-distributed-1.0.1.tgz
+    version: 1.0.1
+  - annotations:
       artifacthub.io/links: |
         - name: Chart Source
           url: https://github.com/grafana/helm-charts
@@ -55239,4 +55298,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-15T15:05:16.52136114Z"
+generated: "2024-01-16T13:46:23.8064954Z"
