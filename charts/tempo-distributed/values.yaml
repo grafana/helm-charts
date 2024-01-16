@@ -1675,7 +1675,8 @@ gateway:
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
-    labels: {}
+    labels:
+      external-dns.alpha.kubernetes.io/hostname: ""
     # -- Additional ports to be opneed on gateway service (e.g. for RPC connections)
     additionalPorts: {}
   # Gateway ingress configuration
