@@ -116,6 +116,16 @@ testFramework:
   imagePullPolicy: IfNotPresent
   securityContext: {}
 
+# dns configuration for pod
+dnsPolicy: ~
+dnsConfig: {}
+  # nameservers:
+  #   - 8.8.8.8
+  #   options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
+
 securityContext:
   runAsNonRoot: true
   runAsUser: 472
@@ -197,6 +207,9 @@ gossipPortName: gossip
 service:
   enabled: true
   type: ClusterIP
+  loadBalancerIP: ""
+  loadBalancerClass: ""
+  loadBalancerSourceRanges: []
   port: 80
   targetPort: 3000
     # targetPort: 4181 To be used with a proxy extraContainer
@@ -530,15 +543,22 @@ extraVolumeMounts: []
   # - name: extra-volume-0
   #   mountPath: /mnt/volume0
   #   readOnly: true
-  #   existingClaim: volume-claim
   # - name: extra-volume-1
   #   mountPath: /mnt/volume1
   #   readOnly: true
-  #   hostPath: /usr/shared/
   # - name: grafana-secrets
   #   mountPath: /mnt/volume2
-  #   csi: true
-  #   data:
+
+## Additional Grafana server volumes
+extraVolumes: []
+  # - name: extra-volume-0
+  #   existingClaim: volume-claim
+  # - name: extra-volume-1
+  #   hostPath:
+  #     path: /usr/shared/
+  #     type: ""
+  # - name: grafana-secrets
+  #   csi:
   #     driver: secrets-store.csi.k8s.io
   #     readOnly: true
   #     volumeAttributes:
@@ -944,6 +964,7 @@ sidecar:
     enabled: false
     # Additional environment variables for the datasourcessidecar
     env: {}
+    envValueFrom: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
     # label that the configmaps with datasources are marked with
@@ -975,8 +996,8 @@ sidecar:
     # Absolute path to shell script to execute after a datasource got reloaded
     script: null
     skipReload: false
-    # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any datasources defined at startup time.
+    # Deploy the datasources sidecar as an initContainer.
     initDatasources: false
     # Sets the size limit of the datasource sidecar emptyDir volume
     sizeLimit: {}
@@ -1280,3 +1301,13 @@ extraObjects: []
   #     data:
   #       - key: grafana-admin-password
   #         name: adminPassword
+
+# assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
+# values are not exposed in the rendered grafana.ini configmap. It is enabled by default.
+#
+# To pass values into grafana.ini without exposing them in a configmap, use variable expansion:
+# https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#variable-expansion
+#
+# Alternatively, if you wish to allow secret values to be exposed in the rendered grafana.ini configmap,
+# you can disable this check by setting assertNoLeakedSecrets to false.
+assertNoLeakedSecrets: true
