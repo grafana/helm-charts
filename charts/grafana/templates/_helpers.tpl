@@ -262,7 +262,7 @@ sensitiveKeys:
         {{- $shouldContinue := true -}}
         {{- range $index, $elem := $secret.path -}}
           {{- if and $shouldContinue (hasKey $currentMap $elem) -}}
-            {{- if eq (len $secret.path) (add1 $index) -}}
+            {{- if and (eq (len $secret.path) (add1 $index)) (not (regexMatch "^\\$__file\\{.*\\}" (index $currentMap $elem) )) -}}
               {{- fail (printf "Sensitive key '%s' should not be defined explicitly in values. Use variable expansion instead." (join "." $secret.path)) -}}
             {{- else -}}
               {{- $currentMap = index $currentMap $elem -}}
