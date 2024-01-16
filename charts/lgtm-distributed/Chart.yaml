@@ -23,7 +23,7 @@ keywords:
   - logs
 
 annotations:
-  "artifacthub.io/license": AGPL-3.0-only
+  "artifacthub.io/license": Apache-2.0
   "artifacthub.io/links": |
     - name: Chart Source
       url: https://github.com/grafana/helm-charts
