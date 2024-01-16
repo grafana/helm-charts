@@ -264,7 +264,7 @@ sensitiveKeys:
           {{- if and $shouldContinue (hasKey $currentMap $elem) -}}
             {{- if eq (len $secret.path) (add1 $index) -}}
               {{- if not (regexMatch "\\$(?:__(?:env|file|vault))?{[^}]+}" (index $currentMap $elem)) -}}
-                {{- fail (printf "Sensitive key '%s' should not be defined explicitly in values. Use variable expansion instead." (join "." $secret.path)) -}}
+                {{- fail (printf "Sensitive key '%s' should not be defined explicitly in values. Use variable expansion instead. You can disable this client-side validation by changing the value of assertNoLeakedSecrets." (join "." $secret.path)) -}}
               {{- end -}}
             {{- else -}}
               {{- $currentMap = index $currentMap $elem -}}
