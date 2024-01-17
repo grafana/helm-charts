@@ -418,6 +418,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
+| gateway.ingress.labels | object | `{"external-dns.alpha.kubernetes.io/hostname":""}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
@@ -437,7 +438,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.service.additionalPorts | object | `{}` | Additional ports to be opneed on gateway service (e.g. for RPC connections) |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
-| gateway.service.labels | object | `{"external-dns.alpha.kubernetes.io/hostname":""}` | Labels for gateway service |
+| gateway.service.labels | object | `{}` | Labels for gateway service |
 | gateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer |
 | gateway.service.nodePort | string | `nil` | Node port if service type is NodePort |
 | gateway.service.port | int | `80` | Port of the gateway service |
