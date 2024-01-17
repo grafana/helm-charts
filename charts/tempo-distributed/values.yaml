@@ -1251,6 +1251,10 @@ config: |
       {{- if .Values.storage.trace.block.version }}
       block:
         version: {{.Values.storage.trace.block.version}}
+        {{- if .Values.storage.trace.block.dedicated_columns}}
+        parquet_dedicated_columns:
+          {{ .Values.storage.trace.block.dedicated_columns}}
+        {{- end }}
       {{- end }}
       pool:
         max_workers: {{ .Values.storage.trace.pool.max_workers }}
@@ -1314,6 +1318,8 @@ storage:
     block:
       # -- The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/
       version: null
+      # -- Lis with dedicated attribute columns (only for vParquet3 or later)
+      dedicated_columns: []
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
     # The worker pool is used primarily when finding traces by id, but is also used by other.
