@@ -434,6 +434,11 @@ containers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
