@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.3.10](https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.37.4](https://img.shields.io/badge/AppVersion-0.37.4-informational?style=flat-square)
+![Version: 0.3.14](https://img.shields.io/badge/Version-0.3.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.39.0](https://img.shields.io/badge/AppVersion-0.39.0-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -8,7 +8,7 @@ A Helm chart for Grafana Agent Operator
 
 ## Source Code
 
-* <https://github.com/grafana/agent/tree/v0.37.4/pkg/operator>
+* <https://github.com/grafana/agent/tree/v0.39.0/pkg/operator>
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
@@ -16,7 +16,7 @@ To learn how to deploy these resources, please see Grafana's [Agent Operator get
 
 ## CRDs
 
-The CRDs are synced into this chart manually (for now) from the Grafana Agent [GitHub repo](https://github.com/grafana/agent/tree/main/production/operator/crds). To learn more about how Helm manages CRDs, please see [Custom Resource Definitions](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) from the Helm docs.
+The CRDs are synced into this chart manually (for now) from the Grafana Agent [GitHub repo](https://github.com/grafana/agent/tree/main/operations/agent-static-operator/crds). To learn more about how Helm manages CRDs, please see [Custom Resource Definitions](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) from the Helm docs.
 
 ## Get Repo Info
 
@@ -63,7 +63,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | image.pullSecrets | list | `[]` | Image pull secrets |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"grafana/agent-operator"` | Image repo |
-| image.tag | string | `"v0.37.4"` | Image tag |
+| image.tag | string | `"v0.39.0"` | Image tag |
 | kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |

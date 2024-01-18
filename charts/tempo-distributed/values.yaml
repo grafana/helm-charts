@@ -321,6 +321,7 @@ metricsGenerator:
       external_labels: {}
       stale_duration: 15m
     processor:
+      # -- For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics]
       service_graphs:
         # -- Additional dimensions to add to the metrics. Dimensions are searched for in the
         # -- resource and span attributes and are added to the metrics if present.
@@ -1050,14 +1051,21 @@ config: |
         url: http://{{ template "tempo.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       distributor:
         url: http://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
-      distributor_ingest:
-        url: h2c://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4317
+        otlp/grpc:
+          url: h2c://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4317
+        otlp/http:
+          url: http://{{ template "tempo.fullname" . }}-distributor.{{ .Release.Namespace }}.svc:4318
       ingester:
         url: http://{{ template "tempo.fullname" . }}-ingester.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       querier:
         url: http://{{ template "tempo.fullname" . }}-querier.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}
       query_frontend:
         url: http://{{ template "tempo.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc:{{ include "tempo.serverHttpListenPort" . }}{{get .Values.tempo.structuredConfig "http_api_prefix"}}
+  {{else}}
+  {{- if and .Values.enterprise.enabled .Values.enterpriseGateway.proxy }}
+  gateway:
+    proxy: {{- toYaml .Values.enterpriseGateway.proxy | nindent 6 }}
+  {{- end }}
   {{- end }}
 
   compactor:
@@ -1243,6 +1251,10 @@ config: |
       {{- if .Values.storage.trace.block.version }}
       block:
         version: {{.Values.storage.trace.block.version}}
+        {{- if .Values.storage.trace.block.dedicated_columns}}
+        parquet_dedicated_columns:
+          {{ .Values.storage.trace.block.dedicated_columns}}
+        {{- end }}
       {{- end }}
       pool:
         max_workers: {{ .Values.storage.trace.pool.max_workers }}
@@ -1306,6 +1318,8 @@ storage:
     block:
       # -- The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/
       version: null
+      # -- Lis with dedicated attribute columns (only for vParquet3 or later)
+      dedicated_columns: []
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
     # The worker pool is used primarily when finding traces by id, but is also used by other.
@@ -1322,6 +1336,7 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
+  # -- List of enabled metrics generator processors ([service-graphs, span-metrics])
   metrics_generator_processors: []
 
 # Per tenants overrides
@@ -1836,7 +1851,7 @@ enterprise:
     # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.2.1
+    tag: v2.3.1
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
@@ -1957,8 +1972,10 @@ adminApi:
 # Settings for the gateway service providing authentication and authorization via the admin_api.
 # Can only be enabled if enterprise.enabled is true - requires license.
 enterpriseGateway:
-  # If you want to use your own proxy URLs, set this to false.
+  # -- If you want to use your own proxy URLs, set this to false.
   useDefaultProxyURLs: true
+  # -- Proxy URLs defined in this object will be used if useDefaultProxyURLs is set to false.
+  proxy: {}
   replicas: 1
   # -- hostAliases to add
   hostAliases: []
@@ -2067,3 +2084,15 @@ enterpriseGateway:
       - secretName: gem-gateway-tls
         hosts:
           - gateway.gem.example.com
+
+# -- Create extra manifests via values.
+extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: tempo-secrets
+  #   spec:
+  #     backendType: aws
+  #     data:
+  #       - key: secret-access-key
+  #         name: awssm-secret
