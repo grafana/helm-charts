@@ -1689,8 +1689,7 @@ gateway:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
     # -- Labels for the gateway ingress
-    labels:
-      external-dns.alpha.kubernetes.io/hostname: ""
+    labels: {}
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: nginx
     # -- Annotations for the gateway ingress
