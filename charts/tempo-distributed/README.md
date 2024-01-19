@@ -418,7 +418,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
-| gateway.ingress.labels | object | `{"external-dns.alpha.kubernetes.io/hostname":""}` | Labels for the gateway ingress |
+| gateway.ingress.labels | object | `{}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
