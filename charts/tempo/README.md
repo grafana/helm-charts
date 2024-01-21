@@ -8,7 +8,6 @@ Grafana Tempo Single Binary Mode
 
 * <https://github.com/grafana/tempo>
 
-
 ## Values
 
 | Key | Type | Default | Description |
