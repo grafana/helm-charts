@@ -8,6 +8,7 @@ Grafana Tempo Single Binary Mode
 
 * <https://github.com/grafana/tempo>
 
+
 ## Values
 
 | Key | Type | Default | Description |
@@ -18,7 +19,16 @@ Grafana Tempo Single Binary Mode
 | extraLabels | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
+| networkPolicy.allowExternal | bool | `true` |  |
+| networkPolicy.egress.blockDNSResolution | bool | `false` |  |
+| networkPolicy.egress.enabled | bool | `false` |  |
+| networkPolicy.egress.ports | list | `[]` |  |
+| networkPolicy.egress.to | list | `[]` |  |
+| networkPolicy.enabled | bool | `false` |  |
+| networkPolicy.explicitNamespacesSelector | object | `{}` |  |
+| networkPolicy.ingress | bool | `true` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
@@ -30,6 +40,7 @@ Grafana Tempo Single Binary Mode
 | securityContext | object | `{}` | securityContext for container |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
+| service.targetPort | string | `""` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `true` |  |
@@ -131,11 +142,11 @@ We recommend reviewing the [release notes](https://github.com/grafana/tempo/rele
 ### From Chart versions < 1.0.0
 
 Please note that we've incremented the major version when upgrading to Tempo 2.0. There were a large number of
-changes in this release (breaking and otherwise). It is encouraged to review the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-0/)
+changes in this release (breaking and otherwise). It is encouraged to review the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-0/) 
 and [1.5 -> 2.0 upgrade guide](https://grafana.com/docs/tempo/latest/setup/upgrade/) before upgrading.
 
 ### From Chart versions < 0.7.0
 
 Upgrading from pre 0.7.0 will, by default, move your trace storage from `/tmp/tempo/traces` to `/var/tempo/traces`.
-This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the
+This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the 
 old folder to the new.
