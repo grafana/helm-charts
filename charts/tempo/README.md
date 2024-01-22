@@ -37,6 +37,7 @@ Grafana Tempo Single Binary Mode
 | priorityClassName | string | `nil` | The name of the PriorityClass |
 | replicas | int | `1` | Define the amount of instances |
 | securityContext | object | `{}` | securityContext for container |
+| selectorLabels | object | `{}` | selectorLabels for tempo |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.targetPort | string | `""` |  |
