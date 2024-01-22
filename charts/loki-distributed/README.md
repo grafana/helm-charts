@@ -488,6 +488,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | overridesExporter.image.registry | string | `nil` | The Docker registry for the overrides-exporter image. Overrides `loki.image.registry` |
 | overridesExporter.image.repository | string | `nil` | Docker image repository for the overrides-exporter image. Overrides `loki.image.repository` |
 | overridesExporter.image.tag | string | `nil` | Docker image tag for the overrides-exporter image. Overrides `loki.image.tag` |
+| overridesExporter.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | overridesExporter.nodeSelector | object | `{}` | Node selector for overrides-exporter pods |
 | overridesExporter.podAnnotations | object | `{}` | Annotations for overrides-exporter pods |
 | overridesExporter.podLabels | object | `{}` | Labels for overrides-exporter pods |

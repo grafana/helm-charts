@@ -1750,6 +1750,8 @@ overridesExporter:
               matchLabels:
                 {{- include "loki.overridesExporterSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
   # -- Node selector for overrides-exporter pods
   nodeSelector: {}
   # -- Tolerations for overrides-exporter pods

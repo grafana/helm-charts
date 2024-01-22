@@ -26,9 +26,6 @@ spec:
       port: 9095
       targetPort: grpc
       protocol: TCP
-      {{- with .Values.overridesExporter.appProtocol.grpc }}
-      appProtocol: {{ . }}
-      {{- end }}
   selector:
     {{- include "loki.overridesExporterSelectorLabels" . | nindent 4 }}
 {{- end }}
