@@ -1,0 +1,20 @@
+{{- if and .Values.overridesExporter.enabled (gt (int .Values.overridesExporter.replicas) 1) }}
+{{- if not .Values.overridesExporter.maxUnavailable }}
+{{- fail "`.Values.overridesExporter.maxUnavailable` must be set when `.Values.overridesExporter.replicas` is greater than 1." }}
+{{- else }}
+apiVersion: {{ include "loki.pdb.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "loki.overridesExporterFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "loki.overridesExporterLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "loki.overridesExporterSelectorLabels" . | nindent 6 }}
+  {{- with .Values.overridesExporter.maxUnavailable }}
+  maxUnavailable: {{ . }}
+  {{- end }}
+{{- end }}
+{{- end }}
