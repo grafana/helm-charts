@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.7.2](https://img.shields.io/badge/Version-1.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -37,6 +37,7 @@ Grafana Tempo Single Binary Mode
 | priorityClassName | string | `nil` | The name of the PriorityClass |
 | replicas | int | `1` | Define the amount of instances |
 | securityContext | object | `{}` | securityContext for container |
+| selectorLabels | object | `{}` | selectorLabels for tempo |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.targetPort | string | `""` |  |

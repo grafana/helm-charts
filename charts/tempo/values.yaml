@@ -13,6 +13,9 @@ replicas: 1
 # -- labels for tempo
 labels: {}
 
+# -- selectorLabels for tempo
+selectorLabels: {}
+
 # -- Annotations for the StatefulSet
 annotations: {}
 
@@ -329,11 +332,6 @@ networkPolicy:
   ##
   explicitNamespacesSelector: {}
   ##
-  ##
-  ##
-  ##
-  ##
-  ##
   egress:
     ## @param networkPolicy.egress.enabled When enabled, an egress network policy will be
     ## created allowing tempo to connect to external data sources from kubernetes cluster.
@@ -358,8 +356,3 @@ networkPolicy:
     ##  - namespaceSelector:
     ##    matchExpressions:
   ##    - {key: role, operator: In, values: [tempo]}
-  ##
-  ##
-  ##
-  ##
-  ##
