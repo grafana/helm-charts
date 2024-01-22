@@ -13,9 +13,6 @@ replicas: 1
 # -- labels for tempo
 labels: {}
 
-# -- selectorLabels for tempo
-selectorLabels: {}
-
 # -- Annotations for the StatefulSet
 annotations: {}
 
