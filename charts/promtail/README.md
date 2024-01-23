@@ -96,11 +96,11 @@ The new release which will pick up again from the existing `positions.yaml`.
 | deployment.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for the deployment |
 | deployment.autoscaling.maxReplicas | int | `10` |  |
 | deployment.autoscaling.minReplicas | int | `1` |  |
-| deployment.autoscaling.strategy | object | `{"type":"RollingUpdate"}` | Set deployment object update strategy |
 | deployment.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
 | deployment.replicaCount | int | `1` |  |
+| deployment.strategy | object | `{"type":"RollingUpdate"}` | Set deployment object update strategy |
 | enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
 | extraContainers | object | `{}` |  |
