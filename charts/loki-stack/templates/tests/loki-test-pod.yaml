@@ -21,7 +21,7 @@ spec:
     - name: LOKI_SERVICE
       value: {{ template "loki.serviceName" . }}
     - name: LOKI_PORT
-      value: "{{ .Values.loki.service.port }}"
+      value: {{ .Values.loki.service.port }}
     {{- with .Values.proxy.http_proxy }}
     - name: HTTP_PROXY
       value: "{{ . }}"
