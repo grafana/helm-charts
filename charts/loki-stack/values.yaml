@@ -20,6 +20,8 @@ loki:
   datasource:
     jsonData: "{}"
     uid: ""
+  service:
+    port: ""
 
 
 promtail:
