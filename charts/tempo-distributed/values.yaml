@@ -692,7 +692,6 @@ queryFrontend:
   config:
     # -- Number of times to retry a request sent to a querier
     max_retries: 2
-    
     # -- Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429.
     max_outstanding_per_tenant: 2000
     search:
