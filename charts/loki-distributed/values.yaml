@@ -1692,6 +1692,71 @@ indexGateway:
   appProtocol:
     grpc: ""
 
+# Configuration for the overrides-exporter
+overridesExporter:
+  # -- Specifies whether the overrides-exporter should be enabled
+  enabled: false
+  # -- Number of replicas for the overrides-exporter.
+  replicas: 1
+  # -- hostAliases to add
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  image:
+    # -- The Docker registry for the overrides-exporter image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the overrides-exporter image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the overrides-exporter image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for overrides-exporter pods
+  priorityClassName: null
+  # -- Labels for overrides-exporter pods
+  podLabels: {}
+  # -- Annotations for overrides-exporter pods
+  podAnnotations: {}
+  # -- Labels for overrides-exporter service
+  serviceLabels: {}
+  # -- Additional CLI args for the overrides-exporter
+  extraArgs: []
+  # -- Environment variables to add to the overrides-exporter pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the overrides-exporter pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the overrides-exporter pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the overrides-exporter pods
+  extraVolumes: []
+  # -- Resource requests and limits for the overrides-exporter
+  resources: {}
+  # -- Containers to add to the overrides-exporter pods
+  extraContainers: []
+  # -- Grace period to allow the overrides-exporter to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # -- Affinity for overrides-exporter pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "loki.overridesExporterSelectorLabels" . | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "loki.overridesExporterSelectorLabels" . | nindent 12 }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: null
+  # -- Node selector for overrides-exporter pods
+  nodeSelector: {}
+  # -- Tolerations for overrides-exporter pods
+  tolerations: []
+
 memcached:
   readinessProbe:
     tcpSocket:
