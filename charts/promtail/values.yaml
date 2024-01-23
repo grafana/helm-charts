@@ -58,9 +58,9 @@ deployment:
     targetMemoryUtilizationPercentage:
     # behavior: {}
 
-    # -- Set deployment object update strategy
-    strategy:
-      type: RollingUpdate
+  # -- Set deployment object update strategy
+  strategy:
+    type: RollingUpdate
 
 secret:
   # -- Labels for the Secret
