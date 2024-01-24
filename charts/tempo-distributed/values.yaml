@@ -228,7 +228,7 @@ ingester:
 metricsGenerator:
   # -- Specifies whether a metrics-generator should be deployed
   enabled: false
-  # -- Annotations for the metrics-generator StatefulSet
+  # -- Annotations for the metrics-generator Deployment
   annotations: {}
   # -- Number of replicas for the metrics-generator
   replicas: 1
@@ -237,6 +237,20 @@ metricsGenerator:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  autoscaling:
+    # -- Enable autoscaling for the metrics-generator
+    enabled: false
+    # -- Minimum autoscaling replicas for the metrics-generator
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the metrics-generator. 
+    # -- Note that increasing the number of metrics-generated instances will increase the total active series.
+    maxReplicas: 3
+    # -- Autoscaling behavior configuration for the metrics-generator
+    behavior: {}
+    # -- Target CPU utilisation percentage for the metrics-generator
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the metrics-generator
+    targetMemoryUtilizationPercentage:
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
