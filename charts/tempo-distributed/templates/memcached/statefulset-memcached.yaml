@@ -16,7 +16,7 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
-  serviceName: memcached
+  serviceName: {{ include "tempo.resourceName" (dict "ctx" . "component" "memcached") }}
   template:
     metadata:
       {{- if or .Values.tempo.podAnnotations .Values.memcached.podAnnotations }}
