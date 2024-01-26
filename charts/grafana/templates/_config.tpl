@@ -163,7 +163,7 @@ provider.yaml: |-
     {{- range .Values.sidecar.dashboards.providers }}
     - name: '{{ .name }}'
       orgId: {{ .orgid | default 1 }}
-      folder: '{{ .folder | default null }}'
+      folder: '{{ .folder | default .name }}'
       type: {{ .type | default "file" }}
       disableDeletion: {{ .disableDelete | default "false" }}
       allowUiUpdates: {{ .allowUiUpdates | default "false"}}
