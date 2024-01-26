@@ -21,7 +21,7 @@ loki:
     jsonData: "{}"
     uid: ""
   service:
-    port: ""
+    port: 3100
 
 
 promtail:
