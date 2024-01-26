@@ -162,15 +162,15 @@ provider.yaml: |-
     {{- if .Values.sidecar.dashboards.providers }}
     {{- range .Values.sidecar.dashboards.providers }}
     - name: '{{ .name }}'
-      orgId: {{ .orgid }}
-      folder: '{{ .folder }}'
-      type: {{ .type }}
-      disableDeletion: {{ .disableDelete }}
-      allowUiUpdates: {{ .allowUiUpdates }}
+      orgId: {{ .orgid | default 1 }}
+      folder: '{{ .folder | default null }}'
+      type: {{ .type | default "file" }}
+      disableDeletion: {{ .disableDelete | default "false" }}
+      allowUiUpdates: {{ .allowUiUpdates | default "false"}}
       updateIntervalSeconds: {{ .updateIntervalSeconds | default 30 }}
       options:
-        foldersFromFilesStructure: {{ .foldersFromFilesStructure }}
-        path: {{ $values.sidecar.dashboards.folder }}{{- with $values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}/{{ .folder }}
+        foldersFromFilesStructure: {{ .foldersFromFilesStructure | default false}}
+        path: {{ $values.sidecar.dashboards.folder }}{{- with $values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}{{- with .folder }}/{{ . }}{{- end }}
     {{- end }}
     {{- end }}
 {{- end -}}
