@@ -940,22 +940,22 @@ sidecar:
     # defaults to 66sec (sic!)
     # watchClientTimeout: 60
     #
-    # provider configuration that lets grafana manage the dashboards
-    provider:
-      # name of the provider, should be unique
-      name: sidecarProvider
-      # orgid as configured in grafana
-      orgid: 1
-      # folder in which the dashboards should be imported in grafana
-      folder: ''
-      # type of the provider
-      type: file
-      # disableDelete to activate a import-only behaviour
-      disableDelete: false
-      # allow updating provisioned dashboards from the UI
-      allowUiUpdates: false
-      # allow Grafana to replicate dashboard structure from filesystem
-      foldersFromFilesStructure: false
+    # providers configuration that lets grafana manage the dashboards
+    providers:
+      - # name of the provider, should be unique
+        name: sidecarProvider
+        # orgid as configured in grafana
+        orgid: 1
+        # folder in which the dashboards should be imported in grafana
+        folder: ''
+        # type of the provider
+        type: file
+        # disableDelete to activate a import-only behaviour
+        disableDelete: false
+        # allow updating provisioned dashboards from the UI
+        allowUiUpdates: false
+        # allow Grafana to replicate dashboard structure from filesystem
+        foldersFromFilesStructure: false
     # Additional dashboard sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the dashboard sidecar emptyDir volume
