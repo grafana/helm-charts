@@ -20,7 +20,18 @@ loki:
   datasource:
     jsonData: "{}"
     uid: ""
-
+  service:
+    type: ClusterIP
+    port: 3100
+    annotations: {}
+    labels: {}
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    externalTrafficPolicy: Cluster
+    clusterIP: ""
+    nodePort: ""
+    sessionAffinity: None
+    sessionAffinityConfig: {}
 
 promtail:
   enabled: true
