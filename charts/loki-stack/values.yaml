@@ -20,7 +20,7 @@ loki:
   datasource:
     jsonData: "{}"
     uid: ""
-  service: {}
+
 
 promtail:
   enabled: true
