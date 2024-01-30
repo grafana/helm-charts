@@ -1084,11 +1084,17 @@ containers:
       - secretRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
       {{- range .Values.envFromConfigMaps }}
       - configMapRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
     {{- end }}
     {{- with .Values.livenessProbe }}
@@ -1273,6 +1279,9 @@ volumes:
     {{- else if .configMap }}
     configMap:
       {{- toYaml .configMap | nindent 6 }}
+    {{- else if .emptyDir }}
+    emptyDir:
+      {{- toYaml .emptyDir | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}
