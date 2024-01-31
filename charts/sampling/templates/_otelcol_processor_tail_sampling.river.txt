@@ -1,8 +1,53 @@
 {{- define "statefulset.processor.tail_sampling" -}}
 otelcol.processor.tail_sampling "default" {
   // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.processor.tail_sampling/
+{{ if .Values.sampling.successfulRequests.sample }}
+    policy {
+      name = "sample-successful-requests"
+      type = "and"
+      and {
+        and_sub_policy {
+          name = "status-code-policy"
+          type = "status_code"
+          status_code {
+            status_codes = ["OK", "UNSET"]
+          }
+        }
+        and_sub_policy {
+          name = "probabilistic-policy"
+          type = "probabilistic"
+          probabilistic {
+            sampling_percentage = {{ .Values.sampling.successfulRequests.percentage }}
+          }
+        }
+      }
+    }
+{{ end }}
 
-{{ .Values.sampling.strategies | indent 2 }}
+{{ if .Values.sampling.failedRequests.sample }}
+    policy {
+      name = "sample-failed-requests"
+      type = "and"
+      and {
+        and_sub_policy {
+          name = "status-code-policy"
+          type = "status_code"
+          status_code {
+            status_codes = ["ERROR"]
+          }
+        }
+        and_sub_policy {
+          name = "probabilistic-policy"
+          type = "probabilistic"
+          probabilistic {
+            sampling_percentage = {{ .Values.sampling.failedRequests.percentage }}
+          }
+        }
+      }
+    }
+{{ end }}
+
+{{ .Values.sampling.extraPolicies | indent 2 }}
 
   output {
     traces = [otelcol.processor.batch.default.input]

@@ -1,7 +1,6 @@
 metricsGeneration:
   enabled: true
   dimensions:
-    # TODO: hard code the first 2? 3? dimensions
     - service.namespace
     - service.version
     - deployment.environment
@@ -10,51 +9,13 @@ metricsGeneration:
 
 sampling:
   enabled: true
-  # TODO: make this additionalPolicies
-  # TODO: add simplified policies
-  strategies: |-
-    policy {
-      name = "sample-successful-requests"
-      type = "and"
-      and {
-        and_sub_policy {
-          name = "status-code-policy"
-          type = "status_code"
-          status_code {
-            status_codes = ["OK", "UNSET"]
-          }
-        }
-        and_sub_policy {
-          name = "probabilistic-policy"
-          type = "probabilistic"
-          probabilistic {
-            sampling_percentage = 10
-          }
-        }
-      }
-    }
-
-    policy {
-      name = "sample-failed-requests"
-      type = "and"
-      and {
-        and_sub_policy {
-          name = "status-code-policy"
-          type = "status_code"
-          status_code {
-            status_codes = ["ERROR"]
-          }
-        }
-        and_sub_policy {
-          name = "probabilistic-policy"
-          type = "probabilistic"
-          probabilistic {
-            sampling_percentage = 50
-          }
-        }
-      }
-    }
-
+  successfulRequests:
+    sample: true
+    percentage: 10
+  failedRequests:
+    sample: false
+    percentage: 50
+  extraPolicies: |-
     policy {
       name = "sample-long-requests"
       type = "and"
