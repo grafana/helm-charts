@@ -40,11 +40,12 @@ sampling:
 grafana-agent-deployment:
   controller:
     type: deployment
+    replicas: 2
     autoscaling:
       # -- Creates a HorizontalPodAutoscaler for controller type deployment.
-      enabled: true
+      enabled: false
       # -- The lower limit for the number of replicas to which the autoscaler can scale down.
-      minReplicas: 1
+      minReplicas: 2
       # -- The upper limit for the number of replicas to which the autoscaler can scale up.
       maxReplicas: 5
       # -- Average CPU utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetCPUUtilizationPercentage` to 0 will disable CPU scaling.
@@ -72,11 +73,12 @@ grafana-agent-deployment:
 grafana-agent-statefulset:
   controller:
     type: statefulset
+    replicas: 2
     autoscaling:
       # -- Creates a HorizontalPodAutoscaler for controller type deployment.
-      enabled: true
+      enabled: false
       # -- The lower limit for the number of replicas to which the autoscaler can scale down.
-      minReplicas: 1
+      minReplicas: 2
       # -- The upper limit for the number of replicas to which the autoscaler can scale up.
       maxReplicas: 5
       # -- Average CPU utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetCPUUtilizationPercentage` to 0 will disable CPU scaling.
