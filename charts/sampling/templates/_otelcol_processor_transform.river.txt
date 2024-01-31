@@ -1,0 +1,19 @@
+{{- define "statefulset.processor.transform.use_grafana_metric_names" -}}
+otelcol.processor.transform "use_grafana_metric_names" {
+  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.processor.transform/
+  error_mode = "ignore"
+
+  metric_statements {
+    context    = "metric"
+    statements = [
+      "set(name, \"traces.spanmetrics.latency\") where name == \"traces.spanmetrics.duration\"",
+      "set(name, \"traces.spanmetrics.calls.total\") where name == \"traces.spanmetrics.calls\"",
+    ]
+  }
+
+  output {
+    metrics = [otelcol.processor.filter.drop_unneeded_span_metrics.input]
+  }
+}
+
+{{ end }}

@@ -1,0 +1,15 @@
+{{- define "agent.config.statefulset" -}}
+  {{- include "statefulset.receiver.otlp" . }}
+  {{- include "statefulset.connector.spanmetrics" . }}
+  {{- include "statefulset.processor.transform.use_grafana_metric_names" . }}
+  {{- include "statefulset.processor.filter" . }}
+  {{- include "statefulset.connector.servicegraph" . }}
+  {{- if .Values.sampling.enabled -}}
+    {{- include "statefulset.processor.tail_sampling" . }}
+  {{- end -}}
+  {{- include "statefulset.processor.batch" . }}
+  {{- include "statefulset.exporter.prometheus" . }}
+  {{- include "statefulset.prometheus.remote_write" . }}
+  {{- include "exporter.otlp" . }}
+  {{- include "auth.basic" . }}
+{{- end -}}
