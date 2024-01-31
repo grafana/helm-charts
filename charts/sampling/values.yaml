@@ -1,6 +1,7 @@
 metricsGeneration:
   enabled: true
   dimensions:
+    # TODO: hard code the first 2? 3? dimensions
     - service.namespace
     - service.version
     - deployment.environment
@@ -9,6 +10,8 @@ metricsGeneration:
 
 sampling:
   enabled: true
+  # TODO: make this additionalPolicies
+  # TODO: add simplified policies
   strategies: |-
     policy {
       name = "sample-successful-requests"
