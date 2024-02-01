@@ -690,10 +690,10 @@ queryFrontend:
   #    hostnames:
   #      - domain.tld
   config:
-    # -- Number of times to retry a request sent to a querier
-    max_retries: 2
     # -- Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429.
     max_outstanding_per_tenant: 2000
+    # -- Number of times to retry a request sent to a querier
+    max_retries: 2
     search:
       # -- The number of concurrent jobs to execute when searching the backend
       concurrent_jobs: 1000
@@ -1192,8 +1192,8 @@ config: |
       {{- end }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
-    max_retries: {{ .Values.queryFrontend.config.max_retries }}
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
+    max_retries: {{ .Values.queryFrontend.config.max_retries }}
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
