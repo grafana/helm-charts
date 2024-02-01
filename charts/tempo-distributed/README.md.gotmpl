@@ -39,6 +39,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.8.0
+
+Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
+
 ### From Chart versions < 1.6.0
 
 The metrics generator component in the chart has been disabled by default, but the configuration for the processors was not empty, resulting error sin the distributor log.  Here we align the default metrics generator config settings to both disable the generator and remove processors.  Users who wish to keep the their processors enabled, will need to update their values.
@@ -261,9 +265,11 @@ metricsGenerator:
     #     x-scope-orgid: operations
 # Global overrides
 global_overrides:
-  metrics_generator_processors:
-    - service-graphs
-    - span-metrics
+  defaults:
+    metrics_generator:
+      processors:
+        - service-graphs
+        - span-metrics
 ```
 
 ----
@@ -317,7 +323,7 @@ config: |
       backend: s3
       s3:
         access_key: tempo
-        bucket: tempo
+        bucket: <your s3 bucket>
         endpoint: minio:9000
         insecure: true
         secret_key: supersecret

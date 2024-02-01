@@ -73,6 +73,8 @@ spec:
             {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.gateway.startupProbe | nindent 12 }}
           securityContext:
             {{- toYaml .Values.gateway.containerSecurityContext | nindent 12 }}
           volumeMounts:
