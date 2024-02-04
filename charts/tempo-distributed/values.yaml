@@ -1253,7 +1253,7 @@ config: |
         version: {{.Values.storage.trace.block.version}}
         {{- if .Values.storage.trace.block.dedicated_columns}}
         parquet_dedicated_columns:
-          {{ .Values.storage.trace.block.dedicated_columns}}
+          {{ .Values.storage.trace.block.dedicated_columns | toYaml | nindent 8}}
         {{- end }}
       {{- end }}
       pool:
