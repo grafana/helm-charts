@@ -2,8 +2,9 @@
 otelcol.exporter.loadbalancing "default" {
   // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.exporter.loadbalancing/
   resolver {
-    dns {
-      hostname = "{{ .Release.Name }}-grafana-agent-statefulset.{{ .Release.Namespace }}.svc.cluster.local."
+
+    kubernetes {
+      service = "{{ .Release.Name }}-grafana-agent-statefulset.{{ .Release.Namespace }}"
     }
   }
 
