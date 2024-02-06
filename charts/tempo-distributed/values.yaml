@@ -202,6 +202,10 @@ ingester:
     # -- Annotations for ingester's persist volume claim
     annotations: {}
   config:
+    # -- Address ingester shoudl bind to
+    address: '0.0.0.0'
+    # -- should ingester use IPv6
+    enable_inet6: false
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
     # -- Amount of time a trace must be idle before flushing it to the wal.
@@ -316,6 +320,9 @@ metricsGenerator:
       service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
+    ring:
+      # -- Should Metrics Generator ius IPv6
+      enable_inet6: false
     registry:
       collection_interval: 15s
       external_labels: {}
@@ -529,6 +536,9 @@ compactor:
       max_time_per_tenant: 5m
       # -- The time between compaction cycles
       compaction_cycle: 30s
+    ring:
+      # -- Should compactor use IPv6
+      enable_inet6: false
   service:
     # -- Annotations for compactor service
     annotations: {}
@@ -1084,6 +1094,7 @@ config: |
       max_time_per_tenant: {{ .Values.compactor.config.compaction.max_time_per_tenant }}
       compaction_cycle: {{ .Values.compactor.config.compaction.compaction_cycle }}
     ring:
+      enable_inet6: {{ .Values.compactor.config.ring.enable_inet6 }}
       kvstore:
         store: memberlist
   {{- if and .Values.enterprise.enabled .Values.enterpriseFederationFrontend.enabled }}
@@ -1094,6 +1105,7 @@ config: |
   {{- if .Values.metricsGenerator.enabled }}
   metrics_generator:
     ring:
+      enable_inet6: {{ .Values.metricsGenerator.config.ring.enable_inet6 }}
       kvstore:
         store: memberlist
     processor:
@@ -1204,6 +1216,8 @@ config: |
 
   ingester:
     lifecycler:
+      address: {{ .Values.ingester.config.address }}
+      enable_inet6: {{ .Values.ingester.config.enable_inet6 }}
       ring:
         replication_factor: {{ .Values.ingester.config.replication_factor }}
         kvstore:
@@ -1247,6 +1261,8 @@ config: |
     log_format: {{ .Values.server.logFormat }}
     grpc_server_max_recv_msg_size: {{ .Values.server.grpc_server_max_recv_msg_size }}
     grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
+    grpc_listen_address: {{ .Values.server.grpc_listen_address | quote}}
+    http_listen_address: {{ .Values.server.http_listen_address | quote}}
     http_server_read_timeout: {{ .Values.server.http_server_read_timeout }}
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   storage:
@@ -1302,6 +1318,10 @@ server:
   grpc_server_max_recv_msg_size: 4194304
   # -- Max gRPC message size that can be sent
   grpc_server_max_send_msg_size: 4194304
+  # -- What address should grpc servers listen on. (default) or [::0]
+  grpc_listen_address: '0.0.0.0'
+  # -- What address should http servers listen on. (default) or [::0]
+  http_listen_address: '0.0.0.0'
   # -- Read timeout for HTTP server
   http_server_read_timeout: 30s
   # -- Write timeout for HTTP server
@@ -1587,6 +1607,8 @@ minio:
 gateway:
   # -- Specifies whether the gateway should be enabled
   enabled: false
+  # -- Should the gateway bind to IPv6 interfaces
+  enable_inet6: false
   # -- Number of replicas for the gateway
   replicas: 1
   # -- hostAliases to add
@@ -1790,6 +1812,9 @@ gateway:
 
         server {
           listen             8080;
+          {{- if .Values.gateway.enable_inet6 }}
+          listen             [::]:8080;
+          {{- end }}
 
           {{- if .Values.gateway.basicAuth.enabled }}
           auth_basic           "Tempo";
