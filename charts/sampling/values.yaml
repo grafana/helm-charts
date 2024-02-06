@@ -40,7 +40,7 @@ sampling:
 grafana-agent-deployment:
   controller:
     type: deployment
-    replicas: 2
+    replicas: 1
     autoscaling:
       # -- Creates a HorizontalPodAutoscaler for controller type deployment.
       enabled: false
@@ -73,7 +73,7 @@ grafana-agent-deployment:
 grafana-agent-statefulset:
   controller:
     type: statefulset
-    replicas: 2
+    replicas: 1
     autoscaling:
       # -- Creates a HorizontalPodAutoscaler for controller type deployment.
       enabled: false
