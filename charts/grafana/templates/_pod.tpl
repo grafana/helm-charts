@@ -1084,11 +1084,17 @@ containers:
       - secretRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
       {{- range .Values.envFromConfigMaps }}
       - configMapRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
     {{- end }}
     {{- with .Values.livenessProbe }}
