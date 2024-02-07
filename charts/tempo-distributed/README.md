@@ -661,6 +661,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the query-frontend |
 | queryFrontend.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the query-frontend |
 | queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
+| queryFrontend.config.max_outstanding_per_tenant | int | `2000` | Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429. |
 | queryFrontend.config.max_retries | int | `2` | Number of times to retry a request sent to a querier |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
