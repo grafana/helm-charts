@@ -490,6 +490,7 @@ envRenderSecret: {}
 ## Name is templated.
 envFromSecrets: []
 ## - name: secret-name
+##   prefix: prefix
 ##   optional: true
 
 ## The names of conifgmaps in the same kubernetes namespace which contain values to be added to the environment
@@ -498,6 +499,7 @@ envFromSecrets: []
 ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#configmapenvsource-v1-core
 envFromConfigMaps: []
 ## - name: configmap-name
+##   prefix: prefix
 ##   optional: true
 
 # Inject Kubernetes services as environment variables.
@@ -964,6 +966,7 @@ sidecar:
     enabled: false
     # Additional environment variables for the datasourcessidecar
     env: {}
+    envValueFrom: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
     # label that the configmaps with datasources are marked with
