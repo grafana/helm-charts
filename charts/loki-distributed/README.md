@@ -44,7 +44,7 @@ loki:
     chunk_store_config:
       chunk_cache_config:
         embedded_cache:
-          enabled: false
+          enabled: false 
 ```
 
 `compactor_address` has to be explicitly set in the `common` section of the config.
