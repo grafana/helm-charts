@@ -270,7 +270,7 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
   # -- Set this toggle to false to opt out of automounting API credentials for the service account
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
 
 # RBAC configuration
 rbac:
