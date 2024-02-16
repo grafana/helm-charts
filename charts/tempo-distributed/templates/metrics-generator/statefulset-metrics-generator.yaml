@@ -1,7 +1,7 @@
-{{- if and (.Values.metricsGenerator.enabled) (eq .Values.metricsGenerator.kind "Deployment") }}
+{{- if and (.Values.metricsGenerator.enabled) (eq .Values.metricsGenerator.kind "StatefulSet") }}
 {{ $dict := dict "ctx" . "component" "metrics-generator" "memberlist" true }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
@@ -15,6 +15,10 @@ spec:
   minReadySeconds: 10
   replicas: {{ .Values.metricsGenerator.replicas }}
   revisionHistoryLimit: 10
+  podManagementPolicy: Parallel
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
@@ -126,9 +130,28 @@ spec:
           secret:
             secretName: {{ tpl .Values.license.secretName . }}
         {{- end }}
-        - name: wal
-          emptyDir: {{- toYaml .Values.metricsGenerator.walEmptyDir | nindent 12 }}
         {{- with .Values.metricsGenerator.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+  {{- if not .Values.metricsGenerator.persistence.enabled }}
+        - name: wal
+          emptyDir: {{- toYaml .Values.metricsGenerator.walEmptyDir | nindent 12 }}
+  {{- else }}
+  volumeClaimTemplates:
+    - metadata:
+        {{- with .Values.metricsGenerator.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        name: wal
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.metricsGenerator.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.metricsGenerator.persistence.size | quote }}
+  {{- end }}
 {{- end }}
