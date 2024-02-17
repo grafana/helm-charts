@@ -228,6 +228,8 @@ ingester:
 metricsGenerator:
   # -- Specifies whether a metrics-generator should be deployed
   enabled: false
+  # -- Kind of deployment [StatefulSet/Deployment]
+  kind: Deployment
   # -- Annotations for the metrics-generator StatefulSet
   annotations: {}
   # -- Number of replicas for the metrics-generator
@@ -293,6 +295,19 @@ metricsGenerator:
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
   tolerations: []
+  # -- Persistence configuration for metrics-generator
+  persistence:
+    # -- Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir
+    enabled: false
+    size: 10Gi
+    # -- Storage class to be used.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is
+    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+    storageClass: null
+    # -- Annotations for metrics generator PVCs
+    annotations: {}
   # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
   walEmptyDir: {}
     ## Here shows how to configure 1Gi memory as emptyDir.
@@ -342,6 +357,9 @@ metricsGenerator:
       # -- A list of remote write endpoints.
       # -- https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
       remote_write: []
+    # -- Used by the local blocks processor to store a wal for traces.
+    traces_storage:
+      path: /var/tempo/traces
     metrics_ingestion_time_range_slack: 30s
   service:
     # -- Annotations for Metrics Generator service
@@ -690,6 +708,8 @@ queryFrontend:
   #    hostnames:
   #      - domain.tld
   config:
+    # -- Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429.
+    max_outstanding_per_tenant: 2000
     # -- Number of times to retry a request sent to a querier
     max_retries: 2
     search:
@@ -1098,6 +1118,8 @@ config: |
       {{- toYaml .Values.metricsGenerator.config.processor | nindent 6 }}
     storage:
       {{- toYaml .Values.metricsGenerator.config.storage | nindent 6 }}
+    traces_storage:
+      {{- toYaml .Values.metricsGenerator.config.traces_storage | nindent 6 }}
     registry:
       {{- toYaml .Values.metricsGenerator.config.registry | nindent 6 }}
     metrics_ingestion_time_range_slack: {{ .Values.metricsGenerator.config.metrics_ingestion_time_range_slack }}
@@ -1190,6 +1212,7 @@ config: |
       {{- end }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
+    max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
