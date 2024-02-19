@@ -12,7 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.compactor.replicas }}
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   strategy:
     type: Recreate
