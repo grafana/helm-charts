@@ -1422,6 +1422,7 @@ memcached:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  nodeSelector: {}
   service:
     # -- Annotations for memcached service
     annotations: {}
