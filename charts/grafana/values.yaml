@@ -48,6 +48,9 @@ replicas: 1
 ## Create a headless service for the deployment
 headlessService: false
 
+## Should the service account be auto mounted on the pod
+automountServiceAccountToken: true
+
 ## Create HorizontalPodAutoscaler object for deployment type
 #
 autoscaling:
