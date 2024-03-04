@@ -1263,6 +1263,20 @@ config: |
     grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
     http_server_read_timeout: {{ .Values.server.http_server_read_timeout }}
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
+  {{- if .Values.memcached.enabled }}
+  cache:
+    caches:
+      - roles:
+          - parquet-footer
+          - parquet-column-idx
+          - parquet-offset-idx
+          - frontend-search
+        memcached:
+          consistent_hash: true
+          host: {{ include "tempo.fullname" . }}-memcached
+          service: memcached-client
+          timeout: 500ms
+  {{- end }}
   storage:
     trace:
       {{- if .Values.storage.trace.block.version }}
@@ -1294,14 +1308,6 @@ config: |
         path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
-      {{- if .Values.memcached.enabled }}
-      cache: memcached
-      memcached:
-        consistent_hash: true
-        host: {{ include "tempo.fullname" . }}-memcached
-        service: memcached-client
-        timeout: 500ms
-      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
