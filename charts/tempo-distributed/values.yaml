@@ -1270,6 +1270,7 @@ config: |
           - parquet-footer
           - parquet-column-idx
           - parquet-offset-idx
+          - bloom
           - frontend-search
         memcached:
           consistent_hash: true
