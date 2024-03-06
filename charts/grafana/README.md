@@ -150,6 +150,7 @@ need to instead set `global.imageRegistry`.
 | `dashboardsConfigMaps`                    | ConfigMaps reference that contains dashboards | `{}`                                                    |
 | `grafana.ini`                             | Grafana's primary configuration               | `{}`                                                    |
 | `global.imageRegistry`                    | Global image pull registry for all images.    | `null`                                   |
+| `global.imageRegistries`                  | Overrides the Docker registries globally for all images based on their origin registry | `{}`                                     |
 | `global.imagePullSecrets`                 | Global image pull secrets (can be templated). Allows either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).  | `[]`                                                    |
 | `ldap.enabled`                            | Enable LDAP authentication                    | `false`                                                 |
 | `ldap.existingSecret`                     | The name of an existing secret containing the `ldap.toml` file, this must have the key `ldap-toml`. | `""` |
