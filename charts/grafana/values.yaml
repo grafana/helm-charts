@@ -2,6 +2,11 @@ global:
   # -- Overrides the Docker registry globally for all images
   imageRegistry: null
 
+  # -- Overrides the Docker registries globally for all images based on their origin registry
+  imageRegistries: {}
+  # docker.io: "registry.example.com/docker"
+  # quay.io: "registry.example.com/quay"
+
   # To help compatibility with other charts which use global.imagePullSecrets.
   # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
   # Can be tempalted.
