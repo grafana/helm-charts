@@ -41,12 +41,15 @@ serviceAccount:
 ## Service account annotations. Can be templated.
 #  annotations:
 #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
-  autoMount: true
+  autoMount: false
 
 replicas: 1
 
 ## Create a headless service for the deployment
 headlessService: false
+
+## Should the service account be auto mounted on the pod
+automountServiceAccountToken: true
 
 ## Create HorizontalPodAutoscaler object for deployment type
 #
