@@ -2,7 +2,7 @@
 otelcol.processor.tail_sampling "default" {
   // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.processor.tail_sampling/
 
-  decision_wait = {{ .Values.sampling.dedcisionWait }}
+  decision_wait = {{ .Values.sampling.decisionWait }}
 
 {{ if .Values.sampling.successfulRequests.sample }}
     policy {
