@@ -37,6 +37,7 @@ sampling:
       }
     }
 
+# @ignored
 grafana-agent-deployment:
   controller:
     type: deployment
@@ -70,6 +71,7 @@ grafana-agent-deployment:
         targetPort: 4318
         protocol: TCP
 
+# @ignored
 grafana-agent-statefulset:
   controller:
     type: statefulset
