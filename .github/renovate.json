@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [ "config:recommended" ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "bumpVersion": "patch",
+  "ignorePaths": [
+    "charts/enterprise-logs-simple/",
+    "charts/enterprise-metrics/"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)\\.github/workflows/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[\\w-]+) depName=(?<depName>[\\w\\/-]+)( extractVersion=(?<extractVersion>.*))?\\s+?(default|\\w+_VERSION|version): (?<currentValue>.*)\\s"
+      ]
+    }
+  ]
+}
