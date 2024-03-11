@@ -38,10 +38,13 @@ serviceAccount:
   nameTest:
   ## ServiceAccount labels.
   labels: {}
-## Service account annotations. Can be templated.
-#  annotations:
-#    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
-  autoMount: false
+  ## Service account annotations. Can be templated.
+  #  annotations:
+  #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
+
+  ## autoMount is deprecated in favor of automountServiceAccountToken
+  # autoMount: false
+  automountServiceAccountToken: false
 
 replicas: 1
 
