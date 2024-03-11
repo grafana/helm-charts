@@ -137,6 +137,7 @@ need to instead set `global.imageRegistry`.
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
 | `extraVolumes`                            | Additional Grafana server volumes             | `[]`                                                    |
+| `automountServiceAccountToken`            | Mounted the service account token on the grafana pod. Mandatory, if sidecars are enabled  | `true`      |
 | `createConfigmap`                         | Enable creating the grafana configmap         | `true`                                                  |
 | `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts (values are templated) | `[]`                         |
 | `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
@@ -223,7 +224,7 @@ need to instead set `global.imageRegistry`.
 | `admin.existingSecret`                    | The name of an existing secret containing the admin credentials (can be templated). | `""`                                 |
 | `admin.userKey`                           | The key in the existing admin secret containing the username. | `"admin-user"`                          |
 | `admin.passwordKey`                       | The key in the existing admin secret containing the password. | `"admin-password"`                      |
-| `serviceAccount.autoMount`                | Automount the service account token in the pod| `true`                                                  |
+| `serviceAccount.automountServiceAccountToken` | Automount the service account token on all pods where is service account is used | `false` |
 | `serviceAccount.annotations`              | ServiceAccount annotations                    |                                                         |
 | `serviceAccount.create`                   | Create service account                        | `true`                                                  |
 | `serviceAccount.labels`                   | ServiceAccount labels                         | `{}`                                                    |
