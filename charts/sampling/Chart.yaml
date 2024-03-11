@@ -3,14 +3,14 @@ name: sampling
 description: A Helm chart for Kubernetes
 type: application
 version: 0.1.0
-appVersion: "v0.38.1"
+appVersion: "v0.40.2"
 
 dependencies:
   - name: grafana-agent
-    version: 0.30.0
+    version: 0.36.0
     repository: https://grafana.github.io/helm-charts
     alias: grafana-agent-deployment
   - name: grafana-agent
-    version: 0.30.0
+    version: 0.36.0
     repository: https://grafana.github.io/helm-charts
     alias: grafana-agent-statefulset

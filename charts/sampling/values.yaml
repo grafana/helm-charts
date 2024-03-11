@@ -9,6 +9,7 @@ metricsGeneration:
 
 sampling:
   enabled: true
+  decisionWait: 15s
   successfulRequests:
     sample: true
     percentage: 10
@@ -37,7 +38,7 @@ sampling:
       }
     }
 
-# @ignored
+# @ignored -- Ignore agent deployment
 grafana-agent-deployment:
   controller:
     type: deployment
@@ -71,7 +72,7 @@ grafana-agent-deployment:
         targetPort: 4318
         protocol: TCP
 
-# @ignored
+# @ignored -- Ignore agent statefulset
 grafana-agent-statefulset:
   controller:
     type: statefulset
