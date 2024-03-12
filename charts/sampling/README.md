@@ -1,8 +1,37 @@
-# sampling
+# grafana-sampling
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.40.2](https://img.shields.io/badge/AppVersion-v0.40.2-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
+
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+helm install my-release grafana/grafana-sampling
+```
+
+## Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```console
+helm delete my-release
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
+
+## Upgrading
+
+A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
 ## Values
 
