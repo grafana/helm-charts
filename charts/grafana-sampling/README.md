@@ -80,6 +80,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 | grafana-agent-deployment.controller.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling. |
 | grafana-agent-deployment.controller.replicas | int | `1` |  |
 | grafana-agent-deployment.controller.type | string | `"deployment"` |  |
+| grafana-agent-deployment.nameOverride | string | `"deployment"` | Do not change this. |
 | grafana-agent-statefulset.agent.configMap.create | bool | `false` |  |
 | grafana-agent-statefulset.agent.extraEnv[0].name | string | `"GRAFANA_CLOUD_API_KEY"` |  |
 | grafana-agent-statefulset.agent.extraEnv[0].value | string | `"<REQUIRED>"` |  |
@@ -107,6 +108,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 | grafana-agent-statefulset.controller.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling. |
 | grafana-agent-statefulset.controller.replicas | int | `1` |  |
 | grafana-agent-statefulset.controller.type | string | `"statefulset"` |  |
+| grafana-agent-statefulset.nameOverride | string | `"statefulset"` | Do not change this. |
 | grafana-agent-statefulset.rbac.create | bool | `false` |  |
 | grafana-agent-statefulset.service.clusterIP | string | `"None"` |  |
 | grafana-agent-statefulset.serviceAccount.create | bool | `false` |  |

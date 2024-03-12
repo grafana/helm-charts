@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-grafana-agent-deployment
+  name: {{ .Release.Name }}-deployment
   labels:
     {{- include "grafana-agent.labels" . | nindent 4 }}
 data:

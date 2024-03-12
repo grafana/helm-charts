@@ -50,6 +50,8 @@ sampling:
 
 # @ignored Ignore agent deployment
 grafana-agent-deployment:
+  # -- Do not change this.
+  nameOverride: deployment
   controller:
     type: deployment
     replicas: 1
@@ -84,6 +86,8 @@ grafana-agent-deployment:
 
 # @ignored Ignore agent statefulset
 grafana-agent-statefulset:
+  # -- Do not change this.
+  nameOverride: statefulset
   controller:
     type: statefulset
     replicas: 1

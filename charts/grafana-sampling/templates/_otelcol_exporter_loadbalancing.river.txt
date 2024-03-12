@@ -4,7 +4,7 @@ otelcol.exporter.loadbalancing "default" {
   resolver {
 
     kubernetes {
-      service = "{{ .Release.Name }}-grafana-agent-statefulset.{{ .Release.Namespace }}"
+      service = "{{ .Release.Name }}-statefulset.{{ .Release.Namespace }}"
     }
   }
 
