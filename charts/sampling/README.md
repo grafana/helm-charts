@@ -56,17 +56,13 @@ A Helm chart for Kubernetes
 | grafana-agent-statefulset.rbac.create | bool | `false` |  |
 | grafana-agent-statefulset.service.clusterIP | string | `"None"` |  |
 | grafana-agent-statefulset.serviceAccount.create | bool | `false` |  |
-| metricsGeneration.dimensions[0] | string | `"service.namespace"` |  |
-| metricsGeneration.dimensions[1] | string | `"service.version"` |  |
-| metricsGeneration.dimensions[2] | string | `"deployment.environment"` |  |
-| metricsGeneration.dimensions[3] | string | `"k8s.pod.name"` |  |
-| metricsGeneration.dimensions[4] | string | `"k8s.cluster.name"` |  |
-| metricsGeneration.enabled | bool | `true` |  |
-| sampling.decisionWait | string | `"15s"` |  |
-| sampling.enabled | bool | `true` |  |
-| sampling.extraPolicies | string | `"policy {\n  name = \"sample-long-requests\"\n  type = \"and\"\n  and {\n    and_sub_policy {\n      name = \"latency\"\n      type = \"latency\"\n      latency {\n        threshold_ms = 5000\n      }\n    }\n    and_sub_policy {\n     name = \"probabilistic-policy\"\n     type = \"probabilistic\"\n      probabilistic {\n       sampling_percentage = 50\n      }\n    }\n  }\n}"` |  |
-| sampling.failedRequests.percentage | int | `50` |  |
-| sampling.failedRequests.sample | bool | `false` |  |
-| sampling.successfulRequests.percentage | int | `10` |  |
-| sampling.successfulRequests.sample | bool | `true` |  |
+| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.pod.name","k8s.cluster.name"]` | Additional dimensions to add to generated metrics. |
+| metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
+| sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
+| sampling.enabled | bool | `true` | Toggle tail sampling. |
+| sampling.extraPolicies | string | A policy to sample long requests is added by default. | User-defined policies in river format. |
+| sampling.failedRequests.percentage | int | `50` | Percentage of failed requests to sample. |
+| sampling.failedRequests.sample | bool | `false` | Toggle sampling failed requests. |
+| sampling.successfulRequests.percentage | int | `10` | Percentage of successful requests to sample. |
+| sampling.successfulRequests.sample | bool | `true` | Toggle sampling successful requests. |
 

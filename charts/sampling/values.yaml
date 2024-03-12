@@ -1,5 +1,7 @@
 metricsGeneration:
+  # -- Toggle generation of spanmetrics and servicegraph metrics.
   enabled: true
+  # -- Additional dimensions to add to generated metrics.
   dimensions:
     - service.namespace
     - service.version
@@ -8,14 +10,22 @@ metricsGeneration:
     - k8s.cluster.name
 
 sampling:
+  # -- Toggle tail sampling.
   enabled: true
+  # -- Wait time since the first span of a trace before making a sampling decision.
   decisionWait: 15s
   successfulRequests:
+    # -- Toggle sampling successful requests.
     sample: true
+    # -- Percentage of successful requests to sample.
     percentage: 10
   failedRequests:
+    # -- Toggle sampling failed requests.
     sample: false
+    # -- Percentage of failed requests to sample.
     percentage: 50
+  # -- User-defined policies in river format.
+  # @default -- A policy to sample long requests is added by default.
   extraPolicies: |-
     policy {
       name = "sample-long-requests"
