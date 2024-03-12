@@ -4,6 +4,11 @@
 
 A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 
+This chart deploys the following architecture to your environment:
+![Photo of sampling architecture](./sampling-architecture.png)
+
+Note: by default, only OTLP traces are accepted at the load balancing layer.
+
 ## Chart Repo
 
 Add the following repo to use the chart:
@@ -13,10 +18,30 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ```
 ## Installing the Chart
 
-To install the chart with the release name `my-release`:
+Use the following command to install the chart with the release name `my-release`. Make sure to populate the required values.
 
 ```console
-helm install my-release grafana/grafana-sampling
+helm install my-release grafana/grafana-sampling --values - <<EOF | less
+grafana-agent-statefulset:
+  agent:
+    extraEnv:
+      - name: GRAFANA_CLOUD_API_KEY
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_PROMETHEUS_URL
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_PROMETHEUS_USERNAME
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_TEMPO_ENDPOINT
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_TEMPO_USERNAME
+        value: <REQUIRED>
+      # This is required for adaptive metric deduplication in Grafana Cloud
+      - name: POD_UID
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.uid
+EOF
 ```
 
 ## Uninstalling the Chart
