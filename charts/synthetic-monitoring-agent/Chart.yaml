@@ -1,4 +1,5 @@
 apiVersion: v2
+# renovate: datasource=docker depName=docker.io/grafana/synthetic-monitoring-agent versioning=regex:^v(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(-(?<build>\d+)-(?<revision>.*))?$
 appVersion: v0.9.3-0-gcd7aadd
 description: Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 home: https://grafana.net

@@ -1,0 +1,177 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [ "config:recommended" ],
+  ignorePaths: [
+    "charts/enterprise-logs-simple/",
+    "charts/enterprise-metrics/",
+    "charts/lgtm-distributed/",  // TODO: needs some more work
+    "charts/loki-stack/" // TODO: needs some more work
+  ],
+  packageRules: [
+    {
+      matchFileNames: [
+        "charts/agent-operator/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/agent-operator/Chart.yaml"',
+        ],
+        fileFilters: ["charts/agent-operator/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/enterprise-logs/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/enterprise-logs/Chart.yaml"',
+        ],
+        fileFilters: ["charts/enterprise-logs/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/fluent-bit/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/fluent-bit/Chart.yaml"',
+        ],
+        fileFilters: ["charts/grafana/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/grafana/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/grafana/Chart.yaml"',
+        ],
+        fileFilters: ["charts/grafana/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/loki-canary/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/loki-canary/Chart.yaml"',
+        ],
+        fileFilters: ["charts/loki-canary/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/loki-distributed/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/loki-distributed/Chart.yaml"',
+        ],
+        fileFilters: ["charts/loki-distributed/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/promtail/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/promtail/Chart.yaml"',
+        ],
+        fileFilters: ["charts/promtail/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/rollout-operator/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/rollout-operator/Chart.yaml"',
+        ],
+        fileFilters: ["charts/rollout-operator/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/synthetic-monitoring-agent/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/synthetic-monitoring-agent/Chart.yaml"',
+        ],
+        fileFilters: ["charts/synthetic-monitoring-agent/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/tempo/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/tempo/Chart.yaml"',
+        ],
+        fileFilters: ["charts/tempo/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/tempo-distributed/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/tempo-distributed/Chart.yaml"',
+        ],
+        fileFilters: ["charts/tempo-distributed/**"],
+        executionMode: "branch",
+      },
+    },
+    {
+      matchFileNames: [
+        "charts/tempo-vulture/",
+      ],
+      postUpgradeTasks: {
+        commands: [
+          '.github/renovate/postupgrade.sh "charts/tempo-vulture/Chart.yaml"',
+        ],
+        fileFilters: ["charts/tempo-vulture/**"],
+        executionMode: "branch",
+      },
+    }
+  ],
+  customManagers: [
+    {
+      customType: "regex",
+      fileMatch: [
+        "(^|/)\\.github/workflows/.+\\.ya?ml$",
+        "(^|/)\\.github/.+\\.sh$",
+      ],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>[\\w-]+?) depName=(?<depName>[\\w\\/-]+?)( packageName=(?<packageName>.+?))?( extractVersion=(?<extractVersion>.+?))?\\s+?(default|\\w+_VERSION|.*version): (?<currentValue>.*)\\s",
+      ],
+    },
+    {
+      customType: "regex",
+      fileMatch: [
+        "Chart.yaml$",
+      ],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>[\\w-]+?) depName=(?<depName>[\\w\\/\\.-]+?)( extractVersion=(?<extractVersion>.+?))?( versioning=(?<versioning>.+?))?\\s+?appVersion: \"?(?<currentValue>.*?)\"?\\s",
+      ],
+    },
+  ],
+}

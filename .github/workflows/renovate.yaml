@@ -1,0 +1,37 @@
+name: Renovate
+on:
+  schedule:
+    - cron: "0/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a GitHub App installation access token
+        uses: tibdex/github-app-token@v2
+        id: app-token
+        with:
+          app_id: ${{ secrets.github_app_id }}
+          private_key: ${{ secrets.github_app_pem }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v40.1.4
+        with:
+          token: "${{ steps.app-token.outputs.token }}"
+          docker-cmd-file: .github/renovate/entrypoint.sh
+          docker-user: root
+        env:
+          LOG_LEVEL: 'debug'
+          RENOVATE_REPOSITORIES: ${{ env.GITHUB_REPOSITORY }}
+          RENOVATE_PLATFORM: github
+
+          RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["^\.github\/renovate-postupgrade\.sh \"charts/[\w-]+/Chart.yaml\"$"]'
+          RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: true

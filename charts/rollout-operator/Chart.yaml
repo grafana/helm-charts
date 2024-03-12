@@ -3,6 +3,7 @@ name: rollout-operator
 description: "Grafana rollout-operator"
 type: application
 version: 0.14.0
+# renovate: datasource=docker depName=docker.io/grafana/rollout-operator
 appVersion: v0.13.0
 home: https://github.com/grafana/rollout-operator
 kubeVersion: ^1.10.0-0

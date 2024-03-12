@@ -2,6 +2,7 @@ apiVersion: v2
 name: loki-canary
 description: Helm chart for Grafana Loki Canary
 type: application
+# renovate: datasource=docker depName=docker.io/grafana/loki
 appVersion: 2.9.1
 version: 0.14.0
 home: https://github.com/grafana/helm-charts

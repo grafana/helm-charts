@@ -2,6 +2,7 @@ apiVersion: v2
 name: loki-distributed
 description: Helm chart for Grafana Loki in microservices mode
 type: application
+# renovate: datasource=docker depName=docker.io/grafana/loki-canary
 appVersion: 2.9.4
 version: 0.78.3
 home: https://grafana.github.io/helm-charts

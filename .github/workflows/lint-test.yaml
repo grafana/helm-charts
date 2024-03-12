@@ -15,7 +15,7 @@ on:
         type: boolean
       helm_version:
         description: version of the helm binary
-        # renovate: datasource=github-tags depName=helm/helm
+        # renovate: datasource=github-tags depName=helm packageName=helm/helm
         default: v3.8.2
         required: false
         type: string
@@ -50,6 +50,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
+          # renovate: datasource=docker depName=python
           python-version: 3.7
 
       - name: Set up chart-testing

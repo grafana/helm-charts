@@ -3,6 +3,7 @@ name: tempo
 description: Grafana Tempo Single Binary Mode
 type: application
 version: 1.7.2
+# renovate: datasource=docker depName=docker.io/grafana/tempo
 appVersion: 2.3.1
 engine: gotpl
 home: https://grafana.net
