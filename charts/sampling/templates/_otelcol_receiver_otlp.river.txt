@@ -30,7 +30,7 @@ otelcol.receiver.otlp "default" {
       {{ end }}
       {{ if .Values.metricsGeneration.enabled }}
       otelcol.connector.servicegraph.default.input,
-      otelcol.connector.spanmetrics.default.input,
+      otelcol.processor.transform.drop_unneeded_resource_attributes.input,
       {{ end }}
     ]
   }

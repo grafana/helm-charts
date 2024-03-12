@@ -2,6 +2,7 @@
   {{- include "statefulset.receiver.otlp" . }}
   {{- if .Values.metricsGeneration.enabled -}}
     {{- include "statefulset.connector.spanmetrics" . }}
+    {{- include "statefulset.processor.transform.drop_unneeded_resource_attributes" . }}
     {{- include "statefulset.processor.transform.use_grafana_metric_names" . }}
     {{- include "statefulset.processor.filter" . }}
     {{- include "statefulset.connector.servicegraph" . }}
