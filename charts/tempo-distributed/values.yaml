@@ -1255,12 +1255,6 @@ config: |
       - dns+{{ include "tempo.fullname" . }}-gossip-ring:{{ .Values.memberlist.bind_port }}
   overrides:
     {{- toYaml .Values.global_overrides | nindent 2 }}
-    {{- if .Values.metricsGenerator.enabled }}
-    metrics_generator_processors:
-    {{- range .Values.global_overrides.metrics_generator_processors }}
-    - {{ . }}
-    {{- end }}
-    {{- end }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
@@ -1359,8 +1353,6 @@ storage:
 # Global overrides
 global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
-  # -- List of enabled metrics generator processors ([service-graphs, span-metrics])
-  metrics_generator_processors: []
 
 # Per tenants overrides
 overrides: |
