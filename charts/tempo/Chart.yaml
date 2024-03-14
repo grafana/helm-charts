@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo
 description: Grafana Tempo Single Binary Mode
 type: application
-version: 1.7.2
+version: 1.7.3
 # renovate: datasource=docker depName=docker.io/grafana/tempo
 appVersion: 2.3.1
 engine: gotpl
