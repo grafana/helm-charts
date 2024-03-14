@@ -19,8 +19,8 @@ jobs:
         uses: tibdex/github-app-token@v2
         id: app-token
         with:
-          app_id: ${{ secrets.grafana_github_app_id }}
-          private_key: ${{ secrets.grafana_github_app_pem }}
+          app_id: ${{ secrets.github_app_id }}
+          private_key: ${{ secrets.github_app_pem }}
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           RENOVATE_REPOSITORIES: '["${{ github.repository }}"]'
           RENOVATE_PLATFORM: github
 
-          RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["^\.github\/renovate/postupgrade\.sh \"charts/[\w-]+/Chart.yaml\"$"]'
+          RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["^\\.github\\/renovate\\/postupgrade\\.sh \"charts\\/[\\w-]+\\/Chart\\.yaml\"$"]'
           RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: true
           RENOVATE_PR_HOURLY_LIMIT: 10
           RENOVATE_PR_CONCURRENT_LIMIT: 10

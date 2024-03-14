@@ -10,7 +10,7 @@
   packageRules: [
     {
       matchFileNames: [
-        "charts/agent-operator/",
+        "charts/agent-operator/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -22,7 +22,7 @@
     },
     {
       matchFileNames: [
-        "charts/enterprise-logs/",
+        "charts/enterprise-logs/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -34,7 +34,7 @@
     },
     {
       matchFileNames: [
-        "charts/fluent-bit/",
+        "charts/fluent-bit/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -46,7 +46,7 @@
     },
     {
       matchFileNames: [
-        "charts/grafana/",
+        "charts/grafana/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -58,7 +58,7 @@
     },
     {
       matchFileNames: [
-        "charts/loki-canary/",
+        "charts/loki-canary/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -70,7 +70,7 @@
     },
     {
       matchFileNames: [
-        "charts/loki-distributed/",
+        "charts/loki-distributed/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -82,7 +82,7 @@
     },
     {
       matchFileNames: [
-        "charts/promtail/",
+        "charts/promtail/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -94,7 +94,7 @@
     },
     {
       matchFileNames: [
-        "charts/rollout-operator/",
+        "charts/rollout-operator/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -106,7 +106,7 @@
     },
     {
       matchFileNames: [
-        "charts/synthetic-monitoring-agent/",
+        "charts/synthetic-monitoring-agent/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -118,7 +118,7 @@
     },
     {
       matchFileNames: [
-        "charts/tempo/",
+        "charts/tempo/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -130,7 +130,7 @@
     },
     {
       matchFileNames: [
-        "charts/tempo-distributed/",
+        "charts/tempo-distributed/**",
       ],
       postUpgradeTasks: {
         commands: [
@@ -142,7 +142,7 @@
     },
     {
       matchFileNames: [
-        "charts/tempo-vulture/",
+        "charts/tempo-vulture/**",
       ],
       postUpgradeTasks: {
         commands: [
