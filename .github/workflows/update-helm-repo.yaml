@@ -40,6 +40,8 @@ env:
   CR_INDEX_PATH: "${{ github.workspace }}/.cr-index"
   CR_PACKAGE_PATH: "${{ github.workspace }}/.cr-release-packages"
   CR_TOOL_PATH: "${{ github.workspace }}/.cr-tool"
+  # renovate: datasource=github-tags depName=helm/chart-releaser extractVersion=^v?(?<version>.*)$
+  CR_TOOL_VERSION: 1.4.0
   HELM_TAG_PREFIX: "${{ inputs.helm_tag_prefix }}"
 
 jobs:
@@ -143,6 +145,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
+          # renovate: datasource=github-tags depName=helm packageName=helm/helm
           version: v3.5.2
 
       - name: Add dependency chart repos
@@ -180,7 +183,7 @@ jobs:
           mkdir "${CR_TOOL_PATH}"
           mkdir "${CR_PACKAGE_PATH}"
           mkdir "${CR_INDEX_PATH}"
-          curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/v1.4.0/chart-releaser_1.4.0_linux_amd64.tar.gz"
+          curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/v${{ env.CR_TOOL_VERSION }}/chart-releaser_${{ env.CR_TOOL_VERSION }}_linux_amd64.tar.gz"
           tar -xzf cr.tar.gz -C "${CR_TOOL_PATH}"
           rm -f cr.tar.gz
 

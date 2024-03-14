@@ -27,6 +27,7 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v3.5
         with:
+          # renovate: datasource=github-tags depName=helm packageName=helm/helm
           version: v3.12.0
 
       - name: Add dependency chart repos
