@@ -1694,7 +1694,7 @@ storage:
     pool:
       # -- Total number of workers pulling jobs from the queue
       max_workers: 400
-      # -- Length of job queue. imporatant for querier as it queues a job for every block it has to search
+      # -- Length of job queue. important for querier as it queues a job for every block it has to search
       queue_depth: 20000
     # The supported search are specified here https://grafana.com/docs/tempo/latest/configuration/#search-config
     search:
@@ -1716,7 +1716,7 @@ storage:
     # -- Delete empty tenants.
     empty_tenant_deletion_enabled: null
 
-  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true
+  # Settings for the Admin client storage backend and buckets. Only valid if enterprise.enabled is true.
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
@@ -1739,7 +1739,7 @@ per_tenant_overrides:
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your own self deployed memcached by setting `memcached.enabled` to false and `memcached.host` + `memcached.service`
 memcached:
-  # -- Specified whether the memcached cachce should be enabled
+  # -- Specified whether the memcached cache should be enabled
   enabled: true
   image:
     # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
@@ -1753,7 +1753,7 @@ memcached:
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
-  # Number of replicas for memchached
+  # Number of replicas for memcached
   replicas: 1
   # -- Additional CLI args for memcached
   extraArgs: []
