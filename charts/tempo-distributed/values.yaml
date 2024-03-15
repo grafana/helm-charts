@@ -1339,13 +1339,13 @@ storage:
       dedicated_columns: []
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
-    # The worker pool is used primarily when finding traces by id, but is also used by other.
+    # The worker pool is used primarily when finding traces by id, but is also used by others.
     pool:
       # -- Total number of workers pulling jobs from the queue
       max_workers: 400
-      # -- Length of job queue. imporatant for querier as it queues a job for every block it has to search
+      # -- Length of job queue. important for querier as it queues a job for every block it has to search
       queue_depth: 20000
-  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+  # Settings for the Admin client storage backend and buckets. Only valid if enterprise.enabled is true.
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
     backend: filesystem
@@ -1358,10 +1358,10 @@ global_overrides:
 overrides: |
   overrides: {}
 
-# memcached is for all of the Tempo pieces to coordinate with each other.
-# you can use your self memcacherd by set enable: false and host + service
+# memcached is for all the Tempo pieces to coordinate with each other.
+# you can use your self memcached by set enable: false and host + service
 memcached:
-  # -- Specified whether the memcached cachce should be enabled
+  # -- Specified whether the memcached cache should be enabled
   enabled: true
   image:
     # -- The Docker registry for the Memcached image. Overrides `global.image.registry`
@@ -1375,7 +1375,7 @@ memcached:
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
-  # Number of replicas for memchached
+  # Number of replicas for memcached
   replicas: 1
   # -- Additional CLI args for memcached
   extraArgs: []
@@ -1390,7 +1390,7 @@ memcached:
   # -- Resource requests and limits for memcached
   resources: {}
   # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
