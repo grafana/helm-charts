@@ -574,6 +574,8 @@ distributor:
   podAnnotations: {}
   # -- Labels for distributor service
   serviceLabels: {}
+  # -- Annotations for distributor service
+  serviceAnnotations: {}
   # -- Additional CLI args for the distributor
   extraArgs: []
   # -- Environment variables to add to the distributor pods

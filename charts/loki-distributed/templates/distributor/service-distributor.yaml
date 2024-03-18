@@ -8,10 +8,15 @@ metadata:
     {{- with .Values.distributor.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.loki.serviceAnnotations }}
+    {{ if or .Values.loki.serviceAnnotations .Values.distributor.serviceAnnotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with .Values.loki.serviceAnnotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.distributor.serviceAnnotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
 spec:
   type: ClusterIP
   ports:
