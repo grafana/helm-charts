@@ -10,7 +10,7 @@ otelcol.processor.filter "drop_unneeded_span_metrics" {
   }
 
   output {
-    metrics = [otelcol.processor.batch.default.input]
+    metrics = [otelcol.processor.transform.use_grafana_metric_names.input]
   }
 }
 

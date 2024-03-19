@@ -18,7 +18,7 @@ otelcol.connector.spanmetrics "default" {
   }
 
   output {
-    metrics = [otelcol.processor.transform.use_grafana_metric_names.input]
+    metrics = [otelcol.processor.filter.drop_unneeded_span_metrics.input]
   }
 }
 
