@@ -17,6 +17,7 @@ metadata:
     {{- end }}
 spec:
   serviceAccountName: {{ include "promtail.serviceAccountName" . }}
+  automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
   {{- include "promtail.enableServiceLinks" . | nindent 2 }}
   {{- with .Values.hostNetwork }}
   hostNetwork: {{ . }}
