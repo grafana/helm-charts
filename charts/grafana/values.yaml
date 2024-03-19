@@ -121,6 +121,13 @@ testFramework:
     tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
 
 # dns configuration for pod
 dnsPolicy: ~
