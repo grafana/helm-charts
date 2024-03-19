@@ -23,8 +23,6 @@ spec:
       port: 9095
       targetPort: grpc
       protocol: TCP
-      {{- if .Values.distributor.appProtocol.grpc }}
-      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
-      {{- end }}
+      appProtocol: tcp
   selector:
     {{- include "loki.distributorSelectorLabels" . | nindent 4 }}
