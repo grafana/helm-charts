@@ -104,6 +104,10 @@ spec:
               mountPath: /var/loki
             - name: tmp
               mountPath: /tmp/loki
+            {{- if .Values.ruler.sidecar.enabled }}
+            - name: sc-rules
+              mountPath: {{ .Values.ruler.sidecar.rules.folder | quote }}
+            {{- end}}
             {{- range $dir, $_ := .Values.ruler.directories }}
             - name: {{ include "loki.rulerRulesDirName" $dir }}
               mountPath: /etc/loki/rules/{{ $dir }}
@@ -116,6 +120,73 @@ spec:
         {{- if .Values.ruler.extraContainers }}
         {{- toYaml .Values.ruler.extraContainers | nindent 8}}
         {{- end }}
+      {{- if .Values.ruler.sidecar.enabled }}
+        - name: loki-sc-rules
+          {{- if .Values.ruler.sidecar.image.sha }}
+          image: "{{ .Values.ruler.sidecar.image.repository }}:{{ .Values.ruler.sidecar.image.tag }}@sha256:{{ .Values.ruler.sidecar.image.sha }}"
+          {{- else }}
+          image: "{{ .Values.ruler.sidecar.image.repository }}:{{ .Values.ruler.sidecar.image.tag }}"
+          {{- end }}
+          imagePullPolicy: {{ .Values.ruler.sidecar.image.pullPolicy }}
+          env:
+            - name: METHOD
+              value: {{ .Values.ruler.sidecar.rules.watchMethod }}
+            - name: LABEL
+              value: "{{ .Values.ruler.sidecar.rules.label }}"
+            {{- if .Values.ruler.sidecar.rules.labelValue }}
+            - name: LABEL_VALUE
+              value: {{ quote .Values.ruler.sidecar.rules.labelValue }}
+            {{- end }}
+            - name: FOLDER
+              value: "{{ .Values.ruler.sidecar.rules.folder }}"
+            - name: RESOURCE
+              value: {{ quote .Values.ruler.sidecar.rules.resource }}
+            {{- if .Values.ruler.sidecar.enableUniqueFilenames }}
+            - name: UNIQUE_FILENAMES
+              value: "{{ .Values.ruler.sidecar.enableUniqueFilenames }}"
+            {{- end }}
+            {{- if .Values.ruler.sidecar.rules.searchNamespace }}
+            - name: NAMESPACE
+              value: "{{ .Values.ruler.sidecar.rules.searchNamespace | join "," }}"
+            {{- end }}
+            {{- if .Values.ruler.sidecar.skipTlsVerify }}
+            - name: SKIP_TLS_VERIFY
+              value: "{{ .Values.ruler.sidecar.skipTlsVerify }}"
+            {{- end }}
+            {{- if .Values.ruler.sidecar.rules.script }}
+            - name: SCRIPT
+              value: "{{ .Values.ruler.sidecar.rules.script }}"
+            {{- end }}
+            {{- if .Values.ruler.sidecar.rules.watchServerTimeout }}
+            - name: WATCH_SERVER_TIMEOUT
+              value: "{{ .Values.ruler.sidecar.rules.watchServerTimeout }}"
+            {{- end }}
+            {{- if .Values.ruler.sidecar.rules.watchClientTimeout }}
+            - name: WATCH_CLIENT_TIMEOUT
+              value: "{{ .Values.ruler.sidecar.rules.watchClientTimeout }}"
+            {{- end }}
+            {{- if .Values.ruler.sidecar.rules.logLevel }}
+            - name: LOG_LEVEL
+              value: "{{ .Values.ruler.sidecar.rules.logLevel }}"
+            {{- end }}
+          {{- if .Values.ruler.sidecar.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.ruler.sidecar.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.ruler.sidecar.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.ruler.sidecar.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.ruler.sidecar.resources | nindent 12 }}
+          {{- if .Values.ruler.sidecar.securityContext }}
+          securityContext:
+            {{- toYaml .Values.ruler.sidecar.securityContext | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: sc-rules
+              mountPath: {{ .Values.ruler.sidecar.rules.folder | quote }}
+        {{- end}}
       {{- with .Values.ruler.affinity }}
       affinity:
         {{- tpl . $ | nindent 8 }}
@@ -161,6 +232,15 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        {{- if .Values.ruler.sidecar.enabled }}
+        - name: sc-rules
+        {{- if .Values.ruler.sidecar.rules.sizeLimit }}
+          emptyDir:
+            sizeLimit: {{ .Values.ruler.sidecar.rules.sizeLimit }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
+        {{- end -}}
         {{- with .Values.ruler.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
