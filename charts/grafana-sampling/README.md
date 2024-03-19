@@ -112,7 +112,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 | grafana-agent-statefulset.rbac.create | bool | `false` |  |
 | grafana-agent-statefulset.service.clusterIP | string | `"None"` |  |
 | grafana-agent-statefulset.serviceAccount.create | bool | `false` |  |
-| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.pod.name","k8s.cluster.name"]` | Additional dimensions to add to generated metrics. |
+| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
 | sampling.enabled | bool | `true` | Toggle tail sampling. |

@@ -6,7 +6,6 @@ metricsGeneration:
     - service.namespace
     - service.version
     - deployment.environment
-    - k8s.pod.name
     - k8s.cluster.name
 
 sampling:
