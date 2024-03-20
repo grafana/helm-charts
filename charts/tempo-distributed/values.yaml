@@ -148,7 +148,7 @@ ingester:
   extraEnvFrom: []
   # -- Resource requests and limits for the ingester
   resources: {}
-  # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
+  # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingester,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
@@ -262,7 +262,7 @@ metricsGenerator:
   extraEnvFrom: []
   # -- Resource requests and limits for the metrics-generator
   resources: {}
-  # -- Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor,
+  # -- Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingester,
   # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
   terminationGracePeriodSeconds: 300
