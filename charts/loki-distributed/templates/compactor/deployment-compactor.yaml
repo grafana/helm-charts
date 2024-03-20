@@ -67,7 +67,6 @@ spec:
           args:
             - -config.file=/etc/loki/config/config.yaml
             - -target=compactor
-            - -boltdb.shipper.compactor.working-directory=/var/loki/compactor
             {{- with .Values.compactor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
