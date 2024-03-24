@@ -71,14 +71,20 @@ spec:
           ports:
             - containerPort: 3100
               name: http-metrics
-          {{- with .Values.enterpriseFederationFrontend.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.enterpriseFederationFrontend.extraEnvFrom }}
+            {{- with .Values.global.extraEnv }}
+              {{ toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.enterpriseFederationFrontend.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.enterpriseFederationFrontend.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.enterpriseFederationFrontend.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
