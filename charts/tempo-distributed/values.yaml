@@ -1263,6 +1263,8 @@ config: |
     grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
     http_server_read_timeout: {{ .Values.server.http_server_read_timeout }}
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
+  cache:
+  {{- toYaml .Values.cache | nindent 2}}
   storage:
     trace:
       {{- if .Values.storage.trace.block.version }}
@@ -1294,14 +1296,6 @@ config: |
         path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
-      {{- if .Values.memcached.enabled }}
-      cache: memcached
-      memcached:
-        consistent_hash: true
-        host: {{ include "tempo.fullname" . }}-memcached
-        service: memcached-client
-        timeout: 500ms
-      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1320,6 +1314,21 @@ server:
   http_server_read_timeout: 30s
   # -- Write timeout for HTTP server
   http_server_write_timeout: 30s
+
+# Use this block to configure caches available throughout the application.
+# Multiple caches can be created and assigned roles which determine how they are used by Tempo.
+# https://grafana.com/docs/tempo/latest/configuration/#cache
+cache:
+  caches:
+    - memcached:
+        host: '{{ include "tempo.fullname" . }}-memcached'
+        service: memcached-client
+        consistent_hash: true
+        timeout: 500ms
+      roles:
+        - parquet-footer
+        - bloom
+        - frontend-search
 
 # To configure a different storage backend instead of local storage:
 # storage:
