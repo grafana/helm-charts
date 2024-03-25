@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.8.4](https://img.shields.io/badge/Version-1.8.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 1.9.0](https://img.shields.io/badge/Version-1.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.0](https://img.shields.io/badge/AppVersion-2.4.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -44,6 +44,10 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.8.0
+
+Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
 
 ### From Chart versions < 1.6.0
 
@@ -240,6 +244,13 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
 | adminApi.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string |
+| cache.caches[0].memcached.consistent_hash | bool | `true` |  |
+| cache.caches[0].memcached.host | string | `"{{ include \"tempo.fullname\" . }}-memcached"` |  |
+| cache.caches[0].memcached.service | string | `"memcached-client"` |  |
+| cache.caches[0].memcached.timeout | string | `"500ms"` |  |
+| cache.caches[0].roles[0] | string | `"parquet-footer"` |  |
+| cache.caches[0].roles[1] | string | `"bloom"` |  |
+| cache.caches[0].roles[2] | string | `"frontend-search"` |  |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.config.compaction.compacted_block_retention | string | `"1h"` |  |
 | compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
@@ -452,7 +463,6 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
-| global_overrides.metrics_generator_processors | list | `[]` | List of enabled metrics generator processors ([service-graphs, span-metrics]) |
 | global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
@@ -840,9 +850,11 @@ metricsGenerator:
     #     x-scope-orgid: operations
 # Global overrides
 global_overrides:
-  metrics_generator_processors:
-    - service-graphs
-    - span-metrics
+  defaults:
+    metrics_generator:
+      processors:
+        - service-graphs
+        - span-metrics
 ```
 
 ----
