@@ -1286,6 +1286,24 @@ volumes:
     emptyDir: {}
     {{- end }}
   {{- end }}
+  {{- range .Values.extraVolumeMounts }}
+  - name: {{ .name }}
+    {{- if .existingClaim }}
+    persistentVolumeClaim:
+      claimName: {{ .existingClaim }}
+    {{- else if .hostPath }}
+    hostPath:
+      {{ toYaml .hostPath | nindent 6 }}
+    {{- else if .csi }}
+    csi:
+      {{- toYaml .data | nindent 6 }}
+    {{- else if .configMap }}
+    configMap:
+      {{- toYaml .configMap | nindent 6 }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
+  {{- end }}
   {{- range .Values.extraEmptyDirMounts }}
   - name: {{ .name }}
     emptyDir: {}
