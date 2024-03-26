@@ -17,7 +17,7 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" . | nindent 6 }}
-  serviceName: {{ template "tempo.fullname" . }}-headless
+  serviceName: {{ template "tempo.fullname" . }}
   template:
     metadata:
       labels:
