@@ -1,0 +1,140 @@
+metricsGeneration:
+  # -- Toggle generation of spanmetrics and servicegraph metrics.
+  enabled: true
+  # -- Additional dimensions to add to generated metrics.
+  dimensions:
+    - service.namespace
+    - service.version
+    - deployment.environment
+    - k8s.cluster.name
+
+sampling:
+  # -- Toggle tail sampling.
+  enabled: true
+  # -- Wait time since the first span of a trace before making a sampling decision.
+  decisionWait: 15s
+  successfulRequests:
+    # -- Toggle sampling successful requests.
+    sample: true
+    # -- Percentage of successful requests to sample.
+    percentage: 10
+  failedRequests:
+    # -- Toggle sampling failed requests.
+    sample: false
+    # -- Percentage of failed requests to sample.
+    percentage: 50
+  # -- User-defined policies in river format.
+  # @default -- A policy to sample long requests is added by default.
+  extraPolicies: |-
+    policy {
+      name = "sample-long-requests"
+      type = "and"
+      and {
+        and_sub_policy {
+          name = "latency"
+          type = "latency"
+          latency {
+            threshold_ms = 5000
+          }
+        }
+        and_sub_policy {
+         name = "probabilistic-policy"
+         type = "probabilistic"
+          probabilistic {
+           sampling_percentage = 50
+          }
+        }
+      }
+    }
+
+# @ignored Ignore agent deployment
+grafana-agent-deployment:
+  # -- Do not change this.
+  nameOverride: deployment
+  controller:
+    type: deployment
+    replicas: 1
+    autoscaling:
+      # -- Creates a HorizontalPodAutoscaler for controller type deployment.
+      enabled: false
+      # -- The lower limit for the number of replicas to which the autoscaler can scale down.
+      minReplicas: 2
+      # -- The upper limit for the number of replicas to which the autoscaler can scale up.
+      maxReplicas: 5
+      # -- Average CPU utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetCPUUtilizationPercentage` to 0 will disable CPU scaling.
+      targetCPUUtilizationPercentage: 0
+      # -- Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling.
+      targetMemoryUtilizationPercentage: 80
+  agent:
+    # This chart creates the configmaps
+    configMap:
+      create: false
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2G"
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
+
+# @ignored Ignore agent statefulset
+grafana-agent-statefulset:
+  # -- Do not change this.
+  nameOverride: statefulset
+  controller:
+    type: statefulset
+    replicas: 1
+    autoscaling:
+      # -- Creates a HorizontalPodAutoscaler for controller type deployment.
+      enabled: false
+      # -- The lower limit for the number of replicas to which the autoscaler can scale down.
+      minReplicas: 2
+      # -- The upper limit for the number of replicas to which the autoscaler can scale up.
+      maxReplicas: 5
+      # -- Average CPU utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetCPUUtilizationPercentage` to 0 will disable CPU scaling.
+      targetCPUUtilizationPercentage: 0
+      # -- Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling.
+      targetMemoryUtilizationPercentage: 80
+  service:
+    clusterIP: None
+  agent:
+    extraEnv:
+      - name: GRAFANA_CLOUD_API_KEY
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_PROMETHEUS_URL
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_PROMETHEUS_USERNAME
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_TEMPO_ENDPOINT
+        value: <REQUIRED>
+      - name: GRAFANA_CLOUD_TEMPO_USERNAME
+        value: <REQUIRED>
+      # This is required for adaptive metric deduplication in Grafana Cloud
+      - name: POD_UID
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.uid
+    # This chart creates the configmaps
+    configMap:
+      create: false
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2G"
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+  # The statefulset and deployment can share the same serviceAccount and rbac roles
+  serviceAccount:
+    create: false
+  rbac:
+    create: false
