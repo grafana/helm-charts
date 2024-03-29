@@ -64,6 +64,9 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"grafana/agent-operator"` | Image repo |
 | image.tag | string | `"v0.40.3"` | Image tag |
+| test.image.registry | string | `"docker.io"` | Test image registry |
+| test.image.repository | string | `"library/busybox"` | Test image repo |
+| test.image.tag | string | `"latest"` | Test image tag |
 | kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
