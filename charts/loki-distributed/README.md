@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.78.4](https://img.shields.io/badge/Version-0.78.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.5](https://img.shields.io/badge/AppVersion-2.9.5-informational?style=flat-square)
+![Version: 0.78.5](https://img.shields.io/badge/Version-0.78.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.5](https://img.shields.io/badge/AppVersion-2.9.5-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -476,6 +476,23 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | networkPolicy.metrics.cidrs | list | `[]` | Specifies specific network CIDRs which are allowed to access the metrics port. In case you use namespaceSelector, you also have to specify your kubelet networks here. The metrics ports are also used for probes. |
 | networkPolicy.metrics.namespaceSelector | object | `{}` | Specifies the namespaces which are allowed to access the metrics port |
 | networkPolicy.metrics.podSelector | object | `{}` | Specifies the Pods which are allowed to access the metrics port. As this is cross-namespace communication, you also need the namespaceSelector. |
+| overridesExporter.enabled | bool | `false` | Specifies whether the overrides-exporter should be enabled |
+| overridesExporter.extraArgs | list | `[]` | Additional CLI args for the overrides-exporter |
+| overridesExporter.extraContainers | list | `[]` | Containers to add to the overrides-exporter pods |
+| overridesExporter.extraEnv | list | `[]` | Environment variables to add to the overrides-exporter pods |
+| overridesExporter.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the overrides-exporter pods |
+| overridesExporter.extraVolumeMounts | list | `[]` | Volume mounts to add to the overrides-exporter pods |
+| overridesExporter.extraVolumes | list | `[]` | Volumes to add to the overrides-exporter pods |
+| overridesExporter.image.registry | string | `nil` | The Docker registry for the overrides-exporter image. Overrides `loki.image.registry` |
+| overridesExporter.image.repository | string | `nil` | Docker image repository for the overrides-exporter image. Overrides `loki.image.repository` |
+| overridesExporter.image.tag | string | `nil` | Docker image tag for the overrides-exporter image. Overrides `loki.image.tag` |
+| overridesExporter.nodeSelector | object | `{}` | Node selector for overrides-exporter pods |
+| overridesExporter.podAnnotations | object | `{}` | Annotations for overrides-exporter pods |
+| overridesExporter.podLabels | object | `{}` | Labels for overrides-exporter pods |
+| overridesExporter.priorityClassName | string | `nil` | The name of the PriorityClass for overrides-exporter pods |
+| overridesExporter.resources | object | `{}` | Resource requests and limits for the overrides-exporter |
+| overridesExporter.serviceLabels | object | `{}` | Labels for overrides-exporter service |
+| overridesExporter.tolerations | list | `[]` | Tolerations for overrides-exporter pods |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
 | prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |

@@ -1,0 +1,25 @@
+{{- if .Values.overridesExporter.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "loki.overridesExporterFullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "loki.overridesExporterLabels" . | nindent 4 }}
+    {{- with .Values.overridesExporter.serviceLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.loki.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3100
+      targetPort: http
+      protocol: TCP
+  selector:
+    {{- include "loki.overridesExporterSelectorLabels" . | nindent 4 }}
+{{- end -}}

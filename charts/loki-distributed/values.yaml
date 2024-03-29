@@ -1692,6 +1692,44 @@ indexGateway:
   appProtocol:
     grpc: ""
 
+# Configuration for the overrides-exporter
+overridesExporter:
+  # -- Specifies whether the overrides-exporter should be enabled
+  enabled: false
+  image:
+    # -- The Docker registry for the overrides-exporter image. Overrides `loki.image.registry`
+    registry: null
+    # -- Docker image repository for the overrides-exporter image. Overrides `loki.image.repository`
+    repository: null
+    # -- Docker image tag for the overrides-exporter image. Overrides `loki.image.tag`
+    tag: null
+  # -- The name of the PriorityClass for overrides-exporter pods
+  priorityClassName: null
+  # -- Labels for overrides-exporter pods
+  podLabels: {}
+  # -- Annotations for overrides-exporter pods
+  podAnnotations: {}
+  # -- Labels for overrides-exporter service
+  serviceLabels: {}
+  # -- Additional CLI args for the overrides-exporter
+  extraArgs: []
+  # -- Environment variables to add to the overrides-exporter pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to the overrides-exporter pods
+  extraEnvFrom: []
+  # -- Volume mounts to add to the overrides-exporter pods
+  extraVolumeMounts: []
+  # -- Volumes to add to the overrides-exporter pods
+  extraVolumes: []
+  # -- Resource requests and limits for the overrides-exporter
+  resources: {}
+  # -- Containers to add to the overrides-exporter pods
+  extraContainers: []
+  # -- Node selector for overrides-exporter pods
+  nodeSelector: {}
+  # -- Tolerations for overrides-exporter pods
+  tolerations: []
+
 memcached:
   readinessProbe:
     tcpSocket:
