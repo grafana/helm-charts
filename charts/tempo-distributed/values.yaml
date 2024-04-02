@@ -201,6 +201,10 @@ ingester:
     storageClass: null
     # -- Annotations for ingester's persist volume claim
     annotations: {}
+    # Retention policy for PVCs. Possible values: Retain (default) and Delete
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
@@ -308,6 +312,10 @@ metricsGenerator:
     storageClass: null
     # -- Annotations for metrics generator PVCs
     annotations: {}
+    # Retention policy for PVCs. Possible values: Retain (default) and Delete
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
   # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
   walEmptyDir: {}
     ## Here shows how to configure 1Gi memory as emptyDir.

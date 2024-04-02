@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.9.1](https://img.shields.io/badge/Version-1.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 1.9.2](https://img.shields.io/badge/Version-1.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -495,6 +495,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
+| ingester.persistence.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` |  |
+| ingester.persistence.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` |  |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
@@ -590,7 +592,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.image.tag | string | `nil` | Docker image tag for the metrics-generator image. Overrides `tempo.image.tag` |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
-| metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
+| metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"persistentVolumeClaimRetentionPolicy":{"whenDeleted":"Retain","whenScaled":"Retain"},"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
