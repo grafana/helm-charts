@@ -10,7 +10,14 @@ A Helm chart for Grafana Agent Operator
 
 * <https://github.com/grafana/agent/tree/v0.40.3/pkg/operator>
 
-Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+|  | agent-crds | 0.0.0 |
+|  | prometheus-crds | 0.0.0 |
+
+Note that this chart provisions custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources. CRD provisioning can be disabled.
 
 To learn how to deploy these resources, please see Grafana's [Agent Operator getting started guide](https://grafana.com/docs/agent/latest/operator/getting-started/).
 
@@ -56,6 +63,8 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | affinity | object | `{}` | Pod affinity configuration |
 | annotations | object | `{}` | Annotations for the Deployment |
 | containerSecurityContext | object | `{}` | Container security context (allowPrivilegeEscalation, etc.) |
+| crds.agent | object | `{"create":true}` | Whether to install CRDs for monitoring. |
+| crds.prometheus.create | bool | `true` |  |
 | extraArgs | list | `[]` | List of additional cli arguments to configure agent-operator (example: `--log.level`) |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | hostAliases | list | `[]` | hostAliases to add |
