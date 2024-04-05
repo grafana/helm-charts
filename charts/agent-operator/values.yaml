@@ -43,6 +43,15 @@ image:
   # -- Image pull secrets
   pullSecrets: []
 
+test:
+  image:
+    # -- Test image registry
+    registry: docker.io
+    # -- Test image repo
+    repository: library/busybox
+    # -- Test image tag
+    tag: latest
+
 # -- hostAliases to add
 hostAliases: []
 #  - ip: 1.2.3.4
