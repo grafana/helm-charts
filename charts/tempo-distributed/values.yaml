@@ -201,6 +201,8 @@ ingester:
     storageClass: null
     # -- Annotations for ingester's persist volume claim
     annotations: {}
+    # -- Labels for ingester's persist volume claim
+    labels: { }
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
