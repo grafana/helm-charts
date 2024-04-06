@@ -17,7 +17,7 @@ A Helm chart for Grafana Agent Operator
 |  | agent-crds | 0.0.0 |
 |  | prometheus-crds | 0.0.0 |
 
-Note that this chart provisions custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources. CRD provisioning can be disabled.
+Note that this chart provisions custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) and some `*Monitor` resources. CRD provisioning can be disabled.
 
 To learn how to deploy these resources, please see Grafana's [Agent Operator getting started guide](https://grafana.com/docs/agent/latest/operator/getting-started/).
 
