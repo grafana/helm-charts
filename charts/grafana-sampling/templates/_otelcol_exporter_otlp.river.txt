@@ -1,0 +1,10 @@
+{{- define "exporter.otlp" -}}
+otelcol.exporter.otlp "grafana_cloud_tempo" {
+  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.exporter.otlp/
+  client {
+    endpoint = env("GRAFANA_CLOUD_TEMPO_ENDPOINT")
+    auth     = otelcol.auth.basic.grafana_cloud_tempo.handler
+  }
+}
+
+{{ end }}
