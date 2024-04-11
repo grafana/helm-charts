@@ -112,6 +112,7 @@ ingester:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  initContainers: []
   autoscaling:
     # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
     enabled: false
@@ -239,6 +240,7 @@ metricsGenerator:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  initContainers: []
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
