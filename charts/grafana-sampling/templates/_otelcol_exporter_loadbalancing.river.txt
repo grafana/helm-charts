@@ -1,0 +1,22 @@
+{{- define "deployment.exporter.loadbalancing" -}}
+otelcol.exporter.loadbalancing "default" {
+  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.exporter.loadbalancing/
+  resolver {
+
+    kubernetes {
+      service = "{{ .Release.Name }}-statefulset.{{ .Release.Namespace }}"
+    }
+  }
+
+  protocol {
+    otlp {
+      client {
+        tls {
+          insecure = true
+        }
+      }
+    }
+  }
+}
+
+{{ end }}
