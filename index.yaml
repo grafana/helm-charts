@@ -19497,6 +19497,64 @@ entries:
   k8s-monitoring:
   - apiVersion: v2
     appVersion: 2.2.0
+    created: "2024-04-15T16:40:40.514037088Z"
+    dependencies:
+    - name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.38.0
+    - alias: grafana-agent-events
+      condition: logs.cluster_events.enabled
+      name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.38.0
+    - alias: grafana-agent-logs
+      condition: logs.pod_logs.enabled
+      name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.38.0
+    - alias: grafana-agent-profiles
+      condition: profiles.enabled
+      name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.38.0
+    - condition: kube-state-metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.18.1
+    - condition: prometheus-node-exporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.32.0
+    - condition: prometheus-operator-crds.enabled
+      name: prometheus-operator-crds
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 11.0.0
+    - condition: prometheus-windows-exporter.enabled
+      name: prometheus-windows-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 0.3.1
+    - condition: opencost.enabled
+      name: opencost
+      repository: https://opencost.github.io/opencost-helm-chart
+      version: 1.33.3
+    description: A Helm chart for gathering, scraping, and forwarding Kubernetes telemetry
+      data to a Grafana Stack.
+    digest: 7f2d6c80c3025b13437171f1fca9d843010bbf85b859aacf8196e1ed0bd07fee
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: stephen.lang@grafana.com
+      name: skl
+    name: k8s-monitoring
+    sources:
+    - https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-0.13.4/k8s-monitoring-0.13.4.tgz
+    version: 0.13.4
+  - apiVersion: v2
+    appVersion: 2.2.0
     created: "2024-04-15T15:38:37.422361741Z"
     dependencies:
     - name: grafana-agent
@@ -60620,4 +60678,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-15T15:38:37.425000839Z"
+generated: "2024-04-15T16:40:40.516810412Z"
