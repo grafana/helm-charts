@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-statefulset
+  labels:
+    {{- include "grafana-agent.labels" . | nindent 4 }}
+data:
+   config.river: |- {{- (include "agent.config.statefulset" .) | nindent 4 }}
