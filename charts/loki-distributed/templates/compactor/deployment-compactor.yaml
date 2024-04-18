@@ -39,6 +39,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.compactor.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "loki.compactorServiceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

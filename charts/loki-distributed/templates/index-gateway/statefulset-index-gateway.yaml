@@ -50,6 +50,10 @@ spec:
         app.kubernetes.io/part-of: memberlist
         {{- end }}
     spec:
+      {{- with .Values.indexGateway.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl . $ | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
