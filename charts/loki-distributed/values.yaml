@@ -591,6 +591,15 @@ distributor:
   extraContainers: []
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.distributorSelectorLabels" . | nindent 6 }}
   # -- Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -813,6 +822,15 @@ queryFrontend:
   extraContainers: []
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.queryFrontendSelectorLabels" . | nindent 6 }}
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -884,6 +902,15 @@ queryScheduler:
   extraContainers: []
   # -- Grace period to allow the query-scheduler to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.querySchedulerSelectorLabels" . | nindent 6 }}
   # -- Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -952,6 +979,15 @@ tableManager:
   extraContainers: []
   # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.tableManagerSelectorLabels" . | nindent 6 }}
   # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1098,6 +1134,15 @@ gateway:
   extraContainers: []
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.gatewaySelectorLabels" . | nindent 6 }}
   # -- Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1356,6 +1401,15 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.compactorSelectorLabels" . | nindent 6 }}
   # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1495,6 +1549,15 @@ ruler:
   initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.rulerSelectorLabels" . | nindent 6 }}
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1648,6 +1711,15 @@ indexGateway:
   initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1727,6 +1799,15 @@ memcached:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.memcachedLabels" . | nindent 6 }}
   # -- Common annotations for all memcached services
   serviceAnnotations: {}
   # -- Adds the appProtocol field to the memcached services. This allows memcached to work with istio protocol selection. Ex: "http" or "tcp"
@@ -1787,6 +1868,15 @@ memcachedChunks:
   extraContainers: []
   # -- Grace period to allow memcached-chunks to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.memcachedChunksSelectorLabels" . | nindent 6 }}
   # -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1856,6 +1946,15 @@ memcachedFrontend:
   extraContainers: []
   # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 6 }}
   # -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1921,6 +2020,15 @@ memcachedIndexQueries:
   extraContainers: []
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 6 }}
   # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1986,6 +2094,15 @@ memcachedIndexWrites:
   extraContainers: []
   # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more then 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 6 }}
   # -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
