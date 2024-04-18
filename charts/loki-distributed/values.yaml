@@ -1401,7 +1401,7 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for compactor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
@@ -1549,7 +1549,7 @@ ruler:
   initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for ruler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
@@ -1711,7 +1711,7 @@ indexGateway:
   initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
@@ -1799,15 +1799,6 @@ memcached:
       drop:
         - ALL
     allowPrivilegeEscalation: false
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
-  topologySpreadConstraints: |
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          {{- include "loki.memcachedLabels" . | nindent 6 }}
   # -- Common annotations for all memcached services
   serviceAnnotations: {}
   # -- Adds the appProtocol field to the memcached services. This allows memcached to work with istio protocol selection. Ex: "http" or "tcp"
@@ -1868,7 +1859,7 @@ memcachedChunks:
   extraContainers: []
   # -- Grace period to allow memcached-chunks to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
@@ -1946,7 +1937,7 @@ memcachedFrontend:
   extraContainers: []
   # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
@@ -2020,7 +2011,7 @@ memcachedIndexQueries:
   extraContainers: []
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
@@ -2094,7 +2085,7 @@ memcachedIndexWrites:
   extraContainers: []
   # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-  # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
+  # -- topologySpread for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
