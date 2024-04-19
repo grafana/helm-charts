@@ -212,6 +212,7 @@ loki:
 
     compactor:
       shared_store: filesystem
+      working_directory: /var/loki/compactor
 
     ruler:
       storage:

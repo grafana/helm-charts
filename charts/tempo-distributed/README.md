@@ -387,9 +387,12 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.resources.requests.cpu | string | `"10m"` |  |
 | enterpriseGateway.resources.requests.memory | string | `"32Mi"` |  |
 | enterpriseGateway.securityContext | object | `{}` |  |
-| enterpriseGateway.service.annotations | object | `{}` |  |
-| enterpriseGateway.service.labels | object | `{}` |  |
-| enterpriseGateway.service.port | string | `nil` | If the port is left undefined, the service will listen on the same port as the pod |
+| enterpriseGateway.service.annotations | object | `{}` | Annotations for the enterprise gateway service |
+| enterpriseGateway.service.clusterIP | string | `nil` | ClusterIP of the enterprise gateway service |
+| enterpriseGateway.service.labels | object | `{}` | Labels for enterprise gateway service |
+| enterpriseGateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer for enterprise gateway service |
+| enterpriseGateway.service.port | string | `nil` | Port of the enterprise gateway service; if left undefined, the service will listen on the same port as the pod |
+| enterpriseGateway.service.type | string | `"ClusterIP"` | Type of the enterprise gateway service |
 | enterpriseGateway.strategy.rollingUpdate.maxSurge | int | `0` |  |
 | enterpriseGateway.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | enterpriseGateway.strategy.type | string | `"RollingUpdate"` |  |
