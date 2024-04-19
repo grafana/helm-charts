@@ -822,7 +822,6 @@ queryFrontend:
   extraContainers: []
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
@@ -832,7 +831,6 @@ queryFrontend:
       labelSelector:
         matchLabels:
           {{- include "loki.queryFrontendSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -904,7 +902,6 @@ queryScheduler:
   extraContainers: []
   # -- Grace period to allow the query-scheduler to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -914,7 +911,6 @@ queryScheduler:
       labelSelector:
         matchLabels:
           {{- include "loki.querySchedulerSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -983,7 +979,6 @@ tableManager:
   extraContainers: []
   # -- Grace period to allow the table-manager to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for table-manager pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -993,7 +988,6 @@ tableManager:
       labelSelector:
         matchLabels:
           {{- include "loki.tableManagerSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for table-manager pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1407,7 +1401,6 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
-
   # -- topologySpread for compactor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -1417,7 +1410,6 @@ compactor:
       labelSelector:
         matchLabels:
           {{- include "loki.compactorSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1557,7 +1549,6 @@ ruler:
   initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
-
   # -- topologySpread for ruler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -1567,7 +1558,6 @@ ruler:
       labelSelector:
         matchLabels:
           {{- include "loki.rulerSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1721,7 +1711,6 @@ indexGateway:
   initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
-
   # -- topologySpread for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -1731,7 +1720,6 @@ indexGateway:
       labelSelector:
         matchLabels:
           {{- include "loki.indexGatewaySelectorLabels" . | nindent 6 }}
-
   # -- Affinity for index-gateway pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1871,7 +1859,6 @@ memcachedChunks:
   extraContainers: []
   # -- Grace period to allow memcached-chunks to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -1881,7 +1868,6 @@ memcachedChunks:
       labelSelector:
         matchLabels:
           {{- include "loki.memcachedChunksSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -1951,7 +1937,6 @@ memcachedFrontend:
   extraContainers: []
   # -- Grace period to allow memcached-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -1961,7 +1946,6 @@ memcachedFrontend:
       labelSelector:
         matchLabels:
           {{- include "loki.memcachedFrontendSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -2027,7 +2011,6 @@ memcachedIndexQueries:
   extraContainers: []
   # -- Grace period to allow memcached-index-queries to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -2037,7 +2020,6 @@ memcachedIndexQueries:
       labelSelector:
         matchLabels:
           {{- include "loki.memcachedIndexQueriesSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
@@ -2103,7 +2085,6 @@ memcachedIndexWrites:
   extraContainers: []
   # -- Grace period to allow memcached-index-writes to shutdown before it is killed
   terminationGracePeriodSeconds: 30
-
   # -- topologySpread for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
@@ -2113,7 +2094,6 @@ memcachedIndexWrites:
       labelSelector:
         matchLabels:
           {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 6 }}
-
   # -- Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Hard node and soft zone anti-affinity
   affinity: |
