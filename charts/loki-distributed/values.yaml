@@ -459,7 +459,7 @@ ingester:
   # -- Lifecycle for the ingester container
   lifecycle: {}
   # -- topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
@@ -823,7 +823,7 @@ queryFrontend:
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
@@ -1135,7 +1135,7 @@ gateway:
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 pod per Node
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
