@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.9.2](https://img.shields.io/badge/Version-1.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 1.9.3](https://img.shields.io/badge/Version-1.9.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -780,6 +780,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.extraArgs | object | `{}` |  |
 | tokengenJob.extraEnvFrom | list | `[]` |  |
 | tokengenJob.hostAliases | list | `[]` | hostAliases to add |
+| tokengenJob.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| tokengenJob.image.registry | string | `nil` | The Docker registry for the tokengenJob image. Overrides `tempo.image.registry` |
+| tokengenJob.image.repository | string | `nil` | Docker image repository for the tokengenJob image. Overrides `tempo.image.repository` |
+| tokengenJob.image.tag | string | `nil` | Docker image tag for the tokengenJob image. Overrides `tempo.image.tag` |
 | tokengenJob.initContainers | list | `[]` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |

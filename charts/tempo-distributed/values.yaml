@@ -1900,6 +1900,15 @@ tokengenJob:
   env: []
   extraEnvFrom: []
   annotations: {}
+  image:
+    # -- The Docker registry for the tokengenJob image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the tokengenJob image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the tokengenJob image. Overrides `tempo.image.tag`
+    tag: null
   initContainers: []
   # -- The SecurityContext for tokenjobgen containers
   containerSecurityContext:
