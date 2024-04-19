@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.9.2](https://img.shields.io/badge/Version-1.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 1.9.3](https://img.shields.io/badge/Version-1.9.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -494,6 +494,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `tempo.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
+| ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
@@ -591,6 +592,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.image.registry | string | `nil` | The Docker registry for the metrics-generator image. Overrides `tempo.image.registry` |
 | metricsGenerator.image.repository | string | `nil` | Docker image repository for the metrics-generator image. Overrides `tempo.image.repository` |
 | metricsGenerator.image.tag | string | `nil` | Docker image tag for the metrics-generator image. Overrides `tempo.image.tag` |
+| metricsGenerator.initContainers | list | `[]` |  |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
 | metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
