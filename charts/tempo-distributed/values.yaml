@@ -2038,10 +2038,18 @@ enterpriseGateway:
 
   annotations: {}
   service:
-    annotations: {}
-    labels: {}
-    # -- If the port is left undefined, the service will listen on the same port as the pod
+    # -- Port of the enterprise gateway service; if left undefined, the service will listen on the same port as the pod
     port: null
+    # -- Type of the enterprise gateway service
+    type: ClusterIP
+    # -- ClusterIP of the enterprise gateway service
+    clusterIP: null
+    # -- Load balancer IPO address if service type is LoadBalancer for enterprise gateway service
+    loadBalancerIP: null
+    # -- Annotations for the enterprise gateway service
+    annotations: {}
+    # -- Labels for enterprise gateway service
+    labels: {}
 
   strategy:
     type: RollingUpdate
