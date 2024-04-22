@@ -40012,6 +40012,37 @@ entries:
     urls:
     - https://grafana.github.io/helm-charts/packages/loki-stack-0.6.0.tgz
     version: 0.6.0
+  meta-monitoring:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-04-22T12:44:17.718314556Z"
+    dependencies:
+    - condition: local.logs.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: 6.2.0
+    - name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.1.1
+    - condition: local.metrics.enabled
+      name: mimir-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: 5.3.0
+    - condition: local.traces.enabled
+      name: tempo-distributed
+      repository: https://grafana.github.io/helm-charts
+      version: 1.9.2
+    - condition: local.minio.enabled
+      name: minio
+      repository: https://charts.min.io
+      version: 5.1.0
+    description: A Helm chart for meta monitoring Grafana Loki, Mimir and Tempo
+    digest: 3bb911ab4419bdf2775ce95d1e1b74cde9cf21f7878ac7091f442db385366991
+    name: meta-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/meta-monitoring-0.0.1/meta-monitoring-0.0.1.tgz
+    version: 0.0.1
   mimir-distributed:
   - apiVersion: v2
     appVersion: r285
@@ -61380,4 +61411,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-20T15:33:18.922474213Z"
+generated: "2024-04-22T12:44:17.721718805Z"
