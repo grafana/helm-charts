@@ -1902,6 +1902,15 @@ tokengenJob:
   env: []
   extraEnvFrom: []
   annotations: {}
+  image:
+    # -- The Docker registry for the tokengenJob image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the tokengenJob image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the tokengenJob image. Overrides `tempo.image.tag`
+    tag: null
   initContainers: []
   # -- The SecurityContext for tokenjobgen containers
   containerSecurityContext:
@@ -1921,6 +1930,16 @@ adminApi:
   service:
     annotations: {}
     labels: {}
+
+  image:
+    # -- The Docker registry for the adminApi image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the adminApi image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the adminApi image. Overrides `tempo.image.tag`
+    tag: null
 
   initContainers: []
 
@@ -2008,6 +2027,16 @@ enterpriseGateway:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+
+  image:
+    # -- The Docker registry for the enterpriseGateway image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the enterpriseGateway image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag`
+    tag: null
 
   annotations: {}
   service:
