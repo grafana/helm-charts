@@ -70,3 +70,4 @@ It is not a highly available application and runs as a single pod.
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tolerations | list | `[]` |  |
 | webhooks.enabled | bool | `false` | Needed for using server Webhooks https://github.com/grafana/rollout-operator#webhooks |
+| webhooks.failurePolicy | string | `""` |  |

@@ -86,3 +86,4 @@ webhooks:
   # -- Needed for using server Webhooks
   # https://github.com/grafana/rollout-operator#webhooks
   enabled: false
+  failurePolicy: ""

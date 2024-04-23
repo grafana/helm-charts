@@ -19,9 +19,11 @@ webhooks:
   {{- $failpol := (lookup "v1" "MutatingWebhookConfiguration" "{{.Release.Namespace}}" "prepare-downscale-{{.Release.Namespace}}") -}}
   {{- if empty $failpol }}
   failurePolicy: Ignore
+  {{- else if .Values.webhooks.failurePolicy }} 
+  failurePolicy: {{.Values.webhooks.failurePolicy}}
   {{- else }}
   failurePolicy: Fail
-  {{- end }}
+  {{- end }}  
   matchPolicy: Equivalent
   name: prepare-downscale-{{.Release.Namespace}}.grafana.com
   rules:
