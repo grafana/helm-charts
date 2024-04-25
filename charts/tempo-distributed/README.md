@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.9.3](https://img.shields.io/badge/Version-1.9.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 1.9.4](https://img.shields.io/badge/Version-1.9.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -223,6 +223,10 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.extraVolumeMounts | list | `[]` |  |
 | adminApi.extraVolumes | list | `[]` |  |
 | adminApi.hostAliases | list | `[]` | hostAliases to add |
+| adminApi.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| adminApi.image.registry | string | `nil` | The Docker registry for the adminApi image. Overrides `tempo.image.registry` |
+| adminApi.image.repository | string | `nil` | Docker image repository for the adminApi image. Overrides `tempo.image.repository` |
+| adminApi.image.tag | string | `nil` | Docker image tag for the adminApi image. Overrides `tempo.image.tag` |
 | adminApi.initContainers | list | `[]` |  |
 | adminApi.nodeSelector | object | `{}` |  |
 | adminApi.persistence.subPath | string | `nil` |  |
@@ -369,6 +373,10 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.extraVolumeMounts | list | `[]` |  |
 | enterpriseGateway.extraVolumes | list | `[]` |  |
 | enterpriseGateway.hostAliases | list | `[]` | hostAliases to add |
+| enterpriseGateway.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| enterpriseGateway.image.registry | string | `nil` | The Docker registry for the enterpriseGateway image. Overrides `tempo.image.registry` |
+| enterpriseGateway.image.repository | string | `nil` | Docker image repository for the enterpriseGateway image. Overrides `tempo.image.repository` |
+| enterpriseGateway.image.tag | string | `nil` | Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag` |
 | enterpriseGateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | enterpriseGateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.gem.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
@@ -777,6 +785,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.extraArgs | object | `{}` |  |
 | tokengenJob.extraEnvFrom | list | `[]` |  |
 | tokengenJob.hostAliases | list | `[]` | hostAliases to add |
+| tokengenJob.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| tokengenJob.image.registry | string | `nil` | The Docker registry for the tokengenJob image. Overrides `tempo.image.registry` |
+| tokengenJob.image.repository | string | `nil` | Docker image repository for the tokengenJob image. Overrides `tempo.image.repository` |
+| tokengenJob.image.tag | string | `nil` | Docker image tag for the tokengenJob image. Overrides `tempo.image.tag` |
 | tokengenJob.initContainers | list | `[]` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
