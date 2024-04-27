@@ -1,0 +1,151 @@
+# Default values for grafana-beyla.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  # -- Repository to pull from
+  repository: grafana/beyla
+  # -- pullPolicy to use for pulling the image
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+## -- Optionally specify an array of imagePullSecrets.
+## Secrets must be manually created in the namespace.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+
+# -- Overrides the chart's name
+nameOverride: ""
+
+# -- Overrides the chart's computed fullname
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # -- If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Pod Annotations
+podAnnotations: {}
+# -- Pod (extra) Labels
+podLabels: {}
+
+# -- See https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/
+terminationMessagePolicy: ~
+  # FallbackToLogsOnError
+
+# -- Mandatory for eBPF probes
+hostPID: true
+
+# -- podSecurityContext 
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  # -- Defaults to privileged = true
+  privileged: true
+  readOnlyRootFilesystem: true
+
+  # -- Custom to eBPF CAPABILITIES
+  # runAsUser: 0
+  # readOnlyRootFilesystem: true
+  # capabilities:
+  #   add:
+  #     - SYS_ADMIN     # <-- Important. Required for most eBPF probes to function correctly.
+  #     - SYS_PTRACE    # <-- Important. Allows Beyla to access the container namespaces and inspect executables.
+  #     #- SYS_RESOURCE # <-- pre 5.11 kenrel only. Allows Beyla to increase the amount of locked memory.
+
+# service:
+#   type: ClusterIP
+#   port: 80
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- OpenTelemetry collector configuration
+otlp:
+  # -- Endpoint OTLP Collector
+  # -- For correct operation, this endpoint must be installed and point to the opentelemtry collector service or ingress
+  endpoint: http://localhost
+  # -- Protocol OTLP Collector (http or grpc)
+  protocol: ~
+  # Insecure (true or false)
+  insecure: false
+  # -- Headers for OTLP Collector
+  # Example: Authorization=Basic ...rest of the secret header value...
+  headers: {}
+
+# -- Beyla configuration file contents
+# @default -- Dynamically generated beyla configmap
+config: |
+  # @default -- Dynamically generated beyla configmap
+  # this is required to enable kubernetes discovery and metadata
+  attributes:
+    kubernetes:
+      enable: true
+  # this will provide automatic routes report while minimizing cardinality
+  routes:
+    unmatched: heuristic
+  # let's instrument only the docs server
+  discovery:
+    services:
+      - k8s_deployment_name: "^docs$"
+      # uncomment the following line to also instrument the website server
+      # - k8s_deployment_name: "^website$"
+
+# -- Extra environment variables to add
+extraEnvs: []
+  # - name: BEYLA_PRINT_TRACES
+  #   value: "true"
+  # - name: BEYLA_KUBE_METADATA_ENABLE
+  #   value: "autodetect"
+
+# -- Additional volumes on the output Deployment definition.
+volumes: []
+  # - name: cgroup
+  #   hostPath:
+  #     path: /sys/fs/cgroup
+
+# -- Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+  # - name: cgroup
+  #   mountPath: /sys/fs/cgroup
+
+# -- Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+# -- Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+  # - effect: NoSchedule
+  #   operator: Exists
+  # - effect: NoExecute
+  #   operator: Exists
+
+# -- Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
+# -- General annotation for the daemonset
+annotations: {}
+
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+
