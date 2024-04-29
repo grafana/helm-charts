@@ -58,4 +58,7 @@ spec:
       {{- end }}
   selector:
     {{- include "grafana.selectorLabels" . | nindent 4 }}
+    {{- with .Values.podLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
