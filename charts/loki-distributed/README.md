@@ -324,6 +324,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingress.hosts[0] | string | `"loki.example.com"` |  |
 | ingress.paths.distributor[0] | string | `"/api/prom/push"` |  |
 | ingress.paths.distributor[1] | string | `"/loki/api/v1/push"` |  |
+| ingress.paths.distributor[2] | string | `"/otlp/v1/logs"` |  |
 | ingress.paths.querier[0] | string | `"/api/prom/tail"` |  |
 | ingress.paths.querier[1] | string | `"/loki/api/v1/tail"` |  |
 | ingress.paths.query-frontend[0] | string | `"/loki/api"` |  |
