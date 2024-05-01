@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.78.4](https://img.shields.io/badge/Version-0.78.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.5](https://img.shields.io/badge/AppVersion-2.9.5-informational?style=flat-square)
+![Version: 0.79.0](https://img.shields.io/badge/Version-0.79.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.78.x to 0.79.0
+Removed the hardcoded, deprecated `boltdb.shipper.compactor.working-directory` flag in the Compactor Deployment template, so that it can be set with `.Values.compactor.extraArgs` and the `compactor.working-directory` flag if necessary.
 
 ### From 0.74.x to 0.75.0
 The Index Gateway and Query Scheduler now expose the memberlist port 7946. In order to join the
