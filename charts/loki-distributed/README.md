@@ -1,6 +1,7 @@
 # loki-distributed
 
-![Version: 0.79.0](https://img.shields.io/badge/Version-0.79.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
+
+![Version: 0.79.1](https://img.shields.io/badge/Version-0.79.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square) 
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -9,6 +10,8 @@ Helm chart for Grafana Loki in microservices mode
 * <https://github.com/grafana/loki>
 * <https://grafana.com/oss/loki/>
 * <https://grafana.com/docs/loki/latest/>
+
+
 
 ## Chart Repo
 
@@ -47,7 +50,7 @@ loki:
     chunk_store_config:
       chunk_cache_config:
         embedded_cache:
-          enabled: false
+          enabled: false 
 ```
 
 `compactor_address` has to be explicitly set in the `common` section of the config.
@@ -110,7 +113,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.livenessProbe | object | `{}` | liveness probe settings for ingester pods. If empty use `loki.livenessProbe` |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.persistence.annotations | object | `{}` | Annotations for compactor PVCs |
-| compactor.persistence.claims | list | `[{"name":"data","size":"10Gi","storageClass":null}]` | List of the compactor PVCs @notationType -- list |
+| compactor.persistence.claims | list |  | List of the compactor PVCs |
 | compactor.persistence.enableStatefulSetAutoDeletePVC | bool | `false` | Enable StatefulSetAutoDeletePVC feature |
 | compactor.persistence.enabled | bool | `false` | Enable creating PVCs for the compactor |
 | compactor.persistence.size | string | `"10Gi"` | Size of persistent disk |
@@ -303,7 +306,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.maxSurge | int | `0` | Max Surge for ingester pods |
 | ingester.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
-| ingester.persistence.claims | list | `[{"name":"data","size":"10Gi","storageClass":null}]` | List of the ingester PVCs @notationType -- list |
+| ingester.persistence.claims | list |  | List of the ingester PVCs |
 | ingester.persistence.enableStatefulSetAutoDeletePVC | bool | `false` | Enable StatefulSetAutoDeletePVC feature |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | Use emptyDir with ramdisk for storage. **Please note that all data in ingester will be lost on pod restart** |
