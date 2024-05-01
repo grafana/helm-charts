@@ -79,15 +79,15 @@ jobs:
 
             if [ $(git tag -l "${name}-${version}") ]; then
               echo "Tag ${tagname} already exists, skipping release"
-              echo "::set-output name=changed::false"
+              echo "changed=false" >> $GITHUB_OUTPUT
             else
               echo "Releasing ${changed}"
-              echo "::set-output name=changed::true"
-              echo "::set-output name=chartpath::${changed}"
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "chartpath=${changed}" >> $GITHUB_OUTPUT
             fi
           else
             echo "No charts have changed, skipping release"
-            echo "::set-output name=changed::false"
+            echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
   release:
@@ -166,14 +166,14 @@ jobs:
           description=$(yq ".description" < ${changed}/Chart.yaml)
           name=$(yq ".name" < ${changed}/Chart.yaml)
           version=$(yq ".version" < ${changed}/Chart.yaml)
-          echo "::set-output name=chartpath::${changed}"
-          echo "::set-output name=desc::${description}"
+          echo "chartpath=${changed}" >> $GITHUB_OUTPUT
+          echo "desc=${description}" >> $GITHUB_OUTPUT
           if [[ -n "${HELM_TAG_PREFIX}" ]]; then
-            echo "::set-output name=tagname::${HELM_TAG_PREFIX}-${name}-${version}"
+            echo "tagname=${HELM_TAG_PREFIX}-${name}-${version}" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=tagname::${name}-${version}"
+            echo "tagname=${name}-${version}" >> $GITHUB_OUTPUT
           fi
-          echo "::set-output name=packagename::${name}-${version}"
+          echo "packagename=${name}-${version}" >> $GITHUB_OUTPUT
 
       - name: Install CR tool
         run: |
