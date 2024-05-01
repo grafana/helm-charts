@@ -55,6 +55,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        {{- toYaml .Values.ingester.initContainers | nindent 8 }}
       containers:
         - args:
             - -target=ingester

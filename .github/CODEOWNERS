@@ -17,3 +17,4 @@
 /charts/enterprise-logs/ @grafana/loki-squad
 /charts/tempo-vulture/ @grafana/tempo @Whyeasy @dgzlopes
 /charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
+/charts/agent-operator/ @grafana/grafana-agent-maintainers
