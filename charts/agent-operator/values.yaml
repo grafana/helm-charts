@@ -37,11 +37,20 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.40.3
+  tag: v0.40.4
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets
   pullSecrets: []
+
+test:
+  image:
+    # -- Test image registry
+    registry: docker.io
+    # -- Test image repo
+    repository: library/busybox
+    # -- Test image tag
+    tag: latest
 
 # -- hostAliases to add
 hostAliases: []

@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.3.19](https://img.shields.io/badge/Version-0.3.19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.40.3](https://img.shields.io/badge/AppVersion-0.40.3-informational?style=flat-square)
+![Version: 0.3.21](https://img.shields.io/badge/Version-0.3.21-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.40.4](https://img.shields.io/badge/AppVersion-0.40.4-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -8,7 +8,7 @@ A Helm chart for Grafana Agent Operator
 
 ## Source Code
 
-* <https://github.com/grafana/agent/tree/v0.40.3/pkg/operator>
+* <https://github.com/grafana/agent/tree/v0.40.4/pkg/operator>
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
@@ -63,7 +63,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | image.pullSecrets | list | `[]` | Image pull secrets |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"grafana/agent-operator"` | Image repo |
-| image.tag | string | `"v0.40.3"` | Image tag |
+| image.tag | string | `"v0.40.4"` | Image tag |
 | kubeletService | object | `{"namespace":"default","serviceName":"kubelet"}` | If both are set, Agent Operator will create and maintain a service for scraping kubelets https://grafana.com/docs/agent/latest/operator/getting-started/#monitor-kubelets |
 | nameOverride | string | `""` | Overrides the chart's name |
 | nodeSelector | object | `{}` | nodeSelector configuration |
@@ -75,4 +75,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | resources | object | `{}` | Resource limits and requests config |
 | serviceAccount.create | bool | `true` | Toggle to create ServiceAccount |
 | serviceAccount.name | string | `nil` | Service account name |
+| test.image.registry | string | `"docker.io"` | Test image registry |
+| test.image.repository | string | `"library/busybox"` | Test image repo |
+| test.image.tag | string | `"latest"` | Test image tag |
 | tolerations | list | `[]` | Tolerations applied to Pods |
