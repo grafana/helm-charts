@@ -33,12 +33,7 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.tokengenJob.securityContext | nindent 8 }}
-      {{- if .Values.tempo.image.pullSecrets }}
-      imagePullSecrets:
-      {{- range .Values.tempo.image.pullSecrets }}
-        - name: {{ . }}
-      {{- end }}
-      {{- end }}
+      {{- include "tempo.tokengenJobImagePullSecrets" . | nindent 6 -}}
       {{- with .Values.tokengenJob.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}
