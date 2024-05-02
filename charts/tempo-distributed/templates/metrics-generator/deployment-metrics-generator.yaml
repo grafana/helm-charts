@@ -1,4 +1,4 @@
-{{- if .Values.metricsGenerator.enabled }}
+{{- if and (.Values.metricsGenerator.enabled) (eq .Values.metricsGenerator.kind "Deployment") }}
 {{ $dict := dict "ctx" . "component" "metrics-generator" "memberlist" true }}
 apiVersion: apps/v1
 kind: Deployment

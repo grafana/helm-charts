@@ -46,6 +46,13 @@ You have to add --force to your helm upgrade command as the labels of the chart 
 
 This version requires Helm >= 3.1.0.
 
+### To 7.0.0
+
+For consistency with other Helm charts, the `global.image.registry` parameter was renamed
+to `global.imageRegistry`. If you were not previously setting `global.image.registry`, no action
+is required on upgrade. If you were previously setting `global.image.registry`, you will
+need to instead set `global.imageRegistry`.
+
 ## Configuration
 
 | Parameter                                 | Description                                   | Default                                                 |
@@ -88,7 +95,7 @@ This version requires Helm >= 3.1.0.
 | `ingress.path`                            | Ingress accepted path                         | `/`                                                     |
 | `ingress.pathType`                        | Ingress type of path                          | `Prefix`                                                |
 | `ingress.hosts`                           | Ingress accepted hostnames                    | `["chart-example.local"]`                                                    |
-| `ingress.extraPaths`                      | Ingress extra paths to prepend to every host configuration. Useful when configuring [custom actions with AWS ALB Ingress Controller](https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/#actions). Requires `ingress.hosts` to have one or more host entries. | `[]`                                                    |
+| `ingress.extraPaths`                      | Ingress extra paths to prepend to every host configuration. Useful when configuring [custom actions with AWS ALB Ingress Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/#actions). Requires `ingress.hosts` to have one or more host entries. | `[]`                                                    |
 | `ingress.tls`                             | Ingress TLS configuration                     | `[]`                                                    |
 | `ingress.ingressClassName`                | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 | `""`                              |
 | `resources`                               | CPU/Memory resource requests/limits           | `{}`                                                    |
@@ -129,6 +136,8 @@ This version requires Helm >= 3.1.0.
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
+| `extraVolumes`                            | Additional Grafana server volumes             | `[]`                                                    |
+| `automountServiceAccountToken`            | Mounted the service account token on the grafana pod. Mandatory, if sidecars are enabled  | `true`      |
 | `createConfigmap`                         | Enable creating the grafana configmap         | `true`                                                  |
 | `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts (values are templated) | `[]`                         |
 | `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
@@ -140,7 +149,7 @@ This version requires Helm >= 3.1.0.
 | `dashboards`                              | Dashboards to import                          | `{}`                                                    |
 | `dashboardsConfigMaps`                    | ConfigMaps reference that contains dashboards | `{}`                                                    |
 | `grafana.ini`                             | Grafana's primary configuration               | `{}`                                                    |
-| `global.image.registry`                   | Global image pull registry for all images.    | `null`                                   |
+| `global.imageRegistry`                    | Global image pull registry for all images.    | `null`                                   |
 | `global.imagePullSecrets`                 | Global image pull secrets (can be templated). Allows either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).  | `[]`                                                    |
 | `ldap.enabled`                            | Enable LDAP authentication                    | `false`                                                 |
 | `ldap.existingSecret`                     | The name of an existing secret containing the `ldap.toml` file, this must have the key `ldap-toml`. | `""` |
@@ -153,7 +162,7 @@ This version requires Helm >= 3.1.0.
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.registry`                  | Sidecar image registry                        | `quay.io`                          |
 | `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.24.6`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.26.0`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -167,7 +176,7 @@ This version requires Helm >= 3.1.0.
 | `sidecar.alerts.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.alerts.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/alerting/reload"` |
 | `sidecar.alerts.skipReload`          | Enabling this omits defining the REQ_URL and REQ_METHOD environment variables | `false` |
-| `sidecar.alerts.initDatasources`     | Set to true to deploy the datasource sidecar as an initContainer in addition to a container. This is needed if skipReload is true, to load any alerts defined at startup time. | `false` |
+| `sidecar.alerts.initAlerts`          | Set to true to deploy the alerts sidecar as an initContainer. This is needed if skipReload is true, to load any alerts defined at startup time. | `false` |
 | `sidecar.alerts.extraMounts`         | Additional alerts sidecar volume mounts. | `[]`                               |
 | `sidecar.dashboards.enabled`              | Enables the cluster wide search for dashboards and adds/updates/deletes them in grafana | `false`       |
 | `sidecar.dashboards.SCProvider`           | Enables creation of sidecar provider          | `true`                                                  |
@@ -215,7 +224,7 @@ This version requires Helm >= 3.1.0.
 | `admin.existingSecret`                    | The name of an existing secret containing the admin credentials (can be templated). | `""`                                 |
 | `admin.userKey`                           | The key in the existing admin secret containing the username. | `"admin-user"`                          |
 | `admin.passwordKey`                       | The key in the existing admin secret containing the password. | `"admin-password"`                      |
-| `serviceAccount.autoMount`                | Automount the service account token in the pod| `true`                                                  |
+| `serviceAccount.automountServiceAccountToken` | Automount the service account token on all pods where is service account is used | `false` |
 | `serviceAccount.annotations`              | ServiceAccount annotations                    |                                                         |
 | `serviceAccount.create`                   | Create service account                        | `true`                                                  |
 | `serviceAccount.labels`                   | ServiceAccount labels                         | `{}`                                                    |
@@ -266,6 +275,7 @@ This version requires Helm >= 3.1.0.
 | `imageRenderer.envValueFrom`               | Environment variables for image-renderer from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
 | `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
+| `imageRenderer.podAnnotations `            | image-renderer image-renderer pod annotation                                       | `{}`                             |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
@@ -307,23 +317,34 @@ ingress:
   path: "/grafana"
 ```
 
-### Example of extraVolumeMounts
+### Example of extraVolumeMounts and extraVolumes
 
-Volume can be type persistentVolumeClaim or hostPath but not both at same time.
-If neither existingClaim or hostPath argument is given then type is emptyDir.
+Configure additional volumes with `extraVolumes` and volume mounts with `extraVolumeMounts`.
+
+Example for `extraVolumeMounts` and corresponding `extraVolumes`:
 
 ```yaml
-- extraVolumeMounts:
+extraVolumeMounts:
   - name: plugins
     mountPath: /var/lib/grafana/plugins
     subPath: configs/grafana/plugins
-    existingClaim: existing-grafana-claim
     readOnly: false
   - name: dashboards
     mountPath: /var/lib/grafana/dashboards
     hostPath: /usr/shared/grafana/dashboards
     readOnly: false
+
+extraVolumes:
+  - name: plugins
+    existingClaim: existing-grafana-claim
+  - name: dashboards
+    hostPath: /usr/shared/grafana/dashboards
 ```
+
+Volumes default to `emptyDir`. Set to `persistentVolumeClaim`,
+`hostPath`, `csi`, or `configMap` for other types. For a
+`persistentVolumeClaim`, specify an existing claim name with
+`existingClaim`.
 
 ## Import dashboards
 
@@ -536,9 +557,61 @@ delete_notifiers:
     # default org_id: 1
 ```
 
-## Provision alert rules, contact points, notification policies and notification templates
+## Sidecar for alerting resources
 
-There are two methods to provision alerting configuration in Grafana. Below are some examples and explanations as to how to use each method:
+If the parameter `sidecar.alerts.enabled` is set, a sidecar container is deployed in the grafana
+pod. This container watches all configmaps (or secrets) in the cluster (namespace defined by `sidecar.alerts.searchNamespace`) and filters out the ones with
+a label as defined in `sidecar.alerts.label` (default is `grafana_alert`). The files defined in those configmaps are written
+to a folder and accessed by grafana. Changes to the configmaps are monitored and the imported alerting resources are updated, however, deletions are a little more complicated (see below).
+
+This sidecar can be used to provision alert rules, contact points, notification policies, notification templates and mute timings as shown in [Grafana Documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/).
+
+To fetch the alert config which will be provisioned, use the alert provisioning API ([Grafana Documentation](https://grafana.com/docs/grafana/next/developers/http_api/alerting_provisioning/)).
+You can use either JSON or YAML format.
+
+Example config for an alert rule:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-grafana-alert
+  labels:
+     grafana_alert: "1"
+data:
+  k8s-alert.yml: |-
+    apiVersion: 1
+    groups:
+        - orgId: 1
+          name: k8s-alert
+          [...]
+```
+
+To delete provisioned alert rules is a two step process, you need to delete the configmap which defined the alert rule
+and then create a configuration which deletes the alert rule.
+
+Example deletion configuration:
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: delete-sample-grafana-alert
+  namespace: monitoring
+  labels:
+    grafana_alert: "1"
+data:
+  delete-k8s-alert.yml: |-
+    apiVersion: 1
+    deleteRules:
+      - orgId: 1
+        uid: 16624780-6564-45dc-825c-8bded4ad92d3
+```
+
+## Statically provision alerting resources
+If you don't need to change alerting resources (alert rules, contact points, notification policies and notification templates) regularly you could use the `alerting` config option instead of the sidecar option above.
+This will grab the alerting config and apply it statically at build time for the helm file.
+
+There are two methods to statically provision alerting configuration in Grafana. Below are some examples and explanations as to how to use each method:
 
 ```yaml
 alerting:
@@ -568,13 +641,14 @@ alerting:
               title: '{{ `{{ template "default.title" . }}` }}'
 ```
 
-There are two possibilities:
+The two possibilities for static alerting resource provisioning are:
 
-* Inlining the file contents as described in the example `values.yaml` and the official [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/).
-* Importing a file using a relative path starting from the chart root directory.
+* Inlining the file contents as shown for contact points in the above example.
+* Importing a file using a relative path starting from the chart root directory as shown for the alert rules in the above example.
 
 ### Important notes on file provisioning
 
+* The format of the files is defined in the [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/) on file provisioning.
 * The chart supports importing YAML and JSON files.
 * The filename must be unique, otherwise one volume mount will overwrite the other.
 * In case of inlining, double curly braces that arise from the Grafana configuration format and are not intended as templates for the chart must be escaped.
