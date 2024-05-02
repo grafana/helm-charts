@@ -1,6 +1,6 @@
 apiVersion: v2
 name: grafana
-version: 7.3.9
+version: 7.4.0
 appVersion: 10.4.1
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
