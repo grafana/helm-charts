@@ -1,0 +1,18 @@
+apiVersion: v2
+name: grafana-sampling
+description: A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
+type: application
+version: 0.1.1
+appVersion: "v0.40.2"
+sources:
+  - https://github.com/grafana/agent
+  - https://grafana.com/docs/grafana-cloud/monitor-applications/application-observability/setup/sampling/tail/
+dependencies:
+  - name: grafana-agent
+    version: 0.36.0
+    repository: https://grafana.github.io/helm-charts
+    alias: grafana-agent-deployment
+  - name: grafana-agent
+    version: 0.36.0
+    repository: https://grafana.github.io/helm-charts
+    alias: grafana-agent-statefulset

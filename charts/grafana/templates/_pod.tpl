@@ -5,7 +5,7 @@
 schedulerName: "{{ . }}"
 {{- end }}
 serviceAccountName: {{ include "grafana.serviceAccountName" . }}
-automountServiceAccountToken: {{ .Values.serviceAccount.autoMount }}
+automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
 {{- with .Values.securityContext }}
 securityContext:
   {{- toYaml . | nindent 2 }}
@@ -1084,11 +1084,17 @@ containers:
       - secretRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
       {{- range .Values.envFromConfigMaps }}
       - configMapRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
     {{- end }}
     {{- with .Values.livenessProbe }}
