@@ -225,3 +225,20 @@ jobs:
         run: |
           cd helm-charts
           "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ env.AUTHTOKEN }}
+
+      - name: Push charts to GHCR
+        run: |
+          shopt -s nullglob
+          for pkg in .cr-release-packages/*.tgz; do
+            if [ -z "${pkg:-}" ]; then
+              break
+            fi
+            helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+          done
