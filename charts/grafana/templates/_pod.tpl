@@ -5,7 +5,7 @@
 schedulerName: "{{ . }}"
 {{- end }}
 serviceAccountName: {{ include "grafana.serviceAccountName" . }}
-automountServiceAccountToken: {{ .Values.serviceAccount.autoMount }}
+automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
 {{- with .Values.securityContext }}
 securityContext:
   {{- toYaml . | nindent 2 }}
@@ -433,6 +433,11 @@ containers:
       {{- range $key, $value := .Values.sidecar.dashboards.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
@@ -1079,11 +1084,17 @@ containers:
       - secretRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
       {{- range .Values.envFromConfigMaps }}
       - configMapRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
     {{- end }}
     {{- with .Values.livenessProbe }}
@@ -1268,6 +1279,9 @@ volumes:
     {{- else if .configMap }}
     configMap:
       {{- toYaml .configMap | nindent 6 }}
+    {{- else if .emptyDir }}
+    emptyDir:
+      {{- toYaml .emptyDir | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}
