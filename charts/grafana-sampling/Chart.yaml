@@ -2,7 +2,7 @@ apiVersion: v2
 name: grafana-sampling
 description: A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "v0.40.2"
 sources:
   - https://github.com/grafana/agent
