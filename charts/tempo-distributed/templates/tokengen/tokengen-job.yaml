@@ -18,6 +18,8 @@ spec:
   completions: 1
   parallelism: 1
   selector:
+    matchLabels:
+      {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   template:
     metadata:
       labels:
