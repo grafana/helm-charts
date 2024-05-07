@@ -112,6 +112,7 @@ ingester:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  initContainers: []
   autoscaling:
     # -- Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing.
     enabled: false
@@ -239,6 +240,7 @@ metricsGenerator:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  initContainers: []
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
@@ -1263,6 +1265,8 @@ config: |
     grpc_server_max_send_msg_size: {{ .Values.server.grpc_server_max_send_msg_size }}
     http_server_read_timeout: {{ .Values.server.http_server_read_timeout }}
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
+  cache:
+  {{- toYaml .Values.cache | nindent 2}}
   storage:
     trace:
       {{- if .Values.storage.trace.block.version }}
@@ -1294,14 +1298,6 @@ config: |
         path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
-      {{- if .Values.memcached.enabled }}
-      cache: memcached
-      memcached:
-        consistent_hash: true
-        host: {{ include "tempo.fullname" . }}-memcached
-        service: memcached-client
-        timeout: 500ms
-      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1320,6 +1316,21 @@ server:
   http_server_read_timeout: 30s
   # -- Write timeout for HTTP server
   http_server_write_timeout: 30s
+
+# Use this block to configure caches available throughout the application.
+# Multiple caches can be created and assigned roles which determine how they are used by Tempo.
+# https://grafana.com/docs/tempo/latest/configuration/#cache
+cache:
+  caches:
+    - memcached:
+        host: '{{ include "tempo.fullname" . }}-memcached'
+        service: memcached-client
+        consistent_hash: true
+        timeout: 500ms
+      roles:
+        - parquet-footer
+        - bloom
+        - frontend-search
 
 # To configure a different storage backend instead of local storage:
 # storage:
@@ -1825,6 +1836,10 @@ gateway:
             proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
           }
 
+          location = /otlp/v1/traces {
+            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
+          }
+
           location ^~ /api {
             proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
           }
@@ -1866,7 +1881,7 @@ enterprise:
     # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.3.2
+    tag: v2.4.0
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
@@ -1891,6 +1906,15 @@ tokengenJob:
   env: []
   extraEnvFrom: []
   annotations: {}
+  image:
+    # -- The Docker registry for the tokengenJob image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the tokengenJob image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the tokengenJob image. Overrides `tempo.image.tag`
+    tag: null
   initContainers: []
   # -- The SecurityContext for tokenjobgen containers
   containerSecurityContext:
@@ -1910,6 +1934,16 @@ adminApi:
   service:
     annotations: {}
     labels: {}
+
+  image:
+    # -- The Docker registry for the adminApi image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the adminApi image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the adminApi image. Overrides `tempo.image.tag`
+    tag: null
 
   initContainers: []
 
@@ -1998,12 +2032,30 @@ enterpriseGateway:
   #    hostnames:
   #      - domain.tld
 
+  image:
+    # -- The Docker registry for the enterpriseGateway image. Overrides `tempo.image.registry`
+    registry: null
+    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
+    pullSecrets: []
+    # -- Docker image repository for the enterpriseGateway image. Overrides `tempo.image.repository`
+    repository: null
+    # -- Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag`
+    tag: null
+
   annotations: {}
   service:
-    annotations: {}
-    labels: {}
-    # -- If the port is left undefined, the service will listen on the same port as the pod
+    # -- Port of the enterprise gateway service; if left undefined, the service will listen on the same port as the pod
     port: null
+    # -- Type of the enterprise gateway service
+    type: ClusterIP
+    # -- ClusterIP of the enterprise gateway service
+    clusterIP: null
+    # -- Load balancer IPO address if service type is LoadBalancer for enterprise gateway service
+    loadBalancerIP: null
+    # -- Annotations for the enterprise gateway service
+    annotations: {}
+    # -- Labels for enterprise gateway service
+    labels: {}
 
   strategy:
     type: RollingUpdate
