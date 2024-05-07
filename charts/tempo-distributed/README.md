@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.8.5](https://img.shields.io/badge/Version-1.8.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 1.9.9](https://img.shields.io/badge/Version-1.9.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -223,6 +223,10 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.extraVolumeMounts | list | `[]` |  |
 | adminApi.extraVolumes | list | `[]` |  |
 | adminApi.hostAliases | list | `[]` | hostAliases to add |
+| adminApi.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| adminApi.image.registry | string | `nil` | The Docker registry for the adminApi image. Overrides `tempo.image.registry` |
+| adminApi.image.repository | string | `nil` | Docker image repository for the adminApi image. Overrides `tempo.image.repository` |
+| adminApi.image.tag | string | `nil` | Docker image tag for the adminApi image. Overrides `tempo.image.tag` |
 | adminApi.initContainers | list | `[]` |  |
 | adminApi.nodeSelector | object | `{}` |  |
 | adminApi.persistence.subPath | string | `nil` |  |
@@ -244,6 +248,13 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.terminationGracePeriodSeconds | int | `60` |  |
 | adminApi.tolerations | list | `[]` |  |
 | adminApi.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string |
+| cache.caches[0].memcached.consistent_hash | bool | `true` |  |
+| cache.caches[0].memcached.host | string | `"{{ include \"tempo.fullname\" . }}-memcached"` |  |
+| cache.caches[0].memcached.service | string | `"memcached-client"` |  |
+| cache.caches[0].memcached.timeout | string | `"500ms"` |  |
+| cache.caches[0].roles[0] | string | `"parquet-footer"` |  |
+| cache.caches[0].roles[1] | string | `"bloom"` |  |
+| cache.caches[0].roles[2] | string | `"frontend-search"` |  |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.config.compaction.compacted_block_retention | string | `"1h"` |  |
 | compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
@@ -319,7 +330,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
-| enterprise.image.tag | string | `"v2.3.2"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterprise.image.tag | string | `"v2.4.0"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
@@ -362,6 +373,10 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.extraVolumeMounts | list | `[]` |  |
 | enterpriseGateway.extraVolumes | list | `[]` |  |
 | enterpriseGateway.hostAliases | list | `[]` | hostAliases to add |
+| enterpriseGateway.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| enterpriseGateway.image.registry | string | `nil` | The Docker registry for the enterpriseGateway image. Overrides `tempo.image.registry` |
+| enterpriseGateway.image.repository | string | `nil` | Docker image repository for the enterpriseGateway image. Overrides `tempo.image.repository` |
+| enterpriseGateway.image.tag | string | `nil` | Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag` |
 | enterpriseGateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | enterpriseGateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.gem.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
@@ -380,9 +395,12 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.resources.requests.cpu | string | `"10m"` |  |
 | enterpriseGateway.resources.requests.memory | string | `"32Mi"` |  |
 | enterpriseGateway.securityContext | object | `{}` |  |
-| enterpriseGateway.service.annotations | object | `{}` |  |
-| enterpriseGateway.service.labels | object | `{}` |  |
-| enterpriseGateway.service.port | string | `nil` | If the port is left undefined, the service will listen on the same port as the pod |
+| enterpriseGateway.service.annotations | object | `{}` | Annotations for the enterprise gateway service |
+| enterpriseGateway.service.clusterIP | string | `nil` | ClusterIP of the enterprise gateway service |
+| enterpriseGateway.service.labels | object | `{}` | Labels for enterprise gateway service |
+| enterpriseGateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer for enterprise gateway service |
+| enterpriseGateway.service.port | string | `nil` | Port of the enterprise gateway service; if left undefined, the service will listen on the same port as the pod |
+| enterpriseGateway.service.type | string | `"ClusterIP"` | Type of the enterprise gateway service |
 | enterpriseGateway.strategy.rollingUpdate.maxSurge | int | `0` |  |
 | enterpriseGateway.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | enterpriseGateway.strategy.type | string | `"RollingUpdate"` |  |
@@ -484,6 +502,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `tempo.image.registry` |
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
+| ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
@@ -581,6 +600,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.image.registry | string | `nil` | The Docker registry for the metrics-generator image. Overrides `tempo.image.registry` |
 | metricsGenerator.image.repository | string | `nil` | Docker image repository for the metrics-generator image. Overrides `tempo.image.repository` |
 | metricsGenerator.image.tag | string | `nil` | Docker image tag for the metrics-generator image. Overrides `tempo.image.tag` |
+| metricsGenerator.initContainers | list | `[]` |  |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
 | metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
@@ -765,6 +785,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.extraArgs | object | `{}` |  |
 | tokengenJob.extraEnvFrom | list | `[]` |  |
 | tokengenJob.hostAliases | list | `[]` | hostAliases to add |
+| tokengenJob.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
+| tokengenJob.image.registry | string | `nil` | The Docker registry for the tokengenJob image. Overrides `tempo.image.registry` |
+| tokengenJob.image.repository | string | `nil` | Docker image repository for the tokengenJob image. Overrides `tempo.image.repository` |
+| tokengenJob.image.tag | string | `nil` | Docker image tag for the tokengenJob image. Overrides `tempo.image.tag` |
 | tokengenJob.initContainers | list | `[]` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
@@ -901,7 +925,7 @@ config: |
       backend: s3
       s3:
         access_key: tempo
-        bucket: tempo
+        bucket: <your s3 bucket>
         endpoint: minio:9000
         insecure: true
         secret_key: supersecret
