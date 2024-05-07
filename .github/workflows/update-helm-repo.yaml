@@ -171,7 +171,10 @@ jobs:
             IFS=' ' read -ra parts <<< "$row"
             name="${parts[0]}"
             repo="${parts[2]}"
-            helm repo add "$name" "$repo"
+            case "$repo" in
+              "https://"*) helm repo add "$name" "$repo" ;;
+              *) echo >&2 "Skipping dependency $name: unsupported schema for \"$repo\"" ;;
+            esac
           done <<< "$deps"
 
       - name: Install CR tool
