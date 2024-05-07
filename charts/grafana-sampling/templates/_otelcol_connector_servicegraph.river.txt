@@ -1,0 +1,20 @@
+{{- define "statefulset.connector.servicegraph" -}}
+otelcol.connector.servicegraph "default" {
+  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.connector.servicegraph/
+  dimensions = [
+    {{- range $.Values.metricsGeneration.dimensions }}
+    {{ . | quote }},
+    {{- end }}
+  ]
+  latency_histogram_buckets = ["0s", "0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
+
+  store {
+    ttl = "2s"
+  }
+
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+  }
+}
+
+{{ end }}
