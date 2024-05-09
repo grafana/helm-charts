@@ -38,15 +38,21 @@ serviceAccount:
   nameTest:
   ## ServiceAccount labels.
   labels: {}
-## Service account annotations. Can be templated.
-#  annotations:
-#    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
-  autoMount: true
+  ## Service account annotations. Can be templated.
+  #  annotations:
+  #    eks.amazonaws.com/role-arn: arn:aws:iam::123456789000:role/iam-role-name-here
+
+  ## autoMount is deprecated in favor of automountServiceAccountToken
+  # autoMount: false
+  automountServiceAccountToken: false
 
 replicas: 1
 
 ## Create a headless service for the deployment
 headlessService: false
+
+## Should the service account be auto mounted on the pod
+automountServiceAccountToken: true
 
 ## Create HorizontalPodAutoscaler object for deployment type
 #
@@ -833,7 +839,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 1.25.2
+    tag: 1.26.1
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
