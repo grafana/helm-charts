@@ -48,7 +48,7 @@ This version requires Helm >= 3.1.0.
 
 ### To 7.0.0
 
-For consistency with other Helm charts, the `global.image.registry` parameter was renamed 
+For consistency with other Helm charts, the `global.image.registry` parameter was renamed
 to `global.imageRegistry`. If you were not previously setting `global.image.registry`, no action
 is required on upgrade. If you were previously setting `global.image.registry`, you will
 need to instead set `global.imageRegistry`.
@@ -136,6 +136,8 @@ need to instead set `global.imageRegistry`.
 | `enableServiceLinks`                      | Inject Kubernetes services as environment variables. | `true`                                           |
 | `extraSecretMounts`                       | Additional grafana server secret mounts       | `[]`                                                    |
 | `extraVolumeMounts`                       | Additional grafana server volume mounts       | `[]`                                                    |
+| `extraVolumes`                            | Additional Grafana server volumes             | `[]`                                                    |
+| `automountServiceAccountToken`            | Mounted the service account token on the grafana pod. Mandatory, if sidecars are enabled  | `true`      |
 | `createConfigmap`                         | Enable creating the grafana configmap         | `true`                                                  |
 | `extraConfigmapMounts`                    | Additional grafana server configMap volume mounts (values are templated) | `[]`                         |
 | `extraEmptyDirMounts`                     | Additional grafana server emptyDir volume mounts | `[]`                                                 |
@@ -160,7 +162,7 @@ need to instead set `global.imageRegistry`.
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.registry`                  | Sidecar image registry                        | `quay.io`                          |
 | `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.24.6`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.26.0`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -174,7 +176,7 @@ need to instead set `global.imageRegistry`.
 | `sidecar.alerts.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.alerts.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/alerting/reload"` |
 | `sidecar.alerts.skipReload`          | Enabling this omits defining the REQ_URL and REQ_METHOD environment variables | `false` |
-| `sidecar.alerts.initDatasources`     | Set to true to deploy the datasource sidecar as an initContainer.  This is needed if skipReload is true, to load any alerts defined at startup time. | `false` |
+| `sidecar.alerts.initAlerts`          | Set to true to deploy the alerts sidecar as an initContainer. This is needed if skipReload is true, to load any alerts defined at startup time. | `false` |
 | `sidecar.alerts.extraMounts`         | Additional alerts sidecar volume mounts. | `[]`                               |
 | `sidecar.dashboards.enabled`              | Enables the cluster wide search for dashboards and adds/updates/deletes them in grafana | `false`       |
 | `sidecar.dashboards.SCProvider`           | Enables creation of sidecar provider          | `true`                                                  |
@@ -222,7 +224,7 @@ need to instead set `global.imageRegistry`.
 | `admin.existingSecret`                    | The name of an existing secret containing the admin credentials (can be templated). | `""`                                 |
 | `admin.userKey`                           | The key in the existing admin secret containing the username. | `"admin-user"`                          |
 | `admin.passwordKey`                       | The key in the existing admin secret containing the password. | `"admin-password"`                      |
-| `serviceAccount.autoMount`                | Automount the service account token in the pod| `true`                                                  |
+| `serviceAccount.automountServiceAccountToken` | Automount the service account token on all pods where is service account is used | `false` |
 | `serviceAccount.annotations`              | ServiceAccount annotations                    |                                                         |
 | `serviceAccount.create`                   | Create service account                        | `true`                                                  |
 | `serviceAccount.labels`                   | ServiceAccount labels                         | `{}`                                                    |
@@ -315,23 +317,34 @@ ingress:
   path: "/grafana"
 ```
 
-### Example of extraVolumeMounts
+### Example of extraVolumeMounts and extraVolumes
 
-Volume can be type persistentVolumeClaim or hostPath but not both at same time.
-If neither existingClaim or hostPath argument is given then type is emptyDir.
+Configure additional volumes with `extraVolumes` and volume mounts with `extraVolumeMounts`.
+
+Example for `extraVolumeMounts` and corresponding `extraVolumes`:
 
 ```yaml
-- extraVolumeMounts:
+extraVolumeMounts:
   - name: plugins
     mountPath: /var/lib/grafana/plugins
     subPath: configs/grafana/plugins
-    existingClaim: existing-grafana-claim
     readOnly: false
   - name: dashboards
     mountPath: /var/lib/grafana/dashboards
     hostPath: /usr/shared/grafana/dashboards
     readOnly: false
+
+extraVolumes:
+  - name: plugins
+    existingClaim: existing-grafana-claim
+  - name: dashboards
+    hostPath: /usr/shared/grafana/dashboards
 ```
+
+Volumes default to `emptyDir`. Set to `persistentVolumeClaim`,
+`hostPath`, `csi`, or `configMap` for other types. For a
+`persistentVolumeClaim`, specify an existing claim name with
+`existingClaim`.
 
 ## Import dashboards
 

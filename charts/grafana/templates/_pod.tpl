@@ -5,13 +5,20 @@
 schedulerName: "{{ . }}"
 {{- end }}
 serviceAccountName: {{ include "grafana.serviceAccountName" . }}
-automountServiceAccountToken: {{ .Values.serviceAccount.autoMount }}
+automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
 {{- with .Values.securityContext }}
 securityContext:
   {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with .Values.hostAliases }}
 hostAliases:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- if .Values.dnsPolicy }}
+dnsPolicy: {{ .Values.dnsPolicy }}
+{{- end }}
+{{- with .Values.dnsConfig }}
+dnsConfig:
   {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with .Values.priorityClassName }}
@@ -169,7 +176,7 @@ initContainers:
         mountPath: "/etc/grafana/provisioning/alerting"
       {{- with .Values.sidecar.alerts.extraMounts }}
       {{- toYaml . | trim | nindent 6 }}
-      {{- end }}        
+      {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources }}
   - name: {{ include "grafana.name" . }}-init-sc-datasources
@@ -411,7 +418,7 @@ containers:
         mountPath: "/etc/grafana/provisioning/alerting"
       {{- with .Values.sidecar.alerts.extraMounts }}
       {{- toYaml . | trim | nindent 6 }}
-      {{- end }}        
+      {{- end }}
 {{- end}}
 {{- if .Values.sidecar.dashboards.enabled }}
   - name: {{ include "grafana.name" . }}-sc-dashboard
@@ -426,6 +433,11 @@ containers:
       {{- range $key, $value := .Values.sidecar.dashboards.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
@@ -898,24 +910,45 @@ containers:
       {{- end }}
       {{- end }}
       {{- with .Values.datasources }}
+      {{- $datasources := . }}
       {{- range (keys . | sortAlpha) }}
+      {{- if (or (hasKey (index $datasources .) "secret")) }} {{/*check if current datasource should be handeled as secret */}}
+      - name: config-secret
+        mountPath: "/etc/grafana/provisioning/datasources/{{ . }}"
+        subPath: {{ . | quote }}
+      {{- else }}
       - name: config
         mountPath: "/etc/grafana/provisioning/datasources/{{ . }}"
         subPath: {{ . | quote }}
       {{- end }}
       {{- end }}
+      {{- end }}
       {{- with .Values.notifiers }}
+      {{- $notifiers := . }}
       {{- range (keys . | sortAlpha) }}
+      {{- if (or (hasKey (index $notifiers .) "secret")) }} {{/*check if current notifier should be handeled as secret */}}
+      - name: config-secret
+        mountPath: "/etc/grafana/provisioning/notifiers/{{ . }}"
+        subPath: {{ . | quote }}
+      {{- else }}
       - name: config
         mountPath: "/etc/grafana/provisioning/notifiers/{{ . }}"
         subPath: {{ . | quote }}
       {{- end }}
       {{- end }}
+      {{- end }}
       {{- with .Values.alerting }}
+      {{- $alertingmap := .}}
       {{- range (keys . | sortAlpha) }}
+      {{- if (or (hasKey (index $.Values.alerting .) "secret") (hasKey (index $.Values.alerting .) "secretFile")) }} {{/*check if current alerting entry should be handeled as secret */}}
+      - name: config-secret
+        mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
+        subPath: {{ . | quote }}
+      {{- else }}
       - name: config
         mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
         subPath: {{ . | quote }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- with .Values.dashboardProviders }}
@@ -1051,11 +1084,17 @@ containers:
       - secretRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
       {{- range .Values.envFromConfigMaps }}
       - configMapRef:
           name: {{ tpl .name $ }}
           optional: {{ .optional | default false }}
+        {{- if .prefix }}
+        prefix: {{ tpl .prefix $ }}
+        {{- end }}
       {{- end }}
     {{- end }}
     {{- with .Values.livenessProbe }}
@@ -1097,6 +1136,12 @@ volumes:
   - name: config
     configMap:
       name: {{ include "grafana.fullname" . }}
+  {{- $createConfigSecret := eq (include "grafana.shouldCreateConfigSecret" .) "true" -}}
+  {{- if and .Values.createConfigmap $createConfigSecret }}
+  - name: config-secret
+    secret:
+      secretName: {{ include "grafana.fullname" . }}-config-secret
+  {{- end }}
   {{- range .Values.extraConfigmapMounts }}
   - name: {{ tpl .name $root }}
     configMap:
@@ -1230,10 +1275,13 @@ volumes:
       {{ toYaml .hostPath | nindent 6 }}
     {{- else if .csi }}
     csi:
-      {{- toYaml .data | nindent 6 }}
+      {{- toYaml .csi | nindent 6 }}
     {{- else if .configMap }}
     configMap:
       {{- toYaml .configMap | nindent 6 }}
+    {{- else if .emptyDir }}
+    emptyDir:
+      {{- toYaml .emptyDir | nindent 6 }}
     {{- else }}
     emptyDir: {}
     {{- end }}
@@ -1246,4 +1294,3 @@ volumes:
   {{- tpl (toYaml .) $root | nindent 2 }}
   {{- end }}
 {{- end }}
-
