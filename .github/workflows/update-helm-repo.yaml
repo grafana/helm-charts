@@ -233,12 +233,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ env.AUTHTOKEN }}
 
-      - name: Push charts to GHCR
+      - name: Push chart to GHCR
         run: |
-          shopt -s nullglob
-          for pkg in .cr-release-packages/*.tgz; do
-            if [ -z "${pkg:-}" ]; then
-              break
-            fi
-            helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
-          done
+          helm push \
+            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz \
+            "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
