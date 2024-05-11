@@ -145,19 +145,6 @@ jobs:
         with:
           version: v3.5.2
 
-      - name: Add dependency chart repos
-        # Todo replace this by https://github.com/grafana/helm-charts/issues/1534
-        run: |
-          helm repo add elastic https://helm.elastic.co
-          helm repo add grafana https://grafana.github.io/helm-charts
-          helm repo add prometheus https://prometheus-community.github.io/helm-charts
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
-          helm repo add hashicorp https://helm.releases.hashicorp.com
-          helm repo add minio-new https://charts.min.io
-          helm repo add jetstack https://charts.jetstack.io
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-
       - name: Parse Chart.yaml
         id: parse-chart
         run: |
@@ -174,6 +161,21 @@ jobs:
             echo "tagname=${name}-${version}" >> $GITHUB_OUTPUT
           fi
           echo "packagename=${name}-${version}" >> $GITHUB_OUTPUT
+
+      - name: Add dependency chart repos
+        run: |
+          cd source
+          # Skip the header line and make sure that tabs are expanded into spaces
+          deps=$(helm dependency list "${{ steps.parse-chart.outputs.chartpath }}" | tail +2 | expand)
+          while read -r row; do
+            IFS=' ' read -ra parts <<< "$row"
+            name="${parts[0]}"
+            repo="${parts[2]}"
+            case "$repo" in
+              "https://"*) helm repo add "$name" "$repo" ;;
+              *) echo >&2 "Skipping dependency $name: unsupported schema for \"$repo\"" ;;
+            esac
+          done <<< "$deps"
 
       - name: Install CR tool
         run: |
