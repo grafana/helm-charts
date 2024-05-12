@@ -41,6 +41,10 @@ spec:
         - mountPath: /tests
           name: tests
           readOnly: true
+      {{- with .Values.testFramework.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   volumes:
     - name: tests
       configMap:
