@@ -164,9 +164,9 @@ Return the appropriate apiVersion for HorizontalPodAutoscaler.
 */}}
 {{- define "tempo.hpa.apiVersion" -}}
  {{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
-    {{- "autoscaling/v2" }}
+    {{- print "autoscaling/v2" }}
   {{- else }}
-    {{- "autoscaling/v2beta2" }}
+    {{- print "autoscaling/v2beta2" }}
   {{- end }}
 {{- end -}}
 
@@ -178,7 +178,7 @@ Resource name template
 {{- end -}}
 
 {{/*
-Calculate the config from structured and unstructured text input
+Calculate t© config from structured and unstructured text input
 */}}
 {{- define "tempo.calculatedConfig" -}}
 {{ tpl (mergeOverwrite (tpl .Values.config . | fromYaml) .Values.tempo.structuredConfig | toYaml) . }}
