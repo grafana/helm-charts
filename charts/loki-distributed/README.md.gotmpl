@@ -147,7 +147,6 @@ loki:
     ingester:
       # Disable chunk transfer which is not possible with statefulsets
       # and unnecessary for boltdb-shipper
-      max_transfer_retries: 0
       chunk_idle_period: 1h
       chunk_target_size: 1536000
       max_chunk_age: 1h
@@ -155,8 +154,6 @@ loki:
       aws:
         s3: s3://eu-central-1
         bucketnames: my-loki-s3-bucket
-      boltdb_shipper:
-        shared_store: s3
     schema_config:
       configs:
         - from: 2020-09-07

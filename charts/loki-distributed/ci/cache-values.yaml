@@ -26,7 +26,6 @@ loki:
       chunk_idle_period: 30m
       chunk_block_size: 262144
       chunk_retain_period: 1m
-      max_transfer_retries: 0
       wal:
         dir: /var/loki/wal
 
@@ -50,7 +49,6 @@ loki:
 
     storage_config:
       boltdb_shipper:
-        shared_store: filesystem
         active_index_directory: /var/loki/index
         cache_location: /var/loki/cache
         cache_ttl: 168h

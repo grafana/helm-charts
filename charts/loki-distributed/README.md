@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.79.0](https://img.shields.io/badge/Version-0.79.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
+![Version: 0.80.0](https://img.shields.io/badge/Version-0.80.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.0](https://img.shields.io/badge/AppVersion-3.0.0-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,26 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### Frome 0.79.x to 0.80.0
+This version allows setting a constant prefix for all created keys in Chunk storage(S3)
+```yaml
+loki:
+  storage_config:
+    object_prefix: loki-logs
+```
+
+Removed `store.max-look-back-period` flag. Use. Use `querier.max-query-lookback` config instead.
+
+Removed `ingester.max-transfer-retries` configuration option. The Write Ahead Log (WAL) supersedes the chunk transfer feature.
+
+Removed `shared_store` and `shared_store_key_prefix` from index shipper and compactor configs and their corresponding CLI flags. `object_store` setting in the `period_config` (which already configured the store for chunks) will be used to configure store for the index.
+
+And the newly added path_prefix option under the index key in period_config will configure the path under which index tables are stored.
+
+Deprecated `write_dedupe_cache_config` config section along with legacy index types (aws, aws-dynamo, bigtable, bigtable-hashed, cassandra, gcp, gcp-columnkey, grpc-store). Consider using TSDB index which does not require a write dedupe cache. 
+
+Refactored `default` block for `runtime_config`. The `default` block was removed and instead a top level config now exists in the standard Loki config called `operational_config`, you can set default values here for runtime configs.
 
 ### From 0.78.x to 0.79.0
 Removed the hardcoded, deprecated `boltdb.shipper.compactor.working-directory` flag in the Compactor Deployment template, so that it can be set with `.Values.compactor.extraArgs` and the `compactor.working-directory` flag if necessary.
@@ -358,7 +378,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | loki.schemaConfig | object | `{"configs":[{"from":"2020-09-07","index":{"period":"24h","prefix":"loki_index_"},"object_store":"filesystem","schema":"v11","store":"boltdb-shipper"}]}` | Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas |
 | loki.server.http_listen_port | int | `3100` | HTTP server listen port |
 | loki.serviceAnnotations | object | `{}` | Common annotations for all loki services |
-| loki.storageConfig | object | `{"boltdb_shipper":{"active_index_directory":"/var/loki/index","cache_location":"/var/loki/cache","cache_ttl":"168h","shared_store":"filesystem"},"filesystem":{"directory":"/var/loki/chunks"}}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
+| loki.storageConfig | object | `{"boltdb_shipper":{"active_index_directory":"/var/loki/index","cache_location":"/var/loki/cache","cache_ttl":"168h"},"filesystem":{"directory":"/var/loki/chunks"}}` | Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages |
 | loki.structuredConfig | object | `{}` | Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig` |
 | memcached.appProtocol | string | `""` | Adds the appProtocol field to the memcached services. This allows memcached to work with istio protocol selection. Ex: "http" or "tcp" |
 | memcached.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcached containers |
@@ -717,7 +737,6 @@ loki:
     ingester:
       # Disable chunk transfer which is not possible with statefulsets
       # and unnecessary for boltdb-shipper
-      max_transfer_retries: 0
       chunk_idle_period: 1h
       chunk_target_size: 1536000
       max_chunk_age: 1h
@@ -725,8 +744,6 @@ loki:
       aws:
         s3: s3://eu-central-1
         bucketnames: my-loki-s3-bucket
-      boltdb_shipper:
-        shared_store: s3
     schema_config:
       configs:
         - from: 2020-09-07
