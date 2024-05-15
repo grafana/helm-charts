@@ -19716,6 +19716,64 @@ entries:
   k8s-monitoring:
   - apiVersion: v2
     appVersion: 2.3.0
+    created: "2024-05-15T15:42:24.613582908Z"
+    dependencies:
+    - name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.0
+    - alias: alloy-events
+      condition: logs.cluster_events.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.0
+    - alias: alloy-logs
+      condition: logs.pod_logs.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.0
+    - alias: alloy-profiles
+      condition: profiles.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.2.0
+    - condition: kube-state-metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.19.0
+    - condition: prometheus-node-exporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.34.0
+    - condition: prometheus-operator-crds.enabled
+      name: prometheus-operator-crds
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 11.0.0
+    - condition: prometheus-windows-exporter.enabled
+      name: prometheus-windows-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 0.3.1
+    - condition: opencost.enabled
+      name: opencost
+      repository: https://opencost.github.io/opencost-helm-chart
+      version: 1.35.0
+    description: A Helm chart for gathering, scraping, and forwarding Kubernetes telemetry
+      data to a Grafana Stack.
+    digest: 1791fe6d255ea11fa538778bd9f193cb81ededbfd05e74bb1dfa19d3fd5b2d0e
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: stephen.lang@grafana.com
+      name: skl
+    name: k8s-monitoring
+    sources:
+    - https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-1.0.10/k8s-monitoring-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
+    appVersion: 2.3.0
     created: "2024-05-14T21:03:59.488318109Z"
     dependencies:
     - name: alloy
@@ -62867,4 +62925,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-14T23:02:02.788343527Z"
+generated: "2024-05-15T15:42:24.616327388Z"
