@@ -1,0 +1,39 @@
+{{- define "deployment.receiver.otlp" -}}
+otelcol.receiver.otlp "default" {
+  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.receiver.otlp/
+
+  // configures the default grpc endpoint "0.0.0.0:4317"
+  grpc { }
+  // configures the default http/protobuf endpoint "0.0.0.0:4318"
+  http { }
+
+  output {
+    traces = [otelcol.processor.batch.default.input]
+  }
+}
+
+{{ end }}
+
+{{- define "statefulset.receiver.otlp" -}}
+otelcol.receiver.otlp "default" {
+  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.receiver.otlp/
+
+  // configures the default grpc endpoint "0.0.0.0:4317"
+  grpc { }
+
+  output {
+    traces = [
+      {{ if .Values.sampling.enabled }}
+      otelcol.processor.tail_sampling.default.input,
+      {{ else }}
+      otelcol.processor.batch.default.input,
+      {{ end }}
+      {{ if .Values.metricsGeneration.enabled }}
+      otelcol.connector.servicegraph.default.input,
+      otelcol.processor.transform.drop_unneeded_resource_attributes.input,
+      {{ end }}
+    ]
+  }
+}
+
+{{ end }}
