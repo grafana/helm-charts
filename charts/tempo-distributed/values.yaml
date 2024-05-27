@@ -231,21 +231,7 @@ ingester:
     maxUnavailable: 50
     # -- topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix.
     # E.g.: topologyKey: 'kubernetes.io/hostname'
-    topologyKey: null
-    # -- Auxiliary values for migration, see https://grafana.com/docs/helm-charts/mimir-distributed/latest/migration-guides/migrate-from-single-zone-with-helm/
-    migration:
-      # -- Indicate if migration is ongoing for multi zone ingester
-      enabled: false
-      # -- Exclude default zone on write path
-      excludeDefaultZone: false
-      # -- Enable zone-awareness, read path only
-      readPath: false
-      # -- Total number of replicas to start in availability zones when migration is enabled
-      replicas: 0
-      # -- Scale default zone ingesters to 0
-      scaleDownDefaultZone: false
-      # -- Enable zone-awareness, write path only
-      writePath: false
+    topologyKey: 'kubernetes.io/hostname'
     # -- Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list.
     zones:
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -253,7 +239,8 @@ ingester:
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
         # nodeSelector:
         #   topology.kubernetes.io/zone: zone-a
-        nodeSelector: null
+        nodeSelector: 
+          topology.kubernetes.io/zone: zone-a
         # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
         extraAffinity: {}
         # -- Ingester data Persistent Volume Storage Class
@@ -266,7 +253,8 @@ ingester:
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
         # nodeSelector:
         #   topology.kubernetes.io/zone: zone-b
-        nodeSelector: null
+        nodeSelector: 
+          topology.kubernetes.io/zone: zone-b
         # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
         extraAffinity: {}
         # -- Ingester data Persistent Volume Storage Class
@@ -279,7 +267,8 @@ ingester:
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
         # nodeSelector:
         #   topology.kubernetes.io/zone: zone-c
-        nodeSelector: null
+        nodeSelector: 
+          topology.kubernetes.io/zone: zone-c
         # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
         extraAffinity: {}
         # -- Ingester data Persistent Volume Storage Class

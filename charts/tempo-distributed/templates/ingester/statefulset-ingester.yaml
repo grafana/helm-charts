@@ -9,10 +9,15 @@ metadata:
   name: {{ template "ingester.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- include "ingester.labels" $dict | indent 4 }}
+  {{- if .Values.ingester.zoneAwareReplication.enabled }}
+  annotations: 
+    {{- include "ingester.Annotations" $dict | nindent 4}}
+  {{- else }}
   {{- with .Values.ingester.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- end }}
 spec:
   {{- if not .Values.ingester.autoscaling.enabled }}
@@ -20,12 +25,16 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" $dict | nindent 6}}
+      {{- include "ingester.selectorLabels" $dict | nindent 6}}
   serviceName: ingester
   podManagementPolicy: Parallel
   updateStrategy:
+    {{- if .Values.ingester.zoneAwareReplication.enabled }}
+    type: OnDelete
+    {{- else }}
     rollingUpdate:
       partition: 0
+    {{- end }}
   template:
     metadata:
       labels:
@@ -118,7 +127,7 @@ spec:
       {{- end }}
       {{- with $rolloutZone.affinity }}
       affinity:
-        {{- tpl . $ | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with $rolloutZone.nodeSelector }}
       nodeSelector:

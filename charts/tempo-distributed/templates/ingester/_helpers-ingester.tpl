@@ -1,6 +1,3 @@
-{{/*
-ingester imagePullSecrets
-*/}}
 {{- define "tempo.ingesterImagePullSecrets" -}}
 {{- $dict := dict "tempo" .Values.tempo.image "component" .Values.ingester.image "global" .Values.global.image -}}
 {{- include "tempo.imagePullSecrets" $dict -}}
@@ -8,16 +5,13 @@ ingester imagePullSecrets
 {{- define "ingester.zoneAwareReplicationMap" -}}
 {{- $zonesMap := (dict) -}}
 {{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "nodeSelector" .ctx.Values.ingester.nodeSelector "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
-
 {{- if .ctx.Values.ingester.zoneAwareReplication.enabled -}}
 {{- $numberOfZones := len .ctx.Values.ingester.zoneAwareReplication.zones -}}
 {{- if lt $numberOfZones 3 -}}
 {{- fail "When zone-awareness is enabled, you must have at least 3 zones defined." -}}
 {{- end -}}
-
 {{- $requestedReplicas := .ctx.Values.ingester.replicas -}}
 {{- $replicaPerZone := div (add $requestedReplicas $numberOfZones -1) $numberOfZones -}}
-
 {{- range $idx, $rolloutZone := .ctx.Values.ingester.zoneAwareReplication.zones -}}
 {{- $_ := set $zonesMap $rolloutZone.name (dict
   "affinity" (($rolloutZone.extraAffinity | default (dict)) | mergeOverwrite (include "ingester.zoneAntiAffinity" (dict "rolloutZoneName" $rolloutZone.name "topologyKey" $.ctx.Values.ingester.zoneAwareReplication.topologyKey) | fromYaml))
@@ -26,20 +20,9 @@ ingester imagePullSecrets
   "storageClass" $rolloutZone.storageClass
   ) -}}
 {{- end -}}
-{{- if .ctx.Values.ingester.zoneAwareReplication.migration.enabled -}}
-{{- if .ctx.Values.ingester.zoneAwareReplication.migration.scaleDownDefaultZone -}}
-{{- $_ := set $defaultZone "replicas" 0 -}}
-{{- end -}}
-{{- $_ := set $zonesMap "" $defaultZone -}}
-{{- end -}}
-
-{{- else -}}
-{{- $_ := set $zonesMap "" $defaultZone -}}
-{{- end -}}
 {{- $zonesMap | toYaml }}
-
 {{- end -}}
-
+{{- end -}}
 {{/*
 Calculate anti-affinity for a zone
 Params:
@@ -48,7 +31,7 @@ Params:
 */}}
 {{- define "ingester.zoneAntiAffinity" -}}
 {{- if .topologyKey -}}
-    podAntiAffinity:
+  podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchExpressions:
@@ -73,16 +56,38 @@ Params:
   component = component name
   rolloutZoneName = rollout zone name (optional)
 */}}
-{{- define "ingester.componentAnnotations" -}}
-{{- $componentSection := include "ingester.componentSectionFromName" . | fromYaml -}}
-{{- if and (or $componentSection.zoneAwareReplication.enabled $componentSection.zoneAwareReplication.migration.enabled) .rolloutZoneName }}
-{{- $map := dict "rollout-max-unavailable" ($componentSection.zoneAwareReplication.maxUnavailable | toString) -}}
-{{- toYaml (deepCopy $map | mergeOverwrite $componentSection.annotations) }}
+{{- define "ingester.Annotations" -}}
+{{- if and .ctx.Values.ingester.zoneAwareReplication.maxUnavailable .rolloutZoneName }}
+{{- $map := dict "rollout-max-unavailable" (.ctx.Values.ingester.zoneAwareReplication.maxUnavailable | toString) -}}
+{{- toYaml (deepCopy $map | mergeOverwrite .ctx.Values.ingester.annotations) }}
 {{- else -}}
-{{ toYaml $componentSection.annotations }}
+{{ toYaml .ctx.Values.ingester.annotations }}
 {{- end -}}
 {{- end -}}
 
+{{/*
+ingester labels
+*/}}
+{{- define "ingester.labels" -}}
+{{- if and .ctx.Values.ingester.zoneAwareReplication.enabled .rolloutZoneName }}
+name: {{ printf "%s-%s" .component .rolloutZoneName }}
+rollout-group: {{ .component }}
+zone: {{ .rolloutZoneName }}
+{{- end }}
+helm.sh/chart: {{ include "tempo.chart" .ctx }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
+{{- if .ctx.Chart.AppVersion }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- end -}}
 {{/*
 Resource name template
 */}}
@@ -92,3 +97,34 @@ Resource name template
 {{- if .rolloutZoneName -}}{{- $resourceName = printf "%s-%s" $resourceName .rolloutZoneName -}}{{- end -}}
 {{- $resourceName -}}
 {{- end -}}
+
+
+{{/*
+ingester selector labels
+Params:
+  ctx = . context
+  component = name of the component
+  rolloutZoneName = rollout zone name (optional)
+*/}}
+{{- define "ingester.selectorLabels" -}}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "tempo.name" .ctx }}-{{ .component }}
+{{- end }}
+release: {{ .ctx.Release.Name }}
+{{- else -}}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- end -}}
+{{- if .rolloutZoneName }}
+{{-   if not .component }}
+{{-     printf "Component name cannot be empty if rolloutZoneName (%s) is set" .rolloutZoneName | fail }}
+{{-   end }}
+rollout-group: {{ .component }}
+zone: {{ .rolloutZoneName }}
+{{- end }}
+{{- end -}}
+
