@@ -231,7 +231,7 @@ ingester:
     maxUnavailable: 50
     # -- topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix.
     # E.g.: topologyKey: 'kubernetes.io/hostname'
-    topologyKey: 'kubernetes.io/hostname'
+    topologyKey: null
     # -- Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list.
     zones:
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -239,8 +239,7 @@ ingester:
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
         # nodeSelector:
         #   topology.kubernetes.io/zone: zone-a
-        nodeSelector: 
-          topology.kubernetes.io/zone: zone-a
+        nodeSelector: null
         # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
         extraAffinity: {}
         # -- Ingester data Persistent Volume Storage Class
@@ -253,8 +252,7 @@ ingester:
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
         # nodeSelector:
         #   topology.kubernetes.io/zone: zone-b
-        nodeSelector: 
-          topology.kubernetes.io/zone: zone-b
+        nodeSelector: null
         # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
         extraAffinity: {}
         # -- Ingester data Persistent Volume Storage Class
@@ -267,8 +265,7 @@ ingester:
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
         # nodeSelector:
         #   topology.kubernetes.io/zone: zone-c
-        nodeSelector: 
-          topology.kubernetes.io/zone: zone-c
+        nodeSelector: null
         # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
         extraAffinity: {}
         # -- Ingester data Persistent Volume Storage Class
