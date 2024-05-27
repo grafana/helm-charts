@@ -14,6 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.2.2 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.15.0 |
 
 ## Chart Repo
 
@@ -519,6 +520,22 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.zoneAwareReplication.enabled | bool | `true` | Enable zone-aware replication for ingester |
+| ingester.zoneAwareReplication.maxUnavailable | int | `50` | Maximum number of ingesters that can be unavailable per zone during rollout |
+| ingester.zoneAwareReplication.topologyKey | string | `"kubernetes.io/hostname"` | topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix. E.g.: topologyKey: 'kubernetes.io/hostname' |
+| ingester.zoneAwareReplication.zones | list | `[{"extraAffinity":{},"name":"zone-a","nodeSelector":{"topology.kubernetes.io/zone":"zone-a"},"storageClass":null},{"extraAffinity":{},"name":"zone-b","nodeSelector":{"topology.kubernetes.io/zone":"zone-b"},"storageClass":null},{"extraAffinity":{},"name":"zone-c","nodeSelector":{"topology.kubernetes.io/zone":"zone-c"},"storageClass":null}]` | Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list. |
+| ingester.zoneAwareReplication.zones[0] | object | `{"extraAffinity":{},"name":"zone-a","nodeSelector":{"topology.kubernetes.io/zone":"zone-a"},"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[0].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
+| ingester.zoneAwareReplication.zones[0].nodeSelector | object | `{"topology.kubernetes.io/zone":"zone-a"}` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-a |
+| ingester.zoneAwareReplication.zones[0].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| ingester.zoneAwareReplication.zones[1] | object | `{"extraAffinity":{},"name":"zone-b","nodeSelector":{"topology.kubernetes.io/zone":"zone-b"},"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[1].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
+| ingester.zoneAwareReplication.zones[1].nodeSelector | object | `{"topology.kubernetes.io/zone":"zone-b"}` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-b |
+| ingester.zoneAwareReplication.zones[1].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| ingester.zoneAwareReplication.zones[2] | object | `{"extraAffinity":{},"name":"zone-c","nodeSelector":{"topology.kubernetes.io/zone":"zone-c"},"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
+| ingester.zoneAwareReplication.zones[2].nodeSelector | object | `{"topology.kubernetes.io/zone":"zone-c"}` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
+| ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
