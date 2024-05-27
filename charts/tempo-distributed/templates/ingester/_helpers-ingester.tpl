@@ -128,3 +128,53 @@ zone: {{ .rolloutZoneName }}
 {{- end }}
 {{- end -}}
 
+{{/*
+ingester POD labels
+Params:
+  ctx = . context
+  component = name of the component
+  memberlist = true if part of memberlist gossip ring
+  rolloutZoneName = rollout zone name (optional)
+*/}}
+{{- define "ingester.podLabels" -}}
+{{ with .ctx.Values.global.podLabels -}}
+{{ toYaml . }}
+{{ end }}
+{{- if .ctx.Values.enterprise.legacyLabels }}
+{{- if .component -}}
+app: {{ include "tempo.name" .ctx }}-{{ .component }}
+{{- if not .rolloutZoneName }}
+name: {{ .component }}
+{{- end }}
+{{- end }}
+{{- if .memberlist }}
+gossip_ring_member: "true"
+{{- end -}}
+{{- if .component }}
+target: {{ .component }}
+release: {{ .ctx.Release.Name }}
+{{- end }}
+{{- else -}}
+helm.sh/chart: {{ include "tempo.chart" .ctx }}
+app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
+app.kubernetes.io/instance: {{ .ctx.Release.Name }}
+app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- if .memberlist }}
+app.kubernetes.io/part-of: memberlist
+{{- end }}
+{{- end }}
+{{- with .ctx.Values.ingester.podLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- if .rolloutZoneName }}
+{{-   if not .component }}
+{{-     printf "Component name cannot be empty if rolloutZoneName (%s) is set" .rolloutZoneName | fail }}
+{{-   end }}
+rollout-group: ingester
+zone: {{ .rolloutZoneName }}
+{{- end }}
+{{- end -}}
