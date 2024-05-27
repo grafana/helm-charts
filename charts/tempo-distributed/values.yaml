@@ -1276,6 +1276,9 @@ config: |
     lifecycler:
       ring:
         replication_factor: {{ .Values.ingester.config.replication_factor }}
+        {{- if .Values.ingester.zoneAwareReplication.enabled }}
+        zone_awareness_enabled: true
+        {{- end }}
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
