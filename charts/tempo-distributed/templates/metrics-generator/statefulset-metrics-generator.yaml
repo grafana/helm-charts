@@ -140,7 +140,9 @@ spec:
           emptyDir: {{- toYaml .Values.metricsGenerator.walEmptyDir | nindent 12 }}
   {{- else }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         {{- with .Values.metricsGenerator.persistence.annotations }}
         annotations:
           {{- toYaml . | nindent 10 }}
