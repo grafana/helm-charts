@@ -55,6 +55,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        {{- toYaml .Values.ingester.initContainers | nindent 8 }}
       containers:
         - args:
             - -target=ingester
@@ -149,7 +151,9 @@ spec:
         {{- end }}
   {{- else }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         {{- with .Values.ingester.persistence.annotations }}
         annotations:
           {{- toYaml . | nindent 10 }}
