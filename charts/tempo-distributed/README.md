@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.9.11](https://img.shields.io/badge/Version-1.9.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.2](https://img.shields.io/badge/AppVersion-2.4.2-informational?style=flat-square)
+![Version: 1.10.0](https://img.shields.io/badge/Version-1.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -694,9 +694,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.config.max_retries | int | `2` | Number of times to retry a request sent to a querier |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
-| queryFrontend.config.trace_by_id | object | `{"hedge_requests_at":"2s","hedge_requests_up_to":2,"query_shards":50}` | Trace by ID lookup configuration |
-| queryFrontend.config.trace_by_id.hedge_requests_at | string | `"2s"` | If set to a non-zero value, a second request will be issued at the provided duration. Recommended to be set to p99 of search requests to reduce long-tail latency. |
-| queryFrontend.config.trace_by_id.hedge_requests_up_to | int | `2` | The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. Must be greater than 0. |
+| queryFrontend.config.trace_by_id | object | `{"query_shards":50}` | Trace by ID lookup configuration |
 | queryFrontend.config.trace_by_id.query_shards | int | `50` | The number of shards to split a trace by id query into. |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
 | queryFrontend.extraEnv | list | `[]` | Environment variables to add to the query-frontend pods |
