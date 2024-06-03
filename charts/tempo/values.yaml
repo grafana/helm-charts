@@ -66,7 +66,7 @@ tempo:
       # backend: s3
       # store traces in s3
       # s3:
-      #   bucket: tempo                                   # store traces in this bucket
+      #   bucket: <your s3 bucket>                        # store traces in this bucket
       #   endpoint: s3.dualstack.us-east-2.amazonaws.com  # api endpoint
       #   access_key: ...                                 # optional. access key when using static credentials.
       #   secret_key: ...                                 # optional. secret key when using static credentials.
