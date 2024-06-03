@@ -178,7 +178,7 @@ Resource name template
 {{- end -}}
 
 {{/*
-Calculate t© config from structured and unstructured text input
+Calculate the config from structured and unstructured text input
 */}}
 {{- define "tempo.calculatedConfig" -}}
 {{ tpl (mergeOverwrite (tpl .Values.config . | fromYaml) .Values.tempo.structuredConfig | toYaml) . }}
