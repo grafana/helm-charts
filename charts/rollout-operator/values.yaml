@@ -46,7 +46,7 @@ securityContext: {}
   # runAsUser: 1000
 
 resources:
-  limits:
+  limits: {}
     # cpu: "1"
     # memory: 200Mi
   requests:

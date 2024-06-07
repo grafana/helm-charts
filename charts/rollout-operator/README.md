@@ -53,7 +53,7 @@ It is not a highly available application and runs as a single pod.
 | podLabels | object | `{}` | Pod (extra) Labels |
 | podSecurityContext | object | `{}` |  |
 | priorityClassName | string | `""` |  |
-| resources.limits | string | `nil` |  |
+| resources.limits | object | `{}` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"100Mi"` |  |
 | securityContext | object | `{}` |  |
