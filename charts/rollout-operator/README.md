@@ -8,9 +8,11 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 Grafana rollout-operator
 
+
 ## Requirements
 
 Kubernetes: `^1.10.0-0`
+
 
 ## Installation
 
