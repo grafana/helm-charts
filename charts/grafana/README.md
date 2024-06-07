@@ -183,6 +183,7 @@ need to instead set `global.imageRegistry`.
 | `sidecar.dashboards.provider.name`        | Unique name of the grafana provider           | `sidecarProvider`                                       |
 | `sidecar.dashboards.provider.orgid`       | Id of the organisation, to which the dashboards should be added | `1`                                   |
 | `sidecar.dashboards.provider.folder`      | Logical folder in which grafana groups dashboards | `""`                                                |
+| `sidecar.dashboards.provider.folderUid`   | Allows you to specify the static UID for the logical folder above | `""`                                |
 | `sidecar.dashboards.provider.disableDelete` | Activate to avoid the deletion of imported dashboards | `false`                                       |
 | `sidecar.dashboards.provider.allowUiUpdates` | Allow updating provisioned dashboards from the UI | `false`                                          |
 | `sidecar.dashboards.provider.type`        | Provider type                                 | `file`                                                  |
