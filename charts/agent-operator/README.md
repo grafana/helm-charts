@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.3.23](https://img.shields.io/badge/Version-0.3.23-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.41.0](https://img.shields.io/badge/AppVersion-0.41.0-informational?style=flat-square)
+![Version: 0.3.24](https://img.shields.io/badge/Version-0.3.24-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.41.1](https://img.shields.io/badge/AppVersion-0.41.1-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -8,7 +8,7 @@ A Helm chart for Grafana Agent Operator
 
 ## Source Code
 
-* <https://github.com/grafana/agent/tree/v0.41.0/pkg/operator>
+* <https://github.com/grafana/agent/tree/v0.41.1/pkg/operator>
 
 Note that this chart does not provision custom resources like `GrafanaAgent` and `MetricsInstance` (formerly `PrometheusInstance`) or any `*Monitor` resources.
 
