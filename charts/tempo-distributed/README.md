@@ -520,7 +520,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
-| ingester.zoneAwareReplication.enabled | bool | `true` | Enable zone-aware replication for ingester |
+| ingester.zoneAwareReplication.enabled | bool | `false` | Enable zone-aware replication for ingester |
 | ingester.zoneAwareReplication.maxUnavailable | int | `50` | Maximum number of ingesters that can be unavailable per zone during rollout |
 | ingester.zoneAwareReplication.topologyKey | string | `nil` | topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix. E.g.: topologyKey: 'kubernetes.io/hostname' |
 | ingester.zoneAwareReplication.zones | list | `[{"extraAffinity":{},"name":"zone-a","nodeSelector":null,"storageClass":null},{"extraAffinity":{},"name":"zone-b","nodeSelector":null,"storageClass":null},{"extraAffinity":{},"name":"zone-c","nodeSelector":null,"storageClass":null}]` | Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list. |
