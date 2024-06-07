@@ -226,7 +226,7 @@ ingester:
     grpc: null
   zoneAwareReplication:
     # -- Enable zone-aware replication for ingester
-    enabled: true
+    enabled: false
     # -- Maximum number of ingesters that can be unavailable per zone during rollout
     maxUnavailable: 50
     # -- topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix.
