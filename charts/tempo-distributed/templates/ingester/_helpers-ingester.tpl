@@ -35,15 +35,15 @@ Params:
     requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchExpressions:
-            - key: rollout-group
+              - key: rollout-group
                 operator: In
                 values:
-                - ingester
-            - key: zone
+                  - ingester
+              - key: zone
                 operator: NotIn
                 values:
-                - {{ .rolloutZoneName }}
-        topologyKey: {{ .topologyKey | quote }}
+                  - {{ .rolloutZoneName }}
+          topologyKey: {{ .topologyKey | quote }}
 {{- else -}}
 {}
 {{- end -}}
