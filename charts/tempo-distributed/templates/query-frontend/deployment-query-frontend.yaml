@@ -136,7 +136,10 @@ spec:
             {{- with .Values.queryFrontend.query.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-      {{- end}}
+        {{- end}}
+        {{- with .Values.queryFrontend.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       terminationGracePeriodSeconds: {{ .Values.queryFrontend.terminationGracePeriodSeconds }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.queryFrontend.topologySpreadConstraints }}

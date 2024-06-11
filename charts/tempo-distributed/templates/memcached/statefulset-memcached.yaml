@@ -93,6 +93,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
         {{- end }}
+        {{- with .Values.memcached.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.memcached.topologySpreadConstraints }}
       topologySpreadConstraints:

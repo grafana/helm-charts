@@ -139,6 +139,9 @@ spec:
             {{- with .Values.distributor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- with .Values.distributor.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.distributor.topologySpreadConstraints }}
