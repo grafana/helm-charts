@@ -147,6 +147,7 @@ config: |
     metrics_generator:
           storage:
             path: "/tmp/tempo"
+            remote_write_add_org_id_header: false
             remote_write:
               - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
       {{- end }}
