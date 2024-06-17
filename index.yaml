@@ -56753,6 +56753,29 @@ entries:
   tempo:
   - apiVersion: v2
     appVersion: 2.5.0
+    created: "2024-06-17T13:13:04.47114809Z"
+    description: Grafana Tempo Single Binary Mode
+    digest: 83ab51cf0643399d55f02f18e9ac230c60a738bf13af7f700d502c6cae42c25b
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: joe-elliott
+    - email: 9215868@gmail.com
+      name: swartz-k
+    - name: annanay25
+    - name: mdisibio
+    - name: dgzlopes
+    - name: mapno
+    name: tempo
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-1.10.0/tempo-1.10.0.tgz
+    version: 1.10.0
+  - apiVersion: v2
+    appVersion: 2.5.0
     created: "2024-05-31T21:05:59.543517674Z"
     description: Grafana Tempo Single Binary Mode
     digest: c60b5579018094220e5987a2c2e7b0f82024f24888519f4ff7496163fc18ab9a
@@ -64411,4 +64434,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-13T23:24:01.683596828Z"
+generated: "2024-06-17T13:13:04.474306767Z"
