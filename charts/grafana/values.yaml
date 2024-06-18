@@ -1243,6 +1243,18 @@ imageRenderer:
   ##
   # schedulerName: "default-scheduler"
 
+  # Extra configmaps to mount in image-renderer pods
+  extraConfigmapMounts: []
+
+  # Extra secrets to mount in image-renderer pods
+  extraSecretMounts: []
+
+  # Extra volumes to mount in image-renderer pods
+  extraVolumeMounts: []
+
+  # Extra volumes for image-renderer pods
+  extraVolumes: []
+
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
   ##

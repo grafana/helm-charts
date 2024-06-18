@@ -274,6 +274,10 @@ need to instead set `global.imageRegistry`.
 | `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `Always`                         |
 | `imageRenderer.env`                        | extra env-vars for image-renderer                                                  | `{}`                             |
 | `imageRenderer.envValueFrom`               | Environment variables for image-renderer from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
+| `imageRenderer.extraConfigmapMounts`       | Additional image-renderer configMap volume mounts (values are templated)           | `[]`                             |
+| `imageRenderer.extraSecretMounts`          | Additional image-renderer secret volume mounts                                     | `[]`                             |
+| `imageRenderer.extraVolumeMounts`          | Additional image-renderer volume mounts                                            | `[]`                             |
+| `imageRenderer.extraVolumes`               | Additional image-renderer volumes                                                  | `[]`                             |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
 | `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
 | `imageRenderer.podAnnotations `            | image-renderer image-renderer pod annotation                                       | `{}`                             |
