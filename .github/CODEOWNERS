@@ -6,7 +6,7 @@
 # Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
 * @grafana/helm-charts-admins
 
-/charts/grafana/ @maorfr @torstenwalter @Xtigyro @zanhsieh
+/charts/grafana/ @jkroepke @maorfr @torstenwalter @Xtigyro @zanhsieh
 /charts/loki-distributed/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/loki-canary/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/promtail/ @grafana/loki-squad @unguiculus @Whyeasy
