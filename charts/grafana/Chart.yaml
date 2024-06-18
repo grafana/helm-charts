@@ -1,6 +1,6 @@
 apiVersion: v2
 name: grafana
-version: 8.0.2
+version: 8.0.3
 appVersion: 11.0.0
 kubeVersion: "^1.8.0-0"
 description: The leading tool for querying and visualizing time series and metrics.
@@ -27,6 +27,8 @@ maintainers:
     email: miroslav.hadzhiev@gmail.com
   - name: torstenwalter
     email: mail@torstenwalter.de
+  - name: jkroepke
+    email: github@jkroepke.de
 type: application
 keywords:
   - monitoring
