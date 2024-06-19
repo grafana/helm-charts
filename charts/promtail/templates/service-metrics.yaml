@@ -7,8 +7,11 @@ metadata:
   labels:
     {{- include "promtail.labels" . | nindent 4 }}
     {{- toYaml .Values.service.labels | nindent 4 }}
+  {{- end }}
+  {{- with .Values.service.annotations }}
   annotations:
-    {{- toYaml .Values.service.annotations | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   clusterIP: None
   ports:
