@@ -24,6 +24,7 @@ Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://github.com/grafana/oncall | oncall(grafana-oncall) | ^1.3.114 |
 | https://grafana.github.io/helm-charts | grafana(grafana) | ^7.3.9 |
 | https://grafana.github.io/helm-charts | loki(loki-distributed) | ^0.79.0 |
 | https://grafana.github.io/helm-charts | mimir(mimir-distributed) | ^5.3.0 |
@@ -33,6 +34,7 @@ Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| grafana-oncall.enabled | bool | `false` | Deploy Grafana OnCall if enabled. See [upstream values.yaml](https://github.com/grafana/oncall/blob/dev/helm/oncall/values.yaml) for full values reference. |
 | grafana.datasources | object | `{"datasources.yaml":{"apiVersion":1,"datasources":[{"isDefault":false,"name":"Loki","type":"loki","uid":"loki","url":"http://{{ .Release.Name }}-loki-gateway"},{"isDefault":true,"name":"Mimir","type":"prometheus","uid":"prom","url":"http://{{ .Release.Name }}-mimir-nginx/prometheus"},{"isDefault":false,"jsonData":{"lokiSearch":{"datasourceUid":"loki"},"serviceMap":{"datasourceUid":"prom"},"tracesToLogsV2":{"datasourceUid":"loki"},"tracesToMetrics":{"datasourceUid":"prom"}},"name":"Tempo","type":"tempo","uid":"tempo","url":"http://{{ .Release.Name }}-tempo-query-frontend:3100"}]}}` | Grafana data sources config. Connects to all three by default |
 | grafana.datasources."datasources.yaml".datasources | list | `[{"isDefault":false,"name":"Loki","type":"loki","uid":"loki","url":"http://{{ .Release.Name }}-loki-gateway"},{"isDefault":true,"name":"Mimir","type":"prometheus","uid":"prom","url":"http://{{ .Release.Name }}-mimir-nginx/prometheus"},{"isDefault":false,"jsonData":{"lokiSearch":{"datasourceUid":"loki"},"serviceMap":{"datasourceUid":"prom"},"tracesToLogsV2":{"datasourceUid":"loki"},"tracesToMetrics":{"datasourceUid":"prom"}},"name":"Tempo","type":"tempo","uid":"tempo","url":"http://{{ .Release.Name }}-tempo-query-frontend:3100"}]` | Datasources linked to the Grafana instance. Override if you disable any components. |
 | grafana.enabled | bool | `true` | Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference. |
