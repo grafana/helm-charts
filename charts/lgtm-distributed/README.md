@@ -24,10 +24,10 @@ Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://github.com/grafana/oncall | oncall(grafana-oncall) | ^1.3.114 |
 | https://grafana.github.io/helm-charts | grafana(grafana) | ^7.3.9 |
 | https://grafana.github.io/helm-charts | loki(loki-distributed) | ^0.79.0 |
 | https://grafana.github.io/helm-charts | mimir(mimir-distributed) | ^5.3.0 |
+| https://grafana.github.io/helm-charts | grafana-oncall(oncall) | ^1.3.114 |
 | https://grafana.github.io/helm-charts | tempo(tempo-distributed) | ^1.9.2 |
 
 ## Values
