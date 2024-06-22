@@ -63,5 +63,5 @@ dependencies:
   - name: grafana-oncall
     alias: oncall
     condition: grafana-oncall.enabled
-    repository: https://github.com/grafana/oncall
+    repository: "https://grafana.github.io/helm-charts"
     version: "^1.3.114"
