@@ -60,7 +60,7 @@ dependencies:
     condition: tempo.enabled
     repository: "https://grafana.github.io/helm-charts"
     version: "^1.9.2"
-  - name: grafana-oncall
+  - name: oncall
     alias: oncall
     condition: grafana-oncall.enabled
     repository: "https://grafana.github.io/helm-charts"
