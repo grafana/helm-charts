@@ -106,7 +106,7 @@ ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 3
+  replicas: 12
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -226,7 +226,7 @@ ingester:
     grpc: null
   zoneAwareReplication:
     # -- Enable zone-aware replication for ingester
-    enabled: false
+    enabled: true
     # -- Maximum number of ingesters that can be unavailable per zone during rollout
     maxUnavailable: 50
     # -- topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix.
