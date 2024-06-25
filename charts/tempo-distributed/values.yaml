@@ -149,6 +149,8 @@ ingester:
   extraEnvFrom: []
   # -- Resource requests and limits for the ingester
   resources: {}
+  # -- Containers to add to the ingester pods
+  extraContainers: []
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -264,6 +266,8 @@ metricsGenerator:
   extraEnvFrom: []
   # -- Resource requests and limits for the metrics-generator
   resources: {}
+  # -- Containers to add to the metrics-generator pods
+  extraContainers: []
   # -- Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -434,6 +438,8 @@ distributor:
   extraEnvFrom: []
   # -- Resource requests and limits for the distributor
   resources: {}
+  # -- Containers to add to the distributor pods
+  extraContainers: []
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
@@ -517,6 +523,8 @@ compactor:
   extraEnvFrom: []
   # -- Resource requests and limits for the compactor
   resources: {}
+  # -- Containers to add to the compactor pods
+  extraContainers: []
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Node selector for compactor pods
@@ -606,6 +614,8 @@ querier:
   extraEnvFrom: []
   # -- Resource requests and limits for the querier
   resources: {}
+  # -- Containers to add to the querier pods
+  extraContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string
@@ -798,6 +808,8 @@ queryFrontend:
   extraEnvFrom: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
+  # -- Containers to add to the query-frontend pods
+  extraContainers: []
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -1396,6 +1408,8 @@ memcached:
   podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
+  # -- Containers to add to the memcached pods
+  extraContainers: []
   # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
@@ -1657,6 +1671,8 @@ gateway:
   extraVolumeMounts: []
   # -- Resource requests and limits for the gateway
   resources: {}
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
