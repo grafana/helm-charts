@@ -106,7 +106,7 @@ ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
   # -- Number of replicas for the ingester
-  replicas: 12
+  replicas: 3
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -224,7 +224,7 @@ ingester:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
-  # -- EXPERIMENTAL Feature, disabled by default 
+  # -- EXPERIMENTAL Feature, disabled by default
   zoneAwareReplication:
     # -- Enable zone-aware replication for ingester
     enabled: false
