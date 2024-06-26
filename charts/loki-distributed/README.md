@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.79.0](https://img.shields.io/badge/Version-0.79.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
+![Version: 0.80.0](https://img.shields.io/badge/Version-0.80.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,16 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### From 0.79.x to 0.80.0
+The Ruler now supports sidecar container that queries Kubernetes API to find Configmaps and/or Secret that contain Loki AlertingRules.
+In order to enable the sidecar:
+```yaml
+ruler:
+  enabled: true
+  sidecar:
+    enabled: true
+```
 
 ### From 0.78.x to 0.79.0
 Removed the hardcoded, deprecated `boltdb.shipper.compactor.working-directory` flag in the Compactor Deployment template, so that it can be set with `.Values.compactor.extraArgs` and the `compactor.working-directory` flag if necessary.
@@ -613,6 +623,28 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.replicas | int | `1` | Number of replicas for the ruler |
 | ruler.resources | object | `{}` | Resource requests and limits for the ruler |
 | ruler.serviceLabels | object | `{}` | Labels for ruler service |
+| ruler.sidecar.enableUniqueFilenames | bool | `false` | Ensure that rule files aren't conflicting and being overwritten by prefixing their name with the namespace they are defined in. |
+| ruler.sidecar.enabled | bool | `false` | Whether or not to create a sidecar to ingest rule from specific ConfigMaps and/or Secrets. |
+| ruler.sidecar.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
+| ruler.sidecar.image.repository | string | `"kiwigrid/k8s-sidecar"` | The Docker registry and image for the k8s sidecar |
+| ruler.sidecar.image.sha | string | `""` | Docker image sha. If empty, no sha will be used |
+| ruler.sidecar.image.tag | string | `"1.25.3"` | Docker image tag |
+| ruler.sidecar.livenessProbe | object | `{}` | Liveness probe definition. Probe is disabled on the sidecar by default. |
+| ruler.sidecar.rbac | object | `{"namespaced":false}` | Whether to install RBAC in the namespace only or cluster-wide. Useful if you want to watch ConfigMap globally. |
+| ruler.sidecar.readinessProbe | object | `{}` | Readiness probe definition. Probe is disabled on the sidecar by default. |
+| ruler.sidecar.resources | object | `{}` | Resource requests and limits for the sidecar |
+| ruler.sidecar.rules.folder | string | `"/etc/loki/sc-rules"` | Folder into which the rules will be placed. |
+| ruler.sidecar.rules.label | string | `"loki_rule"` | Label that the configmaps/secrets with rules will be marked with. |
+| ruler.sidecar.rules.labelValue | string | `""` | Label value that the configmaps/secrets with rules will be set to. |
+| ruler.sidecar.rules.logLevel | string | `"INFO"` | Log level of the sidecar container. |
+| ruler.sidecar.rules.resource | string | `"both"` | Search in configmap, secret, or both. |
+| ruler.sidecar.rules.script | string | `nil` | Absolute path to the shell script to execute after a configmap or secret has been reloaded. |
+| ruler.sidecar.rules.searchNamespace | string | `nil` | Comma separated list of namespaces. If specified, the sidecar will search for config-maps/secrets inside these namespaces. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify 'ALL' to search in all namespaces. |
+| ruler.sidecar.rules.watchClientTimeout | int | `60` | WatchClientTimeout: is a client-side timeout, configuring your local socket. If you have a network outage dropping all packets with no RST/FIN, this is how long your client waits before realizing & dropping the connection. Defaults to 66sec. |
+| ruler.sidecar.rules.watchMethod | string | `"WATCH"` | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH request, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. |
+| ruler.sidecar.rules.watchServerTimeout | int | `60` | WatchServerTimeout: request to the server, asking it to cleanly close the connection after that. defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S. |
+| ruler.sidecar.securityContext | object | `{}` | The SecurityContext for the sidecar. |
+| ruler.sidecar.skipTlsVerify | bool | `false` | Set to true to skip tls verification for kube api calls. |
 | ruler.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ruler to shutdown before it is killed |
 | ruler.tolerations | list | `[]` | Tolerations for ruler pods |
 | runtimeConfig | object | `{}` | Provides a reloadable runtime configuration file for some specific configuration |
@@ -952,4 +984,44 @@ ruler:
                   severity: warning
                 annotations:
                   summary: High error percentage
+```
+
+Furthermore, it is possible to enable the sidecar container to load rules from ConfigMaps and Secrets.
+See `values.yaml` for a more detailed example.
+
+```yaml
+ruler:
+  enabled: true
+  sidecar:
+    enabled: true
+```
+
+ConfigMaps/Secrets with Alerting rules must be configured with appropriate labels to be recognized by the sidecar container.
+Exemplary ConfigMap:
+
+```yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: AlertingRule
+  annotations:
+  labels:
+    loki_rule: ""
+data:
+  rules.yaml: |
+    groups:
+      - name: should_fire
+        rules:
+          - alert: HighPercentageError
+            expr: |
+              sum(rate({app="loki"} |= "error" [5m])) by (job)
+                /
+              sum(rate({app="loki"}[5m])) by (job)
+                > 0.05
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: High error percentage
 ```
