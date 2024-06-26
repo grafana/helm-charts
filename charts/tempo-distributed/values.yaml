@@ -992,6 +992,8 @@ enterpriseFederationFrontend:
 
 multitenancyEnabled: false
 
+rollout_operator:
+  enabled: false
 traces:
   jaeger:
     grpc:
