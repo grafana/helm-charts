@@ -22,8 +22,8 @@
   {{- end -}}
 {{- else -}}
 {{- $_ := set $zonesMap "" $defaultZone -}}
-{{- $zonesMap | toYaml }}
 {{- end -}}
+{{- $zonesMap | toYaml }}
 {{- end -}}
 {{/*
 Calculate anti-affinity for a zone
