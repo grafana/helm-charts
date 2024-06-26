@@ -39,6 +39,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### from Chart versions < 1.11.0
+
+EXPERIMENTAL: Zone Aware Replication has been added to the ingester statefulset. 
+Attention, the calculation of the pods per AZ is as follows ```(.values.ingester.replicas + numberOfZones -1)/numberOfZones``` 
+
 ### From Chart versions < 1.8.0
 
 Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
