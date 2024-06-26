@@ -6,20 +6,20 @@
 {{- $zonesMap := (dict) -}}
 {{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "nodeSelector" .ctx.Values.ingester.nodeSelector "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
 {{- if .ctx.Values.ingester.zoneAwareReplication.enabled -}}
-  {{- $numberOfZones := len .ctx.Values.ingester.zoneAwareReplication.zones -}}
-  {{- if lt $numberOfZones 3 -}}
-    {{- fail "When zone-awareness is enabled, you must have at least 3 zones defined." -}}
-  {{- end -}}
-  {{- $requestedReplicas := .ctx.Values.ingester.replicas -}}
-  {{- $replicaPerZone := div (add $requestedReplicas $numberOfZones -1) $numberOfZones -}}
-  {{- range $idx, $rolloutZone := .ctx.Values.ingester.zoneAwareReplication.zones -}}
-    {{- $_ := set $zonesMap $rolloutZone.name (dict
-      "affinity" (($rolloutZone.extraAffinity | default (dict)) | mergeOverwrite (include "ingester.zoneAntiAffinity" (dict "rolloutZoneName" $rolloutZone.name "topologyKey" $.ctx.Values.ingester.zoneAwareReplication.topologyKey) | fromYaml))
-      "nodeSelector" ($rolloutZone.nodeSelector | default (dict) )
-      "replicas" $replicaPerZone
-      "storageClass" $rolloutZone.storageClass
-      ) -}}
-  {{- end -}}
+{{- $numberOfZones := len .ctx.Values.ingester.zoneAwareReplication.zones -}}
+{{- if lt $numberOfZones 3 -}}
+{{- fail "When zone-awareness is enabled, you must have at least 3 zones defined." -}}
+{{- end -}}
+{{- $requestedReplicas := .ctx.Values.ingester.replicas -}}
+{{- $replicaPerZone := div (add $requestedReplicas $numberOfZones -1) $numberOfZones -}}
+{{- range $idx, $rolloutZone := .ctx.Values.ingester.zoneAwareReplication.zones -}}
+{{- $_ := set $zonesMap $rolloutZone.name (dict
+"affinity" (($rolloutZone.extraAffinity | default (dict)) | mergeOverwrite (include "ingester.zoneAntiAffinity" (dict "rolloutZoneName" $rolloutZone.name "topologyKey" $.ctx.Values.ingester.zoneAwareReplication.topologyKey) | fromYaml))
+"nodeSelector" ($rolloutZone.nodeSelector | default (dict) )
+"replicas" $replicaPerZone
+"storageClass" $rolloutZone.storageClass
+) -}}
+{{- end -}}
 {{- else -}}
 {{- $_ := set $zonesMap "" $defaultZone -}}
 {{- end -}}
