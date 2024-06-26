@@ -13,7 +13,7 @@ spec:
   selector:
     matchLabels:
       {{- include "loki.querierSelectorLabels" . | nindent 6 }}
-  {{- with .Values.querier.maxUnavailable }}
+  {{- with .Values.querier.pdb.maxUnavailable }}
   maxUnavailable: {{ . }}
   {{- end }}
 {{- end }}

@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.79.0](https://img.shields.io/badge/Version-0.79.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
+![Version: 0.79.1](https://img.shields.io/badge/Version-0.79.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -510,8 +510,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
 | querier.initContainers | list | `[]` | Init containers to add to the querier pods |
 | querier.maxSurge | int | `0` | Max Surge for querier pods |
-| querier.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
+| querier.maxUnavailable | int | `1` | Max Unavailable for querier pods |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
+| querier.pdb.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | querier.persistence.annotations | object | `{}` | Annotations for querier PVCs |
 | querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
 | querier.persistence.size | string | `"10Gi"` | Size of persistent disk |

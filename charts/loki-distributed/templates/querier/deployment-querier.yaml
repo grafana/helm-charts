@@ -18,7 +18,7 @@ spec:
   strategy:
     rollingUpdate:
       maxSurge: {{ .Values.querier.maxSurge }}
-      maxUnavailable: 1
+      maxUnavailable: {{ .Values.querier.maxUnavailable }}
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   selector:
     matchLabels:

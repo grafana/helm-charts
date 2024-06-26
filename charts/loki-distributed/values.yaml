@@ -716,8 +716,11 @@ querier:
               matchLabels:
                 {{- include "loki.querierSelectorLabels" . | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  pdb:
   # -- Pod Disruption Budget maxUnavailable
-  maxUnavailable: null
+    maxUnavailable: null
+  # -- Max Unavailable for querier pods
+  maxUnavailable: 1
   # -- Max Surge for querier pods
   maxSurge: 0
   # -- Node selector for querier pods
