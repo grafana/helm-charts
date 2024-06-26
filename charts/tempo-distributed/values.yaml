@@ -992,8 +992,10 @@ enterpriseFederationFrontend:
 
 multitenancyEnabled: false
 
+# -- Enable rollout-operator. It must be enabled when using Zone Aware Replication.
 rollout_operator:
   enabled: false
+  
 traces:
   jaeger:
     grpc:
