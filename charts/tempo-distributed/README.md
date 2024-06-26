@@ -766,7 +766,15 @@ The memcached default args are removed and should be provided manually. The sett
 | rbac.create | bool | `false` | Specifies whether RBAC manifests should be created |
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy should be created |
 | reportingEnabled | bool | `true` | If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs |
-| rollout_operator | object | `{"enabled":false}` | Enable rollout-operator. It must be enabled when using Zone Aware Replication. |
+| rollout_operator.enabled | bool | `false` | Enable rollout-operator. It must be enabled when using Zone Aware Replication. |
+| rollout_operator.podSecurityContext.fsGroup | int | `10001` |  |
+| rollout_operator.podSecurityContext.runAsGroup | int | `10001` |  |
+| rollout_operator.podSecurityContext.runAsNonRoot | bool | `true` |  |
+| rollout_operator.podSecurityContext.runAsUser | int | `10001` |  |
+| rollout_operator.podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| rollout_operator.securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| rollout_operator.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| rollout_operator.securityContext.readOnlyRootFilesystem | bool | `true` |  |
 | server.grpc_server_max_recv_msg_size | int | `4194304` | Max gRPC message size that can be received |
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
 | server.httpListenPort | int | `3100` | HTTP server listen host |
