@@ -224,6 +224,56 @@ ingester:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
+  # -- EXPERIMENTAL Feature, disabled by default
+  zoneAwareReplication:
+    # -- Enable zone-aware replication for ingester
+    enabled: false
+    # -- Maximum number of ingesters that can be unavailable per zone during rollout
+    maxUnavailable: 50
+    # -- topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix.
+    # E.g.: topologyKey: 'kubernetes.io/hostname'
+    topologyKey: null
+    # -- Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list.
+    zones:
+      # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+      - name: zone-a
+        # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
+        # nodeSelector:
+        #   topology.kubernetes.io/zone: zone-a
+        nodeSelector: null
+        # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
+        extraAffinity: {}
+        # -- Ingester data Persistent Volume Storage Class
+        # If defined, storageClassName: <storageClass>
+        # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
+        # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
+        storageClass: null
+      # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+      - name: zone-b
+        # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
+        # nodeSelector:
+        #   topology.kubernetes.io/zone: zone-b
+        nodeSelector: null
+        # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
+        extraAffinity: {}
+        # -- Ingester data Persistent Volume Storage Class
+        # If defined, storageClassName: <storageClass>
+        # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
+        # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
+        storageClass: null
+      # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+      - name: zone-c
+        # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
+        # nodeSelector:
+        #   topology.kubernetes.io/zone: zone-c
+        nodeSelector: null
+        # -- extraAffinity adds user defined custom affinity rules (merged with generated rules)
+        extraAffinity: {}
+        # -- Ingester data Persistent Volume Storage Class
+        # If defined, storageClassName: <storageClass>
+        # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
+        # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
+        storageClass: null
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -356,6 +406,8 @@ metricsGenerator:
       path: /var/tempo/wal
       wal:
       remote_write_flush_deadline: 1m
+      # Whether to add X-Scope-OrgID header in remote write requests
+      remote_write_add_org_id_header: true
       # -- A list of remote write endpoints.
       # -- https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
       remote_write: []
@@ -723,10 +775,6 @@ queryFrontend:
     trace_by_id:
       # -- The number of shards to split a trace by id query into.
       query_shards: 50
-      # -- If set to a non-zero value, a second request will be issued at the provided duration. Recommended to be set to p99 of search requests to reduce long-tail latency.
-      hedge_requests_at: 2s
-      # -- The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. Must be greater than 0.
-      hedge_requests_up_to: 2
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -1221,13 +1269,14 @@ config: |
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
-      hedge_requests_at: {{ .Values.queryFrontend.config.trace_by_id.hedge_requests_at }}
-      hedge_requests_up_to: {{ .Values.queryFrontend.config.trace_by_id.hedge_requests_up_to }}
 
   ingester:
     lifecycler:
       ring:
         replication_factor: {{ .Values.ingester.config.replication_factor }}
+        {{- if .Values.ingester.zoneAwareReplication.enabled }}
+        zone_awareness_enabled: true
+        {{- end }}
         kvstore:
           store: memberlist
       tokens_file_path: /var/tempo/tokens.json
@@ -1709,11 +1758,13 @@ gateway:
     # -- Labels for gateway service
     labels: {}
     # -- Additional ports to be opneed on gateway service (e.g. for RPC connections)
-    additionalPorts: {}
+    additionalPorts: []
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
     enabled: false
+    # -- Labels for the gateway ingress
+    labels: {}
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: nginx
     # -- Annotations for the gateway ingress

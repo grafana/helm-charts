@@ -1,31 +1,44 @@
-{{ $dict := dict "ctx" . "component" "ingester" "memberlist" true }}
+{{- $dict := dict "ctx" . "component" "ingester" "memberlist" true -}}
+{{- $zonesMap := include "ingester.zoneAwareReplicationMap" $dict | fromYaml -}}
+{{- range $zoneName, $rolloutZone := $zonesMap -}}
+{{- with $ -}}
+{{- $_ := set $dict "rolloutZoneName" $zoneName -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "tempo.resourceName" $dict }}
+  name: {{ template "ingester.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- include "ingester.labels" $dict | indent 4 }}
+  {{- if .Values.ingester.zoneAwareReplication.enabled }}
+  annotations: 
+    {{- include "ingester.Annotations" $dict | nindent 4}}
+  {{- else }}
   {{- with .Values.ingester.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- end }}
 spec:
-{{- if not .Values.ingester.autoscaling.enabled }}
-  replicas: {{ .Values.ingester.replicas }}
-{{- end }}
+  {{- if not .Values.ingester.autoscaling.enabled }}
+  replicas: {{ $rolloutZone.replicas }}
+  {{- end }}
   selector:
     matchLabels:
-      {{- include "tempo.selectorLabels" $dict | nindent 6}}
+      {{- include "ingester.selectorLabels" $dict | nindent 6}}
   serviceName: ingester
   podManagementPolicy: Parallel
   updateStrategy:
+    {{- if .Values.ingester.zoneAwareReplication.enabled }}
+    type: OnDelete
+    {{- else }}
     rollingUpdate:
       partition: 0
+    {{- end }}
   template:
     metadata:
       labels:
-        {{- include "tempo.podLabels" $dict | nindent 8 }}
+        {{- include "ingester.podLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -112,11 +125,11 @@ spec:
         {{- tpl . $ | nindent 8 }}
       {{- end }}
       {{- end }}
-      {{- with .Values.ingester.affinity }}
+      {{- with $rolloutZone.affinity }}
       affinity:
-        {{- tpl . $ | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.ingester.nodeSelector }}
+      {{- with $rolloutZone.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -151,7 +164,9 @@ spec:
         {{- end }}
   {{- else }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         {{- with .Values.ingester.persistence.annotations }}
         annotations:
           {{- toYaml . | nindent 10 }}
@@ -167,3 +182,6 @@ spec:
           requests:
             storage: {{ .Values.ingester.persistence.size | quote }}
   {{- end }}
+---
+{{ end }}
+{{ end }}
