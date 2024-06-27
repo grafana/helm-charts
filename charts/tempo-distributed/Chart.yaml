@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 1.12.0
+version: 1.13.0
 appVersion: 2.5.0
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
@@ -31,3 +31,8 @@ dependencies:
     version: 0.2.2
     repository: https://grafana.github.io/helm-charts
     condition: metaMonitoring.grafanaAgent.installOperator
+  - name: rollout-operator
+    alias: rollout_operator
+    repository: https://grafana.github.io/helm-charts
+    version: 0.15.0
+    condition: rollout_operator.enabled
