@@ -119,6 +119,7 @@ need to instead set `global.imageRegistry`.
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume (can be templated) | `nil`                                     |
 | `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
 | `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
+| `persistence.disableWarning`              | Hide NOTES warning, useful when persiting to a database | `false`                                       |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
 | `initChownData.image.registry`            | init-chown-data container image registry      | `docker.io`                                               |
 | `initChownData.image.repository`          | init-chown-data container image repository    | `busybox`                                               |
@@ -276,7 +277,7 @@ need to instead set `global.imageRegistry`.
 | `imageRenderer.envValueFrom`               | Environment variables for image-renderer from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
 | `imageRenderer.serviceAccountName`         | image-renderer deployment serviceAccountName                                       | `""`                             |
 | `imageRenderer.securityContext`            | image-renderer deployment securityContext                                          | `{}`                             |
-| `imageRenderer.podAnnotations `            | image-renderer image-renderer pod annotation                                       | `{}`                             |
+| `imageRenderer.podAnnotations`            | image-renderer image-renderer pod annotation                                       | `{}`                             |
 | `imageRenderer.hostAliases`                | image-renderer deployment Host Aliases                                             | `[]`                             |
 | `imageRenderer.priorityClassName`          | image-renderer deployment priority class                                           | `''`                             |
 | `imageRenderer.service.enabled`            | Enable the image-renderer service                                                  | `true`                           |
@@ -438,6 +439,7 @@ Secrets are recommended over configmaps for this usecase because datasources usu
 data like usernames and passwords. Secrets are the more appropriate cluster resource to manage those.
 
 Example values to add a postgres datasource as a kubernetes secret:
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -592,6 +594,7 @@ To delete provisioned alert rules is a two step process, you need to delete the 
 and then create a configuration which deletes the alert rule.
 
 Example deletion configuration:
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -609,6 +612,7 @@ data:
 ```
 
 ## Statically provision alerting resources
+
 If you don't need to change alerting resources (alert rules, contact points, notification policies and notification templates) regularly you could use the `alerting` config option instead of the sidecar option above.
 This will grab the alerting config and apply it statically at build time for the helm file.
 
