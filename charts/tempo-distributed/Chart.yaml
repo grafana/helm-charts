@@ -20,6 +20,8 @@ maintainers:
   - name: BitProcessor
   - name: faustodavid
   - name: zalegrala
+  - name: Sheikh-Abubaker
+    email: sheikhabubaker761@gmail.com
 dependencies:
   - name: minio
     alias: minio
