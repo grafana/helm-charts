@@ -73,6 +73,8 @@ need to instead set `global.imageRegistry`.
 | `image.pullPolicy`                        | Image pull policy                             | `IfNotPresent`                                          |
 | `image.pullSecrets`                       | Image pull secrets (can be templated)         | `[]`                                                    |
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
+| `service.ipFamilies`                      | Kubernetes service IP families                | `[]`                                                    |
+| `service.ipFamilyPolicy`                  | Kubernetes service IP family policy           | `""`                                                    |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
