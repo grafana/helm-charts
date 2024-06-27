@@ -381,6 +381,7 @@ persistence:
   # existingClaim:
   ## Extra labels to apply to a PVC.
   extraPvcLabels: {}
+  disableWarning: false
 
   ## If persistence is not enabled, this allows to mount the
   ## local storage in-memory to improve performance
