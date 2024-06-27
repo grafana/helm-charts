@@ -58,9 +58,16 @@ deployment:
     targetMemoryUtilizationPercentage:
     # behavior: {}
 
-    # -- Set deployment object update strategy
-    strategy:
-      type: RollingUpdate
+  # -- Set deployment object update strategy
+  strategy:
+    type: RollingUpdate
+
+service:
+  enabled: false
+  # -- Labels for the service
+  labels: {}
+  # -- Annotations for the service
+  annotations: {}
 
 secret:
   # -- Labels for the Secret
@@ -584,11 +591,11 @@ sidecar:
     enabled: false
     image:
       # -- The Docker registry for sidecar config-reloader
-      registry: docker.io
+      registry: ghcr.io
       # -- Docker image repository for sidecar config-reloader
       repository: jimmidyson/configmap-reload
       # -- Docker image tag for sidecar config-reloader
-      tag: v0.8.0
+      tag: v0.12.0
       # -- Docker image pull policy for sidecar config-reloader
       pullPolicy: IfNotPresent
     # Extra args for the config-reloader container.

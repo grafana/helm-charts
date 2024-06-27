@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.15.5](https://img.shields.io/badge/Version-6.15.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.3](https://img.shields.io/badge/AppVersion-2.9.3-informational?style=flat-square)
+![Version: 6.16.2](https://img.shields.io/badge/Version-6.16.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.0](https://img.shields.io/badge/AppVersion-3.0.0-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -96,11 +96,11 @@ The new release which will pick up again from the existing `positions.yaml`.
 | deployment.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for the deployment |
 | deployment.autoscaling.maxReplicas | int | `10` |  |
 | deployment.autoscaling.minReplicas | int | `1` |  |
-| deployment.autoscaling.strategy | object | `{"type":"RollingUpdate"}` | Set deployment object update strategy |
 | deployment.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | deployment.autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | deployment.enabled | bool | `false` | Deploys Promtail as a Deployment |
 | deployment.replicaCount | int | `1` |  |
+| deployment.strategy | object | `{"type":"RollingUpdate"}` | Set deployment object update strategy |
 | enableServiceLinks | bool | `true` | Configure enableServiceLinks in pod |
 | extraArgs | list | `[]` |  |
 | extraContainers | object | `{}` |  |
@@ -143,6 +143,9 @@ The new release which will pick up again from the existing `positions.yaml`.
 | resources | object | `{}` | Resource requests and limits |
 | secret.annotations | object | `{}` | Annotations for the Secret |
 | secret.labels | object | `{}` | Labels for the Secret |
+| service.annotations | object | `{}` | Annotations for the service |
+| service.enabled | bool | `false` |  |
+| service.labels | object | `{}` | Labels for the service |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
@@ -167,9 +170,9 @@ The new release which will pick up again from the existing `positions.yaml`.
 | sidecar.configReloader.extraEnv | list | `[]` | Extra environment variables for sidecar config-reloader |
 | sidecar.configReloader.extraEnvFrom | list | `[]` | Extra environment variables from secrets or configmaps for sidecar config-reloader |
 | sidecar.configReloader.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy for sidecar config-reloader |
-| sidecar.configReloader.image.registry | string | `"docker.io"` | The Docker registry for sidecar config-reloader |
+| sidecar.configReloader.image.registry | string | `"ghcr.io"` | The Docker registry for sidecar config-reloader |
 | sidecar.configReloader.image.repository | string | `"jimmidyson/configmap-reload"` | Docker image repository for sidecar config-reloader |
-| sidecar.configReloader.image.tag | string | `"v0.8.0"` | Docker image tag for sidecar config-reloader |
+| sidecar.configReloader.image.tag | string | `"v0.12.0"` | Docker image tag for sidecar config-reloader |
 | sidecar.configReloader.livenessProbe | object | `{}` | Liveness probe for sidecar config-reloader |
 | sidecar.configReloader.readinessProbe | object | `{}` | Readiness probe for sidecar config-reloader |
 | sidecar.configReloader.resources | object | `{}` | Resource requests and limits for sidecar config-reloader |
