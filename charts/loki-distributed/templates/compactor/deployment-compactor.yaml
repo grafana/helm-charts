@@ -94,6 +94,8 @@ spec:
             {{- toYaml .Values.loki.readinessProbe | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.loki.livenessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.loki.startupProbe | nindent 12 }}
           volumeMounts:
             - name: temp
               mountPath: /tmp
