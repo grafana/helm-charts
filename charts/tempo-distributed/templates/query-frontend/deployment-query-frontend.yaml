@@ -72,14 +72,20 @@ spec:
               name: http-metrics
             - containerPort: 9095
               name: grpc
-          {{- with .Values.queryFrontend.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.queryFrontend.extraEnvFrom }}
+            {{- with .Values.global.extraEnv }}
+              {{ toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
@@ -116,14 +122,20 @@ spec:
               name: jaeger-ui
             - containerPort: 16687
               name: jaeger-metrics
-          {{- with .Values.queryFrontend.query.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.queryFrontend.query.extraEnvFrom }}
+            {{- with .Values.global.extraEnv }}
+              {{ toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.query.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.query.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.query.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
