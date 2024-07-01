@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.17.0](https://img.shields.io/badge/AppVersion-v0.17.0-informational?style=flat-square)
+![Version: 0.17.0](https://img.shields.io/badge/Version-0.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.17.0](https://img.shields.io/badge/AppVersion-v0.17.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -53,7 +53,7 @@ It is not a highly available application and runs as a single pod.
 | podLabels | object | `{}` | Pod (extra) Labels |
 | podSecurityContext | object | `{}` |  |
 | priorityClassName | string | `""` |  |
-| resources.limits.memory | string | `"200Mi"` |  |
+| resources.limits | object | `{}` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"100Mi"` |  |
 | securityContext | object | `{}` |  |
