@@ -1061,6 +1061,18 @@ containers:
         value: {{ (get .Values "grafana.ini").paths.plugins }}
       - name: GF_PATHS_PROVISIONING
         value: {{ (get .Values "grafana.ini").paths.provisioning }}
+      {{- if (.Values.resources.limits).cpu }}
+      - name: GOMAXPROCS
+        valueFrom:
+          resourceFieldRef:
+            resource: limits.cpu
+      {{- end }}
+      {{- if (.Values.resources.limits).memory }}
+      - name: GOMEMLIMIT
+        valueFrom:
+          resourceFieldRef:
+            resource: limits.memory
+      {{- end }}
       {{- range $key, $value := .Values.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
