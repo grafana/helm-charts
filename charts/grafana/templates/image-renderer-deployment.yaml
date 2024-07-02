@@ -152,7 +152,7 @@ spec:
             name: {{ tpl .configMap $root }}
             {{- with .items }}
             items:
-              {{- toYaml . | nindent 8 }}
+              {{- toYaml . | nindent 14 }}
             {{- end }}
         {{- end }}
         {{- range .Values.imageRenderer.extraSecretMounts }}
@@ -163,16 +163,16 @@ spec:
             defaultMode: {{ .defaultMode }}
             {{- with .items }}
             items:
-              {{- toYaml . | nindent 8 }}
+              {{- toYaml . | nindent 14 }}
             {{- end }}
         {{- else if .projected }}
         - name: {{ .name }}
           projected:
-            {{- toYaml .projected | nindent 6 }}
+            {{- toYaml .projected | nindent 12 }}
         {{- else if .csi }}
         - name: {{ .name }}
           csi:
-            {{- toYaml .csi | nindent 6 }}
+            {{- toYaml .csi | nindent 12 }}
         {{- end }}
         {{- end }}
         {{- range .Values.imageRenderer.extraVolumes }}
@@ -182,16 +182,16 @@ spec:
             claimName: {{ .existingClaim }}
           {{- else if .hostPath }}
           hostPath:
-            {{ toYaml .hostPath | nindent 6 }}
+            {{ toYaml .hostPath | nindent 12 }}
           {{- else if .csi }}
           csi:
-            {{- toYaml .csi | nindent 6 }}
+            {{- toYaml .csi | nindent 12 }}
           {{- else if .configMap }}
           configMap:
-            {{- toYaml .configMap | nindent 6 }}
+            {{- toYaml .configMap | nindent 12 }}
           {{- else if .emptyDir }}
           emptyDir:
-            {{- toYaml .emptyDir | nindent 6 }}
+            {{- toYaml .emptyDir | nindent 12 }}
           {{- else }}
           emptyDir: {}
           {{- end }}
