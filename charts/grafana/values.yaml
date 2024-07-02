@@ -398,6 +398,10 @@ persistence:
     ##
     # sizeLimit: 300Mi
 
+  ## If 'lookupVolumeName' is set to true, Helm will attempt to retrieve
+  ## the current value of 'spec.volumeName' and incorporate it into the template.
+  lookupVolumeName: true
+
 initChownData:
   ## If false, data ownership will not be reset at startup
   ## This allows the grafana-server to be run with an arbitrary user
