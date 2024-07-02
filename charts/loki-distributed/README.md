@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.79.0](https://img.shields.io/badge/Version-0.79.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
+![Version: 0.80.0](https://img.shields.io/badge/Version-0.80.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.6](https://img.shields.io/badge/AppVersion-2.9.6-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -131,6 +131,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | compactor.serviceLabels | object | `{}` | Labels for compactor service |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
+| compactor.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for compactor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | distributor.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection. |
 | distributor.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -165,6 +166,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | distributor.serviceLabels | object | `{}` | Labels for distributor service |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
+| distributor.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | fullnameOverride | string | `nil` | Overrides the chart's computed fullname |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.behavior.enabled | bool | `false` | Enable autoscaling behaviours |
@@ -232,6 +234,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.service.type | string | `"ClusterIP"` | Type of the gateway service |
 | gateway.terminationGracePeriodSeconds | int | `30` | Grace period to allow the gateway to shutdown before it is killed |
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
+| gateway.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
@@ -273,6 +276,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.serviceLabels | object | `{}` | Labels for index-gateway service |
 | indexGateway.terminationGracePeriodSeconds | int | `300` | Grace period to allow the index-gateway to shutdown before it is killed. |
 | indexGateway.tolerations | list | `[]` | Tolerations for index-gateway pods |
+| indexGateway.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for index-gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.affinity | string | Hard node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
 | ingester.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -318,7 +322,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.serviceLabels | object | `{}` | Labels for ingestor service |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
-| ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
+| ingester.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0] | string | `"loki.example.com"` |  |
@@ -395,6 +399,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedChunks.serviceLabels | object | `{}` | Labels for memcached-chunks service |
 | memcachedChunks.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-chunks to shutdown before it is killed |
 | memcachedChunks.tolerations | list | `[]` | Tolerations for memcached-chunks pods |
+| memcachedChunks.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for memcached-chunks pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedChunks.volumeClaimTemplates | list | `[]` | List of additional PVCs to be created for the memcached-chunks statefulset |
 | memcachedExporter.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The SecurityContext for memcachedExporter containers |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
@@ -424,6 +429,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedFrontend.serviceLabels | object | `{}` | Labels for memcached-frontend service |
 | memcachedFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-frontend to shutdown before it is killed |
 | memcachedFrontend.tolerations | list | `[]` | Tolerations for memcached-frontend pods |
+| memcachedFrontend.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for memcached-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexQueries.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexQueries.enabled | bool | `false` | Specifies whether the Memcached index queries cache should be enabled |
 | memcachedIndexQueries.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-index-queries |
@@ -444,6 +450,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexQueries.serviceLabels | object | `{}` | Labels for memcached-index-queries service |
 | memcachedIndexQueries.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-queries to shutdown before it is killed |
 | memcachedIndexQueries.tolerations | list | `[]` | Tolerations for memcached-index-queries pods |
+| memcachedIndexQueries.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for memcached-index-queries pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexWrites.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedIndexWrites.enabled | bool | `false` | Specifies whether the Memcached index writes cache should be enabled |
 | memcachedIndexWrites.extraArgs | list | `["-I 32m"]` | Additional CLI args for memcached-index-writes |
@@ -464,6 +471,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | memcachedIndexWrites.serviceLabels | object | `{}` | Labels for memcached-index-writes service |
 | memcachedIndexWrites.terminationGracePeriodSeconds | int | `30` | Grace period to allow memcached-index-writes to shutdown before it is killed |
 | memcachedIndexWrites.tolerations | list | `[]` | Tolerations for memcached-index-writes pods |
+| memcachedIndexWrites.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for memcached-index-writes pods. Passed through `tpl` and, thus, to be configured as string |
 | nameOverride | string | `nil` | Overrides the chart's name |
 | networkPolicy.alertmanager.namespaceSelector | object | `{}` | Specifies the namespace the alertmanager is running in |
 | networkPolicy.alertmanager.podSelector | object | `{}` | Specifies the alertmanager Pods. As this is cross-namespace communication, you also need the namespaceSelector. |
@@ -524,7 +532,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.serviceLabels | object | `{}` | Labels for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
-| querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 pod per Node | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.appProtocol | object | `{"grpc":""}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `""` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -558,6 +566,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryFrontend.serviceLabels | object | `{}` | Labels for query-frontend service |
 | queryFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-frontend to shutdown before it is killed |
 | queryFrontend.tolerations | list | `[]` | Tolerations for query-frontend pods |
+| queryFrontend.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | queryScheduler.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string |
 | queryScheduler.appProtocol | object | `{"grpc":""}` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | queryScheduler.enabled | bool | `false` | Specifies whether the query-scheduler should be decoupled from the query-frontend |
@@ -581,6 +590,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | queryScheduler.serviceLabels | object | `{}` | Labels for query-scheduler service |
 | queryScheduler.terminationGracePeriodSeconds | int | `30` | Grace period to allow the query-scheduler to shutdown before it is killed |
 | queryScheduler.tolerations | list | `[]` | Tolerations for query-scheduler pods |
+| queryScheduler.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for query-scheduler pods. Passed through `tpl` and, thus, to be configured as string |
 | rbac.pspEnabled | bool | `false` | If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp. |
 | rbac.sccEnabled | bool | `false` | For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints. |
 | ruler.affinity | string | Hard node and soft zone anti-affinity | Affinity for ruler pods. Passed through `tpl` and, thus, to be configured as string |
@@ -615,6 +625,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ruler.serviceLabels | object | `{}` | Labels for ruler service |
 | ruler.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ruler to shutdown before it is killed |
 | ruler.tolerations | list | `[]` | Tolerations for ruler pods |
+| ruler.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for ruler pods. Passed through `tpl` and, thus, to be configured as string |
 | runtimeConfig | object | `{}` | Provides a reloadable runtime configuration file for some specific configuration |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `true` | Set this toggle to false to opt out of automounting API credentials for the service account |
@@ -656,6 +667,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | tableManager.serviceLabels | object | `{}` | Labels for table-manager service |
 | tableManager.terminationGracePeriodSeconds | int | `30` | Grace period to allow the table-manager to shutdown before it is killed |
 | tableManager.tolerations | list | `[]` | Tolerations for table-manager pods |
+| tableManager.topologySpreadConstraints | string | Defaults to allow skew no more than 1 pod per Node | topologySpread for table-manager pods. Passed through `tpl` and, thus, to be configured as string |
 
 ## Components
 
