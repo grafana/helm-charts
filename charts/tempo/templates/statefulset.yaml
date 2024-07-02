@@ -82,6 +82,10 @@ spec:
           name: otlp-http
         - containerPort: 55678
           name: opencensus
+        livenessProbe:
+          {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
+        readinessProbe:
+          {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
         {{- with .Values.tempo.securityContext }}
