@@ -11,7 +11,7 @@ extraObjects:
       name: '{{ include "grafana.fullname" . }}'
     type: Opaque
     data:
-      var2: "value2"
+      var2: "dmFsdWUy"
 
 sidecar:
   dashboards:
