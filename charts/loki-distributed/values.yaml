@@ -989,6 +989,7 @@ ingress:
     distributor:
       - /api/prom/push
       - /loki/api/v1/push
+      - /otlp/v1/logs
     querier:
       - /api/prom/tail
       - /loki/api/v1/tail
@@ -1303,6 +1304,12 @@ gateway:
           }
 
           location = /loki/api/v1/push {
+            set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
+            proxy_http_version 1.1;
+          }
+
+          location = /otlp/v1/logs {
             set $loki_api_v1_push_backend http://{{ include "loki.distributorFullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             proxy_pass       $loki_api_v1_push_backend:3100$request_uri;
             proxy_http_version 1.1;
