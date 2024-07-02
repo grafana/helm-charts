@@ -106,3 +106,7 @@ tempo:
   enabled: true
   ingester:
     replicas: 1
+
+grafana-oncall:
+  # -- Deploy Grafana OnCall if enabled. See [upstream values.yaml](https://github.com/grafana/oncall/blob/dev/helm/oncall/values.yaml) for full values reference.
+  enabled: false
