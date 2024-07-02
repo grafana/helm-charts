@@ -103,5 +103,5 @@ extraObjects:
       name: image-renderer-certificate
     type: Opaque
     data:
-      not-a-real-certificate: UExBQ0VIT0xERVIgQ0VSVElGSUNBVEU= # Decodes to 'PLACEHOLDER CERTIFICATE'
-    
+      # Decodes to 'PLACEHOLDER CERTIFICATE'
+      not-a-real-certificate: UExBQ0VIT0xERVIgQ0VSVElGSUNBVEU=
