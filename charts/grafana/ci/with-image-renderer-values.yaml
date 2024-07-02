@@ -30,7 +30,7 @@ imageRenderer:
       configMap: image-renderer-config
   extraSecretMounts:
     - name: renderer-certificate
-      mountPath: /usr/src/app/
+      mountPath: /usr/src/app/certs/
       secretName: image-renderer-certificate
       readOnly: true
 
