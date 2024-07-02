@@ -63,7 +63,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: api-token
-                  name: {{ include "synthetic-monitoring-agent.fullname" . }}
+                  name: {{ (tpl .Values.secret.existingSecret .) | default (include "synthetic-monitoring-agent.fullname" .) }}
           name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

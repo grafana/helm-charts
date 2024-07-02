@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 agent:
-  # -- **REQUIRED** API token from Grafana Cloud.
+  # -- API token from Grafana Cloud when secret is created by the chart.
   apiToken: ""
   # -- Default server endpoint for receiving synthetic monitoring checks on Grafana's side.
   # See https://grafana.com/docs/grafana-cloud/synthetic-monitoring/private-probes/#probe-api-server-url for more information.
@@ -148,3 +148,7 @@ affinity: {}
 
 # -- Add dynamic manifests via values:
 extraObjects: []
+
+secret:
+# -- Reference an existing secret for API token
+  existingSecret: ""
