@@ -15,9 +15,6 @@ agent:
   # -- Enable / disable verbose logging on the agent.
   verbose: false
 
-# -- Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`.
-replicaCount: 1
-
 image:
   # -- Base registry to pull the container image from.
   registry: docker.io
@@ -71,18 +68,6 @@ resources:
   # requests:
   #   cpu: 200m
   #   memory: 512Mi
-
-autoscaling:
-  # -- Enable autoscaling
-  enabled: false
-  # -- Minimum autoscaling replicas
-  minReplicas: 1
-  # -- Maximum autoscaling replicas
-  maxReplicas: 3
-  # -- Target CPU utilisation percentage
-  targetCPUUtilizationPercentage: 60
-  # -- Target memory utilisation percentage
-  targetMemoryUtilizationPercentage:
 
 # -- Liveness probe for the agent
 livenessProbe:
