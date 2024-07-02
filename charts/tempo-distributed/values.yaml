@@ -992,6 +992,25 @@ enterpriseFederationFrontend:
 
 multitenancyEnabled: false
 
+rollout_operator:
+# -- Enable rollout-operator. It must be enabled when using Zone Aware Replication.
+  enabled: false
+
+  podSecurityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+    seccompProfile:
+      type: RuntimeDefault
+
+  # Set the container security context
+  securityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+    allowPrivilegeEscalation: false
+
 traces:
   jaeger:
     grpc:
