@@ -108,6 +108,7 @@ loki:
           store: memberlist
 
     memberlist:
+      cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
       join_members:
         - {{ include "loki.fullname" . }}-memberlist
 
