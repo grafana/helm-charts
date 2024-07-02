@@ -192,6 +192,11 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -434,7 +439,7 @@ containers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
-      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      {{- range $key, $value := .Values.sidecar.dashboards.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
@@ -549,6 +554,11 @@ containers:
       {{- range $key, $value := .Values.sidecar.datasources.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
