@@ -938,7 +938,7 @@ sidecar:
     ##       valueFrom:
     ##         <value rendered as YAML>
     envValueFrom: {}
-   #  ENV_NAME:
+    #  ENV_NAME:
     #    configMapKeyRef:
     #      name: configmap-name
     #      key: value_key
