@@ -14,14 +14,16 @@
 {{- $replicaPerZone := div (add $requestedReplicas $numberOfZones -1) $numberOfZones -}}
 {{- range $idx, $rolloutZone := .ctx.Values.ingester.zoneAwareReplication.zones -}}
 {{- $_ := set $zonesMap $rolloutZone.name (dict
-  "affinity" (($rolloutZone.extraAffinity | default (dict)) | mergeOverwrite (include "ingester.zoneAntiAffinity" (dict "rolloutZoneName" $rolloutZone.name "topologyKey" $.ctx.Values.ingester.zoneAwareReplication.topologyKey) | fromYaml))
-  "nodeSelector" ($rolloutZone.nodeSelector | default (dict) )
-  "replicas" $replicaPerZone
-  "storageClass" $rolloutZone.storageClass
-  ) -}}
+"affinity" (($rolloutZone.extraAffinity | default (dict)) | mergeOverwrite (include "ingester.zoneAntiAffinity" (dict "rolloutZoneName" $rolloutZone.name "topologyKey" $.ctx.Values.ingester.zoneAwareReplication.topologyKey) | fromYaml))
+"nodeSelector" ($rolloutZone.nodeSelector | default (dict) )
+"replicas" $replicaPerZone
+"storageClass" $rolloutZone.storageClass
+) -}}
+{{- end -}}
+{{- else -}}
+{{- $_ := set $zonesMap "" $defaultZone -}}
 {{- end -}}
 {{- $zonesMap | toYaml }}
-{{- end -}}
 {{- end -}}
 {{/*
 Calculate anti-affinity for a zone
