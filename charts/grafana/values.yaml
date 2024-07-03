@@ -938,7 +938,7 @@ sidecar:
     ##       valueFrom:
     ##         <value rendered as YAML>
     envValueFrom: {}
-      #  ENV_NAME:
+   #  ENV_NAME:
     #    configMapKeyRef:
     #      name: configmap-name
     #      key: value_key
@@ -1016,8 +1016,8 @@ sidecar:
     ##       valueFrom:
     ##         <value rendered as YAML>
     envValueFrom: {}
-      #  ENV_NAME:
-      #    configMapKeyRef:
+    #  ENV_NAME:
+    #    configMapKeyRef:
     #      name: configmap-name
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
