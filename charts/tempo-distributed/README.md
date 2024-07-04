@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.13.1](https://img.shields.io/badge/Version-1.13.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.13.2](https://img.shields.io/badge/Version-1.13.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -46,7 +46,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### from Chart versions < 1.11.0
+### from Chart versions < 1.13.0
 
 EXPERIMENTAL: Zone Aware Replication has been added to the ingester statefulset.
 Attention, the calculation of the pods per AZ is as follows ```(.values.ingester.replicas + numberOfZones -1)/numberOfZones```
@@ -766,6 +766,15 @@ The memcached default args are removed and should be provided manually. The sett
 | rbac.create | bool | `false` | Specifies whether RBAC manifests should be created |
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy should be created |
 | reportingEnabled | bool | `true` | If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs |
+| rollout_operator.enabled | bool | `false` | Enable rollout-operator. It must be enabled when using Zone Aware Replication. |
+| rollout_operator.podSecurityContext.fsGroup | int | `10001` |  |
+| rollout_operator.podSecurityContext.runAsGroup | int | `10001` |  |
+| rollout_operator.podSecurityContext.runAsNonRoot | bool | `true` |  |
+| rollout_operator.podSecurityContext.runAsUser | int | `10001` |  |
+| rollout_operator.podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| rollout_operator.securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| rollout_operator.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| rollout_operator.securityContext.readOnlyRootFilesystem | bool | `true` |  |
 | server.grpc_server_max_recv_msg_size | int | `4194304` | Max gRPC message size that can be received |
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
 | server.httpListenPort | int | `3100` | HTTP server listen host |
