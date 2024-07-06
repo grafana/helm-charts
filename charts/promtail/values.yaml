@@ -58,9 +58,9 @@ deployment:
     targetMemoryUtilizationPercentage:
     # behavior: {}
 
-    # -- Set deployment object update strategy
-    strategy:
-      type: RollingUpdate
+  # -- Set deployment object update strategy
+  strategy:
+    type: RollingUpdate
 
 service:
   enabled: false
@@ -100,7 +100,7 @@ image:
   # -- Docker image repository
   repository: grafana/promtail
   # -- Overrides the image tag whose default is the chart's appVersion
-  tag: null
+  tag: ""
   # -- Docker image pull policy
   pullPolicy: IfNotPresent
 
