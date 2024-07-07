@@ -717,6 +717,10 @@ querier:
       google_cloud_run: {}
     # -- This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries.
     max_concurrent_queries: 20
+    # -- When true the querier will hash the trace id in the same way that distributors do and then
+    # -- only query those ingesters who own the trace id hash as determined by the ring.
+    # -- If this parameter is set, the number of 404s could increase during rollout or scaling of ingesters.
+    query_relevant_ingesters: false
 
   service:
     # -- Annotations for querier service
@@ -1280,6 +1284,7 @@ config: |
         {{- toYaml .Values.querier.config.search.google_cloud_run | nindent 6 }}
       {{- end }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
+    query_relevant_ingesters: {{ .Values.querier.config.query_relevant_ingesters }}
   query_frontend:
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
