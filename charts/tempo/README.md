@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.7.3](https://img.shields.io/badge/Version-1.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 1.10.0](https://img.shields.io/badge/Version-1.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -18,7 +18,16 @@ Grafana Tempo Single Binary Mode
 | extraLabels | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
+| networkPolicy.allowExternal | bool | `true` |  |
+| networkPolicy.egress.blockDNSResolution | bool | `false` |  |
+| networkPolicy.egress.enabled | bool | `false` |  |
+| networkPolicy.egress.ports | list | `[]` |  |
+| networkPolicy.egress.to | list | `[]` |  |
+| networkPolicy.enabled | bool | `false` |  |
+| networkPolicy.explicitNamespacesSelector | object | `{}` |  |
+| networkPolicy.ingress | bool | `true` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enabled | bool | `false` |  |
@@ -30,6 +39,7 @@ Grafana Tempo Single Binary Mode
 | securityContext | object | `{}` | securityContext for container |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
+| service.targetPort | string | `""` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `true` |  |
