@@ -64,9 +64,17 @@ tempoAddress:
 | nodeSelector | object | `{}` | Node selector for vulture pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
 | podLabels | object | `{}` | Common labels for all pods |
+| podMonitor.annotations | object | `{}` | PodMonitor annotations |
+| podMonitor.enabled | bool | `false` | If enabled, PodMonitor resources for Prometheus Operator are created |
+| podMonitor.interval | string | `nil` | PodMonitor scrape interval |
+| podMonitor.labels | object | `{}` | Additional PodMonitor labels |
+| podMonitor.namespace | string | `nil` | Alternative namespace for PodMonitor resources |
+| podMonitor.namespaceSelector | object | `{}` | Namespace selector for PodMonitor resources |
+| podMonitor.scrapeTimeout | string | `nil` | PodMonitor scrape timeout in Go duration format (e.g. 15s) |
 | replicas | int | `1` | Number of replicas of Tempo Vulture |
 | resources | object | `{}` | Resource requests and limits for the vulture |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
+| service.enabled | bool | `true` |  |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
@@ -78,6 +86,6 @@ tempoAddress:
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor |
-| tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
+| tempoAddress.push | string | `"loo"` | the url towards your Tempo distributor, e.g. http://distributor |
+| tempoAddress.query | string | `";ll"` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
 | tolerations | list | `[]` | Tolerations for vulture pods |
