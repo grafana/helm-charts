@@ -46,6 +46,8 @@ nodeSelector: {}
 # -- Tolerations for vulture pods
 tolerations: []
 
+service:
+  enabled: true
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -75,8 +77,25 @@ podMonitor:
   # -- PodMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
+# ServiceMonitor configuration
+podMonitor:
+  # -- If enabled, PodMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for PodMonitor resources
+  namespace: null
+  # -- Namespace selector for PodMonitor resources
+  namespaceSelector: {}
+  # -- PodMonitor annotations
+  annotations: {}
+  # -- Additional PodMonitor labels
+  labels: {}
+  # -- PodMonitor scrape interval
+  interval: null
+  # -- PodMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+
 tempoAddress:
   # -- the url towards your Tempo distributor, e.g. http://distributor
-  push:
+  push: "loo"
   # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
-  query:
+  query: ";ll"
