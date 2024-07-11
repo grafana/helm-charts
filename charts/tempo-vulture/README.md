@@ -86,6 +86,6 @@ tempoAddress:
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| tempoAddress.push | string | `"loo"` | the url towards your Tempo distributor, e.g. http://distributor |
-| tempoAddress.query | string | `";ll"` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
+| tempoAddress.push | string | `""` | the url towards your Tempo distributor, e.g. http://distributor |
+| tempoAddress.query | string | `""` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
 | tolerations | list | `[]` | Tolerations for vulture pods |
