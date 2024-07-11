@@ -74,7 +74,7 @@ tempoAddress:
 | replicas | int | `1` | Number of replicas of Tempo Vulture |
 | resources | object | `{}` | Resource requests and limits for the vulture |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
-| service.enabled | bool | `true` |  |
+| service.enabled | bool | `true` | Specifies whether a Service should be created |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
@@ -86,6 +86,6 @@ tempoAddress:
 | serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
 | serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
-| tempoAddress.push | string | `""` | the url towards your Tempo distributor, e.g. http://distributor |
-| tempoAddress.query | string | `""` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
+| tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor |
+| tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
 | tolerations | list | `[]` | Tolerations for vulture pods |
