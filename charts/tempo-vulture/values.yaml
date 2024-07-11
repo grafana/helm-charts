@@ -46,7 +46,9 @@ nodeSelector: {}
 # -- Tolerations for vulture pods
 tolerations: []
 
+
 service:
+  # -- Specifies whether a Service should be created
   enabled: true
 
 serviceAccount:
@@ -96,6 +98,6 @@ podMonitor:
 
 tempoAddress:
   # -- the url towards your Tempo distributor, e.g. http://distributor
-  push: ""
+  push:
   # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
-  query: ""
+  query:
