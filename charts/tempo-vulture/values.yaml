@@ -96,6 +96,6 @@ podMonitor:
 
 tempoAddress:
   # -- the url towards your Tempo distributor, e.g. http://distributor
-  push: "loo"
+  push: ""
   # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
-  query: ";ll"
+  query: ""
