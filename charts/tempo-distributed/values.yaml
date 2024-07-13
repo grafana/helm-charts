@@ -465,6 +465,8 @@ distributor:
     loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
+    # -- If type is LoadBalancer you can set it to 'Local' [preserve the client source IP](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip)
+    externalTrafficPolicy: null
   serviceDiscovery:
     # -- Annotations for distributorDiscovery service
     annotations: {}
