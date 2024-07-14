@@ -79,7 +79,7 @@ podMonitor:
   # -- PodMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
-# ServiceMonitor configuration
+# PodMonitor configuration
 podMonitor:
   # -- If enabled, PodMonitor resources for Prometheus Operator are created
   enabled: false
