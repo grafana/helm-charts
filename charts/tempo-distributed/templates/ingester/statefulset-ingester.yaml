@@ -85,7 +85,7 @@ spec:
             - name: grpc
               containerPort: 9095
             - name: http-memberlist
-              containerPort: 7946
+              containerPort: {{ include "tempo.memberlistBindPort" . }}
             - name: http-metrics
               containerPort: 3100
           {{- with .Values.ingester.extraEnv }}
