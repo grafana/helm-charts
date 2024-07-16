@@ -76,7 +76,7 @@ spec:
             - -config.file=/conf/tempo.yaml
             - -mem-ballast-size-mbs=1024
             {{- if ne $zoneName ""}}
-            - "-ingester.ring.instance-availability-zone={{ $zoneName }}"
+            - -ingester.availability-zone={{ $zoneName }}
             {{- end }}
             {{- with .Values.ingester.extraArgs }}
             {{- toYaml . | nindent 12 }}
