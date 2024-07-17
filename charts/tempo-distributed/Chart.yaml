@@ -2,8 +2,8 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 1.9.1
-appVersion: 2.4.1
+version: 1.15.1
+appVersion: 2.5.0
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
 icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
@@ -20,6 +20,8 @@ maintainers:
   - name: BitProcessor
   - name: faustodavid
   - name: zalegrala
+  - name: Sheikh-Abubaker
+    email: sheikhabubaker761@gmail.com
 dependencies:
   - name: minio
     alias: minio
@@ -28,6 +30,11 @@ dependencies:
     condition: minio.enabled
   - name: grafana-agent-operator
     alias: grafana-agent-operator
-    version: 0.2.2
+    version: 0.4.0
     repository: https://grafana.github.io/helm-charts
     condition: metaMonitoring.grafanaAgent.installOperator
+  - name: rollout-operator
+    alias: rollout_operator
+    repository: https://grafana.github.io/helm-charts
+    version: 0.16.0
+    condition: rollout_operator.enabled

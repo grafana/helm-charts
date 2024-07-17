@@ -68,7 +68,7 @@ spec:
           ports:
             - containerPort: 3100
               name: http-metrics
-            - containerPort: 7946
+            - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
           {{- with .Values.compactor.extraEnv }}
           env:
