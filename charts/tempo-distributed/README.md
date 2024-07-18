@@ -553,7 +553,19 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[2].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
 | ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
-| ingress | object | `{"annotations":{},"enabled":false,"hosts":["tempo.example.com"],"paths":{"compactor":[{"path":"/api/v1/upload/block/"}],"distributor":[{"path":"/jaeger/api/traces"},{"path":"/zipkin/spans"},{"path":"/v1/traces"},{"path":"/otlp/v1/traces"},{"path":"/distributor/ring"},{"path":"/ingester/ring"}],"ingester":[{"path":"/flush"},{"path":"/shutdown"}],"query-frontend":[{"path":"/api"}]}}` | Use either this ingress or the gateway, but not both at once. If you enable this, make sure to disable the gateway's ingress. |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` | If you enable this, make sure to disable the gateway's ingress. |
+| ingress.hosts[0] | string | `"tempo.example.com"` |  |
+| ingress.paths.compactor[0].path | string | `"/api/v1/upload/block/"` |  |
+| ingress.paths.distributor[0].path | string | `"/jaeger/api/traces"` |  |
+| ingress.paths.distributor[1].path | string | `"/zipkin/spans"` |  |
+| ingress.paths.distributor[2].path | string | `"/v1/traces"` |  |
+| ingress.paths.distributor[3].path | string | `"/otlp/v1/traces"` |  |
+| ingress.paths.distributor[4].path | string | `"/distributor/ring"` |  |
+| ingress.paths.distributor[5].path | string | `"/ingester/ring"` |  |
+| ingress.paths.ingester[0].path | string | `"/flush"` |  |
+| ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
+| ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |

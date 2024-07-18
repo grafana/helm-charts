@@ -1977,9 +1977,8 @@ gateway:
         }
       }
 
-# -- Use either this ingress or the gateway, but not both at once.
-# If you enable this, make sure to disable the gateway's ingress.
 ingress:
+  # -- If you enable this, make sure to disable the gateway's ingress.
   enabled: false
   # ingressClassName: nginx
   annotations: {}

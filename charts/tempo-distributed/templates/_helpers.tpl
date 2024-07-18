@@ -184,8 +184,6 @@ Calculate the config from structured and unstructured text input
 {{ tpl (mergeOverwrite (tpl .Values.config . | fromYaml) .Values.tempo.structuredConfig | toYaml) . }}
 {{- end -}}
 
-
-
 {{/*
 Renders the overrides config
 */}}
