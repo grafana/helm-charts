@@ -1977,6 +1977,32 @@ gateway:
         }
       }
 
+# -- Use either this ingress or the gateway, but not both at once.
+# If you enable this, make sure to disable the gateway's ingress.
+ingress:
+  enabled: false
+  # ingressClassName: nginx
+  annotations: {}
+  paths:
+    distributor:
+      - path: /jaeger/api/traces
+        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+        # pathType: Prefix
+      - path: /zipkin/spans
+      - path: /v1/traces
+      - path: /otlp/v1/traces
+      - path: /distributor/ring
+      - path: /ingester/ring
+    ingester:
+      - path: /flush
+      - path: /shutdown
+    query-frontend:
+      - path: /api
+    compactor:
+      - path: /api/v1/upload/block/
+  hosts:
+    - tempo.example.com
+
 ##############################################################################
 # The values in and after the `enterprise:` key configure the enterprise features
 enterprise:
