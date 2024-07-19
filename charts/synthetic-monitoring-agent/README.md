@@ -1,6 +1,6 @@
 # synthetic-monitoring-agent
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
@@ -28,7 +28,7 @@ Kubernetes: `^1.16.0-0`
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Node affinity for pod assignment. |
 | agent.apiServerAddress | string | `"synthetic-monitoring-grpc.grafana.net:443"` | Default server endpoint for receiving synthetic monitoring checks on Grafana's side. See https://grafana.com/docs/grafana-cloud/synthetic-monitoring/private-probes/#probe-api-server-url for more information. |
-| agent.apiToken | string | `""` | **REQUIRED** API token from Grafana Cloud. |
+| agent.apiToken | string | `""` | API token from Grafana Cloud when secret is created by the chart. |
 | agent.debug | bool | `false` | Enable / disable debug logging on the agent. |
 | agent.enableDisconnect | bool | `false` | Enable / disable the HTTP /disconnect endpoint |
 | agent.verbose | bool | `false` | Enable / disable verbose logging on the agent. |
@@ -54,6 +54,7 @@ Kubernetes: `^1.16.0-0`
 | readinessProbe | object | `{"httpGet":{"path":"/ready","port":"http"}}` | Readiness probe for the agent |
 | replicaCount | int | `1` | Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`. |
 | resources | object | `{}` | Default resources to apply. |
+| secret.existingSecret | string | `""` | Reference an existing secret for API token |
 | securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | Security context for the container level. |
 | service.annotations | object | `{}` | Annotations for the service |
 | service.port | int | `4050` | Service port. |
