@@ -16,6 +16,10 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   template:
     metadata:
       annotations:
