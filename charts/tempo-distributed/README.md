@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.15.1](https://img.shields.io/badge/Version-1.15.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.15.2](https://img.shields.io/badge/Version-1.15.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -46,14 +46,14 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### from Chart versions < 1.13.0
+### From Chart versions < 1.15.2
+
+Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
+
+### From Chart versions < 1.13.0
 
 EXPERIMENTAL: Zone Aware Replication has been added to the ingester statefulset.
 Attention, the calculation of the pods per AZ is as follows ```(.values.ingester.replicas + numberOfZones -1)/numberOfZones```
-
-### From Chart versions < 1.8.0
-
-Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
 
 ### From Chart versions < 1.6.0
 
@@ -661,7 +661,7 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.rootPassword | string | `"supersecret"` |  |
 | minio.rootUser | string | `"grafana-tempo"` |  |
 | multitenancyEnabled | bool | `false` |  |
-| overrides | string | `"overrides: {}\n"` |  |
+| overrides | object | `{}` |  |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
 | prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
