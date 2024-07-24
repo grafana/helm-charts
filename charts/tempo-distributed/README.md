@@ -896,8 +896,8 @@ metricsGenerator:
       remote_write:
         - url: http://cortex/api/v1/push
           send_exemplars: true
-    #   headers:
-    #     x-scope-orgid: operations
+      #   headers:
+      #     x-scope-orgid: operations
 # Global overrides
 global_overrides:
   defaults:
