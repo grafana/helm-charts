@@ -26,7 +26,7 @@ spec:
   {{- end }}
   {{- with .Values.initContainer }}
   initContainers:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
   {{- with .Values.global.imagePullSecrets | default .Values.imagePullSecrets }}
   imagePullSecrets:
@@ -166,6 +166,6 @@ spec:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     {{- with .Values.extraVolumes }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
 {{- end }}
