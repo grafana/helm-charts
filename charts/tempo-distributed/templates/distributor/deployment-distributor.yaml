@@ -64,7 +64,7 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: distributor
           ports:
-            - containerPort: 7946
+            - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
               protocol: TCP
             - containerPort: 3100
