@@ -892,10 +892,9 @@ Metrics-generator is disabled by default and can be activated by configuring the
 metricsGenerator:
   enabled: true
   config:
-    storage:
-      remote_write:
-      - url: http://cortex/api/v1/push
-        send_exemplars: true
+    storage_remote_write:
+    - url: http://cortex/api/v1/push
+      send_exemplars: true
     #   headers:
     #     x-scope-orgid: operations
 # Global overrides
