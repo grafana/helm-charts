@@ -79,15 +79,15 @@ jobs:
 
             if [ $(git tag -l "${name}-${version}") ]; then
               echo "Tag ${tagname} already exists, skipping release"
-              echo "::set-output name=changed::false"
+              echo "changed=false" >> $GITHUB_OUTPUT
             else
               echo "Releasing ${changed}"
-              echo "::set-output name=changed::true"
-              echo "::set-output name=chartpath::${changed}"
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "chartpath=${changed}" >> $GITHUB_OUTPUT
             fi
           else
             echo "No charts have changed, skipping release"
-            echo "::set-output name=changed::false"
+            echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
   release:
@@ -145,19 +145,6 @@ jobs:
         with:
           version: v3.5.2
 
-      - name: Add dependency chart repos
-        # Todo replace this by https://github.com/grafana/helm-charts/issues/1534
-        run: |
-          helm repo add elastic https://helm.elastic.co
-          helm repo add grafana https://grafana.github.io/helm-charts
-          helm repo add prometheus https://prometheus-community.github.io/helm-charts
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
-          helm repo add hashicorp https://helm.releases.hashicorp.com
-          helm repo add minio-new https://charts.min.io
-          helm repo add jetstack https://charts.jetstack.io
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-
       - name: Parse Chart.yaml
         id: parse-chart
         run: |
@@ -166,14 +153,29 @@ jobs:
           description=$(yq ".description" < ${changed}/Chart.yaml)
           name=$(yq ".name" < ${changed}/Chart.yaml)
           version=$(yq ".version" < ${changed}/Chart.yaml)
-          echo "::set-output name=chartpath::${changed}"
-          echo "::set-output name=desc::${description}"
+          echo "chartpath=${changed}" >> $GITHUB_OUTPUT
+          echo "desc=${description}" >> $GITHUB_OUTPUT
           if [[ -n "${HELM_TAG_PREFIX}" ]]; then
-            echo "::set-output name=tagname::${HELM_TAG_PREFIX}-${name}-${version}"
+            echo "tagname=${HELM_TAG_PREFIX}-${name}-${version}" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=tagname::${name}-${version}"
+            echo "tagname=${name}-${version}" >> $GITHUB_OUTPUT
           fi
-          echo "::set-output name=packagename::${name}-${version}"
+          echo "packagename=${name}-${version}" >> $GITHUB_OUTPUT
+
+      - name: Add dependency chart repos
+        run: |
+          cd source
+          # Skip the header line and make sure that tabs are expanded into spaces
+          deps=$(helm dependency list "${{ steps.parse-chart.outputs.chartpath }}" | tail +2 | expand)
+          while read -r row; do
+            IFS=' ' read -ra parts <<< "$row"
+            name="${parts[0]}"
+            repo="${parts[2]}"
+            case "$repo" in
+              "https://"*) helm repo add "$name" "$repo" ;;
+              *) echo >&2 "Skipping dependency $name: unsupported schema for \"$repo\"" ;;
+            esac
+          done <<< "$deps"
 
       - name: Install CR tool
         run: |

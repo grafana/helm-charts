@@ -90,6 +90,9 @@ spec:
   {{- if .Values.distributor.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP  }}
   {{- end }}
+  {{- with .Values.distributor.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
   {{- with .Values.distributor.service.loadBalancerSourceRanges}}
   loadBalancerSourceRanges:
     {{ toYaml . | nindent 4 }}
