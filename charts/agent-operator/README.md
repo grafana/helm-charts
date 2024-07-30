@@ -70,7 +70,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
 | podLabels | object | `{}` | Annotations for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
-| priorityClassName | string | `nil` | priorityClassName for the Deployment Pods |
+| priorityClassName | string | `"nil"` | priorityClassName for the Deployment Pods |
 | rbac.create | bool | `true` | Toggle to create ClusterRole and ClusterRoleBinding |
 | rbac.podSecurityPolicyName | string | `""` | Name of a PodSecurityPolicy to use in the ClusterRole. If unset, no PodSecurityPolicy is used. |
 | resources | object | `{}` | Resource limits and requests config |
