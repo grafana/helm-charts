@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo
 description: Grafana Tempo Single Binary Mode
 type: application
-version: 1.9.0
+version: 1.10.1
 appVersion: 2.5.0
 engine: gotpl
 home: https://grafana.net
@@ -18,3 +18,5 @@ maintainers:
   - name: mdisibio
   - name: dgzlopes
   - name: mapno
+  - name: Sheikh-Abubaker
+    email: sheikhabubaker761@gmail.com
