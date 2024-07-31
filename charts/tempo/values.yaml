@@ -10,6 +10,9 @@ replicas: 1
 # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
 # revisionHistoryLimit: 1
 
+# -- labels for tempo
+labels: {}
+
 # -- Annotations for the StatefulSet
 annotations: {}
 
@@ -256,6 +259,7 @@ service:
   type: ClusterIP
   annotations: {}
   labels: {}
+  targetPort: ""
 
 serviceMonitor:
   enabled: false
@@ -294,3 +298,58 @@ affinity: {}
 
 # -- The name of the PriorityClass
 priorityClassName: null
+
+networkPolicy:
+  ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
+  ##
+  enabled: false
+  ## @param networkPolicy.allowExternal Don't require client label for connections
+  ## The Policy model to apply. When set to false, only pods with the correct
+  ## client label will have network access to  tempo port defined.
+  ## When true, tempo will accept connections from any source
+  ## (with the correct destination port).
+  ##
+  ingress: true
+  ## @param networkPolicy.ingress When true enables the creation
+  ## an ingress network policy
+  ##
+  allowExternal: true
+  ## @param networkPolicy.explicitNamespacesSelector A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed
+  ## If explicitNamespacesSelector is missing or set to {}, only client Pods that are in the networkPolicy's namespace
+  ## and that match other criteria, the ones that have the good label, can reach the tempo.
+  ## But sometimes, we want the tempo to be accessible to clients from other namespaces, in this case, we can use this
+  ## LabelSelector to select these namespaces, note that the networkPolicy's namespace should also be explicitly added.
+  ##
+  ## Example:
+  ## explicitNamespacesSelector:
+  ##   matchLabels:
+  ##     role: frontend
+  ##   matchExpressions:
+  ##    - {key: role, operator: In, values: [frontend]}
+  ##
+  explicitNamespacesSelector: {}
+  ##
+  egress:
+    ## @param networkPolicy.egress.enabled When enabled, an egress network policy will be
+    ## created allowing tempo to connect to external data sources from kubernetes cluster.
+    enabled: false
+    ##
+    ## @param networkPolicy.egress.blockDNSResolution When enabled, DNS resolution will be blocked
+    ## for all pods in the tempo namespace.
+    blockDNSResolution: false
+    ##
+    ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
+    ports: []
+    ## Add ports to the egress by specifying - port: <port number>
+    ## E.X.
+    ## - port: 80
+    ## - port: 443
+    ##
+    ## @param networkPolicy.egress.to Allow egress traffic to specific destinations
+    to: []
+    ## Add destinations to the egress by specifying - ipBlock: <CIDR>
+    ## E.X.
+    ## to:
+    ##  - namespaceSelector:
+    ##    matchExpressions:
+  ##    - {key: role, operator: In, values: [tempo]}
