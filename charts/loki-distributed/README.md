@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.79.1](https://img.shields.io/badge/Version-0.79.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.8](https://img.shields.io/badge/AppVersion-2.9.8-informational?style=flat-square)
+![Version: 0.79.2](https://img.shields.io/badge/Version-0.79.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.8](https://img.shields.io/badge/AppVersion-2.9.8-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -315,8 +315,8 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingester.readinessProbe | object | `{}` | readiness probe settings for ingester pods. If empty, use `loki.readinessProbe` |
 | ingester.replicas | int | `1` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
-| ingester.serviceLabels | object | `{}` | Labels for ingestor service |
-| ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
+| ingester.serviceLabels | object | `{}` | Labels for ingester service |
+| ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingester, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingress.annotations | object | `{}` |  |
