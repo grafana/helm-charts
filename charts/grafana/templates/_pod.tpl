@@ -318,7 +318,7 @@ imagePullSecrets:
 enableServiceLinks: {{ .Values.enableServiceLinks }}
 {{- end }}
 containers:
-{{- if and .Values.sidecar.alerts.enabled (not .Values.sidecar.alerts.initAlerts) }}
+{{- if and .Values.sidecar.alerts.enabled (or .Values.sidecar.alerts.initAndSidecar (not .Values.sidecar.alerts.initAlerts)) }}
   - name: {{ include "grafana.name" . }}-sc-alerts
     {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
