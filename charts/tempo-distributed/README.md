@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.15.2](https://img.shields.io/badge/Version-1.15.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.15.3](https://img.shields.io/badge/Version-1.15.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -892,9 +892,10 @@ Metrics-generator is disabled by default and can be activated by configuring the
 metricsGenerator:
   enabled: true
   config:
-    storage_remote_write:
-     - url: http://cortex/api/v1/push
-       send_exemplars: true
+    storage:
+      remote_write:
+      - url: http://cortex/api/v1/push
+        send_exemplars: true
     #   headers:
     #     x-scope-orgid: operations
 # Global overrides
