@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: operator-lifecycle-manager
+    app.kubernetes.io/name: tempo-operator
+    app.kubernetes.io/part-of: tempo-operator
+    control-plane: controller-manager
+  name: tempo-operator-controller
+  namespace: tempo-operator-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/managed-by: operator-lifecycle-manager
+      app.kubernetes.io/name: tempo-operator
+      app.kubernetes.io/part-of: tempo-operator
+      control-plane: controller-manager
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        app.kubernetes.io/managed-by: operator-lifecycle-manager
+        app.kubernetes.io/name: tempo-operator
+        app.kubernetes.io/part-of: tempo-operator
+        control-plane: controller-manager
+    spec:
+      containers:
+      - args:
+        - --zap-log-level=info
+        - start
+        - --config=controller_manager_config.yaml
+        env:
+        - name: RELATED_IMAGE_TEMPO
+          value: docker.io/grafana/tempo:2.5.0
+        - name: RELATED_IMAGE_TEMPO_QUERY
+          value: docker.io/grafana/tempo-query:2.5.0
+        - name: RELATED_IMAGE_TEMPO_GATEWAY
+          value: quay.io/observatorium/api:main-2024-05-29-ca8d2de
+        - name: RELATED_IMAGE_TEMPO_GATEWAY_OPA
+          value: quay.io/observatorium/opa-openshift:main-2024-04-29-914c13f
+        - name: RELATED_IMAGE_OAUTH_PROXY
+          value: quay.io/openshift/origin-oauth-proxy:4.12
+        image: ghcr.io/grafana/tempo-operator/tempo-operator:v0.11.1
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+        - mountPath: /controller_manager_config.yaml
+          name: manager-config
+          subPath: controller_manager_config.yaml
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=0
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 5m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: tempo-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+      - configMap:
+          name: tempo-operator-manager-config
+        name: manager-config

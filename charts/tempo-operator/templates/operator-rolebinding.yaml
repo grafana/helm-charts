@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: operator-lifecycle-manager
+    app.kubernetes.io/name: tempo-operator
+    app.kubernetes.io/part-of: tempo-operator
+  name: tempo-operator-leader-election-rolebinding
+  namespace: tempo-operator-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tempo-operator-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: tempo-operator-controller-manager
+  namespace: tempo-operator-system

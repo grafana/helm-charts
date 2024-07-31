@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: tempo-operator-system/tempo-operator-serving-cert
+  labels:
+    app.kubernetes.io/managed-by: operator-lifecycle-manager
+    app.kubernetes.io/name: tempo-operator
+    app.kubernetes.io/part-of: tempo-operator
+  name: tempo-operator-mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: tempo-operator-webhook-service
+      namespace: tempo-operator-system
+      path: /mutate-tempo-grafana-com-v1alpha1-tempostack
+  failurePolicy: Fail
+  name: mtempostack.tempo.grafana.com
+  rules:
+  - apiGroups:
+    - tempo.grafana.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - tempostacks
+  sideEffects: None
