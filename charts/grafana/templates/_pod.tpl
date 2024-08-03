@@ -1156,6 +1156,9 @@ volumes:
   - name: {{ tpl .name $root }}
     configMap:
       name: {{ tpl .configMap $root }}
+      {{- with .optional }}
+      optional: {{ . }}
+      {{- end }}
       {{- with .items }}
       items:
         {{- toYaml . | nindent 8 }}
@@ -1261,6 +1264,9 @@ volumes:
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
+      {{- with .optional }}
+      optional: {{ . }}
+      {{- end }}
       {{- with .items }}
       items:
         {{- toYaml . | nindent 8 }}
