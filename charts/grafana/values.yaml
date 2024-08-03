@@ -164,6 +164,7 @@ extraConfigmapMounts: []
   #   subPath: certificates.crt # (optional)
   #   configMap: certs-configmap
   #   readOnly: true
+  #   optional: false
 
 
 extraEmptyDirMounts: []
@@ -539,6 +540,7 @@ extraSecretMounts: []
   #   mountPath: /etc/secrets
   #   secretName: grafana-secret-files
   #   readOnly: true
+  #   optional: false
   #   subPath: ""
   #
   # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
@@ -859,7 +861,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 1.26.1
+    tag: 1.27.4
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
