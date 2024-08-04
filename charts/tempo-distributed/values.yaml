@@ -1984,12 +1984,11 @@ ingress:
   annotations: {}
   paths:
     distributor:
-      - path: /jaeger/api/traces
-        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
-        # pathType: Prefix
       - path: /v1/traces
         port: 4318
       - path: /distributor/ring
+        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+        # pathType: Prefix
       - path: /ingester/ring
     ingester:
       - path: /flush
