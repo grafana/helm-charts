@@ -1987,9 +1987,8 @@ ingress:
       - path: /jaeger/api/traces
         # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
         # pathType: Prefix
-      - path: /zipkin/spans
       - path: /v1/traces
-      - path: /otlp/v1/traces
+        port: 4318
       - path: /distributor/ring
       - path: /ingester/ring
     ingester:
