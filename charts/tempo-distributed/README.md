@@ -562,11 +562,10 @@ The memcached default args are removed and should be provided manually. The sett
 | ingress.hosts[0] | string | `"tempo.example.com"` |  |
 | ingress.paths.compactor[0].path | string | `"/api/v1/upload/block/"` |  |
 | ingress.paths.distributor[0].path | string | `"/jaeger/api/traces"` |  |
-| ingress.paths.distributor[1].path | string | `"/zipkin/spans"` |  |
-| ingress.paths.distributor[2].path | string | `"/v1/traces"` |  |
-| ingress.paths.distributor[3].path | string | `"/otlp/v1/traces"` |  |
-| ingress.paths.distributor[4].path | string | `"/distributor/ring"` |  |
-| ingress.paths.distributor[5].path | string | `"/ingester/ring"` |  |
+| ingress.paths.distributor[1].path | string | `"/v1/traces"` |  |
+| ingress.paths.distributor[1].port | int | `4318` |  |
+| ingress.paths.distributor[2].path | string | `"/distributor/ring"` |  |
+| ingress.paths.distributor[3].path | string | `"/ingester/ring"` |  |
 | ingress.paths.ingester[0].path | string | `"/flush"` |  |
 | ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
 | ingress.paths.query-frontend[0].path | string | `"/api"` |  |
