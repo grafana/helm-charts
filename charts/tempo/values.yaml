@@ -154,11 +154,11 @@ config: |
             path: "/tmp/tempo"
             remote_write:
               - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
-        {{- if .Values.tempo.metricsGenerator.enable_virtual_node_label }}
-          processor:
-            service_graphs:
-              enable_virtual_node_label: true
-        {{- end }}
+          {{- if .Values.tempo.metricsGenerator.enable_virtual_node_label }}
+            processor:
+              service_graphs:
+                enable_virtual_node_label: true
+          {{- end }}
       {{- end }}
 
 tempoQuery:
