@@ -58,6 +58,11 @@ spec:
             - name: http-metrics
               containerPort: 8080
               protocol: TCP
+            {{ range .Values.gateway.additionalPorts }}
+            - name: {{ .name }}
+              containerPort: {{ .port }}
+              protocol: {{ .protocol }}
+            {{ end }} 
           {{- with .Values.gateway.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
