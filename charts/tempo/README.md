@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.10.1](https://img.shields.io/badge/Version-1.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.11.0](https://img.shields.io/badge/Version-1.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -38,6 +38,8 @@ Grafana Tempo Single Binary Mode
 | replicas | int | `1` | Define the amount of instances |
 | securityContext | object | `{}` | securityContext for container |
 | service.annotations | object | `{}` |  |
+| service.ipFamilies | list | `[]` |  |
+| service.ipFamilyPolicy | string | `"SingleStack"` |  |
 | service.labels | object | `{}` |  |
 | service.targetPort | string | `""` |  |
 | service.type | string | `"ClusterIP"` |  |
@@ -58,6 +60,8 @@ Grafana Tempo Single Binary Mode
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | tempo.ingester | object | `{}` | Configuration options for the ingester |
 | tempo.memBallastSizeMbs | int | `1024` |  |
+| tempo.memberlist.bind_addr[0] | string | `"0.0.0.0"` |  |
+| tempo.memberlist.bind_port | int | `7946` |  |
 | tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
 | tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |
@@ -82,6 +86,7 @@ Grafana Tempo Single Binary Mode
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
 | tempo.storage.trace.wal.path | string | `"/var/tempo/wal"` |  |
 | tempo.tag | string | `""` |  |
+| tempo.target | string | `"all"` |  |
 | tempo.updateStrategy | string | `"RollingUpdate"` |  |
 | tempoQuery.enabled | bool | `false` | if False the tempo-query container is not deployed |
 | tempoQuery.extraArgs | object | `{}` |  |

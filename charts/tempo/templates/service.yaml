@@ -14,6 +14,8 @@ spec:
   type: ClusterIP
   {{- if .Values.service.clusterIP }}
   clusterIP: {{ .Values.service.clusterIP }}
+  ipFamilies: {{ .Values.service.ipFamilies }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
   {{ end }}
 {{- else if eq .Values.service.type "LoadBalancer" }}
   type: {{ .Values.service.type }}
