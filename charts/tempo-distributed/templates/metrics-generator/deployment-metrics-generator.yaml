@@ -67,14 +67,20 @@ spec:
             - name: {{ .name | quote }}
               containerPort: {{ .port }}
             {{- end }}
-          {{- with .Values.metricsGenerator.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.metricsGenerator.extraEnvFrom }}
+            {{- with .Values.global.extraEnv }}
+              {{ toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.metricsGenerator.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.metricsGenerator.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:
