@@ -568,6 +568,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.23-alpine"` | Memcached Docker image tag |
+| memcached.nodeSelector | object | `{}` |  |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.replicas | int | `1` |  |
