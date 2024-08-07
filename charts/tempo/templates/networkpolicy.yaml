@@ -52,7 +52,7 @@ spec:
         - namespaceSelector:
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        - podSelector:
+          podSelector:
             matchLabels:
               {{- include "tempo.labels" . | nindent 14 }}
               role: read
