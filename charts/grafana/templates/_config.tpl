@@ -139,22 +139,41 @@ download_dashboards.sh: |
  Generate dashboard json config map data
  */}}
 {{- define "grafana.configDashboardProviderData" -}}
+{{- $values := .Values -}}
 provider.yaml: |-
   apiVersion: 1
   providers:
-    - name: '{{ .Values.sidecar.dashboards.provider.name }}'
-      orgId: {{ .Values.sidecar.dashboards.provider.orgid }}
-      {{- if not .Values.sidecar.dashboards.provider.foldersFromFilesStructure }}
-      folder: '{{ .Values.sidecar.dashboards.provider.folder }}'
-      folderUid: '{{ .Values.sidecar.dashboards.provider.folderUid }}'
+    {{- if .Values.sidecar.dashboards.provider }}
+    {{- with .Values.sidecar.dashboards.provider }} 
+        - name: '{{ .name }}'
+      orgId: {{ .orgid }}
+      {{- if not .foldersFromFilesStructure }}
+      folder: '{{ .folder }}'
+      folderUid: '{{ .folderUid }}'
       {{- end }}
-      type: {{ .Values.sidecar.dashboards.provider.type }}
-      disableDeletion: {{ .Values.sidecar.dashboards.provider.disableDelete }}
-      allowUiUpdates: {{ .Values.sidecar.dashboards.provider.allowUiUpdates }}
-      updateIntervalSeconds: {{ .Values.sidecar.dashboards.provider.updateIntervalSeconds | default 30 }}
+      type: {{ .type }}
+      disableDeletion: {{ .disableDelete }}
+      allowUiUpdates: {{ .allowUiUpdates }}
+      updateIntervalSeconds: {{ .updateIntervalSeconds | default 30 }}
       options:
-        foldersFromFilesStructure: {{ .Values.sidecar.dashboards.provider.foldersFromFilesStructure }}
-        path: {{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}
+        foldersFromFilesStructure: {{ .foldersFromFilesStructure }}
+        path: {{ $values.sidecar.dashboards.folder }}{{- with $values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.sidecar.dashboards.providers }}
+    {{- range .Values.sidecar.dashboards.providers }}
+    - name: '{{ .name }}'
+      orgId: {{ .orgid | default 1 }}
+      folder: '{{ .folder | default .name }}'
+      type: {{ .type | default "file" }}
+      disableDeletion: {{ .disableDelete | default "false" }}
+      allowUiUpdates: {{ .allowUiUpdates | default "false"}}
+      updateIntervalSeconds: {{ .updateIntervalSeconds | default 30 }}
+      options:
+        foldersFromFilesStructure: {{ .foldersFromFilesStructure | default false}}
+        path: {{ $values.sidecar.dashboards.folder }}{{- with $values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}{{- with .folder }}/{{ . }}{{- end }}
+    {{- end }}
+    {{- end }}
 {{- end -}}
 
 {{- define "grafana.secretsData" -}}
