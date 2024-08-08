@@ -16,6 +16,9 @@ podLabels: {}
 # -- Pod security context (runAsUser, etc.)
 podSecurityContext: {}
 
+# -- priorityClassName for the Deployment Pods
+priorityClassName: nil
+
 # -- Container security context (allowPrivilegeEscalation, etc.)
 containerSecurityContext: {}
 
