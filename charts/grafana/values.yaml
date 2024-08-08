@@ -921,8 +921,10 @@ sidecar:
     script: null
     skipReload: false
     # This is needed if skipReload is true, to load any alerts defined at startup time.
-    # Deploy the alert sidecar as an initContainer.
+    # Deploy the alert sidecar as an initContainer only.
     initAlerts: false
+    # Deploy sc-alert as init AND sidecar to watch changes.
+    initAndSidecar: false
     # Additional alert sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
