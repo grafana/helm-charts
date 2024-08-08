@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.16.0](https://img.shields.io/badge/Version-1.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.16.1](https://img.shields.io/badge/Version-1.16.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -453,7 +453,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | gateway.image.registry | string | `nil` | The Docker registry for the gateway image. Overrides `global.image.registry` |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
-| gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
+| gateway.image.tag | string | `"1.27-alpine"` | The gateway image tag |
 | gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
@@ -567,7 +567,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.23-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.29-alpine"` | Memcached Docker image tag |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.replicas | int | `1` |  |
@@ -580,7 +580,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcachedExporter.image.registry | string | `nil` | The Docker registry for the Memcached Exporter image. Overrides `global.image.registry` |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
-| memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
+| memcachedExporter.image.tag | string | `"v0.14.4"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
 | metaMonitoring.grafanaAgent.annotations | object | `{}` | Annotations to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that. |
 | metaMonitoring.grafanaAgent.enabled | bool | `false` | Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below. Note that you need to configure serviceMonitor in order to have some metrics available. |
