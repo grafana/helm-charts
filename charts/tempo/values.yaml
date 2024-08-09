@@ -1,21 +1,16 @@
 # -- Overrides the chart's name
 nameOverride: ""
-
 # -- Overrides the chart's computed fullname
 fullnameOverride: ""
-
 # -- Define the amount of instances
 replicas: 1
-
 # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
 # revisionHistoryLimit: 1
 
 # -- labels for tempo
 labels: {}
-
 # -- Annotations for the StatefulSet
 annotations: {}
-
 tempo:
   repository: grafana/tempo
   tag: ""
@@ -38,6 +33,7 @@ tempo:
 
   memBallastSizeMbs: 1024
   multitenancyEnabled: false
+  target: 'all'
   # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
   reportingEnabled: true
   metricsGenerator:
@@ -54,8 +50,10 @@ tempo:
   # Global overrides
   global_overrides:
     per_tenant_override_config: /conf/overrides.yaml
+  memberlist:
+    bind_addr: ['0.0.0.0']
+    bind_port: 7946
   overrides: {}
-
   # Tempo server configuration
   # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
   server:
@@ -101,11 +99,11 @@ tempo:
         http:
           endpoint: "0.0.0.0:4318"
   securityContext: {}
-    # allowPrivilegeEscalation: false
-    #  capabilities:
-    #    drop:
-    #    - ALL
-    # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  #  capabilities:
+  #    drop:
+  #    - ALL
+  # readOnlyRootFilesystem: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -118,42 +116,45 @@ tempo:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
-
 # -- Tempo configuration file contents
 # @default -- Dynamically generated tempo configmap
 config: |
-    multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
-    usage_report:
-      reporting_enabled: {{ .Values.tempo.reportingEnabled }}
-    compactor:
-      compaction:
-        block_retention: {{ .Values.tempo.retention }}
-    distributor:
-      receivers:
-        {{- toYaml .Values.tempo.receivers | nindent 8 }}
-    ingester:
-      {{- toYaml .Values.tempo.ingester | nindent 6 }}
-    server:
-      {{- toYaml .Values.tempo.server | nindent 6 }}
-    storage:
-      {{- toYaml .Values.tempo.storage | nindent 6 }}
-    querier:
-      {{- toYaml .Values.tempo.querier | nindent 6 }}
-    query_frontend:
-      {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
-    overrides:
-      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
-      {{- if .Values.tempo.metricsGenerator.enabled }}
-          metrics_generator_processors:
-          - 'service-graphs'
-          - 'span-metrics'
-    metrics_generator:
-          storage:
-            path: "/tmp/tempo"
-            remote_write:
-              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
-      {{- end }}
-
+  target: {{ .Values.tempo.target }}
+  multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
+  usage_report:
+    reporting_enabled: {{ .Values.tempo.reportingEnabled }}
+  compactor:
+    compaction:
+      block_retention: {{ .Values.tempo.retention }}
+  distributor:
+    receivers:
+      {{- toYaml .Values.tempo.receivers | nindent 8 }}
+  ingester:
+    {{- toYaml .Values.tempo.ingester | nindent 6 }}
+  server:
+    {{- toYaml .Values.tempo.server | nindent 6 }}
+  storage:
+    {{- toYaml .Values.tempo.storage | nindent 6 }}
+  querier:
+    {{- toYaml .Values.tempo.querier | nindent 6 }}
+  query_frontend:
+    {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
+  memberlist:
+    {{- if eq .Values.tempo.target "scalable-single-binary" }}
+    {{- toYaml .Values.tempo.memberlist | nindent 6 }}
+    {{- end }}
+  overrides:
+    {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+    {{- if .Values.tempo.metricsGenerator.enabled }}
+        metrics_generator_processors:
+        - 'service-graphs'
+        - 'span-metrics'
+  metrics_generator:
+        storage:
+          path: "/tmp/tempo"
+          remote_write:
+            - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+    {{- end }}
 tempoQuery:
   repository: grafana/tempo-query
   tag: null
@@ -167,10 +168,8 @@ tempoQuery:
 
   # -- if False the tempo-query container is not deployed
   enabled: false
-
   service:
     port: 16686
-
   ingress:
     enabled: false
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
@@ -182,10 +181,8 @@ tempoQuery:
     # kubernetes.io/tls-acme: "true"
     labels: {}
     path: /
-
     # pathType is only for k8s >= 1.1=
     pathType: Prefix
-
     hosts:
       - query.tempo.example.com
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
@@ -203,12 +200,10 @@ tempoQuery:
     #       port:
     #         name: use-annotation
 
-
     tls: []
     #  - secretName: tempo-query-tls
     #    hosts:
     #      - query.tempo.example.com
-
   resources: {}
   #  requests:
   #    cpu: 1000m
@@ -228,18 +223,17 @@ tempoQuery:
   #   readOnly: true
   #   existingClaim: volume-claim
   securityContext: {}
-    # allowPrivilegeEscalation: false
-    #  capabilities:
-    #    drop:
-    #    - ALL
-    # readOnlyRootFilesystem: false # fails if true, do not enable
-
+  # allowPrivilegeEscalation: false
+  #  capabilities:
+  #    drop:
+  #    - ALL
+  # readOnlyRootFilesystem: false # fails if true, do not enable
 # -- securityContext for container
 securityContext: {}
-  # runAsUser: 65532
-  # runAsGroup: 65532
-  # fsGroup: 65532
-  # runAsNonRoot: true
+# runAsUser: 65532
+# runAsGroup: 65532
+# fsGroup: 65532
+# runAsNonRoot: true
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -254,51 +248,41 @@ serviceAccount:
   # -- Labels for the service account
   labels: {}
   automountServiceAccountToken: true
-
 service:
   type: ClusterIP
   annotations: {}
   labels: {}
   targetPort: ""
-
+  ipFamilies: []
+  ipFamilyPolicy: 'SingleStack'
 serviceMonitor:
   enabled: false
   interval: ""
   additionalLabels: {}
   annotations: {}
   # scrapeTimeout: 10s
-
 persistence:
   enabled: false
   # storageClassName: local-path
   accessModes:
     - ReadWriteOnce
   size: 10Gi
-
 # -- Pod Annotations
 podAnnotations: {}
-
 # -- Pod (extra) Labels
 podLabels: {}
-
 # Apply extra labels to common labels.
 extraLabels: {}
-
 # -- Volumes to add
 extraVolumes: []
-
 # -- Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
-
 # -- Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
-
 # -- Affinity for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
-
 # -- The name of the PriorityClass
 priorityClassName: null
-
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
   ##

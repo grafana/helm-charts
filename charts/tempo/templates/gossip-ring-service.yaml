@@ -1,0 +1,40 @@
+{{- if eq .Values.tempo.target "scalable-single-binary" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ "gossip-ring" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  clusterIP: 'None'
+  ipFamilies: {{ .Values.service.ipFamilies }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
+  ports:
+  - name: tempo-prom-metrics
+    port: 3100
+    targetPort: 3100
+  {{- if .Values.tempoQuery.enabled }}
+  - name: jaeger-metrics
+    port: 16687
+    targetPort: 16687
+  - name: tempo-query-jaeger-ui
+    port: {{ .Values.tempoQuery.service.port }}
+    targetPort: {{ .Values.tempoQuery.service.port }}
+  {{- end }}
+  - name: gossip-ring
+    port: 7946
+    protocol: TCP
+    targetPort: 7946
+  - name: grpc
+    port: 9095
+    protocol: TCP
+    targetPort: 9095
+  selector:
+    {{- include "tempo.selectorLabels" . | nindent 4 }}
+{{- end }}
