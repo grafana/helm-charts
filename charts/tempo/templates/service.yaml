@@ -4,7 +4,10 @@ metadata:
   name: {{ template "tempo.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" . | nindent 4 }}
+    {{- include "tempo.labels" . | nindent 4 }}    
+    {{- with .Values.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
