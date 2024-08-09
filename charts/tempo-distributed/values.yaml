@@ -1332,6 +1332,7 @@ config: |
       ring:
         replication_factor: {{ .Values.ingester.config.replication_factor }}
         {{- if .Values.ingester.zoneAwareReplication.enabled }}
+        availability_zone: ${AVAILABILITY_ZONE}
         zone_awareness_enabled: true
         {{- end }}
         kvstore:

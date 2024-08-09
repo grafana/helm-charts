@@ -73,6 +73,9 @@ spec:
       containers:
         - args:
             - -target=ingester
+            {{- if .Values.ingester.zoneAwareReplication.enabled }}
+            - -config.expand-env=true
+            {{- end }}
             - -config.file=/conf/tempo.yaml
             - -mem-ballast-size-mbs=1024
             {{- with .Values.ingester.extraArgs }}
@@ -88,9 +91,18 @@ spec:
               containerPort: {{ include "tempo.memberlistBindPort" . }}
             - name: http-metrics
               containerPort: 3100
+          {{- if .Values.ingester.zoneAwareReplication.enabled }}
+          env:
+            - name: AVAILABILITY_ZONE
+              value: {{ $zoneName }}
+          {{- with .Values.ingester.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- else }}
           {{- with .Values.ingester.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           {{- with .Values.ingester.extraEnvFrom }}
           envFrom:
