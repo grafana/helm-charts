@@ -3,7 +3,7 @@ name: loki-canary
 description: Helm chart for Grafana Loki Canary
 type: application
 appVersion: 2.9.1
-version: 0.14.0
+version: 0.14.1
 home: https://github.com/grafana/helm-charts
 sources:
   - https://github.com/grafana/loki
