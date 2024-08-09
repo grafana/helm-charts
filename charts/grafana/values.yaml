@@ -557,7 +557,7 @@ extraSecretMounts: []
   #
   # for CSI e.g. Azure Key Vault use the following
   # - name: secrets-store-inline
-  #  mountPath: /run/secrets
+  #  mountPath: /run/secrets/vault.azure.com
   #  readOnly: true
   #  csi:
   #    driver: secrets-store.csi.k8s.io
