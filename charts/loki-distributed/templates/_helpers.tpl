@@ -176,6 +176,18 @@ livenessProbe:
 {{- end }}
 {{- end -}}
 
+{{- define "loki.ingester.startupProbe" -}}
+{{- with .Values.ingester.startupProbe }}  
+startupProbe:
+  {{- toYaml . | nindent 2 }}
+{{- else }}
+{{- with .Values.loki.startupProbe }}
+startupProbe:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
 {{- define "loki.config.checksum" -}}
 checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
 {{- end }}

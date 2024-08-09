@@ -95,6 +95,8 @@ spec:
             {{- toYaml .Values.memcached.readinessProbe | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.memcached.livenessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.memcached.startupProbe | nindent 12 }}
           {{- if .Values.memcachedIndexWrites.persistence.enabled }}
           volumeMounts:
             - name: data
