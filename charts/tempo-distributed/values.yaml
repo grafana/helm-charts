@@ -1487,7 +1487,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.23-alpine
+    tag: 1.6.29-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1550,7 +1550,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.8.0
+    tag: v0.14.4
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
@@ -1745,7 +1745,7 @@ gateway:
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
-    tag: 1.19-alpine
+    tag: 1.27-alpine
     # -- The gateway image pull policy
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
