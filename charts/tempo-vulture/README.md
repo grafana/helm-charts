@@ -1,6 +1,6 @@
 # tempo-vulture
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
 
@@ -63,9 +63,17 @@ tempoAddress:
 | nodeSelector | object | `{}` | Node selector for vulture pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
 | podLabels | object | `{}` | Common labels for all pods |
+| podMonitor.annotations | object | `{}` | PodMonitor annotations |
+| podMonitor.enabled | bool | `false` | If enabled, PodMonitor resources for Prometheus Operator are created |
+| podMonitor.interval | string | `nil` | PodMonitor scrape interval |
+| podMonitor.labels | object | `{}` | Additional PodMonitor labels |
+| podMonitor.namespace | string | `nil` | Alternative namespace for PodMonitor resources |
+| podMonitor.namespaceSelector | object | `{}` | Namespace selector for PodMonitor resources |
+| podMonitor.scrapeTimeout | string | `nil` | PodMonitor scrape timeout in Go duration format (e.g. 15s) |
 | replicas | int | `1` | Number of replicas of Tempo Vulture |
 | resources | object | `{}` | Resource requests and limits for the vulture |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
+| service.enabled | bool | `true` | Specifies whether a Service should be created |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
