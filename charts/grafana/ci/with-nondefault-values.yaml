@@ -3,4 +3,4 @@ global:
 ingress:
   enabled: true
   hosts:
-      - monitoring-{{ .Values.global.environment }}.example.com
+    - monitoring-{{ .Values.global.environment }}.example.com
