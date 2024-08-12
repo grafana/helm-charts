@@ -36,7 +36,7 @@ Grafana Tempo Single Binary Mode
 | podLabels | object | `{}` | Pod (extra) Labels |
 | priorityClassName | string | `nil` | The name of the PriorityClass |
 | replicas | int | `1` | Define the amount of instances |
-| securityContext | object | `{}` | securityContext for container |
+| securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | securityContext for container |
 | service.annotations | object | `{}` |  |
 | service.ipFamilies | list | `[]` |  |
 | service.ipFamilyPolicy | string | `"SingleStack"` |  |
