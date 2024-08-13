@@ -15,6 +15,9 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.distributor.service.type }}
+  {{- if .Values.distributor.service.clusterIP }}
+  clusterIP: {{ .Values.distributor.service.clusterIP }}
+  {{ end }}
   ports:
     - name: http-metrics
       port: 3100
