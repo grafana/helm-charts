@@ -15,7 +15,7 @@ metadata:
   {{- end }}
 spec:
   policyTypes:
-    {{- if .Values.networkPolicy.ingress }}
+    {{- if .Values.networkPolicy.ingress.enabled }}
     - Ingress
     {{- end }}
     {{- if .Values.networkPolicy.egress.enabled }}
