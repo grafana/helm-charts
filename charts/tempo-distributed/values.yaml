@@ -465,6 +465,8 @@ distributor:
     loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
+    # -- If type is LoadBalancer you can set it to 'Local' [preserve the client source IP](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip)
+    externalTrafficPolicy: null
   serviceDiscovery:
     # -- Annotations for distributorDiscovery service
     annotations: {}
@@ -539,6 +541,42 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
+
+  # -- Autoscaling configurations
+  autoscaling:
+    # -- Enable autoscaling for the compactor
+    enabled: false
+    # -- Minimum autoscaling replicas for the compactor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the compactor
+    maxReplicas: 3
+    # -- Autoscaling via HPA object
+    hpa:
+      enabled: false
+      # -- Autoscaling behavior configuration for the compactor
+      behavior: {}
+      # -- Target CPU utilisation percentage for the compactor
+      targetCPUUtilizationPercentage: 100
+      # -- Target memory utilisation percentage for the compactor
+      targetMemoryUtilizationPercentage:
+    # -- Autoscaling via keda/ScaledObject
+    keda:
+      # requires https://keda.sh/
+      enabled: false
+      # -- List of autoscaling triggers for the compactor
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "250"
+      #     query: |-
+      #       sum by (cluster, namespace, tenant) (
+      #         tempodb_compaction_outstanding_blocks{container="compactor", namespace=~".*"}
+      #       ) /
+      #       ignoring(tenant) group_left count by (cluster, namespace)(
+      #         tempo_build_info{container="compactor", namespace=~".*"}
+      #       )
+
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -992,6 +1030,25 @@ enterpriseFederationFrontend:
 
 multitenancyEnabled: false
 
+rollout_operator:
+# -- Enable rollout-operator. It must be enabled when using Zone Aware Replication.
+  enabled: false
+
+  podSecurityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+    seccompProfile:
+      type: RuntimeDefault
+
+  # Set the container security context
+  securityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+    allowPrivilegeEscalation: false
+
 traces:
   jaeger:
     grpc:
@@ -1407,7 +1464,7 @@ storage:
       queue_depth: 20000
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
   admin:
-    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
 
 # Global overrides
@@ -1415,8 +1472,7 @@ global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
 
 # Per tenants overrides
-overrides: |
-  overrides: {}
+overrides: {}
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
@@ -1431,7 +1487,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.23-alpine
+    tag: 1.6.29-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1494,7 +1550,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.8.0
+    tag: v0.14.4
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
@@ -1689,7 +1745,7 @@ gateway:
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
-    tag: 1.19-alpine
+    tag: 1.27-alpine
     # -- The gateway image pull policy
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
@@ -1876,43 +1932,53 @@ gateway:
           }
 
           location = /jaeger/api/traces {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:14268/api/traces;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:14268/api/traces;
           }
 
           location = /zipkin/spans {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:9411/spans;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:9411/spans;
           }
 
           location = /v1/traces {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:4318/v1/traces;
           }
 
           location = /otlp/v1/traces {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:4318/v1/traces;
           }
 
           location ^~ /api {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$query_frontend:3100$request_uri;
           }
 
           location = /flush {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$ingester:3100$request_uri;
           }
 
           location = /shutdown {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$ingester:3100$request_uri;
           }
 
           location = /distributor/ring {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:3100$request_uri;
           }
 
           location = /ingester/ring {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:3100$request_uri;
           }
 
           location = /compactor/ring {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $compactor {{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$compactor:3100$request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
