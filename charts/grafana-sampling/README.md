@@ -141,7 +141,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 | alloy-statefulset.serviceAccount.create | bool | `false` |  |
 | metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
-| metricsGeneration.legacy | bool | `false` | Use legacy metric names that match those used by the Tempo metrics generator. |
+| metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
 | sampling.enabled | bool | `true` | Toggle tail sampling. |
 | sampling.extraPolicies | string | A policy to sample long requests is added by default. | User-defined policies in alloy format. |
