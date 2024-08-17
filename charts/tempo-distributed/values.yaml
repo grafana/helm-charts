@@ -461,6 +461,8 @@ distributor:
     labels: {}
     # -- Type of service for the distributor
     type: ClusterIP
+    # -- ClusterIP of the distributor service
+    clusterIP: null
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
     loadBalancerIP: ''
     # -- If type is LoadBalancer limit incoming traffic from IPs.
@@ -844,6 +846,8 @@ queryFrontend:
     labels: {}
     # -- Type of service for the queryFrontend
     type: ClusterIP
+    # -- ClusterIP of the queryFrontend service
+    clusterIP: null
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
     loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
