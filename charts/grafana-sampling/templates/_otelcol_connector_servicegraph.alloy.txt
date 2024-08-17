@@ -1,6 +1,6 @@
 {{- define "statefulset.connector.servicegraph" -}}
 otelcol.connector.servicegraph "default" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.connector.servicegraph/
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.connector.servicegraph/
   dimensions = [
     {{- range $.Values.metricsGeneration.dimensions }}
     {{ . | quote }},

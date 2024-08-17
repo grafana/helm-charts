@@ -1,6 +1,6 @@
 {{- define "statefulset.prometheus.remote_write" -}}
 prometheus.remote_write "grafana_cloud_prometheus" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/prometheus.remote_write/
+  // https://grafana.com/docs/alloy/latest/reference/components/prometheus.remote_write/
   endpoint {
     url = env("GRAFANA_CLOUD_PROMETHEUS_URL")
 
