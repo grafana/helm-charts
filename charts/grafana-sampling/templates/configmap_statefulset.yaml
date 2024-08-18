@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-statefulset
   labels:
-    {{- include "grafana-agent.labels" . | nindent 4 }}
+    {{- include "alloy.labels" . | nindent 4 }}
 data:
-   config.river: |- {{- (include "agent.config.statefulset" .) | nindent 4 }}
+   config.alloy: |- {{- (include "alloy.config.statefulset" .) | nindent 4 }}
