@@ -1,6 +1,6 @@
 {{- define "deployment.receiver.otlp" -}}
 otelcol.receiver.otlp "default" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.receiver.otlp/
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.receiver.otlp/
 
   // configures the default grpc endpoint "0.0.0.0:4317"
   grpc { }
@@ -16,7 +16,7 @@ otelcol.receiver.otlp "default" {
 
 {{- define "statefulset.receiver.otlp" -}}
 otelcol.receiver.otlp "default" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.receiver.otlp/
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.receiver.otlp/
 
   // configures the default grpc endpoint "0.0.0.0:4317"
   grpc { }
