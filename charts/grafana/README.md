@@ -121,7 +121,7 @@ need to instead set `global.imageRegistry`.
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume (can be templated) | `nil`                                     |
 | `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
 | `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
-| `persistence.disableWarning`              | Hide NOTES warning, useful when persiting to a database | `false`                                       |
+| `persistence.disableWarning`              | Hide NOTES warning, useful when persisting to a database | `false`                                       |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
 | `initChownData.image.registry`            | init-chown-data container image registry      | `docker.io`                                               |
 | `initChownData.image.repository`          | init-chown-data container image repository    | `busybox`                                               |
