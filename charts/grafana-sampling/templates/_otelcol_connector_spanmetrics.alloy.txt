@@ -7,6 +7,12 @@ otelcol.connector.spanmetrics "default" {
   }
   {{- end }}
 
+  resource_metrics_key_attributes = [
+    {{- range $.Values.metricsGeneration.dimensions }}
+    {{ . | quote }},
+    {{- end }}
+  ]
+
   {{ if .Values.metricsGeneration.legacy }}
   namespace = "traces.spanmetrics"
   {{- end }}
