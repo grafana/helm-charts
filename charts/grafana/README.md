@@ -718,7 +718,7 @@ stringData:
 Include in the `extraSecretMounts` configuration flag:
 
 ```yaml
-- extraSecretMounts:
+extraSecretMounts:
   - name: auth-generic-oauth-secret-mount
     secretName: auth-generic-oauth-secret
     defaultMode: 0440
@@ -731,7 +731,7 @@ Include in the `extraSecretMounts` configuration flag:
 This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Provider](https://github.com/Azure/secrets-store-csi-driver-provider-azure)
 
 ```yaml
-- extraSecretMounts:
+extraSecretMounts:
   - name: secrets-store-inline
     mountPath: /run/secrets
     readOnly: true
