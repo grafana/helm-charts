@@ -1320,6 +1320,22 @@ networkPolicy:
   ##    - {key: role, operator: In, values: [frontend]}
   ##
   explicitNamespacesSelector: {}
+  extraIngress: {}
+  ## Example:
+  ## extraIngress:
+  ##   - from:
+  ##     - podSelector:
+  ##         matchLabels:
+  ##           app.kubernetes.io/name: ingress-nginx
+  ##           app.kubernetes.io/component: controller
+  ##           app.kubernetes.io/instance: ingress-nginx
+  ##       namespaceSelector:
+  ##         matchLabels:
+  ##           kubernetes.io/metadata.name: ingress-nginx
+  ##     ports:
+  ##     - protocol: TCP
+  ##       port: 3000
+  ##
   ##
   ##
   ##

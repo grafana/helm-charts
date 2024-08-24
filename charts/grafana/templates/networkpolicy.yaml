@@ -57,5 +57,8 @@ spec:
               {{- include "grafana.labels" . | nindent 14 }}
               role: read
       {{- end }}
+    {{- if .Values.networkPolicy.extraIngress }}
+    {{- toYaml .Values.networkPolicy.extraIngress | nindent 4 }}
+    {{- end }}
   {{- end }}
 {{- end }}
