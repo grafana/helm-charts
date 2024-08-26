@@ -1,0 +1,5 @@
+{{- define "alloy.config.deployment" -}}
+  {{- include "deployment.receiver.otlp" . }}
+  {{- include "deployment.processor.batch" . }}
+  {{- include "deployment.exporter.loadbalancing" . }}
+{{- end -}}
