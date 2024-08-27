@@ -1067,7 +1067,7 @@ containers:
       - name: GF_RENDERING_CALLBACK_URL
         {{- if .Values.imageRenderer.renderingCallbackURL }}
         value: {{ .Values.imageRenderer.renderingCallbackURL | quote }}
-        {{ else }}
+        {{- else }}
         value: {{ .Values.imageRenderer.grafanaProtocol }}://{{ include "grafana.fullname" . }}.{{ include "grafana.namespace" . }}:{{ .Values.service.port }}/{{ .Values.imageRenderer.grafanaSubPath }}
         {{- end }}
       {{- end }}
