@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
   labels:
-    app.kubernetes.io/managed-by: operator-lifecycle-manager
-    app.kubernetes.io/name: tempo-operator
-    app.kubernetes.io/part-of: tempo-operator
-  name: tempo-operator-selfsigned-issuer
-  namespace: tempo-operator-system
+    {{- include "tempo-operator.labels" . | nindent 4 }}
+  name: {{ include "tempo-operator.fullname" . }}-selfsigned-issuer
+  namespace: {{ .Release.Namespace }}
 spec:
   selfSigned: {}

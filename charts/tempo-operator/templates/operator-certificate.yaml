@@ -1,6 +1,8 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
   labels:
     app.kubernetes.io/managed-by: operator-lifecycle-manager
     app.kubernetes.io/name: tempo-operator
