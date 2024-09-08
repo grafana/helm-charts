@@ -2,11 +2,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    app.kubernetes.io/managed-by: operator-lifecycle-manager
-    app.kubernetes.io/name: tempo-operator
-    app.kubernetes.io/part-of: tempo-operator
-  name: tempo-operator-leader-election-role
-  namespace: tempo-operator-system
+    {{- include "tempo-operator.labels" . | nindent 4 }}
+  name: {{ include "tempo-operator.fullname" . }}-leader-election-role
+  namespace: {{ .Release.Namespace }}
 rules:
 - apiGroups:
   - ""
