@@ -4,16 +4,14 @@ metadata:
   annotations:
     helm.sh/hook: post-install,post-upgrade
   labels:
-    app.kubernetes.io/managed-by: operator-lifecycle-manager
-    app.kubernetes.io/name: tempo-operator
-    app.kubernetes.io/part-of: tempo-operator
-  name: tempo-operator-serving-cert
-  namespace: tempo-operator-system
+    {{- include "tempo-operator.labels" . | nindent 4 }}
+  name: {{ include "tempo-operator.fullname" . }}-serving-cert
+  namespace: {{ .Release.Namespace }}
 spec:
   dnsNames:
-  - tempo-operator-webhook-service.tempo-operator-system.svc
-  - tempo-operator-webhook-service.tempo-operator-system.svc.cluster.local
+  - {{ include "tempo-operator.fullname" . }}-webhook-service.{{ .Release.Namespace }}.svc
+  - {{ include "tempo-operator.fullname" . }}-webhook-service.{{ .Release.Namespace }}.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: tempo-operator-selfsigned-issuer
+    name: {{ include "tempo-operator.fullname" . }}-selfsigned-issuer
   secretName: webhook-server-cert
