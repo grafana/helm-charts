@@ -2,29 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/managed-by: operator-lifecycle-manager
-    app.kubernetes.io/name: tempo-operator
-    app.kubernetes.io/part-of: tempo-operator
-    control-plane: controller-manager
-  name: tempo-operator-controller
-  namespace: tempo-operator-system
+    {{- include "tempo-operator.labels" . | nindent 4 }}
+  name: {{ include "tempo-operator.fullname" . }}-controller
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/managed-by: operator-lifecycle-manager
-      app.kubernetes.io/name: tempo-operator
-      app.kubernetes.io/part-of: tempo-operator
-      control-plane: controller-manager
+      {{- include "tempo-operator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        app.kubernetes.io/managed-by: operator-lifecycle-manager
-        app.kubernetes.io/name: tempo-operator
-        app.kubernetes.io/part-of: tempo-operator
-        control-plane: controller-manager
+        {{- include "tempo-operator.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - args:
@@ -101,7 +92,7 @@ spec:
             - ALL
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: tempo-operator-controller-manager
+      serviceAccountName: {{ include "tempo-operator.fullname" . }}-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
       - name: cert
@@ -109,5 +100,5 @@ spec:
           defaultMode: 420
           secretName: webhook-server-cert
       - configMap:
-          name: tempo-operator-manager-config
+          name: {{ include "tempo-operator.fullname" . }}-manager-config
         name: manager-config
