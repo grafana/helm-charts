@@ -1,6 +1,2 @@
 nameOverride: ''
 fullnameOverride: ''
-
-cert-manager:
-  crds:
-    enabled: true

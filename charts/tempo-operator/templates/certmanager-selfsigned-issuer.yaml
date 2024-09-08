@@ -1,8 +1,6 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  annotations:
-    helm.sh/hook: post-install,post-upgrade
   labels:
     {{- include "tempo-operator.labels" . | nindent 4 }}
   name: {{ include "tempo-operator.fullname" . }}-selfsigned-issuer
