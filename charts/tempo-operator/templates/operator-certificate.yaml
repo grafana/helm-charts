@@ -10,6 +10,12 @@ spec:
   - {{ include "tempo-operator.fullname" . }}-webhook-service.{{ .Release.Namespace }}.svc
   - {{ include "tempo-operator.fullname" . }}-webhook-service.{{ .Release.Namespace }}.svc.cluster.local
   issuerRef:
+    {{- with .Values.manager.webhook }}
+    {{- if .createCertificateIssuer }}
     kind: Issuer
-    name: {{ include "tempo-operator.fullname" . }}-selfsigned-issuer
+    name: {{ include "tempo-operator.fullname" $ }}-selfsigned-issuer
+    {{- else -}}
+    {{- toYaml .certificateIssuerRef | nindent 4 }}
+    {{- end }}
+    {{- end }}
   secretName: webhook-server-cert

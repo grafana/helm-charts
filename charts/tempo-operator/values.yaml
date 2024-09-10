@@ -1,2 +1,10 @@
 nameOverride: ''
 fullnameOverride: ''
+
+manager:
+  webhook:
+    createCertificateIssuer: true
+    certificateIssuerRef: {}
+      #kind: Issuer
+      #name: new-issuer
+      #group: some-group.local
