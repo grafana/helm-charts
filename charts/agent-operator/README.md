@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.42.0](https://img.shields.io/badge/AppVersion-0.42.0-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.42.0](https://img.shields.io/badge/AppVersion-0.42.0-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -70,6 +70,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | podAnnotations | object | `{}` | Annotations for the Deployment Pods |
 | podLabels | object | `{}` | Annotations for the Deployment Pods |
 | podSecurityContext | object | `{}` | Pod security context (runAsUser, etc.) |
+| priorityClassName | string | `"nil"` | priorityClassName for the Deployment Pods |
 | rbac.create | bool | `true` | Toggle to create ClusterRole and ClusterRoleBinding |
 | rbac.podSecurityPolicyName | string | `""` | Name of a PodSecurityPolicy to use in the ClusterRole. If unset, no PodSecurityPolicy is used. |
 | resources | object | `{}` | Resource limits and requests config |
