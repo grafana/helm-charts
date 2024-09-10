@@ -17,82 +17,75 @@ spec:
       labels:
         {{- include "tempo-operator.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.manager }}
       containers:
-      - args:
-        - --zap-log-level=info
-        - start
-        - --config=controller_manager_config.yaml
-        env:
-        - name: RELATED_IMAGE_TEMPO
-          value: docker.io/grafana/tempo:2.5.0
-        - name: RELATED_IMAGE_TEMPO_QUERY
-          value: docker.io/grafana/tempo-query:2.5.0
-        - name: RELATED_IMAGE_TEMPO_GATEWAY
-          value: quay.io/observatorium/api:main-2024-05-29-ca8d2de
-        - name: RELATED_IMAGE_TEMPO_GATEWAY_OPA
-          value: quay.io/observatorium/opa-openshift:main-2024-04-29-914c13f
-        - name: RELATED_IMAGE_OAUTH_PROXY
-          value: quay.io/openshift/origin-oauth-proxy:4.12
-        image: ghcr.io/grafana/tempo-operator/tempo-operator:v0.11.1
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        name: manager
-        ports:
-        - containerPort: 9443
-          name: webhook-server
-          protocol: TCP
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-        volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs
-          name: cert
-          readOnly: true
-        - mountPath: /controller_manager_config.yaml
-          name: manager-config
-          subPath: controller_manager_config.yaml
-      - args:
-        - --secure-listen-address=0.0.0.0:8443
-        - --upstream=http://127.0.0.1:8080/
-        - --logtostderr=true
-        - --v=0
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
-        name: kube-rbac-proxy
-        ports:
-        - containerPort: 8443
-          name: https
-          protocol: TCP
-        resources:
-          limits:
-            cpu: 500m
-            memory: 128Mi
-          requests:
-            cpu: 5m
-            memory: 64Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
+        - name: manager
+          {{- if not .args }}
+          args:
+            - --zap-log-level=info
+            - start
+            - --config=controller_manager_config.yaml
+          {{- else -}}
+          {{- toYaml .args | nindent 12 }}
+          {{- end }}
+          env:
+          - name: RELATED_IMAGE_TEMPO
+            value: docker.io/grafana/tempo:2.5.0
+          - name: RELATED_IMAGE_TEMPO_QUERY
+            value: docker.io/grafana/tempo-query:2.5.0
+          - name: RELATED_IMAGE_TEMPO_GATEWAY
+            value: quay.io/observatorium/api:main-2024-05-29-ca8d2de
+          - name: RELATED_IMAGE_TEMPO_GATEWAY_OPA
+            value: quay.io/observatorium/opa-openshift:main-2024-04-29-914c13f
+          - name: RELATED_IMAGE_OAUTH_PROXY
+            value: quay.io/openshift/origin-oauth-proxy:4.12
+          image: {{ .image.repository }}:{{ .image.tag }}
+          imagePullPolicy: {{ .image.pullPolicy }}
+          livenessProbe:
+            {{- toYaml .livenessProbe | nindent 12 }}
+          ports:
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+          readinessProbe:
+            {{- toYaml .readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .securityContext | nindent 12 }}
+          volumeMounts:
+          - mountPath: /tmp/k8s-webhook-server/serving-certs
+            name: cert
+            readOnly: true
+          - mountPath: /controller_manager_config.yaml
+            name: manager-config
+            subPath: controller_manager_config.yaml
+        - args:
+          - --secure-listen-address=0.0.0.0:8443
+          - --upstream=http://127.0.0.1:8080/
+          - --logtostderr=true
+          - --v=0
+          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+          name: kube-rbac-proxy
+          ports:
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 5m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: {{ include "tempo-operator.fullname" . }}-controller-manager
+      serviceAccountName: {{ include "tempo-operator.fullname" $ }}-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
       - name: cert
@@ -100,5 +93,6 @@ spec:
           defaultMode: 420
           secretName: webhook-server-cert
       - configMap:
-          name: {{ include "tempo-operator.fullname" . }}-manager-config
+          name: {{ include "tempo-operator.fullname" $ }}-manager-config
         name: manager-config
+      {{- end }}

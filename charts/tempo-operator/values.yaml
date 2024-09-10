@@ -2,6 +2,39 @@ nameOverride: ''
 fullnameOverride: ''
 
 manager:
+  args: []
+
+  image:
+    repository: "ghcr.io/grafana/tempo-operator/tempo-operator"
+    tag: "v0.11.1"
+    pullPolicy: IfNotPresent
+  
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8081
+    initialDelaySeconds: 15
+    periodSeconds: 20
+  
+  readinessProbe:
+    httpGet:
+      path: /readyz
+      port: 8081
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+  
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL 
+  
+
   webhook:
     createCertificateIssuer: true
     certificateIssuerRef: {}

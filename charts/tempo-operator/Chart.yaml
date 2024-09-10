@@ -2,4 +2,4 @@ apiVersion: v2
 name: tempo-operator
 description: Grafana Tempo Operator
 type: application
-version: 0.1.1
+version: 0.1.2
