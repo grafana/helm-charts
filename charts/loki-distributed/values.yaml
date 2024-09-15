@@ -229,6 +229,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
+    # Old boltdb-shipper schema. Included in example for reference but does not need changing.
     - from: "2020-09-07"
       store: boltdb-shipper
       object_store: filesystem
@@ -236,13 +237,27 @@ loki:
       index:
         prefix: loki_index_
         period: 24h
+    # New TSDB schema below
+    - from: "2024-09-15"
+      store: tsdb
+      object_store: filesystem
+      schema: v12
+      index:
+        prefix: loki_index_
+        period: 24h
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
   storageConfig:
+  # Old boltdb-shipper configuration. Included in example for reference but does not need changing.
     boltdb_shipper:
       shared_store: filesystem
       active_index_directory: /var/loki/index
       cache_location: /var/loki/cache
+      cache_ttl: 168h
+    # New tsdb-shipper configuration
+    tsdb_shipper:
+      active_index_directory: /var/loki/tsdb-index
+      cache_location: /var/loki/tsdb-cache
       cache_ttl: 168h
     filesystem:
       directory: /var/loki/chunks
