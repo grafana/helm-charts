@@ -248,7 +248,7 @@ loki:
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
   storageConfig:
-  # Old boltdb-shipper configuration. Included in example for reference but does not need changing.
+    # Old boltdb-shipper configuration. Included in example for reference but does not need changing.
     boltdb_shipper:
       shared_store: filesystem
       active_index_directory: /var/loki/index
