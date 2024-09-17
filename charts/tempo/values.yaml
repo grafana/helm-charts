@@ -263,6 +263,12 @@ serviceAccount:
 
 service:
   type: ClusterIP
+  # type: LoadBalancer
+  # clusterIP: ""
+  # loadBalancerIP: ""
+  # -- If service type is LoadBalancer, the exposed protocol can either be UDP or TCP
+  # protocol: "TCP"
+
   annotations: {}
   labels: {}
   targetPort: ""
