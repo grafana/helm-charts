@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.10.3](https://img.shields.io/badge/Version-1.10.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.10.4](https://img.shields.io/badge/Version-1.10.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -41,6 +41,9 @@ Grafana Tempo Single Binary Mode
 | service.labels | object | `{}` |  |
 | service.targetPort | string | `""` |  |
 | service.type | string | `"ClusterIP"` |  |
+| service.clusterIP | string | `""` | |
+| service.loadBalancerIP | string | `""` | |
+| service.protocol | string | `"TCP"` | If service type is LoadBalancer, the exposed protocol can be "UDP", "TCP" or "UDP,TCP"  |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `true` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
