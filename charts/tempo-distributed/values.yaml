@@ -2005,6 +2005,29 @@ gateway:
         }
       }
 
+ingress:
+  # -- If you enable this, make sure to disable the gateway's ingress.
+  enabled: false
+  # ingressClassName: nginx
+  annotations: {}
+  paths:
+    distributor:
+      - path: /v1/traces
+        port: 4318
+      - path: /distributor/ring
+        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+        # pathType: Prefix
+      - path: /ingester/ring
+    ingester:
+      - path: /flush
+      - path: /shutdown
+    query-frontend:
+      - path: /api
+    compactor:
+      - path: /api/v1/upload/block/
+  hosts:
+    - tempo.example.com
+
 ##############################################################################
 # The values in and after the `enterprise:` key configure the enterprise features
 enterprise:
