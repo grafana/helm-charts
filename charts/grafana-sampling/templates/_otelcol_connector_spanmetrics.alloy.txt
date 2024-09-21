@@ -1,13 +1,25 @@
 {{- define "statefulset.connector.spanmetrics" -}}
 otelcol.connector.spanmetrics "default" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.connector.spanmetrics/
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.connector.spanmetrics/
   {{- range $.Values.metricsGeneration.dimensions }}
   dimension {
     name = {{ . | quote }}
   }
   {{- end }}
 
+  resource_metrics_key_attributes = [
+    "service.name",
+    "span.name",
+    "span.kind",
+    "status.code",
+    {{- range $.Values.metricsGeneration.dimensions }}
+    {{ . | quote }},
+    {{- end }}
+  ]
+
+  {{ if .Values.metricsGeneration.legacy }}
   namespace = "traces.spanmetrics"
+  {{- end }}
 
   histogram {
     unit = "s"

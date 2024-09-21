@@ -1,6 +1,8 @@
 metricsGeneration:
   # -- Toggle generation of spanmetrics and servicegraph metrics.
   enabled: true
+  # -- Use legacy metric names that match those used by the Tempo metrics generator.
+  legacy: true
   # -- Additional dimensions to add to generated metrics.
   dimensions:
     - service.namespace
@@ -23,7 +25,7 @@ sampling:
     sample: false
     # -- Percentage of failed requests to sample.
     percentage: 50
-  # -- User-defined policies in river format.
+  # -- User-defined policies in alloy format.
   # @default -- A policy to sample long requests is added by default.
   extraPolicies: |-
     policy {
@@ -47,8 +49,8 @@ sampling:
       }
     }
 
-# @ignored Ignore agent deployment
-grafana-agent-deployment:
+# @ignored Ignore alloy deployment
+alloy-deployment:
   # -- Do not change this.
   nameOverride: deployment
   controller:
@@ -65,7 +67,7 @@ grafana-agent-deployment:
       targetCPUUtilizationPercentage: 0
       # -- Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling.
       targetMemoryUtilizationPercentage: 80
-  agent:
+  alloy:
     # This chart creates the configmaps
     configMap:
       create: false
@@ -83,8 +85,8 @@ grafana-agent-deployment:
         targetPort: 4318
         protocol: TCP
 
-# @ignored Ignore agent statefulset
-grafana-agent-statefulset:
+# @ignored Ignore alloy statefulset
+alloy-statefulset:
   # -- Do not change this.
   nameOverride: statefulset
   controller:
@@ -103,7 +105,7 @@ grafana-agent-statefulset:
       targetMemoryUtilizationPercentage: 80
   service:
     clusterIP: None
-  agent:
+  alloy:
     extraEnv:
       - name: GRAFANA_CLOUD_API_KEY
         value: <REQUIRED>
