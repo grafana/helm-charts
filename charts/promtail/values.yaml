@@ -193,6 +193,11 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
+  # -- Automatically mount a ServiceAccount's API credentials
+  automountServiceAccountToken: true
+
+# -- Automatically mount API credentials for a particular Pod
+automountServiceAccountToken: true
 
 # -- Node selector for pods
 nodeSelector: {}
