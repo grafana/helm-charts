@@ -139,7 +139,11 @@ A major chart version change indicates that there is an incompatible breaking ch
 | alloy-statefulset.rbac.create | bool | `false` |  |
 | alloy-statefulset.service.clusterIP | string | `"None"` |  |
 | alloy-statefulset.serviceAccount.create | bool | `false` |  |
-| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name"]` | Additional dimensions to add to generated metrics. |
+| batch.deployment | object | `{"send_batch_max_size":0,"send_batch_size":8192,"timeout":"200ms"}` | Configure batch processing options. |
+| batch.statefulset.send_batch_max_size | int | `0` |  |
+| batch.statefulset.send_batch_size | int | `8192` |  |
+| batch.statefulset.timeout | string | `"200ms"` |  |
+| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name","k8s.pod.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
 | metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
