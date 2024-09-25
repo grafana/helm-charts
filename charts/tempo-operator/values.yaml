@@ -41,3 +41,6 @@ manager:
       #kind: Issuer
       #name: new-issuer
       #group: some-group.local
+
+rbac:
+  enabled: true
