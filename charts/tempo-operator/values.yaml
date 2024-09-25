@@ -8,7 +8,7 @@ manager:
 
   image:
     repository: "ghcr.io/grafana/tempo-operator/tempo-operator"
-    tag: "v0.11.1"
+    tag: "0.11.1"
     pullPolicy: IfNotPresent
   
   livenessProbe:

@@ -43,7 +43,7 @@ spec:
             value: quay.io/observatorium/opa-openshift:main-2024-04-29-914c13f
           - name: RELATED_IMAGE_OAUTH_PROXY
             value: quay.io/openshift/origin-oauth-proxy:4.12
-          image: {{ .image.repository }}:{{ .image.tag }}
+          image: {{ .image.repository }}:{{ default $.Chart.AppVersion .image.tag }}
           imagePullPolicy: {{ .image.pullPolicy }}
           livenessProbe:
             {{- toYaml .livenessProbe | nindent 12 }}
