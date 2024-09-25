@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-operator
 description: Grafana Tempo Operator
 type: application
-version: 0.1.2
+version: 0.1.0
 appVersion: 0.11.1
 home: https://grafana.github.io/helm-charts
 sources:
