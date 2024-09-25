@@ -90,7 +90,15 @@ manager:
         metrics:
           createServiceMonitors: false
           createPrometheusRules: false
+  
+  serviceAccount:
+    create: true
+    
+    # To use an existing service account, enter its name below.
+    # Only used if serviceAccount.create == false
+    serviceAccountName: ""
 
 
 rbac:
   enabled: true
+
