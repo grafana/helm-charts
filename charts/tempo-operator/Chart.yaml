@@ -9,3 +9,4 @@ sources:
   - https://github.com/grafana/tempo-operator
 maintainers:
   - name: Suyash Sonawane
+    email: sonawsuyash@proton.me
