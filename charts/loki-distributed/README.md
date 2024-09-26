@@ -510,8 +510,9 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `loki.image.tag` |
 | querier.initContainers | list | `[]` | Init containers to add to the querier pods |
 | querier.maxSurge | int | `0` | Max Surge for querier pods |
-| querier.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
+| querier.maxUnavailable | int | `1` | Max Unavailable for querier pods |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
+| querier.pdb.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | querier.persistence.annotations | object | `{}` | Annotations for querier PVCs |
 | querier.persistence.enabled | bool | `false` | Enable creating PVCs for the querier cache |
 | querier.persistence.size | string | `"10Gi"` | Size of persistent disk |
