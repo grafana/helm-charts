@@ -44,6 +44,12 @@ loki:
       path: /ready
       port: http
     initialDelaySeconds: 300
+  startupProbe:
+    httpGet:
+      path: /ready
+      port: http
+    failureThreshold: 30
+    timeoutSeconds: 1
   image:
     # -- The Docker registry
     registry: docker.io
@@ -495,6 +501,8 @@ ingester:
   readinessProbe: {}
   # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
   livenessProbe: {}
+  # -- startup probe settings for ingester pods. If empty, use `loki.startupProbe`
+  startupProbe: {}
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -1194,6 +1202,12 @@ gateway:
       path: /
       port: http
     initialDelaySeconds: 30
+  startupProbe:
+    httpGet:
+      path: /
+      port: http
+    failureThreshold: 3
+    timeoutSeconds: 1
   nginxConfig:
     # -- NGINX log format
     # @default -- See values.yaml
@@ -1388,10 +1402,12 @@ compactor:
   extraVolumeMounts: []
   # -- Volumes to add to the compactor pods
   extraVolumes: []
-  # -- readiness probe settings for ingester pods. If empty, use `loki.readinessProbe`
+  # -- readiness probe settings for compactor pods. If empty, use `loki.readinessProbe`
   readinessProbe: {}
-  # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
+  # -- liveness probe settings for compactor pods. If empty use `loki.livenessProbe`
   livenessProbe: {}
+  # -- startup probe settings for compactor pods. If empty, use `loki.startupProbe`
+  startupProbe: {}
   # -- Resource requests and limits for the compactor
   resources: {}
   # -- Containers to add to the compactor pods
@@ -1707,6 +1723,11 @@ memcached:
     tcpSocket:
       port: http
     initialDelaySeconds: 10
+  startupProbe:
+    tcpSocket:
+      port: http
+    failureThreshold: 1
+    timeoutSeconds: 1
   image:
     # -- The Docker registry for the memcached
     registry: docker.io
