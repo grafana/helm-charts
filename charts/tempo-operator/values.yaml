@@ -10,40 +10,40 @@ manager:
     repository: "ghcr.io/grafana/tempo-operator/tempo-operator"
     tag: "0.11.1"
     pullPolicy: IfNotPresent
-  
+
   livenessProbe:
     httpGet:
       path: /healthz
       port: 8081
     initialDelaySeconds: 15
     periodSeconds: 20
-  
+
   readinessProbe:
     httpGet:
       path: /readyz
       port: 8081
     initialDelaySeconds: 5
     periodSeconds: 10
-  
+
   resources:
     requests:
       cpu: 100m
       memory: 64Mi
-  
+
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
-      - ALL 
-  
+      - ALL
+
 
   webhook:
     createCertificateIssuer: true
     certificateIssuerRef: {}
-      #kind: Issuer
-      #name: new-issuer
-      #group: some-group.local
-  
+      # kind: Issuer
+      # name: new-issuer
+      # group: some-group.local
+
   config:
     apiVersion: config.tempo.grafana.com/v1alpha1
     kind: ProjectConfig
@@ -92,10 +92,10 @@ manager:
         metrics:
           createServiceMonitors: false
           createPrometheusRules: false
-  
+
   serviceAccount:
     create: true
-    
+
     # To use an existing service account, enter its name below.
     # Only used if serviceAccount.create == false
     serviceAccountName: ""
@@ -103,4 +103,3 @@ manager:
 
 rbac:
   enabled: true
-
