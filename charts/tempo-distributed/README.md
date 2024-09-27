@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.15.0](https://img.shields.io/badge/Version-1.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.18.1](https://img.shields.io/badge/Version-1.18.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -46,14 +46,19 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### from Chart versions < 1.13.0
+### From Chart versions < 1.18.0
+
+Please be aware that we've updated the minor version to Tempo 2.6, which includes breaking changes.
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.6.0/) before upgrading.
+
+### From Chart versions < 1.15.2
+
+Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
+
+### From Chart versions < 1.13.0
 
 EXPERIMENTAL: Zone Aware Replication has been added to the ingester statefulset.
 Attention, the calculation of the pods per AZ is as follows ```(.values.ingester.replicas + numberOfZones -1)/numberOfZones```
-
-### From Chart versions < 1.8.0
-
-Switch to new overrides format, see https://grafana.com/docs/tempo/latest/configuration/#overrides.
 
 ### From Chart versions < 1.6.0
 
@@ -261,6 +266,16 @@ The memcached default args are removed and should be provided manually. The sett
 | cache.caches[0].roles[0] | string | `"parquet-footer"` |  |
 | cache.caches[0].roles[1] | string | `"bloom"` |  |
 | cache.caches[0].roles[2] | string | `"frontend-search"` |  |
+| compactor.autoscaling | object | `{"enabled":false,"hpa":{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null},"keda":{"enabled":false,"triggers":[]},"maxReplicas":3,"minReplicas":1}` | Autoscaling configurations |
+| compactor.autoscaling.enabled | bool | `false` | Enable autoscaling for the compactor |
+| compactor.autoscaling.hpa | object | `{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null}` | Autoscaling via HPA object |
+| compactor.autoscaling.hpa.behavior | object | `{}` | Autoscaling behavior configuration for the compactor |
+| compactor.autoscaling.hpa.targetCPUUtilizationPercentage | int | `100` | Target CPU utilisation percentage for the compactor |
+| compactor.autoscaling.hpa.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the compactor |
+| compactor.autoscaling.keda | object | `{"enabled":false,"triggers":[]}` | Autoscaling via keda/ScaledObject |
+| compactor.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the compactor |
+| compactor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the compactor |
+| compactor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the compactor |
 | compactor.config.compaction.block_retention | string | `"48h"` | Duration to keep blocks |
 | compactor.config.compaction.compacted_block_retention | string | `"1h"` |  |
 | compactor.config.compaction.compaction_cycle | string | `"30s"` | The time between compaction cycles |
@@ -285,6 +300,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `tempo.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
+| compactor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.podLabels | object | `{}` | Labels for compactor pods |
@@ -318,6 +334,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `tempo.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
+| distributor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.podLabels | object | `{}` | Labels for distributor pods |
@@ -355,6 +372,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
 | enterpriseFederationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
 | enterpriseFederationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
+| enterpriseFederationFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
 | enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
 | enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
@@ -443,12 +461,13 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | gateway.image.registry | string | `nil` | The Docker registry for the gateway image. Overrides `global.image.registry` |
 | gateway.image.repository | string | `"nginxinc/nginx-unprivileged"` | The gateway image repository |
-| gateway.image.tag | string | `"1.19-alpine"` | The gateway image tag |
+| gateway.image.tag | string | `"1.27-alpine"` | The gateway image tag |
 | gateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.labels | object | `{}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| gateway.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
@@ -557,7 +576,8 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.23-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.29-alpine"` | Memcached Docker image tag |
+| memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.replicas | int | `1` |  |
@@ -570,7 +590,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcachedExporter.image.registry | string | `nil` | The Docker registry for the Memcached Exporter image. Overrides `global.image.registry` |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
-| memcachedExporter.image.tag | string | `"v0.8.0"` | Memcached Exporter Docker image tag |
+| memcachedExporter.image.tag | string | `"v0.14.4"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
 | metaMonitoring.grafanaAgent.annotations | object | `{}` | Annotations to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that. |
 | metaMonitoring.grafanaAgent.enabled | bool | `false` | Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below. Note that you need to configure serviceMonitor in order to have some metrics available. |
@@ -627,6 +647,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.image.tag | string | `nil` | Docker image tag for the metrics-generator image. Overrides `tempo.image.tag` |
 | metricsGenerator.initContainers | list | `[]` |  |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
+| metricsGenerator.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
 | metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
@@ -661,7 +682,7 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.rootPassword | string | `"supersecret"` |  |
 | minio.rootUser | string | `"grafana-tempo"` |  |
 | multitenancyEnabled | bool | `false` |  |
-| overrides | string | `"overrides: {}\n"` |  |
+| overrides | object | `{}` |  |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
 | prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
@@ -696,6 +717,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
+| querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.podLabels | object | `{}` | Labels for querier pods |
@@ -735,6 +757,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
 | queryFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
 | queryFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
+| queryFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
@@ -788,7 +811,7 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| storage.admin.backend | string | `"filesystem"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config |
+| storage.admin.backend | string | `"filesystem"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config |
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
 | storage.trace.block.dedicated_columns | list | `[]` | Lis with dedicated attribute columns (only for vParquet3 or later) |
 | storage.trace.block.version | string | `nil` | The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/ |
@@ -892,9 +915,10 @@ Metrics-generator is disabled by default and can be activated by configuring the
 metricsGenerator:
   enabled: true
   config:
-    storage_remote_write:
-     - url: http://cortex/api/v1/push
-       send_exemplars: true
+    storage:
+      remote_write:
+      - url: http://cortex/api/v1/push
+        send_exemplars: true
     #   headers:
     #     x-scope-orgid: operations
 # Global overrides
