@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.16.2](https://img.shields.io/badge/Version-1.16.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.18.1](https://img.shields.io/badge/Version-1.18.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -45,6 +45,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.18.0
+
+Please be aware that we've updated the minor version to Tempo 2.6, which includes breaking changes.
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.6.0/) before upgrading.
 
 ### From Chart versions < 1.15.2
 
@@ -295,6 +300,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `tempo.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
+| compactor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.podLabels | object | `{}` | Labels for compactor pods |
@@ -328,6 +334,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.image.registry | string | `nil` | The Docker registry for the ingester image. Overrides `tempo.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
+| distributor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.podLabels | object | `{}` | Labels for distributor pods |
@@ -365,6 +372,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.image.registry | string | `nil` | The Docker registry for the federation-frontend image. Overrides `tempo.image.registry` |
 | enterpriseFederationFrontend.image.repository | string | `nil` | Docker image repository for the federation-frontend image. Overrides `tempo.image.repository` |
 | enterpriseFederationFrontend.image.tag | string | `nil` | Docker image tag for the federation-frontend image. Overrides `tempo.image.tag` |
+| enterpriseFederationFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
 | enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
 | enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
@@ -459,6 +467,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.labels | object | `{}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| gateway.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
@@ -568,6 +577,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.29-alpine"` | Memcached Docker image tag |
+| memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.replicas | int | `1` |  |
@@ -637,6 +647,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.image.tag | string | `nil` | Docker image tag for the metrics-generator image. Overrides `tempo.image.tag` |
 | metricsGenerator.initContainers | list | `[]` |  |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
+| metricsGenerator.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
 | metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
@@ -706,6 +717,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
+| querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.podLabels | object | `{}` | Labels for querier pods |
@@ -745,6 +757,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
 | queryFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
 | queryFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
+| queryFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
