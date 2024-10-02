@@ -265,7 +265,7 @@ service:
   type: ClusterIP
   clusterIP: ""
   # -- (string) IP address, in case of 'type: LoadBalancer'
-  loadBalancerIP: 
+  loadBalancerIP:
   # -- If service type is LoadBalancer, the exposed protocol can either be "UDP", "TCP" or "UDP,TCP"
   protocol: "TCP"
 
