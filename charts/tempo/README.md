@@ -41,7 +41,7 @@ Grafana Tempo Single Binary Mode
 | service.clusterIP | string | `""` |  |
 | service.labels | object | `{}` |  |
 | service.loadBalancerIP | string | `nil` | IP address, in case of 'type: LoadBalancer' |
-| service.protocol | string | `"TCP"` | If service type is LoadBalancer, the exposed protocol can either be 'UDP', 'TCP' or 'UDP,TCP' |
+| service.protocol | string | `"TCP"` | If service type is LoadBalancer, the exposed protocol can either be "UDP", "TCP" or "UDP,TCP" |
 | service.targetPort | string | `""` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
