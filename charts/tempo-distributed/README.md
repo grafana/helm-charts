@@ -584,6 +584,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.replicas | int | `1` |  |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |
+| memcached.tolerations | list | `[]` | Toleration for memcached pods |
 | memcached.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
 | memcachedExporter.hostAliases | list | `[]` | hostAliases to add |
