@@ -81,3 +81,9 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+
+webhooks:
+  # -- Needed for using server Webhooks
+  # https://github.com/grafana/rollout-operator#webhooks
+  enabled: false
+  failurePolicy: ""
