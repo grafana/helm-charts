@@ -799,9 +799,9 @@ grafana.ini:
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
 ## grafana Authentication can be enabled with the following values on grafana.ini
- # server:
-      # The full public facing url you use in browser, used for redirects and emails
- #    root_url:
+ server:
+    # The full public facing url you use in browser, used for redirects and emails
+    root_url: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{if (.Values.ingress.tls )}}https://{{ else }}http://{{end}}{{ .Values.ingress.hosts | first }}{{ else }}''{{ end }}"
  # https://grafana.com/docs/grafana/latest/auth/github/#enable-github-in-grafana
  # auth.github:
  #    enabled: false
