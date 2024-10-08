@@ -16,6 +16,9 @@ global:
   dnsService: 'kube-dns'
   # -- configures DNS service namespace
   dnsNamespace: 'kube-system'
+  # -- Common environment variables to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
+  extraEnv: []
 fullnameOverride: ''
 # fullnameOverride: tempo
 
@@ -179,6 +182,8 @@ ingester:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Override Pod Disruption Budget maxUnavailable with a static value
+  # maxUnavailable: 1
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -343,6 +348,8 @@ metricsGenerator:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for metrics-generator pods
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
@@ -513,6 +520,8 @@ distributor:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -541,6 +550,42 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
+
+  # -- Autoscaling configurations
+  autoscaling:
+    # -- Enable autoscaling for the compactor
+    enabled: false
+    # -- Minimum autoscaling replicas for the compactor
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the compactor
+    maxReplicas: 3
+    # -- Autoscaling via HPA object
+    hpa:
+      enabled: false
+      # -- Autoscaling behavior configuration for the compactor
+      behavior: {}
+      # -- Target CPU utilisation percentage for the compactor
+      targetCPUUtilizationPercentage: 100
+      # -- Target memory utilisation percentage for the compactor
+      targetMemoryUtilizationPercentage:
+    # -- Autoscaling via keda/ScaledObject
+    keda:
+      # requires https://keda.sh/
+      enabled: false
+      # -- List of autoscaling triggers for the compactor
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "250"
+      #     query: |-
+      #       sum by (cluster, namespace, tenant) (
+      #         tempodb_compaction_outstanding_blocks{container="compactor", namespace=~".*"}
+      #       ) /
+      #       ignoring(tenant) group_left count by (cluster, namespace)(
+      #         tempo_build_info{container="compactor", namespace=~".*"}
+      #       )
+
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -571,6 +616,8 @@ compactor:
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for compactor pods
   nodeSelector: {}
   # -- Tolerations for compactor pods
@@ -685,6 +732,8 @@ querier:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -877,6 +926,8 @@ queryFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -983,6 +1034,8 @@ enterpriseFederationFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for federation-frontend pods
   nodeSelector: {}
   # -- Tolerations for federation-frontend pods
@@ -1428,7 +1481,7 @@ storage:
       queue_depth: 20000
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
   admin:
-    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/config/reference/#admin_client_config
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
 
 # Global overrides
@@ -1451,7 +1504,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.23-alpine
+    tag: 1.6.29-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1494,6 +1547,8 @@ memcached:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   service:
     # -- Annotations for memcached service
     annotations: {}
@@ -1514,7 +1569,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.8.0
+    tag: v0.14.4
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
@@ -1709,7 +1764,7 @@ gateway:
     # -- The gateway image repository
     repository: nginxinc/nginx-unprivileged
     # -- The gateway image tag
-    tag: 1.19-alpine
+    tag: 1.27-alpine
     # -- The gateway image pull policy
     pullPolicy: IfNotPresent
   # -- The name of the PriorityClass for gateway pods
@@ -1757,6 +1812,8 @@ gateway:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for gateway pods
   nodeSelector: {}
   # -- Tolerations for gateway pods
@@ -1896,43 +1953,53 @@ gateway:
           }
 
           location = /jaeger/api/traces {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:14268/api/traces;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:14268/api/traces;
           }
 
           location = /zipkin/spans {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:9411/spans;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:9411/spans;
           }
 
           location = /v1/traces {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:4318/v1/traces;
           }
 
           location = /otlp/v1/traces {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4318/v1/traces;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:4318/v1/traces;
           }
 
           location ^~ /api {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$query_frontend:3100$request_uri;
           }
 
           location = /flush {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$ingester:3100$request_uri;
           }
 
           location = /shutdown {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$ingester:3100$request_uri;
           }
 
           location = /distributor/ring {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:3100$request_uri;
           }
 
           location = /ingester/ring {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$distributor:3100$request_uri;
           }
 
           location = /compactor/ring {
-            proxy_pass       http://{{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:3100$request_uri;
+            set $compactor {{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            proxy_pass       http://$compactor:3100$request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
