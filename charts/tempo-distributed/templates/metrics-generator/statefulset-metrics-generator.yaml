@@ -73,9 +73,14 @@ spec:
             - name: {{ .name | quote }}
               containerPort: {{ .port }}
             {{- end }}
-          {{- with .Values.metricsGenerator.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.metricsGenerator.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.metricsGenerator.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.metricsGenerator.extraEnvFrom }}
           envFrom:
