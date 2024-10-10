@@ -14,6 +14,7 @@ metadata:
     {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
+  internalTrafficPolicy: {{ .Values.distributor.service.internalTrafficPolicy }}
   type: {{ .Values.distributor.service.type }}
   ports:
     - name: http-metrics
