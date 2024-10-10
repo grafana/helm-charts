@@ -66,7 +66,7 @@ initContainers:
     {{- end }}
     imagePullPolicy: {{ .Values.downloadDashboardsImage.pullPolicy }}
     command: ["/bin/sh"]
-    args: [ "-c", "mkdir -p /var/lib/grafana/dashboards/default && /bin/sh -x /etc/grafana/download_dashboards.sh" ]
+    args: [ "-c", "mkdir -p /var/lib/grafana/dashboards/default && /bin/sh /etc/grafana/download_dashboards.sh" ]
     {{- with .Values.downloadDashboards.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
