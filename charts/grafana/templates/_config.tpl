@@ -26,6 +26,8 @@ grafana.ini: |
   {{- range $elem, $elemVal := $value }}
   {{- if kindIs "invalid" $elemVal }}
   {{ $elem }} =
+  {{- else if kindIs "slice" $elemVal }}
+  {{ $elem }} = [{{ join ", " $elemVal }}]
   {{- else if kindIs "string" $elemVal }}
   {{ $elem }} = {{ tpl $elemVal $ }}
   {{- else }}
