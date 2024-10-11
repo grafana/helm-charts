@@ -857,6 +857,9 @@ containers:
     volumeMounts:
       - name: sc-plugins-volume
         mountPath: "/etc/grafana/provisioning/plugins"
+      {{- with .Values.sidecar.plugins.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
   - name: {{ .Chart.Name }}
     {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
