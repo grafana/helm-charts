@@ -72,9 +72,14 @@ spec:
               name: http-metrics
             - containerPort: 9095
               name: grpc
-          {{- with .Values.queryFrontend.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.queryFrontend.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.queryFrontend.extraEnvFrom }}
           envFrom:

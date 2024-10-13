@@ -16,6 +16,9 @@ global:
   dnsService: 'kube-dns'
   # -- configures DNS service namespace
   dnsNamespace: 'kube-system'
+  # -- Common environment variables to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
+  extraEnv: []
 fullnameOverride: ''
 # fullnameOverride: tempo
 
@@ -179,6 +182,8 @@ ingester:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Override Pod Disruption Budget maxUnavailable with a static value
+  # maxUnavailable: 1
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -343,6 +348,8 @@ metricsGenerator:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for metrics-generator pods
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods
@@ -513,6 +520,8 @@ distributor:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for distributor pods
   nodeSelector: {}
   # -- Tolerations for distributor pods
@@ -607,6 +616,8 @@ compactor:
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for compactor pods
   nodeSelector: {}
   # -- Tolerations for compactor pods
@@ -721,6 +732,8 @@ querier:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -913,6 +926,8 @@ queryFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -1019,6 +1034,8 @@ enterpriseFederationFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for federation-frontend pods
   nodeSelector: {}
   # -- Tolerations for federation-frontend pods
@@ -1530,6 +1547,8 @@ memcached:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   service:
     # -- Annotations for memcached service
     annotations: {}
@@ -1793,6 +1812,8 @@ gateway:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
   # -- Node selector for gateway pods
   nodeSelector: {}
   # -- Tolerations for gateway pods

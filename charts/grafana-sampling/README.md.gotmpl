@@ -4,11 +4,37 @@
 
 {{ template "chart.description" . }}
 
-This chart deploys the following architecture to your environment:
+## Breaking change announcements
+
+### **v1.0.0**
+
+Grafana Agent has been replaced with [Grafana Alloy](https://grafana.com/oss/alloy-opentelemetry-collector/)!
+
+These sections in your values file will need to be renamed:
+
+| Old                         | New                 | Purpose                                        |
+|-----------------------------|---------------------|------------------------------------------------|
+| `grafana-agent-deployment`  | `alloy-deployment`  | Settings for the Alloy load balancing instance |
+| `grafana-agent-statefulset` | `alloy-statefulset` | Settings for the Alloy tail sampling instance  |
+
+For example, if you have something like this:
+
+```yaml
+grafana-agent-statefulset:
+  agent:
+```
+
+you will need to change it to this:
+
+```yaml
+alloy-statefulset:
+  alloy:
+`````
+
+This chart deploys the following architecture to your environment (note the agents have been replaced with Alloy):
 ![Photo of sampling architecture](./sampling-architecture.png)
 
 Note: by default, only OTLP traces are accepted at the load balancing layer.
-
 
 ## Chart Repo
 
@@ -23,13 +49,13 @@ Use the following command to install the chart with the release name `my-release
 
 ```console
 helm install my-release grafana/grafana-sampling --values - <<EOF | less
-grafana-agent-statefulset:
-  agent:
+alloy-statefulset:
+  alloy:
     extraEnv:
       - name: GRAFANA_CLOUD_API_KEY
         value: <REQUIRED>
       - name: GRAFANA_CLOUD_PROMETHEUS_URL
-        value: <REQUIRED>
+        value: <REQUIRED> # This should include /api/prom/push uri
       - name: GRAFANA_CLOUD_PROMETHEUS_USERNAME
         value: <REQUIRED>
       - name: GRAFANA_CLOUD_TEMPO_ENDPOINT

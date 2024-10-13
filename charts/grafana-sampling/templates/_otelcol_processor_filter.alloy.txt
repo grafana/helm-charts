@@ -1,6 +1,6 @@
 {{- define "statefulset.processor.filter" -}}
 otelcol.processor.filter "drop_unneeded_span_metrics" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.processor.filter/
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.processor.filter/
   error_mode = "ignore"
 
   metrics {
@@ -10,7 +10,12 @@ otelcol.processor.filter "drop_unneeded_span_metrics" {
   }
 
   output {
-    metrics = [otelcol.processor.transform.use_grafana_metric_names.input]
+    // TODO: only use grafana_metric_names is legacy is enabled.
+    {{ if .Values.metricsGeneration.legacy }}
+        metrics = [otelcol.processor.transform.use_grafana_metric_names.input]
+    {{ else }}
+        metrics = [otelcol.processor.batch.default.input]
+    {{- end }}
   }
 }
 
