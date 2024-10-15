@@ -229,8 +229,8 @@ Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific 
 Define the source URL 
 */}}
 {{- define "grafana.url" -}}
-{{- $this_revision := hasKey $value "revision" | ternary $value.revision 1 }}
-{{- $this_url := hasKey $value "url" | ternary $value.url (printf "https://grafana.com/api/dashboards/%s/revisions/%s/download" $value.gnetId $this_revision) }}                                      
+{{- $this_revision := hasKey . "revision" | ternary .revision 1 }}
+{{- $this_url := hasKey . "url" | ternary .url (printf "https://grafana.com/api/dashboards/%s/revisions/%s/download" .gnetId $this_revision) }}                                      
 {{- print $this_url }}
 {{- end }}
 
