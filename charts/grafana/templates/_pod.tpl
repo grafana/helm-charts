@@ -858,7 +858,7 @@ containers:
       - name: sc-plugins-volume
         mountPath: "/etc/grafana/provisioning/plugins"
       {{- with .Values.sidecar.plugins.extraMounts }}
-      {{- toYaml . | trim | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
 {{- end}}
   - name: {{ .Chart.Name }}
