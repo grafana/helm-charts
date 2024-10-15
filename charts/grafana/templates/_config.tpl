@@ -82,11 +82,8 @@ download_dashboards.sh: |
   {{- range $key, $value := $dashboards }}
     {{- if (or (hasKey $value "gnetId") (hasKey $value "url")) }}
   echo "downloading: {{ $key }} dashboard"
-{{- if $value.url }}
-  echo "Source Url: {{ $value.url }}"
-{{- else }}
-  echo "Source Url: https://grafana.com/api/dashboards/{{ $value.gnetId }}/revisions/{{- if $value.revision -}}{{ $value.revision }}{{- else -}}1{{- end -}}/download"
-{{- end }}
+  echo "Source Url: {{ include "grafana.url" . }}  
+
   curl -skf --show-error \
   --connect-timeout 60 \
   --max-time 60 \
