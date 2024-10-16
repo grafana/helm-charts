@@ -90,6 +90,9 @@ app.kubernetes.io/part-of: memberlist
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- if .Values.extraLabels }}
+{{ toYaml .Values.extraLabels }}
+{{- end }}
 {{- end -}}
 
 {{/*

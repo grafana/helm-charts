@@ -150,6 +150,8 @@ ingester:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the ingester pods
   extraEnvFrom: []
+  # Apply extra labels to common labels.
+  extraLabels: {}
   # -- Resource requests and limits for the ingester
   resources: {}
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
