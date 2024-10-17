@@ -224,6 +224,16 @@ Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific 
 {{- $secretFound}}
 {{- end -}}
 
+
+{{/*
+Define the source URL 
+*/}}
+{{- define "grafana.url" -}}
+{{- $this_revision := hasKey . "revision" | ternary .revision 1 }}
+{{- $this_url := hasKey . "url" | ternary .url (printf "https://grafana.com/api/dashboards/%s/revisions/%s/download" .gnetId $this_revision) }}                                      
+{{- print $this_url }}
+{{- end }}
+
 {{/*
     Checks whether the user is attempting to store secrets in plaintext
     in the grafana.ini configmap
