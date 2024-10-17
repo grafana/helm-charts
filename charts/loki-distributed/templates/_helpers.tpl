@@ -153,7 +153,7 @@ Return the appropriate apiVersion for HorizontalPodAutoscaler.
 {{- end -}}
 
 {{- define "loki.ingester.readinessProbe" -}}
-{{- with .Values.ingester.readinessProbe }}  
+{{- with .Values.ingester.readinessProbe }}
 readinessProbe:
   {{- toYaml . | nindent 2 }}
 {{- else }}
@@ -176,6 +176,31 @@ livenessProbe:
 {{- end }}
 {{- end -}}
 
-{{- define "loki.config.checksum" -}}
+{{- define "loki.config.checksum" }}
+{{- if .Values.loki.existingSecretForConfig -}}
+checksum/config: {{ .Values.loki.externalConfigVersion | quote }}
+{{- else -}}
 checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
 {{- end }}
+{{- end }}
+
+{{/*
+The volume to mount for loki configuration
+*/}}
+{{- define "loki.configVolume" -}}
+{{- if .Values.loki.existingSecretForConfig }}
+{{- if .Values.loki.configAsSecret }}
+secret:
+  secretName: {{ .Values.loki.existingSecretForConfig }}
+{{- else }}
+configMap:
+  name: {{ .Values.loki.existingSecretForConfig }}
+{{- end }}
+{{- else if .Values.loki.configAsSecret }}
+secret:
+  secretName: {{ include "loki.fullname" . }}-config
+{{- else }}
+configMap:
+  name: {{ include "loki.fullname" . }}
+{{- end }}
+{{- end -}}
