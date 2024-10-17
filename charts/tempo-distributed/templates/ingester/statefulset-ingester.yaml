@@ -88,9 +88,14 @@ spec:
               containerPort: {{ include "tempo.memberlistBindPort" . }}
             - name: http-metrics
               containerPort: 3100
-          {{- with .Values.ingester.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.ingester.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.ingester.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.ingester.extraEnvFrom }}
           envFrom:

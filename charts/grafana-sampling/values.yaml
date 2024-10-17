@@ -9,6 +9,7 @@ metricsGeneration:
     - service.version
     - deployment.environment
     - k8s.cluster.name
+    - k8s.pod.name
 
 sampling:
   # -- Toggle tail sampling.
@@ -48,6 +49,17 @@ sampling:
         }
       }
     }
+
+batch:
+  # -- Configure batch processing options.
+  deployment:
+    timeout: 200ms
+    send_batch_size: 8192
+    send_batch_max_size: 0
+  statefulset:
+    timeout: 200ms
+    send_batch_size: 8192
+    send_batch_max_size: 0
 
 # @ignored Ignore alloy deployment
 alloy-deployment:

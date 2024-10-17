@@ -73,9 +73,14 @@ spec:
               protocol: TCP
             - containerPort: 3100
               name: http-metrics
-          {{- with .Values.querier.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.querier.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.querier.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.querier.extraEnvFrom }}
           envFrom:
