@@ -70,7 +70,7 @@ spec:
               name: http-metrics
             - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
-          {{- if or .Values.global.extraEnv .Values.compactor.env }}
+          {{- if or .Values.global.extraEnv .Values.compactor.extraEnv }}
           env:
             {{- with .Values.global.extraEnv }}
               {{ toYaml . | nindent 12 }}

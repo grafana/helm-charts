@@ -8,7 +8,7 @@ metadata:
     {{- include "tempo.labels" (dict "ctx" . "component" "enterprise-federation-frontend") | nindent 4 }}
   {{- with .Values.enterpriseFederationFrontend.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: {{ .Values.enterpriseFederationFrontend.service.type }}
