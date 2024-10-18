@@ -44,6 +44,8 @@ tempo:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
+    # -- If true, enables Tempo's metrics generator virtual node (infers services when those services are not instrumented) (https://grafana.com/docs/tempo/latest/metrics-generator/service_graphs/#activate-enable_virtual_node_label/)
+    enable_virtual_node_label: false
   # -- Configuration options for the ingester
   ingester: {}
   # -- Configuration options for the querier
@@ -152,6 +154,11 @@ config: |
             path: "/tmp/tempo"
             remote_write:
               - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+          {{- if .Values.tempo.metricsGenerator.enable_virtual_node_label }}
+            processor:
+              service_graphs:
+                enable_virtual_node_label: true
+          {{- end }}
       {{- end }}
 
 tempoQuery:
