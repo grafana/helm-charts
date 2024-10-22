@@ -826,6 +826,10 @@ queryFrontend:
     trace_by_id:
       # -- The number of shards to split a trace by id query into.
       query_shards: 50
+    metrics:
+      # The maximum allowed time range for a metrics query.
+      # 0 disables this limit.
+      max_duration: 3h
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -1343,6 +1347,8 @@ config: |
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
+    metrics:
+      max_duration: {{ .Values.queryFrontend.config.metrics.max_duration }}
 
   ingester:
     lifecycler:
@@ -1512,6 +1518,8 @@ memcached:
   replicas: 1
   # -- Additional CLI args for memcached
   extraArgs: []
+  # -- Toleration for memcached pods
+  tolerations: []
   # -- Environment variables to add to memcached pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to memcached pods
