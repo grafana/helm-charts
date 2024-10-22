@@ -1204,6 +1204,7 @@ imageRenderer:
 
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
+  automountServiceAccountToken: false
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment container securityContext
