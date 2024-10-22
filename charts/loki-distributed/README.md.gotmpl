@@ -22,6 +22,16 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
+### From 0.79.x to 0.80.0
+The Ruler now supports sidecar container that queries Kubernetes API to find Configmaps and/or Secret that contain Loki AlertingRules.
+In order to enable the sidecar:
+```yaml
+ruler:
+  enabled: true
+  sidecar:
+    enabled: true
+```
+
 ### From 0.78.x to 0.79.0
 Removed the hardcoded, deprecated `boltdb.shipper.compactor.working-directory` flag in the Compactor Deployment template, so that it can be set with `.Values.compactor.extraArgs` and the `compactor.working-directory` flag if necessary.
 
@@ -382,4 +392,44 @@ ruler:
                   severity: warning
                 annotations:
                   summary: High error percentage
+```
+
+Furthermore, it is possible to enable the sidecar container to load rules from ConfigMaps and Secrets.
+See `values.yaml` for a more detailed example. 
+
+```yaml
+ruler:
+  enabled: true
+  sidecar:
+    enabled: true
+```
+
+ConfigMaps/Secrets with Alerting rules must be configured with appropriate labels to be recognized by the sidecar container.
+Exemplary ConfigMap:
+
+```yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: AlertingRule
+  annotations:
+  labels:
+    loki_rule: ""
+data:
+  rules.yaml: |
+    groups:
+      - name: should_fire
+        rules:
+          - alert: HighPercentageError
+            expr: |
+              sum(rate({app="loki"} |= "error" [5m])) by (job)
+                /
+              sum(rate({app="loki"}[5m])) by (job)
+                > 0.05
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: High error percentage
 ```
