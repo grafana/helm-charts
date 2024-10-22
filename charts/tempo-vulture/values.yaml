@@ -42,6 +42,10 @@ nodeSelector: {}
 tolerations: []
 
 
+service:
+  # -- Specifies whether a Service should be created
+  enabled: true
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -68,6 +72,23 @@ serviceMonitor:
   # -- ServiceMonitor scrape interval
   interval: null
   # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  scrapeTimeout: null
+
+# PodMonitor configuration
+podMonitor:
+  # -- If enabled, PodMonitor resources for Prometheus Operator are created
+  enabled: false
+  # -- Alternative namespace for PodMonitor resources
+  namespace: null
+  # -- Namespace selector for PodMonitor resources
+  namespaceSelector: {}
+  # -- PodMonitor annotations
+  annotations: {}
+  # -- Additional PodMonitor labels
+  labels: {}
+  # -- PodMonitor scrape interval
+  interval: null
+  # -- PodMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
 tempoAddress:
