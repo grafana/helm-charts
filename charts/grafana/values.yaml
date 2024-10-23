@@ -373,6 +373,8 @@ persistence:
   type: pvc
   enabled: false
   # storageClassName: default
+  ## Set the name of the PVC
+  # nameOverride: ""
   accessModes:
     - ReadWriteOnce
   size: 10Gi
