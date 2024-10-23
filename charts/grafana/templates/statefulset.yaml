@@ -42,7 +42,7 @@ spec:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: {{ include "grafana.fullname" . }}
+      name: {{ if .Values.persistence.nameOverride }}{{ .Values.persistence.nameOverride }}{{ else }}{{ include "grafana.fullname" . }}{{ end }}
     spec:
       accessModes: {{ .Values.persistence.accessModes }}
       storageClassName: {{ .Values.persistence.storageClassName }}
