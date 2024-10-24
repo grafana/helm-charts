@@ -1,0 +1,13 @@
+{{- if .Values.webhooks.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "rollout-operator.fullname" .}}-webhook-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "rollout-operator.fullname" .}}-webhook-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "rollout-operator.serviceAccountName" . }}
+{{- end -}}
