@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.18.4](https://img.shields.io/badge/Version-1.18.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.20.1](https://img.shields.io/badge/Version-1.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -20,7 +20,7 @@ Grafana Tempo in MicroService mode
 
 Add the following repo to use the chart:
 
-```console
+```sh
 helm repo add grafana https://grafana.github.io/helm-charts
 ```
 
@@ -28,7 +28,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 To install the chart with the release name `my-release`:
 
-```console
+```sh
 helm install my-release grafana/tempo-distributed
 ```
 
@@ -36,7 +36,7 @@ helm install my-release grafana/tempo-distributed
 
 To uninstall/delete the my-release deployment:
 
-```console
+```sh
 helm delete my-release
 ```
 
@@ -58,7 +58,7 @@ Switch to new overrides format, see https://grafana.com/docs/tempo/latest/config
 ### From Chart versions < 1.13.0
 
 EXPERIMENTAL: Zone Aware Replication has been added to the ingester statefulset.
-Attention, the calculation of the pods per AZ is as follows ```(.values.ingester.replicas + numberOfZones -1)/numberOfZones```
+Attention, the calculation of the pods per AZ is as follows `(.values.ingester.replicas + numberOfZones -1)/numberOfZones`
 
 ### From Chart versions < 1.6.0
 
@@ -89,8 +89,8 @@ Many changes have been introduced, including some breaking changes.
 The [PR](https://github.com/grafana/helm-charts/pull/1759) includes additional details.
 
 * **BREAKING CHANGE** centralize selector label handling -- users who wish to keep old values should still be able to use the `nameOverride` and `fullNameOverride` top level keys in their values.
-
 * **BREAKING CHANGE** serviceMonitor has been nested under metaMonitoring -- metamonitoring can be used scrape services as well as install the operator with the following values.  Note also that the port names have changed from `http` to `http-metrics`.
+
 ```yaml
 metaMonitoring:
   serviceMonitor:
@@ -99,11 +99,14 @@ metaMonitoring:
     enabled: true
     installOperator: true
 ```
+
 * minio can now be enabled as part of this chart using the following values
+
 ```yaml
 minio:
   enabled: true
 ```
+
 * allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
 
 ### From chart version < 0.26.0
@@ -118,10 +121,9 @@ Version 0.26.0
 Version 0.23.0:
 
 * Adds /var/tempo emptyDir mount for querier, queryfrontend, distributor and compactor. Previously, /var/tempo was directory inside container.
-
 * Sets queryFrontend.query.enabled to false. tempo-query is only required for grafana version <7.5 for compatibility with jaeger-ui. Please also note that tempo-query is incompatible with securityContext readOnlyRootFilesystem set to true.
-
 * Sets stricter default securityContext:
+
 ```yaml
 tempo:
   securityContext:
@@ -136,9 +138,11 @@ tempo:
   podSecurityContext:
     fsGroup: 1000
 ```
+
 If you had ingester persistence enabled, you might need to manually change ownership of files in your PV if your CSI doesn't support fsGroup
 
 ### From Chart version >= 0.22.0
+
 Align Istio GRPC named port syntax. For example,
 
 - otlp-grpc               -> grpc-otlp
@@ -149,7 +153,9 @@ Align Istio GRPC named port syntax. For example,
 In case you need to rollback, please search the right hand side pattern and replace with left hand side pattern.
 
 ### From Chart version < 0.20.0
+
 The image's attributes must be set under the `image` key for the Memcached service.
+
 ```yaml
 memcached:
   image:
@@ -160,7 +166,9 @@ memcached:
 ```
 
 ### From Chart version < 0.18.0
+
 Trace ingestion must now be enabled with the `enabled` key:
+
 ```yaml
 traces:
   otlp:
@@ -189,13 +197,13 @@ Uninstall the old release and re-install the new one. There will be no data loss
 Option 2
 Add new selector labels to the existing pods. This option will make your pods also temporarely unavailable, option 1 is faster:
 
-```
+```sh
 kubectl label pod -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> app.kubernetes.io/component=<component> --overwrite
 ```
 
 Perform a non-cascading deletion of the Deployments and Statefulsets which will keep the pods running:
 
-```
+```sh
 kubectl delete <deployment/statefulset> -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> --cascade=false
 ```
 
@@ -206,6 +214,7 @@ Perform a regular Helm upgrade on the existing release. The new Deployment/State
 By default all tracing protocols are disabled and you need to specify which protocols to enable for ingestion.
 
 For example to enable Jaeger grpc thrift http and zipkin protocols:
+
 ```yaml
 traces:
   jaeger:
@@ -535,9 +544,9 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
-| ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
+| ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. __Please note that all data in ingester will be lost on pod restart__ |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
-| ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: . If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
@@ -555,15 +564,15 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.zoneAwareReplication.zones[0] | object | `{"extraAffinity":{},"name":"zone-a","nodeSelector":null,"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
 | ingester.zoneAwareReplication.zones[0].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[0].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-a |
-| ingester.zoneAwareReplication.zones[0].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| ingester.zoneAwareReplication.zones[0].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName:  If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
 | ingester.zoneAwareReplication.zones[1] | object | `{"extraAffinity":{},"name":"zone-b","nodeSelector":null,"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
 | ingester.zoneAwareReplication.zones[1].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[1].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-b |
-| ingester.zoneAwareReplication.zones[1].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| ingester.zoneAwareReplication.zones[1].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName:  If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
 | ingester.zoneAwareReplication.zones[2] | object | `{"extraAffinity":{},"name":"zone-c","nodeSelector":null,"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
 | ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[2].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
-| ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName:  If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
@@ -654,7 +663,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
-| metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: . If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
 | metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
@@ -932,7 +941,7 @@ global_overrides:
         - span-metrics
 ```
 
-----
+---
 
 ### Directory and File Locations
 
