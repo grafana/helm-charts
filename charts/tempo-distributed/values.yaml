@@ -2309,3 +2309,6 @@ extraObjects: []
   #     data:
   #       - key: secret-access-key
   #         name: awssm-secret
+
+# Apply extra labels to common labels.
+extraLabels: {}
