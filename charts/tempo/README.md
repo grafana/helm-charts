@@ -18,6 +18,7 @@ Grafana Tempo Single Binary Mode
 | extraLabels | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
 | networkPolicy.allowExternal | bool | `true` |  |
