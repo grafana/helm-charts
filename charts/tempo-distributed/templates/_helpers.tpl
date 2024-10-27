@@ -90,7 +90,7 @@ app.kubernetes.io/part-of: memberlist
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
-{{- with .Values.extraLabels }}
+{{- with $.Values.extraLabels }}
 {{ toYaml . }}
 {{- end }}
 {{- end -}}
