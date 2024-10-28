@@ -1,3 +1,7 @@
+global:
+  # -- Common labels for all object directly managed by this chart.
+  commonLabels: {}
+
 # -- Overrides the chart's name
 nameOverride: ""
 
@@ -282,6 +286,7 @@ podAnnotations: {}
 podLabels: {}
 
 # Apply extra labels to common labels.
+# DEPRECATED: use global.commonLabels
 extraLabels: {}
 
 # -- Volumes to add
