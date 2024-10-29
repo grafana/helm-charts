@@ -286,7 +286,6 @@ podAnnotations: {}
 podLabels: {}
 
 # Apply extra labels to common labels.
-# DEPRECATED: use global.commonLabels
 extraLabels: {}
 
 # -- Volumes to add
