@@ -146,7 +146,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.5.2
+          version: v3.16.2
 
       - name: Parse Chart.yaml
         id: parse-chart
