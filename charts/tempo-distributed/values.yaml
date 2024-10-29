@@ -19,6 +19,11 @@ global:
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []
+
+  # -- Common labels for all object directly managed by this chart.
+  # scope: *
+  commonLabels: {}
+
 fullnameOverride: ''
 # fullnameOverride: tempo
 
