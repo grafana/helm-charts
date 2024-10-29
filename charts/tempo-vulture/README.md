@@ -54,6 +54,7 @@ tempoAddress:
 | extraEnv | list | `[]` | Environment variables to add to the vulture pods |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the vulture pods |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. scope: * |
 | hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.repository | string | `"docker.io/grafana/tempo-vulture"` | Docker image repository |
