@@ -114,6 +114,10 @@ image:
 
 testFramework:
   enabled: true
+  ## The type of Helm hook used to run this test. Defaults to test.
+  ## ref: https://helm.sh/docs/topics/charts_hooks/#the-available-hooks
+  ##
+  # hookType: test
   image:
     # -- The Docker registry
     registry: docker.io
