@@ -94,7 +94,8 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      contents: write # to push chart release, create release, and push tags to github
+      packages: write # to push package to ghcr
     env:
       github_app_id: ${{ secrets.github_app_id }}
     if: needs.setup.outputs.changed == 'true'
@@ -145,7 +146,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.5.2
+          version: v3.16.2
 
       - name: Parse Chart.yaml
         id: parse-chart
