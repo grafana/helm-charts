@@ -35,7 +35,6 @@ Common labels
 */}}
 {{- define "ga-operator.labels" -}}
 {{ include "ga-operator.selectorLabels" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: operator
 helm.sh/chart: {{ include "ga-operator.chart" . }}
 {{- if .Chart.AppVersion }}

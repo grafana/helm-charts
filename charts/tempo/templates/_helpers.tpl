@@ -51,7 +51,6 @@ helm.sh/chart: {{ include "tempo.chart" . }}
 {{- if or .Chart.AppVersion .Values.tempo.tag }}
 app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.tempo.tag "" | default .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.extraLabels }}
 {{ toYaml . }}
 {{- end }}
@@ -74,7 +73,6 @@ helm.sh/chart: {{ include "tempo.chart" . }}
 {{- if or .Chart.AppVersion .Values.image.tag }}
 app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
 {{- end }}`
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*

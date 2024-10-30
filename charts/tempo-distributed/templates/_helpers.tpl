@@ -89,7 +89,6 @@ app.kubernetes.io/part-of: memberlist
 {{- if .ctx.Chart.AppVersion }}
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
 {{- end -}}
 
 {{/*
@@ -260,7 +259,6 @@ helm.sh/chart: {{ include "tempo.chart" .ctx }}
 app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
 app.kubernetes.io/instance: {{ .ctx.Release.Name }}
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
-app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
 {{- if .component }}
 app.kubernetes.io/component: {{ .component }}
 {{- end }}
