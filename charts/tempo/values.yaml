@@ -1,3 +1,7 @@
+global:
+  # -- Common labels for all object directly managed by this chart.
+  commonLabels: {}
+
 # -- Overrides the chart's name
 nameOverride: ""
 
