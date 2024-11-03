@@ -10,7 +10,7 @@ metadata:
     {{- end }}
   {{- with .Values.queryFrontend.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: {{ .Values.queryFrontend.service.type }}
