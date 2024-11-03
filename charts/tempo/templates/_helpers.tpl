@@ -55,6 +55,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.extraLabels }}
 {{ toYaml . }}
 {{- end }}
+{{- with .Values.global.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end -}}
 
 {{/*

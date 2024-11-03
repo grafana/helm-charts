@@ -1,6 +1,6 @@
 # grafana-agent-operator
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.43.3](https://img.shields.io/badge/AppVersion-0.43.3-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.43.3](https://img.shields.io/badge/AppVersion-0.43.3-informational?style=flat-square)
 
 A Helm chart for Grafana Agent Operator
 
@@ -58,6 +58,7 @@ A major chart version change (like v1.2.3 -> v2.0.0) indicates that there is an 
 | containerSecurityContext | object | `{}` | Container security context (allowPrivilegeEscalation, etc.) |
 | extraArgs | list | `[]` | List of additional cli arguments to configure agent-operator (example: `--log.level`) |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | Image pull secrets |
