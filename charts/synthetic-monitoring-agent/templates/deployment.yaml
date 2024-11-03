@@ -7,7 +7,7 @@ metadata:
 spec:
   {{- with .Values.deploymentStrategy }}
   strategy:
-    {{- toYaml . | trim | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   minReadySeconds: 10
   {{- if not .Values.autoscaling.enabled }}
