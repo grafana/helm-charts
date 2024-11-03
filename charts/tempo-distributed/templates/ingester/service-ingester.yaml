@@ -1,14 +1,18 @@
 {{- $dict := dict "ctx" . "component" "ingester" true }}
+{{- $zonesMap := include "ingester.zoneAwareReplicationMap" $dict | fromYaml -}}
+{{- range $zoneName, $rolloutZone := $zonesMap -}}
+{{- with $ -}}
+{{- $_ := set $dict "rolloutZoneName" $zoneName -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tempo.resourceName" $dict }}
+  name: {{ template "ingester.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.ingester.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   ports:
@@ -24,4 +28,7 @@ spec:
       appProtocol: {{ .Values.ingester.appProtocol.grpc }}
       {{- end }}
   selector:
-    {{- include "tempo.selectorLabels" $dict | nindent 4 }}
+    {{- include "ingester.selectorLabels" $dict | nindent 4 }}
+---
+{{ end }}
+{{ end }}

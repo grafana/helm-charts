@@ -62,9 +62,14 @@ spec:
           ports:
             - containerPort: 11211
               name: client
-          {{- with .Values.memcached.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.memcached.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.memcached.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.memcached.extraEnvFrom }}
           envFrom:
