@@ -50,7 +50,7 @@ jobs:
       chartpath: ${{ steps.list-changed.outputs.chartpath }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           path: source
@@ -91,8 +91,11 @@ jobs:
           fi
 
   release:
-    needs: [ setup ]
+    needs: [setup]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to push chart release, create release, and push tags to github
+      packages: write # to push package to ghcr
     env:
       github_app_id: ${{ secrets.github_app_id }}
     if: needs.setup.outputs.changed == 'true'
@@ -114,7 +117,7 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           path: source
@@ -127,7 +130,7 @@ jobs:
 
       - name: Checkout helm-charts
         # The cr tool only works if the target repository is already checked out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           repository: grafana/helm-charts
@@ -141,9 +144,9 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v4
         with:
-          version: v3.5.2
+          version: v3.16.2
 
       - name: Parse Chart.yaml
         id: parse-chart
@@ -225,3 +228,14 @@ jobs:
         run: |
           cd helm-charts
           "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ env.AUTHTOKEN }}
+
+      - name: Push charts to GHCR
+        run: |
+          helm push "${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
