@@ -1,7 +1,7 @@
 storage:
   trace:
     block:
-      version: vParquet3
+      version: vParquet4
       dedicated_columns:
         - name: cluster
           type: string

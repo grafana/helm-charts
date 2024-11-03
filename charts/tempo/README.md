@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.10.1](https://img.shields.io/badge/Version-1.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.11.0](https://img.shields.io/badge/Version-1.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -18,6 +18,7 @@ Grafana Tempo Single Binary Mode
 | extraLabels | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
 | networkPolicy.allowExternal | bool | `true` |  |
@@ -36,7 +37,7 @@ Grafana Tempo Single Binary Mode
 | podLabels | object | `{}` | Pod (extra) Labels |
 | priorityClassName | string | `nil` | The name of the PriorityClass |
 | replicas | int | `1` | Define the amount of instances |
-| securityContext | object | `{}` | securityContext for container |
+| securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | securityContext for container |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.targetPort | string | `""` |  |

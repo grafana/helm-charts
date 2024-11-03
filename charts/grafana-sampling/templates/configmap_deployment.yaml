@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-deployment
   labels:
-    {{- include "grafana-agent.labels" . | nindent 4 }}
+    {{- include "alloy.labels" . | nindent 4 }}
 data:
-  config.river: |- {{- (include "agent.config.deployment" .) | nindent 4 }}
+  config.alloy: |- {{- (include "alloy.config.deployment" .) | nindent 4 }}

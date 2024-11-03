@@ -63,9 +63,14 @@ spec:
               containerPort: {{ .port }}
               protocol: {{ .protocol }}
             {{ end }} 
-          {{- with .Values.gateway.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.gateway.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.gateway.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.gateway.extraEnvFrom }}
           envFrom:
