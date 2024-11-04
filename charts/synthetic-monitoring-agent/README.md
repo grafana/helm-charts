@@ -1,6 +1,6 @@
 # synthetic-monitoring-agent
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
@@ -37,6 +37,7 @@ Kubernetes: `^1.16.0-0`
 | autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas |
 | autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage |
 | autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage |
+| deploymentStrategy | object | `{}` | See `kubectl explain deployment.spec.strategy` for more ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
 | extraObjects | list | `[]` | Add dynamic manifests via values: |
 | fullnameOverride | string | `""` | Override the fullname of the chart. |
 | hostAliases | list | `[]` | hostAliases to add |
