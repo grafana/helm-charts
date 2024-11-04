@@ -21558,6 +21558,17 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/grafana-agent-operator-0.1.0/grafana-agent-operator-0.1.0.tgz
     version: 0.1.0
+  grafana-operator:
+  - apiVersion: v2
+    appVersion: v5.15.1
+    created: "2024-11-04T12:12:16.313950142Z"
+    description: Helm chart for the Grafana Operator
+    digest: 63c2f0f6bbcbc9b9ca3d3befb3508f550a361a43e03ce63df7188975d804c3d7
+    name: grafana-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-operator-v5.15.1/grafana-operator-v5.15.1.tgz
+    version: v5.15.1
   grafana-sampling:
   - apiVersion: v2
     appVersion: v1.3.0
@@ -73530,4 +73541,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-04T08:14:59.634742583Z"
+generated: "2024-11-04T12:12:16.335869576Z"
