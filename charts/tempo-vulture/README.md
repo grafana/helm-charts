@@ -1,6 +1,6 @@
 # tempo-vulture
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
 
@@ -54,6 +54,7 @@ tempoAddress:
 | extraEnv | list | `[]` | Environment variables to add to the vulture pods |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the vulture pods |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. scope: * |
 | hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.repository | string | `"docker.io/grafana/tempo-vulture"` | Docker image repository |
