@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.20.1](https://img.shields.io/badge/Version-1.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.21.0](https://img.shields.io/badge/Version-1.21.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -45,6 +45,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.21.0
+
+Upgrading to chart 1.21.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
 
 ### From Chart versions < 1.18.0
 
@@ -566,7 +571,7 @@ The memcached default args are removed and should be provided manually. The sett
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
-| memberlist | object | `{"abort_if_cluster_join_fails":false,"bind_addr":[],"bind_port":7946,"gossip_interval":"1s","gossip_nodes":2,"gossip_to_dead_nodes_time":"30s","leave_timeout":"5s","left_ingesters_timeout":"5m","max_join_backoff":"1m","max_join_retries":10,"min_join_backoff":"1s","node_name":"","packet_dial_timeout":"5s","packet_write_timeout":"5s","pull_push_interval":"30s","randomize_node_name":true,"rejoin_interval":"0s","retransmit_factor":2,"stream_timeout":"10s"}` | Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist |
+| memberlist | object | `{"abort_if_cluster_join_fails":false,"bind_addr":[],"bind_port":7946,"cluster_label":"{{ .Release.Name }}.{{ .Release.Namespace }}","gossip_interval":"1s","gossip_nodes":2,"gossip_to_dead_nodes_time":"30s","leave_timeout":"5s","left_ingesters_timeout":"5m","max_join_backoff":"1m","max_join_retries":10,"min_join_backoff":"1s","node_name":"","packet_dial_timeout":"5s","packet_write_timeout":"5s","pull_push_interval":"30s","randomize_node_name":true,"rejoin_interval":"0s","retransmit_factor":2,"stream_timeout":"10s"}` | Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
