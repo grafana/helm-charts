@@ -1119,6 +1119,7 @@ traces:
 # -- Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist
 memberlist:
   node_name: ""
+  cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
   randomize_node_name: true
   stream_timeout: "10s"
   retransmit_factor: 2

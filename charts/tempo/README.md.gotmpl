@@ -40,6 +40,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.12.0
+
+Upgrading to chart 1.12.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
+
 ### From Chart versions < 1.2.0
 
 Please be aware that we've updated the minor version to Tempo 2.1, which includes breaking changes.
