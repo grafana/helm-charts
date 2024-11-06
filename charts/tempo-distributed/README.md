@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.21.0](https://img.shields.io/badge/Version-1.21.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.20.2](https://img.shields.io/badge/Version-1.20.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -830,8 +830,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
-| tempo.memberlist | object | `{"appProtocol":null}` | Memberlist service configuration. |
+| tempo.memberlist | object | `{"appProtocol":null,"service":{"annotations":{}}}` | Memberlist service configuration. |
 | tempo.memberlist.appProtocol | string | `nil` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https". |
+| tempo.memberlist.service | object | `{"annotations":{}}` | Adds the service field to the memberlist service |
+| tempo.memberlist.service.annotations | object | `{}` | Sets optional annotations to the service field of the memberlist service. |
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
 | tempo.podSecurityContext | object | `{"fsGroup":1000}` | podSecurityContext holds pod-level security attributes and common container settings |
