@@ -22,6 +22,9 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
 
+### To 0.80.0
+Introduces a default `cluster_label` for the ring memberlist, which will temporarily disrupt ingestion as it rolls out, unless you temporarily set `cluster_label_verification_disabled`.
+
 ### From 0.78.x to 0.79.0
 Removed the hardcoded, deprecated `boltdb.shipper.compactor.working-directory` flag in the Compactor Deployment template, so that it can be set with `.Values.compactor.extraArgs` and the `compactor.working-directory` flag if necessary.
 
