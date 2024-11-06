@@ -501,6 +501,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. scope: * |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.extraEnv | list | `[]` | Common environment variables to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
