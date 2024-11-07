@@ -207,6 +207,13 @@ ingester:
     storageClass: null
     # -- Annotations for ingester's persist volume claim
     annotations: {}
+  persistentVolumeClaimRetentionPolicy:
+    # -- Enable Persistent volume retention policy for Statefulset
+    enabled: false
+    # -- Volume retention behavior when the replica count of the StatefulSet is reduced
+    whenScaled: Retain
+    # -- Volume retention behavior that applies when the StatefulSet is deleted
+    whenDeleted: Retain
   config:
     # -- Number of copies of spans to store in the ingester ring
     replication_factor: 3
