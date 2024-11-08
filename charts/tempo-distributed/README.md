@@ -833,8 +833,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
-| tempo.memberlist | object | `{"appProtocol":null}` | Memberlist service configuration. |
+| tempo.memberlist | object | `{"appProtocol":null,"service":{"annotations":{}}}` | Memberlist service configuration. |
 | tempo.memberlist.appProtocol | string | `nil` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https". |
+| tempo.memberlist.service | object | `{"annotations":{}}` | Adds the service field to the memberlist service |
+| tempo.memberlist.service.annotations | object | `{}` | Sets optional annotations to the service field of the memberlist service. |
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
 | tempo.podSecurityContext | object | `{"fsGroup":1000}` | podSecurityContext holds pod-level security attributes and common container settings |
