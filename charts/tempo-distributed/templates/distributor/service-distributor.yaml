@@ -23,6 +23,9 @@ spec:
       port: 9095
       protocol: TCP
       targetPort: 9095
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.grpc)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.grpc }}
+      {{- end }}
       {{- if .Values.distributor.appProtocol.grpc }}
       appProtocol: {{ .Values.distributor.appProtocol.grpc }}
       {{- end }}
@@ -31,18 +34,27 @@ spec:
       port: 6831
       protocol: UDP
       targetPort: jaeger-compact
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.jaegerCompact)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.jaegerCompact }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.jaeger.thriftBinary.enabled }}
     - name: distributor-jaeger-thrift-binary
       port: 6832
       protocol: UDP
       targetPort: jaeger-binary
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.jaegerBinary)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.jaegerBinary }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.jaeger.thriftHttp.enabled }}
     - name: distributor-jaeger-thrift-http
       port: 14268
       protocol: TCP
       targetPort: jaeger-http
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.jaegerHttp)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.jaegerHttp }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.jaeger.grpc.enabled }}
     - name: grpc-distributor-jaeger
@@ -52,18 +64,27 @@ spec:
       {{- if .Values.distributor.appProtocol.grpc }}
       appProtocol: {{ .Values.distributor.appProtocol.grpc }}
       {{- end }}
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.grpcJaeger)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.grpcJaeger }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.zipkin.enabled }}
     - name: distributor-zipkin
       port: 9411
       protocol: TCP
       targetPort: zipkin
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.zipkin)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.zipkin }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.otlp.http.enabled }}
     - name: distributor-otlp-http
       port: 4318
       protocol: TCP
       targetPort: otlp-http
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.otlpHttp)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.otlpHttp }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.otlp.grpc.enabled }}
     - name: grpc-distributor-otlp
@@ -73,6 +94,9 @@ spec:
       {{- if .Values.distributor.appProtocol.grpc }}
       appProtocol: {{ .Values.distributor.appProtocol.grpc }}
       {{- end }}
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.grpcOtlp)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.grpcOtlp }}
+      {{- end }}
     - name: distributor-otlp-legacy
       port: 55680
       protocol: TCP
@@ -80,12 +104,18 @@ spec:
       {{- if .Values.distributor.appProtocol.grpc }}
       appProtocol: {{ .Values.distributor.appProtocol.grpc }}
       {{- end }}
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.grpcOtlpLegacy)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.grpcOtlpLegacy }}
+      {{- end }}
     {{- end }}
     {{- if .Values.traces.opencensus.enabled }}
     - name: distributor-opencensus
       port: 55678
       protocol: TCP
       targetPort: opencensus
+      {{- if (and (eq .Values.distributor.service.type "NodePort") (.Values.distributor.service.nodePorts.opencensus)) }}
+      nodePort: {{ .Values.distributor.service.nodePorts.opencensus }}
+      {{- end }}
     {{- end }}
   {{- if .Values.distributor.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP  }}

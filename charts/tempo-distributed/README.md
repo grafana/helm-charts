@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.21.1](https://img.shields.io/badge/Version-1.21.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.21.2](https://img.shields.io/badge/Version-1.21.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -351,6 +351,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.labels | object | `{}` | Labels for distributor service |
 | distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| distributor.service.nodePorts | object | `{"grpc":null,"grpcJaeger":null,"grpcOtlp":null,"grpcOtlpLegacy":null,"jaegerBinary":null,"jaegerCompact":null,"jaegerHttp":null,"opencensus":null,"otlpHttp":null,"zipkin":null}` | If type is NodePort you can set specific `nodePort` values for each service. null will assign a random port |
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.serviceDiscovery.annotations | object | `{}` | Annotations for distributorDiscovery service |
 | distributor.serviceDiscovery.labels | object | `{}` | Labels for distributorDiscovery service |
@@ -388,6 +389,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
 | enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| enterpriseFederationFrontend.service.nodePort | string | `nil` | If type is NodePort set the nodePort.  Null will assign a random port |
 | enterpriseFederationFrontend.service.port | int | `3100` | Port of the federation-frontend service |
 | enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
 | enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
@@ -429,6 +431,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.service.clusterIP | string | `nil` | ClusterIP of the enterprise gateway service |
 | enterpriseGateway.service.labels | object | `{}` | Labels for enterprise gateway service |
 | enterpriseGateway.service.loadBalancerIP | string | `nil` | Load balancer IPO address if service type is LoadBalancer for enterprise gateway service |
+| enterpriseGateway.service.nodePort | string | `nil` | If type is NodePort, set a nodePort value.  Null will assign a random port |
 | enterpriseGateway.service.port | string | `nil` | Port of the enterprise gateway service; if left undefined, the service will listen on the same port as the pod |
 | enterpriseGateway.service.type | string | `"ClusterIP"` | Type of the enterprise gateway service |
 | enterpriseGateway.strategy.rollingUpdate.maxSurge | int | `0` |  |
@@ -788,6 +791,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.service.labels | object | `{}` | Labels for queryFrontend service |
 | queryFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | queryFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
+| queryFrontend.service.nodePorts | object | `{"grpc":null,"jaegerMetrics":null,"jaegerUi":null,"metrics":null}` | If type is NodePort, set the 'nodePort'.  Null will assign a random nodeport |
 | queryFrontend.service.port | int | `16686` | Port of the query-frontend service |
 | queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for queryFrontendDiscovery service |

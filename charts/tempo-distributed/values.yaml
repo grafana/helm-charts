@@ -478,6 +478,19 @@ distributor:
     loadBalancerSourceRanges: []
     # -- If type is LoadBalancer you can set it to 'Local' [preserve the client source IP](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip)
     externalTrafficPolicy: null
+    # -- If type is NodePort you can set specific `nodePort` values for each service. null will assign a random port
+    nodePorts:
+      grpc: null
+      jaegerCompact: null
+      jaegerBinary: null
+      jaegerHttp: null
+      grpcJaeger: null
+      zipkin: null
+      otlpHttp: null
+      grpcOtlp: null
+      grpcOtlpLegacy: null
+      opencensus: null
+
   serviceDiscovery:
     # -- Annotations for distributorDiscovery service
     annotations: {}
@@ -869,6 +882,12 @@ queryFrontend:
     loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
+    # -- If type is NodePort, set the 'nodePort'.  Null will assign a random nodeport
+    nodePorts:
+      metrics: null
+      grpc: null
+      jaegerUi: null
+      jaegerMetrics: null
   serviceDiscovery:
     # -- Annotations for queryFrontendDiscovery service
     annotations: {}
@@ -1001,6 +1020,8 @@ enterpriseFederationFrontend:
     loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
+    # -- If type is NodePort set the nodePort.  Null will assign a random port
+    nodePort: null
   # -- The name of the PriorityClass for federation-frontend pods
   priorityClassName: null
   # -- Labels for enterpriseFederationFrontend pods
@@ -2207,6 +2228,8 @@ enterpriseGateway:
     annotations: {}
     # -- Labels for enterprise gateway service
     labels: {}
+    # -- If type is NodePort, set a nodePort value.  Null will assign a random port
+    nodePort: null
 
   strategy:
     type: RollingUpdate

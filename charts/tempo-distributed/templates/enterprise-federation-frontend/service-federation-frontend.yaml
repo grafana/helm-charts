@@ -16,6 +16,9 @@ spec:
     - name: http-metrics
       port: 3100
       targetPort: 3100
+      {{- if (and (eq .Values.enterpriseFederationFrontend.service.type "NodePort") (.Values.enterpriseFederationFrontend.service.nodePort)) }}
+      nodePort: {{ .Values.enterpriseFederationFrontend.service.nodePort }}
+      {{- end }}
   {{- if .Values.enterpriseFederationFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.enterpriseFederationFrontend.service.loadBalancerIP  }}
   {{- end }}
