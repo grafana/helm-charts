@@ -85,6 +85,10 @@ tempo:
   memberlist:
     # -- Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https".
     appProtocol: null
+    # -- Adds the service field to the memberlist service
+    service:
+      # -- Sets optional annotations to the service field of the memberlist service.
+      annotations: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -1119,6 +1123,7 @@ traces:
 # -- Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist
 memberlist:
   node_name: ""
+  cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
   randomize_node_name: true
   stream_timeout: "10s"
   retransmit_factor: 2
