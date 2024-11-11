@@ -10,9 +10,7 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   minReadySeconds: 10
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "synthetic-monitoring-agent.selectorLabels" . | nindent 6 }}
