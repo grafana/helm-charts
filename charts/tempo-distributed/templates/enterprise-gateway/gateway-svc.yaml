@@ -25,6 +25,9 @@ spec:
       protocol: TCP
       name: http-metrics
       targetPort: http-metrics
+      {{- if (and (eq .Values.enterpriseGateway.service.type "NodePort") (.Values.enterpriseGateway.service.nodePort)) }}
+      nodePort: {{ .Values.enterpriseGateway.service.nodePort }}
+      {{- end }}
   selector:
     {{- include "tempo.selectorLabels" $dict | nindent 4 }}
 {{- end -}}

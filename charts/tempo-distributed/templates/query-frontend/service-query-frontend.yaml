@@ -18,6 +18,9 @@ spec:
     - name: http-metrics
       port: 3100
       targetPort: 3100
+      {{- if and (eq "NodePort" .Values.queryFrontend.service.type) .Values.queryFrontend.service.nodePorts.metrics }}
+      nodePort: {{ .Values.queryFrontend.service.nodePorts.metrics }}
+      {{- end }}
     - name: grpc
       port: 9095
       protocol: TCP
@@ -25,13 +28,22 @@ spec:
       {{- if .Values.queryFrontend.appProtocol.grpc }}
       appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
       {{- end }}
+      {{- if and (eq "NodePort" .Values.queryFrontend.service.type) .Values.queryFrontend.service.nodePorts.grpc }}
+      nodePort: {{ .Values.queryFrontend.service.nodePorts.grpc }}
+      {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
     - name: tempo-query-jaeger-ui
       port: {{ .Values.queryFrontend.service.port }}
       targetPort: {{ .Values.queryFrontend.service.port }}
+      {{- if and (eq "NodePort" .Values.queryFrontend.service.type) .Values.queryFrontend.service.nodePorts.jaegerUi }}
+      nodePort: {{ .Values.queryFrontend.service.nodePorts.jaegerUi }}
+      {{- end }}
     - name: tempo-query-metrics
       port: 16687
       targetPort: jaeger-metrics
+      {{- if and (eq "NodePort" .Values.queryFrontend.service.type) .Values.queryFrontend.service.nodePorts.jaegerMetrics }}
+      nodePort: {{ .Values.queryFrontend.service.nodePorts.jaegerMetrics }}
+      {{- end }}
     {{- end }}
   {{- if .Values.queryFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.queryFrontend.service.loadBalancerIP  }}
