@@ -107,7 +107,24 @@ rbac:
   create: false
   # -- Specifies whether a PodSecurityPolicy should be created
   pspEnabled: false
-
+tls:
+  secretName: 'tempo-distributed-tls'
+  # -- Create a CertificateRequest object to be consumed by cert-manager to produce a secret
+  request:
+    enabled: false
+    dnsNames: []
+    # -- The duration of the certificate request.
+    duration: '720h'
+    # -- Renew the certificate before this 
+    renew_before: '504h'
+    # -- The private key algorithm
+    privateKeyAlgorithm: 'ECDSA'
+    # -- Issuer
+    issuerRef:
+      group: 'cert-manager.io'
+      kind: 'ClusterIssuer'
+      name: 'acme-issuer'
+  enabled: false,
 # Configuration for the ingester
 ingester:
   # -- Annotations for the ingester StatefulSet

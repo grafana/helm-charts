@@ -1,0 +1,26 @@
+{{- if and .Values.tls.enabled .Values.tls.request.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.tls.secretName}}
+  namespace: {{.Release.Namespace}}
+spec:
+  commonName: {{ include "tempo.resourceName" (dict "ctx" . ) }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}
+  {{- if .Values.tls.dns_names }}
+  dnsNames:
+    {{ range .Values.tls.request.dns_names }}
+  - {{ . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  duration: {{ .Values.tls.request.duration}}
+  issuerRef:
+    group: {{ .Values.tls.request.issuerRef.group }}
+    kind: {{ .Values.tls.request.issuerRef.kind }}
+    name: {{ .Values.tls.request.issuerRef.name }}
+  privateKey:
+    algorithm: {{ .Values.tls.request.private_key_algorithm }}
+  renewBefore: {{ .Values.tls.request.renew_before }}
+  secretName: {{ .Values.tls.secretName}}
+  usages:
+  - server auth
+{{- end }}
