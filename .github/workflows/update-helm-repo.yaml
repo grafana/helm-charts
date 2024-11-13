@@ -94,6 +94,7 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     permissions:
+      contents: write # allows GITHUB_TOKEN to push chart release, create release, and push tags to github
       packages: write # allows GITHUB_TOKEN to push package to ghcr
     env:
       github_app_id: ${{ secrets.github_app_id }}
