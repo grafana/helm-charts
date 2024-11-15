@@ -260,6 +260,7 @@ serviceMonitor:
   scrapeTimeout: 30s
   relabelings: []
   metricRelabelings: []
+  basicAuth: {}
   targetLabels: []
 
 extraExposePorts: []
