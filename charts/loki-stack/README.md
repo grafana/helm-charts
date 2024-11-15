@@ -1,72 +1,78 @@
-# Loki-Stack Helm Chart
+# loki-stack
 
-This `loki-stack` Helm chart is a community maintained chart.
+![Version: 2.10.2](https://img.shields.io/badge/Version-2.10.2-informational?style=flat-square) ![AppVersion: v2.9.3](https://img.shields.io/badge/AppVersion-v2.9.3-informational?style=flat-square)
 
-## Prerequisites
+Loki: like Prometheus, but for logs.
 
-Make sure you have Helm [installed](https://helm.sh/docs/using_helm/#installing-helm).
+**Homepage:** <https://grafana.com/loki>
 
-## Get Repo Info
+## Maintainers
 
-```console
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-```
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Loki Maintainers | <lokiproject@googlegroups.com> |  |
 
-_See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
+## Source Code
 
-## Deploy Loki and Promtail to your cluster
+* <https://github.com/grafana/loki>
 
-### Deploy with default config
+## Requirements
 
-```bash
-helm upgrade --install loki grafana/loki-stack
-```
+Kubernetes: `^1.10.0-0`
 
-### Deploy in a custom namespace
+| Repository | Name | Version |
+|------------|------|---------|
+| https://grafana.github.io/helm-charts | fluent-bit | ^2.3.0 |
+| https://grafana.github.io/helm-charts | grafana | ~6.43.0 |
+| https://grafana.github.io/helm-charts | loki | ^2.15.2 |
+| https://grafana.github.io/helm-charts | promtail | ^6.7.4 |
+| https://helm.elastic.co | filebeat | ~7.17.1 |
+| https://helm.elastic.co | logstash | ~7.17.1 |
+| https://prometheus-community.github.io/helm-charts | prometheus | ~19.7.2 |
 
-```bash
-helm upgrade --install loki --namespace=loki-stack grafana/loki-stack
-```
+## Values
 
-### Deploy with custom config
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| filebeat.enabled | bool | `false` |  |
+| filebeat.filebeatConfig."filebeat.yml" | string | `"# logging.level: debug\nfilebeat.inputs:\n- type: container\n  paths:\n    - /var/log/containers/*.log\n  processors:\n  - add_kubernetes_metadata:\n      host: ${NODE_NAME}\n      matchers:\n      - logs_path:\n          logs_path: \"/var/log/containers/\"\noutput.logstash:\n  hosts: [\"logstash-loki:5044\"]\n"` |  |
+| fluent-bit.enabled | bool | `false` |  |
+| grafana.enabled | bool | `false` |  |
+| grafana.image.tag | string | `"10.3.3"` |  |
+| grafana.sidecar.datasources.enabled | bool | `true` |  |
+| grafana.sidecar.datasources.label | string | `""` |  |
+| grafana.sidecar.datasources.labelValue | string | `""` |  |
+| grafana.sidecar.datasources.maxLines | int | `1000` |  |
+| logstash.enabled | bool | `false` |  |
+| logstash.filters.main | string | `"filter {\n  if [kubernetes] {\n    mutate {\n      add_field => {\n        \"container_name\" => \"%{[kubernetes][container][name]}\"\n        \"namespace\" => \"%{[kubernetes][namespace]}\"\n        \"pod\" => \"%{[kubernetes][pod][name]}\"\n      }\n      replace => { \"host\" => \"%{[kubernetes][node][name]}\"}\n    }\n  }\n  mutate {\n    remove_field => [\"tags\"]\n  }\n}"` |  |
+| logstash.image | string | `"grafana/logstash-output-loki"` |  |
+| logstash.imageTag | string | `"1.0.1"` |  |
+| logstash.outputs.main | string | `"output {\n  loki {\n    url => \"http://loki:3100/loki/api/v1/push\"\n    #username => \"test\"\n    #password => \"test\"\n  }\n  # stdout { codec => rubydebug }\n}"` |  |
+| loki.datasource.jsonData | string | `"{}"` |  |
+| loki.datasource.uid | string | `""` |  |
+| loki.enabled | bool | `true` |  |
+| loki.isDefault | bool | `true` |  |
+| loki.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| loki.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| loki.livenessProbe.initialDelaySeconds | int | `45` |  |
+| loki.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| loki.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| loki.readinessProbe.initialDelaySeconds | int | `45` |  |
+| loki.url | string | `"http://{{(include \"loki.serviceName\" .)}}:{{ .Values.loki.service.port }}"` |  |
+| prometheus.datasource.jsonData | string | `"{}"` |  |
+| prometheus.enabled | bool | `false` |  |
+| prometheus.isDefault | bool | `false` |  |
+| prometheus.url | string | `"http://{{ include \"prometheus.fullname\" .}}:{{ .Values.prometheus.server.service.servicePort }}{{ .Values.prometheus.server.prefixURL }}"` |  |
+| promtail.config.clients[0].url | string | `"http://{{ .Release.Name }}:3100/loki/api/v1/push"` |  |
+| promtail.config.logLevel | string | `"info"` |  |
+| promtail.config.serverPort | int | `3101` |  |
+| promtail.enabled | bool | `true` |  |
+| proxy.http_proxy | string | `""` |  |
+| proxy.https_proxy | string | `""` |  |
+| proxy.no_proxy | string | `""` |  |
+| test_pod.enabled | bool | `true` |  |
+| test_pod.image | string | `"bats/bats:1.8.2"` |  |
+| test_pod.pullPolicy | string | `"IfNotPresent"` |  |
 
-```bash
-helm upgrade --install loki grafana/loki-stack --set "key1=val1,key2=val2,..."
-```
-
-## Deploy Loki and Fluent Bit to your cluster
-
-```bash
-helm upgrade --install loki grafana/loki-stack \
-    --set fluent-bit.enabled=true,promtail.enabled=false
-```
-
-## Deploy Grafana to your cluster
-
-The chart loki-stack contains a pre-configured Grafana, simply use `--set grafana.enabled=true`
-
-To get the admin password for the Grafana pod, run the following command:
-
-```bash
-kubectl get secret --namespace <YOUR-NAMESPACE> loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
-```
-
-To access the Grafana UI, run the following command:
-
-```bash
-kubectl port-forward --namespace <YOUR-NAMESPACE> service/loki-grafana 3000:80
-```
-
-Navigate to <http://localhost:3000> and login with `admin` and the password output above.
-Then follow the [instructions for adding the loki datasource](https://grafana.com/docs/grafana/latest/datasources/loki/), using the URL `http://loki:3100/`.
-
-## Upgrade
-### Version >= 2.8.0
-Provide support configurable datasource urls [#1374](https://github.com/grafana/helm-charts/pull/1374)
-
-### Version >= 2.7.0
-Update promtail dependency to ^6.2.3 [#1692](https://github.com/grafana/helm-charts/pull/1692)
-
-### Version >=2.6.0
-Bumped grafana 8.1.6->8.3.4 [#1013](https://github.com/grafana/helm-charts/pull/1013)
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

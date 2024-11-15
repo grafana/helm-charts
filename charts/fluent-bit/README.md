@@ -1,130 +1,95 @@
-# Fluent Bit Loki chart
+# fluent-bit
 
-DEPRECATED. Please use the official Fluent-Bit chart at https://github.com/fluent/helm-charts.
+> **:exclamation: This Helm Chart is deprecated!**
 
-This chart install the Fluent Bit application to ship logs to Loki. It defines daemonset on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+![Version: 2.6.0](https://img.shields.io/badge/Version-2.6.0-informational?style=flat-square) ![AppVersion: v2.1.0](https://img.shields.io/badge/AppVersion-v2.1.0-informational?style=flat-square)
 
-## Get Repo Info
+Uses fluent-bit Loki go plugin for gathering logs and sending them to Loki
 
-```console
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-```
+**Homepage:** <https://grafana.com/loki>
 
-_See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
+## Maintainers
 
-## Installing the Chart
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Loki Maintainers | <lokiproject@googlegroups.com> |  |
 
-> If you don't have `Helm` installed locally, or `Tiller` installed in your Kubernetes cluster, read the [Using Helm](https://docs.helm.sh/using_helm/) documentation to get started.
-To install the chart with the release name `my-release` using our helm repository:
+## Source Code
 
-```bash
-helm repo add grafana https://grafana.github.io/helm-charts
-helm upgrade --install my-release grafana/fluent-bit \
-    --set loki.serviceName=loki.default.svc.cluster.local
-```
+* <https://github.com/grafana/loki>
 
-If you deploy Loki with a custom namespace or service name, you must change the value above for `loki.serviceName` to the appropriate value.
+## Requirements
 
-The command deploys Fluent Bit on the Kubernetes cluster with the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+Kubernetes: `^1.10.0-0`
 
-To configure the chart to send to [Grafana Cloud](https://grafana.com/products/cloud) use:
+## Values
 
-```bash
-helm upgrade --install my-release grafana/fluent-bit \
-    --set loki.serviceName=logs-us-west1.grafana.net,loki.servicePort=80,loki.serviceScheme=https \
-    --set loki.user=2830,loki.password=1234
-```
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| annotations | object | `{}` |  |
+| automountServiceAccountToken | bool | `true` |  |
+| config.autoKubernetesLabels | bool | `false` |  |
+| config.batchSize | int | `1048576` |  |
+| config.batchWait | int | `1` |  |
+| config.bufChunkSize | string | `"32k"` |  |
+| config.bufMaxSize | string | `"32k"` |  |
+| config.k8sLoggingExclude | string | `"Off"` |  |
+| config.k8sLoggingParser | string | `"Off"` |  |
+| config.labelMap.kubernetes.container_name | string | `"container"` |  |
+| config.labelMap.kubernetes.host | string | `"node"` |  |
+| config.labelMap.kubernetes.labels.app | string | `"app"` |  |
+| config.labelMap.kubernetes.labels.release | string | `"release"` |  |
+| config.labelMap.kubernetes.namespace_name | string | `"namespace"` |  |
+| config.labelMap.kubernetes.pod_name | string | `"instance"` |  |
+| config.labelMap.stream | string | `"stream"` |  |
+| config.labels | string | `"{job=\"fluent-bit\"}"` |  |
+| config.lineFormat | string | `"json"` |  |
+| config.loglevel | string | `"warn"` |  |
+| config.memBufLimit | string | `"5MB"` |  |
+| config.port | int | `2020` |  |
+| config.removeKeys[0] | string | `"kubernetes"` |  |
+| config.removeKeys[1] | string | `"stream"` |  |
+| config.tenantID | string | `"\"\""` |  |
+| deploymentStrategy | string | `"RollingUpdate"` |  |
+| hostAliases | list | `[]` | hostAliases to add |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.repository | string | `"grafana/fluent-bit-plugin-loki"` |  |
+| image.tag | string | `"2.1.0-amd64"` |  |
+| loki.serviceName | string | `""` |  |
+| loki.servicePath | string | `"/api/prom/push"` |  |
+| loki.servicePort | int | `3100` |  |
+| loki.serviceScheme | string | `"http"` |  |
+| nameOverride | string | `"fluent-bit-loki"` |  |
+| nodeSelector | object | `{}` |  |
+| podAnnotations."prometheus.io/path" | string | `"/api/v1/metrics/prometheus"` |  |
+| podAnnotations."prometheus.io/port" | string | `"2020"` |  |
+| podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
+| podLabels | object | `{}` |  |
+| podSecurityContext | object | `{}` |  |
+| rbac.create | bool | `true` |  |
+| rbac.pspEnabled | bool | `true` |  |
+| resources.limits.memory | string | `"100Mi"` |  |
+| resources.requests.cpu | string | `"100m"` |  |
+| resources.requests.memory | string | `"100Mi"` |  |
+| securityContext | object | `{}` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `nil` |  |
+| serviceMonitor.additionalLabels | object | `{}` |  |
+| serviceMonitor.annotations | object | `{}` |  |
+| serviceMonitor.enabled | bool | `false` |  |
+| serviceMonitor.interval | string | `""` |  |
+| tolerations[0].effect | string | `"NoSchedule"` |  |
+| tolerations[0].key | string | `"node-role.kubernetes.io/master"` |  |
+| volumeMounts[0].mountPath | string | `"/var/log"` |  |
+| volumeMounts[0].name | string | `"varlog"` |  |
+| volumeMounts[1].mountPath | string | `"/var/lib/docker/containers"` |  |
+| volumeMounts[1].name | string | `"varlibdockercontainers"` |  |
+| volumeMounts[1].readOnly | bool | `true` |  |
+| volumes[0].hostPath.path | string | `"/var/log"` |  |
+| volumes[0].name | string | `"varlog"` |  |
+| volumes[1].hostPath.path | string | `"/var/lib/docker/containers"` |  |
+| volumes[1].name | string | `"varlibdockercontainers"` |  |
 
-> **Tip**: List all releases using `helm list`
-
-To install a custom tag use the following command:
-
-```bash
-helm upgrade --install my-release grafana/fluent-bit \
-    --set image.tag=<custom tag>
-```
-
-The full list of available tags on [docker hub](https://cloud.docker.com/u/grafana/repository/docker/grafana/fluent-bit-plugin-loki).
-
-Alternatively you can install the full [Loki stack](../loki-stack) (Loki + Fluent Bit) using:
-
-```bash
-helm upgrade --install my-release grafana/loki-stack \
-    --set fluent-bit.enabled=true,promtail.enabled=false
-```
-
-This will automatically configured the `loki.serviceName` configuration field to the newly created Loki instance.
-
-## RBAC
-
-By default, `rbac.create` is set to true. This enable RBAC support in Fluent Bit and must be true if RBAC is enabled in your cluster.
-
-The chart will take care of creating the required service accounts and roles for Fluent Bit.
-
-If you have RBAC disabled, or to put it another way, ABAC enabled, you should set this value to `false`.
-
-## Uninstalling the Chart
-
-To uninstall/delete the `my-release` deployment:
-
-```bash
-helm delete my-release
-```
-
-The command removes all the Kubernetes components associated with the chart and deletes the release.
-
-## Configuration
-
-The following tables lists the configurable parameters of the Fluent Bit chart and their default values.
-
-For more details, read the [Fluent Bit documentation](../../../cmd/fluent-bit/README.md)
-
-| Parameter                | Description                                                                                        | Default                          |
-|--------------------------|----------------------------------------------------------------------------------------------------|----------------------------------|
-| `loki.serviceName`       | The address of the Loki service.                                                                   | `"${RELEASE}-loki"`              |
-| `loki.servicePort`       | The port of the Loki service.                                                                      | `3100`                           |
-| `loki.serviceScheme`     | The scheme of the Loki service.                                                                    | `http`                           |
-| `loki.user`              | The http basic auth username to access the Loki service.                                           |                                  |
-| `loki.password`          | The http basic auth password to access the Loki service.                                           |                                  |
-| `config.port`            | the Fluent Bit port to listen. (This is mainly used to serve metrics)                              | `2020`                           |
-| `config.tenantID`        | The tenantID used by default to push logs to Loki                                                  | `''`                             |
-| `config.batchWait`       | Time to wait before send a log batch to Loki, full or not. (unit: secs)                            | `1`                              |
-| `config.batchSize`       | Log batch size to send a log batch to Loki. (unit: bytes)                                          | `10240` (10KiB)                  |
-| `config.loglevel`        | the Fluent Bit log level (debug,info,warn,error).                                                  | `warn`                           |
-| `config.lineFormat`      | The line format to use to send a record (json/key_value)                                           | `json`                           |
-| `config.k8sLoggingParser`| Allow Kubernetes Pods to suggest a pre-defined Parser. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/filter/kubernetes#kubernetes-annotations).                                                                                      | `Off`                           |
-| `config.k8sLoggingExclude`| Allow Kubernetes Pods to exclude their logs from the log processor. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/filters/kubernetes)                                                                                             | `Off`
-| `config.memBufLimit`     | Override the default  Mem_Buf_Limit [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/administration/backpressure#mem_buf_limit) | `5MB`
-| `config.removeKeys`      | The list of key to remove from each record                                                         | `[removeKeys,stream]`            |
-| `config.labels`          | A set of labels to send for every log                                                              | `'{job="fluent-bit"}'`           |
-| `config.autoKubernetesLabels` | If set to true, it will add all Kubernetes labels to Loki labels                                   | `false`                          |
-| `config.labelMap`        | Mapping of labels from a record. See [Fluent Bit documentation](../../../cmd/fluent-bit/README.md) |                                  |
-| `config.parsers`         | Definition of extras fluent bit parsers. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/filter/parser). The format is a sequence of mappings where each key is the same as the one in the [PARSER] section of parsers.conf file       | `[]`                            |
-| `config.extraOutputs`    | Definition of extras fluent bit outputs. See [Official Fluent Bit documentation](https://docs.fluentbit.io/manual/pipeline/outputs/). The format is a sequence of mappings where each key is the same as the one in the [OUTPUT]                                | `[]`                            |
-| `affinity`               | [affinity][affinity] settings for pod assignment                                                   | `{}`                             |
-| `annotations`            | Annotations to add to Kubernetes resources.                                                        | `{}`                             |
-| `deploymentStrategy`     | The deployment strategy to use with the daemonset                                                  | `RollingUpdate`                  |
-| `image.repository`       | The Fluent Bit docker image repository                                                             | `grafana/fluent-bit-plugin-loki` |
-| `image.tag`              | The Fluent Bit docker image tag                                                                    | `0.1`                            |
-| `image.pullPolicy`       | The Fluent Bit docker image pull policy                                                            | `IfNotPresent`                   |
-| `nodeSelector`           | Fluent Bit [node labels][nodeSelector] for pod assignment                                          | `{}`                             |
-| `podLabels`              | additional Fluent Bit pod labels                                                                   | `{}`                             |
-| `podAnnotations`         | additional Fluent Bit pod annotations                                                              | `Prometheus discovery`           |
-| `rbac.create`            | Activate support for RBAC                                                                          | `true`                           |
-| `resources`              | Resource requests/limit                                                                            |                                  |
-| `tolerations`            | [Toleration][toleration] labels for pod assignment                                                 | `no schedule on master nodes`    |
-| `volumes`                | [Volume]([volumes]) to mount                                                                       | `host containers log`            |
-| `volumeMounts`           | Volume mount mapping                                                                               |                                  |
-| `serviceMonitor.enabled` | Create a [Prometheus Operator](operator) serviceMonitor resource for Fluent Bit                    | `false`                          |
-| `podSecurityContext`     | Configure the pod level securityContext                                                            | `{}`                             |
-| `securityContext`        | Configure the fluent-bit container securityContext                                                 | `{}`                             |
-| `automountServiceAccountToken `  | Configure the fluent-bit container automountServiceAccountToken                            | `true`                           |
-
-
-
-[toleration]: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-[nodeSelector]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-[affinity]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-[volumes]: https://kubernetes.io/docs/concepts/storage/volumes/
-[operator]: https://github.com/coreos/prometheus-operator
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
