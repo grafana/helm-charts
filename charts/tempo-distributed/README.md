@@ -348,6 +348,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.service.annotations | object | `{}` | Annotations for distributor service |
 | distributor.service.externalTrafficPolicy | string | `nil` | If type is LoadBalancer you can set it to 'Local' [preserve the client source IP](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip) |
+| distributor.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
 | distributor.service.labels | object | `{}` | Labels for distributor service |
 | distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
@@ -551,6 +552,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.replicas | int | `3` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
+| ingester.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
+| ingester.service.type | string | `"ClusterIP"` | Type of the service: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
