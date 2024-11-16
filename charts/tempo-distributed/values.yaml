@@ -1064,7 +1064,7 @@ enterpriseFederationFrontend:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
-  # proxy_targets:
+  proxy_targets: []
   #   - name: own-data-center
   #     url: http://get/tempo
   #   - name: grafana-cloud
@@ -1072,7 +1072,6 @@ enterpriseFederationFrontend:
   #     basic_auth:
   #       username: <instance-id>
   #       password: <token>
-  proxy_targets: []
   autoscaling:
     # -- Enable autoscaling for the federation-frontend
     enabled: false
