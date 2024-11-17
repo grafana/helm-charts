@@ -1568,10 +1568,13 @@ memcached:
             topologyKey: topology.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Extra volumes for memcached pods
+  extraVolumeMounts: []
+  # -- Extra volumes for memcached statefulSet
+  extraVolumes: []
   service:
     # -- Annotations for memcached service
     annotations: {}
-
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
@@ -1593,7 +1596,8 @@ memcachedExporter:
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
   resources: {}
-
+  # -- Additional CLI args for the memcached exporter
+  extraArgs: []
 metaMonitoring:
   # ServiceMonitor configuration
   serviceMonitor:
