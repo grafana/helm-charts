@@ -278,6 +278,8 @@ serviceMonitor:
 
 persistence:
   enabled: false
+    # -- Enable StatefulSetAutoDeletePVC feature
+  enableStatefulSetAutoDeletePVC: false
   # storageClassName: local-path
   accessModes:
     - ReadWriteOnce
