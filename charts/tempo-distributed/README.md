@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.22.1](https://img.shields.io/badge/Version-1.22.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.23.0](https://img.shields.io/badge/Version-1.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -641,6 +641,16 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
 | metricsGenerator.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection. |
 | metricsGenerator.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| metricsGenerator.autoscaling | object | `{"enabled":false,"hpa":{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null},"keda":{"enabled":false,"triggers":[]},"maxReplicas":3,"minReplicas":1}` | Autoscaling configurations |
+| metricsGenerator.autoscaling.enabled | bool | `false` | Enable autoscaling for the metrics-generator |
+| metricsGenerator.autoscaling.hpa | object | `{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null}` | Autoscaling via HPA object |
+| metricsGenerator.autoscaling.hpa.behavior | object | `{}` | Autoscaling behavior configuration for the metrics-generator |
+| metricsGenerator.autoscaling.hpa.targetCPUUtilizationPercentage | int | `100` | Target CPU utilisation percentage for the metrics-generator |
+| metricsGenerator.autoscaling.hpa.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the metrics-generator |
+| metricsGenerator.autoscaling.keda | object | `{"enabled":false,"triggers":[]}` | Autoscaling via keda/ScaledObject |
+| metricsGenerator.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the metrics-generator |
+| metricsGenerator.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the metrics-generator |
+| metricsGenerator.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the metrics-generator |
 | metricsGenerator.config | object | `{"metrics_ingestion_time_range_slack":"30s","processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_add_org_id_header":true,"remote_write_flush_deadline":"1m","wal":null},"traces_storage":{"path":"/var/tempo/traces"}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
 | metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics] |
 | metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |

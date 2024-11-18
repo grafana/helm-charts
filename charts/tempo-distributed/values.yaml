@@ -313,6 +313,36 @@ metricsGenerator:
     repository: null
     # -- Docker image tag for the metrics-generator image. Overrides `tempo.image.tag`
     tag: null
+  # -- Autoscaling configurations
+  autoscaling:
+    # -- Enable autoscaling for the metrics-generator
+    enabled: false
+    # -- Minimum autoscaling replicas for the metrics-generator
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for the metrics-generator
+    maxReplicas: 3
+    # -- Autoscaling via HPA object
+    hpa:
+      enabled: false
+      # -- Autoscaling behavior configuration for the metrics-generator
+      behavior: {}
+      # -- Target CPU utilisation percentage for the metrics-generator
+      targetCPUUtilizationPercentage: 100
+      # -- Target memory utilisation percentage for the metrics-generator
+      targetMemoryUtilizationPercentage:
+    # -- Autoscaling via keda/ScaledObject
+    keda:
+      # requires https://keda.sh/
+      enabled: false
+      # -- List of autoscaling triggers for the metrics-generator
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "250"
+      #     query: |-
+      #       sum(prometheus_remote_storage_shards_desired{job="default/metrics-generator"} /
+      #       prometheus_remote_storage_shards_max{job="default/metrics-generator"})by(job)
   # -- The name of the PriorityClass for metrics-generator pods
   priorityClassName: null
   # -- Labels for metrics-generator pods
