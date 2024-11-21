@@ -302,6 +302,12 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+  # optionally allow adding 'tempo-' prefix to ingester name label
+  addNamePrefix: false
+  # optionally allow adding arbitrary prefix to the ingester rollout-group label
+  rolloutGroupPrefix: ''
+  # optionally namespace StatefulSet serviceName with zone. ex: temp-ingester-zone-a
+  zoneNamespacedServiceName: false
 
 # Configuration for the metrics-generator
 metricsGenerator:

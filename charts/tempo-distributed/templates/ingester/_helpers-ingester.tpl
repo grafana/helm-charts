@@ -38,7 +38,7 @@ Params:
               - key: rollout-group
                 operator: In
                 values:
-                  - ingester
+                  - "{{ include "ingester.rolloutGroupNamePrefix" .ctx | trim }}{{ .component }}"
               - key: zone
                 operator: NotIn
                 values:
@@ -70,8 +70,8 @@ ingester labels
 */}}
 {{- define "ingester.labels" -}}
 {{- if and .ctx.Values.ingester.zoneAwareReplication.enabled .rolloutZoneName }}
-name: {{ printf "%s-%s" .component .rolloutZoneName }}
-rollout-group: {{ .component }}
+name: "{{ include "ingester.namePrefix" .ctx | trim }}{{ .component | trim }}-{{ .rolloutZoneName }}"
+rollout-group: "{{ include "ingester.rolloutGroupNamePrefix" .ctx | trim }}{{ .component }}"
 zone: {{ .rolloutZoneName }}
 {{- end }}
 helm.sh/chart: {{ include "tempo.chart" .ctx }}
@@ -123,7 +123,7 @@ app.kubernetes.io/component: {{ .component }}
 {{-   if not .component }}
 {{-     printf "Component name cannot be empty if rolloutZoneName (%s) is set" .rolloutZoneName | fail }}
 {{-   end }}
-rollout-group: {{ .component }}
+rollout-group: "{{ include "ingester.rolloutGroupNamePrefix" .ctx | trim }}{{ .component }}"
 zone: {{ .rolloutZoneName }}
 {{- end }}
 {{- end -}}
@@ -174,8 +174,20 @@ app.kubernetes.io/part-of: memberlist
 {{-   if not .component }}
 {{-     printf "Component name cannot be empty if rolloutZoneName (%s) is set" .rolloutZoneName | fail }}
 {{-   end }}
-name: "{{ .component }}-{{ .rolloutZoneName }}" {{- /* Currently required for rollout-operator. https://github.com/grafana/rollout-operator/issues/15 */}}
-rollout-group: ingester
+name: "{{ include "ingester.namePrefix" .ctx | trim }}{{ .component }}-{{ .rolloutZoneName }}"{{- /* Currently required for rollout-operator. https://github.com/grafana/rollout-operator/issues/15 */}}
+rollout-group: "{{ include "ingester.rolloutGroupNamePrefix" .ctx | trim }}{{ .component }}"
 zone: {{ .rolloutZoneName }}
+{{- end }}
+{{- end -}}
+
+{{- define "ingester.rolloutGroupNamePrefix" -}}
+{{- if .Values.ingester.rolloutGroupPrefix }}
+{{ .Values.ingester.rolloutGroupPrefix }}-
+{{- end }}
+{{- end -}}
+
+{{- define "ingester.namePrefix" -}}
+{{- if .Values.ingester.addNamePrefix }}
+tempo-
 {{- end }}
 {{- end -}}
