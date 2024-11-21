@@ -837,9 +837,26 @@ queryFrontend:
       # -- The number of shards to split a trace by id query into.
       query_shards: 50
     metrics:
-      # The maximum allowed time range for a metrics query.
+      # -- The number of concurrent jobs to execute when querying the backend.
+      concurrent_jobs: 1000
+      # -- The target number of bytes for each job to handle when querying the backend.
+      target_bytes_per_job: 104857600
+      # -- The maximum allowed time range for a metrics query.
       # 0 disables this limit.
       max_duration: 3h
+      # -- query_backend_after controls where the query-frontend searches for traces.
+      # Time ranges older than query_backend_after will be searched in the backend/object storage only.
+      # Time ranges between query_backend_after and now will be queried from the metrics-generators.
+      query_backend_after: 30m
+      # -- The target length of time for each job to handle when querying the backend.
+      interval: 5m
+      # -- If set to a non-zero value, it's value will be used to decide if query is within SLO or not.
+      # Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data.
+      # NOTE: `duration_slo` and `throughput_bytes_slo` both must be configured for it to work
+      duration_slo: 0s
+      # -- If set to a non-zero value, it's value will be used to decide if query is within SLO or not.
+      # Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data.
+      throughput_bytes_slo: 0
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -1359,8 +1376,13 @@ config: |
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
+      concurrent_jobs:  {{ .Values.queryFrontend.config.metrics.concurrent_jobs }}
+      target_bytes_per_job:  {{ .Values.queryFrontend.config.metrics.target_bytes_per_job }}
       max_duration: {{ .Values.queryFrontend.config.metrics.max_duration }}
-
+      query_backend_after: {{ .Values.queryFrontend.config.metrics.query_backend_after }}
+      interval: {{ .Values.queryFrontend.config.metrics.interval }}
+      duration_slo: {{ .Values.queryFrontend.config.metrics.duration_slo }}
+      throughput_bytes_slo: {{ .Values.queryFrontend.config.metrics.throughput_bytes_slo }}
   ingester:
     lifecycler:
       ring:
