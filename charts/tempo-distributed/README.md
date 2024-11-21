@@ -509,6 +509,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
+| ingester.addIngesterNamePrefix | bool | `false` | Optionally allow adding 'tempo-' prefix to Ingester StatefulSet names, this is helpful when running multiple LTGM components in a single namespace. |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
 | ingester.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
@@ -551,6 +552,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `3` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
+| ingester.rolloutGroupPrefix | string | `null` | Optionally add supplied prefix to the Ingester StatefulSet rollout-group label. This is helpful when running multiple LTGM components in a single namespace. |
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
 | ingester.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
 | ingester.service.type | string | `"ClusterIP"` | Type of the service: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
