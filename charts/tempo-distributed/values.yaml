@@ -1807,6 +1807,9 @@ minio:
   persistence:
     size: 5Gi
   resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -2232,6 +2235,9 @@ adminApi:
     initialDelaySeconds: 45
 
   resources:
+    limits:
+      cpu: 10m
+      memory: 32Mi
     requests:
       cpu: 10m
       memory: 32Mi
@@ -2345,6 +2351,9 @@ enterpriseGateway:
     initialDelaySeconds: 45
 
   resources:
+    limits:
+      cpu: 10m
+      memory: 32Mi
     requests:
       cpu: 10m
       memory: 32Mi
