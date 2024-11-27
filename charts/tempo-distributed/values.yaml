@@ -156,6 +156,12 @@ ingester:
   extraEnvFrom: []
   # -- Resource requests and limits for the ingester
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -327,6 +333,12 @@ metricsGenerator:
   extraEnvFrom: []
   # -- Resource requests and limits for the metrics-generator
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor,
   # this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -503,6 +515,12 @@ distributor:
   extraEnvFrom: []
   # -- Resource requests and limits for the distributor
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
@@ -624,6 +642,12 @@ compactor:
   extraEnvFrom: []
   # -- Resource requests and limits for the compactor
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Pod Disruption Budget maxUnavailable
@@ -715,6 +739,12 @@ querier:
   extraEnvFrom: []
   # -- Resource requests and limits for the querier
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string
@@ -803,6 +833,12 @@ queryFrontend:
       tag: null
     # -- Resource requests and limits for the query
     resources: {}
+    #  limits:
+    #    cpu: 500m
+    #    memory: 512Mi
+    #  requests:
+    #    cpu: 500m
+    #    memory: 512Mi
     # -- Additional CLI args for tempo-query pods
     extraArgs: []
     # -- Environment variables to add to the tempo-query pods
@@ -930,6 +966,12 @@ queryFrontend:
   extraEnvFrom: []
   # -- Resource requests and limits for the query-frontend
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -1038,6 +1080,12 @@ enterpriseFederationFrontend:
   extraEnvFrom: []
   # -- Resource requests and limits for the federation-frontend
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the federation-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string
@@ -1563,6 +1611,12 @@ memcached:
   podAnnotations: {}
   # -- Resource requests and limits for memcached
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
@@ -1618,6 +1672,12 @@ memcachedExporter:
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Additional CLI args for the memcached exporter
   extraArgs: []
 metaMonitoring:
@@ -1769,6 +1829,9 @@ minio:
   persistence:
     size: 5Gi
   resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -1830,6 +1893,12 @@ gateway:
   extraVolumeMounts: []
   # -- Resource requests and limits for the gateway
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -2188,6 +2257,9 @@ adminApi:
     initialDelaySeconds: 45
 
   resources:
+    limits:
+      cpu: 10m
+      memory: 32Mi
     requests:
       cpu: 10m
       memory: 32Mi
@@ -2301,6 +2373,9 @@ enterpriseGateway:
     initialDelaySeconds: 45
 
   resources:
+    limits:
+      cpu: 10m
+      memory: 32Mi
     requests:
       cpu: 10m
       memory: 32Mi
