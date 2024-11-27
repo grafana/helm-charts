@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.79.4](https://img.shields.io/badge/Version-0.79.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.10](https://img.shields.io/badge/AppVersion-2.9.10-informational?style=flat-square)
+![Version: 0.80.0](https://img.shields.io/badge/Version-0.80.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.10](https://img.shields.io/badge/AppVersion-2.9.10-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -23,6 +23,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 ### Upgrading an existing Release to a new major version
 
 Major version upgrades listed here indicate that there is an incompatible breaking change needing manual actions.
+
+### To 0.80.0
+
+Upgrading to chart 0.80.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out. This will interrupt reads and writes. This config option is set to prevent cross talk between Loki and other memberlist clusters.
 
 ### From 0.78.x to 0.79.0
 Removed the hardcoded, deprecated `boltdb.shipper.compactor.working-directory` flag in the Compactor Deployment template, so that it can be set with `.Values.compactor.extraArgs` and the `compactor.working-directory` flag if necessary.
