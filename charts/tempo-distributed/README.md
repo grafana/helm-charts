@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.22.2](https://img.shields.io/badge/Version-1.22.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.23.1](https://img.shields.io/badge/Version-1.23.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -752,7 +752,13 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
 | queryFrontend.config.max_outstanding_per_tenant | int | `2000` | Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429. |
 | queryFrontend.config.max_retries | int | `2` | Number of times to retry a request sent to a querier |
-| queryFrontend.config.metrics.max_duration | string | `"3h"` |  |
+| queryFrontend.config.metrics.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when querying the backend. |
+| queryFrontend.config.metrics.duration_slo | string | `"0s"` | If set to a non-zero value, it's value will be used to decide if query is within SLO or not. Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data. NOTE: `duration_slo` and `throughput_bytes_slo` both must be configured for it to work |
+| queryFrontend.config.metrics.interval | string | `"5m"` | The target length of time for each job to handle when querying the backend. |
+| queryFrontend.config.metrics.max_duration | string | `"3h"` | The maximum allowed time range for a metrics query. 0 disables this limit. |
+| queryFrontend.config.metrics.query_backend_after | string | `"30m"` | query_backend_after controls where the query-frontend searches for traces. Time ranges older than query_backend_after will be searched in the backend/object storage only. Time ranges between query_backend_after and now will be queried from the metrics-generators. |
+| queryFrontend.config.metrics.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when querying the backend. |
+| queryFrontend.config.metrics.throughput_bytes_slo | int | `0` | If set to a non-zero value, it's value will be used to decide if query is within SLO or not. Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data. |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
 | queryFrontend.config.trace_by_id | object | `{"query_shards":50}` | Trace by ID lookup configuration |
