@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.14.0](https://img.shields.io/badge/Version-1.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.14.1](https://img.shields.io/badge/Version-1.14.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -53,6 +53,8 @@ Grafana Tempo Single Binary Mode
 | serviceMonitor.annotations | object | `{}` |  |
 | serviceMonitor.enabled | bool | `false` |  |
 | serviceMonitor.interval | string | `""` |  |
+| serviceMonitor.scheme | string | `""` |  |
+| serviceMonitor.tlsConfig | object | `{}` |  |
 | tempo.extraArgs | object | `{}` |  |
 | tempo.extraEnv | list | `[]` | Environment variables to add |
 | tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |

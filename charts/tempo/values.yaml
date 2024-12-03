@@ -272,6 +272,8 @@ serviceMonitor:
   interval: ""
   additionalLabels: {}
   annotations: {}
+  scheme: ""
+  tlsConfig: {}
   # scrapeTimeout: 10s
 
 persistence:
