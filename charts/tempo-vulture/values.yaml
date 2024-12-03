@@ -47,10 +47,6 @@ nodeSelector: {}
 tolerations: []
 
 
-service:
-  # -- Specifies whether a Service should be created
-  enabled: true
-
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -61,23 +57,6 @@ serviceAccount:
   imagePullSecrets: []
   # -- Annotations for the service account
   annotations: {}
-
-# ServiceMonitor configuration
-serviceMonitor:
-  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-  enabled: false
-  # -- Alternative namespace for ServiceMonitor resources
-  namespace: null
-  # -- Namespace selector for ServiceMonitor resources
-  namespaceSelector: {}
-  # -- ServiceMonitor annotations
-  annotations: {}
-  # -- Additional ServiceMonitor labels
-  labels: {}
-  # -- ServiceMonitor scrape interval
-  interval: null
-  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
-  scrapeTimeout: null
 
 # PodMonitor configuration
 podMonitor:
