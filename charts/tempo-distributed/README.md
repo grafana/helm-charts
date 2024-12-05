@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.25.0](https://img.shields.io/badge/Version-1.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.25.1](https://img.shields.io/badge/Version-1.25.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -31,6 +31,8 @@ To install the chart with the release name `my-release`:
 ```console
 helm install my-release grafana/tempo-distributed
 ```
+
+Refer to the [Get started with Grafana Tempo using the Helm chart](https://grafana.com/docs/helm-charts/tempo-distributed/next/get-started-helm-charts/) documentation for more details.
 
 ## Uninstalling the Chart
 
@@ -508,7 +510,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
-| global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
+| global_overrides | object | `{"per_tenant_override_config":"/runtime-config/overrides.yaml"}` | The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details. |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
 | ingester.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
@@ -645,9 +647,9 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection. |
 | metricsGenerator.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | metricsGenerator.config | object | `{"metrics_ingestion_time_range_slack":"30s","processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_add_org_id_header":true,"remote_write_flush_deadline":"1m","wal":null},"traces_storage":{"path":"/var/tempo/traces"}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
-| metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics] |
-| metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |
-| metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | Dimensions are searched for in the resource and span attributes and are added to the metrics if present. |
+| metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to `global_overrides.defaults.metrics_generator_processors` value like `[service-graphs, span-metrics]`. |
+| metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | The resource and span attributes to be added to the service graph metrics, if present. |
+| metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | The resource and span attributes to be added to the span metrics, if present. |
 | metricsGenerator.config.storage.remote_write | list | `[]` | https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write |
 | metricsGenerator.config.traces_storage | object | `{"path":"/var/tempo/traces"}` | Used by the local blocks processor to store a wal for traces. |
 | metricsGenerator.enabled | bool | `false` | Specifies whether a metrics-generator should be deployed |
@@ -698,7 +700,7 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.rootPassword | string | `"supersecret"` |  |
 | minio.rootUser | string | `"grafana-tempo"` |  |
 | multitenancyEnabled | bool | `false` |  |
-| overrides | object | `{}` |  |
+| overrides | object | `{}` | The runtime overrides to write to the `per_tenant_override_config` file for Tempo (see `global_overrides` and the `per_tenant_override_config` property). This allows overriding the `ingestion` and `global` values on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) documentation for more details. |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
 | prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
@@ -996,8 +998,6 @@ config: |
     abort_if_cluster_join_fails: false
     join_members:
       - {{ include "tempo.fullname" . }}-memberlist
-  overrides:
-    per_tenant_override_config: /runtime-config/overrides.yaml
   server:
     http_listen_port: 3100
   storage:
