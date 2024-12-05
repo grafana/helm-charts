@@ -422,10 +422,10 @@ metricsGenerator:
       external_labels: {}
       stale_duration: 15m
     processor:
-      # -- For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics]
+      # -- For processors to be enabled and generate metrics, pass the names of the processors to `global_overrides.defaults.metrics_generator_processors` value like `[service-graphs, span-metrics]`.
       service_graphs:
-        # -- Additional dimensions to add to the metrics. Dimensions are searched for in the
-        # -- resource and span attributes and are added to the metrics if present.
+        # -- Additional dimensions to add to the metrics along with the default dimensions.
+        # -- The resource and span attributes to be added to the service graph metrics, if present.
         dimensions: []
         histogram_buckets: [0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4, 12.8]
         max_items: 10000
@@ -433,7 +433,7 @@ metricsGenerator:
         workers: 10
       span_metrics:
         # -- Additional dimensions to add to the metrics along with the default dimensions.
-        # -- Dimensions are searched for in the resource and span attributes and are added to the metrics if present.
+        # -- The resource and span attributes to be added to the span metrics, if present.
         dimensions: []
         histogram_buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.02, 2.05, 4.10]
     storage:
@@ -1578,11 +1578,11 @@ storage:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
 
-# Global overrides
+# -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
 global_overrides:
   per_tenant_override_config: /runtime-config/overrides.yaml
 
-# Per tenants overrides
+# -- The runtime overrides to write to the `per_tenant_override_config` file for Tempo (see `global_overrides` and the `per_tenant_override_config` property). This allows overriding the `ingestion` and `global` values on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) documentation for more details.
 overrides: {}
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
