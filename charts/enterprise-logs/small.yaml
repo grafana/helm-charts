@@ -35,6 +35,17 @@ compactor:
       cpu: 2
       memory: 1Gi
 
+# -target=tokengen
+# defined in enterprise-logs chart
+tokengen:
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 0.5
+      memory: 500Mi
+
 # -target=gateway
 # defined in enterprise-logs chart
 gateway:
