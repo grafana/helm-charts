@@ -73,6 +73,8 @@ spec:
               mountPath: /etc/loki/config
             - name: license
               mountPath: /etc/enterprise-logs/license
+          resources:
+            {{- toYaml .Values.enterprise.tokengen.resources | nindent 8 }}
           env:
             {{- if .Values.tokengen.env }}
               {{ toYaml .Values.tokengen.env | nindent 12 }}
@@ -97,6 +99,8 @@ spec:
               mountPath: /etc/loki/config
             - name: license
               mountPath: /etc/enterprise-logs/license
+          resources:
+            {{- toYaml .Values.enterprise.tokengen.resources | nindent 8 }}
           securityContext:
             {{- toYaml .Values.tokengen.containerSecurityContext | nindent 12 }}
       restartPolicy: OnFailure
