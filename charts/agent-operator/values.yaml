@@ -1,3 +1,7 @@
+global:
+  # -- Common labels for all object directly managed by this chart.
+  commonLabels: {}
+
 # -- Overrides the chart's name
 nameOverride: ""
 
@@ -37,7 +41,7 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.42.0
+  tag: v0.43.3
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets
