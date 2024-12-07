@@ -1,7 +1,7 @@
-{{- with .Values.serviceMonitor }}
+{{- with .Values.podMonitor}}
 {{- if .enabled }}
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: {{ include "tempo-vulture.fullname" $ }}
   {{- with .namespace }}
@@ -24,7 +24,7 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo-vulture.selectorLabels" $ | nindent 6 }}
-  endpoints:
+  podMetricsEndpoints:
     - port: prom-metrics
       {{- with .interval }}
       interval: {{ . }}
