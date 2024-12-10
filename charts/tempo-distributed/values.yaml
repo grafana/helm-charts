@@ -2350,13 +2350,13 @@ enterpriseGateway:
       port: http-metrics
     initialDelaySeconds: 45
 
-  resources:
-    limits:
-      cpu: 10m
-      memory: 32Mi
-    requests:
-      cpu: 10m
-      memory: 32Mi
+  resources: {}
+#    limits:
+#      cpu: 10m
+#      memory: 32Mi
+#    requests:
+#      cpu: 10m
+#      memory: 32Mi
 
   terminationGracePeriodSeconds: 60
 
