@@ -24,6 +24,8 @@ To install the chart with the release name `my-release`:
 helm install my-release grafana/tempo-distributed
 ```
 
+Refer to the [Get started with Grafana Tempo using the Helm chart](https://grafana.com/docs/helm-charts/tempo-distributed/next/get-started-helm-charts/) documentation for more details.
+
 ## Uninstalling the Chart
 
 To uninstall/delete the my-release deployment:
@@ -330,8 +332,6 @@ config: |
     abort_if_cluster_join_fails: false
     join_members:
       - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
-  overrides:
-    per_tenant_override_config: /runtime-config/overrides.yaml
   server:
     http_listen_port: 3100
   storage:
