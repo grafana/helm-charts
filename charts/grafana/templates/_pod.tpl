@@ -1088,6 +1088,9 @@ containers:
       - name: {{ .Values.gossipPortName }}-udp
         containerPort: 9094
         protocol: UDP
+      - name: profiling
+        containerPort: 6060
+        protocol: TCP
     env:
       - name: POD_IP
         valueFrom:
