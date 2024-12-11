@@ -588,7 +588,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.29-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
