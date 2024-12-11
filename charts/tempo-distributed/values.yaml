@@ -43,7 +43,7 @@ externalRuntimeConfigName: '{{ include "tempo.resourceName" (dict "ctx" . "compo
 externalConfigVersion: '0'
 
 # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
-reportingEnabled: true
+reportingEnabled: false
 
 tempo:
   image:

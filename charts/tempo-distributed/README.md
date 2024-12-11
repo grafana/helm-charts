@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.25.1](https://img.shields.io/badge/Version-1.25.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.25.2](https://img.shields.io/badge/Version-1.25.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -814,7 +814,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | rbac.create | bool | `false` | Specifies whether RBAC manifests should be created |
 | rbac.pspEnabled | bool | `false` | Specifies whether a PodSecurityPolicy should be created |
-| reportingEnabled | bool | `true` | If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs |
+| reportingEnabled | bool | `false` | If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs |
 | rollout_operator.enabled | bool | `false` | Enable rollout-operator. It must be enabled when using Zone Aware Replication. |
 | rollout_operator.podSecurityContext.fsGroup | int | `10001` |  |
 | rollout_operator.podSecurityContext.runAsGroup | int | `10001` |  |
