@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.22.2](https://img.shields.io/badge/Version-1.22.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.25.1](https://img.shields.io/badge/Version-1.25.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -253,6 +253,8 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | adminApi.readinessProbe.initialDelaySeconds | int | `45` |  |
 | adminApi.replicas | int | `1` |  |
+| adminApi.resources.limits.cpu | string | `"10m"` |  |
+| adminApi.resources.limits.memory | string | `"32Mi"` |  |
 | adminApi.resources.requests.cpu | string | `"10m"` |  |
 | adminApi.resources.requests.memory | string | `"32Mi"` |  |
 | adminApi.securityContext | object | `{}` |  |
@@ -423,8 +425,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | enterpriseGateway.readinessProbe.initialDelaySeconds | int | `45` |  |
 | enterpriseGateway.replicas | int | `1` |  |
-| enterpriseGateway.resources.requests.cpu | string | `"10m"` |  |
-| enterpriseGateway.resources.requests.memory | string | `"32Mi"` |  |
+| enterpriseGateway.resources | object | `{}` |  |
 | enterpriseGateway.securityContext | object | `{}` |  |
 | enterpriseGateway.service.annotations | object | `{}` | Annotations for the enterprise gateway service |
 | enterpriseGateway.service.clusterIP | string | `nil` | ClusterIP of the enterprise gateway service |
@@ -690,6 +691,8 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.enabled | bool | `false` |  |
 | minio.mode | string | `"standalone"` |  |
 | minio.persistence.size | string | `"5Gi"` |  |
+| minio.resources.limits.cpu | string | `"100m"` |  |
+| minio.resources.limits.memory | string | `"128Mi"` |  |
 | minio.resources.requests.cpu | string | `"100m"` |  |
 | minio.resources.requests.memory | string | `"128Mi"` |  |
 | minio.rootPassword | string | `"supersecret"` |  |
