@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.18.0](https://img.shields.io/badge/Version-0.18.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.19.1](https://img.shields.io/badge/AppVersion-v0.19.1-informational?style=flat-square)
+![Version: 0.21.0](https://img.shields.io/badge/Version-0.21.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.21.0](https://img.shields.io/badge/AppVersion-v0.21.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -41,6 +41,7 @@ It is not a highly available application and runs as a single pod.
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"grafana/rollout-operator"` |  |

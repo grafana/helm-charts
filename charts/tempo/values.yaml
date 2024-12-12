@@ -126,6 +126,8 @@ tempo:
 # -- Tempo configuration file contents
 # @default -- Dynamically generated tempo configmap
 config: |
+    memberlist:
+      cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     usage_report:
       reporting_enabled: {{ .Values.tempo.reportingEnabled }}
@@ -261,6 +263,12 @@ serviceAccount:
 
 service:
   type: ClusterIP
+  clusterIP: ""
+  # -- (string) IP address, in case of 'type: LoadBalancer'
+  loadBalancerIP:
+  # -- If service type is LoadBalancer, the exposed protocol can either be "UDP", "TCP" or "UDP,TCP"
+  protocol: "TCP"
+
   annotations: {}
   labels: {}
   targetPort: ""
@@ -274,6 +282,8 @@ serviceMonitor:
 
 persistence:
   enabled: false
+    # -- Enable StatefulSetAutoDeletePVC feature
+  enableStatefulSetAutoDeletePVC: false
   # storageClassName: local-path
   accessModes:
     - ReadWriteOnce

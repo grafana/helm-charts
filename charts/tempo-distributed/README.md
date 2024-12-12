@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.20.1](https://img.shields.io/badge/Version-1.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.25.1](https://img.shields.io/badge/Version-1.25.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -13,8 +13,8 @@ Grafana Tempo in MicroService mode
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
-| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.4.0 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.16.0 |
+| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.21.0 |
 
 ## Chart Repo
 
@@ -32,6 +32,8 @@ To install the chart with the release name `my-release`:
 helm install my-release grafana/tempo-distributed
 ```
 
+Refer to the [Get started with Grafana Tempo using the Helm chart](https://grafana.com/docs/helm-charts/tempo-distributed/next/get-started-helm-charts/) documentation for more details.
+
 ## Uninstalling the Chart
 
 To uninstall/delete the my-release deployment:
@@ -45,6 +47,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.21.0
+
+Upgrading to chart 1.21.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
 
 ### From Chart versions < 1.18.0
 
@@ -343,6 +350,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
 | distributor.service.annotations | object | `{}` | Annotations for distributor service |
 | distributor.service.externalTrafficPolicy | string | `nil` | If type is LoadBalancer you can set it to 'Local' [preserve the client source IP](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip) |
+| distributor.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
 | distributor.service.labels | object | `{}` | Labels for distributor service |
 | distributor.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | distributor.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
@@ -354,7 +362,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository' |
-| enterprise.image.tag | string | `"v2.4.0"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterprise.image.tag | string | `"v2.6.1"` | Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
@@ -502,7 +510,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
-| global_overrides.per_tenant_override_config | string | `"/runtime-config/overrides.yaml"` |  |
+| global_overrides | object | `{"per_tenant_override_config":"/runtime-config/overrides.yaml"}` | The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details. |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
 | ingester.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection. |
@@ -537,12 +545,17 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for Statefulset |
+| ingester.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
+| ingester.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `3` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
+| ingester.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
+| ingester.service.type | string | `"ClusterIP"` | Type of the service: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
@@ -566,12 +579,14 @@ The memcached default args are removed and should be provided manually. The sett
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
-| memberlist | object | `{"abort_if_cluster_join_fails":false,"bind_addr":[],"bind_port":7946,"gossip_interval":"1s","gossip_nodes":2,"gossip_to_dead_nodes_time":"30s","leave_timeout":"5s","left_ingesters_timeout":"5m","max_join_backoff":"1m","max_join_retries":10,"min_join_backoff":"1s","node_name":"","packet_dial_timeout":"5s","packet_write_timeout":"5s","pull_push_interval":"30s","randomize_node_name":true,"rejoin_interval":"0s","retransmit_factor":2,"stream_timeout":"10s"}` | Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist |
+| memberlist | object | `{"abort_if_cluster_join_fails":false,"bind_addr":[],"bind_port":7946,"cluster_label":"{{ .Release.Name }}.{{ .Release.Namespace }}","gossip_interval":"1s","gossip_nodes":2,"gossip_to_dead_nodes_time":"30s","leave_timeout":"5s","left_ingesters_timeout":"5m","max_join_backoff":"1m","max_join_retries":10,"min_join_backoff":"1s","node_name":"","packet_dial_timeout":"5s","packet_write_timeout":"5s","pull_push_interval":"30s","randomize_node_name":true,"rejoin_interval":"0s","retransmit_factor":2,"stream_timeout":"10s"}` | Memberlist configuration. Please refer to https://grafana.com/docs/tempo/latest/configuration/#memberlist |
 | memcached.affinity | string | Hard node and soft zone anti-affinity | Affinity for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcached.enabled | bool | `true` | Specified whether the memcached cachce should be enabled |
 | memcached.extraArgs | list | `[]` | Additional CLI args for memcached |
 | memcached.extraEnv | list | `[]` | Environment variables to add to memcached pods |
 | memcached.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to memcached pods |
+| memcached.extraVolumeMounts | list | `[]` | Extra volumes for memcached pods |
+| memcached.extraVolumes | list | `[]` | Extra volumes for memcached statefulSet |
 | memcached.host | string | `"memcached"` |  |
 | memcached.image.pullPolicy | string | `"IfNotPresent"` | Memcached Docker image pull policy |
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
@@ -587,6 +602,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.tolerations | list | `[]` | Toleration for memcached pods |
 | memcached.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string |
 | memcachedExporter.enabled | bool | `false` | Specifies whether the Memcached Exporter should be enabled |
+| memcachedExporter.extraArgs | list | `[]` | Additional CLI args for the memcached exporter |
 | memcachedExporter.hostAliases | list | `[]` | hostAliases to add |
 | memcachedExporter.image.pullPolicy | string | `"IfNotPresent"` | Memcached Exporter Docker image pull policy |
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
@@ -631,9 +647,9 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection. |
 | metricsGenerator.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | metricsGenerator.config | object | `{"metrics_ingestion_time_range_slack":"30s","processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_add_org_id_header":true,"remote_write_flush_deadline":"1m","wal":null},"traces_storage":{"path":"/var/tempo/traces"}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
-| metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to overrides.metrics_generator_processors value like [service-graphs, span-metrics] |
-| metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | resource and span attributes and are added to the metrics if present. |
-| metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | Dimensions are searched for in the resource and span attributes and are added to the metrics if present. |
+| metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to `global_overrides.defaults.metrics_generator_processors` value like `[service-graphs, span-metrics]`. |
+| metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | The resource and span attributes to be added to the service graph metrics, if present. |
+| metricsGenerator.config.processor.span_metrics.dimensions | list | `[]` | The resource and span attributes to be added to the span metrics, if present. |
 | metricsGenerator.config.storage.remote_write | list | `[]` | https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write |
 | metricsGenerator.config.traces_storage | object | `{"path":"/var/tempo/traces"}` | Used by the local blocks processor to store a wal for traces. |
 | metricsGenerator.enabled | bool | `false` | Specifies whether a metrics-generator should be deployed |
@@ -684,7 +700,7 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.rootPassword | string | `"supersecret"` |  |
 | minio.rootUser | string | `"grafana-tempo"` |  |
 | multitenancyEnabled | bool | `false` |  |
-| overrides | object | `{}` |  |
+| overrides | object | `{}` | The runtime overrides to write to the `per_tenant_override_config` file for Tempo (see `global_overrides` and the `per_tenant_override_config` property). This allows overriding the `ingestion` and `global` values on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) documentation for more details. |
 | prometheusRule.annotations | object | `{}` | PrometheusRule annotations |
 | prometheusRule.enabled | bool | `false` | If enabled, a PrometheusRule resource for Prometheus Operator is created |
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
@@ -741,7 +757,13 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the query-frontend |
 | queryFrontend.config.max_outstanding_per_tenant | int | `2000` | Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429. |
 | queryFrontend.config.max_retries | int | `2` | Number of times to retry a request sent to a querier |
-| queryFrontend.config.metrics.max_duration | string | `"3h"` |  |
+| queryFrontend.config.metrics.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when querying the backend. |
+| queryFrontend.config.metrics.duration_slo | string | `"0s"` | If set to a non-zero value, it's value will be used to decide if query is within SLO or not. Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data. NOTE: `duration_slo` and `throughput_bytes_slo` both must be configured for it to work |
+| queryFrontend.config.metrics.interval | string | `"5m"` | The target length of time for each job to handle when querying the backend. |
+| queryFrontend.config.metrics.max_duration | string | `"3h"` | The maximum allowed time range for a metrics query. 0 disables this limit. |
+| queryFrontend.config.metrics.query_backend_after | string | `"30m"` | query_backend_after controls where the query-frontend searches for traces. Time ranges older than query_backend_after will be searched in the backend/object storage only. Time ranges between query_backend_after and now will be queried from the metrics-generators. |
+| queryFrontend.config.metrics.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when querying the backend. |
+| queryFrontend.config.metrics.throughput_bytes_slo | int | `0` | If set to a non-zero value, it's value will be used to decide if query is within SLO or not. Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data. |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
 | queryFrontend.config.trace_by_id | object | `{"query_shards":50}` | Trace by ID lookup configuration |
@@ -825,8 +847,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
-| tempo.memberlist | object | `{"appProtocol":null}` | Memberlist service configuration. |
+| tempo.memberlist | object | `{"appProtocol":null,"service":{"annotations":{}}}` | Memberlist service configuration. |
 | tempo.memberlist.appProtocol | string | `nil` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https". |
+| tempo.memberlist.service | object | `{"annotations":{}}` | Adds the service field to the memberlist service |
+| tempo.memberlist.service.annotations | object | `{}` | Sets optional annotations to the service field of the memberlist service. |
 | tempo.podAnnotations | object | `{}` | Common annotations for all pods |
 | tempo.podLabels | object | `{}` | Global labels for all tempo pods |
 | tempo.podSecurityContext | object | `{"fsGroup":1000}` | podSecurityContext holds pod-level security attributes and common container settings |
@@ -974,8 +998,6 @@ config: |
     abort_if_cluster_join_fails: false
     join_members:
       - {{ include "tempo.fullname" . }}-memberlist
-  overrides:
-    per_tenant_override_config: /runtime-config/overrides.yaml
   server:
     http_listen_port: 3100
   storage:
