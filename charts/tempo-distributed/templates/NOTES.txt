@@ -19,6 +19,9 @@ Installed components:
 {{- if .Values.memcached.enabled }}
 * memcached
 {{- end }}
+{{- if .Values.memcachedExporter.enabled }}
+* memcached-exporter
+{{- end }}
 {{- if .Values.gateway.enabled }}
 * gateway
 {{- end }}
@@ -26,6 +29,9 @@ Installed components:
 * minio
 {{- end }}
 {{- if .Values.rollout_operator.enabled }}
-* rollout_operator
+* rollout-operator
 {{- end }}
-
+{{- if .Values.enterprise.enabled }}
+* admin_api
+* enterprise-gateway
+{{- end }}
