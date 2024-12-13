@@ -811,7 +811,7 @@ queryFrontend:
       registry: null
       # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
       pullSecrets: []
-      # -- Docker image repository for the tempo-queryimage. Overrides `tempo.image.repository`
+      # -- Docker image repository for the tempo-query image. Overrides `tempo.image.repository`
       repository: grafana/tempo-query
       # -- Docker image tag for the tempo-query image. Overrides `tempo.image.tag`
       tag: null

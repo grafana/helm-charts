@@ -796,7 +796,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.query.extraVolumes | list | `[]` | Extra volumes for tempo-query deployment |
 | queryFrontend.query.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | queryFrontend.query.image.registry | string | `nil` | The Docker registry for the tempo-query image. Overrides `tempo.image.registry` |
-| queryFrontend.query.image.repository | string | `"grafana/tempo-query"` | Docker image repository for the tempo-queryimage. Overrides `tempo.image.repository` |
+| queryFrontend.query.image.repository | string | `"grafana/tempo-query"` | Docker image repository for the tempo-query image. Overrides `tempo.image.repository` |
 | queryFrontend.query.image.tag | string | `nil` | Docker image tag for the tempo-query image. Overrides `tempo.image.tag` |
 | queryFrontend.query.resources | object | `{}` | Resource requests and limits for the query |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
