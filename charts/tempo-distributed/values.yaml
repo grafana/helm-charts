@@ -2144,9 +2144,9 @@ enterprise:
   enabled: false
 
   image:
-    # -- Grafana Enterprise Tetrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
+    # -- Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
-    # -- Grafana Enterprise Tetrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
+    # -- Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag'
     tag: v2.6.1
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
