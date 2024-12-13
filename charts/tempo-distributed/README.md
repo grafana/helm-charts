@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.26.0](https://img.shields.io/badge/Version-1.26.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.26.1](https://img.shields.io/badge/Version-1.26.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -412,8 +412,8 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.image.tag | string | `nil` | Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag` |
 | enterpriseGateway.ingress.annotations | object | `{}` | Annotations for the gateway ingress |
 | enterpriseGateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
-| enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.gem.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
-| enterpriseGateway.ingress.tls | list | `[{"hosts":["gateway.gem.example.com"],"secretName":"gem-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.get.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
+| enterpriseGateway.ingress.tls | list | `[{"hosts":["gateway.get.example.com"],"secretName":"get-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | enterpriseGateway.initContainers | list | `[]` |  |
 | enterpriseGateway.nodeSelector | object | `{}` |  |
 | enterpriseGateway.persistence.subPath | string | `nil` |  |
