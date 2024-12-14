@@ -908,7 +908,13 @@ The other components are optional and must be explicitly enabled.
 | compactor | no |
 | metrics-generator | yes |
 | memcached | yes |
+| memcached-exporter | yes |
 | gateway | yes |
+| federation-frontend | yes |
+| rollout-operator | yes |
+| minio | yes |
+| admin-api | yes |
+| enterprise-gateway | yes |
 
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
