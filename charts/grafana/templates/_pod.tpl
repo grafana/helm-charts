@@ -192,6 +192,11 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -397,6 +402,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.alerts.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.alerts.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.alerts.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.alerts.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.alerts.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.alerts.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.alerts.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -434,7 +451,7 @@ containers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
-      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      {{- range $key, $value := .Values.sidecar.dashboards.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
@@ -513,6 +530,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: {{ .Values.sidecar.dashboards.watchClientTimeout | quote }}
       {{- end }}
+      {{- if .Values.sidecar.dashboards.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.dashboards.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.dashboards.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.dashboards.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -549,6 +578,11 @@ containers:
       {{- range $key, $value := .Values.sidecar.datasources.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.sidecar.datasources.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
@@ -620,6 +654,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.datasources.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.datasources.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.datasources.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.datasources.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.datasources.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -639,6 +685,9 @@ containers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+      {{- with .Values.sidecar.datasources.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
 {{- if .Values.sidecar.notifiers.enabled }}
   - name: {{ include "grafana.name" . }}-sc-notifiers
@@ -724,6 +773,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.notifiers.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.notifiers.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.notifiers.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.notifiers.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.notifiers.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -743,6 +804,9 @@ containers:
     volumeMounts:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
+      {{- with .Values.sidecar.notifiers.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
 {{- if .Values.sidecar.plugins.enabled }}
   - name: {{ include "grafana.name" . }}-sc-plugins
@@ -828,6 +892,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.plugins.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.plugins.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.plugins.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.plugins.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.plugins.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -847,6 +923,9 @@ containers:
     volumeMounts:
       - name: sc-plugins-volume
         mountPath: "/etc/grafana/provisioning/plugins"
+      {{- with .Values.sidecar.plugins.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
   - name: {{ .Chart.Name }}
     {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
@@ -1049,9 +1128,17 @@ containers:
       {{- end }}
       {{- if .Values.imageRenderer.enabled }}
       - name: GF_RENDERING_SERVER_URL
+        {{- if .Values.imageRenderer.serverURL }}
+        value: {{ .Values.imageRenderer.serverURL | quote }}
+        {{- else }}
         value: http://{{ include "grafana.fullname" . }}-image-renderer.{{ include "grafana.namespace" . }}:{{ .Values.imageRenderer.service.port }}/render
+        {{- end }}
       - name: GF_RENDERING_CALLBACK_URL
+        {{- if .Values.imageRenderer.renderingCallbackURL }}
+        value: {{ .Values.imageRenderer.renderingCallbackURL | quote }}
+        {{- else }}
         value: {{ .Values.imageRenderer.grafanaProtocol }}://{{ include "grafana.fullname" . }}.{{ include "grafana.namespace" . }}:{{ .Values.service.port }}/{{ .Values.imageRenderer.grafanaSubPath }}
+        {{- end }}
       {{- end }}
       - name: GF_PATHS_DATA
         value: {{ (get .Values "grafana.ini").paths.data }}
@@ -1146,6 +1233,9 @@ volumes:
   - name: {{ tpl .name $root }}
     configMap:
       name: {{ tpl .configMap $root }}
+      {{- with .optional }}
+      optional: {{ . }}
+      {{- end }}
       {{- with .items }}
       items:
         {{- toYaml . | nindent 8 }}
@@ -1251,6 +1341,9 @@ volumes:
     secret:
       secretName: {{ .secretName }}
       defaultMode: {{ .defaultMode }}
+      {{- with .optional }}
+      optional: {{ . }}
+      {{- end }}
       {{- with .items }}
       items:
         {{- toYaml . | nindent 8 }}

@@ -5,14 +5,20 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "gossip-ring") | nindent 4 }}
+  annotations:
+    {{- with .Values.tempo.memberlist.service.annotations | default dict }}
+    {{- toYaml . | nindent 4}}
+    {{- end }}
 spec:
   type: ClusterIP
   clusterIP: None
+  ipFamilies: {{ .Values.tempo.service.ipFamilies }}
+  ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
     - name: gossip-ring
-      port: 7946
+      port: {{ include "tempo.memberlistBindPort" . }}
       protocol: TCP
-      targetPort: http-memberlist
+      targetPort: {{ include "tempo.memberlistBindPort" . }}
       {{- if .Values.tempo.memberlist.appProtocol }}
       appProtocol: {{ .Values.tempo.memberlist.appProtocol }}
       {{- end }}

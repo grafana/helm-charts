@@ -68,14 +68,19 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: querier
           ports:
-            - containerPort: 7946
+            - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
               protocol: TCP
             - containerPort: 3100
               name: http-metrics
-          {{- with .Values.querier.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.querier.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.querier.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.querier.extraEnvFrom }}
           envFrom:

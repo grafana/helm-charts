@@ -11,10 +11,13 @@ metadata:
     {{- end }}
   {{- with .Values.distributor.service.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
+  internalTrafficPolicy: {{ .Values.distributor.service.internalTrafficPolicy }}
   type: {{ .Values.distributor.service.type }}
+  ipFamilies: {{ .Values.tempo.service.ipFamilies }}
+  ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
     - name: http-metrics
       port: 3100
@@ -89,6 +92,9 @@ spec:
     {{- end }}
   {{- if .Values.distributor.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.distributor.service.loadBalancerIP  }}
+  {{- end }}
+  {{- with .Values.distributor.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
   {{- end }}
   {{- with .Values.distributor.service.loadBalancerSourceRanges}}
   loadBalancerSourceRanges:
