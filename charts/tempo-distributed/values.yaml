@@ -89,7 +89,14 @@ tempo:
     service:
       # -- Sets optional annotations to the service field of the memberlist service.
       annotations: {}
-
+  service:
+    # -- Configure the IP families for all tempo services
+    # See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core
+    ipFamilies:
+      - 'IPv4'
+    #   - 'IPv6'
+    # -- Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack
+    ipFamilyPolicy: 'SingleStack'
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -1550,7 +1557,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.29-alpine
+    tag: 1.6.33-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached

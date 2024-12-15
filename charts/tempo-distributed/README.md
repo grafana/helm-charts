@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.25.1](https://img.shields.io/badge/Version-1.25.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.26.1](https://img.shields.io/badge/Version-1.26.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -592,7 +592,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.29-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
@@ -859,6 +859,8 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
 | tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
+| tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
+| tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
 | tokengenJob.annotations | object | `{}` |  |
 | tokengenJob.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for tokenjobgen containers |
@@ -906,7 +908,13 @@ The other components are optional and must be explicitly enabled.
 | compactor | no |
 | metrics-generator | yes |
 | memcached | yes |
+| memcached-exporter | yes |
 | gateway | yes |
+| federation-frontend | yes |
+| rollout-operator | yes |
+| minio | yes |
+| admin-api | yes |
+| enterprise-gateway | yes |
 
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
