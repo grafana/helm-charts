@@ -372,6 +372,8 @@ metricsGenerator:
             topologyKey: topology.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
+  minReadySeconds: 10
   # -- Node selector for metrics-generator pods
   nodeSelector: {}
   # -- Tolerations for metrics-generator pods

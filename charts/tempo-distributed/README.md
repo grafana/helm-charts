@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.26.1](https://img.shields.io/badge/Version-1.26.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.26.2](https://img.shields.io/badge/Version-1.26.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -666,6 +666,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.initContainers | list | `[]` |  |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | metricsGenerator.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| metricsGenerator.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
 | metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
