@@ -220,7 +220,7 @@ ingester:
     # -- Annotations for ingester's persist volume claim
     annotations: {}
   persistentVolumeClaimRetentionPolicy:
-    # -- Enable Persistent volume retention policy for Statefulset
+    # -- Enable Persistent volume retention policy for StatefulSet
     enabled: false
     # -- Volume retention behavior when the replica count of the StatefulSet is reduced
     whenScaled: Retain
@@ -400,6 +400,13 @@ metricsGenerator:
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
   extraVolumes: []
+  persistentVolumeClaimRetentionPolicy:
+    # -- Enable Persistent volume retention policy for StatefulSet
+    enabled: false
+    # -- Volume retention behavior when the replica count of the StatefulSet is reduced
+    whenScaled: Retain
+    # -- Volume retention behavior that applies when the StatefulSet is deleted
+    whenDeleted: Retain
   # -- Default ports
   ports:
     - name: grpc
