@@ -65,6 +65,25 @@ tempo:
   server:
     # -- HTTP server listen port
     http_listen_port: 3100
+  # Readiness and Liveness Probe Configuration Options
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: 3100
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 3100
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
   storage:
     trace:
       # tempo storage backend

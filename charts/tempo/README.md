@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.15.2](https://img.shields.io/badge/Version-1.15.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.17.0](https://img.shields.io/badge/Version-1.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -63,6 +63,13 @@ Grafana Tempo Single Binary Mode
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
 | tempo.ingester | object | `{}` | Configuration options for the ingester |
+| tempo.livenessProbe.failureThreshold | int | `3` |  |
+| tempo.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.livenessProbe.httpGet.port | int | `3100` |  |
+| tempo.livenessProbe.initialDelaySeconds | int | `30` |  |
+| tempo.livenessProbe.periodSeconds | int | `10` |  |
+| tempo.livenessProbe.successThreshold | int | `1` |  |
+| tempo.livenessProbe.timeoutSeconds | int | `5` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
 | tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
@@ -71,6 +78,13 @@ Grafana Tempo Single Binary Mode
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.querier | object | `{}` | Configuration options for the querier |
 | tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
+| tempo.readinessProbe.failureThreshold | int | `3` |  |
+| tempo.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.readinessProbe.httpGet.port | int | `3100` |  |
+| tempo.readinessProbe.initialDelaySeconds | int | `20` |  |
+| tempo.readinessProbe.periodSeconds | int | `10` |  |
+| tempo.readinessProbe.successThreshold | int | `1` |  |
+| tempo.readinessProbe.timeoutSeconds | int | `5` |  |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
 | tempo.receivers.jaeger.protocols.thrift_binary.endpoint | string | `"0.0.0.0:6832"` |  |
 | tempo.receivers.jaeger.protocols.thrift_compact.endpoint | string | `"0.0.0.0:6831"` |  |
