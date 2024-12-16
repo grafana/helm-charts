@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.26.2](https://img.shields.io/badge/Version-1.26.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.26.3](https://img.shields.io/badge/Version-1.26.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -830,7 +830,7 @@ The memcached default args are removed and should be provided manually. The sett
 | server.http_server_read_timeout | string | `"30s"` | Read timeout for HTTP server |
 | server.http_server_write_timeout | string | `"30s"` | Write timeout for HTTP server |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
-| server.logLevel | string | `"info"` | Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic |
+| server.logLevel | string | `"info"` | Log level. Can be set to debug, info (default), warn, error |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
