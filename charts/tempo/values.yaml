@@ -65,7 +65,7 @@ tempo:
   server:
     # -- HTTP server listen port
     http_listen_port: 3100
-  #Readiness and Liveness Probe Configuration Options
+  # Readiness and Liveness Probe Configuration Options
   livenessProbe:
     httpGet:
       path: /ready
