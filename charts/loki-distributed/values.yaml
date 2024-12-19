@@ -226,6 +226,7 @@ loki:
       rule_path: /tmp/loki/scratch
       alertmanager_url: https://alertmanager.xx
       external_url: https://alertmanager.xx
+      enable_alertmanager_v2: true
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
