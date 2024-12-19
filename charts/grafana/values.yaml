@@ -260,6 +260,7 @@ serviceMonitor:
   scrapeTimeout: 30s
   relabelings: []
   metricRelabelings: []
+  basicAuth: {}
   targetLabels: []
 
 extraExposePorts: []
@@ -673,9 +674,15 @@ datasources: {}
 #    - name: Prometheus
 
 ## Configure grafana alerting (can be templated)
-## ref: http://docs.grafana.org/administration/provisioning/#alerting
+## ref: https://docs.grafana.com/alerting/set-up/provision-alerting-resources/file-provisioning/
 ##
 alerting: {}
+  # policies.yaml:
+  #   apiVersion: 1
+  #   policies:
+  #     - orgId: 1
+  #       receiver: first_uid
+  #
   # rules.yaml:
   #   apiVersion: 1
   #   groups:
@@ -720,6 +727,7 @@ alerting: {}
   #             some_key: some_value
   #           labels:
   #             team: sre_team_1
+  #
   # contactpoints.yaml:
   #   secret:
   #     apiVersion: 1
@@ -737,6 +745,26 @@ alerting: {}
   #               group: app-stack
   #               summary: |
   #                 {{ `{{ include "default.message" . }}` }}
+  #
+  # templates.yaml:
+  #   apiVersion: 1
+  #   templates:
+  #     - orgId: 1
+  #       name: my_first_template
+  #       template: |
+  #         {{ `
+  #         {{ define "my_first_template" }}
+  #         Custom notification message
+  #         {{ end }}
+  #         ` }}
+  #
+  # mutetimes.yaml
+  #   apiVersion: 1
+  #   muteTimes:
+  #     - orgId: 1
+  #       name: mti_1
+  #       # refer to https://prometheus.io/docs/alerting/latest/configuration/#time_interval-0
+  #       time_intervals: {}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
@@ -955,6 +983,23 @@ sidecar:
     # defaults to 66sec (sic!)
     # watchClientTimeout: 60
     #
+    # maxTotalRetries: Total number of retries to allow for any http request.
+    # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry.
+    # maxTotalRetries: 5
+    #
+    # maxConnectRetries: How many connection-related errors to retry on for any http request.
+    # These are errors raised before the request is sent to the remote server, which we assume has not triggered the server to process the request.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxConnectRetries: 10
+    #
+    # maxReadRetries: How many times to retry on read errors for any http request
+    # These errors are raised after the request was sent to the server, so the request may have side-effects.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxReadRetries: 5
+    #
     # Endpoint to send request to reload alerts
     reloadURL: "http://localhost:3000/api/admin/provisioning/alerting/reload"
     # Absolute path to shell script to execute after a alert got reloaded
@@ -1008,6 +1053,24 @@ sidecar:
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
     # You can use this parameter together with `provider.foldersFromFilesStructure`to annotate configmaps and create folder structure.
     folderAnnotation: null
+    #
+    # maxTotalRetries: Total number of retries to allow for any http request.
+    # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry.
+    # maxTotalRetries: 5
+    #
+    # maxConnectRetries: How many connection-related errors to retry on for any http request.
+    # These are errors raised before the request is sent to the remote server, which we assume has not triggered the server to process the request.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxConnectRetries: 10
+    #
+    # maxReadRetries: How many times to retry on read errors for any http request
+    # These errors are raised after the request was sent to the server, so the request may have side-effects.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxReadRetries: 5
+    #
     # Endpoint to send request to reload alerts
     reloadURL: "http://localhost:3000/api/admin/provisioning/dashboards/reload"
     # Absolute path to shell script to execute after a configmap got reloaded
@@ -1088,6 +1151,23 @@ sidecar:
     # defaults to 66sec (sic!)
     # watchClientTimeout: 60
     #
+    # maxTotalRetries: Total number of retries to allow for any http request.
+    # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry.
+    # maxTotalRetries: 5
+    #
+    # maxConnectRetries: How many connection-related errors to retry on for any http request.
+    # These are errors raised before the request is sent to the remote server, which we assume has not triggered the server to process the request.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxConnectRetries: 10
+    #
+    # maxReadRetries: How many times to retry on read errors for any http request
+    # These errors are raised after the request was sent to the server, so the request may have side-effects.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxReadRetries: 5
+    #
     # Endpoint to send request to reload datasources
     reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
     # Absolute path to shell script to execute after a datasource got reloaded
@@ -1130,6 +1210,23 @@ sidecar:
     # defaults to 66sec (sic!)
     # watchClientTimeout: 60
     #
+    # maxTotalRetries: Total number of retries to allow for any http request.
+    # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry.
+    # maxTotalRetries: 5
+    #
+    # maxConnectRetries: How many connection-related errors to retry on for any http request.
+    # These are errors raised before the request is sent to the remote server, which we assume has not triggered the server to process the request.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxConnectRetries: 10
+    #
+    # maxReadRetries: How many times to retry on read errors for any http request
+    # These errors are raised after the request was sent to the server, so the request may have side-effects.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxReadRetries: 5
+    #
     # Endpoint to send request to reload plugins
     reloadURL: "http://localhost:3000/api/admin/provisioning/plugins/reload"
     # Absolute path to shell script to execute after a plugin got reloaded
@@ -1171,6 +1268,23 @@ sidecar:
     # this is how long your client waits before realizing & dropping the connection.
     # defaults to 66sec (sic!)
     # watchClientTimeout: 60
+    #
+    # maxTotalRetries: Total number of retries to allow for any http request.
+    # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry.
+    # maxTotalRetries: 5
+    #
+    # maxConnectRetries: How many connection-related errors to retry on for any http request.
+    # These are errors raised before the request is sent to the remote server, which we assume has not triggered the server to process the request.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxConnectRetries: 10
+    #
+    # maxReadRetries: How many times to retry on read errors for any http request
+    # These errors are raised after the request was sent to the server, so the request may have side-effects.
+    # Applies to all requests to reloadURL and k8s api requests.
+    # Set to 0 to fail on the first retry of this type.
+    # maxReadRetries: 5
     #
     # Endpoint to send request to reload notifiers
     reloadURL: "http://localhost:3000/api/admin/provisioning/notifications/reload"
@@ -1224,6 +1338,9 @@ imageRenderer:
   # extra environment variables
   env:
     HTTP_HOST: "0.0.0.0"
+    # Fixes "Error: Failed to launch the browser process!\nchrome_crashpad_handler: --database is required"
+    XDG_CONFIG_HOME: /tmp/.chromium
+    XDG_CACHE_HOME: /tmp/.chromium
     # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
     # IGNORE_HTTPS_ERRORS: true
@@ -1244,6 +1361,7 @@ imageRenderer:
 
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
+  automountServiceAccountToken: false
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment container securityContext
