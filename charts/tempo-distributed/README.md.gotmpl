@@ -24,6 +24,8 @@ To install the chart with the release name `my-release`:
 helm install my-release grafana/tempo-distributed
 ```
 
+Refer to the [Get started with Grafana Tempo using the Helm chart](https://grafana.com/docs/helm-charts/tempo-distributed/next/get-started-helm-charts/) documentation for more details.
+
 ## Uninstalling the Chart
 
 To uninstall/delete the my-release deployment:
@@ -38,6 +40,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.21.0
+
+Upgrading to chart 1.21.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
 
 ### From Chart versions < 1.18.0
 
@@ -231,7 +238,14 @@ The other components are optional and must be explicitly enabled.
 | compactor | no |
 | metrics-generator | yes |
 | memcached | yes |
+| memcached-exporter | yes |
 | gateway | yes |
+| federation-frontend | yes |
+| rollout-operator | yes |
+| minio | yes |
+| admin-api | yes |
+| enterprise-gateway | yes |
+
 
 
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
@@ -325,8 +339,6 @@ config: |
     abort_if_cluster_join_fails: false
     join_members:
       - {{"{{"}} include "tempo.fullname" . {{"}}"}}-memberlist
-  overrides:
-    per_tenant_override_config: /runtime-config/overrides.yaml
   server:
     http_listen_port: 3100
   storage:
