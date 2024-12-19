@@ -144,6 +144,11 @@ spec:
         - name: wal
           emptyDir: {{- toYaml .Values.metricsGenerator.walEmptyDir | nindent 12 }}
   {{- else }}
+  {{- if .Values.metricsGenerator.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
     - apiVersion: v1
       kind: PersistentVolumeClaim

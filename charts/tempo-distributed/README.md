@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.27.0](https://img.shields.io/badge/Version-1.27.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.28.0](https://img.shields.io/badge/Version-1.28.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -545,12 +545,13 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
+| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
-| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for Statefulset |
+| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
 | ingester.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
 | ingester.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
@@ -676,6 +677,9 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
 | metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
