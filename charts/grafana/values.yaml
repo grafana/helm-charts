@@ -260,6 +260,7 @@ serviceMonitor:
   scrapeTimeout: 30s
   relabelings: []
   metricRelabelings: []
+  basicAuth: {}
   targetLabels: []
 
 extraExposePorts: []
@@ -1337,6 +1338,9 @@ imageRenderer:
   # extra environment variables
   env:
     HTTP_HOST: "0.0.0.0"
+    # Fixes "Error: Failed to launch the browser process!\nchrome_crashpad_handler: --database is required"
+    XDG_CONFIG_HOME: /tmp/.chromium
+    XDG_CACHE_HOME: /tmp/.chromium
     # RENDERING_ARGS: --no-sandbox,--disable-gpu,--window-size=1280x758
     # RENDERING_MODE: clustered
     # IGNORE_HTTPS_ERRORS: true
@@ -1357,6 +1361,7 @@ imageRenderer:
 
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
+  automountServiceAccountToken: false
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment container securityContext
