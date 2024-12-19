@@ -9,6 +9,7 @@ metricsGeneration:
     - service.version
     - deployment.environment
     - k8s.cluster.name
+    - k8s.pod.name
 
 sampling:
   # -- Toggle tail sampling.
@@ -48,6 +49,34 @@ sampling:
         }
       }
     }
+
+batch:
+  # -- Configure batch processing options.
+  deployment:
+    timeout: 200ms
+    send_batch_size: 8192
+    send_batch_max_size: 0
+  statefulset:
+    timeout: 200ms
+    send_batch_size: 8192
+    send_batch_max_size: 0
+
+
+deployment:
+  otlp:
+    # -- otlp receiver settings for deployment (loadbalancer)
+    receiver:
+      grpc:
+        # -- gRPC max message receive size. Default to 4MB
+        max_recv_msg_size: 4MB
+
+statefulset:
+  otlp:
+    # -- otlp receiver settings for statefulset (sampler)
+    receiver:
+      grpc:
+        # -- gRPC max message receive size. Default to 4MB
+        max_recv_msg_size: 4MB
 
 # @ignored Ignore alloy deployment
 alloy-deployment:

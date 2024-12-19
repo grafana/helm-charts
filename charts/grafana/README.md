@@ -165,7 +165,7 @@ need to instead set `global.imageRegistry`.
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.registry`                  | Sidecar image registry                        | `quay.io`                          |
 | `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.26.0`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `1.28.0`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
@@ -292,6 +292,8 @@ need to instead set `global.imageRegistry`.
 | `imageRenderer.service.targetPort`         | image-renderer service port used by service                                        | `8081`                           |
 | `imageRenderer.appProtocol`                | Adds the appProtocol field to the service                                          | ``                               |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |
+| `imageRenderer.serverURL`                  | Remote image renderer url                                                          | `''`                             |
+| `imageRenderer.renderingCallbackURL`       | Callback url for the Grafana image renderer                                        | `''`                             |
 | `imageRenderer.podPortName`                | name of the image-renderer port on the pod                                         | `http`                           |
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
@@ -425,7 +427,7 @@ kind: ConfigMap
 metadata:
   name: sample-grafana-dashboard
   labels:
-     grafana_dashboard: "1"
+    grafana_dashboard: "1"
 data:
   k8s-dashboard.json: |-
   [...]
@@ -586,7 +588,7 @@ kind: ConfigMap
 metadata:
   name: sample-grafana-alert
   labels:
-     grafana_alert: "1"
+    grafana_alert: "1"
 data:
   k8s-alert.yml: |-
     apiVersion: 1
