@@ -255,6 +255,8 @@ The memcached default args are removed and should be provided manually. The sett
 | adminApi.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | adminApi.readinessProbe.initialDelaySeconds | int | `45` |  |
 | adminApi.replicas | int | `1` |  |
+| adminApi.resources.limits.cpu | string | `"10m"` |  |
+| adminApi.resources.limits.memory | string | `"32Mi"` |  |
 | adminApi.resources.requests.cpu | string | `"10m"` |  |
 | adminApi.resources.requests.memory | string | `"32Mi"` |  |
 | adminApi.securityContext | object | `{}` |  |
@@ -425,8 +427,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | enterpriseGateway.readinessProbe.initialDelaySeconds | int | `45` |  |
 | enterpriseGateway.replicas | int | `1` |  |
-| enterpriseGateway.resources.requests.cpu | string | `"10m"` |  |
-| enterpriseGateway.resources.requests.memory | string | `"32Mi"` |  |
+| enterpriseGateway.resources | object | `{}` |  |
 | enterpriseGateway.securityContext | object | `{}` |  |
 | enterpriseGateway.service.annotations | object | `{}` | Annotations for the enterprise gateway service |
 | enterpriseGateway.service.clusterIP | string | `nil` | ClusterIP of the enterprise gateway service |
@@ -695,6 +696,8 @@ The memcached default args are removed and should be provided manually. The sett
 | minio.enabled | bool | `false` |  |
 | minio.mode | string | `"standalone"` |  |
 | minio.persistence.size | string | `"5Gi"` |  |
+| minio.resources.limits.cpu | string | `"100m"` |  |
+| minio.resources.limits.memory | string | `"128Mi"` |  |
 | minio.resources.requests.cpu | string | `"100m"` |  |
 | minio.resources.requests.memory | string | `"128Mi"` |  |
 | minio.rootPassword | string | `"supersecret"` |  |
