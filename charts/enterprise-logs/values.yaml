@@ -189,6 +189,11 @@ tokengen:
   extraVolumes: []
   # -- Additional volume mounts for Pods
   extraVolumeMounts: []
+
+  # -- Request and limit Kubernetes resources
+  # -- Values are defined in small.yaml and large.yaml
+  resources: {}
+
   # -- Run containers as user `enterprise-logs(uid=10001)`
   podSecurityContext:
     runAsNonRoot: true
