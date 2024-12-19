@@ -68,9 +68,8 @@ Common labels
 helm.sh/chart: {{ include "grafana.chart" . }}
 {{ include "grafana.selectorLabels" . }}
 {{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.extraLabels }}
 {{ toYaml . }}
 {{- end }}
@@ -91,9 +90,8 @@ Common labels
 helm.sh/chart: {{ include "grafana.chart" . }}
 {{ include "grafana.imageRenderer.selectorLabels" . }}
 {{- if or .Chart.AppVersion .Values.image.tag }}
-app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.tag "" | default .Chart.AppVersion | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
@@ -145,13 +143,11 @@ Return the appropriate apiVersion for ingress.
 Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 */}}
 {{- define "grafana.hpa.apiVersion" -}}
-{{- if $.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler" }}
-{{- print "autoscaling/v2" }}
-{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler" }}
-{{- print "autoscaling/v2beta2" }}
-{{- else }}
-{{- print "autoscaling/v2beta1" }}
-{{- end }}
+{{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}  
+{{- print "autoscaling/v2" }}  
+{{- else }}  
+{{- print "autoscaling/v2beta2" }}  
+{{- end }} 
 {{- end }}
 
 {{/*
