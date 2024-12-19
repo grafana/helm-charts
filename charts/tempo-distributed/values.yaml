@@ -194,7 +194,7 @@ ingester:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
   # -- Override Pod Disruption Budget maxUnavailable with a static value
-  # maxUnavailable: 1
+  maxUnavailable: 1
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
