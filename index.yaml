@@ -22830,6 +22830,97 @@ entries:
   k8s-monitoring:
   - apiVersion: v2
     appVersion: 2.0.0
+    created: "2024-12-19T23:56:00.761749816Z"
+    dependencies:
+    - alias: annotationAutodiscovery
+      condition: annotationAutodiscovery.enabled
+      name: k8s-monitoring-feature-annotation-autodiscovery
+      repository: file://../feature-annotation-autodiscovery
+      version: 1.0.0
+    - alias: applicationObservability
+      condition: applicationObservability.enabled
+      name: k8s-monitoring-feature-application-observability
+      repository: file://../feature-application-observability
+      version: 1.0.0
+    - alias: autoInstrumentation
+      condition: autoInstrumentation.enabled
+      name: k8s-monitoring-feature-auto-instrumentation
+      repository: file://../feature-auto-instrumentation
+      version: 1.0.0
+    - alias: clusterEvents
+      condition: clusterEvents.enabled
+      name: k8s-monitoring-feature-cluster-events
+      repository: file://../feature-cluster-events
+      version: 1.0.0
+    - alias: clusterMetrics
+      condition: clusterMetrics.enabled
+      name: k8s-monitoring-feature-cluster-metrics
+      repository: file://../feature-cluster-metrics
+      version: 1.0.0
+    - alias: integrations
+      name: k8s-monitoring-feature-integrations
+      repository: file://../feature-integrations
+      version: 1.0.0
+    - alias: nodeLogs
+      condition: nodeLogs.enabled
+      name: k8s-monitoring-feature-node-logs
+      repository: file://../feature-node-logs
+      version: 1.0.0
+    - alias: podLogs
+      condition: podLogs.enabled
+      name: k8s-monitoring-feature-pod-logs
+      repository: file://../feature-pod-logs
+      version: 1.0.0
+    - alias: profiling
+      condition: profiling.enabled
+      name: k8s-monitoring-feature-profiling
+      repository: file://../feature-profiling
+      version: 1.0.0
+    - alias: prometheusOperatorObjects
+      condition: prometheusOperatorObjects.enabled
+      name: k8s-monitoring-feature-prometheus-operator-objects
+      repository: file://../feature-prometheus-operator-objects
+      version: 1.0.0
+    - alias: alloy-metrics
+      condition: alloy-metrics.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    - alias: alloy-singleton
+      condition: alloy-singleton.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    - alias: alloy-logs
+      condition: alloy-logs.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    - alias: alloy-receiver
+      condition: alloy-receiver.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    - alias: alloy-profiles
+      condition: alloy-profiles.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    description: Capture all telemetry data from your Kubernetes cluster.
+    digest: 5f81f1846c123b68735715ae681c904def6cad728082d0dbe60849451bc4700f
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    name: k8s-monitoring
+    sources:
+    - https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-2.0.0-rc.10/k8s-monitoring-2.0.0-rc.10.tgz
+    version: 2.0.0-rc.10
+  - apiVersion: v2
+    appVersion: 2.0.0
     created: "2024-12-13T00:31:39.624494392Z"
     dependencies:
     - alias: annotationAutodiscovery
@@ -77954,4 +78045,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-19T18:40:12.844531156Z"
+generated: "2024-12-19T23:56:00.764701054Z"
