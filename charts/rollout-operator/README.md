@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.22.0](https://img.shields.io/badge/Version-0.22.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.22.0](https://img.shields.io/badge/AppVersion-v0.22.0-informational?style=flat-square)
+![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.22.0](https://img.shields.io/badge/AppVersion-v0.22.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -40,6 +40,7 @@ It is not a highly available application and runs as a single pod.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| extraArgs | list | `[]` | List of additional cli arguments to configure agent-operator (example: `--log.level`) |
 | fullnameOverride | string | `""` |  |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
