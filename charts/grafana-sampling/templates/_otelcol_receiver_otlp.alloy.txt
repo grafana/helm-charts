@@ -3,7 +3,10 @@ otelcol.receiver.otlp "default" {
   // https://grafana.com/docs/alloy/latest/reference/components/otelcol.receiver.otlp/
 
   // configures the default grpc endpoint "0.0.0.0:4317"
-  grpc { }
+  grpc {
+    max_recv_msg_size = {{ .Values.deployment.otlp.receiver.grpc.max_recv_msg_size | quote }}
+  }
+
   // configures the default http/protobuf endpoint "0.0.0.0:4318"
   http { }
 
@@ -19,7 +22,9 @@ otelcol.receiver.otlp "default" {
   // https://grafana.com/docs/alloy/latest/reference/components/otelcol.receiver.otlp/
 
   // configures the default grpc endpoint "0.0.0.0:4317"
-  grpc { }
+  grpc {
+    max_recv_msg_size = {{ .Values.statefulset.otlp.receiver.grpc.max_recv_msg_size | quote }}
+  }
 
   output {
     traces = [
