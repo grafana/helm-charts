@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.26.3](https://img.shields.io/badge/Version-1.26.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.28.0](https://img.shields.io/badge/Version-1.28.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -47,6 +47,10 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.23.0
+
+A default affinity has been defined in this version for the compactor following the standard used in other components.
 
 ### From Chart versions < 1.21.0
 
@@ -273,6 +277,7 @@ The memcached default args are removed and should be provided manually. The sett
 | cache.caches[0].roles[0] | string | `"parquet-footer"` |  |
 | cache.caches[0].roles[1] | string | `"bloom"` |  |
 | cache.caches[0].roles[2] | string | `"frontend-search"` |  |
+| compactor.affinity | string | Hard node and soft zone anti-affinity | Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string |
 | compactor.autoscaling | object | `{"enabled":false,"hpa":{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null},"keda":{"enabled":false,"triggers":[]},"maxReplicas":3,"minReplicas":1}` | Autoscaling configurations |
 | compactor.autoscaling.enabled | bool | `false` | Enable autoscaling for the compactor |
 | compactor.autoscaling.hpa | object | `{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null}` | Autoscaling via HPA object |
@@ -540,12 +545,13 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
+| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
-| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for Statefulset |
+| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
 | ingester.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
 | ingester.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
@@ -671,6 +677,9 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
 | metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
