@@ -551,7 +551,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
-| ingester.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | Ingestor service ports |
+| ingester.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | Ingester service ports |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `3` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
