@@ -227,7 +227,7 @@ configMap:
 Internal servers http listen port - derived from Loki default
 */}}
 {{- define "tempo.serverHttpListenPort" -}}
-{{ (((.Values.tempo).structuredConfig).server).http_listen_port | default "3100" }}
+{{ (((.Values.tempo).structuredConfig).server).http_listen_port | default "3200" }}
 {{- end -}}
 
 {{/*
