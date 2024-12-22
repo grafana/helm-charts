@@ -249,6 +249,14 @@ ingester:
     complete_block_timeout: null
     # -- Flush all traces to backend when ingester is stopped
     flush_all_on_shutdown: false
+  # -- Ingestor service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for ingester service
     annotations: {}
