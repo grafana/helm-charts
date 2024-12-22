@@ -910,6 +910,17 @@ queryFrontend:
       repository: grafana/tempo-query
       # -- Docker image tag for the tempo-query image. Overrides `tempo.image.tag`
       tag: null
+    # -- Query service ports
+    ports:
+      - name: tempo-query-metrics
+        port: 16687
+        service: true
+      - name: tempo-query-jaeger-ui
+        port: 16686
+        service: true
+      - name: tempo-query-jaeger-grpc
+        port: 16685
+        service: true
     # -- Resource requests and limits for the query
     resources: {}
     #  limits:
@@ -994,9 +1005,15 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
+  # -- QueryFrontend service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
-    # -- Port of the query-frontend service
-    port: 16686
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Labels for queryFrontend service
