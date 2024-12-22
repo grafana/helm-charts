@@ -1903,6 +1903,8 @@ gateway:
   tolerations: []
   # Gateway service configuration
   service:
+    # -- Port Name of the gateway service
+    name: http-gateway
     # -- Port of the gateway service
     port: 80
     # -- Type of the gateway service
@@ -1960,9 +1962,11 @@ gateway:
   readinessProbe:
     httpGet:
       path: /
-      port: http-metrics
     initialDelaySeconds: 15
     timeoutSeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
   nginxConfig:
     # -- NGINX log format
     logFormat: |-
