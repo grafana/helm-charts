@@ -748,6 +748,14 @@ compactor:
       max_time_per_tenant: 5m
       # -- The time between compaction cycles
       compaction_cycle: 30s
+  # -- Compactor service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for compactor service
     annotations: {}
