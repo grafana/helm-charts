@@ -429,17 +429,6 @@ metricsGenerator:
     whenScaled: Retain
     # -- Volume retention behavior that applies when the StatefulSet is deleted
     whenDeleted: Retain
-  # -- Default ports
-  ports:
-    - name: grpc
-      port: 9095
-      service: true
-    - name: http-memberlist
-      port: 7946
-      service: false
-    - name: http-metrics
-      port: 3100
-      service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
     registry:
@@ -474,6 +463,17 @@ metricsGenerator:
     traces_storage:
       path: /var/tempo/traces
     metrics_ingestion_time_range_slack: 30s
+  # -- Metrics-generator service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-memberlist
+      port: 7946
+      service: false
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
@@ -513,6 +513,14 @@ distributor:
     repository: null
     # -- Docker image tag for the distributor image. Overrides `tempo.image.tag`
     tag: null
+  # -- Distributor service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for distributor service
     annotations: {}
