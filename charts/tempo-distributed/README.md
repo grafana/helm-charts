@@ -313,6 +313,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.podLabels | object | `{}` | Labels for compactor pods |
+| compactor.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | Compactor service ports |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
 | compactor.replicas | int | `1` | Number of replicas for the compactor |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
@@ -347,6 +348,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.podLabels | object | `{}` | Labels for distributor pods |
+| distributor.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | Distributor service ports |
 | distributor.priorityClassName | string | `nil` | The name of the PriorityClass for distributor pods |
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
 | distributor.resources | object | `{}` | Resource requests and limits for the distributor |
@@ -386,6 +388,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
 | enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
 | enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
+| enterpriseFederationFrontend.ports | list | `[{"name":"http-metrics","port":3100,"service":true}]` | Federation-frontend service ports |
 | enterpriseFederationFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for federation-frontend pods |
 | enterpriseFederationFrontend.proxy_targets | list | `[]` |  |
 | enterpriseFederationFrontend.replicas | int | `1` | Number of replicas for the federation-frontend |
@@ -393,7 +396,6 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
 | enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
-| enterpriseFederationFrontend.service.port | int | `3100` | Port of the federation-frontend service |
 | enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
 | enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
 | enterpriseFederationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
@@ -549,6 +551,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
+| ingester.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | Ingestor service ports |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `3` | Number of replicas for the ingester |
 | ingester.resources | object | `{}` | Resource requests and limits for the ingester |
@@ -672,7 +675,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
-| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
+| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Metrics-generator service ports |
 | metricsGenerator.priorityClassName | string | `nil` | The name of the PriorityClass for metrics-generator pods |
 | metricsGenerator.replicas | int | `1` | Number of replicas for the metrics-generator |
 | metricsGenerator.resources | object | `{}` | Resource requests and limits for the metrics-generator |
@@ -740,6 +743,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.podLabels | object | `{}` | Labels for querier pods |
+| querier.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | Querier service ports |
 | querier.priorityClassName | string | `nil` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
 | querier.resources | object | `{}` | Resource requests and limits for the querier |
@@ -781,6 +785,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
+| queryFrontend.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-metrics","port":3100,"service":true}]` | QueryFrontend service ports |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.query.config | string | `"backend: 127.0.0.1:3100\n"` |  |
 | queryFrontend.query.enabled | bool | `false` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
@@ -793,6 +798,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.query.image.registry | string | `nil` | The Docker registry for the tempo-query image. Overrides `tempo.image.registry` |
 | queryFrontend.query.image.repository | string | `"grafana/tempo-query"` | Docker image repository for the tempo-query image. Overrides `tempo.image.repository` |
 | queryFrontend.query.image.tag | string | `nil` | Docker image tag for the tempo-query image. Overrides `tempo.image.tag` |
+| queryFrontend.query.ports | list | `[{"name":"tempo-query-metrics","port":16687,"service":true},{"name":"tempo-query-jaeger-ui","port":16686,"service":true},{"name":"tempo-query-jaeger-grpc","port":16685,"service":true}]` | Query service ports |
 | queryFrontend.query.resources | object | `{}` | Resource requests and limits for the query |
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
@@ -800,7 +806,6 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.service.labels | object | `{}` | Labels for queryFrontend service |
 | queryFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | queryFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
-| queryFrontend.service.port | int | `16686` | Port of the query-frontend service |
 | queryFrontend.service.type | string | `"ClusterIP"` | Type of service for the queryFrontend |
 | queryFrontend.serviceDiscovery.annotations | object | `{}` | Annotations for queryFrontendDiscovery service |
 | queryFrontend.serviceDiscovery.labels | object | `{}` | Labels for queryFrontendDiscovery service |
