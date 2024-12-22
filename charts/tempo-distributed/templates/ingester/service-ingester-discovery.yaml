@@ -21,7 +21,7 @@ spec:
       port: {{ .port }}
       protocol: TCP
       targetPort: {{ .port }}
-      {{- if and (hasPrefix .name "grpc" ($.Values.ingester.appProtocol.grpc) )}}
+      {{- if and (hasPrefix .name "grpc") ($.Values.ingester.appProtocol.grpc) }}
       appProtocol: {{ $.Values.ingester.appProtocol.grpc }}
       {{- end }}
     {{- end }}
