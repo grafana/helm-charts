@@ -249,7 +249,7 @@ ingester:
     complete_block_timeout: null
     # -- Flush all traces to backend when ingester is stopped
     flush_all_on_shutdown: false
-  # -- Ingestor service ports
+  # -- Ingester service ports
   ports:
     - name: grpc
       port: 9095
@@ -2196,32 +2196,32 @@ gateway:
 
           location ^~ /api {
             set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$query_frontend:3100$request_uri;
+            proxy_pass       http://$query_frontend:{{ .Values.queryFrontend.ports }}$request_uri;
           }
 
           location = /flush {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:{{ .Values.ingester.ports }}$request_uri;
           }
 
           location = /shutdown {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:{{ .Values.ingester.ports }}$request_uri;
           }
 
           location = /distributor/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:{{ .Values.distributor.ports }}$request_uri;
           }
 
           location = /ingester/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:{{ .Values.distributor.ports }}$request_uri;
           }
 
           location = /compactor/ring {
             set $compactor {{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$compactor:3100$request_uri;
+            proxy_pass       http://$compactor:{{ .Values.compactor.ports }}request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
