@@ -64,8 +64,10 @@ spec:
           name: metrics-generator
           ports:
             {{- range .Values.metricsGenerator.ports }}
+            {{- if .service }}
             - name: {{ .name | quote }}
               containerPort: {{ .port }}
+            {{- end }}
             {{- end }}
           {{- if or .Values.global.extraEnv .Values.metricsGenerator.extraEnv }}
           env:
