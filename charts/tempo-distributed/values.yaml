@@ -203,6 +203,7 @@ ingester:
   extraVolumeMounts: []
   # -- Extra volumes for ingester deployment
   extraVolumes: []
+  # -- Persistence configuration for ingester
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -219,7 +220,7 @@ ingester:
     # -- Annotations for ingester's persist volume claim
     annotations: {}
   persistentVolumeClaimRetentionPolicy:
-    # -- Enable Persistent volume retention policy for Statefulset
+    # -- Enable Persistent volume retention policy for StatefulSet
     enabled: false
     # -- Volume retention behavior when the replica count of the StatefulSet is reduced
     whenScaled: Retain
@@ -399,6 +400,13 @@ metricsGenerator:
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
   extraVolumes: []
+  persistentVolumeClaimRetentionPolicy:
+    # -- Enable Persistent volume retention policy for StatefulSet
+    enabled: false
+    # -- Volume retention behavior when the replica count of the StatefulSet is reduced
+    whenScaled: Retain
+    # -- Volume retention behavior that applies when the StatefulSet is deleted
+    whenDeleted: Retain
   # -- Default ports
   ports:
     - name: grpc
@@ -630,6 +638,22 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 12 }}
+            topologyKey: topology.kubernetes.io/zone
   # -- Additional CLI args for the compactor
   extraArgs: []
   # -- Environment variables to add to the compactor pods
