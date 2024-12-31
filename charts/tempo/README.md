@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.16.0](https://img.shields.io/badge/Version-1.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.16.1](https://img.shields.io/badge/Version-1.16.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -61,7 +61,7 @@ Grafana Tempo Single Binary Mode
 | tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
-| tempo.ingester | object | `{}` | Configuration options for the ingester |
+| tempo.ingester | object | `{}` | Configuration options for the ingester. Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester |
 | tempo.livenessProbe.failureThreshold | int | `3` |  |
 | tempo.livenessProbe.httpGet.path | string | `"/ready"` |  |
 | tempo.livenessProbe.httpGet.port | int | `3100` |  |
@@ -75,8 +75,8 @@ Grafana Tempo Single Binary Mode
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
-| tempo.querier | object | `{}` | Configuration options for the querier |
-| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
+| tempo.querier | object | `{}` | Configuration options for the querier. Refers to: https://grafana.com/docs/tempo/latest/configuration/#querier |
+| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted. Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend |
 | tempo.readinessProbe.failureThreshold | int | `3` |  |
 | tempo.readinessProbe.httpGet.path | string | `"/ready"` |  |
 | tempo.readinessProbe.httpGet.port | int | `3100` |  |
@@ -96,6 +96,7 @@ Grafana Tempo Single Binary Mode
 | tempo.resources | object | `{}` |  |
 | tempo.retention | string | `"24h"` |  |
 | tempo.securityContext | object | `{}` |  |
+| tempo.server | object | `{"http_listen_port":3100}` | Configuration options for the server. Refers to: https://grafana.com/docs/tempo/latest/configuration/#server |
 | tempo.server.http_listen_port | int | `3100` | HTTP server listen port |
 | tempo.storage.trace.backend | string | `"local"` |  |
 | tempo.storage.trace.local.path | string | `"/var/tempo/traces"` |  |
