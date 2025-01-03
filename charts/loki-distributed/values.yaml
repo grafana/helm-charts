@@ -486,6 +486,8 @@ ingester:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Max Surge for ingester pods
   maxSurge: 0
   # -- Node selector for ingester pods
@@ -610,6 +612,8 @@ distributor:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Max Surge for distributor pods
   maxSurge: 0
   # -- Node selector for distributor pods
@@ -719,6 +723,8 @@ querier:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Max Surge for querier pods
   maxSurge: 0
   # -- Node selector for querier pods
@@ -832,6 +838,8 @@ queryFrontend:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -903,6 +911,8 @@ queryScheduler:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for query-scheduler pods
   nodeSelector: {}
   # -- Tolerations for query-scheduler pods
@@ -1117,6 +1127,8 @@ gateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for gateway pods
   nodeSelector: {}
   # -- Tolerations for gateway pods
@@ -1518,6 +1530,8 @@ ruler:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for ruler pods
   nodeSelector: {}
   # -- Tolerations for ruler pods
@@ -1671,6 +1685,8 @@ indexGateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for index-gateway pods
   nodeSelector: {}
   # -- Tolerations for index-gateway pods
@@ -1810,6 +1826,8 @@ memcachedChunks:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-chunks pods
   nodeSelector: {}
   # -- Tolerations for memcached-chunks pods
@@ -1879,6 +1897,8 @@ memcachedFrontend:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-frontend pods
   nodeSelector: {}
   # -- Tolerations for memcached-frontend pods
@@ -1944,6 +1964,8 @@ memcachedIndexQueries:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-index-queries pods
   nodeSelector: {}
   # -- Tolerations for memcached-index-queries pods
@@ -2009,6 +2031,8 @@ memcachedIndexWrites:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-index-writes pods
   nodeSelector: {}
   # -- Tolerations for memcached-index-writes pods
