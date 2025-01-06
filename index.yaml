@@ -55033,6 +55033,49 @@ entries:
     version: 2.1.0
   oncall:
   - apiVersion: v2
+    appVersion: v1.14.0
+    created: "2025-01-06T18:50:34.750527329Z"
+    dependencies:
+    - condition: cert-manager.enabled
+      name: cert-manager
+      repository: https://charts.jetstack.io
+      version: v1.8.0
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.2.5
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.9.10
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.0.0
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: 8.4.6
+    - condition: ingress-nginx.enabled
+      name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: 4.1.4
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 25.8.2
+    description: Developer-friendly incident response with brilliant Slack integration
+    digest: 872d256e30ce80742d22be33fb3b35c92d9622f57ad646584ed6641bb2b70bb5
+    name: oncall
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/oncall-1.14.0/oncall-1.14.0.tgz
+    version: 1.14.0
+  - apiVersion: v2
     appVersion: v1.13.11
     created: "2024-12-16T19:33:35.495455117Z"
     dependencies:
@@ -78582,4 +78625,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-06T10:30:46.130672717Z"
+generated: "2025-01-06T18:50:34.772359156Z"
