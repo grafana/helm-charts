@@ -89,7 +89,14 @@ tempo:
     service:
       # -- Sets optional annotations to the service field of the memberlist service.
       annotations: {}
-
+  service:
+    # -- Configure the IP families for all tempo services
+    # See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core
+    ipFamilies:
+      - 'IPv4'
+    #   - 'IPv6'
+    # -- Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack
+    ipFamilyPolicy: 'SingleStack'
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -196,6 +203,7 @@ ingester:
   extraVolumeMounts: []
   # -- Extra volumes for ingester deployment
   extraVolumes: []
+  # -- Persistence configuration for ingester
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -212,7 +220,7 @@ ingester:
     # -- Annotations for ingester's persist volume claim
     annotations: {}
   persistentVolumeClaimRetentionPolicy:
-    # -- Enable Persistent volume retention policy for Statefulset
+    # -- Enable Persistent volume retention policy for StatefulSet
     enabled: false
     # -- Volume retention behavior when the replica count of the StatefulSet is reduced
     whenScaled: Retain
@@ -392,6 +400,13 @@ metricsGenerator:
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
   extraVolumes: []
+  persistentVolumeClaimRetentionPolicy:
+    # -- Enable Persistent volume retention policy for StatefulSet
+    enabled: false
+    # -- Volume retention behavior when the replica count of the StatefulSet is reduced
+    whenScaled: Retain
+    # -- Volume retention behavior that applies when the StatefulSet is deleted
+    whenDeleted: Retain
   # -- Default ports
   ports:
     - name: grpc
@@ -468,13 +483,13 @@ distributor:
     # -- Target memory utilisation percentage for the distributor
     targetMemoryUtilizationPercentage:
   image:
-    # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
+    # -- The Docker registry for the distributor image. Overrides `tempo.image.registry`
     registry: null
     # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
     pullSecrets: []
-    # -- Docker image repository for the ingester image. Overrides `tempo.image.repository`
+    # -- Docker image repository for the distributor image. Overrides `tempo.image.repository`
     repository: null
-    # -- Docker image tag for the ingester image. Overrides `tempo.image.tag`
+    # -- Docker image tag for the distributor image. Overrides `tempo.image.tag`
     tag: null
   service:
     # -- Annotations for distributor service
@@ -623,6 +638,22 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 12 }}
+            topologyKey: topology.kubernetes.io/zone
   # -- Additional CLI args for the compactor
   extraArgs: []
   # -- Environment variables to add to the compactor pods
@@ -800,13 +831,13 @@ queryFrontend:
     # -- Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
     enabled: false
     image:
-      # -- The Docker registry for the query-frontend image. Overrides `tempo.image.registry`
+      # -- The Docker registry for the tempo-query image. Overrides `tempo.image.registry`
       registry: null
       # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
       pullSecrets: []
-      # -- Docker image repository for the query-frontend image. Overrides `tempo.image.repository`
+      # -- Docker image repository for the tempo-query image. Overrides `tempo.image.repository`
       repository: grafana/tempo-query
-      # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
+      # -- Docker image tag for the tempo-query image. Overrides `tempo.image.tag`
       tag: null
     # -- Resource requests and limits for the query
     resources: {}
@@ -1473,7 +1504,7 @@ config: |
 server:
   # --  HTTP server listen host
   httpListenPort: 3100
-  # -- Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic
+  # -- Log level. Can be set to debug, info (default), warn, error
   logLevel: info
   # -- Log format. Can be set to logfmt (default) or json.
   logFormat: logfmt
@@ -1519,7 +1550,7 @@ storage:
       dedicated_columns: []
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage
     backend: local
-    # The worker pool is used primarily when finding traces by id, but is also used by other.
+    # The worker pool is used primarily when finding traces by id, but is also used by others.
     pool:
       # -- Total number of workers pulling jobs from the queue
       max_workers: 400
@@ -1550,7 +1581,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.29-alpine
+    tag: 1.6.33-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1571,7 +1602,7 @@ memcached:
   # -- Resource requests and limits for memcached
   resources: {}
   # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
@@ -1840,7 +1871,7 @@ gateway:
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
@@ -1880,13 +1911,13 @@ gateway:
     clusterIP: null
     # -- Node port if service type is NodePort
     nodePort: null
-    # -- Load balancer IPO address if service type is LoadBalancer
+    # -- Load balancer IP address if service type is LoadBalancer
     loadBalancerIP: null
     # -- Annotations for the gateway service
     annotations: {}
     # -- Labels for gateway service
     labels: {}
-    # -- Additional ports to be opneed on gateway service (e.g. for RPC connections)
+    # -- Additional ports to be opened on gateway service (e.g. for RPC connections)
     additionalPorts: []
   # Gateway ingress configuration
   ingress:
@@ -2068,9 +2099,9 @@ enterprise:
   enabled: false
 
   image:
-    # -- Grafana Enterprise Metrics container image repository. Note: for Grafana Tempo use the value 'image.repository'
+    # -- Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
-    # -- Grafana Enterprise Metrics container image tag. Note: for Grafana Tempo use the value 'image.tag'
+    # -- Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag'
     tag: v2.6.1
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
@@ -2148,7 +2179,7 @@ adminApi:
 
   nodeSelector: {}
   # -- topologySpread for admin-api pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
@@ -2240,7 +2271,7 @@ enterpriseGateway:
     type: ClusterIP
     # -- ClusterIP of the enterprise gateway service
     clusterIP: null
-    # -- Load balancer IPO address if service type is LoadBalancer for enterprise gateway service
+    # -- Load balancer IP address if service type is LoadBalancer for enterprise gateway service
     loadBalancerIP: null
     # -- Annotations for the enterprise gateway service
     annotations: {}
@@ -2261,7 +2292,7 @@ enterpriseGateway:
 
   nodeSelector: {}
   # -- topologySpread for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
+  # @default -- Defaults to allow skew no more than 1 node per AZ
   topologySpreadConstraints: |
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
@@ -2290,7 +2321,7 @@ enterpriseGateway:
   securityContext:
     {}
 
-    # -- The SecurityContext for gateway containers
+    # -- The SecurityContext for enterprise-gateway containers
   containerSecurityContext:
     readOnlyRootFilesystem: true
 
@@ -2323,20 +2354,20 @@ enterpriseGateway:
 
   # Ingress configuration
   ingress:
-    # -- Specifies whether an ingress for the gateway should be created
+    # -- Specifies whether an ingress for the enterprise-gateway should be created
     enabled: false
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
     # ingressClassName: gateway
-    # -- Annotations for the gateway ingress
+    # -- Annotations for the enterprise-gateway ingress
     annotations: {}
-    # -- Hosts configuration for the gateway ingress
+    # -- Hosts configuration for the enterprise-gateway ingress
     hosts:
       - host: gateway.gem.example.com
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
-    # -- TLS configuration for the gateway ingress
+    # -- TLS configuration for the enterprise-gateway ingress
     tls:
       - secretName: gem-gateway-tls
         hosts:
