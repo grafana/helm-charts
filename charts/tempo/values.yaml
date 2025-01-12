@@ -26,7 +26,7 @@ tempo:
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
-  ## Refers to: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
@@ -70,7 +70,7 @@ tempo:
     per_tenant_override_config: /conf/overrides.yaml
   overrides: {}
 
-  # -- Configuration options for the server.
+  # Tempo server configuration.
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#server
   server:
     # -- HTTP server listen port
@@ -97,7 +97,7 @@ tempo:
   storage:
     trace:
       # tempo storage backend.
-      # Refers to: https://grafana.com/docs/tempo/latest/configuration/
+      # Refers to: https://grafana.com/docs/tempo/latest/configuration/#storage
       ## Use s3 for example
       # backend: s3
       # store traces in s3
