@@ -1585,6 +1585,12 @@ memcached:
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
+  # -- Configures readinessProbe for memcached
+  readinessProbe:
+    initialDelaySeconds: 5
+    tcpSocket:
+      port: client
+    timeoutSeconds: 1
   # Number of replicas for memchached
   replicas: 1
   # -- Additional CLI args for memcached
