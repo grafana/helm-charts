@@ -306,6 +306,34 @@ entries:
     version: 0.1.0
   beyla:
   - apiVersion: v2
+    appVersion: 1.9.6
+    created: "2025-01-13T14:46:38.795258779Z"
+    description: eBPF-based autoinstrumentation HTTP, HTTP2 and gRPC services, as
+      well as network metrics.
+    digest: 1d673d45eca7028f4e4b11e54f180af6aae22449c5515f560632b33b0610d2c0
+    home: https://grafana.com/oss/beyla-ebpf/
+    icon: https://grafana.com/static/img/logos/beyla-logo.svg
+    keywords:
+    - observability
+    - autoinstrumentation
+    - eBPF-based
+    maintainers:
+    - name: mariomac
+      url: https://github.com/mariomac
+    - name: grcevski
+      url: https://github.com/grcevski
+    - name: marctc
+      url: https://github.com/marctc
+    - name: rafaelroquetto
+      url: https://github.com/rafaelroquetto
+    name: beyla
+    sources:
+    - https://github.com/grafana/beyla
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/beyla-1.6.0/beyla-1.6.0.tgz
+    version: 1.6.0
+  - apiVersion: v2
     appVersion: 1.9.0
     created: "2024-11-26T11:26:48.150957611Z"
     description: eBPF-based autoinstrumentation HTTP, HTTP2 and gRPC services, as
@@ -78957,4 +78985,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-13T10:28:26.64950825Z"
+generated: "2025-01-13T14:46:38.817818561Z"
