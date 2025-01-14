@@ -51,7 +51,7 @@ spec:
   {{- if .Values.service.seessionAffinity }}
   sessionAffinity: {{ .Values.service.sessionAffinity }}
   {{- end }}
-s  ports:
+  ports:
     - name: {{ .Values.service.portName }}
       port: {{ .Values.service.port }}
       protocol: TCP
