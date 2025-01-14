@@ -48,7 +48,10 @@ spec:
   {{- with .Values.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}
   {{- end }}
-  ports:
+  {{- if .Values.service.seessionAffinity }}
+  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  {{- end }}
+s  ports:
     - name: {{ .Values.service.portName }}
       port: {{ .Values.service.port }}
       protocol: TCP
