@@ -75,6 +75,7 @@ need to instead set `global.imageRegistry`.
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
 | `service.ipFamilies`                      | Kubernetes service IP families                | `[]`                                                    |
 | `service.ipFamilyPolicy`                  | Kubernetes service IP family policy           | `""`                                                    |
+| `service.sessionAffinity`                 | Kubernetes service session affinity config    | `""`                                                    |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
