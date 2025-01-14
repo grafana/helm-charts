@@ -602,6 +602,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
+| memcached.readinessProbe | object | `{"initialDelaySeconds":5,"tcpSocket":{"port":"client"},"timeoutSeconds":1}` | Configures readinessProbe for memcached |
 | memcached.replicas | int | `1` |  |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |
