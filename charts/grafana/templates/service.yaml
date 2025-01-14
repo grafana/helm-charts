@@ -48,8 +48,8 @@ spec:
   {{- with .Values.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}
   {{- end }}
-  {{- if .Values.service.seessionAffinity }}
-  sessionAffinity: {{ .Values.service.sessionAffinity }}
+  {{- with .Values.service.seessionAffinity }}
+  sessionAffinity: {{ . }}
   {{- end }}
   ports:
     - name: {{ .Values.service.portName }}
