@@ -2,8 +2,8 @@ apiVersion: v2
 name: tempo
 description: Grafana Tempo Single Binary Mode
 type: application
-version: 1.16.0
-appVersion: 2.6.1
+version: 1.18.0
+appVersion: 2.7.0
 engine: gotpl
 home: https://grafana.net
 icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png

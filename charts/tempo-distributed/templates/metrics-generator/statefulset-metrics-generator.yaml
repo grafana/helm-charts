@@ -1,5 +1,7 @@
 {{- if and (.Values.metricsGenerator.enabled) (eq .Values.metricsGenerator.kind "StatefulSet") }}
 {{ $dict := dict "ctx" . "component" "metrics-generator" "memberlist" true }}
+{{- $storageClass := .Values.metricsGenerator.persistence.storageClass | default .Values.global.storageClass }}
+{{- if eq $storageClass "-" }}{{- $storageClass = "" }}{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -161,9 +163,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.metricsGenerator.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
+        storageClassName: {{ if $storageClass }}{{ $storageClass }}{{ else }}{{- "" }}{{ end }}
         resources:
           requests:
             storage: {{ .Values.metricsGenerator.persistence.size | quote }}

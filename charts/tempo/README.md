@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.16.0](https://img.shields.io/badge/Version-1.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.18.0](https://img.shields.io/badge/Version-1.18.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -19,6 +19,7 @@ Grafana Tempo Single Binary Mode
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
+| hostAliases | list | `[]` | hostAliases to add |
 | labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
 | networkPolicy.allowExternal | bool | `true` |  |
@@ -151,6 +152,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.17.0
+
+Please be aware that we've updated the Tempo version to 2.7, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-7/) before upgrading.
 
 ### From Chart versions < 1.12.0
 
