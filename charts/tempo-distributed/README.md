@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.28.0](https://img.shields.io/badge/Version-1.28.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.29.0](https://img.shields.io/badge/Version-1.29.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.21.0 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.23.0 |
 
 ## Chart Repo
 
@@ -47,6 +47,11 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.28.2
+
+Please be aware that we've updated the Tempo version to 2.7, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-7/) before upgrading.
 
 ### From Chart versions < 1.23.0
 
@@ -515,6 +520,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
+| global.storageClass | string | `nil` | Global storage class to be used for persisted components |
 | global_overrides | object | `{"per_tenant_override_config":"/runtime-config/overrides.yaml"}` | The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details. |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |

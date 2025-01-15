@@ -341,7 +341,11 @@ affinity: {}
 
 # -- The name of the PriorityClass
 priorityClassName: null
-
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
   ##
