@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.29.0](https://img.shields.io/badge/Version-1.29.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
+![Version: 1.30.0](https://img.shields.io/badge/Version-1.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -308,6 +308,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.dnsConfigOverides.dnsConfig.options[0].value | string | `"3"` |  |
 | compactor.dnsConfigOverides.enabled | bool | `false` |  |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
+| compactor.extraContainers | list | `[]` | Containers to add to the compactor pod |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
 | compactor.extraVolumeMounts | list | `[]` | Extra volumes for compactor pods |
@@ -317,6 +318,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `tempo.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
+| compactor.initContainers | list | `[]` | Init containers to add to the compactor pod |
 | compactor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
