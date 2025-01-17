@@ -48,7 +48,7 @@ spec:
   {{- with .Values.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}
   {{- end }}
-  {{- with .Values.service.seessionAffinity }}
+  {{- with .Values.service.sessionAffinity }}
   sessionAffinity: {{ . }}
   {{- end }}
   ports:
