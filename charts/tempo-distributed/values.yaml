@@ -573,6 +573,10 @@ distributor:
       enabled: false
       include_all_attributes: false
       filter_by_status_error: false
+    log_discarded_spans:
+      enabled: false
+      include_all_attributes: false
+      filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
@@ -662,6 +666,10 @@ compactor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the compactor pods
   extraEnvFrom: []
+  # -- Init containers to add to the compactor pod
+  initContainers: []
+  # -- Containers to add to the compactor pod
+  extraContainers: []
   # -- Resource requests and limits for the compactor
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
@@ -1376,6 +1384,12 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
+    {{- if .Values.distributor.config.log_discarded_spans.enabled }}
+    log_discarded_spans:
+      enabled: {{ .Values.distributor.config.log_discarded_spans.enabled }}
+      include_all_attributes: {{ .Values.distributor.config.log_discarded_spans.include_all_attributes }}
+      filter_by_status_error: {{ .Values.distributor.config.log_discarded_spans.filter_by_status_error }}
+    {{- end }}
     {{- if or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
     log_received_spans:
       enabled: {{ or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
