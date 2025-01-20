@@ -60,7 +60,7 @@ Charts should start at `1.0.0`. Any breaking (backwards incompatible) changes to
 The readme of each chart can be re-generated with the following command (run inside the chart directory):
 
 ```shell
-docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.14.2
 ```
 
 ### Community Requirements
