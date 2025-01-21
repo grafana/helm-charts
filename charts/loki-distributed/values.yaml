@@ -1020,6 +1020,7 @@ gateway:
   replicas: 1
   # -- Enable logging of 2xx and 3xx HTTP requests
   verboseLogging: true
+  automountServiceAccountToken: true  # default to true for backward compatibility
   autoscaling:
     # -- Enable autoscaling for the gateway
     enabled: false
