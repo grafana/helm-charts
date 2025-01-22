@@ -255,7 +255,7 @@ need to instead set `global.imageRegistry`.
 | `downloadDashboards.resources`            | Resources of `download-dashboards` container  | `{}`                                                    |
 | `downloadDashboardsImage.registry`        | Curl docker image registry                    | `docker.io`                                       |
 | `downloadDashboardsImage.repository`      | Curl docker image repository                  | `curlimages/curl`                                       |
-| `downloadDashboardsImage.tag`             | Curl docker image tag                         | `7.73.0`                                                |
+| `downloadDashboardsImage.tag`             | Curl docker image tag                         | `8.9.1`                                                 |
 | `downloadDashboardsImage.sha`             | Curl docker image sha (optional)              | `""`                                                    |
 | `downloadDashboardsImage.pullPolicy`      | Curl docker image pull policy                 | `IfNotPresent`                                          |
 | `namespaceOverride`                       | Override the deployment namespace             | `""` (`Release.Namespace`)                              |
