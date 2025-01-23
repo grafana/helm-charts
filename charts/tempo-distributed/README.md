@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.31.0](https://img.shields.io/badge/Version-1.31.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
+![Version: 1.32.0](https://img.shields.io/badge/Version-1.32.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -737,12 +737,6 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
 | querier.config.frontend_worker.grpc_client_config | object | `{}` | grpc client configuration |
 | querier.config.max_concurrent_queries | int | `20` | This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries. |
-| querier.config.search.external_backend | string | `""` | credentials when querying the external backend. |
-| querier.config.search.external_endpoints | list | `[]` | A list of external endpoints that the querier will use to offload backend search requests |
-| querier.config.search.external_hedge_requests_at | string | `"8s"` | If set to a non-zero value a second request will be issued at the provided duration. Recommended to be set to p99 of external search requests to reduce long tail latency. |
-| querier.config.search.external_hedge_requests_up_to | int | `2` | The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. |
-| querier.config.search.google_cloud_run | object | `{}` | external_backend is "google_cloud_run". |
-| querier.config.search.prefer_self | int | `10` | If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries. |
 | querier.config.search.query_timeout | string | `"30s"` | Timeout for search requests |
 | querier.config.trace_by_id.query_timeout | string | `"10s"` | Timeout for trace lookup requests |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
