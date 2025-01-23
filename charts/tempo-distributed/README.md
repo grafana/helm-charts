@@ -50,7 +50,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 ### From Chart versions < 1.31.0
 
-Tempo serverless was deprecated in [tempo 2.7 release](https://github.com/grafana/tempo/releases/tag/v2.7.0), 
+Tempo serverless was deprecated in [tempo 2.7 release](https://github.com/grafana/tempo/releases/tag/v2.7.0),
 Config options related to serverless are being removed from helm chart, and this might be a breaking change if you were using tempo serverless.
 
 These config optioons are removed in [tempo#4599](https://github.com/grafana/tempo/pull/4599) and will not work from next release of tempo.
