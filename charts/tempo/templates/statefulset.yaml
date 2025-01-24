@@ -14,6 +14,11 @@ spec:
   {{- if .Values.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
+  {{- if and (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) (.Values.persistence.enableStatefulSetAutoDeletePVC) (.Values.persistence.enabled) }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+  {{- end }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" . | nindent 6 }}
@@ -46,6 +51,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
       - args:
@@ -82,6 +91,10 @@ spec:
           name: otlp-http
         - containerPort: 55678
           name: opencensus
+        livenessProbe:
+          {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
+        readinessProbe:
+          {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
         resources:
           {{- toYaml .Values.tempo.resources | nindent 10 }}
         {{- with .Values.tempo.securityContext }}
