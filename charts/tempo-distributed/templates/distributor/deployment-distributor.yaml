@@ -64,11 +64,13 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: distributor
           ports:
+            {{- range .Values.distributor.ports }}
+            - name: {{ .name | quote }}
+              containerPort: {{ .port }}
+            {{- end }}
             - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
               protocol: TCP
-            - containerPort: 3100
-              name: http-metrics
             {{- if .Values.traces.jaeger.thriftCompact.enabled }}
             - containerPort: 6831
               name: jaeger-compact

@@ -69,8 +69,10 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: federation-frontend
           ports:
-            - containerPort: 3100
-              name: http-metrics
+            {{- range .Values.enterpriseFederationFrontend.ports }}
+            - name: {{ .name | quote }}
+              containerPort: {{ .port }}
+            {{- end }}
           {{- if or .Values.global.extraEnv .Values.enterpriseFederationFrontend.extraEnv }}
           env:
             {{- with .Values.global.extraEnv }}
