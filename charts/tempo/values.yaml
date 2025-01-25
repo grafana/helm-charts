@@ -48,20 +48,30 @@ tempo:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
-  # -- Configuration options for the ingester
+  # -- Configuration options for the ingester.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester
   ingester: {}
-  # -- Configuration options for the querier
+  #  flush_check_period: 10s
+  #  trace_idle_period: 10s
+  #  max_block_duration: 30m
+  #  complete_block_timeout: 1h
+  # -- Configuration options for the querier.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#querier
   querier: {}
-  # -- Configuration options for the query-fronted
+  #  max_concurrent_queries: 20
+  # -- Configuration options for the query-fronted.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend
   queryFrontend: {}
+  #  search:
+  #    concurrent_jobs: 2000
   retention: 24h
   # Global overrides
   global_overrides:
     per_tenant_override_config: /conf/overrides.yaml
   overrides: {}
 
-  # Tempo server configuration
-  # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
+  # Tempo server configuration.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#server
   server:
     # -- HTTP server listen port
     http_listen_port: 3100
@@ -86,8 +96,8 @@ tempo:
     successThreshold: 1
   storage:
     trace:
-      # tempo storage backend
-      # refer https://grafana.com/docs/tempo/latest/configuration/
+      # tempo storage backend.
+      # Refers to: https://grafana.com/docs/tempo/latest/configuration/#storage
       ## Use s3 for example
       # backend: s3
       # store traces in s3
@@ -185,7 +195,7 @@ tempoQuery:
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Refers to: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
@@ -331,7 +341,11 @@ affinity: {}
 
 # -- The name of the PriorityClass
 priorityClassName: null
-
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
   ##
