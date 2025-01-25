@@ -19,6 +19,8 @@ global:
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []
+  # -- Global storage class to be used for persisted components
+  storageClass: null
 fullnameOverride: ''
 # fullnameOverride: tempo
 
@@ -203,6 +205,7 @@ ingester:
   extraVolumeMounts: []
   # -- Extra volumes for ingester deployment
   extraVolumes: []
+  # -- Persistence configuration for ingester
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -219,7 +222,7 @@ ingester:
     # -- Annotations for ingester's persist volume claim
     annotations: {}
   persistentVolumeClaimRetentionPolicy:
-    # -- Enable Persistent volume retention policy for Statefulset
+    # -- Enable Persistent volume retention policy for StatefulSet
     enabled: false
     # -- Volume retention behavior when the replica count of the StatefulSet is reduced
     whenScaled: Retain
@@ -401,6 +404,13 @@ metricsGenerator:
   extraVolumeMounts: []
   # -- Extra volumes for metrics-generator deployment
   extraVolumes: []
+  persistentVolumeClaimRetentionPolicy:
+    # -- Enable Persistent volume retention policy for StatefulSet
+    enabled: false
+    # -- Volume retention behavior when the replica count of the StatefulSet is reduced
+    whenScaled: Retain
+    # -- Volume retention behavior that applies when the StatefulSet is deleted
+    whenDeleted: Retain
   # -- Default ports
   ports:
     - name: grpc
@@ -567,6 +577,10 @@ distributor:
       enabled: false
       include_all_attributes: false
       filter_by_status_error: false
+    log_discarded_spans:
+      enabled: false
+      include_all_attributes: false
+      filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
@@ -634,12 +648,32 @@ compactor:
   podLabels: {}
   # -- Annotations for compactor pods
   podAnnotations: {}
+  # -- Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "compactor") | nindent 12 }}
+            topologyKey: topology.kubernetes.io/zone
   # -- Additional CLI args for the compactor
   extraArgs: []
   # -- Environment variables to add to the compactor pods
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the compactor pods
   extraEnvFrom: []
+  # -- Init containers to add to the compactor pod
+  initContainers: []
+  # -- Containers to add to the compactor pod
+  extraContainers: []
   # -- Resource requests and limits for the compactor
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
@@ -1008,7 +1042,7 @@ enterpriseFederationFrontend:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
-  # proxy_targets:
+  proxy_targets: []
   #   - name: own-data-center
   #     url: http://get/tempo
   #   - name: grafana-cloud
@@ -1016,7 +1050,6 @@ enterpriseFederationFrontend:
   #     basic_auth:
   #       username: <instance-id>
   #       password: <token>
-  proxy_targets: []
   autoscaling:
     # -- Enable autoscaling for the federation-frontend
     enabled: false
@@ -1361,6 +1394,12 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
+    {{- if .Values.distributor.config.log_discarded_spans.enabled }}
+    log_discarded_spans:
+      enabled: {{ .Values.distributor.config.log_discarded_spans.enabled }}
+      include_all_attributes: {{ .Values.distributor.config.log_discarded_spans.include_all_attributes }}
+      filter_by_status_error: {{ .Values.distributor.config.log_discarded_spans.filter_by_status_error }}
+    {{- end }}
     {{- if or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
     log_received_spans:
       enabled: {{ or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
@@ -1490,7 +1529,7 @@ config: |
 server:
   # --  HTTP server listen host
   httpListenPort: 3100
-  # -- Log level. Can be set to trace, debug, info (default), warn, error, fatal, panic
+  # -- Log level. Can be set to debug, info (default), warn, error
   logLevel: info
   # -- Log format. Can be set to logfmt (default) or json.
   logFormat: logfmt
