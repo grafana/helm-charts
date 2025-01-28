@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "tempo.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "tempo.name" . }}
     chart: {{ template "tempo.chart" . }}

@@ -19,6 +19,8 @@ global:
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []
+  # -- Global storage class to be used for persisted components
+  storageClass: null
 fullnameOverride: ''
 # fullnameOverride: tempo
 
@@ -571,6 +573,10 @@ distributor:
       enabled: false
       include_all_attributes: false
       filter_by_status_error: false
+    log_discarded_spans:
+      enabled: false
+      include_all_attributes: false
+      filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
@@ -660,6 +666,10 @@ compactor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the compactor pods
   extraEnvFrom: []
+  # -- Init containers to add to the compactor pod
+  initContainers: []
+  # -- Containers to add to the compactor pod
+  extraContainers: []
   # -- Resource requests and limits for the compactor
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
@@ -1022,7 +1032,7 @@ enterpriseFederationFrontend:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
-  # proxy_targets:
+  proxy_targets: []
   #   - name: own-data-center
   #     url: http://get/tempo
   #   - name: grafana-cloud
@@ -1030,7 +1040,6 @@ enterpriseFederationFrontend:
   #     basic_auth:
   #       username: <instance-id>
   #       password: <token>
-  proxy_targets: []
   autoscaling:
     # -- Enable autoscaling for the federation-frontend
     enabled: false
@@ -1375,6 +1384,12 @@ config: |
       kafka:
         {{- toYaml .Values.traces.kafka | nindent 6 }}
       {{- end }}
+    {{- if .Values.distributor.config.log_discarded_spans.enabled }}
+    log_discarded_spans:
+      enabled: {{ .Values.distributor.config.log_discarded_spans.enabled }}
+      include_all_attributes: {{ .Values.distributor.config.log_discarded_spans.include_all_attributes }}
+      filter_by_status_error: {{ .Values.distributor.config.log_discarded_spans.filter_by_status_error }}
+    {{- end }}
     {{- if or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
     log_received_spans:
       enabled: {{ or .Values.distributor.config.log_received_traces .Values.distributor.config.log_received_spans.enabled }}
