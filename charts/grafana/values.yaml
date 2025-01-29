@@ -186,7 +186,7 @@ downloadDashboardsImage:
   # -- The Docker registry
   registry: docker.io
   repository: curlimages/curl
-  tag: 7.85.0
+  tag: 8.9.1
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -245,6 +245,7 @@ service:
   portName: service
   # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
+  sessionAffinity: ""
 
 serviceMonitor:
   ## If true, a ServiceMonitor CR is created for a prometheus operator
