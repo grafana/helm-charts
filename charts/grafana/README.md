@@ -75,6 +75,7 @@ need to instead set `global.imageRegistry`.
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
 | `service.ipFamilies`                      | Kubernetes service IP families                | `[]`                                                    |
 | `service.ipFamilyPolicy`                  | Kubernetes service IP family policy           | `""`                                                    |
+| `service.sessionAffinity`                 | Kubernetes service session affinity config    | `""`                                                    |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
@@ -254,7 +255,7 @@ need to instead set `global.imageRegistry`.
 | `downloadDashboards.resources`            | Resources of `download-dashboards` container  | `{}`                                                    |
 | `downloadDashboardsImage.registry`        | Curl docker image registry                    | `docker.io`                                       |
 | `downloadDashboardsImage.repository`      | Curl docker image repository                  | `curlimages/curl`                                       |
-| `downloadDashboardsImage.tag`             | Curl docker image tag                         | `7.73.0`                                                |
+| `downloadDashboardsImage.tag`             | Curl docker image tag                         | `8.9.1`                                                 |
 | `downloadDashboardsImage.sha`             | Curl docker image sha (optional)              | `""`                                                    |
 | `downloadDashboardsImage.pullPolicy`      | Curl docker image pull policy                 | `IfNotPresent`                                          |
 | `namespaceOverride`                       | Override the deployment namespace             | `""` (`Release.Namespace`)                              |
@@ -427,7 +428,7 @@ kind: ConfigMap
 metadata:
   name: sample-grafana-dashboard
   labels:
-     grafana_dashboard: "1"
+    grafana_dashboard: "1"
 data:
   k8s-dashboard.json: |-
   [...]
@@ -588,7 +589,7 @@ kind: ConfigMap
 metadata:
   name: sample-grafana-alert
   labels:
-     grafana_alert: "1"
+    grafana_alert: "1"
 data:
   k8s-alert.yml: |-
     apiVersion: 1
