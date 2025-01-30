@@ -1549,3 +1549,24 @@ extraObjects: []
 # Alternatively, if you wish to allow secret values to be exposed in the rendered grafana.ini configmap,
 # you can disable this check by setting assertNoLeakedSecrets to false.
 assertNoLeakedSecrets: true
+
+# To add users to Grafana using the values.yaml file,
+# you can define the user names, roles, and password keys under the grafana.users section.
+# When you set the passwordKey to refer to an encrypted variable,
+# Grafana will use the value from the encrypted source during deployment. Here's an example configuration:
+grafana:
+  users:
+    - name: "user1"
+      role: "Viewer"
+      passwordKey: "user1Password"
+    - name: "user2"
+      role: "Editor"
+      passwordKey: "user2Password"
+    - name: "user3"
+      role: "Admin"
+      passwordKey: "user3Password"
+
+# In this example:
+# Replace the passwordKey values with the actual keys for the encrypted passwords.
+# The role can be adjusted according to the access level you want for each user (e.g., "Viewer", "Editor", or "Admin").
+# You can manage these encrypted password keys via GitHub Encrypted Variables (or another secure method) to keep the passwords safe.
