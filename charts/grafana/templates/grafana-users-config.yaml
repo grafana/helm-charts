@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-users-config
+data:
+  users.json: |
+    {{ .Values.grafana.users | toJson }}
