@@ -310,6 +310,8 @@ need to instead set `global.imageRegistry`.
 | `networkPolicy.egress.enabled`             | Enable the creation of an egress network policy              | `false`   |
 | `networkPolicy.egress.ports`               | An array of ports to allow for the egress                    | `[]`    |
 | `enableKubeBackwardCompatibility`          | Enable backward compatibility of kubernetes where pod's defintion version below 1.13 doesn't have the enableServiceLinks option  | `false`     |
+| `grafana.users`               | An array of users to create in setup                    | `[]`    |
+| `grafana.userPasswords`               | An array of users pasword                    | `[]`    |
 
 ### Example ingress with path
 
