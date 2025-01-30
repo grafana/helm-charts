@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-create-users
+  annotations:
+    "helm.sh/hook": post-install
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-users
+          image: curlimages/curl:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              GRAFANA_URL="http://admin:$(cat /etc/secrets/adminPassword)@grafana.local"
+              USERS=$(cat /etc/config/users.json | jq -c '.[]')
+
+              for user in $USERS; do
+                name=$(echo $user | jq -r '.name')
+                role=$(echo $user | jq -r '.role')
+                passwordKey=$(echo $user | jq -r '.passwordKey')
+                password=$(cat /etc/secrets/$passwordKey)
+
+                echo "Creating user $name with role $role..."
+                curl -X POST "$GRAFANA_URL/api/admin/users" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"name\": \"$name\", \"email\": \"$name@example.com\", \"login\": \"$name\", \"password\": \"$password\"}"
+
+                userId=$(curl -s "$GRAFANA_URL/api/users/lookup?login=$name" | jq -r '.id')
+
+                curl -X POST "$GRAFANA_URL/api/orgs/1/users" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"loginOrEmail\": \"$name\", \"role\": \"$role\"}"
+              done
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: secrets-volume
+              mountPath: /etc/secrets
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: grafana-users-config
+        - name: secrets-volume
+          secret:
+            secretName: grafana-user-secrets
+      restartPolicy: OnFailure
