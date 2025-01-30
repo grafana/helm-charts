@@ -1556,17 +1556,23 @@ assertNoLeakedSecrets: true
 # Grafana will use the value from the encrypted source during deployment. Here's an example configuration:
 grafana:
   users:
-    - name: "user1"
-      role: "Viewer"
-      passwordKey: "user1Password"
-    - name: "user2"
-      role: "Editor"
-      passwordKey: "user2Password"
-    - name: "user3"
-      role: "Admin"
-      passwordKey: "user3Password"
+#    - name: "user1"
+#      role: "Viewer"
+#      passwordKey: "user1Password"
+#    - name: "user2"
+#      role: "Editor"
+#      passwordKey: "user2Password"
+#    - name: "user3"
+#      role: "Admin"
+#      passwordKey: "user3Password"
+  userPasswords:
+#    user1: "${{ secrets.GRAFANA_USER1_PASSWORD }}"
+#    user2: "${{ secrets.GRAFANA_USER2_PASSWORD }}"
+#    user3: "${{ secrets.GRAFANA_USER3_PASSWORD }}"
 
 # In this example:
 # Replace the passwordKey values with the actual keys for the encrypted passwords.
 # The role can be adjusted according to the access level you want for each user (e.g., "Viewer", "Editor", or "Admin").
 # You can manage these encrypted password keys via GitHub Encrypted Variables (or another secure method) to keep the passwords safe.
+# This configuration will create a new user in Grafana during its setup.
+
