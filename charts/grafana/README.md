@@ -789,9 +789,22 @@ grafana.ini:
 In the `values.yaml` file of the Helm Chart, you can preconfigure users during Grafana deployment using the following parameters:
 
 - **`grafana.users`** – A list of usernames to be created in Grafana.  
-- **`grafana.userPasswords`** – A list of passwords corresponding to the users added.
+- **`grafana.userPasswords`** – A list of passwords corresponding to the users added.  
+- **Passwords should be securely stored using GitHub Encrypted Secrets.**
 
-## Example Configuration:
+## Creating GitHub Encrypted Secrets for Each User
+
+To securely manage user passwords, **DO NOT** store them directly in `values.yaml`. Instead, follow these steps:
+
+1. Go to your GitHub repository.  
+2. Navigate to **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.  
+3. Create a secret for each user, using a naming convention like:
+   - `GRAFANA_USER_ADMIN_PASSWORD`
+   - `GRAFANA_USER_DEVUSER_PASSWORD`
+   - `GRAFANA_USER_OPSUSER_PASSWORD`
+4. Store each user's password as a separate GitHub Secret.
+
+## Example `values.yaml` Configuration
 
 ```yaml
 grafana:
@@ -800,6 +813,6 @@ grafana:
     - devuser
     - opsuser
   userPasswords:
-    - "SuperSecurePass123"
-    - "DevUserPass456"
-    - "OpsUserPass789"
+    - "${GRAFANA_USER_ADMIN_PASSWORD}"
+    - "${GRAFANA_USER_DEVUSER_PASSWORD}"
+    - "${GRAFANA_USER_OPSUSER_PASSWORD}"
