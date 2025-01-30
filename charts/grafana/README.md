@@ -784,3 +784,22 @@ grafana.ini:
   alerting:
     enabled: false
 ```
+# Adding Users to Grafana via Helm Chart
+
+In the `values.yaml` file of the Helm Chart, you can preconfigure users during Grafana deployment using the following parameters:
+
+- **`grafana.users`** – A list of usernames to be created in Grafana.  
+- **`grafana.userPasswords`** – A list of passwords corresponding to the users added.
+
+## Example Configuration:
+
+```yaml
+grafana:
+  users:
+    - admin
+    - devuser
+    - opsuser
+  userPasswords:
+    - "SuperSecurePass123"
+    - "DevUserPass456"
+    - "OpsUserPass789"
