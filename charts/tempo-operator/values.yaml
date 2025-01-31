@@ -38,11 +38,7 @@ manager:
 
 
   webhook:
-    createCertificateIssuer: true
-    certificateIssuerRef: {}
-      # kind: Issuer
-      # name: new-issuer
-      # group: some-group.local
+    generateCertificate: true
 
   config:
     apiVersion: config.tempo.grafana.com/v1alpha1

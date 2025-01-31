@@ -63,8 +63,7 @@ Grafana Tempo Operator
 | manager.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | manager.serviceAccount.create | bool | `true` |  |
 | manager.serviceAccount.serviceAccountName | string | `""` |  |
-| manager.webhook.certificateIssuerRef | object | `{}` |  |
-| manager.webhook.createCertificateIssuer | bool | `true` |  |
+| manager.webhook.generateCertificate | bool | `true` |  |
 | nameOverride | string | `""` |  |
 | rbac.enabled | bool | `true` |  |
 

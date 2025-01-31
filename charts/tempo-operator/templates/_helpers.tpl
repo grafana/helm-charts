@@ -60,3 +60,17 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate certificates for tempo operator webhook service
+*/}}
+{{- define "tempo-operator.WebhookCert" -}}
+{{- $altNames := list ( printf "%s-webhook-service.%s.svc" (include "tempo-operator.fullname" .) .Release.Namespace ) ( printf "%s-webhook-service.%s.svc.cluster.local" (include "tempo-operator.fullname" .) .Release.Namespace ) -}}
+{{- $cert := genSelfSignedCert "tempo-operator-cert" nil $altNames 365 -}}
+{{- $certCrtEnc := b64enc $cert.Cert }}
+{{- $certKeyEnc := b64enc $cert.Key }}
+{{- $caCertEnc := b64enc $cert.Cert }}
+{{- $result := dict "crt" $certCrtEnc "key" $certKeyEnc "ca" $caCertEnc }}
+{{- $result | toYaml }}
+{{- end -}}
+

@@ -1,0 +1,101 @@
+
+{{- $cert := fromYaml (include "tempo-operator.WebhookCert" $ ) }}
+{{- $caCertEnc := $cert.ca }}
+{{- $certCrtEnc := $cert.crt }}
+{{- $certKeyEnc := $cert.key }}
+
+
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  labels:
+    {{- include "tempo-operator.labels" . | nindent 4 }}
+  name: {{ include "tempo-operator.fullname" . }}-mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: {{ include "tempo-operator.fullname" . }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /mutate-tempo-grafana-com-v1alpha1-tempostack
+    caBundle: {{ $caCertEnc }}
+  failurePolicy: Fail
+  name: mtempostack.tempo.grafana.com
+  rules:
+  - apiGroups:
+    - tempo.grafana.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - tempostacks
+  sideEffects: None
+
+---
+
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  labels:
+    {{- include "tempo-operator.labels" . | nindent 4 }}
+  name: {{ include "tempo-operator.fullname" . }}-validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: {{ include "tempo-operator.fullname" . }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-tempo-grafana-com-v1alpha1-tempomonolithic
+    caBundle: {{ $caCertEnc }}
+  failurePolicy: Fail
+  name: vtempomonolithic.kb.io
+  rules:
+  - apiGroups:
+    - tempo.grafana.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - tempomonolithics
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: {{ include "tempo-operator.fullname" . }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-tempo-grafana-com-v1alpha1-tempostack
+    caBundle: {{ $caCertEnc }}
+  failurePolicy: Fail
+  name: vtempostack.tempo.grafana.com
+  rules:
+  - apiGroups:
+    - tempo.grafana.com
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - tempostacks
+  sideEffects: None
+
+---
+
+
+{{- if .Values.manager.webhook.generateCertificate }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webhook-server-cert
+data:
+  tls.crt: {{ $certCrtEnc }}
+  tls.key: {{ $certKeyEnc }}
+  ca.crt: {{ $caCertEnc }}
+{{- end }}
