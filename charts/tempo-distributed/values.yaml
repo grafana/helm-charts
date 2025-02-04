@@ -68,6 +68,8 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
+  # -- The number of old ReplicaSets to retain to allow rollback
+  revisionHistoryLimit: 10
   # -- SecurityContext holds container-level security attributes and common container settings
   securityContext:
     runAsNonRoot: true
