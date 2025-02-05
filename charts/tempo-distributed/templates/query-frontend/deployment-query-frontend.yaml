@@ -107,9 +107,7 @@ spec:
             {{- end }}
         {{- if .Values.queryFrontend.query.enabled }}
         - args:
-            - --query.base-path=/
-            - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
-            - --query.bearer-token-propagation=true
+            - -config=/conf/tempo-query.yaml
             {{- with .Values.queryFrontend.query.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
