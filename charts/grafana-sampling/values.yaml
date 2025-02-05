@@ -3,6 +3,10 @@ metricsGeneration:
   enabled: true
   # -- Use legacy metric names that match those used by the Tempo metrics generator.
   legacy: true
+  # -- Override the servicegraph metrics generation flush interval
+  metricsGeneration:
+    servicegraph:
+      metrics_flush_interval: 0s
   # -- Additional dimensions to add to generated metrics.
   dimensions:
     - service.namespace

@@ -11,7 +11,10 @@ otelcol.connector.servicegraph "default" {
   store {
     ttl = "2s"
   }
-
+  {{- if .Values.metricsGeneration.servicegraph.metrics_flush_interval }}
+  metrics_flush_interval = {{.Values.metricsGeneration.servicegraph.metrics_flush_interval }}
+  {{- end}}
+  
   output {
     metrics = [otelcol.processor.batch.default.input]
   }
