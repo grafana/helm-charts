@@ -6,7 +6,7 @@ otelcol.connector.servicegraph "default" {
     {{ . | quote }},
     {{- end }}
   ]
-  latency_histogram_buckets = buckets = [{{- join ", " .Values.metricsGeneration.buckets }}]
+  latency_histogram_buckets = [{{- join ", " .Values.metricsGeneration.buckets }}]
 
   store {
     ttl = "2s"
