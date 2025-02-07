@@ -1,6 +1,6 @@
 # grafana-sampling
 
-![Version: 1.1.2](https://img.shields.io/badge/Version-1.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.5.1](https://img.shields.io/badge/AppVersion-v1.5.1-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.5.1](https://img.shields.io/badge/AppVersion-v1.5.1-informational?style=flat-square)
 
 A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 
@@ -145,8 +145,11 @@ A major chart version change indicates that there is an incompatible breaking ch
 | batch.statefulset.timeout | string | `"200ms"` |  |
 | deployment.otlp.receiver | object | `{"grpc":{"max_recv_msg_size":"4MB"}}` | otlp receiver settings for deployment (loadbalancer) |
 | deployment.otlp.receiver.grpc.max_recv_msg_size | string | `"4MB"` | gRPC max message receive size. Default to 4MB |
+| metricsGeneration.buckets | list | `["0s","0.005s","0.01s","0.025s","0.05s","0.075s","0.1s","0.25s","0.5s","0.75s","1s","2.5s","5s","7.5s","10s"]` | List of histogram buckets. |
 | metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name","k8s.pod.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
+| metricsGeneration.expiration | string | `"0s"` | Time period after which metrics are considered stale and are removed from the cache. |
+| metricsGeneration.flushInterval | string | `"15s"` | How often to flush generated metrics. |
 | metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
 | sampling.enabled | bool | `true` | Toggle tail sampling. |
