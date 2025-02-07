@@ -78,11 +78,11 @@ tempo:
     per_tenant_override_config: /conf/overrides.yaml
   # -- The `per tenant` aka `tenant-specific` runtime overrides. This allows overriding values set in the configuration on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) and [Tenant-Specific overrides](https://grafana.com/docs/tempo/latest/configuration/#tenant-specific-overrides) documentation for more details.
   per_tenant_overrides: {}
-    #'tenant-id':
+    # 'tenant-id':
     #  metrics_generator:
     #    processors:
     #      - service-graphs
-    #      - span-metrics  
+    #      - span-metrics
 
   # Tempo server configuration.
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#server
