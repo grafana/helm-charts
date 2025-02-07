@@ -1569,11 +1569,11 @@ overrides:
 
 # -- The `per tenant` runtime overrides in place of the `per_tenant_override_config` file for Tempo (see `overrides` and the `per_tenant_override_config` property). This allows overriding the configs like `ingestion` and `global` values on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) documentation for more details.
 per_tenant_overrides:
-  #'tenant-id':
-  #  metrics_generator:
+  # 'tenant-id':
+  #   metrics_generator:
   #    processors:
-  #      - service-graphs
-  #      - span-metrics  
+  #     - service-graphs
+  #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
