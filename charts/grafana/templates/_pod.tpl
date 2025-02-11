@@ -6,6 +6,9 @@ schedulerName: "{{ . }}"
 {{- end }}
 serviceAccountName: {{ include "grafana.serviceAccountName" . }}
 automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
+{{- if .Values.shareProcessNamespace.enabled }}
+shareProcessNamespace: true
+{{- end }}
 {{- with .Values.securityContext }}
 securityContext:
   {{- toYaml . | nindent 2 }}
