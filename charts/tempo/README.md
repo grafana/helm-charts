@@ -1,21 +1,12 @@
 # tempo
 
-![Version: 1.18.2](https://img.shields.io/badge/Version-1.18.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
+![Version: 1.19.0](https://img.shields.io/badge/Version-1.19.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.0](https://img.shields.io/badge/AppVersion-2.7.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
 ## Source Code
 
 * <https://github.com/grafana/tempo>
-
-## Upgrading
-
-### From Chart versions < 1.32.0
-* Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below.  
-
-`global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
-`overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
 
 ## Values
 
@@ -163,6 +154,13 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.19.0
+* Breaking Change *
+In order to reduce confusion, the overrides configurations have been renamed as below. 
+
+`global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
+`overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
 
 ### From Chart versions < 1.17.0
 
