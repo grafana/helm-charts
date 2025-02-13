@@ -8,15 +8,6 @@ Grafana Tempo Single Binary Mode
 
 * <https://github.com/grafana/tempo>
 
-## Upgrading
-
-### From Chart versions < 1.32.0
-* Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below.  
-
-`global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
-`overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
-
 ## Values
 
 | Key | Type | Default | Description |
@@ -163,6 +154,13 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.19.0
+* Breaking Change *
+In order to reduce confusion, the overrides configurations have been renamed as below. 
+
+`global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
+`overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
 
 ### From Chart versions < 1.17.0
 
