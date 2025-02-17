@@ -3,6 +3,12 @@ metricsGeneration:
   enabled: true
   # -- Use legacy metric names that match those used by the Tempo metrics generator.
   legacy: true
+  # -- How often to flush generated metrics.
+  flushInterval: "15s"
+  # -- Time period after which metrics are considered stale and are removed from the cache.
+  expiration: "0s"
+  # -- List of histogram buckets.
+  buckets: ["0s", "0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
   # -- Additional dimensions to add to generated metrics.
   dimensions:
     - service.namespace
