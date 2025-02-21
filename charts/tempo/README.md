@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.10.3](https://img.shields.io/badge/Version-1.10.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 1.18.2](https://img.shields.io/badge/Version-1.18.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -18,6 +18,8 @@ Grafana Tempo Single Binary Mode
 | extraLabels | object | `{}` |  |
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
+| hostAliases | list | `[]` | hostAliases to add |
 | labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
 | networkPolicy.allowExternal | bool | `true` |  |
@@ -30,6 +32,7 @@ Grafana Tempo Single Binary Mode
 | networkPolicy.ingress | bool | `true` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
+| persistence.enableStatefulSetAutoDeletePVC | bool | `false` | Enable StatefulSetAutoDeletePVC feature |
 | persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"10Gi"` |  |
 | podAnnotations | object | `{}` | Pod Annotations |
@@ -38,7 +41,10 @@ Grafana Tempo Single Binary Mode
 | replicas | int | `1` | Define the amount of instances |
 | securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | securityContext for container |
 | service.annotations | object | `{}` |  |
+| service.clusterIP | string | `""` |  |
 | service.labels | object | `{}` |  |
+| service.loadBalancerIP | string | `nil` | IP address, in case of 'type: LoadBalancer' |
+| service.protocol | string | `"TCP"` | If service type is LoadBalancer, the exposed protocol can either be "UDP", "TCP" or "UDP,TCP" |
 | service.targetPort | string | `""` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
@@ -56,15 +62,29 @@ Grafana Tempo Single Binary Mode
 | tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
 | tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
-| tempo.ingester | object | `{}` | Configuration options for the ingester |
+| tempo.ingester | object | `{}` | Configuration options for the ingester. Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester |
+| tempo.livenessProbe.failureThreshold | int | `3` |  |
+| tempo.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.livenessProbe.httpGet.port | int | `3100` |  |
+| tempo.livenessProbe.initialDelaySeconds | int | `30` |  |
+| tempo.livenessProbe.periodSeconds | int | `10` |  |
+| tempo.livenessProbe.successThreshold | int | `1` |  |
+| tempo.livenessProbe.timeoutSeconds | int | `5` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
 | tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{}` |  |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
-| tempo.querier | object | `{}` | Configuration options for the querier |
-| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
+| tempo.querier | object | `{}` | Configuration options for the querier. Refers to: https://grafana.com/docs/tempo/latest/configuration/#querier |
+| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted. Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend |
+| tempo.readinessProbe.failureThreshold | int | `3` |  |
+| tempo.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.readinessProbe.httpGet.port | int | `3100` |  |
+| tempo.readinessProbe.initialDelaySeconds | int | `20` |  |
+| tempo.readinessProbe.periodSeconds | int | `10` |  |
+| tempo.readinessProbe.successThreshold | int | `1` |  |
+| tempo.readinessProbe.timeoutSeconds | int | `5` |  |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
 | tempo.receivers.jaeger.protocols.thrift_binary.endpoint | string | `"0.0.0.0:6832"` |  |
 | tempo.receivers.jaeger.protocols.thrift_compact.endpoint | string | `"0.0.0.0:6831"` |  |
@@ -132,6 +152,16 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.17.0
+
+Please be aware that we've updated the Tempo version to 2.7, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-7/) before upgrading.
+
+### From Chart versions < 1.12.0
+
+Upgrading to chart 1.12.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
 
 ### From Chart versions < 1.2.0
 
