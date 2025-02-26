@@ -2119,6 +2119,10 @@ tokengenJob:
   env: []
   extraEnvFrom: []
   annotations: {}
+  storeTokenInSecret: true
+  # -- Name of the secret to store the admin token. If not specified, defaults to "<release-name>-admin-token"
+  adminTokenSecret: ""
+
   image:
     # -- The Docker registry for the tokengenJob image. Overrides `tempo.image.registry`
     registry: null
