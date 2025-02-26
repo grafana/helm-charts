@@ -883,6 +883,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
 | tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
+| tokengenJob.adminTokenSecret | string | `""` | Name of the secret to store the admin token. If not specified, defaults to "<release-name>-admin-token" |
 | tokengenJob.annotations | object | `{}` |  |
 | tokengenJob.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for tokenjobgen containers |
 | tokengenJob.enable | bool | `true` |  |
@@ -895,6 +896,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.image.repository | string | `nil` | Docker image repository for the tokengenJob image. Overrides `tempo.image.repository` |
 | tokengenJob.image.tag | string | `nil` | Docker image tag for the tokengenJob image. Overrides `tempo.image.tag` |
 | tokengenJob.initContainers | list | `[]` |  |
+| tokengenJob.storeTokenInSecret | bool | `true` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
 | traces.jaeger.thriftBinary.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
