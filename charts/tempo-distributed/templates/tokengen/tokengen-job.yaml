@@ -41,10 +41,14 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      initContainers:
-        {{- if .Values.tokengenJob.initContainers }}
+      {{- if .Values.tokengenJob.storeTokenInSecret }}
+      initContainers: 
+      {{- if .Values.tokengenJob.initContainers }}
         {{- toYaml .Values.tokengenJob.initContainers | nindent 8 }}
         {{- end }}
+      {{ else }}
+      containers:
+      {{- end }}
         - name: tokengen
           image: "{{ include "tempo.imageReference" $dict }}"
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
@@ -82,6 +86,7 @@ spec:
             {{- with .Values.tokengenJob.extraEnvFrom }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
+      {{- if .Values.tokengenJob.storeTokenInSecret }}
       containers:
         - name: kubectl
           image: {{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}
@@ -92,15 +97,11 @@ spec:
             - |
               if cat /shared/admin-token; then
                 echo "Admin token generated successfully and is readable"
-                {{- if .Values.tokengenJob.storeTokenInSecret | default true }}
                 # Create or update the secret with the admin token
-                kubectl create secret generic {{ .Values.tokengenJob.adminTokenSecret | default (printf "%s-admin-token" .Release.Name) }} \
+                kubectl create secret generic {{ .Values.tokengenJob.adminTokenSecret }} \
                   --from-file=token=/shared/admin-token \
                   --dry-run=client -o yaml | kubectl apply -f -
                 echo "Admin token secret created/updated successfully"
-                {{- else }}
-                echo "Skipping secret creation as storeTokenInSecret is disabled"
-                {{- end }}
               else
                 echo "Error: Admin token file not found or not readable at /shared/admin-token"
                 exit 1
@@ -108,6 +109,7 @@ spec:
           volumeMounts:
             - name: shared
               mountPath: /shared
+      {{- end }}
       restartPolicy: OnFailure
       volumes:
         - name: config
