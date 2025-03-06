@@ -221,6 +221,11 @@ ingester:
     storageClass: null
     # -- Annotations for ingester's persist volume claim
     annotations: {}
+  
+  # -- updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true.
+  statefulStrategy:
+    type: rollingUpdate
+    partition: 0
   persistentVolumeClaimRetentionPolicy:
     # -- Enable Persistent volume retention policy for StatefulSet
     enabled: false
