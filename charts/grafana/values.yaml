@@ -913,6 +913,11 @@ ldap:
   #   ssl_skip_verify = false
   #   bind_dn = "uid=%s,ou=users,dc=myorg,dc=com"
 
+# When process namespace sharing is enabled, processes in a container are visible to all other containers in the same pod
+# This parameter is added because the ldap reload api is not working https://grafana.com/docs/grafana/latest/developers/http_api/admin/#reload-ldap-configuration
+# To allow an extraContainer to restart the Grafana container
+shareProcessNamespace: false
+
 ## Grafana's SMTP configuration
 ## NOTE: To enable, grafana.ini must be configured with smtp.enabled
 ## ref: http://docs.grafana.org/installation/configuration/#smtp
@@ -930,7 +935,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 1.28.0
+    tag: 1.30.0
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
