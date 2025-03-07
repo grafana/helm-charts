@@ -792,6 +792,8 @@ querier:
             topologyKey: topology.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Max Surge for querier pods
+  maxSurge: 0
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
