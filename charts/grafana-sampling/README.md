@@ -89,6 +89,56 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| alloy-deployment.alloy.configMap.create | bool | `false` |  |
+| alloy-deployment.alloy.extraPorts[0].name | string | `"otlp-grpc"` |  |
+| alloy-deployment.alloy.extraPorts[0].port | int | `4317` |  |
+| alloy-deployment.alloy.extraPorts[0].protocol | string | `"TCP"` |  |
+| alloy-deployment.alloy.extraPorts[0].targetPort | int | `4317` |  |
+| alloy-deployment.alloy.extraPorts[1].name | string | `"otlp-http"` |  |
+| alloy-deployment.alloy.extraPorts[1].port | int | `4318` |  |
+| alloy-deployment.alloy.extraPorts[1].protocol | string | `"TCP"` |  |
+| alloy-deployment.alloy.extraPorts[1].targetPort | int | `4318` |  |
+| alloy-deployment.alloy.resources.requests.cpu | string | `"1"` |  |
+| alloy-deployment.alloy.resources.requests.memory | string | `"2G"` |  |
+| alloy-deployment.controller.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for controller type deployment. |
+| alloy-deployment.controller.autoscaling.maxReplicas | int | `5` | The upper limit for the number of replicas to which the autoscaler can scale up. |
+| alloy-deployment.controller.autoscaling.minReplicas | int | `2` | The lower limit for the number of replicas to which the autoscaler can scale down. |
+| alloy-deployment.controller.autoscaling.targetCPUUtilizationPercentage | int | `0` | Average CPU utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetCPUUtilizationPercentage` to 0 will disable CPU scaling. |
+| alloy-deployment.controller.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling. |
+| alloy-deployment.controller.replicas | int | `1` |  |
+| alloy-deployment.controller.type | string | `"deployment"` |  |
+| alloy-deployment.nameOverride | string | `"deployment"` | Do not change this. |
+| alloy-statefulset.alloy.configMap.create | bool | `false` |  |
+| alloy-statefulset.alloy.extraEnv[0].name | string | `"GRAFANA_CLOUD_API_KEY"` |  |
+| alloy-statefulset.alloy.extraEnv[0].value | string | `"<REQUIRED>"` |  |
+| alloy-statefulset.alloy.extraEnv[1].name | string | `"GRAFANA_CLOUD_PROMETHEUS_URL"` |  |
+| alloy-statefulset.alloy.extraEnv[1].value | string | `"<REQUIRED>"` |  |
+| alloy-statefulset.alloy.extraEnv[2].name | string | `"GRAFANA_CLOUD_PROMETHEUS_USERNAME"` |  |
+| alloy-statefulset.alloy.extraEnv[2].value | string | `"<REQUIRED>"` |  |
+| alloy-statefulset.alloy.extraEnv[3].name | string | `"GRAFANA_CLOUD_TEMPO_ENDPOINT"` |  |
+| alloy-statefulset.alloy.extraEnv[3].value | string | `"<REQUIRED>"` |  |
+| alloy-statefulset.alloy.extraEnv[4].name | string | `"GRAFANA_CLOUD_TEMPO_USERNAME"` |  |
+| alloy-statefulset.alloy.extraEnv[4].value | string | `"<REQUIRED>"` |  |
+| alloy-statefulset.alloy.extraEnv[5].name | string | `"POD_UID"` |  |
+| alloy-statefulset.alloy.extraEnv[5].valueFrom.fieldRef.apiVersion | string | `"v1"` |  |
+| alloy-statefulset.alloy.extraEnv[5].valueFrom.fieldRef.fieldPath | string | `"metadata.uid"` |  |
+| alloy-statefulset.alloy.extraPorts[0].name | string | `"otlp-grpc"` |  |
+| alloy-statefulset.alloy.extraPorts[0].port | int | `4317` |  |
+| alloy-statefulset.alloy.extraPorts[0].protocol | string | `"TCP"` |  |
+| alloy-statefulset.alloy.extraPorts[0].targetPort | int | `4317` |  |
+| alloy-statefulset.alloy.resources.requests.cpu | string | `"1"` |  |
+| alloy-statefulset.alloy.resources.requests.memory | string | `"2G"` |  |
+| alloy-statefulset.controller.autoscaling.enabled | bool | `false` | Creates a HorizontalPodAutoscaler for controller type deployment. |
+| alloy-statefulset.controller.autoscaling.maxReplicas | int | `5` | The upper limit for the number of replicas to which the autoscaler can scale up. |
+| alloy-statefulset.controller.autoscaling.minReplicas | int | `2` | The lower limit for the number of replicas to which the autoscaler can scale down. |
+| alloy-statefulset.controller.autoscaling.targetCPUUtilizationPercentage | int | `0` | Average CPU utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetCPUUtilizationPercentage` to 0 will disable CPU scaling. |
+| alloy-statefulset.controller.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average Memory utilization across all relevant pods, a percentage of the requested value of the resource for the pods. Setting `targetMemoryUtilizationPercentage` to 0 will disable Memory scaling. |
+| alloy-statefulset.controller.replicas | int | `1` |  |
+| alloy-statefulset.controller.type | string | `"statefulset"` |  |
+| alloy-statefulset.nameOverride | string | `"statefulset"` | Do not change this. |
+| alloy-statefulset.rbac.create | bool | `false` |  |
+| alloy-statefulset.service.clusterIP | string | `"None"` |  |
+| alloy-statefulset.serviceAccount.create | bool | `false` |  |
 | batch.deployment | object | `{"send_batch_max_size":0,"send_batch_size":8192,"timeout":"200ms"}` | Configure batch processing options. |
 | batch.statefulset.send_batch_max_size | int | `0` |  |
 | batch.statefulset.send_batch_size | int | `8192` |  |
