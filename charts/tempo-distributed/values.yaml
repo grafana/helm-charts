@@ -224,8 +224,8 @@ ingester:
   
   # -- updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true.
   statefulStrategy:
-    type: rollingUpdate
-    partition: 0
+    rollingUpdate:
+      partition: 0
   persistentVolumeClaimRetentionPolicy:
     # -- Enable Persistent volume retention policy for StatefulSet
     enabled: false
