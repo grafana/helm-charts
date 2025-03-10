@@ -56,6 +56,7 @@
   port: 9411
   protocol: TCP
   targetPort: 9411
+{{- if not .Values.tempo.disableOtlpLegacyPorts }}
 - name: tempo-otlp-legacy
   port: 55680
   protocol: TCP
@@ -64,6 +65,7 @@
   port: 55681
   protocol: TCP
   targetPort: 55681
+{{- end }}
 {{- $endpoint := .Values.tempo.receivers.otlp.protocols.grpc }}
 {{- with $endpoint.endpoint }}
 {{- $port := regexSplit ":" . -1 | last }}

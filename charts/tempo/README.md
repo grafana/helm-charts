@@ -57,6 +57,7 @@ Grafana Tempo Single Binary Mode
 | serviceMonitor.annotations | object | `{}` |  |
 | serviceMonitor.enabled | bool | `false` |  |
 | serviceMonitor.interval | string | `""` |  |
+| tempo.disableOtlpLegacyPorts | bool | `false` | If true, disables the legacy OTLP ports (55680 and 55681) |
 | tempo.extraArgs | object | `{}` |  |
 | tempo.extraEnv | list | `[]` | Environment variables to add |
 | tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |

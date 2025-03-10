@@ -40,6 +40,8 @@ tempo:
   #    cpu: 2000m
   #    memory: 6Gi
 
+  # -- If true, disables the legacy OTLP ports (55680 and 55681)
+  disableOtlpLegacyPorts: false
   memBallastSizeMbs: 1024
   multitenancyEnabled: false
   # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
