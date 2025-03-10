@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.32.3](https://img.shields.io/badge/Version-1.32.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.33.0](https://img.shields.io/badge/Version-1.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -43,6 +43,7 @@ helm delete my-release
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
+
 
 ## Upgrading
 
@@ -128,6 +129,7 @@ minio:
   enabled: true
 ```
 * allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
+
 
 ### From chart version < 0.26.0
 
@@ -468,6 +470,7 @@ The memcached default args are removed and should be provided manually. The sett
 | externalRuntimeConfigName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"runtime\") }}"` | Name of the Secret or ConfigMap that contains the runtime configuration (used for naming even if config is internal). |
 | extraObjects | list | `[]` | Create extra manifests via values. |
 | fullnameOverride | string | `""` |  |
+| gateway.additionalPorts | list | `[{"name":"grpc-otlp","port":4317,"protocol":"TCP"}]` | Additional ports to be opened on gateway container (e.g. for RPC connections) |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the gateway |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
@@ -513,7 +516,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.readinessProbe.timeoutSeconds | int | `1` |  |
 | gateway.replicas | int | `1` | Number of replicas for the gateway |
 | gateway.resources | object | `{}` | Resource requests and limits for the gateway |
-| gateway.service.additionalPorts | list | `[]` | Additional ports to be opened on gateway service (e.g. for RPC connections) |
+| gateway.service.additionalPorts | list | `[{"name":"grpc-otlp","port":4317,"protocol":"TCP","targetPort":4317}]` | Additional ports to be opneed on gateway service (e.g. for RPC connections) |
 | gateway.service.annotations | object | `{}` | Annotations for the gateway service |
 | gateway.service.clusterIP | string | `nil` | ClusterIP of the gateway service |
 | gateway.service.labels | object | `{}` | Labels for gateway service |
@@ -937,6 +940,7 @@ The other components are optional and must be explicitly enabled.
 | admin-api | yes |
 | enterprise-gateway | yes |
 
+
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
@@ -992,6 +996,7 @@ global_overrides:
 
 * Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
 * The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
+
 
 ### Example configuration using S3 for storage
 
