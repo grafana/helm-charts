@@ -152,3 +152,8 @@ extraObjects: []
 secret:
 # -- Reference an existing secret for API token
   existingSecret: ""
+
+# -- See `kubectl explain deployment.spec.strategy` for more
+# ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+deploymentStrategy: {}
+  # type: RollingUpdate

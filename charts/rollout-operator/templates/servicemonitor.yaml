@@ -28,9 +28,9 @@ spec:
       {{- with .Values.serviceMonitor.scrapeTimeout }}
       scrapeTimeout: {{ . }}
       {{- end }}
+      {{- with .Values.serviceMonitor.relabelings }}
       relabelings:
-        {{- with .Values.serviceMonitor.relabelings }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       scheme: http
 {{- end -}}
