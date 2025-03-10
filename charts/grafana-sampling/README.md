@@ -158,3 +158,4 @@ A major chart version change indicates that there is an incompatible breaking ch
 | sampling.successfulRequests.sample | bool | `true` | Toggle sampling successful requests. |
 | statefulset.otlp.receiver | object | `{"grpc":{"max_recv_msg_size":"4MB"}}` | otlp receiver settings for statefulset (sampler) |
 | statefulset.otlp.receiver.grpc.max_recv_msg_size | string | `"4MB"` | gRPC max message receive size. Default to 4MB |
+
