@@ -125,6 +125,7 @@ testFramework:
     tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
+  containerSecurityContext: {}
   resources: {}
   #  limits:
   #    cpu: 100m
