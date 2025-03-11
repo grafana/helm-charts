@@ -525,6 +525,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Init containers to add to the distributor pods
+  initContainers: []
+  # -- Containers to add to the distributor pod
+  extraContainers: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
