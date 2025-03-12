@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.32.3](https://img.shields.io/badge/Version-1.32.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.32.4](https://img.shields.io/badge/Version-1.32.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -600,6 +600,9 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[2].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
 | ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
+| kubectlImage.repository | string | `"bitnami/kubectl"` |  |
+| kubectlImage.tag | string | `"latest"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
@@ -884,6 +887,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
 | tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
+| tokengenJob.adminTokenSecret | string | `"admin-token"` | Name of the secret to store the admin token. If not specified, defaults to "<release-name>-admin-token" |
 | tokengenJob.annotations | object | `{}` |  |
 | tokengenJob.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for tokenjobgen containers |
 | tokengenJob.enable | bool | `true` |  |
@@ -896,6 +900,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.image.repository | string | `nil` | Docker image repository for the tokengenJob image. Overrides `tempo.image.repository` |
 | tokengenJob.image.tag | string | `nil` | Docker image tag for the tokengenJob image. Overrides `tempo.image.tag` |
 | tokengenJob.initContainers | list | `[]` |  |
+| tokengenJob.storeTokenInSecret | bool | `false` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
 | traces.jaeger.thriftBinary.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
