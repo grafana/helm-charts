@@ -2124,6 +2124,9 @@ tokengenJob:
   env: []
   extraEnvFrom: []
   annotations: {}
+  storeTokenInSecret: false
+  # -- Name of the secret to store the admin token. If not specified, defaults to "<release-name>-admin-token"
+  adminTokenSecret: "admin-token"
   image:
     # -- The Docker registry for the tokengenJob image. Overrides `tempo.image.registry`
     registry: null
@@ -2137,6 +2140,11 @@ tokengenJob:
   # -- The SecurityContext for tokenjobgen containers
   containerSecurityContext:
     readOnlyRootFilesystem: true
+
+kubectlImage:
+  repository: bitnami/kubectl
+  tag: latest
+  pullPolicy: IfNotPresent
 
 # Settings for the admin_api service providing authentication and authorization service.
 # Can only be enabled if enterprise.enabled is true - requires license.
