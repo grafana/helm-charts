@@ -760,6 +760,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
+| querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
