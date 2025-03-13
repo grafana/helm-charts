@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.32.5](https://img.shields.io/badge/Version-1.32.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.32.6](https://img.shields.io/badge/Version-1.32.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -741,6 +741,9 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | querier.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the querier |
 | querier.autoscaling.enabled | bool | `false` | Enable autoscaling for the querier |
+| querier.autoscaling.keda | object | `{"enabled":true,"triggers":[]}` | Use KEDA for autoscaling instead of HPA |
+| querier.autoscaling.keda.enabled | bool | `true` | Use KEDA and prometheus metrics to autoscale the querier |
+| querier.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the querier |
 | querier.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the querier |
 | querier.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the querier |
 | querier.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the querier |

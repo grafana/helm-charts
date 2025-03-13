@@ -1,4 +1,4 @@
-{{- if .Values.querier.autoscaling.enabled }}
+{{- if and .Values.querier.autoscaling.enabled (not .Values.querier.autoscaling.keda.enabled) }}
 {{- $apiVersion := include "tempo.hpa.apiVersion" . -}}
 apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler

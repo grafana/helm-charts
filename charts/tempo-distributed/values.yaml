@@ -740,6 +740,22 @@ querier:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the querier
     targetMemoryUtilizationPercentage:
+    # -- Use KEDA for autoscaling instead of HPA
+    keda:
+      # -- Use KEDA and prometheus metrics to autoscale the querier
+      enabled: true
+      # -- List of autoscaling triggers for the querier
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "8"
+      #     query: sum(max_over_time(tempo_inflight_requests{container="query-frontend", route="api_metrics_query_range"}[1m])
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "4"
+      #     query: rate(tempo_request_duration_seconds_sum{container="query-frontend", route="api_metrics_query_range"}[1m])
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
