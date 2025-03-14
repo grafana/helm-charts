@@ -737,6 +737,27 @@ The memcached default args are removed and should be provided manually. The sett
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
+| provisioner.additionalTenants | list | `[]` | Additional tenants to be created. Each tenant will get a read and write policy and associated token. Tenant must have a name and a namespace for the secret containting the token to be created in. For example additionalTenants:   - name: tempo     secretNamespace: grafana |
+| provisioner.affinity | object | `{}` | Affinity for tokengen Pods |
+| provisioner.annotations | object | `{}` | Additional annotations for the `provisioner` Job |
+| provisioner.apiUrl | string | `""` | URL for the admin API service. Must be set to a valid URL. Example: "http://tempo-admin-api.namespace.svc:3100" |
+| provisioner.enabled | bool | `false` | Whether the job should be part of the deployment |
+| provisioner.env | list | `[]` | Additional Kubernetes environment |
+| provisioner.extraArgs | object | `{}` | Additional arguments for the provisioner command |
+| provisioner.extraVolumeMounts | list | `[]` | Volume mounts to add to the provisioner pods |
+| provisioner.hookType | string | `"post-install"` | Hook type(s) to customize when the job runs.  defaults to post-install |
+| provisioner.image | object | `{"digest":null,"pullPolicy":"IfNotPresent","registry":"us-docker.pkg.dev","repository":"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner","tag":null}` | Provisioner image to Utilize |
+| provisioner.image.digest | string | `nil` | Overrides the image tag with an image digest |
+| provisioner.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
+| provisioner.image.registry | string | `"us-docker.pkg.dev"` | The Docker registry |
+| provisioner.image.repository | string | `"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner"` | Docker image repository |
+| provisioner.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| provisioner.labels | object | `{}` | Additional labels for the `provisioner` Job |
+| provisioner.nodeSelector | object | `{}` | Node selector for tokengen Pods |
+| provisioner.priorityClassName | string | `nil` | The name of the PriorityClass for provisioner Job |
+| provisioner.provisionedSecretPrefix | string | `nil` | Name of the secret to store provisioned tokens in |
+| provisioner.securityContext | object | `{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | Run containers as nonroot user (uid=10001)` |
+| provisioner.tolerations | list | `[]` | Tolerations for tokengen Pods |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
