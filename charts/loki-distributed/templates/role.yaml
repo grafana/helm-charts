@@ -28,4 +28,16 @@ rules:
   resourceNames:
   - {{ include "loki.fullname" . }}
 {{- end }}
+{{- if and .Values.ruler.enabled .Values.ruler.sidecar.enabled .Values.ruler.sidecar.rbac.namespaced }}
+  {{- if or (eq .Values.ruler.sidecar.rules.resource "both") (eq .Values.ruler.sidecar.rules.resource "configmap") }}
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "watch", "list"]
+  {{- end }}
+  {{- if or (eq .Values.ruler.sidecar.rules.resource "both") (eq .Values.ruler.sidecar.rules.resource "secret") }}
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "watch", "list"]
+  {{- end }}
+{{- end}}
 {{- end }}
