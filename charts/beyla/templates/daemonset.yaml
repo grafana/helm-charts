@@ -1,0 +1,93 @@
+{{- $fullName := include "chart.fullname" . -}}
+{{- $serviceAccountName := include "chart.serviceAccountName" . -}}
+{{- $name := "beyla" -}}
+{{- $data := dict "name" $name "Chart" .Chart "Release" .Release "Values" .Values -}}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ $fullName }}-{{ $name }}
+  labels:
+    {{- include "chart.labels" $data | nindent 4 }}
+  {{- if .Values.podAnnotations -}}
+  annotations:
+    {{- toYaml .Values.podAnnotations | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" $data | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations -}}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "chart.selectorLabels" $data | nindent 8 }}
+    spec:
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+       {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.hostAliases }}
+      hostAliases: 
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      hostPID: {{ .Values.hostPID }}
+      containers:
+        - name: beyla
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.terminationMessagePolicy }}
+          terminationMessagePolicy: {{ .Values.terminationMessagePolicy }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /config
+              name: beyla-config
+            - mountPath: /var/run/beyla
+              name: var-run-beyla
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: BEYLA_CONFIG_PATH
+              value: "/config/beyla-config.yml"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}-{{ $name }}-credentials
+                  key: otlp-endpoint
+          {{- if .Values.otlp.headers }}
+            - name: OTEL_EXPORTER_OTLP_HEADERS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}-{{ $name }}-credentials
+                  key: otlp-headers
+          {{- end }}
+            {{- if .Values.extraEnvs -}}
+              {{- toYaml .Values.extraEnvs | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: beyla-config
+          configMap:
+            name: {{ $fullName }}-{{ $name }}-config
+        - name: var-run-beyla
+          emptyDir: {}
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
