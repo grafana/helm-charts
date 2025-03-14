@@ -1535,7 +1535,9 @@ networkPolicy:
 enableKubeBackwardCompatibility: false
 useStatefulSet: false
 
-# -- Add dynamic manifests via values. Example:
+# Add dynamic manifests via values
+extraObjects: []
+# Examples:
 # extraObjects:
 # - apiVersion: kubernetes-client.io/v1
 #   kind: ExternalSecret
@@ -1558,7 +1560,6 @@ useStatefulSet: false
 #     data:
 #     - key: grafana-admin-password
 #       name: {{ include "some-other-template" }}
-extraObjects: []
 
 # assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
 # values are not exposed in the rendered grafana.ini configmap. It is enabled by default.

@@ -2434,27 +2434,14 @@ enterpriseGateway:
         hosts:
           - gateway.gem.example.com
 
-# -- Add dynamic manifests via values. Example:
-# extraObjects:
-# - apiVersion: kubernetes-client.io/v1
-#   kind: ExternalSecret
-#   metadata:
-#     name: tempo-secrets-{{ .Release.Name }}
-#   spec:
-#     backendType: aws
-#     data:
-#     - key: secret-access-key
-#       name: awssm-secret
-# alternatively, you can use strings, which lets you use additional templating features:
-# extraObjects:
-# - |
-#   apiVersion: kubernetes-client.io/v1
-#   kind: ExternalSecret
-#   metadata:
-#     name: tempo-secrets-{{ .Release.Name }}
-#   spec:
-#     backendType: aws
-#     data:
-#     - key: secret-access-key
-#       name: {{ include "some-other-template" }}
+# -- Create extra manifests via values.
 extraObjects: []
+  # - apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: tempo-secrets
+  #   spec:
+  #     backendType: aws
+  #     data:
+  #       - key: secret-access-key
+  #         name: awssm-secret
