@@ -1548,7 +1548,7 @@ extraObjects: []
 #     data:
 #     - key: grafana-admin-password
 #       name: adminPassword
-# alternatively, you can use strings, which lets you use additional templating features:
+# Alternatively, you can use strings, which lets you use additional templating features:
 # extraObjects:
 # - |
 #   apiVersion: kubernetes-client.io/v1
