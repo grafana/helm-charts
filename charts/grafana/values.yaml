@@ -1534,17 +1534,32 @@ networkPolicy:
 # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
 enableKubeBackwardCompatibility: false
 useStatefulSet: false
-# Create a dynamic manifests via values:
+
+# extraObjects could be utilized to add dynamic manifests via values
 extraObjects: []
-  # - apiVersion: "kubernetes-client.io/v1"
-  #   kind: ExternalSecret
-  #   metadata:
-  #     name: grafana-secrets
-  #   spec:
-  #     backendType: gcpSecretsManager
-  #     data:
-  #       - key: grafana-admin-password
-  #         name: adminPassword
+# Examples:
+# extraObjects:
+# - apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: grafana-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: gcpSecretsManager
+#     data:
+#     - key: grafana-admin-password
+#       name: adminPassword
+# Alternatively, you can use strings, which lets you use additional templating features:
+# extraObjects:
+# - |
+#   apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: grafana-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: gcpSecretsManager
+#     data:
+#     - key: grafana-admin-password
+#       name: {{ include "some-other-template" }}
 
 # assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
 # values are not exposed in the rendered grafana.ini configmap. It is enabled by default.
