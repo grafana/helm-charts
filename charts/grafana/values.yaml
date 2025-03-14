@@ -1535,7 +1535,7 @@ networkPolicy:
 enableKubeBackwardCompatibility: false
 useStatefulSet: false
 
-# Add dynamic manifests via values
+# extraObjects could be utilized to add dynamic manifests via values
 extraObjects: []
 # Examples:
 # extraObjects:
