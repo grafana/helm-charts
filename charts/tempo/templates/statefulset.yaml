@@ -81,14 +81,16 @@ spec:
           name: jaeger-grpc
         - containerPort: 9411
           name: zipkin
-        - containerPort: 55680
-          name: otlp-legacy
         - containerPort: 4317
           name: otlp-grpc
-        - containerPort: 55681
-          name: otlp-httplegacy
         - containerPort: 4318
           name: otlp-http
+        {{- if not .Values.tempo.disableOtlpLegacyPorts }}
+        - containerPort: 55680
+          name: otlp-legacy
+        - containerPort: 55681
+          name: otlp-httplegacy
+        {{- end }}
         - containerPort: 55678
           name: opencensus
         livenessProbe:
