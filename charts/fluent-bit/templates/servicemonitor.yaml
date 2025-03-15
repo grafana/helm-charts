@@ -6,7 +6,6 @@ metadata:
   labels:
     app: {{ template "fluent-bit-loki.name" . }}
     chart: {{ template "fluent-bit-loki.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- if .Values.serviceMonitor.additionalLabels }}
 {{ toYaml .Values.serviceMonitor.additionalLabels | indent 4 }}
