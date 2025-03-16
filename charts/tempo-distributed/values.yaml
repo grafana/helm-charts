@@ -221,6 +221,8 @@ ingester:
     storageClass: null
     # -- Annotations for ingester's persist volume claim
     annotations: {}
+    # -- Labels for ingester's persist volume claim
+    labels: {}
 
   # -- updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true.
   statefulStrategy:
@@ -397,6 +399,8 @@ metricsGenerator:
     storageClass: null
     # -- Annotations for metrics generator PVCs
     annotations: {}
+    # -- Labels for metrics generator PVCs
+    labels: {}
   # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
   walEmptyDir: {}
     ## Here shows how to configure 1Gi memory as emptyDir.
