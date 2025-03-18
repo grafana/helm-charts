@@ -9,6 +9,6 @@ version: 1.0.0
 
 # This is the version of cloudcost-exporter to be deployed, which should be incremented
 # with each release.
-appVersion: "0.7.7"
+appVersion: "0.7.12"
 
 home: https://github.com/grafana/cloudcost-exporter
