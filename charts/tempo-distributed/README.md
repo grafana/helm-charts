@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.26.3](https://img.shields.io/badge/Version-1.26.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 1.32.7](https://img.shields.io/badge/Version-1.32.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.21.0 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.24.0 |
 
 ## Chart Repo
 
@@ -47,6 +47,22 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.31.0
+
+Tempo serverless was deprecated in [tempo 2.7 release](https://github.com/grafana/tempo/releases/tag/v2.7.0),
+Config options related to serverless are being removed from helm chart, and this might be a breaking change if you were using tempo serverless.
+
+These config optioons are removed in [tempo#4599](https://github.com/grafana/tempo/pull/4599) and will not work from next release of tempo.
+
+### From Chart versions < 1.28.2
+
+Please be aware that we've updated the Tempo version to 2.7, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-7/) before upgrading.
+
+### From Chart versions < 1.23.0
+
+A default affinity has been defined in this version for the compactor following the standard used in other components.
 
 ### From Chart versions < 1.21.0
 
@@ -273,6 +289,7 @@ The memcached default args are removed and should be provided manually. The sett
 | cache.caches[0].roles[0] | string | `"parquet-footer"` |  |
 | cache.caches[0].roles[1] | string | `"bloom"` |  |
 | cache.caches[0].roles[2] | string | `"frontend-search"` |  |
+| compactor.affinity | string | Hard node and soft zone anti-affinity | Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string |
 | compactor.autoscaling | object | `{"enabled":false,"hpa":{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null},"keda":{"enabled":false,"triggers":[]},"maxReplicas":3,"minReplicas":1}` | Autoscaling configurations |
 | compactor.autoscaling.enabled | bool | `false` | Enable autoscaling for the compactor |
 | compactor.autoscaling.hpa | object | `{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null}` | Autoscaling via HPA object |
@@ -298,6 +315,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.dnsConfigOverides.dnsConfig.options[0].value | string | `"3"` |  |
 | compactor.dnsConfigOverides.enabled | bool | `false` |  |
 | compactor.extraArgs | list | `[]` | Additional CLI args for the compactor |
+| compactor.extraContainers | list | `[]` | Containers to add to the compactor pod |
 | compactor.extraEnv | list | `[]` | Environment variables to add to the compactor pods |
 | compactor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the compactor pods |
 | compactor.extraVolumeMounts | list | `[]` | Extra volumes for compactor pods |
@@ -307,6 +325,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `tempo.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
+| compactor.initContainers | list | `[]` | Init containers to add to the compactor pod |
 | compactor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
@@ -329,6 +348,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
+| distributor.config.log_discarded_spans.enabled | bool | `false` |  |
+| distributor.config.log_discarded_spans.filter_by_status_error | bool | `false` |  |
+| distributor.config.log_discarded_spans.include_all_attributes | bool | `false` |  |
 | distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
 | distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
@@ -510,6 +532,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
+| global.storageClass | string | `nil` | Global storage class to be used for persisted components |
 | global_overrides | object | `{"per_tenant_override_config":"/runtime-config/overrides.yaml"}` | The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details. |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
 | ingester.annotations | object | `{}` | Annotations for the ingester StatefulSet |
@@ -540,12 +563,13 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
+| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
-| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for Statefulset |
+| ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
 | ingester.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
 | ingester.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
@@ -556,6 +580,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
 | ingester.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
 | ingester.service.type | string | `"ClusterIP"` | Type of the service: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
+| ingester.statefulStrategy | object | `{"rollingUpdate":{"partition":0}}` | updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true. |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
@@ -576,6 +601,9 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[2].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
 | ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
+| kubectlImage.repository | string | `"bitnami/kubectl"` |  |
+| kubectlImage.tag | string | `"latest"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
@@ -671,6 +699,9 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
+| metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
 | metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
@@ -706,6 +737,27 @@ The memcached default args are removed and should be provided manually. The sett
 | prometheusRule.groups | list | `[]` | Contents of Prometheus rules file |
 | prometheusRule.labels | object | `{}` | Additional PrometheusRule labels |
 | prometheusRule.namespace | string | `nil` | Alternative namespace for the PrometheusRule resource |
+| provisioner.additionalTenants | list | `[]` | Additional tenants to be created. Each tenant will get a read and write policy and associated token. Tenant must have a name and a namespace for the secret containting the token to be created in. For example additionalTenants:   - name: tempo     secretNamespace: grafana |
+| provisioner.affinity | object | `{}` | Affinity for tokengen Pods |
+| provisioner.annotations | object | `{}` | Additional annotations for the `provisioner` Job |
+| provisioner.apiUrl | string | `""` | URL for the admin API service. Must be set to a valid URL. Example: "http://tempo-admin-api.namespace.svc:3100" |
+| provisioner.enabled | bool | `false` | Whether the job should be part of the deployment |
+| provisioner.env | list | `[]` | Additional Kubernetes environment |
+| provisioner.extraArgs | object | `{}` | Additional arguments for the provisioner command |
+| provisioner.extraVolumeMounts | list | `[]` | Volume mounts to add to the provisioner pods |
+| provisioner.hookType | string | `"post-install"` | Hook type(s) to customize when the job runs.  defaults to post-install |
+| provisioner.image | object | `{"digest":null,"pullPolicy":"IfNotPresent","registry":"us-docker.pkg.dev","repository":"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner","tag":null}` | Provisioner image to Utilize |
+| provisioner.image.digest | string | `nil` | Overrides the image tag with an image digest |
+| provisioner.image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
+| provisioner.image.registry | string | `"us-docker.pkg.dev"` | The Docker registry |
+| provisioner.image.repository | string | `"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner"` | Docker image repository |
+| provisioner.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| provisioner.labels | object | `{}` | Additional labels for the `provisioner` Job |
+| provisioner.nodeSelector | object | `{}` | Node selector for tokengen Pods |
+| provisioner.priorityClassName | string | `nil` | The name of the PriorityClass for provisioner Job |
+| provisioner.provisionedSecretPrefix | string | `nil` | Name of the secret to store provisioned tokens in |
+| provisioner.securityContext | object | `{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | Run containers as nonroot user (uid=10001)` |
+| provisioner.tolerations | list | `[]` | Tolerations for tokengen Pods |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | querier.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
@@ -717,12 +769,6 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the querier |
 | querier.config.frontend_worker.grpc_client_config | object | `{}` | grpc client configuration |
 | querier.config.max_concurrent_queries | int | `20` | This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries. |
-| querier.config.search.external_backend | string | `""` | credentials when querying the external backend. |
-| querier.config.search.external_endpoints | list | `[]` | A list of external endpoints that the querier will use to offload backend search requests |
-| querier.config.search.external_hedge_requests_at | string | `"8s"` | If set to a non-zero value a second request will be issued at the provided duration. Recommended to be set to p99 of external search requests to reduce long tail latency. |
-| querier.config.search.external_hedge_requests_up_to | int | `2` | The maximum number of requests to execute when hedging. Requires hedge_requests_at to be set. |
-| querier.config.search.google_cloud_run | object | `{}` | external_backend is "google_cloud_run". |
-| querier.config.search.prefer_self | int | `10` | If search_external_endpoints is set then the querier will primarily act as a proxy for whatever serverless backend you have configured. This setting allows the operator to have the querier prefer itself for a configurable number of subqueries. |
 | querier.config.search.query_timeout | string | `"30s"` | Timeout for search requests |
 | querier.config.trace_by_id.query_timeout | string | `"10s"` | Timeout for trace lookup requests |
 | querier.extraArgs | list | `[]` | Additional CLI args for the querier |
@@ -735,6 +781,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
+| querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
@@ -862,6 +909,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
 | tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |
 | tempo.structuredConfig | object | `{}` | Structured tempo configuration |
+| tokengenJob.adminTokenSecret | string | `"admin-token"` | Name of the secret to store the admin token. If not specified, defaults to "<release-name>-admin-token" |
 | tokengenJob.annotations | object | `{}` |  |
 | tokengenJob.containerSecurityContext | object | `{"readOnlyRootFilesystem":true}` | The SecurityContext for tokenjobgen containers |
 | tokengenJob.enable | bool | `true` |  |
@@ -874,6 +922,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tokengenJob.image.repository | string | `nil` | Docker image repository for the tokengenJob image. Overrides `tempo.image.repository` |
 | tokengenJob.image.tag | string | `nil` | Docker image tag for the tokengenJob image. Overrides `tempo.image.tag` |
 | tokengenJob.initContainers | list | `[]` |  |
+| tokengenJob.storeTokenInSecret | bool | `false` |  |
 | traces.jaeger.grpc.enabled | bool | `false` | Enable Tempo to ingest Jaeger GRPC traces |
 | traces.jaeger.grpc.receiverConfig | object | `{}` | Jaeger GRPC receiver config |
 | traces.jaeger.thriftBinary.enabled | bool | `false` | Enable Tempo to ingest Jaeger Thrift Binary traces |
