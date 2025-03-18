@@ -1129,6 +1129,19 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/beyla-1.0.0/beyla-1.0.0.tgz
     version: 1.0.0
+  cloudcost-exporter:
+  - apiVersion: v2
+    appVersion: 0.7.12
+    created: "2025-03-18T12:53:31.557724516Z"
+    description: Cloud Cost Exporter exports cloud provider agnostic cost metrics
+      to Prometheus.
+    digest: b9bf5163f5fc7d948ed32755c7bcc82f9513eb92390e13a447cbaf279f5cf1b4
+    home: https://github.com/grafana/cloudcost-exporter
+    name: cloudcost-exporter
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/cloudcost-exporter-1.0.0/cloudcost-exporter-1.0.0.tgz
+    version: 1.0.0
   enterprise-logs:
   - apiVersion: v2
     appVersion: v1.5.2
@@ -83465,4 +83478,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-18T08:27:34.110896442Z"
+generated: "2025-03-18T12:53:31.561094048Z"
