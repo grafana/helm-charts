@@ -1,4 +1,13 @@
 {{/*
+Common labels from global configuration
+*/}}
+{{- define "loki.commonLabels" -}}
+{{- with .Values.global.commonLabels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "loki.name" -}}
@@ -28,18 +37,6 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "loki.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "loki.labels" -}}
-helm.sh/chart: {{ include "loki.chart" . }}
-{{ include "loki.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
@@ -178,4 +175,16 @@ livenessProbe:
 
 {{- define "loki.config.checksum" -}}
 checksum/config: {{ tpl (mergeOverwrite (tpl .Values.loki.config . | fromYaml) .Values.loki.structuredConfig | toYaml) . | sha256sum }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "loki.labels" -}}
+helm.sh/chart: {{ include "loki.chart" . }}
+{{ include "loki.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}

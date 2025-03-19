@@ -205,6 +205,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 For example: `ingressClassName: nginx` |
+| gateway.ingress.labels | object | `{}` | Custom labels for the gateway ingress |
 | gateway.ingress.tls | list | `[]` | TLS configuration for the gateway ingress |
 | gateway.livenessProbe.httpGet.path | string | `"/"` |  |
 | gateway.livenessProbe.httpGet.port | string | `"http"` |  |
@@ -240,6 +241,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
+| global.commonLabels | object | `{}` | Common labels to be added to all resources |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |
@@ -330,6 +332,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0] | string | `"loki.example.com"` |  |
+| ingress.labels | object | `{}` | Custom labels for the ingress |
 | ingress.paths.distributor[0] | string | `"/api/prom/push"` |  |
 | ingress.paths.distributor[1] | string | `"/loki/api/v1/push"` |  |
 | ingress.paths.querier[0] | string | `"/api/prom/tail"` |  |

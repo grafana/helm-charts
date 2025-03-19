@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.memcachedIndexWritesSelectorLabels" . | nindent 4 }}
+    {{- include "loki.commonLabels" . | nindent 4 }}
     {{- with .Values.memcachedIndexWrites.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

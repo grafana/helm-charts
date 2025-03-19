@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
+    {{- include "loki.commonLabels" . | nindent 4 }}
     {{- with .Values.compactor.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
