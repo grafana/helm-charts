@@ -7,7 +7,6 @@ metadata:
   labels:
     app: {{ template "tempo.name" . }}
     chart: {{ template "tempo.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- if .Values.serviceMonitor.additionalLabels }}
 {{ toYaml .Values.serviceMonitor.additionalLabels | indent 4 }}
