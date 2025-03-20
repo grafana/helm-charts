@@ -97,7 +97,7 @@ loki:
     auth_enabled: false
 
     server:
-      {{- toYaml .Values.loki.server | nindent 6 }}
+      {{- toYaml .Values.loki.server | nindent 2 }}
 
     common:
       compactor_address: http://{{ include "loki.compactorFullname" . }}:3100
