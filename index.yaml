@@ -23100,6 +23100,29 @@ entries:
   grafana-sampling:
   - apiVersion: v2
     appVersion: v1.5.1
+    created: "2025-03-20T16:38:02.491475209Z"
+    dependencies:
+    - alias: alloy-deployment
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    - alias: alloy-statefulset
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.10.1
+    description: A Helm chart for a layered OTLP tail sampling and metrics generation
+      pipeline.
+    digest: 9ed2755ae0a0820f8ba53cb0a8b4ec1320af5e913b0696a2b640c7f7a475af9a
+    name: grafana-sampling
+    sources:
+    - https://github.com/grafana/alloy
+    - https://grafana.com/docs/grafana-cloud/monitor-applications/application-observability/setup/sampling/tail/
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-sampling-1.1.4/grafana-sampling-1.1.4.tgz
+    version: 1.1.4
+  - apiVersion: v2
+    appVersion: v1.5.1
     created: "2025-03-05T17:27:40.956646118Z"
     dependencies:
     - alias: alloy-deployment
@@ -83599,4 +83622,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-19T14:29:17.364204005Z"
+generated: "2025-03-20T16:38:02.497332265Z"
