@@ -29,6 +29,8 @@ otelcol.connector.spanmetrics "default" {
     }
   }
 
+  metrics_expiration = {{ $.Values.metricsGeneration.spanMetrics.metricsExpiration | quote }}
+
   output {
     metrics = [otelcol.processor.filter.drop_unneeded_span_metrics.input]
   }

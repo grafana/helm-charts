@@ -149,6 +149,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
 | metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
 | metricsGeneration.serviceGraph.metricsFlushInterval | string | `"60s"` | The interval at which metrics are flushed to downstream components. |
+| metricsGeneration.spanMetrics.metricsExpiration | string | `"5m"` | Time period after which metrics are considered stale and are removed from the cache. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
 | sampling.enabled | bool | `true` | Toggle tail sampling. |
 | sampling.extraPolicies | string | A policy to sample long requests is added by default. | User-defined policies in alloy format. |
