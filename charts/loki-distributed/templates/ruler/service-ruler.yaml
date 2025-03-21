@@ -5,6 +5,7 @@ metadata:
   name: {{ include "loki.rulerFullname" . }}
   labels:
     {{- include "loki.rulerSelectorLabels" . | nindent 4 }}
+    {{- include "loki.commonLabels" . | nindent 4 }}
     {{- with .Values.ruler.serviceLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
