@@ -799,6 +799,9 @@ querier:
   maxUnavailable: 1
   # -- Max Surge for querier pods
   maxSurge: 0
+  rollingUpdate:
+    # -- Maximum number of Pods that can be unavailable during the update process
+    maxUnavailable: 1
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods

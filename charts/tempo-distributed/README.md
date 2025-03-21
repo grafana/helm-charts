@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.32.7](https://img.shields.io/badge/Version-1.32.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.33.0](https://img.shields.io/badge/Version-1.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -789,6 +789,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.priorityClassName | string | `nil` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
 | querier.resources | object | `{}` | Resource requests and limits for the querier |
+| querier.rollingUpdate.maxUnavailable | int | `1` | Maximum number of Pods that can be unavailable during the update process |
 | querier.service.annotations | object | `{}` | Annotations for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
