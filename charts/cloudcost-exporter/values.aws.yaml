@@ -1,0 +1,13 @@
+# Custom values to deploy cloudcost-exporter on AWS.
+# This is a YAML-formatted file.
+# Declare additional variables to be passed into your templates.
+# Use this values file together with the default values file.
+
+containerArgs:
+  - "--provider=aws"
+  - "--aws.region=us-east-1"
+  - "--aws.services=s3,ec2"
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/CloudCostExporterRole

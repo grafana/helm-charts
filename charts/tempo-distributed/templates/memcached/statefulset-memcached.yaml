@@ -104,11 +104,11 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        {{- end }}
           {{- with .Values.memcached.extraVolumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- end }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.memcached.topologySpreadConstraints }}
       topologySpreadConstraints:

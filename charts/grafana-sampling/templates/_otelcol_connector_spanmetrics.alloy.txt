@@ -25,9 +25,11 @@ otelcol.connector.spanmetrics "default" {
     unit = "s"
 
     explicit {
-      buckets = ["0s", "0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
+      buckets = ["0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
     }
   }
+
+  metrics_expiration = {{ $.Values.metricsGeneration.spanMetrics.metricsExpiration | quote }}
 
   output {
     metrics = [otelcol.processor.filter.drop_unneeded_span_metrics.input]
