@@ -332,6 +332,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.registry | string | `nil` | The Docker registry for the compactor image. Overrides `tempo.image.registry` |
 | compactor.image.repository | string | `nil` | Docker image repository for the compactor image. Overrides `tempo.image.repository` |
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
+| compactor.initContainers | list | `[]` | Init Containers |
 | compactor.initContainers | list | `[]` | Init containers to add to the compactor pod |
 | compactor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
@@ -792,8 +793,8 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
-| querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.initContainers | list | `[]` | Init Containers |
+| querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
