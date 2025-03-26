@@ -432,7 +432,7 @@ metricsGenerator:
       external_labels: {}
       stale_duration: 15m
     processor:
-      # -- For processors to be enabled and generate metrics, pass the names of the processors to `global_overrides.defaults.metrics_generator_processors` value like `[service-graphs, span-metrics]`.
+      # -- For processors to be enabled and generate metrics, pass the names of the processors to `overrides.defaults.metrics_generator.processors` value like `[service-graphs, span-metrics]`.
       service_graphs:
         # -- Additional dimensions to add to the metrics along with the default dimensions.
         # -- The resource and span attributes to be added to the service graph metrics, if present.
@@ -1455,7 +1455,7 @@ config: |
     join_members:
       - dns+{{ include "tempo.fullname" . }}-gossip-ring:{{ .Values.memberlist.bind_port }}
   overrides:
-    {{- toYaml .Values.global_overrides | nindent 2 }}
+    {{- toYaml .Values.overrides | nindent 2 }}
   server:
     http_listen_port: {{ .Values.server.httpListenPort }}
     log_level: {{ .Values.server.logLevel }}
@@ -1560,12 +1560,20 @@ storage:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
 
-# -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `global_overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
-global_overrides:
+# -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
+overrides:
+  # -- default config values for all tenants, can be overridden by per-tenant overrides. If a tenant's specific overrides are not found in the `per_tenant_overrides` block, the values in this `default` block will be used. Configs inside this block should follow the new overrides indentation format
+  defaults: {}
+  # -- Path to the per tenant override config file. The values of the `per_tenant_overrides` config below will be written to the default path which is `/runtime-config/overrides.yaml`. Users can set tenant-specific overrides settings in a separate file and point per_tenant_override_config to it if not using the per_tenant_overrides block below.
   per_tenant_override_config: /runtime-config/overrides.yaml
 
-# -- The runtime overrides to write to the `per_tenant_override_config` file for Tempo (see `global_overrides` and the `per_tenant_override_config` property). This allows overriding the `ingestion` and `global` values on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) documentation for more details.
-overrides: {}
+# -- The `per tenant` runtime overrides in place of the `per_tenant_override_config` file for Tempo (see `overrides` and the `per_tenant_override_config` property). This allows overriding the configs like `ingestion` and `global` values on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) documentation for more details.
+per_tenant_overrides:
+  # 'tenant-id':
+  #   metrics_generator:
+  #    processors:
+  #     - service-graphs
+  #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
 # you can use your self memcacherd by set enable: false and host + service
