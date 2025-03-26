@@ -29,6 +29,7 @@ Documentation per CSP will vary (especially when it comes to authentication). Be
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Node/pod affinities |
 | containerArgs | list | `[]` | Container arguments, usually to configure the deployment per CSP |
+| env | object | `{}` | Define environment variables for the container |
 | fullnameOverride | string | `""` | Override the full name of the chart and release |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the image |
 | image.repository | string | `"grafana/cloudcost-exporter"` | Image to use for deploying |
