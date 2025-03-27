@@ -83,3 +83,6 @@ minReadySeconds: 10
 
 # -- Number of old versions to retain to allow rollback
 revisionHistoryLimit: 10
+
+# -- Define environment variables for the container
+env: {}

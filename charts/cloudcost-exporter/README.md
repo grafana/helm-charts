@@ -2,7 +2,7 @@
 
 Cloud Cost Exporter exports cloud provider agnostic cost metrics to Prometheus.
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.12](https://img.shields.io/badge/AppVersion-0.7.12-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.12](https://img.shields.io/badge/AppVersion-0.7.12-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -29,6 +29,7 @@ Documentation per CSP will vary (especially when it comes to authentication). Be
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Node/pod affinities |
 | containerArgs | list | `[]` | Container arguments, usually to configure the deployment per CSP |
+| env | object | `{}` | Define environment variables for the container |
 | fullnameOverride | string | `""` | Override the full name of the chart and release |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the image |
 | image.repository | string | `"grafana/cloudcost-exporter"` | Image to use for deploying |
