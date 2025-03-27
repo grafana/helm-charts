@@ -325,6 +325,7 @@ metricsGenerator:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  # -- Init Containers
   initContainers: []
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
@@ -476,6 +477,10 @@ distributor:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+
+  # -- Init Containers
+  initContainers: []
+
   autoscaling:
     # -- Enable autoscaling for the distributor
     enabled: false
@@ -634,6 +639,10 @@ compactor:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+
+  # -- Init Containers
+  initContainers: []
+
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
@@ -732,6 +741,10 @@ querier:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+
+  # -- Init Containers
+  initContainers: []
+
   autoscaling:
     # -- Enable autoscaling for the querier
     enabled: false
@@ -863,6 +876,10 @@ queryFrontend:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+
+  # -- Init Containers
+  initContainers: []
+
   config:
     # -- Maximum number of outstanding requests per tenant per frontend; requests beyond this error with HTTP 429.
     max_outstanding_per_tenant: 2000
@@ -1591,6 +1608,9 @@ memcached:
     tag: 1.6.33-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
+  # -- Init Containers
+  initContainers: []
+
   host: memcached
   # Number of replicas for memchached
   replicas: 1

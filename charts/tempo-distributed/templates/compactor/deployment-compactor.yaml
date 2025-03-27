@@ -55,7 +55,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
-        {{- toYaml .Values.ingester.initContainers | nindent 8 }}
+        {{- toYaml .Values.compactor.initContainers | nindent 8 }}
       containers:
         - args:
             - -target=compactor
@@ -105,9 +105,6 @@ spec:
             {{- with .Values.compactor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-        {{- with .Values.compactor.extraContainers }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
       terminationGracePeriodSeconds: {{ .Values.compactor.terminationGracePeriodSeconds }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.compactor.topologySpreadConstraints }}
