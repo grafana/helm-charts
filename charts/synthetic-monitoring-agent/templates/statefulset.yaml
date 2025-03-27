@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "synthetic-monitoring-agent.fullname" . }}
   labels:
@@ -10,9 +10,8 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   minReadySeconds: 10
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
+  serviceName: {{ include "synthetic-monitoring-agent.fullname" . }}-headless
   selector:
     matchLabels:
       {{- include "synthetic-monitoring-agent.selectorLabels" . | nindent 6 }}

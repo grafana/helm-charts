@@ -32,11 +32,6 @@ Kubernetes: `^1.16.0-0`
 | agent.debug | bool | `false` | Enable / disable debug logging on the agent. |
 | agent.enableDisconnect | bool | `false` | Enable / disable the HTTP /disconnect endpoint |
 | agent.verbose | bool | `false` | Enable / disable verbose logging on the agent. |
-| autoscaling.enabled | bool | `false` | Enable autoscaling |
-| autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas |
-| autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas |
-| autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage |
-| autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage |
 | deploymentStrategy | object | `{}` | See `kubectl explain deployment.spec.strategy` for more ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
 | extraObjects | list | `[]` | Add dynamic manifests via values: |
 | fullnameOverride | string | `""` | Override the fullname of the chart. |
@@ -53,7 +48,6 @@ Kubernetes: `^1.16.0-0`
 | podLabels | object | `{}` | Labels to add to each pod. |
 | podSecurityContext | object | `{"fsGroup":65534}` | Security context on the Pod level. |
 | readinessProbe | object | `{"httpGet":{"path":"/ready","port":"http"}}` | Readiness probe for the agent |
-| replicaCount | int | `1` | Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`. |
 | resources | object | `{}` | Default resources to apply. |
 | secret.existingSecret | string | `""` | Reference an existing secret for API token |
 | securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | Security context for the container level. |
