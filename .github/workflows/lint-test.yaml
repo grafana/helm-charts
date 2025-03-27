@@ -98,5 +98,8 @@ jobs:
           elif [[ "$changed" == "charts/snyk-exporter" ]]; then
             # Do not run `ct install` for snyk-exporter as it requires Snyk API token
             exit 0
+          elif [[ "$changed" == "charts/cloudcost-exporter" ]]; then
+            # Do not run `ct install` for cloudcost-exporter as it requires IRSA
+            exit 0
           fi
           ct install --config "${CT_CONFIGFILE}"
