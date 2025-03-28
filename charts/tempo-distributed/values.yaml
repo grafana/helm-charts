@@ -873,6 +873,8 @@ queryFrontend:
       concurrent_jobs: 1000
       # -- The target number of bytes for each job to handle when performing a backend search
       target_bytes_per_job: 104857600
+      # -- Allows to query beyond 7 days (default value) in Grafana.
+      max_duration: 720h
     # -- Trace by ID lookup configuration
     trace_by_id:
       # -- The number of shards to split a trace by id query into.
@@ -1410,6 +1412,7 @@ config: |
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+      max_duration: {{ .Values.queryFrontend.config.search.max_duration }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
