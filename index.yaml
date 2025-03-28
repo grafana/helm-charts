@@ -23848,6 +23848,99 @@ entries:
     version: 1.0.0
   k8s-monitoring:
   - apiVersion: v2
+    appVersion: 2.0.22
+    created: "2025-03-28T16:30:53.329202509Z"
+    dependencies:
+    - alias: annotationAutodiscovery
+      condition: annotationAutodiscovery.enabled
+      name: feature-annotation-autodiscovery
+      repository: ""
+      version: 1.0.0
+    - alias: applicationObservability
+      condition: applicationObservability.enabled
+      name: feature-application-observability
+      repository: ""
+      version: 1.0.0
+    - alias: autoInstrumentation
+      condition: autoInstrumentation.enabled
+      name: feature-auto-instrumentation
+      repository: ""
+      version: 1.0.0
+    - alias: clusterEvents
+      condition: clusterEvents.enabled
+      name: feature-cluster-events
+      repository: ""
+      version: 1.0.0
+    - alias: clusterMetrics
+      condition: clusterMetrics.enabled
+      name: feature-cluster-metrics
+      repository: ""
+      version: 1.0.0
+    - alias: integrations
+      name: feature-integrations
+      repository: ""
+      version: 1.0.0
+    - alias: nodeLogs
+      condition: nodeLogs.enabled
+      name: feature-node-logs
+      repository: ""
+      version: 1.0.0
+    - alias: podLogs
+      condition: podLogs.enabled
+      name: feature-pod-logs
+      repository: ""
+      version: 1.0.0
+    - alias: profiling
+      condition: profiling.enabled
+      name: feature-profiling
+      repository: ""
+      version: 1.0.0
+    - alias: prometheusOperatorObjects
+      condition: prometheusOperatorObjects.enabled
+      name: feature-prometheus-operator-objects
+      repository: ""
+      version: 1.0.0
+    - alias: alloy-metrics
+      condition: alloy-metrics.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.12.5
+    - alias: alloy-singleton
+      condition: alloy-singleton.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.12.5
+    - alias: alloy-logs
+      condition: alloy-logs.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.12.5
+    - alias: alloy-receiver
+      condition: alloy-receiver.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.12.5
+    - alias: alloy-profiles
+      condition: alloy-profiles.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 0.12.5
+    description: Capture all telemetry data from your Kubernetes cluster.
+    digest: 0fe528ec6e76da3108d87b069bbad384ff33fa6e9c4a9aaf8e8eca4556418ba9
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: robert.lankford@grafana.com
+      name: rlankfo
+    name: k8s-monitoring
+    sources:
+    - https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-2.0.22/k8s-monitoring-2.0.22.tgz
+    version: 2.0.22
+  - apiVersion: v2
     appVersion: 2.0.21
     created: "2025-03-24T17:24:07.641454864Z"
     dependencies:
@@ -84205,4 +84298,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-27T17:30:18.811268404Z"
+generated: "2025-03-28T16:30:53.333186528Z"
