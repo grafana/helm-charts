@@ -1,0 +1,17 @@
+{{- $fullName := include "chart.fullname" . -}}
+{{- $name := "beyla" -}}
+{{- $data := dict "name" $name "Chart" .Chart "Release" .Release "Values" .Values -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ $fullName }}-{{ $name }}-config
+  labels:
+    {{- include "chart.labels" $data | nindent 4 }}
+  annotations:
+  {{- if .Values.annotations }}
+    {{- toYaml .Values.annotations | nindent 4 }}
+  {{- end }}
+data:
+  beyla-config.yml: |
+{{- .Values.config | nindent 6 }}
