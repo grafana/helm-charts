@@ -48,7 +48,7 @@ podLabels: {}
 
 # -- Security context on the Pod level.
 podSecurityContext:
-  fsGroup: 65534
+  fsGroup: 12345
 
 # -- Assign a PriorityClassName to pods if set
 # priorityClassName:
@@ -56,11 +56,14 @@ podSecurityContext:
 # -- Security context for the container level.
 securityContext:
   capabilities:
-    drop:
-      - ALL
+    add:
+      - NET_RAW
   readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
   runAsNonRoot: true
-  runAsUser: 65534
+  runAsUser: 12345
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- Default resources to apply.
 resources:
@@ -148,6 +151,9 @@ affinity: {}
 
 # -- Add dynamic manifests via values:
 extraObjects: []
+
+# -- Environment variables to add to the agent
+extraEnv: []
 
 secret:
 # -- Reference an existing secret for API token
