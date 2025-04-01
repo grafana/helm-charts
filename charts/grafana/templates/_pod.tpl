@@ -127,10 +127,10 @@ initContainers:
       - name: METHOD
         value: "LIST"
       - name: LABEL
-        value: "{{ .Values.sidecar.alerts.label }}"
+        value: "{{ tpl .Values.sidecar.alerts.label $root }}"
       {{- with .Values.sidecar.alerts.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.alerts.logLevel }}
       - name: LOG_LEVEL
@@ -205,10 +205,10 @@ initContainers:
       - name: METHOD
         value: "LIST"
       - name: LABEL
-        value: "{{ .Values.sidecar.datasources.label }}"
+        value: "{{ tpl .Values.sidecar.datasources.label $root }}"
       {{- with .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
@@ -263,10 +263,10 @@ initContainers:
       - name: METHOD
         value: LIST
       - name: LABEL
-        value: "{{ .Values.sidecar.notifiers.label }}"
+        value: "{{ tpl .Values.sidecar.notifiers.label $root }}"
       {{- with .Values.sidecar.notifiers.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       - name: LOG_LEVEL
@@ -340,10 +340,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.alerts.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.alerts.label }}"
+        value: "{{ tpl .Values.sidecar.alerts.label $root }}"
       {{- with .Values.sidecar.alerts.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.alerts.logLevel }}
       - name: LOG_LEVEL
@@ -464,10 +464,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.dashboards.label }}"
+        value: "{{ tpl .Values.sidecar.dashboards.label $root }}"
       {{- with .Values.sidecar.dashboards.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
       - name: LOG_LEVEL
@@ -592,10 +592,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.datasources.label }}"
+        value: "{{ tpl .Values.sidecar.datasources.label $root }}"
       {{- with .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
@@ -711,10 +711,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.notifiers.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.notifiers.label }}"
+        value: "{{ tpl .Values.sidecar.notifiers.label $root }}"
       {{- with .Values.sidecar.notifiers.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       - name: LOG_LEVEL
@@ -830,10 +830,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.plugins.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.plugins.label }}"
+        value: "{{ tpl .Values.sidecar.plugins.label $root }}"
       {{- if .Values.sidecar.plugins.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote .Values.sidecar.plugins.labelValue }}
+        value: {{ quote (tpl .Values.sidecar.plugins.labelValue $) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.plugins.logLevel }}
       - name: LOG_LEVEL
