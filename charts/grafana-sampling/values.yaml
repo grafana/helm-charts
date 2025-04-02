@@ -175,3 +175,6 @@ alloy-statefulset:
     create: false
   rbac:
     create: false
+liveDebugging:
+  # -- Enable live debugging in the Alloy UI.
+  enabled: false

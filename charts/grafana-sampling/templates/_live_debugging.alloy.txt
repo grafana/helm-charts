@@ -1,0 +1,5 @@
+{{- define "liveDebugging" -}}
+  livedebugging {
+    enabled = true
+  }
+{{ end }}

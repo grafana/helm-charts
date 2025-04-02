@@ -966,9 +966,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with alert are marked with
+    # label that the configmaps with alert are marked with (can be templated)
     label: grafana_alert
-    # value of label that the configmaps with alert are set to
+    # value of label that the configmaps with alert are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1039,9 +1039,9 @@ sidecar:
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
     SCProvider: true
-    # label that the configmaps with dashboards are marked with
+    # label that the configmaps with dashboards are marked with (can be templated)
     label: grafana_dashboard
-    # value of label that the configmaps with dashboards are set to
+    # value of label that the configmaps with dashboards are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1134,9 +1134,9 @@ sidecar:
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with datasources are marked with
+    # label that the configmaps with datasources are marked with (can be templated)
     label: grafana_datasource
-    # value of label that the configmaps with datasources are set to
+    # value of label that the configmaps with datasources are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1193,9 +1193,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with plugins are marked with
+    # label that the configmaps with plugins are marked with (can be templated)
     label: grafana_plugin
-    # value of label that the configmaps with plugins are set to
+    # value of label that the configmaps with plugins are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1252,9 +1252,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with notifiers are marked with
+    # label that the configmaps with notifiers are marked with (can be templated)
     label: grafana_notifier
-    # value of label that the configmaps with notifiers are set to
+    # value of label that the configmaps with notifiers are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
