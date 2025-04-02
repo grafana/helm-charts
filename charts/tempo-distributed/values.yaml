@@ -640,9 +640,6 @@ compactor:
   #    hostnames:
   #      - domain.tld
 
-  # -- Init Containers
-  initContainers: []
-
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
