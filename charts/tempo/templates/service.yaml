@@ -35,56 +35,17 @@ spec:
   {{- end }}
 {{- end }}
   ports:
-  - name: tempo-prom-metrics
-    port: 3100
-    targetPort: 3100
-  {{- if .Values.tempoQuery.enabled }}
-  - name: jaeger-metrics
-    port: 16687
-    targetPort: 16687
-  - name: tempo-query-jaeger-ui
-    port: {{ .Values.tempoQuery.service.port }}
-    targetPort: {{ .Values.tempoQuery.service.port }}
+  {{- if (eq .Values.service.type "LoadBalancer") }}
+    {{- $protocol := .Values.service.protocol | default "TCP" }}
+    {{- if contains "UDP" $protocol }}
+      {{- include "tempo.udp" . | indent 2 }}
+    {{- end }}
+    {{- if contains "TCP" $protocol }}
+      {{- include "tempo.tcp" . | indent 2 }}
+    {{- end }}
+  {{- else }}
+    {{- include "tempo.udp" . | indent 2 }}
+    {{- include "tempo.tcp" . | indent 2 }}
   {{- end }}
-  - name: tempo-jaeger-thrift-compact
-    port: 6831
-    protocol: UDP
-    targetPort: 6831
-  - name: tempo-jaeger-thrift-binary
-    port: 6832
-    protocol: UDP
-    targetPort: 6832
-  - name: tempo-jaeger-thrift-http
-    port: 14268
-    protocol: TCP
-    targetPort: 14268
-  - name: grpc-tempo-jaeger
-    port: 14250
-    protocol: TCP
-    targetPort: 14250
-  - name: tempo-zipkin
-    port: 9411
-    protocol: TCP
-    targetPort: 9411
-  - name: tempo-otlp-legacy
-    port: 55680
-    protocol: TCP
-    targetPort: 55680
-  - name: tempo-otlp-http-legacy
-    port: 55681
-    protocol: TCP
-    targetPort: 4318
-  - name: grpc-tempo-otlp
-    port: 4317
-    protocol: TCP
-    targetPort: 4317
-  - name: tempo-otlp-http
-    port: 4318
-    protocol: TCP
-    targetPort: 4318
-  - name: tempo-opencensus
-    port: 55678
-    protocol: TCP
-    targetPort: 55678
   selector:
     {{- include "tempo.selectorLabels" . | nindent 4 }}
