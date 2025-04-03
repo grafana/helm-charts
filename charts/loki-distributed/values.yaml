@@ -498,6 +498,12 @@ ingester:
   readinessProbe: {}
   # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
   livenessProbe: {}
+
+  # -- updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true.
+  statefulStrategy:
+    rollingUpdate:
+      partition: 0
+  
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
