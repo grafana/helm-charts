@@ -17,9 +17,6 @@ spec:
 {{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
-    {{- if .Values.ingester.zoneAwareReplication.enabled }}
-    type: OnDelete
-    {{- else }}
     {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
     {{- end }}
   serviceName: {{ include "loki.ingesterFullname" . }}-headless
