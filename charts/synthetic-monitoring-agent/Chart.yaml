@@ -1,9 +1,8 @@
 apiVersion: v2
-appVersion: v0.29.3
+appVersion: v0.34.4
 description: Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 home: https://grafana.net
 icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
-kubeVersion: ^1.16.0-0
 maintainers:
   - email: zanhsieh@gmail.com
     name: zanhsieh
@@ -15,4 +14,4 @@ name: synthetic-monitoring-agent
 sources:
   - https://github.com/grafana/synthetic-monitoring-agent
 type: application
-version: 0.6.0
+version: 1.0.0
