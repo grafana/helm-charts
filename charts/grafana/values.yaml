@@ -890,6 +890,10 @@ grafana.ini:
   #   enabled: true
   #   allow_sign_up: true
   #   config_file: /etc/grafana/ldap.toml
+## Grafana's alerting configuration
+  # unified_alerting:
+  #   enabled: true
+  #   rule_version_record_limit: "5"
 
 ## Grafana's LDAP configuration
 ## Templated by the template in _helpers.tpl
