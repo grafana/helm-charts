@@ -841,7 +841,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
 | queryFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
 | queryFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
-| queryFrontend.initContainers | list | `[]` | Init containers for the Query Frontend pod |
+| queryFrontend.initContainers | list | `[]` | Init containers for the query-frontend pod |
 | queryFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
