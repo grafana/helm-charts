@@ -21,6 +21,7 @@ spec:
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      namespace: {{ .Release.Namespace | quote }}
       labels:
         {{- include "rollout-operator.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
