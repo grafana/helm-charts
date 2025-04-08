@@ -801,6 +801,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.priorityClassName | string | `nil` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
 | querier.resources | object | `{}` | Resource requests and limits for the querier |
+| querier.rollingUpdate.maxUnavailable | int | `1` | Maximum number of Pods that can be unavailable during the update process |
 | querier.service.annotations | object | `{}` | Annotations for querier service |
 | querier.terminationGracePeriodSeconds | int | `30` | Grace period to allow the querier to shutdown before it is killed |
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
