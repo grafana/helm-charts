@@ -22,7 +22,7 @@ spec:
   strategy:
     rollingUpdate:
       maxSurge: {{ .Values.querier.maxSurge }}
-      maxUnavailable: 1
+      maxUnavailable: {{ .Values.querier.rollingUpdate.maxUnavailable }}
   template:
     metadata:
       labels:
