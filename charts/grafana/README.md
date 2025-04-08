@@ -778,6 +778,7 @@ grafana.ini:
     ha_peers: {{ Name }}-headless:9094
     ha_listen_address: ${POD_IP}:9094
     ha_advertise_address: ${POD_IP}:9094
+    rule_version_record_limit: "5"
 
   alerting:
     enabled: false
