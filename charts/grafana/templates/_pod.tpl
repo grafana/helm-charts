@@ -25,7 +25,7 @@ dnsConfig:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
-{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts) (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
+{{- if ( or (and .Values.persistence.enabled .Values.initChownData.enabled) .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts) (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
 initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
