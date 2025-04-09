@@ -560,6 +560,11 @@ distributor:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # Strategy of updating pods
+  strategy: 
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1 
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Node selector for distributor pods
