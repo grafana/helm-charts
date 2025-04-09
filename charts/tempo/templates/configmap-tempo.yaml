@@ -8,6 +8,6 @@ metadata:
 data:
   overrides.yaml: |
     overrides:
-      {{- toYaml .Values.tempo.overrides | nindent 6 }}
+      {{- toYaml .Values.tempo.per_tenant_overrides | nindent 6 }}
   tempo.yaml: |
     {{- tpl .Values.config . | nindent 4 }}
