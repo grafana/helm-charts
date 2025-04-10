@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.35.0](https://img.shields.io/badge/Version-1.35.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.36.0](https://img.shields.io/badge/Version-1.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -387,6 +387,8 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.serviceDiscovery.annotations | object | `{}` | Annotations for distributorDiscovery service |
 | distributor.serviceDiscovery.labels | object | `{}` | Labels for distributorDiscovery service |
+| distributor.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| distributor.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |

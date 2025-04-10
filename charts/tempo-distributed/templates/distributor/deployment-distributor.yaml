@@ -19,6 +19,10 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
+{{- with .Values.distributor.strategy }}
+  strategy:
+{{- toYaml . | nindent 4 }}
+{{- end }}      
   template:
     metadata:
       labels:
