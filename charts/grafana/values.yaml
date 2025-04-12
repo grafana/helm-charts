@@ -1078,7 +1078,6 @@ sidecar:
     # resourceName: "secret/dashboards-0,configmap/dashboards-1"
     resourceName: ""
     #
-    #
     # maxTotalRetries: Total number of retries to allow for any http request.
     # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
     # Set to 0 to fail on the first retry.
