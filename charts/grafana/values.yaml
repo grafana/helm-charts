@@ -989,6 +989,7 @@ sidecar:
     # per default all resources of the type defined in {{ .Values.sidecar.alerts.resource }} will be checked.
     # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
     # resourceName: "secret/alerts-1,configmap/alerts-0"
+    resourceName: ""
     #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
@@ -1075,6 +1076,7 @@ sidecar:
     # per default all resources of the type defined in {{ .Values.sidecar.dashboards.resource }} will be checked.
     # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
     # resourceName: "secret/dashboards-0,configmap/dashboards-1"
+    resourceName: ""
     #
     #
     # maxTotalRetries: Total number of retries to allow for any http request.
@@ -1169,6 +1171,7 @@ sidecar:
     # per default all resources of the type defined in {{ .Values.sidecar.datasources.resource }} will be checked.
     # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
     # resourceName: "secret/datasources-0,configmap/datasources-15"
+    resourceName: ""
     #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
@@ -1234,6 +1237,7 @@ sidecar:
     # per default all resources of the type defined in {{ .Values.sidecar.plugins.resource }} will be checked.
     # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
     # resourceName: "secret/plugins-0,configmap/plugins-1"
+    resourceName: ""
     #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
@@ -1299,6 +1303,7 @@ sidecar:
     # per default all resources of the type defined in {{ .Values.sidecar.notifiers.resource }} will be checked.
     # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
     # resourceName: "secret/notifiers-2,configmap/notifiers-1"
+    resourceName: ""
     #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
