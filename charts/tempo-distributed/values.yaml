@@ -325,6 +325,7 @@ metricsGenerator:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  # -- Init containers for the metrics generator pod
   initContainers: []
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
@@ -565,6 +566,8 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
+  # -- Init containers for the distributor pod
+  initContainers: []
   # -- Extra volumes for distributor pods
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
@@ -806,6 +809,8 @@ querier:
   nodeSelector: {}
   # -- Tolerations for querier pods
   tolerations: []
+  # -- Init containers for the querier pod
+  initContainers: []
   # -- Extra volumes for querier pods
   extraVolumeMounts: []
   # -- Extra volumes for querier deployment
@@ -1007,6 +1012,8 @@ queryFrontend:
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
   tolerations: []
+  # -- Init containers for the query-frontend pod
+  initContainers: []
   # -- Extra volumes for query-frontend pods
   extraVolumeMounts: []
   # -- Extra volumes for query-frontend deployment
@@ -1638,6 +1645,8 @@ memcached:
             topologyKey: topology.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Init containers for the memcached pod
+  initContainers: []
   # -- Extra volumes for memcached pods
   extraVolumeMounts: []
   # -- Extra volumes for memcached statefulSet

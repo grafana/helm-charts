@@ -25,7 +25,7 @@ dnsConfig:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
-{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts) (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
+{{- if ( or (and .Values.persistence.enabled .Values.initChownData.enabled) .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts) (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
 initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
@@ -353,6 +353,10 @@ containers:
         value: "/etc/grafana/provisioning/alerting"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.alerts.resource }}
+      {{- if .Values.sidecar.alerts.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.alerts.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
@@ -477,6 +481,10 @@ containers:
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.dashboards.resource }}
+      {{- if .Values.sidecar.dashboards.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.dashboards.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
@@ -605,6 +613,10 @@ containers:
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.datasources.resource }}
+      {{- if .Values.sidecar.datasources.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.datasources.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
@@ -724,6 +736,10 @@ containers:
         value: "/etc/grafana/provisioning/notifiers"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.notifiers.resource }}
+      {{- if .Values.sidecar.notifiers.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.notifiers.resourceName }}
+      {{- end }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -843,6 +859,10 @@ containers:
         value: "/etc/grafana/provisioning/plugins"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.plugins.resource }}
+      {{- if .Values.sidecar.plugins.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.plugins.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
