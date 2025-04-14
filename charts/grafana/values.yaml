@@ -1378,6 +1378,10 @@ imageRenderer:
     tag: latest
     # image-renderer Image sha (optional)
     sha: ""
+    # image-renderer Image pull secrets (optional)
+    # If "global.imagePullSecrets" is specified, the image pull secrets
+    # defined here get overwritten.
+    pullSecrets: []
     # image-renderer ImagePullPolicy
     pullPolicy: Always
   # extra environment variables
