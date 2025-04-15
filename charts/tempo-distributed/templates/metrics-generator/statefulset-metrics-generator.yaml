@@ -159,6 +159,10 @@ spec:
         annotations:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.ingester.persistence.labels }}
+        labels:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         name: wal
       spec:
         accessModes:

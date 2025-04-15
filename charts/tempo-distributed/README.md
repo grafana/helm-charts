@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.35.0](https://img.shields.io/badge/Version-1.35.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.38.0](https://img.shields.io/badge/Version-1.38.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -387,6 +387,8 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.serviceDiscovery.annotations | object | `{}` | Annotations for distributorDiscovery service |
 | distributor.serviceDiscovery.labels | object | `{}` | Labels for distributorDiscovery service |
+| distributor.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| distributor.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
@@ -570,10 +572,11 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
-| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
+| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"labels":{},"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
+| ingester.persistence.labels | object | `{}` | Labels for ingester's persist volume claim |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
@@ -703,9 +706,10 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | metricsGenerator.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
-| metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
+| metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"labels":{},"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
+| metricsGenerator.persistence.labels | object | `{}` | Labels for metrics generator PVCs |
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
@@ -825,6 +829,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.config.metrics.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when querying the backend. |
 | queryFrontend.config.metrics.throughput_bytes_slo | int | `0` | If set to a non-zero value, it's value will be used to decide if query is within SLO or not. Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data. |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
+| queryFrontend.config.search.max_spans_per_span_set | int | `100` | The maximum allowed value of spans per span set. 0 disables this limit. |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
 | queryFrontend.config.trace_by_id | object | `{"query_shards":50}` | Trace by ID lookup configuration |
 | queryFrontend.config.trace_by_id.query_shards | int | `50` | The number of shards to split a trace by id query into. |

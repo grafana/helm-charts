@@ -221,6 +221,8 @@ ingester:
     storageClass: null
     # -- Annotations for ingester's persist volume claim
     annotations: {}
+    # -- Labels for ingester's persist volume claim
+    labels: {}
 
   # -- updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true.
   statefulStrategy:
@@ -398,6 +400,8 @@ metricsGenerator:
     storageClass: null
     # -- Annotations for metrics generator PVCs
     annotations: {}
+    # -- Labels for metrics generator PVCs
+    labels: {}
   # -- The EmptyDir location where the /var/tempo will be mounted on. Defaults to local disk, can be set to memory.
   walEmptyDir: {}
     ## Here shows how to configure 1Gi memory as emptyDir.
@@ -560,6 +564,11 @@ distributor:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "distributor") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # Strategy of updating pods
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Node selector for distributor pods
@@ -881,6 +890,8 @@ queryFrontend:
       concurrent_jobs: 1000
       # -- The target number of bytes for each job to handle when performing a backend search
       target_bytes_per_job: 104857600
+      # -- The maximum allowed value of spans per span set. 0 disables this limit.
+      max_spans_per_span_set: 100
     # -- Trace by ID lookup configuration
     trace_by_id:
       # -- The number of shards to split a trace by id query into.
