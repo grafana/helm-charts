@@ -65,10 +65,24 @@ tempo:
   #  search:
   #    concurrent_jobs: 2000
   retention: 24h
-  # Global overrides
-  global_overrides:
+  # -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
+  overrides:
+    # -- Default config values for all tenants, can be overridden by per-tenant overrides. If a tenant's specific overrides are not found in the `per_tenant_overrides` block, the values in this `default` block will be used. Configs inside this block should follow the new overrides indentation format
+    defaults: {}
+    #  metrics_generator:
+    #    processors:
+    #      - service-graphs
+    #      - span-metrics
+
+    # -- Path to the per tenant override config file. The values of the `per_tenant_overrides` config below will be written to the default path `/conf/overrides.yaml`. Users can set tenant-specific overrides settings in a separate file and point per_tenant_override_config to it if not using the per_tenant_overrides block below.
     per_tenant_override_config: /conf/overrides.yaml
-  overrides: {}
+  # -- The `per tenant` aka `tenant-specific` runtime overrides. This allows overriding values set in the configuration on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) and [Tenant-Specific overrides](https://grafana.com/docs/tempo/latest/configuration/#tenant-specific-overrides) documentation for more details.
+  per_tenant_overrides: {}
+    # 'tenant-id':
+    #  metrics_generator:
+    #    processors:
+    #      - service-graphs
+    #      - span-metrics
 
   # Tempo server configuration.
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#server
@@ -177,16 +191,15 @@ config: |
     query_frontend:
       {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
     overrides:
-      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+      {{- toYaml .Values.tempo.overrides | nindent 6 }}
       {{- if .Values.tempo.metricsGenerator.enabled }}
-          metrics_generator_processors:
-          - 'service-graphs'
-          - 'span-metrics'
     metrics_generator:
           storage:
             path: "/tmp/tempo"
             remote_write:
               - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+          traces_storage:
+            path: "/tmp/traces"
       {{- end }}
 
 tempoQuery:

@@ -890,6 +890,10 @@ grafana.ini:
   #   enabled: true
   #   allow_sign_up: true
   #   config_file: /etc/grafana/ldap.toml
+## Grafana's alerting configuration
+  # unified_alerting:
+  #   enabled: true
+  #   rule_version_record_limit: "5"
 
 ## Grafana's LDAP configuration
 ## Templated by the template in _helpers.tpl
@@ -966,9 +970,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with alert are marked with
+    # label that the configmaps with alert are marked with (can be templated)
     label: grafana_alert
-    # value of label that the configmaps with alert are set to
+    # value of label that the configmaps with alert are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -980,6 +984,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.alerts.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/alerts-1,configmap/alerts-0"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1039,9 +1050,9 @@ sidecar:
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
     SCProvider: true
-    # label that the configmaps with dashboards are marked with
+    # label that the configmaps with dashboards are marked with (can be templated)
     label: grafana_dashboard
-    # value of label that the configmaps with dashboards are set to
+    # value of label that the configmaps with dashboards are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1060,6 +1071,12 @@ sidecar:
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
     # You can use this parameter together with `provider.foldersFromFilesStructure`to annotate configmaps and create folder structure.
     folderAnnotation: null
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.dashboards.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/dashboards-0,configmap/dashboards-1"
+    resourceName: ""
     #
     # maxTotalRetries: Total number of retries to allow for any http request.
     # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
@@ -1134,9 +1151,9 @@ sidecar:
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with datasources are marked with
+    # label that the configmaps with datasources are marked with (can be templated)
     label: grafana_datasource
-    # value of label that the configmaps with datasources are set to
+    # value of label that the configmaps with datasources are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1148,6 +1165,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.datasources.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/datasources-0,configmap/datasources-15"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1193,9 +1217,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with plugins are marked with
+    # label that the configmaps with plugins are marked with (can be templated)
     label: grafana_plugin
-    # value of label that the configmaps with plugins are set to
+    # value of label that the configmaps with plugins are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1207,6 +1231,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.plugins.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/plugins-0,configmap/plugins-1"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1252,9 +1283,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with notifiers are marked with
+    # label that the configmaps with notifiers are marked with (can be templated)
     label: grafana_notifier
-    # value of label that the configmaps with notifiers are set to
+    # value of label that the configmaps with notifiers are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1266,6 +1297,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.notifiers.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/notifiers-2,configmap/notifiers-1"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
