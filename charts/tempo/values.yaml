@@ -198,6 +198,8 @@ config: |
             path: "/tmp/tempo"
             remote_write:
               - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+          traces_storage:
+            path: "/tmp/traces"
       {{- end }}
 
 tempoQuery:
