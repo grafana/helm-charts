@@ -19,6 +19,9 @@ imagePullSecrets: []
 # -- Override the name of the release
 nameOverride: ""
 
+# -- Container port name
+portName: http
+
 # -- Override the full name of the chart and release
 fullnameOverride: ""
 
@@ -46,8 +49,6 @@ service:
   type: ClusterIP
   # -- Service port
   port: 8080
-  # -- Service port name
-  portName: http
   # -- Service protocol
   protocol: TCP
 
