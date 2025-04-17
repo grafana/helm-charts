@@ -1378,6 +1378,8 @@ imageRenderer:
     tag: latest
     # image-renderer Image sha (optional)
     sha: ""
+    # image-renderer Image pull secrets (optional)
+    pullSecrets: []
     # image-renderer ImagePullPolicy
     pullPolicy: Always
   # extra environment variables
