@@ -85,7 +85,7 @@ download_dashboards.sh: |
 {{- range $provider, $dashboards := .Values.dashboards }}
   {{- range $key, $value := $dashboards }}
     {{- if (or (hasKey $value "gnetId") (hasKey $value "url")) }}
-  curl -skf \
+  curl -skLf \
   --connect-timeout 60 \
   --max-time 60 \
     {{- if not $value.b64content }}
