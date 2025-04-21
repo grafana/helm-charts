@@ -989,6 +989,7 @@ tableManager:
 ingress:
   enabled: false
 #  ingressClassName: nginx
+  labels: {}
   annotations: {}
 #    nginx.ingress.kubernetes.io/auth-type: basic
 #    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
