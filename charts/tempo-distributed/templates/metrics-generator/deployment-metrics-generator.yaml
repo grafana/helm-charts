@@ -12,7 +12,7 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  minReadySeconds: 10
+  minReadySeconds: {{ .Values.metricsGenerator.minReadySeconds }}
   replicas: {{ .Values.metricsGenerator.replicas }}
   revisionHistoryLimit: 10
   selector:
