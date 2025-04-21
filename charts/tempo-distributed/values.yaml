@@ -1526,6 +1526,24 @@ config: |
         path: /var/tempo/traces
       wal:
         path: /var/tempo/wal
+      search:
+        {{- toYaml .Values.storage.trace.search | nindent 6}}
+
+      {{- if .Values.storage.trace.blocklist_poll }}
+      blocklist_poll: {{ .Values.storage.trace.blocklist_poll }}
+      {{- end }}
+      {{- if .Values.storage.trace.blocklist_poll_concurrency }}
+      blocklist_poll_concurrency: {{ .Values.storage.trace.blocklist_poll_concurrency }}
+      {{- end }}
+      {{- if .Values.storage.trace.blocklist_poll_fallback }}
+      blocklist_poll_fallback: {{ .Values.storage.trace.blocklist_poll_fallback }}
+      {{- end }}
+      {{- if .Values.storage.trace.blocklist_poll_tenant_index_builders }}
+      blocklist_poll_tenant_index_builders: {{ .Values.storage.trace.blocklist_poll_tenant_index_builders }}
+      {{- end }}
+      {{- if .Values.storage.trace.blocklist_poll_stale_tenant_index }}
+      blocklist_poll_stale_tenant_index: {{ .Values.storage.trace.blocklist_poll_stale_tenant_index }}
+      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1584,6 +1602,21 @@ storage:
       max_workers: 400
       # -- Length of job queue. imporatant for querier as it queues a job for every block it has to search
       queue_depth: 20000
+    # The supported search are specified here https://grafana.com/docs/tempo/latest/configuration/#search-config
+    search:
+      # -- Number of traces to prefetch while scanning blocks. Increasing this value can improve trace search performance at the cost of memory.
+      prefetch_trace_count: 1000
+    # -- How often to repoll the backend for new blocks
+    blocklist_poll: 5m
+    # -- Number of blocks to process in parallel during polling.
+    blocklist_poll_concurrency: null
+    # -- By default components will pull the blocklist from the tenant index. If that fails the component can
+    # -- fallback to scanning the entire bucket. Set to false to disable this behavior.
+    blocklist_poll_fallback: null
+    # -- Maximum number of compactors that should build the tenant index. All other components will download the index.
+    blocklist_poll_tenant_index_builders: null
+    # -- The oldest allowable tenant index.
+    blocklist_poll_stale_tenant_index: null
   # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
