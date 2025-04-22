@@ -503,7 +503,7 @@ ingester:
   statefulStrategy:
     rollingUpdate:
       partition: 0
-  
+
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
