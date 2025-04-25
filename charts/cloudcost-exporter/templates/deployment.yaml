@@ -34,17 +34,17 @@ spec:
             - {{ . }}
           {{- end }}
           ports:
-            - name: {{ .Values.service.portName }}
+            - name: {{ .Values.portName }}
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: {{ .Values.service.portName }}
+              port: {{ .Values.portName }}
           readinessProbe:
             httpGet:
               path: /
-              port: {{ .Values.service.portName }}
+              port: {{ .Values.portName }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

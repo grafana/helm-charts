@@ -50,7 +50,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 
 ### From Chart versions < 1.33.0
 * Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below.
+In order to reduce confusion, the overrides configurations have been renamed as below. 
 
 `global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
 `overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
