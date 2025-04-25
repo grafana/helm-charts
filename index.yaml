@@ -483,6 +483,23 @@ entries:
   alloy-operator:
   - apiVersion: v2
     appVersion: 1.0.2
+    created: "2025-04-25T22:44:12.979132882Z"
+    description: A Helm chart the Alloy Operator, a project to innovate on creating
+      instances of Grafana Alloy.
+    digest: 988a4a401b8bc169441c04e6b91b1b5b3857861e3d112a6d4252479f8e741a5d
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    name: alloy-operator
+    sources:
+    - https://github.com/grafana/alloy-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-operator-0.2.6-beta.1/alloy-operator-0.2.6-beta.1.tgz
+    version: 0.2.6-beta.1
+  - apiVersion: v2
+    appVersion: 1.0.2
     created: "2025-04-25T21:31:47.415504014Z"
     description: A Helm chart the Alloy Operator, a project to innovate on creating
       instances of Grafana Alloy.
@@ -86377,4 +86394,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-25T21:31:47.419300101Z"
+generated: "2025-04-25T22:44:12.982654178Z"
