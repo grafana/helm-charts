@@ -2183,13 +2183,14 @@ ingress:
         # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
         # pathType: Prefix
       - path: /ingester/ring
+      - path: /metrics-generator/ring
     ingester:
       - path: /flush
       - path: /shutdown
     query-frontend:
       - path: /api
     compactor:
-      - path: /api/v1/upload/block/
+      - path: /compactor/ring
   hosts:
     - tempo.example.com
 
