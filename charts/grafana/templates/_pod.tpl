@@ -230,6 +230,10 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
+      {{- if .Values.sidecar.datasources.script }}
+      - name: SCRIPT
+        value: "{{ .Values.sidecar.datasources.script }}"
+      {{- end }}
     {{- with .Values.sidecar.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
@@ -241,6 +245,9 @@ initContainers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+      {{- with .Values.sidecar.datasources.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers }}
   - name: {{ include "grafana.name" . }}-init-sc-notifiers
