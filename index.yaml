@@ -483,10 +483,27 @@ entries:
   alloy-operator:
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2025-04-25T23:00:32.242736951Z"
+    created: "2025-04-25T23:27:22.201907356Z"
     description: A Helm chart the Alloy Operator, a project to innovate on creating
       instances of Grafana Alloy.
-    digest: b32bda54538a009c114537a9d746501b1fef466777b117c6389a3563b03b6721
+    digest: e423bbebab51b11f8bc124a576fb56407bfb404aecaa893eb0bf89fad60d87d4
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    name: alloy-operator
+    sources:
+    - https://github.com/grafana/alloy-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-operator-0.2.6-beta.3/alloy-operator-0.2.6-beta.3.tgz
+    version: 0.2.6-beta.3
+  - apiVersion: v2
+    appVersion: 1.0.2
+    created: "2025-04-25T23:20:42.337406787Z"
+    description: A Helm chart the Alloy Operator, a project to innovate on creating
+      instances of Grafana Alloy.
+    digest: 3314b50c5ed86483c93698ec664f3da31476a1184b896298d8e4a9d31baa9941
     icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
     maintainers:
     - email: pete.wall@grafana.com
@@ -500,10 +517,10 @@ entries:
     version: 0.2.6-beta.2
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2025-04-25T23:20:42.337406787Z"
+    created: "2025-04-25T23:00:32.242736951Z"
     description: A Helm chart the Alloy Operator, a project to innovate on creating
       instances of Grafana Alloy.
-    digest: 3314b50c5ed86483c93698ec664f3da31476a1184b896298d8e4a9d31baa9941
+    digest: b32bda54538a009c114537a9d746501b1fef466777b117c6389a3563b03b6721
     icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
     maintainers:
     - email: pete.wall@grafana.com
@@ -86428,4 +86445,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-25T23:20:42.340596674Z"
+generated: "2025-04-25T23:27:22.205179715Z"
