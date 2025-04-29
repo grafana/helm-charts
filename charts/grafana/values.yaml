@@ -1022,7 +1022,9 @@ sidecar:
     #
     # Endpoint to send request to reload alerts
     reloadURL: "http://localhost:3000/api/admin/provisioning/alerting/reload"
-    # Absolute path to shell script to execute after a alert got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # This is needed if skipReload is true, to load any alerts defined at startup time.
@@ -1099,7 +1101,9 @@ sidecar:
     #
     # Endpoint to send request to reload alerts
     reloadURL: "http://localhost:3000/api/admin/provisioning/dashboards/reload"
-    # Absolute path to shell script to execute after a configmap got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
@@ -1203,7 +1207,9 @@ sidecar:
     #
     # Endpoint to send request to reload datasources
     reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
-    # Absolute path to shell script to execute after a datasource got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # This is needed if skipReload is true, to load any datasources defined at startup time.
@@ -1269,7 +1275,9 @@ sidecar:
     #
     # Endpoint to send request to reload plugins
     reloadURL: "http://localhost:3000/api/admin/provisioning/plugins/reload"
-    # Absolute path to shell script to execute after a plugin got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # Deploy the datasource sidecar as an initContainer in addition to a container.
@@ -1335,7 +1343,9 @@ sidecar:
     #
     # Endpoint to send request to reload notifiers
     reloadURL: "http://localhost:3000/api/admin/provisioning/notifications/reload"
-    # Absolute path to shell script to execute after a notifier got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # Deploy the notifier sidecar as an initContainer in addition to a container.
