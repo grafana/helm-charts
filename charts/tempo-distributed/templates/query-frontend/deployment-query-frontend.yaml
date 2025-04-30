@@ -109,7 +109,7 @@ spec:
             {{- end }}
         {{- if .Values.queryFrontend.query.enabled }}
         - args:
-            - --config=/conf/tempo.yaml
+            - -config=/conf/tempo.yaml
             {{- with .Values.queryFrontend.query.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
