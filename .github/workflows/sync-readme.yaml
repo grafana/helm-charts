@@ -13,11 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: |
           cp -f README.md ${{ runner.temp }}/README.md
       - uses: actions/checkout@v4
         with:
           ref: gh-pages
+          persist-credentials: false
       - run: |
           cp -f ${{ runner.temp }}/README.md .
           git config user.name "$GITHUB_ACTOR"

@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.34.1](https://img.shields.io/badge/Version-1.34.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.38.3](https://img.shields.io/badge/Version-1.38.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -334,6 +334,7 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.image.tag | string | `nil` | Docker image tag for the compactor image. Overrides `tempo.image.tag` |
 | compactor.initContainers | list | `[]` | Init containers to add to the compactor pod |
 | compactor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| compactor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
 | compactor.podLabels | object | `{}` | Labels for compactor pods |
@@ -370,7 +371,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `tempo.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `tempo.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `tempo.image.tag` |
+| distributor.initContainers | list | `[]` | Init containers for the distributor pod |
 | distributor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| distributor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
 | distributor.podLabels | object | `{}` | Labels for distributor pods |
@@ -386,6 +389,8 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.service.type | string | `"ClusterIP"` | Type of service for the distributor |
 | distributor.serviceDiscovery.annotations | object | `{}` | Annotations for distributorDiscovery service |
 | distributor.serviceDiscovery.labels | object | `{}` | Labels for distributorDiscovery service |
+| distributor.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| distributor.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | distributor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the distributor to shutdown before it is killed |
 | distributor.tolerations | list | `[]` | Tolerations for distributor pods |
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
@@ -505,6 +510,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.ingress.labels | object | `{}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
 | gateway.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| gateway.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
 | gateway.nginxConfig.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | gateway.nginxConfig.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
@@ -569,10 +575,11 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
-| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
+| ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"labels":{},"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
 | ingester.persistence.enabled | bool | `false` | Enable creating PVCs which is required when using boltdb-shipper |
 | ingester.persistence.inMemory | bool | `false` | use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart** |
+| ingester.persistence.labels | object | `{}` | Labels for ingester's persist volume claim |
 | ingester.persistence.size | string | `"10Gi"` | Size of persistent or memory disk |
 | ingester.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | ingester.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
@@ -627,6 +634,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
+| memcached.initContainers | list | `[]` | Init containers for the memcached pod |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
@@ -697,13 +705,15 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.image.registry | string | `nil` | The Docker registry for the metrics-generator image. Overrides `tempo.image.registry` |
 | metricsGenerator.image.repository | string | `nil` | Docker image repository for the metrics-generator image. Overrides `tempo.image.repository` |
 | metricsGenerator.image.tag | string | `nil` | Docker image tag for the metrics-generator image. Overrides `tempo.image.tag` |
-| metricsGenerator.initContainers | list | `[]` |  |
+| metricsGenerator.initContainers | list | `[]` | Init containers for the metrics generator pod |
 | metricsGenerator.kind | string | `"Deployment"` | Kind of deployment [StatefulSet/Deployment] |
 | metricsGenerator.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| metricsGenerator.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | metricsGenerator.nodeSelector | object | `{}` | Node selector for metrics-generator pods |
-| metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
+| metricsGenerator.persistence | object | `{"annotations":{},"enabled":false,"labels":{},"size":"10Gi","storageClass":null}` | Persistence configuration for metrics-generator |
 | metricsGenerator.persistence.annotations | object | `{}` | Annotations for metrics generator PVCs |
 | metricsGenerator.persistence.enabled | bool | `false` | Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir |
+| metricsGenerator.persistence.labels | object | `{}` | Labels for metrics generator PVCs |
 | metricsGenerator.persistence.storageClass | string | `nil` | Storage class to be used. If defined, storageClassName: <storageClass>. If set to "-", storageClassName: "", which disables dynamic provisioning. If empty or set to null, no storageClassName spec is set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack). |
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.enabled | bool | `false` | Enable Persistent volume retention policy for StatefulSet |
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
@@ -790,6 +800,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.image.registry | string | `nil` | The Docker registry for the querier image. Overrides `tempo.image.registry` |
 | querier.image.repository | string | `nil` | Docker image repository for the querier image. Overrides `tempo.image.repository` |
 | querier.image.tag | string | `nil` | Docker image tag for the querier image. Overrides `tempo.image.tag` |
+| querier.initContainers | list | `[]` | Init containers for the querier pod |
 | querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
@@ -822,6 +833,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.config.metrics.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when querying the backend. |
 | queryFrontend.config.metrics.throughput_bytes_slo | int | `0` | If set to a non-zero value, it's value will be used to decide if query is within SLO or not. Query is within SLO if it returned 200 within duration_slo seconds OR processed throughput_slo bytes/s data. |
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
+| queryFrontend.config.search.max_spans_per_span_set | int | `100` | The maximum allowed value of spans per span set. 0 disables this limit. |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
 | queryFrontend.config.trace_by_id | object | `{"query_shards":50}` | Trace by ID lookup configuration |
 | queryFrontend.config.trace_by_id.query_shards | int | `50` | The number of shards to split a trace by id query into. |
@@ -839,7 +851,9 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.ingress.enabled | bool | `false` | Specifies whether an ingress for the Jaeger should be created |
 | queryFrontend.ingress.hosts | list | `[{"host":"query.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the Jaeger ingress |
 | queryFrontend.ingress.tls | list | `[{"hosts":["query.tempo.example.com"],"secretName":"tempo-query-tls"}]` | TLS configuration for the Jaeger ingress |
+| queryFrontend.initContainers | list | `[]` | Init containers for the query-frontend pod |
 | queryFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| queryFrontend.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
@@ -897,8 +911,14 @@ The memcached default args are removed and should be provided manually. The sett
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
 | storage.trace.block.dedicated_columns | list | `[]` | Lis with dedicated attribute columns (only for vParquet3 or later) |
 | storage.trace.block.version | string | `nil` | The supported block versions are specified here https://grafana.com/docs/tempo/latest/configuration/parquet/ |
+| storage.trace.blocklist_poll | string | `"5m"` | How often to repoll the backend for new blocks |
+| storage.trace.blocklist_poll_concurrency | string | `nil` | Number of blocks to process in parallel during polling. |
+| storage.trace.blocklist_poll_fallback | string | `nil` | fallback to scanning the entire bucket. Set to false to disable this behavior. |
+| storage.trace.blocklist_poll_stale_tenant_index | string | `nil` | The oldest allowable tenant index. |
+| storage.trace.blocklist_poll_tenant_index_builders | string | `nil` | Maximum number of compactors that should build the tenant index. All other components will download the index. |
 | storage.trace.pool.max_workers | int | `400` | Total number of workers pulling jobs from the queue |
 | storage.trace.pool.queue_depth | int | `20000` | Length of job queue. imporatant for querier as it queues a job for every block it has to search |
+| storage.trace.search.prefetch_trace_count | int | `1000` | Number of traces to prefetch while scanning blocks. Increasing this value can improve trace search performance at the cost of memory. |
 | tempo.image.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |

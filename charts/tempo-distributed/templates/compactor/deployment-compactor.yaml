@@ -11,7 +11,7 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  minReadySeconds: 10
+  minReadySeconds: {{ .Values.compactor.minReadySeconds }}
   replicas: {{ .Values.compactor.replicas }}
   revisionHistoryLimit: 10
   selector:
@@ -55,7 +55,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
-        {{- toYaml .Values.ingester.initContainers | nindent 8 }}
+        {{- toYaml .Values.compactor.initContainers | nindent 8 }}
       containers:
         - args:
             - -target=compactor
