@@ -50,6 +50,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
           - -kubernetes.namespace={{ .Release.Namespace }}
+          {{- range .Values.extraArgs  }}
+          - {{ . }}
+          {{- end }}
           ports:
             - name: http-metrics
               containerPort: 8001
