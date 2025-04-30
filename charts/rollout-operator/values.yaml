@@ -51,7 +51,7 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# -- List of additional cli arguments to configure agent-operator (example: `--log.level`)
+# -- List of additional cli arguments to configure rollout-operator (example: `--log.level=info`)
 extraArgs: []
 
 resources:
