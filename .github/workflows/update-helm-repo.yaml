@@ -41,6 +41,7 @@ env:
   CR_PACKAGE_PATH: "${{ github.workspace }}/.cr-release-packages"
   CR_TOOL_PATH: "${{ github.workspace }}/.cr-tool"
   HELM_TAG_PREFIX: "${{ inputs.helm_tag_prefix }}"
+  REF_NAME: "${{ github.ref_name }}"
 
 jobs:
   setup:
@@ -54,9 +55,10 @@ jobs:
         with:
           fetch-depth: 0
           path: source
+          persist-credentials: false
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
+        uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
 
       - name: List changed charts
         id: list-changed
@@ -65,8 +67,8 @@ jobs:
 
           latest_tag=$( if ! git describe --tags --abbrev=0 2> /dev/null ; then git rev-list --max-parents=0 --first-parent HEAD ; fi )
 
-          echo "Running: ct list-changed --config ${CT_CONFIGFILE} --since ${latest_tag} --target-branch ${{ github.ref_name }}"
-          changed=$(ct list-changed --config "${CT_CONFIGFILE}" --since "${latest_tag}" --target-branch "${{ github.ref_name }}")
+          echo "Running: ct list-changed --config ${CT_CONFIGFILE} --since ${latest_tag} --target-branch ${REF_NAME}"
+          changed=$(ct list-changed --config "${CT_CONFIGFILE}" --since "${latest_tag}" --target-branch "${REF_NAME}")
           echo "${changed}"
           num_changed=$(wc -l <<< ${changed})
           if [[ "${num_changed}" -gt "1" ]] ; then
@@ -102,18 +104,21 @@ jobs:
     steps:
       - name: Create a GitHub App installation access token
         if: env.github_app_id != ''
-        uses: tibdex/github-app-token@v2
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
         id: app-token
         with:
-          app_id: ${{ secrets.github_app_id }}
+          app_id: ${github_app_id}
           private_key: ${{ secrets.github_app_pem }}
 
       - name: Set the correct token (Github App or PAT)
+        env:
+          HELM_REPO_TOKEN: ${{ secrets.helm_repo_token }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          if [[ "${{ env.github_app_id }}" == '' ]]; then
-            echo "AUTHTOKEN=${{ secrets.helm_repo_token }}" >> $GITHUB_ENV
+          if [[ "${github_app_id}" == '' ]]; then
+            echo "AUTHTOKEN=${HELM_REPO_TOKEN}" >> $GITHUB_ENV
           else
-            echo "AUTHTOKEN=${{ steps.app-token.outputs.token }}" >> $GITHUB_ENV
+            echo "AUTHTOKEN=${APP_TOKEN}" >> $GITHUB_ENV
           fi
 
       - name: Checkout
@@ -121,6 +126,7 @@ jobs:
         with:
           fetch-depth: 0
           path: source
+          persist-credentials: false
 
       - name: Configure Git
         run: |
@@ -136,6 +142,7 @@ jobs:
           repository: grafana/helm-charts
           path: helm-charts
           token: ${{ env.AUTHTOKEN  }}
+          persist-credentials: false
 
       - name: Configure Git for helm-charts
         run: |
@@ -144,15 +151,17 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4.3.0
         with:
           version: v3.16.2
 
       - name: Parse Chart.yaml
         id: parse-chart
+        env:
+          CHARTPATH: ${{ needs.setup.outputs.chartpath }}
         run: |
           cd source
-          changed="${{ needs.setup.outputs.chartpath }}"
+          changed="${CHARTPATH}"
           description=$(yq ".description" < ${changed}/Chart.yaml)
           name=$(yq ".name" < ${changed}/Chart.yaml)
           version=$(yq ".version" < ${changed}/Chart.yaml)
@@ -166,10 +175,12 @@ jobs:
           echo "packagename=${name}-${version}" >> $GITHUB_OUTPUT
 
       - name: Add dependency chart repos
+        env:
+          CHARTPATH: ${{ steps.parse-chart.outputs.chartpath }}
         run: |
           cd source
           # Skip the header line and make sure that tabs are expanded into spaces
-          deps=$(helm dependency list "${{ steps.parse-chart.outputs.chartpath }}" | tail +2 | expand)
+          deps=$(helm dependency list "${CHARTPATH}" | tail +2 | expand)
           while read -r row; do
             IFS=' ' read -ra parts <<< "$row"
             name="${parts[0]}"
@@ -190,20 +201,24 @@ jobs:
           rm -f cr.tar.gz
 
       - name: Create helm package
+        env:
+          CHARTPATH: ${{ steps.parse-chart.outputs.chartpath }}
         run: |
           cd source
-          "${CR_TOOL_PATH}/cr" package "${{ steps.parse-chart.outputs.chartpath }}" --config "${CR_CONFIGFILE}" --package-path "${CR_PACKAGE_PATH}"
+          "${CR_TOOL_PATH}/cr" package "${CHARTPATH}" --config "${CR_CONFIGFILE}" --package-path "${CR_PACKAGE_PATH}"
           echo "Result of chart package:"
           ls -l "${CR_PACKAGE_PATH}"
 
       - name: Create tag and check if exists on origin
+        env:
+          TAGNAME: ${{ steps.parse-chart.outputs.tagname }}
         run: |
           cd source
-          echo "Making tag ${{ steps.parse-chart.outputs.tagname }}"
-          git tag "${{ steps.parse-chart.outputs.tagname }}"
+          echo "Making tag ${TAGNAME}"
+          git tag "${TAGNAME}"
 
       - name: Make github release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@b21b43df682dab285bf5146c1955e7f3560805f8 # tags/v1
         with:
           body: |
             ${{ steps.parse-chart.outputs.desc }}
@@ -219,10 +234,12 @@ jobs:
           token: ${{ env.AUTHTOKEN }}
 
       - name: Push release tag on origin
+        env:
+          TAGNAME: ${{ steps.parse-chart.outputs.tagname }}
         run: |
           cd source
-          echo "Pushing tag ${{ steps.parse-chart.outputs.tagname }}"
-          git push origin "${{ steps.parse-chart.outputs.tagname }}"
+          echo "Pushing tag ${TAGNAME}"
+          git push origin "${TAGNAME}"
 
       - name: Update helm repo index.yaml
         run: |
@@ -230,7 +247,7 @@ jobs:
           "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
 
       - name: Login to GHCR
-        uses: docker/login-action@v3.0.0
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -239,5 +256,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push charts to GHCR
+        env:
+          PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
         run: |
-          helm push "${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+          helm push "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
