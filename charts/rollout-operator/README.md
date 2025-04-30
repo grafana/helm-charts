@@ -40,7 +40,7 @@ It is not a highly available application and runs as a single pod.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| extraArgs | list | `[]` | List of additional cli arguments to configure rollout-operator (example: `--log.level=info`) |
+| extraArgs | list | `[]` | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`) |
 | fullnameOverride | string | `""` |  |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
