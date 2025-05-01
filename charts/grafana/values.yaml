@@ -811,6 +811,11 @@ dashboardProviders: {}
 ##       defaults can be overridden individually for each dashboard. See the
 ##       example dashboards section below.
 ##
+## -s  - silent mode
+## -k  - allow insecure (eg: non-TLS) connections
+## -f  - fail fast
+## See the curl documentation for additional options
+##
 defaultCurlOptions: "-skf"
 
 ## Configure grafana dashboard to import
