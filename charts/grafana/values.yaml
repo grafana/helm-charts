@@ -825,6 +825,7 @@ dashboards: {}
   #     datasource: Prometheus
   #   local-dashboard:
   #     url: https://example.com/repository/test.json
+  #     curlOptions: "-sLf"
   #     token: ''
   #   local-dashboard-base64:
   #     url: https://example.com/repository/test-b64.json

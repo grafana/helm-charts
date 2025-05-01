@@ -396,6 +396,12 @@ dashboards:
         value: Loki
     local-dashboard:
       url: https://raw.githubusercontent.com/user/repository/master/dashboards/dashboard.json
+      # default: -skf
+      # -s  - silent mode
+      # -k  - allow insecure (eg: non-TLS) connections
+      # -f  - fail fast
+      # -L  - follow HTTP redirects
+      curlOptions: -Lf
 ```
 
 ## BASE64 dashboards
