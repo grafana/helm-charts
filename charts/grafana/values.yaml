@@ -806,6 +806,13 @@ dashboardProviders: {}
 #      options:
 #        path: /var/lib/grafana/dashboards/default
 
+## Configure how curl fetches remote dashboards. The beginning dash is required.
+## NOTE: This sets the default short flags for all dashboards, but these
+##       defaults can be overridden individually for each dashboard. See the
+##       example dashboards section below.
+##
+defaultCurlOptions: "-skf"
+
 ## Configure grafana dashboard to import
 ## NOTE: To use dashboards you must also enable/configure dashboardProviders
 ## ref: https://grafana.com/dashboards
