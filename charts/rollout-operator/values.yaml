@@ -51,6 +51,9 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# -- List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`)
+extraArgs: []
+
 resources:
   limits:
     # cpu: "1"
