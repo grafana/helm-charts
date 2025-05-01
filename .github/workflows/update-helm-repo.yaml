@@ -218,7 +218,7 @@ jobs:
           git tag "${TAGNAME}"
 
       - name: Make github release
-        uses: softprops/action-gh-release@b21b43df682dab285bf5146c1955e7f3560805f8 # tags/v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # tags/v1
         with:
           body: |
             ${{ steps.parse-chart.outputs.desc }}
