@@ -396,7 +396,10 @@ dashboards:
       - name: DS_LOKI
         value: Loki
     local-dashboard:
-      url: https://raw.githubusercontent.com/user/repository/master/dashboards/dashboard.json
+      url: https://github.com/cloudnative-pg/grafana-dashboards/blob/main/charts/cluster/grafana-dashboard.json
+      # redirects to:
+      # https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/refs/heads/main/charts/cluster/grafana-dashboard.json
+
       # default: -skf
       # -s  - silent mode
       # -k  - allow insecure (eg: non-TLS) connections
