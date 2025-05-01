@@ -482,6 +482,8 @@ initChownData:
     capabilities:
       add:
         - CHOWN
+      drop:
+        - ALL
 
 # Administrator credentials when not using an existing secret (see below)
 adminUser: admin
