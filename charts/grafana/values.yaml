@@ -808,8 +808,8 @@ dashboardProviders: {}
 
 ## Configure how curl fetches remote dashboards. The beginning dash is required.
 ## NOTE: This sets the default short flags for all dashboards, but these
-##       defaults can be overridden individually for each dashboard. See the
-##       example dashboards section below.
+##       defaults can be overridden individually for each dashboard by setting
+##       curlOptions. See the example dashboards section below.
 ##
 ## -s  - silent mode
 ## -k  - allow insecure (eg: non-TLS) connections
