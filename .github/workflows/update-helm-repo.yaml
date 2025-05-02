@@ -107,7 +107,7 @@ jobs:
         uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
         id: app-token
         with:
-          app_id: ${github_app_id}
+          app_id: ${{ env.github_app_id }}
           private_key: ${{ secrets.github_app_pem }}
 
       - name: Set the correct token (Github App or PAT)
@@ -218,7 +218,7 @@ jobs:
           git tag "${TAGNAME}"
 
       - name: Make github release
-        uses: softprops/action-gh-release@b21b43df682dab285bf5146c1955e7f3560805f8 # tags/v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # tags/v1
         with:
           body: |
             ${{ steps.parse-chart.outputs.desc }}
