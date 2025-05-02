@@ -475,7 +475,7 @@ initChownData:
   #    cpu: 100m
   #    memory: 128Mi
   securityContext:
-    readOnlyRootFilesystem: true
+    readOnlyRootFilesystem: false
     runAsNonRoot: false
     runAsUser: 0
     seccompProfile:
