@@ -28,6 +28,7 @@ spec:
       namespace: {{ .Release.Namespace | quote }}
     spec:
       serviceAccountName: {{ template "tempo.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- if .Values.enterpriseGateway.priorityClassName }}
       priorityClassName: {{ .Values.enterpriseGateway.priorityClassName }}
       {{- end }}
