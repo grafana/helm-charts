@@ -51,10 +51,11 @@ jobs:
       chartpath: ${{ steps.list-changed.outputs.chartpath }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the release tags later on in this workflow
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           path: source
+          persist-credentials: false
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
@@ -121,11 +122,10 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the release tags later on in this workflow
         with:
           fetch-depth: 0
           path: source
-          persist-credentials: false
 
       - name: Configure Git
         run: |
@@ -135,13 +135,12 @@ jobs:
 
       - name: Checkout helm-charts
         # The cr tool only works if the target repository is already checked out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the release tags later on in this workflow
         with:
           fetch-depth: 0
           repository: grafana/helm-charts
           path: helm-charts
-          token: ${{ env.AUTHTOKEN  }}
-          persist-credentials: false
+          token: ${{ env.AUTHTOKEN }}
 
       - name: Configure Git for helm-charts
         run: |
