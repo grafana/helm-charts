@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.80.4](https://img.shields.io/badge/Version-0.80.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.13](https://img.shields.io/badge/AppVersion-2.9.13-informational?style=flat-square)
+![Version: 0.80.5](https://img.shields.io/badge/Version-0.80.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.13](https://img.shields.io/badge/AppVersion-2.9.13-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -205,6 +205,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the gateway should be created |
 | gateway.ingress.hosts | list | `[{"host":"gateway.loki.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.ingressClassName | string | `""` | Ingress Class Name. MAY be required for Kubernetes versions >= 1.18 For example: `ingressClassName: nginx` |
+| gateway.ingress.labels | object | `{}` | Custom labels for the gateway ingress |
 | gateway.ingress.tls | list | `[]` | TLS configuration for the gateway ingress |
 | gateway.livenessProbe.httpGet.path | string | `"/"` |  |
 | gateway.livenessProbe.httpGet.port | string | `"http"` |  |
@@ -331,6 +332,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0] | string | `"loki.example.com"` |  |
+| ingress.labels | object | `{}` | Custom labels for the ingress |
 | ingress.paths.distributor[0] | string | `"/api/prom/push"` |  |
 | ingress.paths.distributor[1] | string | `"/loki/api/v1/push"` |  |
 | ingress.paths.querier[0] | string | `"/api/prom/tail"` |  |
