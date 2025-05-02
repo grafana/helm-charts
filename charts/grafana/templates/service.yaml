@@ -53,7 +53,7 @@ spec:
   {{- end }}
   ports:
     - name: {{ .Values.service.portName }}
-      port: {{ .Values.service.port }}
+      port: {{ .Values.service.portName }}
       protocol: TCP
       targetPort: {{ .Values.service.targetPort }}
       {{- with .Values.service.appProtocol }}
