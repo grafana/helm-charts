@@ -1937,6 +1937,8 @@ gateway:
   extraVolumes: []
   # -- Volume mounts to add to the gateway pods
   extraVolumeMounts: []
+  # -- Enables the routes and ports that enable pushing traces using gRPC
+  enableGrpc: false
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
@@ -2162,6 +2164,30 @@ gateway:
           {{ . | nindent 4 }}
           {{- end }}
         }
+
+        {{- if .Values.gateway.enableGrpc }}
+        # OTLP gRPC
+        server {
+          listen               4317 http2;
+
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Tempo";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
+
+          location = /opentelemetry.proto.collector.trace.v1.TraceService/Export {
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4317;
+          }
+
+          location ~ /opentelemetry {
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4317;
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
+        }
+        {{- end }}
       }
 
 ##############################################################################
