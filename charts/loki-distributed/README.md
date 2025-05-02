@@ -241,7 +241,6 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | gateway.tolerations | list | `[]` | Tolerations for gateway pods |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
-| global.commonLabels | object | `{}` | Common labels to be added to all resources |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.image.registry | string | `nil` | Overrides the Docker registry globally for all images |

@@ -10,8 +10,6 @@ global:
   dnsService: "kube-dns"
   # -- configures DNS service namespace
   dnsNamespace: "kube-system"
-  # -- Common labels to be added to all resources
-  commonLabels: {}
 
 # -- Overrides the chart's name
 nameOverride: null

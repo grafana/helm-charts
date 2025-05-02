@@ -5,7 +5,6 @@ metadata:
   name: {{ include "loki.gatewayFullname" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
-    {{- include "loki.commonLabels" . | nindent 4 }}
     {{- with .Values.gateway.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
