@@ -51,13 +51,10 @@ jobs:
       chartpath: ${{ steps.list-changed.outputs.chartpath }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the release tags later on in this workflow
         with:
           fetch-depth: 0
           path: source
-          # zizmor may complain about this as a "medium" level warning, but it is necessary
-          # to be able to push the release tags later on in this workflow
-          persist-credentials: true
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
