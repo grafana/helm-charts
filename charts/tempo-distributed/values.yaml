@@ -600,6 +600,8 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # -- Maximum size of attribute in traces
+    max_span_attr_byte: null
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -1420,6 +1422,9 @@ config: |
     {{- end }}
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
+    {{- end }}
+    {{- if .Values.distributor.config.max_span_attr_byte }}
+    max_span_attr_byte: {{ .Values.distributor.config.max_span_attr_byte }}
     {{- end }}
   querier:
     frontend_worker:
