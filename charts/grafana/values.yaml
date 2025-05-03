@@ -125,6 +125,7 @@ testFramework:
     tag: "v1.4.1"
   imagePullPolicy: IfNotPresent
   securityContext: {}
+  containerSecurityContext: {}
   resources: {}
   #  limits:
   #    cpu: 100m
@@ -415,6 +416,8 @@ persistence:
   type: pvc
   enabled: false
   # storageClassName: default
+  ## (Optional) Use this to bind the claim to an existing PersistentVolume (PV) by name.
+  volumeName: ""
   accessModes:
     - ReadWriteOnce
   size: 10Gi
@@ -472,6 +475,7 @@ initChownData:
   #    cpu: 100m
   #    memory: 128Mi
   securityContext:
+    readOnlyRootFilesystem: false
     runAsNonRoot: false
     runAsUser: 0
     seccompProfile:
@@ -479,6 +483,8 @@ initChownData:
     capabilities:
       add:
         - CHOWN
+      drop:
+        - ALL
 
 # Administrator credentials when not using an existing secret (see below)
 adminUser: admin
@@ -889,6 +895,10 @@ grafana.ini:
   #   enabled: true
   #   allow_sign_up: true
   #   config_file: /etc/grafana/ldap.toml
+## Grafana's alerting configuration
+  # unified_alerting:
+  #   enabled: true
+  #   rule_version_record_limit: "5"
 
 ## Grafana's LDAP configuration
 ## Templated by the template in _helpers.tpl
@@ -913,6 +923,11 @@ ldap:
   #   ssl_skip_verify = false
   #   bind_dn = "uid=%s,ou=users,dc=myorg,dc=com"
 
+# When process namespace sharing is enabled, processes in a container are visible to all other containers in the same pod
+# This parameter is added because the ldap reload api is not working https://grafana.com/docs/grafana/latest/developers/http_api/admin/#reload-ldap-configuration
+# To allow an extraContainer to restart the Grafana container
+shareProcessNamespace: false
+
 ## Grafana's SMTP configuration
 ## NOTE: To enable, grafana.ini must be configured with smtp.enabled
 ## ref: http://docs.grafana.org/installation/configuration/#smtp
@@ -930,7 +945,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 1.28.0
+    tag: 1.30.0
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -960,9 +975,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with alert are marked with
+    # label that the configmaps with alert are marked with (can be templated)
     label: grafana_alert
-    # value of label that the configmaps with alert are set to
+    # value of label that the configmaps with alert are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -974,6 +989,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.alerts.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/alerts-1,configmap/alerts-0"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1003,7 +1025,9 @@ sidecar:
     #
     # Endpoint to send request to reload alerts
     reloadURL: "http://localhost:3000/api/admin/provisioning/alerting/reload"
-    # Absolute path to shell script to execute after a alert got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # This is needed if skipReload is true, to load any alerts defined at startup time.
@@ -1033,9 +1057,9 @@ sidecar:
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
     SCProvider: true
-    # label that the configmaps with dashboards are marked with
+    # label that the configmaps with dashboards are marked with (can be templated)
     label: grafana_dashboard
-    # value of label that the configmaps with dashboards are set to
+    # value of label that the configmaps with dashboards are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1054,6 +1078,12 @@ sidecar:
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
     # You can use this parameter together with `provider.foldersFromFilesStructure`to annotate configmaps and create folder structure.
     folderAnnotation: null
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.dashboards.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/dashboards-0,configmap/dashboards-1"
+    resourceName: ""
     #
     # maxTotalRetries: Total number of retries to allow for any http request.
     # Takes precedence over other counts. Applies to all requests to reloadURL and k8s api requests.
@@ -1074,7 +1104,9 @@ sidecar:
     #
     # Endpoint to send request to reload alerts
     reloadURL: "http://localhost:3000/api/admin/provisioning/dashboards/reload"
-    # Absolute path to shell script to execute after a configmap got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
@@ -1128,9 +1160,9 @@ sidecar:
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with datasources are marked with
+    # label that the configmaps with datasources are marked with (can be templated)
     label: grafana_datasource
-    # value of label that the configmaps with datasources are set to
+    # value of label that the configmaps with datasources are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1142,6 +1174,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.datasources.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/datasources-0,configmap/datasources-15"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1171,7 +1210,9 @@ sidecar:
     #
     # Endpoint to send request to reload datasources
     reloadURL: "http://localhost:3000/api/admin/provisioning/datasources/reload"
-    # Absolute path to shell script to execute after a datasource got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # This is needed if skipReload is true, to load any datasources defined at startup time.
@@ -1187,9 +1228,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with plugins are marked with
+    # label that the configmaps with plugins are marked with (can be templated)
     label: grafana_plugin
-    # value of label that the configmaps with plugins are set to
+    # value of label that the configmaps with plugins are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1201,6 +1242,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.plugins.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/plugins-0,configmap/plugins-1"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1230,7 +1278,9 @@ sidecar:
     #
     # Endpoint to send request to reload plugins
     reloadURL: "http://localhost:3000/api/admin/provisioning/plugins/reload"
-    # Absolute path to shell script to execute after a plugin got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # Deploy the datasource sidecar as an initContainer in addition to a container.
@@ -1246,9 +1296,9 @@ sidecar:
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
-    # label that the configmaps with notifiers are marked with
+    # label that the configmaps with notifiers are marked with (can be templated)
     label: grafana_notifier
-    # value of label that the configmaps with notifiers are set to
+    # value of label that the configmaps with notifiers are set to (can be templated)
     labelValue: ""
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
@@ -1260,6 +1310,13 @@ sidecar:
     watchMethod: WATCH
     # search in configmap, secret or both
     resource: both
+    #
+    # resourceName: comma separated list of resource names to be fetched/checked by this sidecar.
+    # per default all resources of the type defined in {{ .Values.sidecar.notifiers.resource }} will be checked.
+    # This e.g. allows stricter RBAC rules which are limited to the resources meant for the sidecars.
+    # resourceName: "secret/notifiers-2,configmap/notifiers-1"
+    resourceName: ""
+    #
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1289,7 +1346,9 @@ sidecar:
     #
     # Endpoint to send request to reload notifiers
     reloadURL: "http://localhost:3000/api/admin/provisioning/notifications/reload"
-    # Absolute path to shell script to execute after a notifier got reloaded
+    # Absolute path to a script to execute after a configmap got reloaded.
+    # It runs before calls to REQ_URI. If the file is not executable it will be passed to sh.
+    # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
     # Deploy the notifier sidecar as an initContainer in addition to a container.
@@ -1334,6 +1393,8 @@ imageRenderer:
     tag: latest
     # image-renderer Image sha (optional)
     sha: ""
+    # image-renderer Image pull secrets (optional)
+    pullSecrets: []
     # image-renderer ImagePullPolicy
     pullPolicy: Always
   # extra environment variables
@@ -1528,17 +1589,32 @@ networkPolicy:
 # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
 enableKubeBackwardCompatibility: false
 useStatefulSet: false
-# Create a dynamic manifests via values:
+
+# extraObjects could be utilized to add dynamic manifests via values
 extraObjects: []
-  # - apiVersion: "kubernetes-client.io/v1"
-  #   kind: ExternalSecret
-  #   metadata:
-  #     name: grafana-secrets
-  #   spec:
-  #     backendType: gcpSecretsManager
-  #     data:
-  #       - key: grafana-admin-password
-  #         name: adminPassword
+# Examples:
+# extraObjects:
+# - apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: grafana-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: gcpSecretsManager
+#     data:
+#     - key: grafana-admin-password
+#       name: adminPassword
+# Alternatively, you can use strings, which lets you use additional templating features:
+# extraObjects:
+# - |
+#   apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: grafana-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: gcpSecretsManager
+#     data:
+#     - key: grafana-admin-password
+#       name: {{ include "some-other-template" }}
 
 # assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
 # values are not exposed in the rendered grafana.ini configmap. It is enabled by default.

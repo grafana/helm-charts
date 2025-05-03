@@ -10,6 +10,12 @@ metricsGeneration:
     - deployment.environment
     - k8s.cluster.name
     - k8s.pod.name
+  serviceGraph:
+    # -- The interval at which metrics are flushed to downstream components.
+    metricsFlushInterval: 60s
+  spanMetrics:
+    # -- Time period after which metrics are considered stale and are removed from the cache.
+    metricsExpiration: 5m
 
 sampling:
   # -- Toggle tail sampling.
@@ -169,3 +175,6 @@ alloy-statefulset:
     create: false
   rbac:
     create: false
+liveDebugging:
+  # -- Enable live debugging in the Alloy UI.
+  enabled: false
