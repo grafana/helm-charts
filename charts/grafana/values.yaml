@@ -809,6 +809,18 @@ dashboardProviders: {}
 #      options:
 #        path: /var/lib/grafana/dashboards/default
 
+## Configure how curl fetches remote dashboards. The beginning dash is required.
+## NOTE: This sets the default short flags for all dashboards, but these
+##       defaults can be overridden individually for each dashboard by setting
+##       curlOptions. See the example dashboards section below.
+##
+## -s  - silent mode
+## -k  - allow insecure (eg: non-TLS) connections
+## -f  - fail fast
+## See the curl documentation for additional options
+##
+defaultCurlOptions: "-skf"
+
 ## Configure grafana dashboard to import
 ## NOTE: To use dashboards you must also enable/configure dashboardProviders
 ## ref: https://grafana.com/dashboards
@@ -828,6 +840,7 @@ dashboards: {}
   #     datasource: Prometheus
   #   local-dashboard:
   #     url: https://example.com/repository/test.json
+  #     curlOptions: "-sLf"
   #     token: ''
   #   local-dashboard-base64:
   #     url: https://example.com/repository/test-b64.json
