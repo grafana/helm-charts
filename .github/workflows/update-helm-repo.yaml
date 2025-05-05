@@ -103,7 +103,9 @@ jobs:
       contents: write # allows GITHUB_TOKEN to push chart release, create release, and push tags to github
       packages: write # allows GITHUB_TOKEN to push package to ghcr
     env:
+      # APP_ID and PRIVATE_KEY are overwritten by credentials from vault, if configured
       GITHUB_APP_ID: ${{ secrets.github_app_id }}
+      PRIVATE_KEY: ${{ secrets.github_app_pem }}
       VAULT_REPO_SECRET_NAME: ${{ secrets.vault_repo_secret_name }}
     if: needs.setup.outputs.changed == 'true'
     steps:
