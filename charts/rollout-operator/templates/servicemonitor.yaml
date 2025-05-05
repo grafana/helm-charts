@@ -4,7 +4,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ include "rollout-operator.fullname" . }}
   {{- with .Values.serviceMonitor.namespace }}
-  namespace: {{ . }}
+  namespace: {{ . | default $.Release.Namespace | quote }}
   {{- end }}
   labels:
     {{- include "rollout-operator.labels" . | nindent 4 }}
