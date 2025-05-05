@@ -1,5 +1,7 @@
 {{- $dict := dict "ctx" . "component" "ingester" "memberlist" true -}}
 {{- $zonesMap := include "ingester.zoneAwareReplicationMap" $dict | fromYaml -}}
+{{- $storageClass := .Values.ingester.persistence.storageClass | default .Values.global.storageClass }}
+{{- if eq $storageClass "-" }}{{- $storageClass = "" }}{{- end }}
 {{- range $zoneName, $rolloutZone := $zonesMap -}}
 {{- with $ -}}
 {{- $_ := set $dict "rolloutZoneName" $zoneName -}}
@@ -32,8 +34,7 @@ spec:
     {{- if .Values.ingester.zoneAwareReplication.enabled }}
     type: OnDelete
     {{- else }}
-    rollingUpdate:
-      partition: 0
+    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
     {{- end }}
   template:
     metadata:
@@ -189,13 +190,15 @@ spec:
         annotations:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.ingester.persistence.labels }}
+        labels:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         name: data
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- with .Values.ingester.persistence.storageClass }}
-        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
-        {{- end }}
+        storageClassName: {{ if $storageClass }}{{ $storageClass }}{{ else }}{{- "" }}{{ end }}
         resources:
           requests:
             storage: {{ .Values.ingester.persistence.size | quote }}
