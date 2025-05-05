@@ -7,6 +7,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
+  {{- with .Values.gateway.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   minReadySeconds: {{ .Values.gateway.minReadySeconds }}
 {{- if not .Values.gateway.autoscaling.enabled }}
