@@ -475,7 +475,7 @@ initChownData:
   #    cpu: 100m
   #    memory: 128Mi
   securityContext:
-    readOnlyRootFilesystem: false
+    readOnlyRootFilesystem: true
     runAsNonRoot: false
     runAsUser: 0
     seccompProfile:
@@ -483,6 +483,7 @@ initChownData:
     capabilities:
       add:
         - CHOWN
+        - DAC_READ_SEARCH
       drop:
         - ALL
 
