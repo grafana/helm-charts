@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.38.3](https://img.shields.io/badge/Version-1.38.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.39.1](https://img.shields.io/badge/Version-1.39.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -481,6 +481,7 @@ The memcached default args are removed and should be provided manually. The sett
 | extraObjects | list | `[]` | Create extra manifests via values. |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.annotations | object | `{}` | Annotations for gateway deployment |
 | gateway.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the gateway |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
@@ -935,6 +936,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
+| tempo.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
 | tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
 | tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |
