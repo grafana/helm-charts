@@ -17,4 +17,7 @@
   {{- include "statefulset.processor.batch" . }}
   {{- include "exporter.otlp" . }}
   {{- include "auth.basic" . }}
+  {{- if .Values.liveDebugging.enabled -}}
+    {{- include "liveDebugging" . }}
+  {{- end -}}
 {{- end -}}
