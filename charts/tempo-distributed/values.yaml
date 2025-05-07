@@ -2275,6 +2275,8 @@ provisioner:
     pullPolicy: IfNotPresent
   # -- Volume mounts to add to the provisioner pods
   extraVolumeMounts: []
+  # -- Volumes to add to the provisioner pods
+  extraVolumes: []
 
 
 kubectlImage:
