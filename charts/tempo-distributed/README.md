@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.39.2](https://img.shields.io/badge/Version-1.39.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.39.3](https://img.shields.io/badge/Version-1.39.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -766,6 +766,7 @@ The memcached default args are removed and should be provided manually. The sett
 | provisioner.env | list | `[]` | Additional Kubernetes environment |
 | provisioner.extraArgs | object | `{}` | Additional arguments for the provisioner command |
 | provisioner.extraVolumeMounts | list | `[]` | Volume mounts to add to the provisioner pods |
+| provisioner.extraVolumes | list | `[]` | Volumes to add to the provisioner pods |
 | provisioner.hookType | string | `"post-install"` | Hook type(s) to customize when the job runs.  defaults to post-install |
 | provisioner.image | object | `{"digest":null,"pullPolicy":"IfNotPresent","registry":"us-docker.pkg.dev","repository":"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner","tag":null}` | Provisioner image to Utilize |
 | provisioner.image.digest | string | `nil` | Overrides the image tag with an image digest |
