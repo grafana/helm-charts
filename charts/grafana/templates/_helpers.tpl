@@ -79,8 +79,8 @@ app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.
 Selector labels
 */}}
 {{- define "grafana.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Release.Name }}
-app.kubernetes.io/instance: {{ include "grafana.name" . }}
+app.kubernetes.io/name: {{ include "grafana.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
@@ -98,9 +98,9 @@ app.kubernetes.io/version: {{ mustRegexReplaceAllLiteral "@sha.*" .Values.image.
 Selector labels ImageRenderer
 */}}
 {{- define "grafana.imageRenderer.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "grafana.name" . }}
 app.kubernetes.io/component: image-renderer
-app.kubernetes.io/instance: {{ include "grafana.name" . }}-image-renderer
+app.kubernetes.io/instance: {{ .Release.Name }}-image-renderer
 {{- end }}
 
 {{/*
