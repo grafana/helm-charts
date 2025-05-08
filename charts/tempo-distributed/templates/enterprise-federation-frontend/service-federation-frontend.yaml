@@ -13,9 +13,14 @@ metadata:
 spec:
   type: {{ .Values.enterpriseFederationFrontend.service.type }}
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: 3100
+    {{- range .Values.enterpriseFederationFrontend.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
+      protocol: TCP
+      targetPort: {{ .port }}
+    {{- end }}
+    {{- end }}
   {{- if .Values.enterpriseFederationFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.enterpriseFederationFrontend.service.loadBalancerIP  }}
   {{- end }}
