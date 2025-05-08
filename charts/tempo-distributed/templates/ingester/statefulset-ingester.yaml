@@ -34,8 +34,7 @@ spec:
     {{- if .Values.ingester.zoneAwareReplication.enabled }}
     type: OnDelete
     {{- else }}
-    rollingUpdate:
-      partition: 0
+    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
     {{- end }}
   template:
     metadata:
@@ -189,6 +188,10 @@ spec:
       metadata:
         {{- with .Values.ingester.persistence.annotations }}
         annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.ingester.persistence.labels }}
+        labels:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         name: data

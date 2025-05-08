@@ -2,6 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "rollout-operator.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "rollout-operator.labels" . | nindent 4 }}
 roleRef:
