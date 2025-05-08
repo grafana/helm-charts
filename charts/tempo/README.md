@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.15.0](https://img.shields.io/badge/Version-1.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 1.21.1](https://img.shields.io/badge/Version-1.21.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -19,6 +19,7 @@ Grafana Tempo Single Binary Mode
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
+| hostAliases | list | `[]` | hostAliases to add |
 | labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
 | networkPolicy.allowExternal | bool | `true` |  |
@@ -60,16 +61,32 @@ Grafana Tempo Single Binary Mode
 | tempo.extraEnv | list | `[]` | Environment variables to add |
 | tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
 | tempo.extraVolumeMounts | list | `[]` | Volume mounts to add |
-| tempo.global_overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` |  |
-| tempo.ingester | object | `{}` | Configuration options for the ingester |
+| tempo.ingester | object | `{}` | Configuration options for the ingester. Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester |
+| tempo.livenessProbe.failureThreshold | int | `3` |  |
+| tempo.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.livenessProbe.httpGet.port | int | `3100` |  |
+| tempo.livenessProbe.initialDelaySeconds | int | `30` |  |
+| tempo.livenessProbe.periodSeconds | int | `10` |  |
+| tempo.livenessProbe.successThreshold | int | `1` |  |
+| tempo.livenessProbe.timeoutSeconds | int | `5` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
 | tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
 | tempo.multitenancyEnabled | bool | `false` |  |
-| tempo.overrides | object | `{}` |  |
+| tempo.overrides | object | `{"defaults":{},"per_tenant_override_config":"/conf/overrides.yaml"}` | The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details. |
+| tempo.overrides.defaults | object | `{}` | Default config values for all tenants, can be overridden by per-tenant overrides. If a tenant's specific overrides are not found in the `per_tenant_overrides` block, the values in this `default` block will be used. Configs inside this block should follow the new overrides indentation format |
+| tempo.overrides.per_tenant_override_config | string | `"/conf/overrides.yaml"` | Path to the per tenant override config file. The values of the `per_tenant_overrides` config below will be written to the default path `/conf/overrides.yaml`. Users can set tenant-specific overrides settings in a separate file and point per_tenant_override_config to it if not using the per_tenant_overrides block below. |
+| tempo.per_tenant_overrides | object | `{}` | The `per tenant` aka `tenant-specific` runtime overrides. This allows overriding values set in the configuration on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) and [Tenant-Specific overrides](https://grafana.com/docs/tempo/latest/configuration/#tenant-specific-overrides) documentation for more details. |
 | tempo.pullPolicy | string | `"IfNotPresent"` |  |
-| tempo.querier | object | `{}` | Configuration options for the querier |
-| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted |
+| tempo.querier | object | `{}` | Configuration options for the querier. Refers to: https://grafana.com/docs/tempo/latest/configuration/#querier |
+| tempo.queryFrontend | object | `{}` | Configuration options for the query-fronted. Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend |
+| tempo.readinessProbe.failureThreshold | int | `3` |  |
+| tempo.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.readinessProbe.httpGet.port | int | `3100` |  |
+| tempo.readinessProbe.initialDelaySeconds | int | `20` |  |
+| tempo.readinessProbe.periodSeconds | int | `10` |  |
+| tempo.readinessProbe.successThreshold | int | `1` |  |
+| tempo.readinessProbe.timeoutSeconds | int | `5` |  |
 | tempo.receivers.jaeger.protocols.grpc.endpoint | string | `"0.0.0.0:14250"` |  |
 | tempo.receivers.jaeger.protocols.thrift_binary.endpoint | string | `"0.0.0.0:6832"` |  |
 | tempo.receivers.jaeger.protocols.thrift_compact.endpoint | string | `"0.0.0.0:6831"` |  |
@@ -137,6 +154,18 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.19.0
+* Breaking Change *
+In order to reduce confusion, the overrides configurations have been renamed as below. 
+
+`global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
+`overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
+
+### From Chart versions < 1.17.0
+
+Please be aware that we've updated the Tempo version to 2.7, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-7/) before upgrading.
 
 ### From Chart versions < 1.12.0
 
