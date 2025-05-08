@@ -1,0 +1,14 @@
+apiVersion: v2
+name: cloudcost-exporter
+description: Cloud Cost Exporter exports cloud provider agnostic cost metrics to Prometheus.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 1.0.4
+
+# This is the version of cloudcost-exporter to be deployed, which should be incremented
+# with each release.
+appVersion: "0.8.1"
+
+home: https://github.com/grafana/cloudcost-exporter

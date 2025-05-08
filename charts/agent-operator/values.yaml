@@ -41,7 +41,7 @@ image:
   # -- Image repo
   repository: grafana/agent-operator
   # -- Image tag
-  tag: v0.43.3
+  tag: v0.44.2
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image pull secrets

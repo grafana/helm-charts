@@ -51,6 +51,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        {{- toYaml .Values.memcached.initContainers | nindent 8 }}
       containers:
         - image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
@@ -104,11 +106,11 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        {{- end }}
           {{- with .Values.memcached.extraVolumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- end }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.memcached.topologySpreadConstraints }}
       topologySpreadConstraints:
