@@ -2,17 +2,17 @@ apiVersion: v2
 name: grafana-sampling
 description: A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 type: application
-version: 1.1.2
-appVersion: "v1.5.1"
+version: 1.1.5
+appVersion: "v1.7.5"
 sources:
   - https://github.com/grafana/alloy
   - https://grafana.com/docs/grafana-cloud/monitor-applications/application-observability/setup/sampling/tail/
 dependencies:
   - name: alloy
-    version: 0.10.1
+    version: 0.12.5
     repository: https://grafana.github.io/helm-charts
     alias: alloy-deployment
   - name: alloy
-    version: 0.10.1
+    version: 0.12.5
     repository: https://grafana.github.io/helm-charts
     alias: alloy-statefulset

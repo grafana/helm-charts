@@ -4,9 +4,11 @@ on: workflow_call
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: install yq
         run: |
           sudo snap install yq
