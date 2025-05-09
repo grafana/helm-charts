@@ -141,7 +141,9 @@ spec:
   {{- if or .Values.memcachedChunks.persistence.enabled .Values.memcachedChunks.volumeClaimTemplates }}
   volumeClaimTemplates:
   {{- if .Values.memcachedChunks.persistence.enabled }}
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: data
       spec:
         accessModes:
