@@ -18,9 +18,17 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: http-metrics
+    {{- range .Values.distributor.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
+      protocol: TCP
+      targetPort: {{ .port }}
+      {{- if .Values.distributor.appProtocol.grpc }}
+      appProtocol: {{ .Values.distributor.appProtocol.grpc }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
     {{- if .Values.traces.jaeger.thriftCompact.enabled }}
     - name: distributor-jaeger-thrift-compact
       port: 6831
