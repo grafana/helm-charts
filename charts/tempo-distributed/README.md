@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.38.3](https://img.shields.io/badge/Version-1.38.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.39.4](https://img.shields.io/badge/Version-1.39.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -362,6 +362,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
 | distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
+| distributor.extraContainers | list | `[]` | Containers to add to the distributor pod |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
 | distributor.extraVolumeMounts | list | `[]` | Extra volumes for distributor pods |
@@ -371,7 +372,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `tempo.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `tempo.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `tempo.image.tag` |
-| distributor.initContainers | list | `[]` | Init containers for the distributor pod |
+| distributor.initContainers | list | `[]` | Init containers to add to the distributor pods |
 | distributor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | distributor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
@@ -481,6 +482,7 @@ The memcached default args are removed and should be provided manually. The sett
 | extraObjects | list | `[]` | Create extra manifests via values. |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
+| gateway.annotations | object | `{}` | Annotations for gateway deployment |
 | gateway.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the gateway |
 | gateway.autoscaling.enabled | bool | `false` | Enable autoscaling for the gateway |
 | gateway.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the gateway |
@@ -765,6 +767,7 @@ The memcached default args are removed and should be provided manually. The sett
 | provisioner.env | list | `[]` | Additional Kubernetes environment |
 | provisioner.extraArgs | object | `{}` | Additional arguments for the provisioner command |
 | provisioner.extraVolumeMounts | list | `[]` | Volume mounts to add to the provisioner pods |
+| provisioner.extraVolumes | list | `[]` | Volumes to add to the provisioner pods |
 | provisioner.hookType | string | `"post-install"` | Hook type(s) to customize when the job runs.  defaults to post-install |
 | provisioner.image | object | `{"digest":null,"pullPolicy":"IfNotPresent","registry":"us-docker.pkg.dev","repository":"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner","tag":null}` | Provisioner image to Utilize |
 | provisioner.image.digest | string | `nil` | Overrides the image tag with an image digest |
@@ -936,6 +939,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
+| tempo.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
 | tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
 | tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |

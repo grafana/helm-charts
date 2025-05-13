@@ -130,6 +130,7 @@ need to instead set `global.imageRegistry`.
 | `initChownData.image.sha`                 | init-chown-data container image sha (optional)| `""`                                                    |
 | `initChownData.image.pullPolicy`          | init-chown-data container image pull policy   | `IfNotPresent`                                          |
 | `initChownData.resources`                 | init-chown-data pod resource requests & limits | `{}`                                                   |
+| `initChownData.securityContext`           | init-chown-data pod securityContext           | `{"readOnlyRootFilesystem": false, "runAsNonRoot": false}`, "runAsUser": 0, "seccompProfile": {"type": "RuntimeDefault"}, "capabilities": {"add": ["CHOWN"], "drop": ["ALL"]}}` |
 | `schedulerName`                           | Alternate scheduler name                      | `nil`                                                   |
 | `env`                                     | Extra environment variables passed to pods    | `{}`                                                    |
 | `envValueFrom`                            | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
@@ -150,6 +151,7 @@ need to instead set `global.imageRegistry`.
 | `alerting`                                | Configure grafana alerting (passed through tpl) | `{}`                                                  |
 | `notifiers`                               | Configure grafana notifiers                   | `{}`                                                    |
 | `dashboardProviders`                      | Configure grafana dashboard providers         | `{}`                                                    |
+| `defaultCurlOptions`                      | Configure default curl short options for all dashboards, the beginning dash is required  | `-skf`       |
 | `dashboards`                              | Dashboards to import                          | `{}`                                                    |
 | `dashboardsConfigMaps`                    | ConfigMaps reference that contains dashboards | `{}`                                                    |
 | `grafana.ini`                             | Grafana's primary configuration               | `{}`                                                    |
@@ -395,7 +397,16 @@ dashboards:
       - name: DS_LOKI
         value: Loki
     local-dashboard:
-      url: https://raw.githubusercontent.com/user/repository/master/dashboards/dashboard.json
+      url: https://github.com/cloudnative-pg/grafana-dashboards/blob/main/charts/cluster/grafana-dashboard.json
+      # redirects to:
+      # https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/refs/heads/main/charts/cluster/grafana-dashboard.json
+
+      # default: -skf
+      # -s  - silent mode
+      # -k  - allow insecure (eg: non-TLS) connections
+      # -f  - fail fast
+      # -L  - follow HTTP redirects
+      curlOptions: -Lf
 ```
 
 ## BASE64 dashboards

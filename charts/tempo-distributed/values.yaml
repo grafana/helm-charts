@@ -68,6 +68,8 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
+  # -- The number of old ReplicaSets to retain to allow rollback
+  revisionHistoryLimit: 10
   # -- SecurityContext holds container-level security attributes and common container settings
   securityContext:
     runAsNonRoot: true
@@ -537,6 +539,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Init containers to add to the distributor pods
+  initContainers: []
+  # -- Containers to add to the distributor pod
+  extraContainers: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
@@ -579,8 +585,6 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
-  # -- Init containers for the distributor pod
-  initContainers: []
   # -- Extra volumes for distributor pods
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
@@ -1925,6 +1929,8 @@ gateway:
   priorityClassName: null
   # -- Labels for gateway pods
   podLabels: {}
+  # -- Annotations for gateway deployment
+  annotations: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -2295,6 +2301,8 @@ provisioner:
     pullPolicy: IfNotPresent
   # -- Volume mounts to add to the provisioner pods
   extraVolumeMounts: []
+  # -- Volumes to add to the provisioner pods
+  extraVolumes: []
 
 
 kubectlImage:
