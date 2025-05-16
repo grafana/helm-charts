@@ -45,7 +45,10 @@ resources: {}
 nodeSelector: {}
 # -- Tolerations for vulture pods
 tolerations: []
-
+# -- SecurityContext holds container-level security attributes and common container settings
+securityContext: {}
+# -- podSecurityContext holds pod-level security attributes and common container settings
+podSecurityContext: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
