@@ -12,7 +12,9 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: {{ .Values.compactor.minReadySeconds }}
+{{- if not .Values.compactor.autoscaling.enabled }}
   replicas: {{ .Values.compactor.replicas }}
+{{- end }}
   revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
