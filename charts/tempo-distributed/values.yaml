@@ -2527,3 +2527,18 @@ extraObjects: []
   #     data:
   #       - key: secret-access-key
   #         name: awssm-secret
+  #
+  # alternatively, you can use strings, which will be templated:
+  #
+  # - |
+  #   apiVersion: "kubernetes-client.io/v1"
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: {{ .Release.Name }}-secrets
+  #     labels:
+  #       {{- include "tempo.labels" . | nindent 4 }}
+  #   spec:
+  #     backendType: aws
+  #     data:
+  #       - key: secret-access-key
+  #         name: awssm-secret
