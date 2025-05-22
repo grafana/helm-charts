@@ -19,16 +19,17 @@ spec:
   ipFamilies: {{ .Values.tempo.service.ipFamilies }}
   ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: http-metrics
-    - name: grpc
-      port: 9095
+    {{- range .Values.distributor.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
       protocol: TCP
-      targetPort: 9095
+      targetPort: {{ .port }}
       {{- if .Values.distributor.appProtocol.grpc }}
       appProtocol: {{ .Values.distributor.appProtocol.grpc }}
       {{- end }}
+    {{- end }}
+    {{- end }}
     {{- if .Values.traces.jaeger.thriftCompact.enabled }}
     - name: distributor-jaeger-thrift-compact
       port: 6831
