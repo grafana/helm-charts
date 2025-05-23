@@ -2531,16 +2531,16 @@ enterpriseGateway:
     annotations: {}
     # -- Hosts configuration for the enterprise-gateway ingress
     hosts:
-      - host: gateway.gem.example.com
+      - host: gateway.get.example.com
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the enterprise-gateway ingress
     tls:
-      - secretName: gem-gateway-tls
+      - secretName: get-gateway-tls
         hosts:
-          - gateway.gem.example.com
+          - gateway.get.example.com
 
 # -- Create extra manifests via values.
 extraObjects: []
