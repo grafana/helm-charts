@@ -38,6 +38,10 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "tempo-vulture.serviceAccountName" . }}
       containers:
         - name: tempo-vulture
@@ -63,6 +67,10 @@ spec:
           ports:
             - containerPort: 8080
               name: prom-metrics
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
