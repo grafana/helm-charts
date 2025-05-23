@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.39.0](https://img.shields.io/badge/Version-1.39.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.40.1](https://img.shields.io/badge/Version-1.40.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -362,6 +362,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
 | distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
+| distributor.extraContainers | list | `[]` | Containers to add to the distributor pod |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
 | distributor.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the distributor pods |
 | distributor.extraVolumeMounts | list | `[]` | Extra volumes for distributor pods |
@@ -371,7 +372,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.image.registry | string | `nil` | The Docker registry for the distributor image. Overrides `tempo.image.registry` |
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `tempo.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `tempo.image.tag` |
-| distributor.initContainers | list | `[]` | Init containers for the distributor pod |
+| distributor.initContainers | list | `[]` | Init containers to add to the distributor pods |
 | distributor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | distributor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
@@ -615,6 +616,18 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[2].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
 | ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` | If you enable this, make sure to disable the gateway's ingress. |
+| ingress.hosts[0] | string | `"tempo.example.com"` |  |
+| ingress.paths.compactor[0].path | string | `"/compactor/ring"` |  |
+| ingress.paths.distributor[0].path | string | `"/v1/traces"` |  |
+| ingress.paths.distributor[0].port | int | `4318` |  |
+| ingress.paths.distributor[1].path | string | `"/distributor/ring"` |  |
+| ingress.paths.distributor[2].path | string | `"/ingester/ring"` |  |
+| ingress.paths.distributor[3].path | string | `"/metrics-generator/ring"` |  |
+| ingress.paths.ingester[0].path | string | `"/flush"` |  |
+| ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
+| ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
 | kubectlImage.repository | string | `"bitnami/kubectl"` |  |
 | kubectlImage.tag | string | `"latest"` |  |
@@ -765,6 +778,7 @@ The memcached default args are removed and should be provided manually. The sett
 | provisioner.env | list | `[]` | Additional Kubernetes environment |
 | provisioner.extraArgs | object | `{}` | Additional arguments for the provisioner command |
 | provisioner.extraVolumeMounts | list | `[]` | Volume mounts to add to the provisioner pods |
+| provisioner.extraVolumes | list | `[]` | Volumes to add to the provisioner pods |
 | provisioner.hookType | string | `"post-install"` | Hook type(s) to customize when the job runs.  defaults to post-install |
 | provisioner.image | object | `{"digest":null,"pullPolicy":"IfNotPresent","registry":"us-docker.pkg.dev","repository":"grafanalabs-global/docker-enterprise-provisioner-prod/enterprise-provisioner","tag":null}` | Provisioner image to Utilize |
 | provisioner.image.digest | string | `nil` | Overrides the image tag with an image digest |
@@ -804,6 +818,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.initContainers | list | `[]` | Init containers for the querier pod |
 | querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| querier.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.podLabels | object | `{}` | Labels for querier pods |
@@ -936,6 +951,7 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
 | tempo.readinessProbe.initialDelaySeconds | int | `30` |  |
 | tempo.readinessProbe.timeoutSeconds | int | `1` |  |
+| tempo.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
 | tempo.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | SecurityContext holds container-level security attributes and common container settings |
 | tempo.service.ipFamilies | list | `["IPv4"]` | Configure the IP families for all tempo services See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core |
 | tempo.service.ipFamilyPolicy | string | `"SingleStack"` | Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack |
