@@ -48,6 +48,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.40.1
+* Breaking Change *
+For the sake of consistency, the default port has been changed from 3100 to 3200.
+
 ### From Chart versions < 1.33.0
 * Breaking Change *
 In order to reduce confusion, the overrides configurations have been renamed as below. 
