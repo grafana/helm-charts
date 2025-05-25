@@ -125,8 +125,8 @@ spec:
         {{- end }}
       {{- if .Values.tempoQuery.enabled }}
       - args:
-        - --query.base-path=/
-        - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
+        - -config
+        - /conf/tempo-query.yaml
         {{- range $key, $value := .Values.tempoQuery.extraArgs }}
         - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
