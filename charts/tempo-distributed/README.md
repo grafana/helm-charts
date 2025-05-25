@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.40.1](https://img.shields.io/badge/Version-1.40.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 1.40.3](https://img.shields.io/badge/Version-1.40.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -447,8 +447,8 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseGateway.image.tag | string | `nil` | Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag` |
 | enterpriseGateway.ingress.annotations | object | `{}` | Annotations for the enterprise-gateway ingress |
 | enterpriseGateway.ingress.enabled | bool | `false` | Specifies whether an ingress for the enterprise-gateway should be created |
-| enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.gem.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the enterprise-gateway ingress |
-| enterpriseGateway.ingress.tls | list | `[{"hosts":["gateway.gem.example.com"],"secretName":"gem-gateway-tls"}]` | TLS configuration for the enterprise-gateway ingress |
+| enterpriseGateway.ingress.hosts | list | `[{"host":"gateway.get.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the enterprise-gateway ingress |
+| enterpriseGateway.ingress.tls | list | `[{"hosts":["gateway.get.example.com"],"secretName":"get-gateway-tls"}]` | TLS configuration for the enterprise-gateway ingress |
 | enterpriseGateway.initContainers | list | `[]` |  |
 | enterpriseGateway.nodeSelector | object | `{}` |  |
 | enterpriseGateway.persistence.subPath | string | `nil` |  |
@@ -818,6 +818,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.initContainers | list | `[]` | Init containers for the querier pod |
 | querier.maxSurge | int | `0` | Max Surge for querier pods |
 | querier.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
+| querier.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
 | querier.podLabels | object | `{}` | Labels for querier pods |
