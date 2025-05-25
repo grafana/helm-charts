@@ -824,6 +824,8 @@ querier:
   rollingUpdate:
     # -- Maximum number of Pods that can be unavailable during the update process
     maxUnavailable: 1
+  # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
+  minReadySeconds: 10
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -2170,6 +2172,30 @@ gateway:
         }
       }
 
+ingress:
+  # -- If you enable this, make sure to disable the gateway's ingress.
+  enabled: false
+  # ingressClassName: nginx
+  annotations: {}
+  paths:
+    distributor:
+      - path: /v1/traces
+        port: 4318
+      - path: /distributor/ring
+        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+        # pathType: Prefix
+      - path: /ingester/ring
+      - path: /metrics-generator/ring
+    ingester:
+      - path: /flush
+      - path: /shutdown
+    query-frontend:
+      - path: /api
+    compactor:
+      - path: /compactor/ring
+  hosts:
+    - tempo.example.com
+
 ##############################################################################
 # The values in and after the `enterprise:` key configure the enterprise features
 enterprise:
@@ -2505,16 +2531,16 @@ enterpriseGateway:
     annotations: {}
     # -- Hosts configuration for the enterprise-gateway ingress
     hosts:
-      - host: gateway.gem.example.com
+      - host: gateway.get.example.com
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the enterprise-gateway ingress
     tls:
-      - secretName: gem-gateway-tls
+      - secretName: get-gateway-tls
         hosts:
-          - gateway.gem.example.com
+          - gateway.get.example.com
 
 # -- Create extra manifests via values.
 extraObjects: []
