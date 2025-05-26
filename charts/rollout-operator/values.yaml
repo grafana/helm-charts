@@ -2,6 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+
+global:
+  # -- Common labels for all object directly managed by this chart.
+  commonLabels: {}
+
+
 image:
   repository: grafana/rollout-operator
   pullPolicy: IfNotPresent
@@ -44,6 +50,9 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+# -- List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`)
+extraArgs: []
 
 resources:
   limits:

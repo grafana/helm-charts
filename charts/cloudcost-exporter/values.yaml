@@ -1,0 +1,86 @@
+# Default values for cloudcost-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of replicas
+replicaCount: 1
+
+image:
+  # -- Image to use for deploying
+  repository: grafana/cloudcost-exporter
+  # -- Pull policy for the image
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# -- Secrets to use for pulling the image
+imagePullSecrets: []
+
+# -- Override the name of the release
+nameOverride: ""
+
+# -- Container port name
+portName: http
+
+# -- Override the full name of the chart and release
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Annotations to add to the pod
+podAnnotations: {}
+
+# -- Container arguments, usually to configure the deployment per CSP
+containerArgs: []
+
+securityContext:
+  # -- Filesystem group to associate for each pod
+  fsGroup: 10001
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 8080
+  # -- Service protocol
+  protocol: TCP
+
+resources:
+  limits:
+    # -- CPU limit
+    cpu: "2"
+    # -- Memory limit
+    memory: 2Gi
+  requests:
+    # -- CPU request
+    cpu: "1"
+    # -- Memory request
+    memory: 1Gi
+
+# -- Node selector
+nodeSelector: {}
+
+# -- List of node taints to tolerate
+tolerations: []
+
+# -- Node/pod affinities
+affinity: {}
+
+# -- List of volumes
+volumes: []
+
+# -- List of volume mounts
+volumeMounts: []
+
+# -- Seconds a pod should be ready to be considered available
+minReadySeconds: 10
+
+# -- Number of old versions to retain to allow rollback
+revisionHistoryLimit: 10
