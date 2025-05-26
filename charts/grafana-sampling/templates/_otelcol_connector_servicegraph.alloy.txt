@@ -6,7 +6,8 @@ otelcol.connector.servicegraph "default" {
     {{ . | quote }},
     {{- end }}
   ]
-  latency_histogram_buckets = ["0s", "0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
+  latency_histogram_buckets = ["0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
+  metrics_flush_interval = {{ $.Values.metricsGeneration.serviceGraph.metricsFlushInterval | quote }}
 
   store {
     ttl = "2s"

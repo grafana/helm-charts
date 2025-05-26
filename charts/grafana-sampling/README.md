@@ -1,6 +1,6 @@
 # grafana-sampling
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.3.0](https://img.shields.io/badge/AppVersion-v1.3.0-informational?style=flat-square)
+![Version: 1.1.5](https://img.shields.io/badge/Version-1.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.7.5](https://img.shields.io/badge/AppVersion-v1.7.5-informational?style=flat-square)
 
 A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 
@@ -139,9 +139,18 @@ A major chart version change indicates that there is an incompatible breaking ch
 | alloy-statefulset.rbac.create | bool | `false` |  |
 | alloy-statefulset.service.clusterIP | string | `"None"` |  |
 | alloy-statefulset.serviceAccount.create | bool | `false` |  |
-| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name"]` | Additional dimensions to add to generated metrics. |
+| batch.deployment | object | `{"send_batch_max_size":0,"send_batch_size":8192,"timeout":"200ms"}` | Configure batch processing options. |
+| batch.statefulset.send_batch_max_size | int | `0` |  |
+| batch.statefulset.send_batch_size | int | `8192` |  |
+| batch.statefulset.timeout | string | `"200ms"` |  |
+| deployment.otlp.receiver | object | `{"grpc":{"max_recv_msg_size":"4MB"}}` | otlp receiver settings for deployment (loadbalancer) |
+| deployment.otlp.receiver.grpc.max_recv_msg_size | string | `"4MB"` | gRPC max message receive size. Default to 4MB |
+| liveDebugging.enabled | bool | `false` | Enable live debugging in the Alloy UI. |
+| metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name","k8s.pod.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
 | metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
+| metricsGeneration.serviceGraph.metricsFlushInterval | string | `"60s"` | The interval at which metrics are flushed to downstream components. |
+| metricsGeneration.spanMetrics.metricsExpiration | string | `"5m"` | Time period after which metrics are considered stale and are removed from the cache. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
 | sampling.enabled | bool | `true` | Toggle tail sampling. |
 | sampling.extraPolicies | string | A policy to sample long requests is added by default. | User-defined policies in alloy format. |
@@ -149,4 +158,6 @@ A major chart version change indicates that there is an incompatible breaking ch
 | sampling.failedRequests.sample | bool | `false` | Toggle sampling failed requests. |
 | sampling.successfulRequests.percentage | int | `10` | Percentage of successful requests to sample. |
 | sampling.successfulRequests.sample | bool | `true` | Toggle sampling successful requests. |
+| statefulset.otlp.receiver | object | `{"grpc":{"max_recv_msg_size":"4MB"}}` | otlp receiver settings for statefulset (sampler) |
+| statefulset.otlp.receiver.grpc.max_recv_msg_size | string | `"4MB"` | gRPC max message receive size. Default to 4MB |
 

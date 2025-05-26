@@ -11,18 +11,18 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  minReadySeconds: 10
+  minReadySeconds: {{ .Values.querier.minReadySeconds }}
 {{- if not .Values.querier.autoscaling.enabled }}
   replicas: {{ .Values.querier.replicas }}
 {{- end }}
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   strategy:
     rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
+      maxSurge: {{ .Values.querier.maxSurge }}
+      maxUnavailable: {{ .Values.querier.rollingUpdate.maxUnavailable }}
   template:
     metadata:
       labels:
@@ -56,6 +56,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        {{- toYaml .Values.querier.initContainers | nindent 8 }}
       containers:
         - args:
             - -target=querier
@@ -73,9 +75,14 @@ spec:
               protocol: TCP
             - containerPort: 3100
               name: http-metrics
-          {{- with .Values.querier.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.querier.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.querier.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.querier.extraEnvFrom }}
           envFrom:
