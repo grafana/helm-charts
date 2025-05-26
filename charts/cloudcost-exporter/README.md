@@ -2,7 +2,7 @@
 
 Cloud Cost Exporter exports cloud provider agnostic cost metrics to Prometheus.
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.13](https://img.shields.io/badge/AppVersion-0.7.13-informational?style=flat-square)
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.1](https://img.shields.io/badge/AppVersion-0.8.1-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -38,6 +38,7 @@ Documentation per CSP will vary (especially when it comes to authentication). Be
 | nameOverride | string | `""` | Override the name of the release |
 | nodeSelector | object | `{}` | Node selector |
 | podAnnotations | object | `{}` | Annotations to add to the pod |
+| portName | string | `"http"` | Container port name |
 | replicaCount | int | `1` | Number of replicas |
 | resources.limits.cpu | string | `"2"` | CPU limit |
 | resources.limits.memory | string | `"2Gi"` | Memory limit |
@@ -46,7 +47,6 @@ Documentation per CSP will vary (especially when it comes to authentication). Be
 | revisionHistoryLimit | int | `10` | Number of old versions to retain to allow rollback |
 | securityContext.fsGroup | int | `10001` | Filesystem group to associate for each pod |
 | service.port | int | `8080` | Service port |
-| service.portName | string | `"http"` | Service port name |
 | service.protocol | string | `"TCP"` | Service protocol |
 | service.type | string | `"ClusterIP"` | Service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
