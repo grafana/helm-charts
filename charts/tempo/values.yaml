@@ -1,3 +1,7 @@
+global:
+  # -- Common labels for all object directly managed by this chart.
+  commonLabels: {}
+
 # -- Overrides the chart's name
 nameOverride: ""
 
@@ -9,6 +13,9 @@ replicas: 1
 
 # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
 # revisionHistoryLimit: 1
+
+# -- labels for tempo
+labels: {}
 
 # -- Annotations for the StatefulSet
 annotations: {}
@@ -41,27 +48,70 @@ tempo:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
-  # -- Configuration options for the ingester
+  # -- Configuration options for the ingester.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester
   ingester: {}
-  # -- Configuration options for the querier
+  #  flush_check_period: 10s
+  #  trace_idle_period: 10s
+  #  max_block_duration: 30m
+  #  complete_block_timeout: 1h
+  # -- Configuration options for the querier.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#querier
   querier: {}
-  # -- Configuration options for the query-fronted
+  #  max_concurrent_queries: 20
+  # -- Configuration options for the query-fronted.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend
   queryFrontend: {}
+  #  search:
+  #    concurrent_jobs: 2000
   retention: 24h
-  # Global overrides
-  global_overrides:
-    per_tenant_override_config: /conf/overrides.yaml
-  overrides: {}
+  # -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
+  overrides:
+    # -- Default config values for all tenants, can be overridden by per-tenant overrides. If a tenant's specific overrides are not found in the `per_tenant_overrides` block, the values in this `default` block will be used. Configs inside this block should follow the new overrides indentation format
+    defaults: {}
+    #  metrics_generator:
+    #    processors:
+    #      - service-graphs
+    #      - span-metrics
 
-  # Tempo server configuration
-  # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
+    # -- Path to the per tenant override config file. The values of the `per_tenant_overrides` config below will be written to the default path `/conf/overrides.yaml`. Users can set tenant-specific overrides settings in a separate file and point per_tenant_override_config to it if not using the per_tenant_overrides block below.
+    per_tenant_override_config: /conf/overrides.yaml
+  # -- The `per tenant` aka `tenant-specific` runtime overrides. This allows overriding values set in the configuration on a per-tenant basis. Note that *all* values must be given for each per-tenant configuration block. Refer to [Runtime overrides](https://grafana.com/docs/tempo/latest/configuration/#runtime-overrides) and [Tenant-Specific overrides](https://grafana.com/docs/tempo/latest/configuration/#tenant-specific-overrides) documentation for more details.
+  per_tenant_overrides: {}
+    # 'tenant-id':
+    #  metrics_generator:
+    #    processors:
+    #      - service-graphs
+    #      - span-metrics
+
+  # Tempo server configuration.
+  # Refers to: https://grafana.com/docs/tempo/latest/configuration/#server
   server:
     # -- HTTP server listen port
     http_listen_port: 3100
+  # Readiness and Liveness Probe Configuration Options
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: 3100
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 3100
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
   storage:
     trace:
-      # tempo storage backend
-      # refer https://grafana.com/docs/tempo/latest/configuration/
+      # tempo storage backend.
+      # Refers to: https://grafana.com/docs/tempo/latest/configuration/#storage
       ## Use s3 for example
       # backend: s3
       # store traces in s3
@@ -119,6 +169,8 @@ tempo:
 # -- Tempo configuration file contents
 # @default -- Dynamically generated tempo configmap
 config: |
+    memberlist:
+      cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
     multitenancy_enabled: {{ .Values.tempo.multitenancyEnabled }}
     usage_report:
       reporting_enabled: {{ .Values.tempo.reportingEnabled }}
@@ -139,16 +191,15 @@ config: |
     query_frontend:
       {{- toYaml .Values.tempo.queryFrontend | nindent 6 }}
     overrides:
-      {{- toYaml .Values.tempo.global_overrides | nindent 6 }}
+      {{- toYaml .Values.tempo.overrides | nindent 6 }}
       {{- if .Values.tempo.metricsGenerator.enabled }}
-          metrics_generator_processors:
-          - 'service-graphs'
-          - 'span-metrics'
     metrics_generator:
           storage:
             path: "/tmp/tempo"
             remote_write:
               - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+          traces_storage:
+            path: "/tmp/traces"
       {{- end }}
 
 tempoQuery:
@@ -157,7 +208,7 @@ tempoQuery:
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Refers to: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
@@ -232,11 +283,11 @@ tempoQuery:
     # readOnlyRootFilesystem: false # fails if true, do not enable
 
 # -- securityContext for container
-securityContext: {}
-  # runAsUser: 65532
-  # runAsGroup: 65532
-  # fsGroup: 65532
-  # runAsNonRoot: true
+securityContext:
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  runAsNonRoot: true
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -254,8 +305,15 @@ serviceAccount:
 
 service:
   type: ClusterIP
+  clusterIP: ""
+  # -- (string) IP address, in case of 'type: LoadBalancer'
+  loadBalancerIP:
+  # -- If service type is LoadBalancer, the exposed protocol can either be "UDP", "TCP" or "UDP,TCP"
+  protocol: "TCP"
+
   annotations: {}
   labels: {}
+  targetPort: ""
 
 serviceMonitor:
   enabled: false
@@ -266,6 +324,8 @@ serviceMonitor:
 
 persistence:
   enabled: false
+    # -- Enable StatefulSetAutoDeletePVC feature
+  enableStatefulSetAutoDeletePVC: false
   # storageClassName: local-path
   accessModes:
     - ReadWriteOnce
@@ -294,3 +354,62 @@ affinity: {}
 
 # -- The name of the PriorityClass
 priorityClassName: null
+# -- hostAliases to add
+hostAliases: []
+#  - ip: 1.2.3.4
+#    hostnames:
+#      - domain.tld
+networkPolicy:
+  ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
+  ##
+  enabled: false
+  ## @param networkPolicy.allowExternal Don't require client label for connections
+  ## The Policy model to apply. When set to false, only pods with the correct
+  ## client label will have network access to  tempo port defined.
+  ## When true, tempo will accept connections from any source
+  ## (with the correct destination port).
+  ##
+  ingress: true
+  ## @param networkPolicy.ingress When true enables the creation
+  ## an ingress network policy
+  ##
+  allowExternal: true
+  ## @param networkPolicy.explicitNamespacesSelector A Kubernetes LabelSelector to explicitly select namespaces from which traffic could be allowed
+  ## If explicitNamespacesSelector is missing or set to {}, only client Pods that are in the networkPolicy's namespace
+  ## and that match other criteria, the ones that have the good label, can reach the tempo.
+  ## But sometimes, we want the tempo to be accessible to clients from other namespaces, in this case, we can use this
+  ## LabelSelector to select these namespaces, note that the networkPolicy's namespace should also be explicitly added.
+  ##
+  ## Example:
+  ## explicitNamespacesSelector:
+  ##   matchLabels:
+  ##     role: frontend
+  ##   matchExpressions:
+  ##    - {key: role, operator: In, values: [frontend]}
+  ##
+  explicitNamespacesSelector: {}
+  ##
+  egress:
+    ## @param networkPolicy.egress.enabled When enabled, an egress network policy will be
+    ## created allowing tempo to connect to external data sources from kubernetes cluster.
+    enabled: false
+    ##
+    ## @param networkPolicy.egress.blockDNSResolution When enabled, DNS resolution will be blocked
+    ## for all pods in the tempo namespace.
+    blockDNSResolution: false
+    ##
+    ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
+    ports: []
+    ## Add ports to the egress by specifying - port: <port number>
+    ## E.X.
+    ## - port: 80
+    ## - port: 443
+    ##
+    ## @param networkPolicy.egress.to Allow egress traffic to specific destinations
+    to: []
+    ## Add destinations to the egress by specifying - ipBlock: <CIDR>
+    ## E.X.
+    ## to:
+    ##  - namespaceSelector:
+    ##    matchExpressions:
+  ##    - {key: role, operator: In, values: [tempo]}

@@ -9,9 +9,11 @@ metadata:
     {{- include "tempo.labels" $dict | nindent 4 }}
   {{- with .Values.metricsGenerator.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
+  ipFamilies: {{ .Values.tempo.service.ipFamilies }}
+  ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
     {{- range .Values.metricsGenerator.ports }}
     {{- if .service }}

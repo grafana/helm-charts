@@ -1,6 +1,6 @@
 {{- define "statefulset.processor.transform.use_grafana_metric_names" -}}
 otelcol.processor.transform "use_grafana_metric_names" {
-  // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.processor.transform/
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.processor.transform/
   error_mode = "ignore"
 
   metric_statements {
@@ -20,7 +20,7 @@ otelcol.processor.transform "use_grafana_metric_names" {
 
 {{- define "statefulset.processor.transform.drop_unneeded_resource_attributes"}}
 otelcol.processor.transform "drop_unneeded_resource_attributes" {
-    // https://grafana.com/docs/agent/latest/flow/reference/components/otelcol.processor.transform/
+    // https://grafana.com/docs/alloy/latest/reference/components/otelcol.processor.transform/
     error_mode = "ignore"
 
     trace_statements {

@@ -188,7 +188,8 @@ Calculate the config from structured and unstructured text input
 Renders the overrides config
 */}}
 {{- define "tempo.overridesConfig" -}}
-{{ tpl .Values.overrides . }}
+overrides:
+{{ toYaml .Values.per_tenant_overrides | indent 2 }}
 {{- end -}}
 
 {{/*

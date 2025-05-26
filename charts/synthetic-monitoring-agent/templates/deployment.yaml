@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "synthetic-monitoring-agent.labels" . | nindent 4 }}
 spec:
+  {{- with .Values.deploymentStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   minReadySeconds: 10
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -63,10 +67,16 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: api-token
-                  name: {{ include "synthetic-monitoring-agent.fullname" . }}
+                  name: {{ (tpl .Values.secret.existingSecret .) | default (include "synthetic-monitoring-agent.fullname" .) }}
+            {{- with .Values.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: synthetic-monitoring-agent-tmpfs
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -95,3 +105,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: synthetic-monitoring-agent-tmpfs
+          emptyDir: {}
