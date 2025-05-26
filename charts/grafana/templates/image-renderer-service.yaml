@@ -11,7 +11,7 @@ metadata:
     {{- end }}
   {{- with .Values.imageRenderer.service.annotations }}
   annotations:
-    {{- tpl (toYaml . | nindent 4) $root }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: ClusterIP
