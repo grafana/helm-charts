@@ -70,6 +70,7 @@ podDisruptionBudget: {}
 #  apiVersion: ""
 #  minAvailable: 1
 #  maxUnavailable: 1
+#  unhealthyPodEvictionPolicy: IfHealthyBudget
 
 ## See `kubectl explain deployment.spec.strategy` for more
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
