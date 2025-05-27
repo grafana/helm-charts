@@ -120,6 +120,11 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.alerts.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
