@@ -483,7 +483,7 @@ The memcached default args are removed and should be provided manually. The sett
 | externalConfigSecretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"config\") }}"` | Name of the Secret or ConfigMap that contains the configuration (used for naming even if config is internal). |
 | externalConfigVersion | string | `"0"` | When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart. |
 | externalRuntimeConfigName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"runtime\") }}"` | Name of the Secret or ConfigMap that contains the runtime configuration (used for naming even if config is internal). |
-| extraObjects | list | `[]` | Create extra manifests via values. |
+| extraObjects | list | `[]` | extraObjects could be utilized to add dynamic manifests via values |
 | fullnameOverride | string | `""` |  |
 | gateway.affinity | string | Hard node and soft zone anti-affinity | Affinity for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.annotations | object | `{}` | Annotations for gateway deployment |
