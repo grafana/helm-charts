@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.40.3](https://img.shields.io/badge/Version-1.40.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 1.41.0](https://img.shields.io/badge/Version-1.41.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -48,7 +48,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### From Chart versions < 1.40.1
+### From Chart versions < 1.41.0
 * Breaking Change *
 In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
 
