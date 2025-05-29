@@ -252,6 +252,14 @@ ingester:
     complete_block_timeout: null
     # -- Flush all traces to backend when ingester is stopped
     flush_all_on_shutdown: false
+  # -- Ingester service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for ingester service
     annotations: {}
@@ -423,17 +431,6 @@ metricsGenerator:
     whenScaled: Retain
     # -- Volume retention behavior that applies when the StatefulSet is deleted
     whenDeleted: Retain
-  # -- Default ports
-  ports:
-    - name: grpc
-      port: 9095
-      service: true
-    - name: http-memberlist
-      port: 7946
-      service: false
-    - name: http-metrics
-      port: 3100
-      service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
     registry:
@@ -468,6 +465,17 @@ metricsGenerator:
     traces_storage:
       path: /var/tempo/traces
     metrics_ingestion_time_range_slack: 30s
+  # -- Metrics-generator service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-memberlist
+      port: 7946
+      service: false
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
@@ -507,6 +515,14 @@ distributor:
     repository: null
     # -- Docker image tag for the distributor image. Overrides `tempo.image.tag`
     tag: null
+  # -- Distributor service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for distributor service
     annotations: {}
@@ -735,6 +751,14 @@ compactor:
       max_time_per_tenant: 5m
       # -- The time between compaction cycles
       compaction_cycle: 30s
+  # -- Compactor service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for compactor service
     annotations: {}
@@ -848,7 +872,14 @@ querier:
       query_timeout: 30s
     # -- This value controls the overall number of simultaneous subqueries that the querier will service at once. It does not distinguish between the types of queries.
     max_concurrent_queries: 20
-
+  # -- Querier service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
     # -- Annotations for querier service
     annotations: {}
@@ -871,6 +902,17 @@ queryFrontend:
       repository: grafana/tempo-query
       # -- Docker image tag for the tempo-query image. Overrides `tempo.image.tag`
       tag: null
+    # -- Query service ports
+    ports:
+      - name: tempo-query-metrics
+        port: 16687
+        service: true
+      - name: tempo-query-jaeger-ui
+        port: 16686
+        service: true
+      - name: tempo-query-jaeger-grpc
+        port: 16685
+        service: true
     # -- Resource requests and limits for the query
     resources: {}
     # -- Additional CLI args for tempo-query pods
@@ -951,9 +993,15 @@ queryFrontend:
     repository: null
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
+  # -- QueryFrontend service ports
+  ports:
+    - name: grpc
+      port: 9095
+      service: true
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
-    # -- Port of the query-frontend service
-    port: 16686
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Labels for queryFrontend service
@@ -1088,9 +1136,12 @@ enterpriseFederationFrontend:
     repository: null
     # -- Docker image tag for the federation-frontend image. Overrides `tempo.image.tag`
     tag: null
+  # -- Federation-frontend service ports
+  ports:
+    - name: http-metrics
+      port: 3100
+      service: true
   service:
-    # -- Port of the federation-frontend service
-    port: 3100
     # -- Annotations for enterpriseFederationFrontend service
     annotations: {}
     # -- Type of service for the enterpriseFederationFrontend
@@ -1884,6 +1935,9 @@ minio:
   persistence:
     size: 5Gi
   resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -1947,6 +2001,12 @@ gateway:
   extraVolumeMounts: []
   # -- Resource requests and limits for the gateway
   resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
+  #  requests:
+  #    cpu: 500m
+  #    memory: 512Mi
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string
@@ -1984,6 +2044,8 @@ gateway:
   tolerations: []
   # Gateway service configuration
   service:
+    # -- Port Name of the gateway service
+    name: http-gateway
     # -- Port of the gateway service
     port: 80
     # -- Type of the gateway service
@@ -2041,9 +2103,11 @@ gateway:
   readinessProbe:
     httpGet:
       path: /
-      port: http-metrics
     initialDelaySeconds: 15
     timeoutSeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
   nginxConfig:
     # -- NGINX log format
     logFormat: |-
@@ -2138,32 +2202,32 @@ gateway:
 
           location ^~ /api {
             set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$query_frontend:3100$request_uri;
+            proxy_pass       http://$query_frontend:{{ .Values.queryFrontend.ports }}$request_uri;
           }
 
           location = /flush {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:{{ .Values.ingester.ports }}$request_uri;
           }
 
           location = /shutdown {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:{{ .Values.ingester.ports }}$request_uri;
           }
 
           location = /distributor/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:{{ .Values.distributor.ports }}$request_uri;
           }
 
           location = /ingester/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:{{ .Values.distributor.ports }}$request_uri;
           }
 
           location = /compactor/ring {
             set $compactor {{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$compactor:3100$request_uri;
+            proxy_pass       http://$compactor:{{ .Values.compactor.ports }}request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}

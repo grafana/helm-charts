@@ -70,8 +70,10 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: compactor
           ports:
-            - containerPort: 3100
-              name: http-metrics
+            {{- range .Values.compactor.ports }}
+            - name: {{ .name | quote }}
+              containerPort: {{ .port }}
+            {{- end }}
             - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
           {{- if or .Values.global.extraEnv .Values.compactor.extraEnv }}

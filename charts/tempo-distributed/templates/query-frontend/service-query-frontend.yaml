@@ -17,23 +17,26 @@ spec:
   ipFamilies: {{ .Values.tempo.service.ipFamilies }}
   ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
-    - name: http-metrics
-      port: 3100
-      targetPort: 3100
-    - name: grpc
-      port: 9095
+    {{- range .Values.queryFrontend.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
       protocol: TCP
-      targetPort: 9095
-      {{- if .Values.queryFrontend.appProtocol.grpc }}
-      appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
+      targetPort: {{ .port }}
+      {{- if and (hasPrefix .name "grpc") ($.Values.queryFrontend.appProtocol.grpc) }}
+      appProtocol: {{ $.Values.queryFrontend.appProtocol.grpc }}
       {{- end }}
+    {{- end }}
+    {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
-    - name: tempo-query-jaeger-ui
-      port: {{ .Values.queryFrontend.service.port }}
-      targetPort: {{ .Values.queryFrontend.service.port }}
-    - name: tempo-query-metrics
-      port: 16687
-      targetPort: jaeger-metrics
+    {{- range .Values.queryFrontend.query.ports }}
+    {{- if .service }}
+    - name: {{ .name | quote }}
+      port: {{ .port }}
+      protocol: TCP
+      targetPort: {{ .port }}
+    {{- end }}
+    {{- end }}
     {{- end }}
   {{- if .Values.queryFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.queryFrontend.service.loadBalancerIP  }}
