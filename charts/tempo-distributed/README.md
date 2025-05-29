@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.40.4](https://img.shields.io/badge/Version-1.40.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 1.41.0](https://img.shields.io/badge/Version-1.41.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -47,6 +47,10 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.41.0
+* Breaking Change *
+In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
 
 ### From Chart versions < 1.33.0
 * Breaking Change *
@@ -426,7 +430,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
 | enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
-| enterpriseFederationFrontend.service.port | int | `3100` | Port of the federation-frontend service |
+| enterpriseFederationFrontend.service.port | int | `3200` | Port of the federation-frontend service |
 | enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
 | enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
 | enterpriseFederationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
@@ -734,7 +738,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
-| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
+| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3200,"service":true}]` | Default ports |
 | metricsGenerator.priorityClassName | string | `nil` | The name of the PriorityClass for metrics-generator pods |
 | metricsGenerator.replicas | int | `1` | Number of replicas for the metrics-generator |
 | metricsGenerator.resources | object | `{}` | Resource requests and limits for the metrics-generator |
@@ -874,7 +878,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
-| queryFrontend.query.config | string | `"backend: 127.0.0.1:3100\n"` |  |
+| queryFrontend.query.config | string | `"backend: 127.0.0.1:3200\n"` |  |
 | queryFrontend.query.enabled | bool | `false` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
 | queryFrontend.query.extraArgs | list | `[]` | Additional CLI args for tempo-query pods |
 | queryFrontend.query.extraEnv | list | `[]` | Environment variables to add to the tempo-query pods |
@@ -913,7 +917,7 @@ The memcached default args are removed and should be provided manually. The sett
 | rollout_operator.securityContext.readOnlyRootFilesystem | bool | `true` |  |
 | server.grpc_server_max_recv_msg_size | int | `4194304` | Max gRPC message size that can be received |
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
-| server.httpListenPort | int | `3100` | HTTP server listen host |
+| server.httpListenPort | int | `3200` | HTTP server listen host |
 | server.http_server_read_timeout | string | `"30s"` | Read timeout for HTTP server |
 | server.http_server_write_timeout | string | `"30s"` | Write timeout for HTTP server |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
