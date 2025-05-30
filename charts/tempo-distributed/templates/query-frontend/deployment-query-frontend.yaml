@@ -46,6 +46,7 @@ spec:
       priorityClassName: {{ default .Values.queryFrontend.priorityClassName .Values.global.priorityClassName }}
       {{- end }}
       serviceAccountName: {{ include "tempo.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- with .Values.tempo.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
