@@ -14,7 +14,7 @@ metadata:
 spec:
   minReadySeconds: {{ .Values.metricsGenerator.minReadySeconds }}
   replicas: {{ .Values.metricsGenerator.replicas }}
-  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}

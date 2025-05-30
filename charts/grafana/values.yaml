@@ -70,7 +70,6 @@ podDisruptionBudget: {}
 #  apiVersion: ""
 #  minAvailable: 1
 #  maxUnavailable: 1
-#  unhealthyPodEvictionPolicy: IfHealthyBudget
 
 ## See `kubectl explain deployment.spec.strategy` for more
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -476,7 +475,7 @@ initChownData:
   #    cpu: 100m
   #    memory: 128Mi
   securityContext:
-    readOnlyRootFilesystem: false
+    readOnlyRootFilesystem: true
     runAsNonRoot: false
     runAsUser: 0
     seccompProfile:
@@ -810,18 +809,6 @@ dashboardProviders: {}
 #      options:
 #        path: /var/lib/grafana/dashboards/default
 
-## Configure how curl fetches remote dashboards. The beginning dash is required.
-## NOTE: This sets the default short flags for all dashboards, but these
-##       defaults can be overridden individually for each dashboard by setting
-##       curlOptions. See the example dashboards section below.
-##
-## -s  - silent mode
-## -k  - allow insecure (eg: non-TLS) connections
-## -f  - fail fast
-## See the curl documentation for additional options
-##
-defaultCurlOptions: "-skf"
-
 ## Configure grafana dashboard to import
 ## NOTE: To use dashboards you must also enable/configure dashboardProviders
 ## ref: https://grafana.com/dashboards
@@ -841,7 +828,6 @@ dashboards: {}
   #     datasource: Prometheus
   #   local-dashboard:
   #     url: https://example.com/repository/test.json
-  #     curlOptions: "-sLf"
   #     token: ''
   #   local-dashboard-base64:
   #     url: https://example.com/repository/test-b64.json
@@ -987,19 +973,6 @@ sidecar:
     enabled: false
     # Additional environment variables for the alerts sidecar
     env: {}
-    ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
-    ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#envvarsource-v1-core
-    ## Renders in container spec as:
-    ##   env:
-    ##     ...
-    ##     - name: <key>
-    ##       valueFrom:
-    ##         <value rendered as YAML>
-    envValueFrom: {}
-    #  ENV_NAME:
-    #    configMapKeyRef:
-    #      name: configmap-name
-    #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
     # ignoreAlreadyProcessed: true
     # label that the configmaps with alert are marked with (can be templated)

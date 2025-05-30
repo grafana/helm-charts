@@ -15,7 +15,7 @@ spec:
 {{- if not .Values.queryFrontend.autoscaling.enabled }}
   replicas: {{ .Values.queryFrontend.replicas }}
 {{- end }}
-  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}

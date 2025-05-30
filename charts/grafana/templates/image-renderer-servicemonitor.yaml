@@ -1,4 +1,4 @@
-{{- if and .Values.imageRenderer.enabled .Values.imageRenderer.serviceMonitor.enabled }}
+{{- if .Values.imageRenderer.serviceMonitor.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

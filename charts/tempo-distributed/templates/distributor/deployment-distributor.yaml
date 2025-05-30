@@ -15,7 +15,7 @@ spec:
 {{- if not .Values.distributor.autoscaling.enabled }}
   replicas: {{ .Values.distributor.replicas }}
 {{- end }}
-  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
@@ -57,10 +57,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.distributor.initContainers }}
       initContainers:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- toYaml .Values.distributor.initContainers | nindent 8 }}
       containers:
         - args:
             - -target=distributor
@@ -153,9 +151,6 @@ spec:
             {{- with .Values.distributor.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-        {{- with .Values.distributor.extraContainers }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
       terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.distributor.topologySpreadConstraints }}
