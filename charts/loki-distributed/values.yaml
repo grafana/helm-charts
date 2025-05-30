@@ -498,6 +498,12 @@ ingester:
   readinessProbe: {}
   # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
   livenessProbe: {}
+
+  # -- updateStrategy of the ingester statefulset.
+  statefulStrategy:
+    rollingUpdate:
+      partition: 0
+
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
@@ -996,6 +1002,8 @@ ingress:
 #    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
 #    nginx.ingress.kubernetes.io/configuration-snippet: |
 #      proxy_set_header X-Scope-OrgID $remote_user;
+  # -- Custom labels for the ingress
+  labels: {}
   paths:
     distributor:
       - /api/prom/push
@@ -1165,6 +1173,8 @@ gateway:
 
     # -- Annotations for the gateway ingress
     annotations: {}
+    # -- Custom labels for the gateway ingress
+    labels: {}
     # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.loki.example.com
@@ -1172,6 +1182,7 @@ gateway:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
+
     # -- TLS configuration for the gateway ingress
     tls: []
     # tls:

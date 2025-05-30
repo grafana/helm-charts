@@ -12,8 +12,10 @@ metadata:
   {{- end }}
 spec:
   minReadySeconds: {{ .Values.compactor.minReadySeconds }}
+{{- if not .Values.compactor.autoscaling.enabled }}
   replicas: {{ .Values.compactor.replicas }}
-  revisionHistoryLimit: 10
+{{- end }}
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}

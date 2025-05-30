@@ -120,6 +120,11 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.alerts.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -230,6 +235,10 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
+      {{- with .Values.sidecar.datasources.script }}
+      - name: SCRIPT
+        value: {{ quote . }}
+      {{- end }}
     {{- with .Values.sidecar.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
@@ -241,6 +250,9 @@ initContainers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+      {{- with .Values.sidecar.datasources.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers }}
   - name: {{ include "grafana.name" . }}-init-sc-notifiers
@@ -288,6 +300,10 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
+      {{- with .Values.sidecar.notifiers.script }}
+      - name: SCRIPT
+        value: {{ quote . }}
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -307,6 +323,9 @@ initContainers:
     volumeMounts:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
+      {{- with .Values.sidecar.notifiers.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
 {{- with .Values.extraInitContainers }}
   {{- tpl (toYaml .) $root | nindent 2 }}
@@ -503,7 +522,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.dashboards.script }}
       - name: SCRIPT
-        value: "{{ . }}"
+        value: {{ quote . }}
       {{- end }}
       {{- if not .Values.sidecar.dashboards.skipReload }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
@@ -629,9 +648,9 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
-      {{- if .Values.sidecar.datasources.script }}
+      {{- with .Values.sidecar.datasources.script }}
       - name: SCRIPT
-        value: "{{ .Values.sidecar.datasources.script }}"
+        value: {{ quote . }}
       {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
@@ -752,9 +771,9 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.script }}
+      {{- with .Values.sidecar.notifiers.script }}
       - name: SCRIPT
-        value: "{{ .Values.sidecar.notifiers.script }}"
+        value: {{ quote . }}
       {{- end }}
       {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
@@ -873,7 +892,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.plugins.script }}
       - name: SCRIPT
-        value: "{{ . }}"
+        value: {{ quote . }}
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
