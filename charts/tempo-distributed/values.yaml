@@ -68,6 +68,8 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
+  # -- The number of old ReplicaSets to retain to allow rollback
+  revisionHistoryLimit: 10
   # -- SecurityContext holds container-level security attributes and common container settings
   securityContext:
     runAsNonRoot: true
@@ -537,6 +539,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Init containers to add to the distributor pods
+  initContainers: []
+  # -- Containers to add to the distributor pod
+  extraContainers: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
@@ -579,8 +585,6 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
-  # -- Init containers for the distributor pod
-  initContainers: []
   # -- Extra volumes for distributor pods
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
@@ -820,6 +824,8 @@ querier:
   rollingUpdate:
     # -- Maximum number of Pods that can be unavailable during the update process
     maxUnavailable: 1
+  # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
+  minReadySeconds: 10
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -1925,6 +1931,8 @@ gateway:
   priorityClassName: null
   # -- Labels for gateway pods
   podLabels: {}
+  # -- Annotations for gateway deployment
+  annotations: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -2164,6 +2172,30 @@ gateway:
         }
       }
 
+ingress:
+  # -- If you enable this, make sure to disable the gateway's ingress.
+  enabled: false
+  # ingressClassName: nginx
+  annotations: {}
+  paths:
+    distributor:
+      - path: /v1/traces
+        port: 4318
+      - path: /distributor/ring
+        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+        # pathType: Prefix
+      - path: /ingester/ring
+      - path: /metrics-generator/ring
+    ingester:
+      - path: /flush
+      - path: /shutdown
+    query-frontend:
+      - path: /api
+    compactor:
+      - path: /compactor/ring
+  hosts:
+    - tempo.example.com
+
 ##############################################################################
 # The values in and after the `enterprise:` key configure the enterprise features
 enterprise:
@@ -2269,6 +2301,8 @@ provisioner:
     pullPolicy: IfNotPresent
   # -- Volume mounts to add to the provisioner pods
   extraVolumeMounts: []
+  # -- Volumes to add to the provisioner pods
+  extraVolumes: []
 
 
 kubectlImage:
@@ -2497,25 +2531,39 @@ enterpriseGateway:
     annotations: {}
     # -- Hosts configuration for the enterprise-gateway ingress
     hosts:
-      - host: gateway.gem.example.com
+      - host: gateway.get.example.com
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the enterprise-gateway ingress
     tls:
-      - secretName: gem-gateway-tls
+      - secretName: get-gateway-tls
         hosts:
-          - gateway.gem.example.com
+          - gateway.get.example.com
 
-# -- Create extra manifests via values.
+# -- extraObjects could be utilized to add dynamic manifests via values
 extraObjects: []
-  # - apiVersion: "kubernetes-client.io/v1"
-  #   kind: ExternalSecret
-  #   metadata:
-  #     name: tempo-secrets
-  #   spec:
-  #     backendType: aws
-  #     data:
-  #       - key: secret-access-key
-  #         name: awssm-secret
+# Examples:
+# extraObjects:
+# - apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: tempo-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: aws
+#     data:
+#     - key: secret-access-key
+#       name: awssm-secret
+# Alternatively, you can use strings, which lets you use additional templating features:
+# extraObjects:
+# - |
+#   apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: tempo-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: aws
+#     data:
+#     - key: secret-access-key
+#       name: {{ include "some-other-template" }}
