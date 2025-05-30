@@ -1002,7 +1002,7 @@ ingress:
 #    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
 #    nginx.ingress.kubernetes.io/configuration-snippet: |
 #      proxy_set_header X-Scope-OrgID $remote_user;
-  # -- Custom labels for the ingress
+# -- Custom labels for the ingress
   labels: {}
   paths:
     distributor:
