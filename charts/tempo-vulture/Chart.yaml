@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-vulture
 description: Grafana Tempo Vulture - A tool to monitor Tempo performance.
 type: application
-version: 0.7.1
+version: 0.8.0
 appVersion: 2.6.1
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
