@@ -580,6 +580,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
+| ingester.maxUnavailable | int | `1` | Override Pod Disruption Budget maxUnavailable with a static value |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"labels":{},"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
