@@ -20,7 +20,7 @@ spec:
   ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
     - name: http-metrics
-      port: 3100
+      port: 3200
       targetPort: http-metrics
     - name: grpc
       port: 9095
