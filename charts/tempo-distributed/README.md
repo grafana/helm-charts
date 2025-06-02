@@ -864,6 +864,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the query-frontend pods |
 | queryFrontend.extraVolumeMounts | list | `[]` | Extra volumes for query-frontend pods |
 | queryFrontend.extraVolumes | list | `[]` | Extra volumes for query-frontend deployment |
+| queryFrontend.extraContainers | list | `[]` | Extra containers for query-frontend deployment |
 | queryFrontend.hostAliases | list | `[]` | hostAliases to add |
 | queryFrontend.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets` |
 | queryFrontend.image.registry | string | `nil` | The Docker registry for the query-frontend image. Overrides `tempo.image.registry` |
