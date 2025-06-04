@@ -1057,7 +1057,7 @@ metricsGenerator:
     #   headers:
     #     x-scope-orgid: operations
 # Global overrides
-global_overrides:
+overrides:
   defaults:
     metrics_generator:
       processors:
