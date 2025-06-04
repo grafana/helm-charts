@@ -29,6 +29,11 @@ spec:
       nodePort: {{ .Values.gateway.service.nodePort }}
       {{- end }}
       protocol: TCP
+    {{- if .Values.gateway.enableGrpc }}
+    - name: grpc-otlp
+      targetPort: grpc-otlp
+      protocol: TCP
+    {{- end }}
     {{ range .Values.gateway.service.additionalPorts }}
     - name: {{ .name }}
       port: {{ .port }}
