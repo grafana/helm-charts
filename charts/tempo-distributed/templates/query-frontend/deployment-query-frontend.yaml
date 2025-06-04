@@ -70,7 +70,7 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: query-frontend
           ports:
-            - containerPort: 3100
+            - containerPort: 3200
               name: http-metrics
             - containerPort: 9095
               name: grpc
