@@ -77,6 +77,10 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: client
+            {{- toYaml .Values.memcached.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.memcached.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}

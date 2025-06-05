@@ -1674,6 +1674,13 @@ memcached:
   podLabels: {}
   # -- Annotations for memcached pods
   podAnnotations: {}
+  # Configures the readiness probe for the memcached pods
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
   # -- Resource requests and limits for memcached
   resources: {}
   # -- topologySpread for memcached pods. Passed through `tpl` and, thus, to be configured as string
