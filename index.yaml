@@ -528,6 +528,24 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/alloy-0.1.0/alloy-0.1.0.tgz
     version: 0.1.0
+  alloy-crd:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-06-05T14:09:11.211353928Z"
+    description: A Helm chart the Alloy CustomResourceDefinition, allowing for discrete
+      deployments of the Alloy CRD independently of the Alloy Operator.
+    digest: 0c847b48aecc460616df586972532a8b973116811af504ee5ab8bc7d0bf06090
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    name: alloy-crd
+    sources:
+    - https://github.com/grafana/alloy-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-crd-1.0.0/alloy-crd-1.0.0.tgz
+    version: 1.0.0
   alloy-operator:
   - apiVersion: v2
     appVersion: 1.0.3
@@ -89244,4 +89262,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-05T13:28:44.701136922Z"
+generated: "2025-06-05T14:09:11.236388072Z"
