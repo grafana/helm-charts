@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.41.1](https://img.shields.io/badge/Version-1.41.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 1.42.0](https://img.shields.io/badge/Version-1.42.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -656,6 +656,11 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
+| memcached.readinessProbe.failureThreshold | int | `6` |  |
+| memcached.readinessProbe.initialDelaySeconds | int | `5` |  |
+| memcached.readinessProbe.periodSeconds | int | `5` |  |
+| memcached.readinessProbe.successThreshold | int | `1` |  |
+| memcached.readinessProbe.timeoutSeconds | int | `3` |  |
 | memcached.replicas | int | `1` |  |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |
