@@ -196,9 +196,16 @@ spec:
         {{- end }}
         name: data
       spec:
+        {{- $storageClass := default .storageClass $rolloutZone.storageClass }}
+        {{- if $storageClass }}
+        {{- if (eq "-" $storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ $storageClass }}
+        {{- end }}
+        {{- end }}
         accessModes:
           - ReadWriteOnce
-        storageClassName: {{ if $storageClass }}{{ $storageClass }}{{ else }}{{- "" }}{{ end }}
         resources:
           requests:
             storage: {{ .Values.ingester.persistence.size | quote }}
