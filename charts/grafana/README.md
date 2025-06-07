@@ -196,7 +196,7 @@ Kubernetes: `^1.8.0-0`
 | livenessProbe.httpGet.port | int | `3000` |  |
 | livenessProbe.initialDelaySeconds | int | `60` |  |
 | livenessProbe.timeoutSeconds | int | `30` |  |
-| mcpServer | object | `{"affinity":{},"annotations":{},"automountServiceAccountToken":true,"containerSecurityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"debug":false,"deploymentStrategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"disabledCategories":[],"dnsConfig":{},"dnsPolicy":"","enabled":true,"env":{},"envFrom":[],"envValueFrom":{},"extraArgs":[],"extraContainers":[],"extraInitContainers":[],"grafana":{"apiKeySecret":{"key":"api-key","name":"grafana-mcp-api-key"},"url":"http://grafana:3000"},"hostAliases":[],"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"mcp/grafana","tag":"latest"},"imagePullSecrets":[],"ingress":{"annotations":{},"className":"","enabled":true,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]},"initContainers":[],"labels":{},"lifecycle":{},"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","replicas":1,"resources":{},"runtimeClassName":"","schedulerName":"","securityContext":{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"service":{"annotations":{},"clusterIP":"","enabled":true,"externalIPs":[],"externalName":"","extraPorts":[],"labels":{},"loadBalancerIP":"","loadBalancerSourceRanges":[],"nodePort":"","port":8000,"sessionAffinity":"","sessionAffinityConfig":{},"type":"ClusterIP"},"tolerations":[],"topologySpreadConstraints":[],"volumeMounts":[],"volumes":[]}` | Enable the Grafana MCP server deployment |
+| mcpServer | object | `{"affinity":{},"annotations":{},"automountServiceAccountToken":true,"containerSecurityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"debug":false,"deploymentStrategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"disabledCategories":[],"dnsConfig":{},"dnsPolicy":"","enabled":false,"env":{},"envFrom":[],"envValueFrom":{},"extraArgs":[],"extraContainers":[],"extraInitContainers":[],"grafana":{"apiKeySecret":{"key":"api-key","name":"grafana-mcp-api-key"},"url":"http://grafana:3000"},"hostAliases":[],"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"mcp/grafana","tag":"latest"},"imagePullSecrets":[],"ingress":{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]},"initContainers":[],"labels":{},"lifecycle":{},"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","replicas":1,"resources":{},"runtimeClassName":"","schedulerName":"","securityContext":{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"service":{"annotations":{},"clusterIP":"","enabled":true,"externalIPs":[],"externalName":"","extraPorts":[],"labels":{},"loadBalancerIP":"","loadBalancerSourceRanges":[],"nodePort":"","port":8000,"sessionAffinity":"","sessionAffinityConfig":{},"type":"ClusterIP"},"tolerations":[],"topologySpreadConstraints":[],"volumeMounts":[],"volumes":[]}` | Enable the Grafana MCP server deployment |
 | mcpServer.affinity | object | `{}` | Affinity |
 | mcpServer.annotations | object | `{}` | Deployment annotations |
 | mcpServer.automountServiceAccountToken | bool | `true` | Automount service account token |
@@ -206,7 +206,7 @@ Kubernetes: `^1.8.0-0`
 | mcpServer.disabledCategories | list | `[]` | Categories to disable (e.g., oncall, incident, sift) |
 | mcpServer.dnsConfig | object | `{}` | DNS config |
 | mcpServer.dnsPolicy | string | `""` | DNS policy |
-| mcpServer.enabled | bool | `true` | Enable the MCP server |
+| mcpServer.enabled | bool | `false` | Enable the MCP server |
 | mcpServer.env | object | `{}` | Environment variables |
 | mcpServer.envFrom | list | `[]` | Environment variables from ConfigMaps or Secrets |
 | mcpServer.envValueFrom | object | `{}` | Environment variables from other sources |
@@ -225,10 +225,10 @@ Kubernetes: `^1.8.0-0`
 | mcpServer.image.repository | string | `"mcp/grafana"` | The Docker repository |
 | mcpServer.image.tag | string | `"latest"` | Image tag |
 | mcpServer.imagePullSecrets | list | `[]` | Image pull secrets |
-| mcpServer.ingress | object | `{"annotations":{},"className":"","enabled":true,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]}` | Ingress configuration |
+| mcpServer.ingress | object | `{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]}` | Ingress configuration |
 | mcpServer.ingress.annotations | object | `{}` | Ingress annotations |
 | mcpServer.ingress.className | string | `""` | Ingress class name |
-| mcpServer.ingress.enabled | bool | `true` | Enable ingress |
+| mcpServer.ingress.enabled | bool | `false` | Enable ingress |
 | mcpServer.ingress.hosts | list | `[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}]` | Ingress hosts |
 | mcpServer.ingress.labels | object | `{}` | Ingress labels |
 | mcpServer.ingress.tls | list | `[]` | Ingress TLS configuration |

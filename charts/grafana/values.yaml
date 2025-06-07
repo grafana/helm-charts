@@ -1657,7 +1657,7 @@ assertNoLeakedSecrets: true
 # -- Enable the Grafana MCP server deployment
 mcpServer:
   # -- Enable the MCP server
-  enabled: true
+  enabled: false
 
   # -- Number of replicas for the MCP server
   replicas: 1
@@ -1746,7 +1746,7 @@ mcpServer:
   # -- Ingress configuration
   ingress:
     # -- Enable ingress
-    enabled: true
+    enabled: false
     # -- Ingress class name
     className: ""
     # -- Ingress annotations
