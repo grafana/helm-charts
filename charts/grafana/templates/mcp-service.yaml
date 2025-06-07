@@ -1,0 +1,59 @@
+{{- if .Values.mcpServer.enabled }}
+{{- if .Values.mcpServer.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "grafana.fullname" . }}-mcp
+  namespace: {{ include "grafana.namespace" . }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mcp-server
+    {{- with .Values.mcpServer.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.mcpServer.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.mcpServer.service.type }}
+  {{- if .Values.mcpServer.service.clusterIP }}
+  clusterIP: {{ .Values.mcpServer.service.clusterIP }}
+  {{- end }}
+  {{- if .Values.mcpServer.service.externalIPs }}
+  externalIPs:
+    {{- toYaml .Values.mcpServer.service.externalIPs | nindent 4 }}
+  {{- end }}
+  {{- if .Values.mcpServer.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.mcpServer.service.loadBalancerIP }}
+  {{- end }}
+  {{- if .Values.mcpServer.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.mcpServer.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if and (eq .Values.mcpServer.service.type "ExternalName") .Values.mcpServer.service.externalName }}
+  externalName: {{ .Values.mcpServer.service.externalName }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.mcpServer.service.port }}
+      targetPort: mcp-http
+      protocol: TCP
+      name: mcp-http
+      {{- if and (or (eq .Values.mcpServer.service.type "NodePort") (eq .Values.mcpServer.service.type "LoadBalancer")) .Values.mcpServer.service.nodePort }}
+      nodePort: {{ .Values.mcpServer.service.nodePort }}
+      {{- end }}
+    {{- with .Values.mcpServer.service.extraPorts }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  selector:
+    {{- include "grafana.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: mcp-server
+  {{- with .Values.mcpServer.service.sessionAffinity }}
+  sessionAffinity: {{ . }}
+  {{- end }}
+  {{- with .Values.mcpServer.service.sessionAffinityConfig }}
+  sessionAffinityConfig:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
