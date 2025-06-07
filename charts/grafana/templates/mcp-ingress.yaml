@@ -1,0 +1,51 @@
+{{- if .Values.mcpServer.enabled }}
+{{- if .Values.mcpServer.ingress.enabled }}
+{{- $fullName := include "grafana.fullname" . }}
+{{- $svcPort := .Values.mcpServer.service.port }}
+{{- if and .Values.mcpServer.ingress.className (not (hasKey .Values.mcpServer.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.mcpServer.ingress.annotations "kubernetes.io/ingress.class" .Values.mcpServer.ingress.className}}
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-mcp
+  namespace: {{ include "grafana.namespace" . }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mcp-server
+    {{- with .Values.mcpServer.ingress.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.mcpServer.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.mcpServer.ingress.className }}
+  {{- if .Values.mcpServer.ingress.tls }}
+  tls:
+    {{- range .Values.mcpServer.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.mcpServer.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ $fullName }}-mcp
+                port:
+                  number: {{ $svcPort }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
