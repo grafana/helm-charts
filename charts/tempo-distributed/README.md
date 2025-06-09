@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.41.1](https://img.shields.io/badge/Version-1.41.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -13,7 +13,6 @@ Grafana Tempo in MicroService mode
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
-| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
 | https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.24.0 |
 
 ## Chart Repo
@@ -670,27 +669,6 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
 | memcachedExporter.image.tag | string | `"v0.14.4"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
-| metaMonitoring.grafanaAgent.annotations | object | `{}` | Annotations to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that. |
-| metaMonitoring.grafanaAgent.enabled | bool | `false` | Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below. Note that you need to configure serviceMonitor in order to have some metrics available. |
-| metaMonitoring.grafanaAgent.installOperator | bool | `false` | Controls whether to install the Grafana Agent Operator and its CRDs. Note that helm will not install CRDs if this flag is enabled during an upgrade. In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds |
-| metaMonitoring.grafanaAgent.labels | object | `{}` | Labels to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.labels for that. |
-| metaMonitoring.grafanaAgent.logs.additionalClientConfigs | list | `[]` | Client configurations for the LogsInstance that will scrape Mimir pods. Follows the format of .remote. |
-| metaMonitoring.grafanaAgent.logs.remote | object | `{"auth":{"passwordSecretKey":"","passwordSecretName":"","tenantId":"","username":""},"url":""}` | Default destination for logs. The config here is translated to Promtail client configuration to write logs to this Loki-compatible remote. Optional. |
-| metaMonitoring.grafanaAgent.logs.remote.auth.passwordSecretKey | string | `""` | The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set. |
-| metaMonitoring.grafanaAgent.logs.remote.auth.passwordSecretName | string | `""` | The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set. |
-| metaMonitoring.grafanaAgent.logs.remote.auth.tenantId | string | `""` | Used to set X-Scope-OrgID header on requests. Usually not used in combination with username and password. |
-| metaMonitoring.grafanaAgent.logs.remote.auth.username | string | `""` | Basic authentication username. Optional. |
-| metaMonitoring.grafanaAgent.logs.remote.url | string | `""` | Full URL for Loki push endpoint. Usually ends in /loki/api/v1/push |
-| metaMonitoring.grafanaAgent.metrics.additionalRemoteWriteConfigs | list | `[]` | Additional remote-write for the MetricsInstance that will scrape Mimir pods. Follows the format of .remote. |
-| metaMonitoring.grafanaAgent.metrics.remote | object | `{"auth":{"passwordSecretKey":"","passwordSecretName":"","username":""},"headers":{},"url":""}` | Default destination for metrics. The config here is translated to remote_write configuration to push metrics to this Prometheus-compatible remote. Optional. Note that you need to configure serviceMonitor in order to have some metrics available. |
-| metaMonitoring.grafanaAgent.metrics.remote.auth.passwordSecretKey | string | `""` | The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set. |
-| metaMonitoring.grafanaAgent.metrics.remote.auth.passwordSecretName | string | `""` | The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set. |
-| metaMonitoring.grafanaAgent.metrics.remote.auth.username | string | `""` | Basic authentication username. Optional. |
-| metaMonitoring.grafanaAgent.metrics.remote.headers | object | `{}` | Used to add HTTP headers to remote-write requests. |
-| metaMonitoring.grafanaAgent.metrics.remote.url | string | `""` | Full URL for Prometheus remote-write. Usually ends in /push |
-| metaMonitoring.grafanaAgent.metrics.scrapeK8s.enabled | bool | `true` | When grafanaAgent.enabled and serviceMonitor.enabled, controls whether to create ServiceMonitors CRs for cadvisor, kubelet, and kube-state-metrics. The scraped metrics are reduced to those pertaining to Mimir pods only. |
-| metaMonitoring.grafanaAgent.metrics.scrapeK8s.kubeStateMetrics | object | `{"labelSelectors":{"app.kubernetes.io/name":"kube-state-metrics"},"namespace":"kube-system"}` | Controls service discovery of kube-state-metrics. |
-| metaMonitoring.grafanaAgent.namespace | string | `""` | Sets the namespace of the resources. Leave empty or unset to use the same namespace as the Helm release. |
 | metaMonitoring.serviceMonitor.annotations | object | `{}` | ServiceMonitor annotations |
 | metaMonitoring.serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
 | metaMonitoring.serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
