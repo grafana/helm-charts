@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.41.1](https://img.shields.io/badge/Version-1.41.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -13,7 +13,6 @@ Grafana Tempo in MicroService mode
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
-| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
 | https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.24.0 |
 
 ## Chart Repo
@@ -47,6 +46,10 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Upgrading
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 1.41.1
+* Breaking Change *
+Grafana Agent has been removed and [k8s monitoring helm chart](https://github.com/grafana/enterprise-traces/blob/main/docs/sources/setup/metamonitoring.md) is recommended for metamonitoring.
 
 ### From Chart versions < 1.41.0
 * Breaking Change *

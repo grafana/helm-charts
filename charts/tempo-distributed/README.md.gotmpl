@@ -41,6 +41,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+
+### From Chart versions < 1.41.1
+* Breaking Change *
+Grafana Agent has been removed and [k8s monitoring helm chart](https://github.com/grafana/enterprise-traces/blob/main/docs/sources/setup/metamonitoring.md) is recommended for metamonitoring.
+
 ### From Chart versions < 1.41.0
 * Breaking Change *
 In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
