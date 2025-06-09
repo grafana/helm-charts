@@ -1945,6 +1945,8 @@ gateway:
   extraVolumes: []
   # -- Volume mounts to add to the gateway pods
   extraVolumeMounts: []
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
