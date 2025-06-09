@@ -500,6 +500,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.enabled | bool | `false` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
+| gateway.extraContainers | list | `[]` | Containers to add to the gateway pods |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
