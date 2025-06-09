@@ -45,18 +45,6 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.memcached.readinessProbe }}
-      readinessProbe:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.memcached.livenessProbe }}
-      livenessProbe:
-        exec:
-          command:
-            - pgrep
-            - memcached
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       enableServiceLinks: false
       {{- include "tempo.memcachedExporterImagePullSecrets" . | nindent 6 -}}
       {{- with .Values.memcachedExporter.hostAliases }}
@@ -88,6 +76,18 @@ spec:
           {{- with .Values.memcached.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.memcached.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.memcached.livenessProbe }}
+          livenessProbe:
+            exec:
+              command:
+                - pgrep
+                - memcached
+            {{- toYaml . | nindent 8 }}
           {{- end }}
           resources:
             {{- toYaml .Values.memcached.resources | nindent 12 }}
