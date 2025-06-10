@@ -48,13 +48,17 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.42.0
+Please be aware that we've updated the Tempo version to 2.8, which includes some breaking changes
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.8.0) before upgrading.
+
 ### From Chart versions < 1.41.0
 * Breaking Change *
 In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
 
 ### From Chart versions < 1.33.0
 * Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below. 
+In order to reduce confusion, the overrides configurations have been renamed as below.
 
 `global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
 `overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
