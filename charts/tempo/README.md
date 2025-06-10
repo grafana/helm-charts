@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.21.2](https://img.shields.io/badge/Version-1.21.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
+![Version: 1.22.0](https://img.shields.io/badge/Version-1.22.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.1](https://img.shields.io/badge/AppVersion-2.7.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -155,9 +155,13 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.21.1
+* Breaking Change *
+In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
+
 ### From Chart versions < 1.19.0
 * Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below. 
+In order to reduce confusion, the overrides configurations have been renamed as below.
 
 `global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
 `overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
