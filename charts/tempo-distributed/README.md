@@ -48,7 +48,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
-### From Chart versions < 1.42.0
+### From Chart versions < 1.41.2
 Please be aware that we've updated the Tempo version to 2.8, which includes some breaking changes
 We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.8.0) before upgrading.
 
