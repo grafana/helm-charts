@@ -67,7 +67,7 @@ spec:
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
         name: tempo
         ports:
-        - containerPort: 3200
+        - containerPort: 3100
           name: prom-metrics
         - containerPort: 6831
           name: jaeger-thrift-c
