@@ -124,6 +124,7 @@ Grafana Tempo Single Binary Mode
 | tempoQuery.service.port | int | `16686` |  |
 | tempoQuery.tag | string | `nil` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment. See: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
+| topologySpreadConstraints | list | `[]` | TopologySpreadConstraints for pod assignment. See: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/ |
 
 ## Chart Repo
 
