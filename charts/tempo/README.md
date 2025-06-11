@@ -155,6 +155,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.22.0
+* Breaking Change *
+Please be aware that we've updated the Tempo version to 2.8, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-8/) before upgrading.
+
 ### From Chart versions < 1.21.1
 * Breaking Change *
 In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
