@@ -88,12 +88,12 @@ tempo:
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#server
   server:
     # -- HTTP server listen port
-    http_listen_port: 3100
+    http_listen_port: 3200
   # Readiness and Liveness Probe Configuration Options
   livenessProbe:
     httpGet:
       path: /ready
-      port: 3100
+      port: 3200
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
@@ -102,7 +102,7 @@ tempo:
   readinessProbe:
     httpGet:
       path: /ready
-      port: 3100
+      port: 3200
     initialDelaySeconds: 20
     periodSeconds: 10
     timeoutSeconds: 5
