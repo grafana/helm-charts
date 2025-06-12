@@ -24,9 +24,9 @@
 {{/* TCP sockets */}}
 {{- define "tempo.tcp"}}
 - name: tempo-prom-metrics
-  port: 3100
+  port: 3200
   protocol: TCP
-  targetPort: 3100
+  targetPort: 3200
 {{- if .Values.tempoQuery.enabled }}
 - name: jaeger-metrics
   port: 16687
