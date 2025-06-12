@@ -5,7 +5,7 @@ test_pod:
 
 loki:
   enabled: true
-  isDefault: true
+  isDefault: false
   url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
   readinessProbe:
     httpGet:
@@ -19,8 +19,7 @@ loki:
     initialDelaySeconds: 45
   datasource:
     jsonData: "{}"
-    uid: ""
-
+    uid: "loki"
 
 promtail:
   enabled: true
