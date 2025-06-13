@@ -101,7 +101,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        {{- if .Values.gateway.extraContainers }}
+        {{- with .Values.gateway.extraContainers }}
         {{- toYaml .Values.gateway.extraContainers | nindent 8 }}
         {{- end }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
