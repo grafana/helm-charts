@@ -16,7 +16,7 @@ grafana.ini: |
   {{- else if kindIs "slice" $elemVal }}
   {{ $elem }} = {{ toJson $elemVal }}
   {{- else if kindIs "string" $elemVal }}
-  {{ $elem }} = {{ tpl $elemVal $ }}
+  {{ $elem }} = {{ tpl ($elemVal | toString) $ }}
   {{- else }}
   {{ $elem }} = {{ $elemVal }}
   {{- end }}
@@ -31,7 +31,7 @@ grafana.ini: |
   {{- else if kindIs "slice" $elemVal }}
   {{ $elem }} = {{ toJson $elemVal }}
   {{- else if kindIs "string" $elemVal }}
-  {{ $elem }} = {{ tpl $elemVal $ }}
+  {{ $elem }} = {{ tpl ($elemVal | toString) $ }}
   {{- else }}
   {{ $elem }} = {{ $elemVal }}
   {{- end }}
