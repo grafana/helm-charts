@@ -102,7 +102,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
         {{- with .Values.gateway.extraContainers }}
-        {{- toYaml .Values.gateway.extraContainers | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.gateway.topologySpreadConstraints }}
