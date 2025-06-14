@@ -151,7 +151,7 @@ initContainers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: {{ . | join "," | quote }}
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -352,6 +352,11 @@ containers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.alerts.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -382,7 +387,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: {{ . | join "," | quote }}
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
