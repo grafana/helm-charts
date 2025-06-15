@@ -1330,21 +1330,25 @@ volumes:
   {{- end }}
   {{- if .Values.sidecar.alerts.enabled }}
   - name: sc-alerts-volume
+    {{- if .Values.sidecar.alerts.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.alerts.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
+    {{- if .Values.sidecar.dashboards.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.dashboards.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- if .Values.sidecar.dashboards.SCProvider }}
   - name: sc-dashboard-provider
     configMap:
@@ -1353,30 +1357,36 @@ volumes:
   {{- end }}
   {{- if .Values.sidecar.datasources.enabled }}
   - name: sc-datasources-volume
+    {{- if .Values.sidecar.datasources.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.datasources.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- if .Values.sidecar.plugins.enabled }}
   - name: sc-plugins-volume
+    {{- if .Values.sidecar.plugins.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.plugins.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- if .Values.sidecar.notifiers.enabled }}
   - name: sc-notifiers-volume
+    {{- if .Values.sidecar.notifiers.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.notifiers.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- range .Values.extraSecretMounts }}
   {{- if .secretName }}
