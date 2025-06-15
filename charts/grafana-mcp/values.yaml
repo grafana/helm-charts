@@ -26,12 +26,14 @@ imagePullSecrets: []
 grafana:
   # -- Grafana URL (should point to the main Grafana service)
   url: "http://grafana:3000"
+  # -- Grafana ApiKey (if not using a secret)
+  apiKey: ""
   # -- Secret containing the Grafana API key
   apiKeySecret:
     # -- Name of the secret containing the API key
-    name: "grafana-mcp-api-key"
+    name: ""
     # -- Key within the secret that contains the API key
-    key: "api-key"
+    key: ""
 
 # -- Enable debug mode
 debug: false
