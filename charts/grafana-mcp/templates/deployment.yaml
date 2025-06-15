@@ -92,8 +92,13 @@ spec:
             - name: GRAFANA_API_KEY
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.grafana.apiKey }}
+                  name: {{ include "grafana-mcp.fullname" . }}
+                  key: api-key
+                  {{- else }}
                   name: {{ .Values.grafana.apiKeySecret.name }}
                   key: {{ .Values.grafana.apiKeySecret.key }}
+                  {{- end }}
             {{- range $key, $value := .Values.env }}
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
@@ -107,6 +112,7 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if or (.Values.debug) (.Values.disabledCategories) (.Values.extraArgs) }}
           args:
             {{- if .Values.debug }}
             - -debug
@@ -117,6 +123,12 @@ spec:
             {{- with .Values.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- else -}}
+          {{- with .Values.extraArgs }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
           {{- with .Values.lifecycle }}
           lifecycle:
             {{- toYaml . | nindent 12 }}
