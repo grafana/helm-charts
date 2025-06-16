@@ -40,7 +40,10 @@ grafana.ini: |
 {{- end }}
 
 {{- range $key, $value := .Values.datasources }}
-{{- if not (hasKey $value "secret") }}
+{{- if kindIs "string" $value }}
+{{ $key }}: |
+  {{- tpl $value $root | nindent 2 }}
+{{- else if not (hasKey $value "secret") }}
 {{ $key }}: |
   {{- tpl (toYaml $value | nindent 2) $root }}
 {{- end }}
@@ -54,7 +57,10 @@ grafana.ini: |
 {{- end }}
 
 {{- range $key, $value := .Values.alerting }}
-{{- if (hasKey $value "file") }}
+{{- if kindIs "string" $value }}
+{{ $key }}: |
+  {{- tpl $value $root | nindent 2 }}
+{{- else if (hasKey $value "file") }}
 {{ $key }}:
 {{- toYaml ( $files.Get $value.file ) | nindent 2 }}
 {{- else if (or (hasKey $value "secret") (hasKey $value "secretFile"))}}
