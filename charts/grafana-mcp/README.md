@@ -1,7 +1,5 @@
 # grafana-mcp
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
-
 MCP server for Grafana.
 
 ## Source Code
@@ -26,7 +24,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 To install the chart with the release name `my-release`:
 
 ```console
-helm install my-release grafana/grafana-mcp
+helm install --set grafana.apiKey=<Grafana_ApiKey> my-release grafana/grafana-mcp
 ```
 
 ## Uninstalling the Chart
@@ -43,70 +41,78 @@ The command removes all the Kubernetes components associated with the chart and 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| mcpServer | object | `{"affinity":{},"annotations":{},"automountServiceAccountToken":true,"containerSecurityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"debug":false,"deploymentStrategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"disabledCategories":[],"dnsConfig":{},"dnsPolicy":"","enabled":false,"env":{},"envFrom":[],"envValueFrom":{},"extraArgs":[],"extraContainers":[],"extraInitContainers":[],"grafana":{"apiKeySecret":{"key":"api-key","name":"grafana-mcp-api-key"},"url":"http://grafana:3000"},"hostAliases":[],"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"mcp/grafana","tag":"latest"},"imagePullSecrets":[],"ingress":{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]},"initContainers":[],"labels":{},"lifecycle":{},"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","replicas":1,"resources":{},"runtimeClassName":"","schedulerName":"","securityContext":{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"service":{"annotations":{},"clusterIP":"","enabled":true,"externalIPs":[],"externalName":"","extraPorts":[],"labels":{},"loadBalancerIP":"","loadBalancerSourceRanges":[],"nodePort":"","port":8000,"sessionAffinity":"","sessionAffinityConfig":{},"type":"ClusterIP"},"tolerations":[],"topologySpreadConstraints":[],"volumeMounts":[],"volumes":[]}` | Enable the Grafana MCP server deployment |
-| mcpServer.affinity | object | `{}` | Affinity |
-| mcpServer.annotations | object | `{}` | Deployment annotations |
-| mcpServer.automountServiceAccountToken | bool | `true` | Automount service account token |
-| mcpServer.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | Container security context |
-| mcpServer.debug | bool | `false` | Enable debug mode |
-| mcpServer.deploymentStrategy | object | `{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"}` | Deployment strategy |
-| mcpServer.disabledCategories | list | `[]` | Categories to disable (e.g., oncall, incident, sift) |
-| mcpServer.dnsConfig | object | `{}` | DNS config |
-| mcpServer.dnsPolicy | string | `""` | DNS policy |
-| mcpServer.enabled | bool | `false` | Enable the MCP server |
-| mcpServer.env | object | `{}` | Environment variables |
-| mcpServer.envFrom | list | `[]` | Environment variables from ConfigMaps or Secrets |
-| mcpServer.envValueFrom | object | `{}` | Environment variables from other sources |
-| mcpServer.extraArgs | list | `[]` | Additional command line arguments |
-| mcpServer.extraContainers | list | `[]` | Extra containers |
-| mcpServer.extraInitContainers | list | `[]` | Extra init containers |
-| mcpServer.grafana | object | `{"apiKeySecret":{"key":"api-key","name":"grafana-mcp-api-key"},"url":"http://grafana:3000"}` | Grafana connection configuration |
-| mcpServer.grafana.apiKeySecret | object | `{"key":"api-key","name":"grafana-mcp-api-key"}` | Secret containing the Grafana API key |
-| mcpServer.grafana.apiKeySecret.key | string | `"api-key"` | Key within the secret that contains the API key |
-| mcpServer.grafana.apiKeySecret.name | string | `"grafana-mcp-api-key"` | Name of the secret containing the API key |
-| mcpServer.grafana.url | string | `"http://grafana:3000"` | Grafana URL (should point to the main Grafana service) |
-| mcpServer.hostAliases | list | `[]` | Host aliases |
-| mcpServer.image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"mcp/grafana","tag":"latest"}` | Image configuration |
-| mcpServer.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| mcpServer.image.registry | string | `"docker.io"` | The Docker registry |
-| mcpServer.image.repository | string | `"mcp/grafana"` | The Docker repository |
-| mcpServer.image.tag | string | `"latest"` | Image tag |
-| mcpServer.imagePullSecrets | list | `[]` | Image pull secrets |
-| mcpServer.ingress | object | `{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]}` | Ingress configuration |
-| mcpServer.ingress.annotations | object | `{}` | Ingress annotations |
-| mcpServer.ingress.className | string | `""` | Ingress class name |
-| mcpServer.ingress.enabled | bool | `false` | Enable ingress |
-| mcpServer.ingress.hosts | list | `[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}]` | Ingress hosts |
-| mcpServer.ingress.labels | object | `{}` | Ingress labels |
-| mcpServer.ingress.tls | list | `[]` | Ingress TLS configuration |
-| mcpServer.initContainers | list | `[]` | Init containers |
-| mcpServer.labels | object | `{}` | Deployment labels |
-| mcpServer.lifecycle | object | `{}` | Lifecycle hooks |
-| mcpServer.nodeSelector | object | `{}` | Node selector |
-| mcpServer.podAnnotations | object | `{}` | Pod annotations |
-| mcpServer.podLabels | object | `{}` | Pod labels |
-| mcpServer.priorityClassName | string | `""` | Priority class name |
-| mcpServer.replicas | int | `1` | Number of replicas for the MCP server |
-| mcpServer.resources | object | `{}` | Resource requests and limits |
-| mcpServer.runtimeClassName | string | `""` | Runtime class name |
-| mcpServer.schedulerName | string | `""` | Scheduler name |
-| mcpServer.securityContext | object | `{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | Pod security context |
-| mcpServer.service | object | `{"annotations":{},"clusterIP":"","enabled":true,"externalIPs":[],"externalName":"","extraPorts":[],"labels":{},"loadBalancerIP":"","loadBalancerSourceRanges":[],"nodePort":"","port":8000,"sessionAffinity":"","sessionAffinityConfig":{},"type":"ClusterIP"}` | Service configuration |
-| mcpServer.service.annotations | object | `{}` | Service annotations |
-| mcpServer.service.clusterIP | string | `""` | Cluster IP (if type is ClusterIP) |
-| mcpServer.service.enabled | bool | `true` | Enable service |
-| mcpServer.service.externalIPs | list | `[]` | External IPs |
-| mcpServer.service.externalName | string | `""` | External name (if type is ExternalName) |
-| mcpServer.service.extraPorts | list | `[]` | Extra ports |
-| mcpServer.service.labels | object | `{}` | Service labels |
-| mcpServer.service.loadBalancerIP | string | `""` | Load balancer IP |
-| mcpServer.service.loadBalancerSourceRanges | list | `[]` | Load balancer source ranges |
-| mcpServer.service.nodePort | string | `""` | Node port (if type is NodePort or LoadBalancer) |
-| mcpServer.service.port | int | `8000` | Service port |
-| mcpServer.service.sessionAffinity | string | `""` | Session affinity |
-| mcpServer.service.sessionAffinityConfig | object | `{}` | Session affinity config |
-| mcpServer.service.type | string | `"ClusterIP"` | Service type |
-| mcpServer.tolerations | list | `[]` | Tolerations |
-| mcpServer.topologySpreadConstraints | list | `[]` | Topology spread constraints |
-| mcpServer.volumeMounts | list | `[]` | Volume mounts |
-| mcpServer.volumes | list | `[]` | Volumes |
+| affinity | object | `{}` | Affinity |
+| annotations | object | `{}` | Deployment annotations |
+| automountServiceAccountToken | bool | `true` | Automount service account token |
+| containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | Container security context |
+| debug | bool | `false` | Enable debug mode |
+| deploymentStrategy | object | `{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"}` | Deployment strategy |
+| disabledCategories | list | `[]` | Categories to disable (e.g., oncall, incident, sift) |
+| dnsConfig | object | `{}` | DNS config |
+| dnsPolicy | string | `""` | DNS policy |
+| env | object | `{}` | Environment variables |
+| envFrom | list | `[]` | Environment variables from ConfigMaps or Secrets |
+| envValueFrom | object | `{}` | Environment variables from other sources |
+| extraArgs | list | `[]` | Additional command line arguments |
+| extraContainers | list | `[]` | Extra containers |
+| extraInitContainers | list | `[]` | Extra init containers |
+| grafana | object | `{"apiKey":"","apiKeySecret":{"key":"","name":""},"url":"http://grafana:3000"}` | Grafana connection configuration |
+| grafana.apiKey | string | `""` | Grafana ApiKey (if not using a secret) |
+| grafana.apiKeySecret | object | `{"key":"","name":""}` | Secret containing the Grafana API key |
+| grafana.apiKeySecret.key | string | `""` | Key within the secret that contains the API key |
+| grafana.apiKeySecret.name | string | `""` | Name of the secret containing the API key |
+| grafana.url | string | `"http://grafana:3000"` | Grafana URL (should point to the main Grafana service) |
+| hostAliases | list | `[]` | Host aliases |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"mcp/grafana","tag":"latest"}` | Image configuration |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.registry | string | `"docker.io"` | The Docker registry |
+| image.repository | string | `"mcp/grafana"` | The Docker repository |
+| image.tag | string | `"latest"` | Image tag |
+| imagePullSecrets | list | `[]` | Image pull secrets |
+| ingress | object | `{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]}` | Ingress configuration |
+| ingress.annotations | object | `{}` | Ingress annotations |
+| ingress.className | string | `""` | Ingress class name |
+| ingress.enabled | bool | `false` | Enable ingress |
+| ingress.hosts | list | `[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}]` | Ingress hosts |
+| ingress.labels | object | `{}` | Ingress labels |
+| ingress.tls | list | `[]` | Ingress TLS configuration |
+| initContainers | list | `[]` | Init containers |
+| labels | object | `{}` | Deployment labels |
+| lifecycle | object | `{}` | Lifecycle hooks |
+| livenessProbe | object | `{}` | MCP server Liveness probe configuration |
+| nodeSelector | object | `{}` | Node selector |
+| podAnnotations | object | `{}` | Pod annotations |
+| podLabels | object | `{}` | Pod labels |
+| priorityClassName | string | `""` | Priority class name |
+| readinessProbe | object | `{}` | MCP server Readiness probe configuration |
+| replicas | int | `1` | Number of replicas for the MCP server |
+| resources | object | `{}` | Resource requests and limits |
+| runtimeClassName | string | `""` | Runtime class name |
+| schedulerName | string | `""` | Scheduler name |
+| securityContext | object | `{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | Pod security context |
+| service | object | `{"annotations":{},"clusterIP":"","enabled":true,"externalIPs":[],"externalName":"","extraPorts":[],"labels":{},"loadBalancerIP":"","loadBalancerSourceRanges":[],"nodePort":"","port":8000,"sessionAffinity":"","sessionAffinityConfig":{},"type":"ClusterIP"}` | Service configuration |
+| service.annotations | object | `{}` | Service annotations |
+| service.clusterIP | string | `""` | Cluster IP (if type is ClusterIP) |
+| service.enabled | bool | `true` | Enable service |
+| service.externalIPs | list | `[]` | External IPs |
+| service.externalName | string | `""` | External name (if type is ExternalName) |
+| service.extraPorts | list | `[]` | Extra ports |
+| service.labels | object | `{}` | Service labels |
+| service.loadBalancerIP | string | `""` | Load balancer IP |
+| service.loadBalancerSourceRanges | list | `[]` | Load balancer source ranges |
+| service.nodePort | string | `""` | Node port (if type is NodePort or LoadBalancer) |
+| service.port | int | `8000` | Service port |
+| service.sessionAffinity | string | `""` | Session affinity |
+| service.sessionAffinityConfig | object | `{}` | Session affinity config |
+| service.type | string | `"ClusterIP"` | Service type |
+| serviceAccount | object | `{"annotations":{},"automountServiceAccountToken":false,"enabled":true,"labels":{},"name":""}` | Service account Configuration |
+| serviceAccount.annotations | object | `{}` | Annotations for the service account |
+| serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token |
+| serviceAccount.enabled | bool | `true` | Enable service account |
+| serviceAccount.labels | object | `{}` | Labels for the service account |
+| serviceAccount.name | string | `""` | Name of the service account |
+| startupProbe | object | `{}` | MCP server Startup probe configuration |
+| tolerations | list | `[]` | Tolerations |
+| topologySpreadConstraints | list | `[]` | Topology spread constraints |
+| volumeMounts | list | `[]` | Volume mounts |
+| volumes | list | `[]` | Volumes |
