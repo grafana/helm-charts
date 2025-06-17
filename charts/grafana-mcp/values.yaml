@@ -53,6 +53,16 @@ envValueFrom: {}
 # -- Environment variables from ConfigMaps or Secrets
 envFrom: []
 
+# -- MCP server Readiness probe configuration
+readinessProbe: {}
+#
+
+# -- MCP server Liveness probe configuration
+livenessProbe: {}
+
+# -- MCP server Startup probe configuration
+startupProbe: {}
+
 # -- Service account Configuration
 serviceAccount:
   # -- Enable service account
@@ -61,6 +71,10 @@ serviceAccount:
   name: ""
   # -- Annotations for the service account
   annotations: {}
+  # -- Labels for the service account
+  labels: {}
+  # -- Automount service account token
+  automountServiceAccountToken: false
 
 # -- Service configuration
 service:

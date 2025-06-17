@@ -1,3 +1,6 @@
+grafana:
+  apiKey: "test"
+
 affinity:
   podAntiAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
