@@ -107,9 +107,9 @@ spec:
             {{- with .Values.queryFrontend.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-        {{- with .Values.queryFrontend.extraContainers }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+            {{- with .Values.queryFrontend.extraContainers }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
         {{- if .Values.queryFrontend.query.enabled }}
         - args:
             - -config=/conf/tempo.yaml
