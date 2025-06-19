@@ -165,6 +165,11 @@ tempo:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
+  datasource:
+    isDefault: false
+    uid: "tempo"
+    url: http://{{(include "tempo.fullname" .)}}:{{ .Values.tempo.server.http_listen_port }}
+    jsonData: "{}"
 
 # -- Tempo configuration file contents
 # @default -- Dynamically generated tempo configmap
@@ -413,3 +418,11 @@ networkPolicy:
     ##  - namespaceSelector:
     ##    matchExpressions:
   ##    - {key: role, operator: In, values: [tempo]}
+
+grafana:
+  sidecar:
+    datasources:
+      enabled: true
+      label: ""
+      labelValue: ""
+      maxLines: 1000
