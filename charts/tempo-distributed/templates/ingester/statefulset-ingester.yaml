@@ -164,6 +164,9 @@ spec:
         {{- with .Values.ingester.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with .Values.ingester.extraContainers }}
+        {{- toYaml . | nindent 12 }}
+        {{- end }}
   {{- if not .Values.ingester.persistence.enabled }}
         - name: data
           emptyDir: {}
