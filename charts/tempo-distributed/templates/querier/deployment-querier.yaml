@@ -74,7 +74,7 @@ spec:
             - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
               protocol: TCP
-            - containerPort: 3100
+            - containerPort: 3200
               name: http-metrics
           {{- if or .Values.global.extraEnv .Values.querier.extraEnv }}
           env:

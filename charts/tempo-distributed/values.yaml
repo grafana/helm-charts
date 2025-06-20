@@ -432,7 +432,7 @@ metricsGenerator:
       port: 7946
       service: false
     - name: http-metrics
-      port: 3100
+      port: 3200
       service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
@@ -884,7 +884,7 @@ queryFrontend:
     # -- Extra volumes for tempo-query deployment
     extraVolumes: []
     config: |
-      backend: 127.0.0.1:3100
+      backend: 127.0.0.1:3200
   # -- Number of replicas for the query-frontend
   replicas: 1
   # -- hostAliases to add
@@ -1090,7 +1090,7 @@ enterpriseFederationFrontend:
     tag: null
   service:
     # -- Port of the federation-frontend service
-    port: 3100
+    port: 3200
     # -- Annotations for enterpriseFederationFrontend service
     annotations: {}
     # -- Type of service for the enterpriseFederationFrontend
@@ -1445,6 +1445,7 @@ config: |
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+      max_spans_per_span_set: {{ .Values.queryFrontend.config.search.max_spans_per_span_set }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
@@ -1555,7 +1556,7 @@ config: |
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
 server:
   # --  HTTP server listen host
-  httpListenPort: 3100
+  httpListenPort: 3200
   # -- Log level. Can be set to debug, info (default), warn, error
   logLevel: info
   # -- Log format. Can be set to logfmt (default) or json.
@@ -1712,6 +1713,25 @@ memcached:
   service:
     # -- Annotations for memcached service
     annotations: {}
+
+  # -- configuration for readiness probe for memcached statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- configuration for liveness probe for memcached statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
@@ -1945,6 +1965,8 @@ gateway:
   extraVolumes: []
   # -- Volume mounts to add to the gateway pods
   extraVolumeMounts: []
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
@@ -2138,32 +2160,32 @@ gateway:
 
           location ^~ /api {
             set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$query_frontend:3100$request_uri;
+            proxy_pass       http://$query_frontend:3200$request_uri;
           }
 
           location = /flush {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:3200$request_uri;
           }
 
           location = /shutdown {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:3200$request_uri;
           }
 
           location = /distributor/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:3200$request_uri;
           }
 
           location = /ingester/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:3200$request_uri;
           }
 
           location = /compactor/ring {
             set $compactor {{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$compactor:3100$request_uri;
+            proxy_pass       http://$compactor:3200$request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
