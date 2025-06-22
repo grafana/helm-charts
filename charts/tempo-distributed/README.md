@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.41.1](https://img.shields.io/badge/Version-1.41.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 1.42.2](https://img.shields.io/badge/Version-1.42.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.0](https://img.shields.io/badge/AppVersion-2.8.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -48,13 +48,17 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.41.2
+Please be aware that we've updated the Tempo version to 2.8, which includes some breaking changes
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.8.0) before upgrading.
+
 ### From Chart versions < 1.41.0
 * Breaking Change *
 In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
 
 ### From Chart versions < 1.33.0
 * Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below. 
+In order to reduce confusion, the overrides configurations have been renamed as below.
 
 `global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
 `overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
@@ -500,6 +504,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.enabled | bool | `false` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
+| gateway.extraContainers | list | `[]` | Containers to add to the gateway pods |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
@@ -653,9 +658,11 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
 | memcached.initContainers | list | `[]` | Init containers for the memcached pod |
+| memcached.livenessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":5}` | configuration for liveness probe for memcached statefulset |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
+| memcached.readinessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":5,"periodSeconds":5,"successThreshold":1,"tcpSocket":{"port":"client"},"timeoutSeconds":3}` | configuration for readiness probe for memcached statefulset |
 | memcached.replicas | int | `1` |  |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |

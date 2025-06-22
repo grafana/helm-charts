@@ -1445,6 +1445,7 @@ config: |
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+      max_spans_per_span_set: {{ .Values.queryFrontend.config.search.max_spans_per_span_set }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
@@ -1712,6 +1713,25 @@ memcached:
   service:
     # -- Annotations for memcached service
     annotations: {}
+
+  # -- configuration for readiness probe for memcached statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- configuration for liveness probe for memcached statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
@@ -1945,6 +1965,8 @@ gateway:
   extraVolumes: []
   # -- Volume mounts to add to the gateway pods
   extraVolumeMounts: []
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
