@@ -12,14 +12,14 @@ metadata:
     prometheus.io/service-monitor: "false"
   {{- with .Values.distributor.serviceDiscovery.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: ClusterIP
   clusterIP: None
   ports:
     - name: http-metrics
-      port: 3100
+      port: 3200
       targetPort: http-metrics
     {{- if .Values.traces.jaeger.thriftCompact.enabled }}
     - name: distributor-jaeger-thrift-compact

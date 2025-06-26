@@ -8,14 +8,14 @@ metadata:
     {{- include "tempo.labels" (dict "ctx" . "component" "enterprise-federation-frontend") | nindent 4 }}
   {{- with .Values.enterpriseFederationFrontend.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: {{ .Values.enterpriseFederationFrontend.service.type }}
   ports:
     - name: http-metrics
-      port: 3100
-      targetPort: 3100
+      port: 3200
+      targetPort: 3200
   {{- if .Values.enterpriseFederationFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.enterpriseFederationFrontend.service.loadBalancerIP  }}
   {{- end }}

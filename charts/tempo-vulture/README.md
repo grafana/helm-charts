@@ -1,6 +1,6 @@
 # tempo-vulture
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.0](https://img.shields.io/badge/AppVersion-2.5.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
 
@@ -54,6 +54,7 @@ tempoAddress:
 | extraEnv | list | `[]` | Environment variables to add to the vulture pods |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the vulture pods |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. scope: * |
 | hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` | Docker image pull policy |
 | image.repository | string | `"docker.io/grafana/tempo-vulture"` | Docker image repository |
@@ -63,20 +64,22 @@ tempoAddress:
 | nodeSelector | object | `{}` | Node selector for vulture pods |
 | podAnnotations | object | `{}` | Common annotations for all pods |
 | podLabels | object | `{}` | Common labels for all pods |
+| podMonitor.annotations | object | `{}` | PodMonitor annotations |
+| podMonitor.enabled | bool | `false` | If enabled, PodMonitor resources for Prometheus Operator are created |
+| podMonitor.interval | string | `nil` | PodMonitor scrape interval |
+| podMonitor.labels | object | `{}` | Additional PodMonitor labels |
+| podMonitor.namespace | string | `nil` | Alternative namespace for PodMonitor resources |
+| podMonitor.namespaceSelector | object | `{}` | Namespace selector for PodMonitor resources |
+| podMonitor.scrapeTimeout | string | `nil` | PodMonitor scrape timeout in Go duration format (e.g. 15s) |
+| podSecurityContext | object | `{}` | podSecurityContext holds pod-level security attributes and common container settings |
 | replicas | int | `1` | Number of replicas of Tempo Vulture |
 | resources | object | `{}` | Resource requests and limits for the vulture |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback |
+| securityContext | object | `{}` | SecurityContext holds container-level security attributes and common container settings |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
-| serviceMonitor.annotations | object | `{}` | ServiceMonitor annotations |
-| serviceMonitor.enabled | bool | `false` | If enabled, ServiceMonitor resources for Prometheus Operator are created |
-| serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
-| serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
-| serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
-| serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
-| serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor |
 | tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
 | tolerations | list | `[]` | Tolerations for vulture pods |

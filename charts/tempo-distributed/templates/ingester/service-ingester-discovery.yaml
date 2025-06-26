@@ -9,16 +9,16 @@ metadata:
     prometheus.io/service-monitor: "false"
   {{- with .Values.ingester.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: ClusterIP
   clusterIP: None
   ports:
     - name: http-metrics
-      port: 3100
+      port: 3200
       protocol: TCP
-      targetPort: 3100
+      targetPort: 3200
     - name: grpc
       port: 9095
       protocol: TCP
