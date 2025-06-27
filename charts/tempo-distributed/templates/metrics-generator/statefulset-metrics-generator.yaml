@@ -23,6 +23,7 @@ spec:
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
+  serviceName: metricsGenerator
   template:
     metadata:
       labels:
