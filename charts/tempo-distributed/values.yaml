@@ -648,7 +648,7 @@ compactor:
       #       ignoring(tenant) group_left count by (cluster, namespace)(
       #         tempo_build_info{container="compactor", namespace=~".*"}
       #       )
-      #      customHeaders: X-Scope-OrgID=<tenant-id>
+      #     customHeaders: X-Scope-OrgID=<tenant-id>
 
   # -- hostAliases to add
   hostAliases: []
