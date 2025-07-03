@@ -13,9 +13,13 @@ metricsGeneration:
   serviceGraph:
     # -- The interval at which metrics are flushed to downstream components.
     metricsFlushInterval: 60s
+    # -- The histogram buckets used for latency metrics.
+    histogramBuckets: ["0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
   spanMetrics:
     # -- Time period after which metrics are considered stale and are removed from the cache.
     metricsExpiration: 5m
+    # -- The histogram buckets used for latency metrics.
+    histogramBuckets: ["0.005s", "0.01s", "0.025s", "0.05s", "0.075s", "0.1s", "0.25s", "0.5s", "0.75s", "1s", "2.5s", "5s", "7.5s", "10s"]
 
 sampling:
   # -- Toggle tail sampling.
