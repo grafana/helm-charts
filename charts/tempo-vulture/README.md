@@ -1,6 +1,6 @@
 # tempo-vulture
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.1](https://img.shields.io/badge/AppVersion-2.6.1-informational?style=flat-square)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.1](https://img.shields.io/badge/AppVersion-2.8.1-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
 
@@ -81,5 +81,5 @@ tempoAddress:
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | tempoAddress.push | string | `nil` | the url towards your Tempo distributor, e.g. http://distributor |
-| tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3100 |
+| tempoAddress.query | string | `nil` | the url towards your Tempo query-frontend, e.g. http://query-frontend:3200 |
 | tolerations | list | `[]` | Tolerations for vulture pods |
