@@ -1,6 +1,6 @@
 # synthetic-monitoring-agent
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.34.4](https://img.shields.io/badge/AppVersion-v0.34.4-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.38.3](https://img.shields.io/badge/AppVersion-v0.38.3-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
