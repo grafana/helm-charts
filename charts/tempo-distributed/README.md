@@ -993,6 +993,7 @@ The memcached default args are removed and should be provided manually. The sett
 | traces.opencensus.enabled | bool | `false` | Enable Tempo to ingest Open Census traces |
 | traces.opencensus.receiverConfig | object | `{}` | Open Census receiver config |
 | traces.otlp.grpc.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry GRPC traces |
+| traces.otlp.grpc.port | int | `4317` |  |
 | traces.otlp.grpc.receiverConfig | object | `{}` | GRPC receiver advanced config |
 | traces.otlp.http.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry HTTP traces |
 | traces.otlp.http.receiverConfig | object | `{}` | HTTP receiver advanced config |

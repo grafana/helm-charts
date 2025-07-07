@@ -68,6 +68,8 @@ tempo:
   podLabels: {}
   # -- Common annotations for all pods
   podAnnotations: {}
+  # -- The number of old ReplicaSets to retain to allow rollback
+  revisionHistoryLimit: 10
   # -- SecurityContext holds container-level security attributes and common container settings
   securityContext:
     runAsNonRoot: true
@@ -430,7 +432,7 @@ metricsGenerator:
       port: 7946
       service: false
     - name: http-metrics
-      port: 3100
+      port: 3200
       service: true
   # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
   config:
@@ -537,6 +539,10 @@ distributor:
   extraEnv: []
   # -- Environment variables from secrets or configmaps to add to the distributor pods
   extraEnvFrom: []
+  # -- Init containers to add to the distributor pods
+  initContainers: []
+  # -- Containers to add to the distributor pod
+  extraContainers: []
   # -- Resource requests and limits for the distributor
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
@@ -579,8 +585,6 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
-  # -- Init containers for the distributor pod
-  initContainers: []
   # -- Extra volumes for distributor pods
   extraVolumeMounts: []
   # -- Extra volumes for distributor deployment
@@ -820,6 +824,8 @@ querier:
   rollingUpdate:
     # -- Maximum number of Pods that can be unavailable during the update process
     maxUnavailable: 1
+  # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
+  minReadySeconds: 10
   # -- Node selector for querier pods
   nodeSelector: {}
   # -- Tolerations for querier pods
@@ -878,7 +884,7 @@ queryFrontend:
     # -- Extra volumes for tempo-query deployment
     extraVolumes: []
     config: |
-      backend: 127.0.0.1:3100
+      backend: 127.0.0.1:3200
   # -- Number of replicas for the query-frontend
   replicas: 1
   # -- hostAliases to add
@@ -1084,7 +1090,7 @@ enterpriseFederationFrontend:
     tag: null
   service:
     # -- Port of the federation-frontend service
-    port: 3100
+    port: 3200
     # -- Annotations for enterpriseFederationFrontend service
     annotations: {}
     # -- Type of service for the enterpriseFederationFrontend
@@ -1204,6 +1210,7 @@ traces:
       enabled: false
       # -- GRPC receiver advanced config
       receiverConfig: {}
+      port: 4317
   opencensus:
     # -- Enable Tempo to ingest Open Census traces
     enabled: false
@@ -1439,6 +1446,7 @@ config: |
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+      max_spans_per_span_set: {{ .Values.queryFrontend.config.search.max_spans_per_span_set }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
@@ -1549,7 +1557,7 @@ config: |
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
 server:
   # --  HTTP server listen host
-  httpListenPort: 3100
+  httpListenPort: 3200
   # -- Log level. Can be set to debug, info (default), warn, error
   logLevel: info
   # -- Log format. Can be set to logfmt (default) or json.
@@ -1706,6 +1714,25 @@ memcached:
   service:
     # -- Annotations for memcached service
     annotations: {}
+
+  # -- configuration for readiness probe for memcached statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- configuration for liveness probe for memcached statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
@@ -1925,6 +1952,8 @@ gateway:
   priorityClassName: null
   # -- Labels for gateway pods
   podLabels: {}
+  # -- Annotations for gateway deployment
+  annotations: {}
   # -- Annotations for gateway pods
   podAnnotations: {}
   # -- Additional CLI args for the gateway
@@ -1937,8 +1966,8 @@ gateway:
   extraVolumes: []
   # -- Volume mounts to add to the gateway pods
   extraVolumeMounts: []
-  # -- Enables the routes and ports that enable pushing traces using gRPC
-  enableGrpc: false
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
@@ -2132,32 +2161,32 @@ gateway:
 
           location ^~ /api {
             set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$query_frontend:3100$request_uri;
+            proxy_pass       http://$query_frontend:3200$request_uri;
           }
 
           location = /flush {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:3200$request_uri;
           }
 
           location = /shutdown {
             set $ingester {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$ingester:3100$request_uri;
+            proxy_pass       http://$ingester:3200$request_uri;
           }
 
           location = /distributor/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:3200$request_uri;
           }
 
           location = /ingester/ring {
             set $distributor {{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$distributor:3100$request_uri;
+            proxy_pass       http://$distributor:3200$request_uri;
           }
 
           location = /compactor/ring {
             set $compactor {{ include "tempo.resourceName" (dict "ctx" . "component" "compactor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
-            proxy_pass       http://$compactor:3100$request_uri;
+            proxy_pass       http://$compactor:3200$request_uri;
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
@@ -2165,10 +2194,10 @@ gateway:
           {{- end }}
         }
 
-        {{- if .Values.gateway.enableGrpc }}
+        {{- if .Values.traces.oltp.grpc.enabled }}
         # OTLP gRPC
         server {
-          listen               4317 http2;
+          listen               {{ .Values.traces.otlp.grpc.port }} http2;
 
           {{- if .Values.gateway.basicAuth.enabled }}
           auth_basic           "Tempo";
@@ -2189,6 +2218,30 @@ gateway:
         }
         {{- end }}
       }
+
+ingress:
+  # -- If you enable this, make sure to disable the gateway's ingress.
+  enabled: false
+  # ingressClassName: nginx
+  annotations: {}
+  paths:
+    distributor:
+      - path: /v1/traces
+        port: 4318
+      - path: /distributor/ring
+        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
+        # pathType: Prefix
+      - path: /ingester/ring
+      - path: /metrics-generator/ring
+    ingester:
+      - path: /flush
+      - path: /shutdown
+    query-frontend:
+      - path: /api
+    compactor:
+      - path: /compactor/ring
+  hosts:
+    - tempo.example.com
 
 ##############################################################################
 # The values in and after the `enterprise:` key configure the enterprise features
@@ -2295,6 +2348,8 @@ provisioner:
     pullPolicy: IfNotPresent
   # -- Volume mounts to add to the provisioner pods
   extraVolumeMounts: []
+  # -- Volumes to add to the provisioner pods
+  extraVolumes: []
 
 
 kubectlImage:
@@ -2523,25 +2578,39 @@ enterpriseGateway:
     annotations: {}
     # -- Hosts configuration for the enterprise-gateway ingress
     hosts:
-      - host: gateway.gem.example.com
+      - host: gateway.get.example.com
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the enterprise-gateway ingress
     tls:
-      - secretName: gem-gateway-tls
+      - secretName: get-gateway-tls
         hosts:
-          - gateway.gem.example.com
+          - gateway.get.example.com
 
-# -- Create extra manifests via values.
+# -- extraObjects could be utilized to add dynamic manifests via values
 extraObjects: []
-  # - apiVersion: "kubernetes-client.io/v1"
-  #   kind: ExternalSecret
-  #   metadata:
-  #     name: tempo-secrets
-  #   spec:
-  #     backendType: aws
-  #     data:
-  #       - key: secret-access-key
-  #         name: awssm-secret
+# Examples:
+# extraObjects:
+# - apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: tempo-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: aws
+#     data:
+#     - key: secret-access-key
+#       name: awssm-secret
+# Alternatively, you can use strings, which lets you use additional templating features:
+# extraObjects:
+# - |
+#   apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: tempo-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: aws
+#     data:
+#     - key: secret-access-key
+#       name: {{ include "some-other-template" }}
