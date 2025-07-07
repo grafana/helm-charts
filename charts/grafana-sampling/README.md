@@ -149,7 +149,9 @@ A major chart version change indicates that there is an incompatible breaking ch
 | metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name","k8s.pod.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
 | metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
+| metricsGeneration.serviceGraph.histogramBuckets | list | `["0.005s","0.01s","0.025s","0.05s","0.075s","0.1s","0.25s","0.5s","0.75s","1s","2.5s","5s","7.5s","10s"]` | The histogram buckets used for latency metrics. |
 | metricsGeneration.serviceGraph.metricsFlushInterval | string | `"60s"` | The interval at which metrics are flushed to downstream components. |
+| metricsGeneration.spanMetrics.histogramBuckets | list | `["0.005s","0.01s","0.025s","0.05s","0.075s","0.1s","0.25s","0.5s","0.75s","1s","2.5s","5s","7.5s","10s"]` | The histogram buckets used for latency metrics. |
 | metricsGeneration.spanMetrics.metricsExpiration | string | `"5m"` | Time period after which metrics are considered stale and are removed from the cache. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
 | sampling.enabled | bool | `true` | Toggle tail sampling. |
