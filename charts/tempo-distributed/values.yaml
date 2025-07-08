@@ -1211,6 +1211,8 @@ traces:
       enabled: false
       # -- GRPC receiver advanced config
       receiverConfig: {}
+      # -- Default OTLP gRPC port
+      port: 4317
   opencensus:
     # -- Enable Tempo to ingest Open Census traces
     enabled: false
@@ -2193,6 +2195,30 @@ gateway:
           {{ . | nindent 4 }}
           {{- end }}
         }
+
+        {{- if .Values.traces.otlp.grpc.enabled }}
+        # OTLP gRPC
+        server {
+          listen               {{ .Values.traces.otlp.grpc.port }} http2;
+
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Tempo";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
+
+          location = /opentelemetry.proto.collector.trace.v1.TraceService/Export {
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
+          }
+
+          location ~ /opentelemetry {
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
+        }
+        {{- end }}
       }
 
 ingress:
