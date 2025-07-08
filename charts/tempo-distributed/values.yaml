@@ -604,6 +604,8 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # -- Trace Attribute bytes limit. This is the maximum number of bytes that can be used in a trace.0 for no limit.
+    max_attribute_bytes: 0
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -1427,6 +1429,9 @@ config: |
     {{- end }}
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
+    {{- end }}
+    {{- if .Values.distributor.config.max_attribute_bytes }}
+    max_attribute_bytes: {{ .Values.distributor.config.max_attribute_bytes }}
     {{- end }}
   querier:
     frontend_worker:
