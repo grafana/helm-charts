@@ -1915,7 +1915,7 @@ minio:
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
-  enabled: true
+  enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
   # -- hostAliases to add
