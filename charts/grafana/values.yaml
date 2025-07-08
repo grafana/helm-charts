@@ -835,6 +835,8 @@ dashboards: {}
   #       $RAW_JSON
   #   custom-dashboard:
   #     file: dashboards/custom-dashboard.json
+  #   dashboard-directory:
+  #     directory: dashboards/
   #   prometheus-stats:
   #     gnetId: 2
   #     revision: 2

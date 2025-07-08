@@ -24,6 +24,14 @@ data:
     {{- toYaml ( $files.Get $value.file ) | nindent 4}}
     {{- end }}
 {{- end }}
+  {{- if hasKey $value "directory" }}
+    {{- $globPath := printf "%s/*.json" (trimSuffix "/" $value.directory) }}
+    {{- range $path, $fileContents := $files.Glob $globPath }}
+      {{- $dashboardFound = true }}
+  {{base $path}}:
+  {{- toYaml ($files.Get $path ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 {{- if not $dashboardFound }}
   {}
