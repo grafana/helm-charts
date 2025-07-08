@@ -2028,7 +2028,7 @@ gateway:
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
-    enabled: true
+    enabled: false
     # -- Labels for the gateway ingress
     labels: {}
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
