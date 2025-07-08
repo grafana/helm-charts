@@ -62,7 +62,7 @@ spec:
             - name: http-metrics
               containerPort: 8080
               protocol: TCP
-          {{- if .Values.traces.oltp.grpc.enabled }}
+          {{- if .Values.traces.otlp.grpc.enabled }}
             - name: grpc-otlp
               containerPort: {{ .Values.traces.otlp.grpc.port }}
               protocol: TCP

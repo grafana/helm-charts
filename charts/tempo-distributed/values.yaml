@@ -1207,9 +1207,10 @@ traces:
       receiverConfig: {}
     grpc:
       # -- Enable Tempo to ingest Open Telemetry GRPC traces
-      enabled: false
+      enabled: true
       # -- GRPC receiver advanced config
       receiverConfig: {}
+      # -- Default OTLP gRPC port
       port: 4317
   opencensus:
     # -- Enable Tempo to ingest Open Census traces
@@ -1914,7 +1915,7 @@ minio:
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
-  enabled: false
+  enabled: true
   # -- Number of replicas for the gateway
   replicas: 1
   # -- hostAliases to add
@@ -2026,7 +2027,7 @@ gateway:
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
-    enabled: false
+    enabled: true
     # -- Labels for the gateway ingress
     labels: {}
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
@@ -2194,7 +2195,7 @@ gateway:
           {{- end }}
         }
 
-        {{- if .Values.traces.oltp.grpc.enabled }}
+        {{- if .Values.traces.otlp.grpc.enabled }}
         # OTLP gRPC
         server {
           listen               {{ .Values.traces.otlp.grpc.port }} http2;
@@ -2205,11 +2206,11 @@ gateway:
           {{- end }}
 
           location = /opentelemetry.proto.collector.trace.v1.TraceService/Export {
-            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4317;
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
           }
 
           location ~ /opentelemetry {
-            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:4317;
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
           }
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
