@@ -391,3 +391,26 @@ config: |
         service: memcached-client
         timeout: 500ms
 ```
+
+### Enabling gRPC Open Telemetry
+
+gRPC for Open Telemetry is disabled by default, simply flip the bool in the `traces` block to turn it on.
+
+If you have enabled the gateway as well, this will let you push traces using the default Open Telemetry API path (`/opentelemetry.proto.collector.trace.v1.TraceService/Export`), on the 4317 port. This port can be overwriten as well in the values.
+
+```yaml
+traces:
+  otlp:
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: false
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: true
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+      # -- Default OTLP gRPC port
+      port: 4317
+```
