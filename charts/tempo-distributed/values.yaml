@@ -1208,7 +1208,7 @@ traces:
       receiverConfig: {}
     grpc:
       # -- Enable Tempo to ingest Open Telemetry GRPC traces
-      enabled: true
+      enabled: false
       # -- GRPC receiver advanced config
       receiverConfig: {}
       # -- Default OTLP gRPC port
