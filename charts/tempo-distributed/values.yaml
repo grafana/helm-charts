@@ -1208,7 +1208,7 @@ traces:
       receiverConfig: {}
     grpc:
       # -- Enable Tempo to ingest Open Telemetry GRPC traces
-      enabled: true
+      enabled: false
       # -- GRPC receiver advanced config
       receiverConfig: {}
       # -- Default OTLP gRPC port
@@ -1916,7 +1916,7 @@ minio:
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
-  enabled: true
+  enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
   # -- hostAliases to add
@@ -2028,7 +2028,7 @@ gateway:
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
-    enabled: true
+    enabled: false
     # -- Labels for the gateway ingress
     labels: {}
     # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
