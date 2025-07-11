@@ -363,15 +363,15 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
+| distributor.config.cost_attribution.enabled | bool | `false` | Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides. |
+| distributor.config.cost_attribution.max_cardinality | int | `10000` | Maximum number of series per tenant. |
+| distributor.config.cost_attribution.stale_duration | string | `"15m0s"` | Once a metrics series is deleted, it won't be emitted anymore, keeping active series low. |
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
 | distributor.config.log_discarded_spans.enabled | bool | `false` |  |
 | distributor.config.log_discarded_spans.filter_by_status_error | bool | `false` |  |
 | distributor.config.log_discarded_spans.include_all_attributes | bool | `false` |  |
 | distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
 | distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
-| distributor.config.cost_attribution.enabled | bool | `false` | Enables the cost-attribution usage tracker in the distributor. |
-| distributor.config.cost_attribution.max_cardinality | int | `10000` | Maximum number of series per tenant. |
-| distributor.config.cost_attribution.stale_duration | string | `"15m0s"` | Interval after which a series is considered stale and will be deleted from the registry. |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraContainers | list | `[]` | Containers to add to the distributor pod |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
