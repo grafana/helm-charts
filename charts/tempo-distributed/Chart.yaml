@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 1.46.0
+version: 1.46.
 appVersion: 2.8.1
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
