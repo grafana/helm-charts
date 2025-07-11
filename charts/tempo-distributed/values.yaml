@@ -607,12 +607,12 @@ distributor:
     # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
     # attributes exposed on /usage_metrics.
     cost_attribution:
-      # Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides.
+      # -- Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides.
       enabled: false
-      # Maximum number of series per tenant.
+      # -- Maximum number of series per tenant.
       max_cardinality: 10000
-      # Interval after which a series is considered stale and will be deleted from the registry.
-      # Once a metrics series is deleted, it won't be emitted anymore, keeping active series low.
+      # -- Interval after which a series is considered stale and will be deleted from the registry.
+      # -- Once a metrics series is deleted, it won't be emitted anymore, keeping active series low.
       stale_duration: 15m0s
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
