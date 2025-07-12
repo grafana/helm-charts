@@ -63,6 +63,8 @@ spec:
             {{- range $key, $value := .Values.tokengenJob.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
+          resources:
+            {{- toYaml .Values.tokengenJob.resources | nindent 12 }}
           volumeMounts:
             {{- if .Values.tokengenJob.extraVolumeMounts }}
               {{ toYaml .Values.tokengenJob.extraVolumeMounts | nindent 12 }}
