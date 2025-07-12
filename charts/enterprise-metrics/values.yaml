@@ -51,6 +51,13 @@ tokengenJob:
   env: []
   annotations: {}
   initContainers: []
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 512Mi
+      cpu: 500m
 
 config:
   auth_enabled: true
@@ -227,9 +234,6 @@ admin_api:
     requests:
       cpu: 10m
       memory: 32Mi
-    limits:
-      memory: 512Mi
-      cpu: 500m
 
   extraContainers: []
   extraVolumes: []
