@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "rollout-operator.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "rollout-operator.labels" . | nindent 4 }}
 spec:

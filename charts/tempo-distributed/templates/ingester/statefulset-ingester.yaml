@@ -34,8 +34,7 @@ spec:
     {{- if .Values.ingester.zoneAwareReplication.enabled }}
     type: OnDelete
     {{- else }}
-    rollingUpdate:
-      partition: 0
+    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
     {{- end }}
   template:
     metadata:
@@ -89,7 +88,7 @@ spec:
             - name: http-memberlist
               containerPort: {{ include "tempo.memberlistBindPort" . }}
             - name: http-metrics
-              containerPort: 3100
+              containerPort: 3200
           {{- if or .Values.global.extraEnv .Values.ingester.extraEnv }}
           env:
             {{- with .Values.global.extraEnv }}
@@ -189,6 +188,10 @@ spec:
       metadata:
         {{- with .Values.ingester.persistence.annotations }}
         annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.ingester.persistence.labels }}
+        labels:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         name: data

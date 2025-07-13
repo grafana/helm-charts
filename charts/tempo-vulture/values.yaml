@@ -45,7 +45,10 @@ resources: {}
 nodeSelector: {}
 # -- Tolerations for vulture pods
 tolerations: []
-
+# -- SecurityContext holds container-level security attributes and common container settings
+securityContext: {}
+# -- podSecurityContext holds pod-level security attributes and common container settings
+podSecurityContext: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -78,5 +81,5 @@ podMonitor:
 tempoAddress:
   # -- the url towards your Tempo distributor, e.g. http://distributor
   push:
-  # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
+  # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3200
   query:

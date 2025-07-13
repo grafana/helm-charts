@@ -501,6 +501,8 @@ ingester:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Max Surge for ingester pods
   maxSurge: 0
   # -- Node selector for ingester pods
@@ -511,13 +513,18 @@ ingester:
   readinessProbe: {}
   # -- liveness probe settings for ingester pods. If empty use `loki.livenessProbe`
   livenessProbe: {}
+
+  # -- updateStrategy of the ingester statefulset.
+  statefulStrategy:
+    rollingUpdate:
+      partition: 0
+
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
     # -- Use emptyDir with ramdisk for storage. **Please note that all data in ingester will be lost on pod restart**
     inMemory: false
     # -- List of the ingester PVCs
-    # @notationType -- list
     claims:
       - name: data
         size: 10Gi
@@ -625,6 +632,8 @@ distributor:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Max Surge for distributor pods
   maxSurge: 0
   # -- Node selector for distributor pods
@@ -734,6 +743,8 @@ querier:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Max Surge for querier pods
   maxSurge: 0
   # -- Node selector for querier pods
@@ -847,6 +858,8 @@ queryFrontend:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for query-frontend pods
   nodeSelector: {}
   # -- Tolerations for query-frontend pods
@@ -918,6 +931,8 @@ queryScheduler:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for query-scheduler pods
   nodeSelector: {}
   # -- Tolerations for query-scheduler pods
@@ -1001,6 +1016,8 @@ ingress:
 #    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
 #    nginx.ingress.kubernetes.io/configuration-snippet: |
 #      proxy_set_header X-Scope-OrgID $remote_user;
+  # -- Custom labels for the ingress
+  labels: {}
   paths:
     distributor:
       - /api/prom/push
@@ -1132,6 +1149,8 @@ gateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for gateway pods
   nodeSelector: {}
   # -- Tolerations for gateway pods
@@ -1168,6 +1187,8 @@ gateway:
 
     # -- Annotations for the gateway ingress
     annotations: {}
+    # -- Custom labels for the gateway ingress
+    labels: {}
     # -- Hosts configuration for the gateway ingress
     hosts:
       - host: gateway.loki.example.com
@@ -1175,6 +1196,7 @@ gateway:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
             # pathType: Prefix
+
     # -- TLS configuration for the gateway ingress
     tls: []
     # tls:
@@ -1437,7 +1459,6 @@ compactor:
     # -- Annotations for compactor PVCs
     annotations: {}
     # -- List of the compactor PVCs
-    # @notationType -- list
     claims:
       - name: data
         size: 10Gi
@@ -1533,6 +1554,8 @@ ruler:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for ruler pods
   nodeSelector: {}
   # -- Tolerations for ruler pods
@@ -1686,6 +1709,8 @@ indexGateway:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for index-gateway pods
   nodeSelector: {}
   # -- Tolerations for index-gateway pods
@@ -1825,6 +1850,8 @@ memcachedChunks:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-chunks pods
   nodeSelector: {}
   # -- Tolerations for memcached-chunks pods
@@ -1894,6 +1921,8 @@ memcachedFrontend:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-frontend pods
   nodeSelector: {}
   # -- Tolerations for memcached-frontend pods
@@ -1959,6 +1988,8 @@ memcachedIndexQueries:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-index-queries pods
   nodeSelector: {}
   # -- Tolerations for memcached-index-queries pods
@@ -2024,6 +2055,8 @@ memcachedIndexWrites:
             topologyKey: failure-domain.beta.kubernetes.io/zone
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: null
+  # -- Pod Disruption Budget minAvailable
+  minAvailable: null
   # -- Node selector for memcached-index-writes pods
   nodeSelector: {}
   # -- Tolerations for memcached-index-writes pods
