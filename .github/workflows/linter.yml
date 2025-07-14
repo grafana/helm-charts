@@ -11,6 +11,11 @@ on:
         default: ".*"
         required: false
         type: string
+      golang_ci_lint_file:
+        description: the path to the golangci-lint.yml file
+        default: .golangci.yml
+        required: false
+        type: string
 
 jobs:
   build:
@@ -40,3 +45,4 @@ jobs:
           VALIDATE_YAML: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GO_CONFIG_FILE: ${{ inputs.golang_ci_lint_file }}
