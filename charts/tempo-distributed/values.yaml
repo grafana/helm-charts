@@ -905,6 +905,13 @@ queryFrontend:
       target_bytes_per_job: 104857600
       # -- The maximum allowed value of spans per span set. 0 disables this limit.
       max_spans_per_span_set: 100
+      # query_backend_after and query_ingesters_until together control where the query-frontend searches for traces.
+      # Time ranges before query_ingesters_until will be searched in the ingesters only.
+      # Time ranges after query_backend_after will be searched in the backend/object storage only.
+      # Time ranges from query_backend_after through query_ingesters_until will be queried from both locations.
+      # query_backend_after must be less than or equal to query_ingesters_until.
+      query_backend_after: 15m
+      query_ingesters_until: 30m
     # -- Trace by ID lookup configuration
     trace_by_id:
       # -- The number of shards to split a trace by id query into.
@@ -1449,6 +1456,8 @@ config: |
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
       max_spans_per_span_set: {{ .Values.queryFrontend.config.search.max_spans_per_span_set }}
+      query_backend_after: {{ .Values.queryFrontend.config.search.query_backend_after }}
+      query_ingesters_until: {{ .Values.queryFrontend.config.search.query_ingesters_until }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
