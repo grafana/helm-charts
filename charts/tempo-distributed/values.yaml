@@ -1369,12 +1369,12 @@ config: |
     metrics_ingestion_time_range_slack: {{ .Values.metricsGenerator.config.metrics_ingestion_time_range_slack }}
   {{- end }}
   distributor:
-    {{- if and .Values.distributor.config.cost_attribution .Values.distributor.config.cost_attribution.enabled }}
+    {{- if .Values.distributor.config.cost_attribution.enabled }}
     usage:
       cost_attribution:
-        enabled: true
-        max_cardinality: {{ .Values.distributor.config.cost_attribution.max_cardinality | default 10000 }}
-        stale_duration: {{ .Values.distributor.config.cost_attribution.stale_duration | default "15m0s" }}
+        enabled: {{ .Values.distributor.config.cost_attribution.enabled }}
+        max_cardinality: {{ .Values.distributor.config.cost_attribution.max_cardinality }}
+        stale_duration: {{ .Values.distributor.config.cost_attribution.stale_duration }}
     {{- end }}
     ring:
       kvstore:
