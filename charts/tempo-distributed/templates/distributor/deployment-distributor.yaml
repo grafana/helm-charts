@@ -22,7 +22,7 @@ spec:
 {{- with .Values.distributor.strategy }}
   strategy:
 {{- toYaml . | nindent 4 }}
-{{- end }}      
+{{- end }}
   template:
     metadata:
       labels:
@@ -66,6 +66,9 @@ spec:
             - -config.file=/conf/tempo.yaml
             - -mem-ballast-size-mbs=1024
             {{- with .Values.distributor.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           image: {{ include "tempo.imageReference" $dict }}
@@ -126,9 +129,14 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-          {{- with .Values.distributor.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.distributor.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.distributor.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}

@@ -83,9 +83,14 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-          {{- with .Values.queryFrontend.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.queryFrontend.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.resources | nindent 12 }}
@@ -111,6 +116,9 @@ spec:
         - args:
             - -config=/conf/tempo.yaml
             {{- with .Values.queryFrontend.query.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           image: {{ include "tempo.queryImage" . }}
