@@ -363,6 +363,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
+| distributor.config.cost_attribution.enabled | bool | `false` | Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides. |
+| distributor.config.cost_attribution.max_cardinality | int | `10000` | Maximum number of series per tenant. |
+| distributor.config.cost_attribution.stale_duration | string | `"15m0s"` | Once a metrics series is deleted, it won't be emitted anymore, keeping active series low. |
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
 | distributor.config.log_discarded_spans.enabled | bool | `false` |  |
 | distributor.config.log_discarded_spans.filter_by_status_error | bool | `false` |  |
