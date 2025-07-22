@@ -76103,6 +76103,21 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/oncall-1.0.0/oncall-1.0.0.tgz
     version: 1.0.0
+  pdc-agent:
+  - apiVersion: v2
+    appVersion: 0.0.45
+    created: "2025-07-22T18:45:19.367168379Z"
+    description: PDC agent is an agent for connecting to Grafana Private Data source
+      Connect
+    digest: edf28378ba3fca833cd7139c875776b635fb0f641770eac6d693f815d7640aa0
+    home: https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/
+    name: pdc-agent
+    sources:
+    - https://github.com/grafana/pdc-agent
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/pdc-agent-0.0.1/pdc-agent-0.0.1.tgz
+    version: 0.0.1
   phlare:
   - apiVersion: v2
     appVersion: 0.5.1
@@ -92465,4 +92480,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-21T21:14:28.883545859Z"
+generated: "2025-07-22T18:45:19.372917461Z"
