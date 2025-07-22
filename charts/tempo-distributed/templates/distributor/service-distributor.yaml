@@ -102,4 +102,6 @@ spec:
   {{- end }}
   selector:
     {{- include "tempo.selectorLabels" $dict | nindent 4 }}
-
+{{- if .Values.distributor.trafficDistribution }}
+  trafficDistribution: {{ .Values.distributor.trafficDistribution }}
+{{- end }}

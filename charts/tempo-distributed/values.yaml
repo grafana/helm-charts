@@ -618,6 +618,8 @@ distributor:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
+  # -- trafficDistribution setting for distributor service
+  trafficDistribution: ""
 
 # Configuration for the compactor
 compactor:
