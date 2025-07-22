@@ -11,7 +11,7 @@
 /charts/loki-canary/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/promtail/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/tempo/ @grafana/tempo @Sheikh-Abubaker @dgzlopes @swartz-k @BitProcessor @faustodavid
-/charts/tempo-distributed/ @grafana/tempo @Sheikh-Abubaker @mapno @swartz-k @BitProcessor @faustodavid
+/charts/tempo-distributed/ @grafana/tempo @Sheikh-Abubaker @swartz-k @BitProcessor @faustodavid
 /charts/enterprise-metrics/ @grafana/mimir-maintainers
 /charts/rollout-operator/ @grafana/mimir-maintainers
 /charts/enterprise-logs/ @grafana/loki-squad
@@ -19,3 +19,4 @@
 /charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
 /charts/agent-operator/ @grafana/grafana-agent-maintainers
 /charts/cloudcost-exporter/ @grafana/platform-monitoring
+/charts/grafana-mcp/ @jkroepke @Sheikh-Abubaker @KyriosGN0

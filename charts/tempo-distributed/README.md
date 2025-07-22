@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.42.2](https://img.shields.io/badge/Version-1.42.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.0](https://img.shields.io/badge/AppVersion-2.8.0-informational?style=flat-square)
+![Version: 1.46.0](https://img.shields.io/badge/Version-1.46.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.1](https://img.shields.io/badge/AppVersion-2.8.1-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.24.0 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.30.0 |
 
 ## Chart Repo
 
@@ -363,6 +363,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
+| distributor.config.cost_attribution.enabled | bool | `false` | Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides. |
+| distributor.config.cost_attribution.max_cardinality | int | `10000` | Maximum number of series per tenant. |
+| distributor.config.cost_attribution.stale_duration | string | `"15m0s"` | Once a metrics series is deleted, it won't be emitted anymore, keeping active series low. |
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
 | distributor.config.log_discarded_spans.enabled | bool | `false` |  |
 | distributor.config.log_discarded_spans.filter_by_status_error | bool | `false` |  |
@@ -993,6 +996,7 @@ The memcached default args are removed and should be provided manually. The sett
 | traces.opencensus.enabled | bool | `false` | Enable Tempo to ingest Open Census traces |
 | traces.opencensus.receiverConfig | object | `{}` | Open Census receiver config |
 | traces.otlp.grpc.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry GRPC traces |
+| traces.otlp.grpc.port | int | `4317` | Default OTLP gRPC port |
 | traces.otlp.grpc.receiverConfig | object | `{}` | GRPC receiver advanced config |
 | traces.otlp.http.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry HTTP traces |
 | traces.otlp.http.receiverConfig | object | `{}` | HTTP receiver advanced config |
@@ -1133,4 +1137,27 @@ config: |
         host: a-tempo-distributed-memcached
         service: memcached-client
         timeout: 500ms
+```
+
+### Enabling gRPC Open Telemetry
+
+gRPC for Open Telemetry is disabled by default, simply flip the bool in the `traces` block to turn it on.
+
+If you have enabled the gateway as well, this will let you push traces using the default Open Telemetry API path (`/opentelemetry.proto.collector.trace.v1.TraceService/Export`), on the 4317 port. This port can be overwriten as well in the values.
+
+```yaml
+traces:
+  otlp:
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: false
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: true
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+      # -- Default OTLP gRPC port
+      port: 4317
 ```
