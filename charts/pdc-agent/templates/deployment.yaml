@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pdc-agent.fullname" . }}
+  labels:
+    {{- include "pdc-agent.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pdc-agent.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        {{- include "pdc-agent.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.metricsPort }}
+              protocol: TCP
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: TOKEN
+              {{- if .Values.tokenSecretName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "A secret name for the PDC agent token is required" .Values.tokenSecretName }}
+                  key: token
+              {{- else if .Values.insecureTokenValue }}
+              value: {{ .Values.insecureTokenValue | quote }}
+              {{- else }}
+              {{- fail "Either tokenSecretName or insecureTokenValue must be provided" }}
+              {{- end }}
+            - name: CLUSTER
+              value: {{ required "A cluster name is required" .Values.cluster | quote }}
+            - name: HOSTED_GRAFANA_ID
+              value: {{ required "A Hosted Grafana stack ID is required" .Values.hostedGrafanaId | quote }}
+          args:
+            - -cluster
+            - $(CLUSTER)
+            - -token
+            - $(TOKEN)
+            - -gcloud-hosted-grafana-id
+            - $(HOSTED_GRAFANA_ID)
+            {{- if .Values.debug }}
+            - -log.level
+            - debug
+            {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . }}
+            {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

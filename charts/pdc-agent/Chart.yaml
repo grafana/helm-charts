@@ -1,0 +1,9 @@
+apiVersion: v2
+name: pdc-agent
+description: PDC agent is an agent for connecting to Grafana Private Data source Connect
+type: application
+appVersion: "0.0.45"
+version: 0.0.1
+home: https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/
+sources:
+  - https://github.com/grafana/pdc-agent

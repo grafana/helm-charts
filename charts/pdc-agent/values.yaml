@@ -1,0 +1,73 @@
+# Default values for pdc-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 3
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: grafana/pdc-agent
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+podSecurityContext:
+  runAsUser: 30000
+  runAsGroup: 30000
+  fsGroup: 30000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  runAsNonRoot: true
+  privileged: false
+  allowPrivilegeEscalation: false
+
+resources:
+  requests:
+    # -- CPU request for the container. There is no point setting the CPU higher than 1, because openssh is single threaded
+    cpu: 100m
+    # -- Memory request for the container.
+    memory: 256Mi
+
+# -- not required, but left in as a choice
+nodeSelector: {}
+# -- not required, but left in as a choice
+tolerations: []
+# --  not required, but left in as a choice
+affinity: {}
+
+# -- The port where metrics are served from the pdc agent
+metricsPort: 8090
+
+# -- Enable debug logging for the agent. Useful for seeing SSH debug logs
+debug: false
+
+# For these values, see https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/configure-pdc/#pdc-connection-steps
+# -- The cluster where your Hosted Grafana stack is running
+cluster: ""
+# -- The numeric ID of your Hosted Grafana stack
+hostedGrafanaId: ""
+# -- secretName Expects a secret with key `token` which contains the Access Policy token you generated
+tokenSecretName: ""
+# -- insecureTokenValue is used to set the token value directly in the deployment.yaml file. This is useful for testing purposes.
+insecureTokenValue: ""
+
+# extra arguments for the pdc-agent can be found in:
+# https://github.com/grafana/pdc-agent/blob/main/pkg/ssh/ssh.go/
+# https://github.com/grafana/pdc-agent/blob/main/pkg/pdc/client.go
+# https://github.com/grafana/pdc-agent/blob/main/cmd/pdc/main.go
+extraArgs: []

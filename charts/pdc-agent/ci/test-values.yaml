@@ -1,0 +1,3 @@
+insecureTokenValue: "1234567890"
+cluster: "test-cluster"
+hostedGrafanaId: "1234567890"
