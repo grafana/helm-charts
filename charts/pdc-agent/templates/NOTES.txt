@@ -1,0 +1,3 @@
+The Grafana PDC agent has been deployed to your cluster. You can now configure data sources to use this PDC network.
+
+See https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/configure-pdc/#configure-a-data-source-to-use-private-data-source-connect-pdc
