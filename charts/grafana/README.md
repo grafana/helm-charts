@@ -383,6 +383,9 @@ dashboards:
     custom-dashboard:
       # This is a path to a file inside the dashboards directory inside the chart directory
       file: dashboards/custom-dashboard.json
+    more-dashboards:
+      # This imports all dashboard .json files in a directory
+      directory: dashboards/
     prometheus-stats:
       # Ref: https://grafana.com/dashboards/2
       gnetId: 2
