@@ -604,6 +604,16 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
+    # attributes exposed on /usage_metrics.
+    cost_attribution:
+      # -- Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides.
+      enabled: false
+      # -- Maximum number of series per tenant.
+      max_cardinality: 10000
+      # -- Interval after which a series is considered stale and will be deleted from the registry.
+      # -- Once a metrics series is deleted, it won't be emitted anymore, keeping active series low.
+      stale_duration: 15m0s
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -1359,6 +1369,13 @@ config: |
     metrics_ingestion_time_range_slack: {{ .Values.metricsGenerator.config.metrics_ingestion_time_range_slack }}
   {{- end }}
   distributor:
+    {{- if .Values.distributor.config.cost_attribution.enabled }}
+    usage:
+      cost_attribution:
+        enabled: {{ .Values.distributor.config.cost_attribution.enabled }}
+        max_cardinality: {{ .Values.distributor.config.cost_attribution.max_cardinality }}
+        stale_duration: {{ .Values.distributor.config.cost_attribution.stale_duration }}
+    {{- end }}
     ring:
       kvstore:
         store: memberlist
