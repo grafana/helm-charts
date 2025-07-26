@@ -865,6 +865,8 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.config.search.concurrent_jobs | int | `1000` | The number of concurrent jobs to execute when searching the backend |
 | queryFrontend.config.search.max_spans_per_span_set | int | `100` | The maximum allowed value of spans per span set. 0 disables this limit. |
 | queryFrontend.config.search.target_bytes_per_job | int | `104857600` | The target number of bytes for each job to handle when performing a backend search |
+| queryFrontend.config.search.query_backend_after | string | `15m` | query_backend_after and query_ingesters_until together control where the query-frontend searches for traces. Time ranges before query_ingesters_until will be searched in the ingesters only. Time ranges after query_backend_after will be searched in the backend/object storage only. Time ranges from query_backend_after through query_ingesters_until will be queried from both locations. query_backend_after must be less than or equal to query_ingesters_until. |
+| queryFrontend.config.search.query_ingesters_until | string | `30m` |
 | queryFrontend.config.trace_by_id | object | `{"query_shards":50}` | Trace by ID lookup configuration |
 | queryFrontend.config.trace_by_id.query_shards | int | `50` | The number of shards to split a trace by id query into. |
 | queryFrontend.extraArgs | list | `[]` | Additional CLI args for the query-frontend |
