@@ -1447,6 +1447,9 @@ config: |
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
     {{- end }}
+    {{- if .Values.distributor.config.max_attribute_bytes }}
+    max_attribute_bytes: {{ .Values.distributor.config.max_attribute_bytes }}
+    {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}:9095
