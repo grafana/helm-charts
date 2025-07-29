@@ -604,6 +604,8 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # -- Trace Attribute bytes limit. This is the maximum number of bytes that can be used in a trace.0 for no limit.
+    max_attribute_bytes: 0
     # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
     # attributes exposed on /usage_metrics.
     cost_attribution:
