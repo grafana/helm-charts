@@ -42,7 +42,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.tokengenJob.storeTokenInSecret }}
-      initContainers: 
+      initContainers:
       {{- if .Values.tokengenJob.initContainers }}
         {{- toYaml .Values.tokengenJob.initContainers | nindent 8 }}
         {{- end }}
@@ -58,6 +58,9 @@ spec:
             - "-config.file=/conf/tempo.yaml"
             - "-tokengen.token-file=/shared/admin-token"
             {{- range $key, $value := .Values.tokengenJob.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+            {{- end }}
+            {{- range $key, $value := .Values.global.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
           volumeMounts:
