@@ -25119,6 +25119,25 @@ entries:
   grafana-cloud-onboarding:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-08-04T10:13:12.849421841Z"
+    dependencies:
+    - condition: alloy-operator.enabled
+      name: alloy-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.3.7
+    - alias: additionalComponents
+      name: additional-components
+      repository: ""
+      version: 1.0.0
+    description: A Helm chart for Grafana Cloud Onboarding on Kubernetes
+    digest: ccac186765146ff898baeeadc2f2a75131d887ed47039951939dd186b4c1ba91
+    name: grafana-cloud-onboarding
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-cloud-onboarding-0.2.0/grafana-cloud-onboarding-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-07-30T10:09:14.124203813Z"
     dependencies:
     - condition: alloy-operator.enabled
@@ -93190,4 +93209,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-01T10:18:53.960992174Z"
+generated: "2025-08-04T10:13:12.874451273Z"
