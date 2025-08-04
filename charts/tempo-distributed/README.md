@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.47.0](https://img.shields.io/badge/Version-1.47.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.47.1](https://img.shields.io/badge/Version-1.47.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -948,6 +948,8 @@ The memcached default args are removed and should be provided manually. The sett
 | storage.trace.blocklist_poll_fallback | string | `nil` | fallback to scanning the entire bucket. Set to false to disable this behavior. |
 | storage.trace.blocklist_poll_stale_tenant_index | string | `nil` | The oldest allowable tenant index. |
 | storage.trace.blocklist_poll_tenant_index_builders | string | `nil` | Maximum number of compactors that should build the tenant index. All other components will download the index. |
+| storage.trace.empty_tenant_deletion_age | string | `nil` | How fast the poller will delete a tenant if it is empty. Will need to be enabled in 'empty_tenant_deletion_enabled'. |
+| storage.trace.empty_tenant_deletion_enabled | string | `nil` | Delete empty tenants. |
 | storage.trace.pool.max_workers | int | `400` | Total number of workers pulling jobs from the queue |
 | storage.trace.pool.queue_depth | int | `20000` | Length of job queue. imporatant for querier as it queues a job for every block it has to search |
 | storage.trace.search.prefetch_trace_count | int | `1000` | Number of traces to prefetch while scanning blocks. Increasing this value can improve trace search performance at the cost of memory. |
