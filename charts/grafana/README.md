@@ -795,3 +795,34 @@ grafana.ini:
   alerting:
     enabled: false
 ```
+
+### Installing plugins
+
+You can install plugins by setting `plugins` in your `values.yaml` file.
+
+```yaml
+plugins:
+  - grafana-clock-panel
+  - grafana-simple-json-datasource
+```
+[Other formats](https://grafana.com/docs/plugins/yesoreyeram-infinity-datasource/latest/setup/installation/#install-using-helm-chart)
+
+Or by setting `GF_PLUGINS_PREINSTALL_SYNC` in your `values.yaml` file.
+
+Format: `<plugin ID>@[<plugin version>]@<url to plugin zip>`
+
+Example: Use one of the below listed example
+
+```yaml
+env:
+  GF_PLUGINS_PREINSTALL_SYNC: yesoreyeram-infinity-datasource@1.0.0@https://github.com/yesoreyeram/infinity-datasource/releases/download/v1.0.0/infinity-datasource-1.0.0.zip
+  GF_PLUGINS_PREINSTALL_SYNC: yesoreyeram-infinity-datasource # without version and url
+  GF_PLUGINS_PREINSTALL_SYNC: yesoreyeram-infinity-datasource,grafana-clock-panel # multiple plugins
+```
+
+Or by setting `GF_PLUGINS_INSTALL` in your `values.yaml` file. **Deprecated since 12.1.0**
+
+```yaml
+env:
+  GF_PLUGINS_INSTALL: grafana-clock-panel,grafana-simple-json-datasource
+```
