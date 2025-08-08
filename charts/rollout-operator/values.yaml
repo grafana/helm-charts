@@ -7,6 +7,8 @@ global:
   # -- Common labels for all object directly managed by this chart.
   commonLabels: {}
 
+# -- Number of old ReplicaSets to retain
+revisionHistoryLimit: 10
 
 image:
   repository: grafana/rollout-operator
