@@ -79,6 +79,9 @@ spec:
             {{- with .Values.ingester.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+            {{- with .Values.global.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: ingester
@@ -98,9 +101,14 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-          {{- with .Values.ingester.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.ingester.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.ingester.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
