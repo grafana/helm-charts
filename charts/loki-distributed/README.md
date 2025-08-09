@@ -1,6 +1,6 @@
 # loki-distributed
 
-![Version: 0.80.5](https://img.shields.io/badge/Version-0.80.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.13](https://img.shields.io/badge/AppVersion-2.9.13-informational?style=flat-square)
+![Version: 0.80.6](https://img.shields.io/badge/Version-0.80.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.13](https://img.shields.io/badge/AppVersion-2.9.13-informational?style=flat-square)
 
 Helm chart for Grafana Loki in microservices mode
 
@@ -262,6 +262,7 @@ kubectl delete statefulset RELEASE_NAME-loki-distributed-querier -n LOKI_NAMESPA
 | indexGateway.image.tag | string | `nil` | Docker image tag for the index-gateway image. Overrides `loki.image.tag` |
 | indexGateway.initContainers | list | `[]` | Init containers to add to the index-gateway pods |
 | indexGateway.joinMemberlist | bool | `true` | Whether the index gateway should join the memberlist hashring |
+| indexGateway.lifecycle | object | `{}` | Lifecycle for the index-gateway container |
 | indexGateway.maxUnavailable | string | `nil` | Pod Disruption Budget maxUnavailable |
 | indexGateway.minAvailable | string | `nil` | Pod Disruption Budget minAvailable |
 | indexGateway.nodeSelector | object | `{}` | Node selector for index-gateway pods |
