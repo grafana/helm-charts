@@ -2,7 +2,7 @@ metricsGeneration:
   # -- Toggle generation of spanmetrics and servicegraph metrics.
   enabled: true
   # -- Use legacy metric names that match those used by the Tempo metrics generator.
-  legacy: false
+  legacy: true
   # -- Additional dimensions to add to generated metrics.
   dimensions:
     - service.namespace
