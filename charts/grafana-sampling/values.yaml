@@ -28,7 +28,8 @@ sampling:
     # -- Percentage of successful requests to sample.
     percentage: 10
   failedRequests:
-    # -- Toggle sampling failed requests. sample: false
+    # -- Toggle sampling failed requests.
+    sample: false
     # -- Percentage of failed requests to sample.
     percentage: 50
   # -- User-defined policies in alloy format.
