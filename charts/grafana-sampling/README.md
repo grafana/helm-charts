@@ -1,6 +1,6 @@
 # grafana-sampling
 
-![Version: 1.1.5](https://img.shields.io/badge/Version-1.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.7.5](https://img.shields.io/badge/AppVersion-v1.7.5-informational?style=flat-square)
+![Version: 1.1.6](https://img.shields.io/badge/Version-1.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.10.1](https://img.shields.io/badge/AppVersion-v1.10.1-informational?style=flat-square)
 
 A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 
@@ -143,7 +143,14 @@ A major chart version change indicates that there is an incompatible breaking ch
 | batch.statefulset.send_batch_max_size | int | `0` |  |
 | batch.statefulset.send_batch_size | int | `8192` |  |
 | batch.statefulset.timeout | string | `"200ms"` |  |
-| deployment.otlp.receiver | object | `{"grpc":{"max_recv_msg_size":"4MB"}}` | otlp receiver settings for deployment (loadbalancer) |
+| deployment.otlp.receiver | object | `{"grpc":{"keepalive":{"enforcementPolicy":{"minTime":"","permitWithoutStream":false},"serverParameters":{"maxConnectionAge":"","maxConnectionAgeGrace":"","maxConnectionIdle":"","time":"","timeout":""}},"max_recv_msg_size":"4MB"}}` | otlp receiver settings for deployment (loadbalancer) |
+| deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime | string | `""` | Minimum time clients should wait before sending a keepalive ping. Default is 5 minutes. @section -- Receivers: OTLP |
+| deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream | bool | `false` | Allow clients to send keepalive pings when there are no active streams. @section -- Receivers: OTLP |
+| deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge | string | `""` | Maximum age for non-idle connections. Default is infinity. @section -- Receivers: OTLP |
+| deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace | string | `""` | Time to wait before forcibly closing connections. Default is infinity. @section -- Receivers: OTLP |
+| deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle | string | `""` | Maximum age for idle connections. Default is infinity. @section -- Receivers: OTLP |
+| deployment.otlp.receiver.grpc.keepalive.serverParameters.time | string | `""` | How often to ping inactive clients to check for liveness. Default is 2 hours. @section -- Receivers: OTLP |
+| deployment.otlp.receiver.grpc.keepalive.serverParameters.timeout | string | `""` | Time to wait before closing inactive clients that don’t respond to liveness checks. Default is 20 seconds. @section -- Receivers: OTLP |
 | deployment.otlp.receiver.grpc.max_recv_msg_size | string | `"4MB"` | gRPC max message receive size. Default to 4MB |
 | liveDebugging.enabled | bool | `false` | Enable live debugging in the Alloy UI. |
 | metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name","k8s.pod.name"]` | Additional dimensions to add to generated metrics. |
@@ -158,6 +165,13 @@ A major chart version change indicates that there is an incompatible breaking ch
 | sampling.failedRequests.sample | bool | `false` | Toggle sampling failed requests. |
 | sampling.successfulRequests.percentage | int | `10` | Percentage of successful requests to sample. |
 | sampling.successfulRequests.sample | bool | `true` | Toggle sampling successful requests. |
-| statefulset.otlp.receiver | object | `{"grpc":{"max_recv_msg_size":"4MB"}}` | otlp receiver settings for statefulset (sampler) |
+| statefulset.otlp.receiver | object | `{"grpc":{"keepalive":{"enforcementPolicy":{"minTime":"","permitWithoutStream":false},"serverParameters":{"maxConnectionAge":"","maxConnectionAgeGrace":"","maxConnectionIdle":"","time":"","timeout":""}},"max_recv_msg_size":"4MB"}}` | otlp receiver settings for statefulset (sampler) |
+| statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime | string | `""` | Minimum time clients should wait before sending a keepalive ping. Default is 5 minutes. @section -- Receivers: OTLP |
+| statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream | bool | `false` | Allow clients to send keepalive pings when there are no active streams. @section -- Receivers: OTLP |
+| statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge | string | `""` | Maximum age for non-idle connections. Default is infinity. @section -- Receivers: OTLP |
+| statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace | string | `""` | Time to wait before forcibly closing connections. Default is infinity. @section -- Receivers: OTLP |
+| statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle | string | `""` | Maximum age for idle connections. Default is infinity. @section -- Receivers: OTLP |
+| statefulset.otlp.receiver.grpc.keepalive.serverParameters.time | string | `""` | How often to ping inactive clients to check for liveness. Default is 2 hours. @section -- Receivers: OTLP |
+| statefulset.otlp.receiver.grpc.keepalive.serverParameters.timeout | string | `""` | Time to wait before closing inactive clients that don’t respond to liveness checks. Default is 20 seconds. @section -- Receivers: OTLP |
 | statefulset.otlp.receiver.grpc.max_recv_msg_size | string | `"4MB"` | gRPC max message receive size. Default to 4MB |
 
