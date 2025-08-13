@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.23.2](https://img.shields.io/badge/Version-1.23.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.1](https://img.shields.io/badge/AppVersion-2.8.1-informational?style=flat-square)
+![Version: 1.24.0](https://img.shields.io/badge/Version-1.24.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.1](https://img.shields.io/badge/AppVersion-2.8.1-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -19,6 +19,10 @@ Grafana Tempo Single Binary Mode
 | extraVolumes | list | `[]` | Volumes to add |
 | fullnameOverride | string | `""` | Overrides the chart's computed fullname |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
+| grafana.sidecar.datasources.enabled | bool | `true` |  |
+| grafana.sidecar.datasources.label | string | `""` |  |
+| grafana.sidecar.datasources.labelValue | string | `""` |  |
+| grafana.sidecar.datasources.maxLines | int | `1000` |  |
 | hostAliases | list | `[]` | hostAliases to add |
 | labels | object | `{}` | labels for tempo |
 | nameOverride | string | `""` | Overrides the chart's name |
@@ -57,6 +61,10 @@ Grafana Tempo Single Binary Mode
 | serviceMonitor.annotations | object | `{}` |  |
 | serviceMonitor.enabled | bool | `false` |  |
 | serviceMonitor.interval | string | `""` |  |
+| tempo.datasource.isDefault | bool | `false` |  |
+| tempo.datasource.jsonData | string | `"{}"` |  |
+| tempo.datasource.uid | string | `"tempo"` |  |
+| tempo.datasource.url | string | `"http://{{(include \"tempo.fullname\" .)}}:{{ .Values.tempo.server.http_listen_port }}"` |  |
 | tempo.extraArgs | object | `{}` |  |
 | tempo.extraEnv | list | `[]` | Environment variables to add |
 | tempo.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the ingester pods |
