@@ -2372,7 +2372,7 @@ provisioner:
 
 
 kubectlImage:
-  repository: bitnami/kubectl
+  repository: k8s.gcr.io/kubectl
   tag: latest
   pullPolicy: IfNotPresent
 
