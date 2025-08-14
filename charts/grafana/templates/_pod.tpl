@@ -1425,6 +1425,9 @@ volumes:
     {{- else if .configMap }}
     configMap:
       {{- toYaml .configMap | nindent 6 }}
+    {{- else if .secret }}
+    secret:
+      {{- toYaml .secret | nindent 6 }}
     {{- else if .emptyDir }}
     emptyDir:
       {{- toYaml .emptyDir | nindent 6 }}
