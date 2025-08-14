@@ -641,7 +641,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
 | ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
-| kubectlImage.repository | string | `"bitnami/kubectl"` |  |
+| kubectlImage.repository | string | `"k8s.gcr.io/kubectl"` |  |
 | kubectlImage.tag | string | `"latest"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
