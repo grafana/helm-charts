@@ -2372,7 +2372,7 @@ provisioner:
 
 
 kubectlImage:
-  repository: k8s.gcr.io/kubectl
+  repository: registry.k8s.io/kubectl
   tag: latest
   pullPolicy: IfNotPresent
 
