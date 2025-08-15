@@ -642,7 +642,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
 | kubectlImage.repository | string | `"registry.k8s.io/kubectl"` |  |
-| kubectlImage.tag | string | `"latest"` |  |
+| kubectlImage.tag | string | `"v1.33.3"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
