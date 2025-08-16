@@ -94313,6 +94313,23 @@ entries:
     version: 0.6.0
   tempo-vulture:
   - apiVersion: v2
+    appVersion: 2.8.2
+    created: "2025-08-16T09:50:28.211626407Z"
+    description: Grafana Tempo Vulture - A tool to monitor Tempo performance.
+    digest: 37331e6f6b5ebfd748e6d0ecc21b08932af3f833d955dfaeca4607d1d28548c5
+    home: https://grafana.com/docs/tempo/latest/
+    icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
+    maintainers:
+    - email: number101010@gmail.com
+      name: Joe Elliott
+    name: tempo-vulture
+    sources:
+    - https://github.com/grafana/tempo
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.9.1/tempo-vulture-0.9.1.tgz
+    version: 0.9.1
+  - apiVersion: v2
     appVersion: 2.8.1
     created: "2025-07-03T00:08:30.259198388Z"
     description: Grafana Tempo Vulture - A tool to monitor Tempo performance.
@@ -94567,4 +94584,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-15T21:41:43.303608731Z"
+generated: "2025-08-16T09:50:28.218102781Z"
