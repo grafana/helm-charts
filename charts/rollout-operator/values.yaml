@@ -90,3 +90,22 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+
+webhooks:
+  enabled: true
+  # Validating and mutating webhook failure policy. Ignore | Fail (default)
+  failurePolicy: ""
+  # Secret resource for TLS certificate
+  selfSignedCertSecretName: "certificate"
+  # Zone aware pod disruption budget configurations
+  # https://github.com/grafana/rollout-operator/blob/main/README.md
+  zoneAwarePodDisruptionBudgets: []
+    # - name: ingester-rollout
+    #  labels:
+    #    name: ingester-rollout
+    #  maxUnavailable: 1
+    #  maxUnavailablePercentage: 10
+    #  podNamePartitionRegex: "[a-z\\-]+-zone-[a-z]-([0-9]+)"
+    #  podNameRegexGroup: 1
+    #  matchLabels:
+    #    rollout-group: ingester
