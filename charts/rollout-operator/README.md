@@ -37,41 +37,42 @@ It is not a highly available application and runs as a single pod.
 
 ## Values
 
-| Key                                    | Type   | Default                      | Description                                                                                                                                                                  |
-|----------------------------------------|--------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| affinity                               | object | `{}`                         |                                                                                                                                                                              |
-| extraArgs                              | list   | `[]`                         | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`)                                                                                 |
-| fullnameOverride                       | string | `""`                         |                                                                                                                                                                              |
-| global.commonLabels                    | object | `{}`                         | Common labels for all object directly managed by this chart.                                                                                                                 |
-| hostAliases                            | list   | `[]`                         | hostAliases to add                                                                                                                                                           |
-| image.pullPolicy                       | string | `"IfNotPresent"`             |                                                                                                                                                                              |
-| image.repository                       | string | `"grafana/rollout-operator"` |                                                                                                                                                                              |
-| image.tag                              | string | `""`                         | Overrides the image tag whose default is the chart appVersion.                                                                                                               |
-| imagePullSecrets                       | list   | `[]`                         |                                                                                                                                                                              |
-| minReadySeconds                        | int    | `10`                         |                                                                                                                                                                              |
-| nameOverride                           | string | `""`                         |                                                                                                                                                                              |
-| nodeSelector                           | object | `{}`                         |                                                                                                                                                                              |
-| podAnnotations                         | object | `{}`                         | Pod Annotations                                                                                                                                                              |
-| podLabels                              | object | `{}`                         | Pod (extra) Labels                                                                                                                                                           |
-| podSecurityContext                     | object | `{}`                         |                                                                                                                                                                              |
-| priorityClassName                      | string | `""`                         |                                                                                                                                                                              |
-| resources.limits.memory                | string | `"200Mi"`                    |                                                                                                                                                                              |
-| resources.requests.cpu                 | string | `"100m"`                     |                                                                                                                                                                              |
-| resources.requests.memory              | string | `"100Mi"`                    |                                                                                                                                                                              |
-| securityContext                        | object | `{}`                         |                                                                                                                                                                              |
-| serviceAccount.annotations             | object | `{}`                         | Annotations to add to the service account                                                                                                                                    |
-| serviceAccount.create                  | bool   | `true`                       | Specifies whether a service account should be created                                                                                                                        |
-| serviceAccount.name                    | string | `""`                         | The name of the service account to use. If not set and create is true, a name is generated using the fullname template                                                       |
-| serviceMonitor.annotations             | object | `{}`                         | ServiceMonitor annotations                                                                                                                                                   |
-| serviceMonitor.enabled                 | bool   | `false`                      | Create ServiceMonitor to scrape metrics for Prometheus                                                                                                                       |
-| serviceMonitor.interval                | string | `nil`                        | ServiceMonitor scrape interval                                                                                                                                               |
-| serviceMonitor.labels                  | object | `{}`                         | Additional ServiceMonitor labels                                                                                                                                             |
-| serviceMonitor.namespace               | string | `nil`                        | Alternative namespace for ServiceMonitor resources                                                                                                                           |
-| serviceMonitor.namespaceSelector       | object | `{}`                         | Namespace selector for ServiceMonitor resources                                                                                                                              |
-| serviceMonitor.relabelings             | list   | `[]`                         | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
-| serviceMonitor.scrapeTimeout           | string | `nil`                        | ServiceMonitor scrape timeout in Go duration format (e.g. 15s)                                                                                                               |
-| tolerations                            | list   | `[]`                         |                                                                                                                                                                              |
-| webhooks.enabled                       | bool   | `false`                      | Enable the rollout operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks                                                                              |
-| webhooks.failurePolicy                 | string | `""`                         |                                                                                                                                                                              |
-| webhooks.selfSignedCertSecretName      | string | `"certificate"`              |                                                                                                                                                                              |
-| webhooks.zoneAwarePodDisruptionBudgets | list   | `[]`                         | Enable the rollout operator zone aware pod disruption budget. See https://github.com/grafana/rollout-operator/#zoneawarepoddisruptionbudget                                  |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| extraArgs | list | `[]` | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`) |
+| fullnameOverride | string | `""` |  |
+| global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
+| hostAliases | list | `[]` | hostAliases to add |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.repository | string | `"grafana/rollout-operator"` |  |
+| image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
+| imagePullSecrets | list | `[]` |  |
+| minReadySeconds | int | `10` |  |
+| nameOverride | string | `""` |  |
+| nodeSelector | object | `{}` |  |
+| podAnnotations | object | `{}` | Pod Annotations |
+| podLabels | object | `{}` | Pod (extra) Labels |
+| podSecurityContext | object | `{}` |  |
+| priorityClassName | string | `""` |  |
+| resources.limits.memory | string | `"200Mi"` |  |
+| resources.requests.cpu | string | `"100m"` |  |
+| resources.requests.memory | string | `"100Mi"` |  |
+| revisionHistoryLimit | int | `10` | Number of old ReplicaSets to retain |
+| securityContext | object | `{}` |  |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| serviceMonitor.annotations | object | `{}` | ServiceMonitor annotations |
+| serviceMonitor.enabled | bool | `false` | Create ServiceMonitor to scrape metrics for Prometheus |
+| serviceMonitor.interval | string | `nil` | ServiceMonitor scrape interval |
+| serviceMonitor.labels | object | `{}` | Additional ServiceMonitor labels |
+| serviceMonitor.namespace | string | `nil` | Alternative namespace for ServiceMonitor resources |
+| serviceMonitor.namespaceSelector | object | `{}` | Namespace selector for ServiceMonitor resources |
+| serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
+| serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
+| tolerations | list | `[]` |  |
+| webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks |
+| webhooks.failurePolicy | string | `""` | Validating and mutating webhook failure policy. Ignore | Fail. Use Ignore when first installing and then re-apply with Fail for ongoing use |
+| webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to used for the webhooks |
+| webhooks.zoneAwarePodDisruptionBudgets | string | `nil` | Enable zone aware pod disruption budgets. See https://github.com/grafana/rollout-operator/#zoneawarepoddisruptionbudget |
