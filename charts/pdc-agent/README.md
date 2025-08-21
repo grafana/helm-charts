@@ -12,35 +12,40 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 
 ## Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| affinity | object | `{}` | not required, but left in as a choice |
-| cluster | string | `""` | The cluster where your Hosted Grafana stack is running |
-| debug | bool | `false` | Enable debug logging for the agent. Useful for seeing SSH debug logs |
-| extraArgs | list | `[]` |  |
-| fullnameOverride | string | `""` |  |
-| hostedGrafanaId | string | `""` | The numeric ID of your Hosted Grafana stack |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"grafana/pdc-agent"` |  |
-| image.tag | string | `""` |  |
-| imagePullSecrets | list | `[]` |  |
-| insecureTokenValue | string | `""` | insecureTokenValue is used to set the token value directly in the deployment.yaml file. This is useful for testing purposes. |
-| metricsPort | int | `8090` | The port where metrics are served from the pdc agent |
-| nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` | not required, but left in as a choice |
-| podLabels | object | `{}` |  |
-| podSecurityContext.fsGroup | int | `30000` |  |
-| podSecurityContext.runAsGroup | int | `30000` |  |
-| podSecurityContext.runAsUser | int | `30000` |  |
-| replicaCount | int | `3` | This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/ |
-| resources.requests.cpu | string | `"100m"` | CPU request for the container. There is no point setting the CPU higher than 1, because openssh is single threaded |
-| resources.requests.memory | string | `"256Mi"` | Memory request for the container. |
-| securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| securityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| securityContext.privileged | bool | `false` |  |
-| securityContext.runAsNonRoot | bool | `true` |  |
-| tokenSecretName | string | `""` | secretName Expects a secret with key `token` which contains the Access Policy token you generated |
-| tolerations | list | `[]` | not required, but left in as a choice |
+| Key                                         | Type   | Default               | Description                                                                                                                                  |
+|---------------------------------------------|--------|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| affinity                                    | object | `{}`                  | not required, but left in as a choice                                                                                                        |
+| cluster                                     | string | `""`                  | The cluster where your Hosted Grafana stack is running                                                                                       |
+| debug                                       | bool   | `false`               | Enable debug logging for the agent. Useful for seeing SSH debug logs                                                                         |
+| extraArgs                                   | list   | `[]`                  |                                                                                                                                              |
+| fullnameOverride                            | string | `""`                  |                                                                                                                                              |
+| hostedGrafanaId                             | string | `""`                  | The numeric ID of your Hosted Grafana stack                                                                                                  |
+| image.pullPolicy                            | string | `"IfNotPresent"`      |                                                                                                                                              |
+| image.repository                            | string | `"grafana/pdc-agent"` |                                                                                                                                              |
+| image.tag                                   | string | `""`                  |                                                                                                                                              |
+| imagePullSecrets                            | list   | `[]`                  |                                                                                                                                              |
+| insecureTokenValue                          | string | `""`                  | insecureTokenValue is used to set the token value directly in the deployment.yaml file. This is useful for testing purposes.                 |
+| metricsPort                                 | int    | `8090`                | The port where metrics are served from the pdc agent                                                                                         |
+| nameOverride                                | string | `""`                  |                                                                                                                                              |
+| nodeSelector                                | object | `{}`                  | not required, but left in as a choice                                                                                                        |
+| podLabels                                   | object | `{}`                  |                                                                                                                                              |
+| podSecurityContext.fsGroup                  | int    | `30000`               |                                                                                                                                              |
+| podSecurityContext.runAsGroup               | int    | `30000`               |                                                                                                                                              |
+| podSecurityContext.runAsUser                | int    | `30000`               |                                                                                                                                              |
+| replicaCount                                | int    | `3`                   | This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/ |
+| resources.requests.cpu                      | string | `"100m"`              | CPU request for the container. There is no point setting the CPU higher than 1, because openssh is single threaded                           |
+| resources.requests.memory                   | string | `"256Mi"`             | Memory request for the container.                                                                                                            |
+| securityContext.allowPrivilegeEscalation    | bool   | `false`               |                                                                                                                                              |
+| securityContext.capabilities.drop[0]        | string | `"ALL"`               |                                                                                                                                              |
+| securityContext.privileged                  | bool   | `false`               |                                                                                                                                              |
+| securityContext.runAsNonRoot                | bool   | `true`                |                                                                                                                                              |
+| serviceAccount.annotations                  | object | `{}`                  | Annotations applied to created service account                                                                                               |
+| serviceAccount.automountServiceAccountToken | bool   | `true`                | Automount API credentials for the Service Account                                                                                            |
+| serviceAccount.create                       | bool   | `false`               | Create pdc-agent service account                                                                                                             |
+| serviceAccount.labels                       | object | `{}`                  | Labels applied to created service account                                                                                                    |
+| serviceAccount.name                         | string | `"pdc-agent"`         | Server service account name                                                                                                                  |
+| tokenSecretName                             | string | `""`                  | secretName Expects a secret with key `token` which contains the Access Policy token you generated                                            |
+| tolerations                                 | list   | `[]`                  | not required, but left in as a choice                                                                                                        |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.8.1](https://github.com/norwoodj/helm-docs/releases/v1.8.1)
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
