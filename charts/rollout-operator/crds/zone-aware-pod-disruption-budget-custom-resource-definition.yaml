@@ -51,4 +51,4 @@ spec:
     plural: zoneawarepoddisruptionbudgets
     singular: zoneawarepoddisruptionbudget
     shortNames:
-      - pdbz
+      - zdpb

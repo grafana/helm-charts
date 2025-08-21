@@ -25,17 +25,11 @@ webhooks:
         resources:
           - pods/eviction
         scope: Namespaced
-
     admissionReviewVersions:
       - v1
     namespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: {{ .Release.Namespace | quote }}
     sideEffects: None
-    {{ if .Values.webhooks.failurePolicy }}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
-    {{- else }}
-    failurePolicy: Fail
-    {{- end }}
-
-  {{- end -}}
+{{- end -}}
