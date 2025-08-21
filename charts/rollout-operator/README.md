@@ -74,5 +74,5 @@ It is not a highly available application and runs as a single pod.
 | tolerations | list | `[]` |  |
 | webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks |
 | webhooks.failurePolicy | string | `""` | Validating and mutating webhook failure policy. Ignore | Fail. Use Ignore when first installing and then re-apply with Fail for ongoing use |
-| webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to used for the webhooks |
+| webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |
 | webhooks.zoneAwarePodDisruptionBudgets | string | `nil` | Enable zone aware pod disruption budgets. See https://github.com/grafana/rollout-operator/#zoneawarepoddisruptionbudget |
