@@ -92,20 +92,23 @@ serviceMonitor:
   relabelings: []
 
 webhooks:
+  # -- Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks
   enabled: true
-  # Validating and mutating webhook failure policy. Ignore | Fail (default)
+  # -- Validating and mutating webhook failure policy. Ignore | Fail. Use Ignore when first installing and then re-apply with Fail for ongoing use
   failurePolicy: ""
-  # Secret resource for TLS certificate
+  # -- Secret resource name for the TLS certificate to used for the webhooks
   selfSignedCertSecretName: "certificate"
-  # Zone aware pod disruption budget configurations
-  # https://github.com/grafana/rollout-operator/blob/main/README.md
-  zoneAwarePodDisruptionBudgets: []
-    # - name: ingester-rollout
-    #  labels:
-    #    name: ingester-rollout
+  # -- Enable zone aware pod disruption budgets. See https://github.com/grafana/rollout-operator/#zoneawarepoddisruptionbudget
+  zoneAwarePodDisruptionBudgets:
+    # classic zones example
+    #- name: ingester-rollout
     #  maxUnavailable: 1
-    #  maxUnavailablePercentage: 10
+    #  matchLabels:
+    #    rollout-group: ingester
+
+    # partition aware example
+    #- name: ingester-rollout-partition-aware
+    #  maxUnavailable: 1
     #  podNamePartitionRegex: "[a-z\\-]+-zone-[a-z]-([0-9]+)"
-    #  podNameRegexGroup: 1
     #  matchLabels:
     #    rollout-group: ingester
