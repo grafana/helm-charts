@@ -13,4 +13,4 @@ rules:
       - list
       - patch
       - watch
-  {{- end -}}
+{{- end -}}

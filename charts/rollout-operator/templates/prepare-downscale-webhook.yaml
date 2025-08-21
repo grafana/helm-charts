@@ -34,9 +34,5 @@ webhooks:
     sideEffects: NoneOnDryRun
     matchPolicy: Equivalent
     timeoutSeconds: 10
-    {{- if .Values.webhooks.failurePolicy }}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
-    {{- else }}
-    failurePolicy: Fail
-    {{- end }}
- {{- end -}}
+{{- end -}}

@@ -52,7 +52,6 @@ spec:
           args:
           - -kubernetes.namespace={{ .Release.Namespace }}
           {{- if .Values.webhooks.enabled }}
-          - -reconcile.interval=1s
           - -server-tls.enabled=true
           - -server-tls.self-signed-cert.secret-name={{ .Values.webhooks.selfSignedCertSecretName }}
           {{- end }}
