@@ -8,7 +8,9 @@ metadata:
     {{- include "rollout-operator.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
+  {{- if eq .Values.webhooks.enabled false }}
   clusterIP: None
+  {{- end }}
   ports:
     {{- if .Values.serviceMonitor.enabled }}
     - port: 8001

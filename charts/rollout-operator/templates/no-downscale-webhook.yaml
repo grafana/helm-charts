@@ -32,10 +32,7 @@ webhooks:
       matchLabels:
         kubernetes.io/metadata.name: {{ .Release.Namespace | quote }}
     sideEffects: None
-    {{- $failpol := (lookup "v1" "ValidatingWebhookConfiguration" "{{.Release.Namespace}}" "no-downscale-{{.Release.Namespace}}") -}}
-    {{- if empty $failpol }}
-    failurePolicy: Ignore
-    {{- else if .Values.webhooks.failurePolicy }}
+    {{ if .Values.webhooks.failurePolicy }}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
     {{- else }}
     failurePolicy: Fail

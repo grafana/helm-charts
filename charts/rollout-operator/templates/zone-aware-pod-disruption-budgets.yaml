@@ -1,7 +1,7 @@
 {{- $root := . -}}
 {{- range $idx, $zpdb := .Values.webhooks.zoneAwarePodDisruptionBudgets }}
 ---
-apiVersion: {{ include "rollout-operator.fullname" $root }}.grafana.com/v1
+apiVersion: rollout-operator.grafana.com/v1
 kind: ZoneAwarePodDisruptionBudget
 metadata:
   name: {{ $zpdb.name }}
