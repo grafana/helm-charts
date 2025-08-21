@@ -1,3 +1,4 @@
+{{- if .Values.ingress.enabled }}
 {{- $fullName := include "grafana-mcp.fullname" . }}
 {{- $svcPort := .Values.service.port }}
 {{- if and .Values.ingress.className (not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class")) }}
@@ -45,3 +46,4 @@ spec:
                   number: {{ $svcPort }}
           {{- end }}
     {{- end }}
+{{- end }}
