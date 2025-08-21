@@ -20,4 +20,4 @@ rules:
       - secrets
     verbs:
       - create
-  {{- end -}}
+{{- end -}}
