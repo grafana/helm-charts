@@ -32,10 +32,5 @@ webhooks:
       matchLabels:
         kubernetes.io/metadata.name: {{ .Release.Namespace | quote }}
     sideEffects: None
-    {{ if .Values.webhooks.failurePolicy }}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
-    {{- else }}
-    failurePolicy: Fail
-    {{- end }}
-
-  {{- end -}}
+{{- end -}}
