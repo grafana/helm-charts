@@ -31,7 +31,7 @@ rules:
   verbs:
   - update
 - apiGroups:
-  - {{ include "rollout-operator.fullname" . }}.grafana.com
+  - rollout-operator.grafana.com
   resources:
   - zoneawarepoddisruptionbudgets
   verbs:
