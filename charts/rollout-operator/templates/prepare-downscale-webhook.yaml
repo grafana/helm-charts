@@ -34,10 +34,7 @@ webhooks:
     sideEffects: NoneOnDryRun
     matchPolicy: Equivalent
     timeoutSeconds: 10
-    {{- $failpol := (lookup "v1" "MutatingWebhookConfiguration" "{{.Release.Namespace}}" "prepare-downscale-{{.Release.Namespace}}") -}}
-    {{- if empty $failpol }}
-    failurePolicy: Ignore
-    {{- else if .Values.webhooks.failurePolicy }}
+    {{- if .Values.webhooks.failurePolicy }}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
     {{- else }}
     failurePolicy: Fail
