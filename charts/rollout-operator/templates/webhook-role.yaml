@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 rules:
   - apiGroups:
-      -
+      - ""
     resources:
       - secrets
     verbs:
@@ -15,7 +15,7 @@ rules:
     resourceNames:
       - {{ .Values.webhooks.selfSignedCertSecretName }}
   - apiGroups:
-      -
+      - ""
     resources:
       - secrets
     verbs:
