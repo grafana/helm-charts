@@ -31,7 +31,7 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-    - ALL
+      - ALL
   runAsNonRoot: true
   privileged: false
   allowPrivilegeEscalation: false
@@ -42,6 +42,18 @@ resources:
     cpu: 100m
     # -- Memory request for the container.
     memory: 256Mi
+
+serviceAccount:
+  # -- Create pdc-agent service account
+  create: false
+  # -- Server service account name
+  name: "pdc-agent"
+  # -- Annotations applied to created service account
+  annotations: {}
+  # -- Labels applied to created service account
+  labels: {}
+  # -- Automount API credentials for the Service Account
+  automountServiceAccountToken: false
 
 # -- not required, but left in as a choice
 nodeSelector: {}
