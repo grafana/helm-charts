@@ -38,6 +38,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
+| securityContext.readOnlyRootFilesystem | bool | `false` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
