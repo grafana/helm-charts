@@ -2273,7 +2273,7 @@ enterprise:
     # -- Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.6.1
+    tag: v2.8.1
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
@@ -2372,8 +2372,8 @@ provisioner:
 
 
 kubectlImage:
-  repository: bitnami/kubectl
-  tag: latest
+  repository: registry.k8s.io/kubectl
+  tag: v1.33.3
   pullPolicy: IfNotPresent
 
 # Settings for the admin_api service providing authentication and authorization service.
