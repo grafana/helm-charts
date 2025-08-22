@@ -967,7 +967,7 @@ containers:
       {{- toYaml . | trim | nindent 6 }}
       {{- end }}
 {{- end}}
-  - name: {{ .Chart.Name }}
+  - name: grafana
     {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
     {{- if .Values.image.sha }}
     image: "{{ $registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
