@@ -135,7 +135,9 @@ spec:
       {{- end }}
   {{- if .Values.memcachedFrontend.persistence.enabled }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: data
       spec:
         accessModes:
