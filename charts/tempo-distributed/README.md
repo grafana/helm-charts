@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.41.1](https://img.shields.io/badge/Version-1.41.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.7.2](https://img.shields.io/badge/AppVersion-2.7.2-informational?style=flat-square)
+![Version: 1.46.4](https://img.shields.io/badge/Version-1.46.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.24.0 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.30.0 |
 
 ## Chart Repo
 
@@ -48,13 +48,17 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.41.2
+Please be aware that we've updated the Tempo version to 2.8, which includes some breaking changes
+We recommend reviewing the [release notes](https://github.com/grafana/tempo/releases/tag/v2.8.0) before upgrading.
+
 ### From Chart versions < 1.41.0
 * Breaking Change *
 In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
 
 ### From Chart versions < 1.33.0
 * Breaking Change *
-In order to reduce confusion, the overrides configurations have been renamed as below. 
+In order to reduce confusion, the overrides configurations have been renamed as below.
 
 `global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
 `overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
@@ -359,6 +363,9 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
 | distributor.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the distributor |
+| distributor.config.cost_attribution.enabled | bool | `false` | Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides. |
+| distributor.config.cost_attribution.max_cardinality | int | `10000` | Maximum number of series per tenant. |
+| distributor.config.cost_attribution.stale_duration | string | `"15m0s"` | Once a metrics series is deleted, it won't be emitted anymore, keeping active series low. |
 | distributor.config.extend_writes | string | `nil` | Disables write extension with inactive ingesters |
 | distributor.config.log_discarded_spans.enabled | bool | `false` |  |
 | distributor.config.log_discarded_spans.filter_by_status_error | bool | `false` |  |
@@ -401,7 +408,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository' |
-| enterprise.image.tag | string | `"v2.6.1"` | Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterprise.image.tag | string | `"v2.8.1"` | Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
@@ -500,6 +507,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.basicAuth.username | string | `nil` | The basic auth username for the gateway |
 | gateway.enabled | bool | `false` | Specifies whether the gateway should be enabled |
 | gateway.extraArgs | list | `[]` | Additional CLI args for the gateway |
+| gateway.extraContainers | list | `[]` | Containers to add to the gateway pods |
 | gateway.extraEnv | list | `[]` | Environment variables to add to the gateway pods |
 | gateway.extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to the gateway pods |
 | gateway.extraVolumeMounts | list | `[]` | Volume mounts to add to the gateway pods |
@@ -633,8 +641,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
 | ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
-| kubectlImage.repository | string | `"bitnami/kubectl"` |  |
-| kubectlImage.tag | string | `"latest"` |  |
+| kubectlImage.repository | string | `"registry.k8s.io/kubectl"` |  |
+| kubectlImage.tag | string | `"v1.33.3"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
@@ -653,9 +661,11 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
 | memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
 | memcached.initContainers | list | `[]` | Init containers for the memcached pod |
+| memcached.livenessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":5}` | configuration for liveness probe for memcached statefulset |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
+| memcached.readinessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":5,"periodSeconds":5,"successThreshold":1,"tcpSocket":{"port":"client"},"timeoutSeconds":3}` | configuration for readiness probe for memcached statefulset |
 | memcached.replicas | int | `1` |  |
 | memcached.resources | object | `{}` | Resource requests and limits for memcached |
 | memcached.service.annotations | object | `{}` | Annotations for memcached service |
@@ -986,6 +996,7 @@ The memcached default args are removed and should be provided manually. The sett
 | traces.opencensus.enabled | bool | `false` | Enable Tempo to ingest Open Census traces |
 | traces.opencensus.receiverConfig | object | `{}` | Open Census receiver config |
 | traces.otlp.grpc.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry GRPC traces |
+| traces.otlp.grpc.port | int | `4317` | Default OTLP gRPC port |
 | traces.otlp.grpc.receiverConfig | object | `{}` | GRPC receiver advanced config |
 | traces.otlp.http.enabled | bool | `false` | Enable Tempo to ingest Open Telemetry HTTP traces |
 | traces.otlp.http.receiverConfig | object | `{}` | HTTP receiver advanced config |
@@ -1126,4 +1137,27 @@ config: |
         host: a-tempo-distributed-memcached
         service: memcached-client
         timeout: 500ms
+```
+
+### Enabling gRPC Open Telemetry
+
+gRPC for Open Telemetry is disabled by default, simply flip the bool in the `traces` block to turn it on.
+
+If you have enabled the gateway as well, this will let you push traces using the default Open Telemetry API path (`/opentelemetry.proto.collector.trace.v1.TraceService/Export`), on the 4317 port. This port can be overwriten as well in the values.
+
+```yaml
+traces:
+  otlp:
+    http:
+      # -- Enable Tempo to ingest Open Telemetry HTTP traces
+      enabled: false
+      # -- HTTP receiver advanced config
+      receiverConfig: {}
+    grpc:
+      # -- Enable Tempo to ingest Open Telemetry GRPC traces
+      enabled: true
+      # -- GRPC receiver advanced config
+      receiverConfig: {}
+      # -- Default OTLP gRPC port
+      port: 4317
 ```

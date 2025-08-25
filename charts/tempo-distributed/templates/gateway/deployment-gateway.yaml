@@ -62,6 +62,11 @@ spec:
             - name: http-metrics
               containerPort: 8080
               protocol: TCP
+          {{- if .Values.traces.otlp.grpc.enabled }}
+            - name: grpc-otlp
+              containerPort: {{ .Values.traces.otlp.grpc.port }}
+              protocol: TCP
+          {{- end }}
           {{- if or .Values.global.extraEnv .Values.gateway.extraEnv }}
           env:
             {{- with .Values.global.extraEnv }}
@@ -101,6 +106,9 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- with .Values.gateway.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
       {{- with .Values.gateway.topologySpreadConstraints }}
       topologySpreadConstraints:

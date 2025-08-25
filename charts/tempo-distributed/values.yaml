@@ -604,6 +604,16 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
+    # attributes exposed on /usage_metrics.
+    cost_attribution:
+      # -- Enables the "cost-attribution" usage tracker. Per-tenant attributes are configured in overrides.
+      enabled: false
+      # -- Maximum number of series per tenant.
+      max_cardinality: 10000
+      # -- Interval after which a series is considered stale and will be deleted from the registry.
+      # -- Once a metrics series is deleted, it won't be emitted anymore, keeping active series low.
+      stale_duration: 15m0s
   # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -648,6 +658,7 @@ compactor:
       #       ignoring(tenant) group_left count by (cluster, namespace)(
       #         tempo_build_info{container="compactor", namespace=~".*"}
       #       )
+      #     customHeaders: X-Scope-OrgID=<tenant-id>
 
   # -- hostAliases to add
   hostAliases: []
@@ -1210,6 +1221,8 @@ traces:
       enabled: false
       # -- GRPC receiver advanced config
       receiverConfig: {}
+      # -- Default OTLP gRPC port
+      port: 4317
   opencensus:
     # -- Enable Tempo to ingest Open Census traces
     enabled: false
@@ -1356,6 +1369,13 @@ config: |
     metrics_ingestion_time_range_slack: {{ .Values.metricsGenerator.config.metrics_ingestion_time_range_slack }}
   {{- end }}
   distributor:
+    {{- if .Values.distributor.config.cost_attribution.enabled }}
+    usage:
+      cost_attribution:
+        enabled: {{ .Values.distributor.config.cost_attribution.enabled }}
+        max_cardinality: {{ .Values.distributor.config.cost_attribution.max_cardinality }}
+        stale_duration: {{ .Values.distributor.config.cost_attribution.stale_duration }}
+    {{- end }}
     ring:
       kvstore:
         store: memberlist
@@ -1445,6 +1465,7 @@ config: |
     search:
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
+      max_spans_per_span_set: {{ .Values.queryFrontend.config.search.max_spans_per_span_set }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
@@ -1712,6 +1733,25 @@ memcached:
   service:
     # -- Annotations for memcached service
     annotations: {}
+
+  # -- configuration for readiness probe for memcached statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- configuration for liveness probe for memcached statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
 memcachedExporter:
   # -- Specifies whether the Memcached Exporter should be enabled
   enabled: false
@@ -1945,6 +1985,8 @@ gateway:
   extraVolumes: []
   # -- Volume mounts to add to the gateway pods
   extraVolumeMounts: []
+  # -- Containers to add to the gateway pods
+  extraContainers: []
   # -- Resource requests and limits for the gateway
   resources: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
@@ -2170,6 +2212,30 @@ gateway:
           {{ . | nindent 4 }}
           {{- end }}
         }
+
+        {{- if .Values.traces.otlp.grpc.enabled }}
+        # OTLP gRPC
+        server {
+          listen               {{ .Values.traces.otlp.grpc.port }} http2;
+
+          {{- if .Values.gateway.basicAuth.enabled }}
+          auth_basic           "Tempo";
+          auth_basic_user_file /etc/nginx/secrets/.htpasswd;
+          {{- end }}
+
+          location = /opentelemetry.proto.collector.trace.v1.TraceService/Export {
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
+          }
+
+          location ~ /opentelemetry {
+            grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
+          }
+
+          {{- with .Values.gateway.nginxConfig.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
+        }
+        {{- end }}
       }
 
 ingress:
@@ -2207,7 +2273,7 @@ enterprise:
     # -- Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.6.1
+    tag: v2.8.1
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
@@ -2306,8 +2372,8 @@ provisioner:
 
 
 kubectlImage:
-  repository: bitnami/kubectl
-  tag: latest
+  repository: registry.k8s.io/kubectl
+  tag: v1.33.3
   pullPolicy: IfNotPresent
 
 # Settings for the admin_api service providing authentication and authorization service.

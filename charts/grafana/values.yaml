@@ -411,7 +411,7 @@ extraContainerVolumes: []
 #    emptyDir: {}
 
 ## Enable persistence using Persistent Volume Claims
-## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 ##
 persistence:
   type: pvc
@@ -959,7 +959,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 1.30.0
+    tag: 1.30.3
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
@@ -1063,7 +1063,7 @@ sidecar:
     # Additional alerts sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
-    sizeLimit: {}
+    sizeLimit: ""
   dashboards:
     enabled: false
     # Additional environment variables for the dashboards sidecar
@@ -1167,7 +1167,7 @@ sidecar:
     # Additional dashboards sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the dashboard sidecar emptyDir volume
-    sizeLimit: {}
+    sizeLimit: ""
   datasources:
     enabled: false
     # Additional environment variables for the datasourcessidecar
@@ -1248,7 +1248,7 @@ sidecar:
     # Additional datasources sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the datasource sidecar emptyDir volume
-    sizeLimit: {}
+    sizeLimit: ""
   plugins:
     enabled: false
     # Additional environment variables for the plugins sidecar
@@ -1316,7 +1316,7 @@ sidecar:
     # Additional plugins sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the plugin sidecar emptyDir volume
-    sizeLimit: {}
+    sizeLimit: ""
   notifiers:
     enabled: false
     # Additional environment variables for the notifierssidecar
@@ -1384,7 +1384,7 @@ sidecar:
     # Additional notifiers sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the notifier sidecar emptyDir volume
-    sizeLimit: {}
+    sizeLimit: ""
 
 ## Override the deployment namespace
 ##

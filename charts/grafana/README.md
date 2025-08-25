@@ -799,3 +799,6 @@ grafana.ini:
   alerting:
     enabled: false
 ```
+
+### Installing plugins
+For installing plugins please see the [official documentation](https://grafana.com/docs/grafana/latest/administration/plugin-management/#install-plugins-using-the-grafana-helm-chart).
