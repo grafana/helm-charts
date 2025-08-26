@@ -151,7 +151,7 @@ initContainers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root | quote }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -387,7 +387,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root | quote }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
