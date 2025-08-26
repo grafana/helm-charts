@@ -84,7 +84,7 @@ spec:
           image: {{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}
           imagePullPolicy: {{ .Values.kubectlImage.pullPolicy | default "IfNotPresent" }}
           command:
-            - /bin/bash
+            - /bin/sh
             - -exuc
             - |
               # In this case, the admin resources have already been created, the provisioner job
