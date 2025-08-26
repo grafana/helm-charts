@@ -2371,8 +2371,8 @@ provisioner:
 
 
 kubectlImage:
-  repository: registry.k8s.io/kubectl
-  tag: v1.33.3
+  repository: alpine/kubectl
+  tag: latest
   pullPolicy: IfNotPresent
 
 # Settings for the admin_api service providing authentication and authorization service.
