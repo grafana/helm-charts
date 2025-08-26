@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.46.4](https://img.shields.io/badge/Version-1.46.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.46.5](https://img.shields.io/badge/Version-1.46.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -641,8 +641,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
 | ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
-| kubectlImage.repository | string | `"registry.k8s.io/kubectl"` |  |
-| kubectlImage.tag | string | `"v1.33.3"` |  |
+| kubectlImage.repository | string | `"alpine/kubectl"` |  |
+| kubectlImage.tag | string | `"latest"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
