@@ -19,6 +19,12 @@ global:
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []
+  # -- Common environment variables which come from a ConfigMap or Secret to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
+  extraEnvFrom: []
+  # -- Common args to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
+  extraArgs: []
   # -- Global storage class to be used for persisted components
   storageClass: null
 fullnameOverride: ''
@@ -2372,7 +2378,7 @@ provisioner:
 
 
 kubectlImage:
-  repository: bitnami/kubectl
+  repository: alpine/kubectl
   tag: latest
   pullPolicy: IfNotPresent
 
