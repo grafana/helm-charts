@@ -30,3 +30,11 @@ rules:
   - statefulsets/status
   verbs:
   - update
+- apiGroups:
+  - rollout-operator.grafana.com
+  resources:
+  - zoneawarepoddisruptionbudgets
+  verbs:
+  - get
+  - list
+  - watch
