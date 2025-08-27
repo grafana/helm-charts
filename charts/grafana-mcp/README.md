@@ -105,7 +105,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | service.sessionAffinity | string | `""` | Session affinity |
 | service.sessionAffinityConfig | object | `{}` | Session affinity config |
 | service.type | string | `"ClusterIP"` | Service type |
-| serviceAccount | object | `{"annotations":{},"automountServiceAccountToken":false,"enabled":true,"labels":{},"name":""}` | Service account Configuration |
+| serviceAccount | object | `{"annotations":{},"automountServiceAccountToken":false,"create":true,"labels":{},"name":""}` | Service account Configuration |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token |
 | serviceAccount.create | bool | `true` | Enable service account |
