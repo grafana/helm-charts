@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.44.0](https://img.shields.io/badge/Version-1.44.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.1](https://img.shields.io/badge/AppVersion-2.8.1-informational?style=flat-square)
+![Version: 1.47.0](https://img.shields.io/badge/Version-1.47.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -408,7 +408,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string |
 | enterprise.enabled | bool | `false` |  |
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository' |
-| enterprise.image.tag | string | `"v2.6.1"` | Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag' |
+| enterprise.image.tag | string | `"v2.8.1"` | Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
 | enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
@@ -437,7 +437,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.service.annotations | object | `{}` | Annotations for enterpriseFederationFrontend service |
 | enterpriseFederationFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | enterpriseFederationFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
-| enterpriseFederationFrontend.service.port | int | `3100` | Port of the federation-frontend service |
+| enterpriseFederationFrontend.service.port | int | `3200` | Port of the federation-frontend service |
 | enterpriseFederationFrontend.service.type | string | `"ClusterIP"` | Type of service for the enterpriseFederationFrontend |
 | enterpriseFederationFrontend.terminationGracePeriodSeconds | int | `30` | Grace period to allow the federation-frontend to shutdown before it is killed |
 | enterpriseFederationFrontend.tolerations | list | `[]` | Tolerations for federation-frontend pods |
@@ -555,7 +555,9 @@ The memcached default args are removed and should be provided manually. The sett
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
+| global.extraArgs | list | `[]` | Common args to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
 | global.extraEnv | list | `[]` | Common environment variables to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
+| global.extraEnvFrom | list | `[]` | Common environment variables which come from a ConfigMap or Secret to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
@@ -748,7 +750,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
-| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3100,"service":true}]` | Default ports |
+| metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3200,"service":true}]` | Default ports |
 | metricsGenerator.priorityClassName | string | `nil` | The name of the PriorityClass for metrics-generator pods |
 | metricsGenerator.replicas | int | `1` | Number of replicas for the metrics-generator |
 | metricsGenerator.resources | object | `{}` | Resource requests and limits for the metrics-generator |
@@ -888,7 +890,7 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
-| queryFrontend.query.config | string | `"backend: 127.0.0.1:3100\n"` |  |
+| queryFrontend.query.config | string | `"backend: 127.0.0.1:3200\n"` |  |
 | queryFrontend.query.enabled | bool | `false` | Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch |
 | queryFrontend.query.extraArgs | list | `[]` | Additional CLI args for tempo-query pods |
 | queryFrontend.query.extraEnv | list | `[]` | Environment variables to add to the tempo-query pods |
@@ -927,7 +929,7 @@ The memcached default args are removed and should be provided manually. The sett
 | rollout_operator.securityContext.readOnlyRootFilesystem | bool | `true` |  |
 | server.grpc_server_max_recv_msg_size | int | `4194304` | Max gRPC message size that can be received |
 | server.grpc_server_max_send_msg_size | int | `4194304` | Max gRPC message size that can be sent |
-| server.httpListenPort | int | `3100` | HTTP server listen host |
+| server.httpListenPort | int | `3200` | HTTP server listen host |
 | server.http_server_read_timeout | string | `"30s"` | Read timeout for HTTP server |
 | server.http_server_write_timeout | string | `"30s"` | Write timeout for HTTP server |
 | server.logFormat | string | `"logfmt"` | Log format. Can be set to logfmt (default) or json. |
@@ -1137,29 +1139,6 @@ config: |
         host: a-tempo-distributed-memcached
         service: memcached-client
         timeout: 500ms
-```
-
-### Enabling gRPC Open Telemetry
-
-gRPC for Open Telemetry is disabled by default, simply flip the bool in the `traces` block to turn it on.
-
-If you have enabled the gateway as well, this will let you push traces using the default Open Telemetry API path (`/opentelemetry.proto.collector.trace.v1.TraceService/Export`), on the 4317 port. This port can be overwriten as well in the values.
-
-```yaml
-traces:
-  otlp:
-    http:
-      # -- Enable Tempo to ingest Open Telemetry HTTP traces
-      enabled: false
-      # -- HTTP receiver advanced config
-      receiverConfig: {}
-    grpc:
-      # -- Enable Tempo to ingest Open Telemetry GRPC traces
-      enabled: true
-      # -- GRPC receiver advanced config
-      receiverConfig: {}
-      # -- Default OTLP gRPC port
-      port: 4317
 ```
 
 ### Enabling gRPC Open Telemetry
