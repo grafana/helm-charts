@@ -108,7 +108,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | serviceAccount | object | `{"annotations":{},"automountServiceAccountToken":false,"enabled":true,"labels":{},"name":""}` | Service account Configuration |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token |
-| serviceAccount.enabled | bool | `true` | Enable service account |
+| serviceAccount.create | bool | `true` | Enable service account |
 | serviceAccount.labels | object | `{}` | Labels for the service account |
 | serviceAccount.name | string | `""` | Name of the service account |
 | startupProbe | object | `{}` | MCP server Startup probe configuration |
