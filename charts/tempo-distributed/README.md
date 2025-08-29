@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.46.4](https://img.shields.io/badge/Version-1.46.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.47.0](https://img.shields.io/badge/Version-1.47.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -555,7 +555,9 @@ The memcached default args are removed and should be provided manually. The sett
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
+| global.extraArgs | list | `[]` | Common args to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
 | global.extraEnv | list | `[]` | Common environment variables to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
+| global.extraEnvFrom | list | `[]` | Common environment variables which come from a ConfigMap or Secret to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
@@ -641,8 +643,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingress.paths.ingester[1].path | string | `"/shutdown"` |  |
 | ingress.paths.query-frontend[0].path | string | `"/api"` |  |
 | kubectlImage.pullPolicy | string | `"IfNotPresent"` |  |
-| kubectlImage.repository | string | `"registry.k8s.io/kubectl"` |  |
-| kubectlImage.tag | string | `"v1.33.3"` |  |
+| kubectlImage.repository | string | `"alpine/kubectl"` |  |
+| kubectlImage.tag | string | `"latest"` |  |
 | license.contents | string | `"NOTAVALIDLICENSE"` |  |
 | license.external | bool | `false` |  |
 | license.secretName | string | `"{{ include \"tempo.resourceName\" (dict \"ctx\" . \"component\" \"license\") }}"` |  |
