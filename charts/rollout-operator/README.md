@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.30.0](https://img.shields.io/badge/Version-0.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.28.0](https://img.shields.io/badge/AppVersion-v0.28.0-informational?style=flat-square)
+![Version: 0.32.0](https://img.shields.io/badge/Version-0.32.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.29.0](https://img.shields.io/badge/AppVersion-v0.29.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -58,6 +58,7 @@ It is not a highly available application and runs as a single pod.
 | resources.limits.memory | string | `"200Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"100Mi"` |  |
+| revisionHistoryLimit | int | `10` | Number of old ReplicaSets to retain |
 | securityContext | object | `{}` |  |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
