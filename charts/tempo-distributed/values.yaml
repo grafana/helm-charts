@@ -553,6 +553,8 @@ distributor:
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Container lifecycle hooks for the distributor
+  lifecycle: {}
   # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
