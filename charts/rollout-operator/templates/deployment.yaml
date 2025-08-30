@@ -51,6 +51,10 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
           - -kubernetes.namespace={{ .Release.Namespace }}
+          {{- if .Values.webhooks.enabled }}
+          - -server-tls.enabled=true
+          - -server-tls.self-signed-cert.secret-name={{ .Values.webhooks.selfSignedCertSecretName }}
+          {{- end }}
           {{- range .Values.extraArgs  }}
           - {{ . }}
           {{- end }}
@@ -58,6 +62,11 @@ spec:
             - name: http-metrics
               containerPort: 8001
               protocol: TCP
+              {{- if .Values.webhooks.enabled }}
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+              {{- end }}
           readinessProbe:
             httpGet:
               path: /ready

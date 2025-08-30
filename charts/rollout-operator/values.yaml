@@ -92,3 +92,12 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+
+webhooks:
+  # -- Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks.
+  # Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory.
+  enabled: true
+  # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
+  failurePolicy: "Fail"
+  # -- Secret resource name for the TLS certificate to be used with the webhooks
+  selfSignedCertSecretName: "certificate"
