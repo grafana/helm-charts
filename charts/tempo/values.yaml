@@ -47,6 +47,7 @@ tempo:
   metricsGenerator:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
+    # supports templates, will be passed to tpl
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
   # -- Configuration options for the ingester.
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester
@@ -197,7 +198,7 @@ config: |
           storage:
             path: "/tmp/tempo"
             remote_write:
-              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+              - url: {{ tpl .Values.tempo.metricsGenerator.remoteWriteUrl . }}
           traces_storage:
             path: "/tmp/traces"
       {{- end }}
