@@ -1,6 +1,6 @@
 # promtail
 
-![Version: 6.17.0](https://img.shields.io/badge/Version-6.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.5.1](https://img.shields.io/badge/AppVersion-3.5.1-informational?style=flat-square)
+![Version: 6.17.1](https://img.shields.io/badge/Version-6.17.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.5.1](https://img.shields.io/badge/AppVersion-3.5.1-informational?style=flat-square)
 
 Promtail is an agent which ships the contents of local logs to a Loki instance
 
@@ -85,6 +85,7 @@ The new release which will pick up again from the existing `positions.yaml`.
 | config.snippets.extraRelabelConfigs | list | `[]` | You can put here any additional relabel_configs to "kubernetes-pods" job |
 | config.snippets.extraScrapeConfigs | string | empty | You can put here any additional scrape configs you want to add to the config file. |
 | config.snippets.extraServerConfigs | string | empty | You can put here any keys that will be directly added to the config file's 'server' block. |
+| config.target_config | object | `{"sync_period":"10s"}` | A block configures controls the behavior of reading files from discovered targets. Must be referenced in `config.file` to configure `target_config` |
 | configmap.enabled | bool | `false` | If enabled, promtail config will be created as a ConfigMap instead of a secret |
 | containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | The security context for containers |
 | daemonset.autoscaling.controlledResources | list | `[]` | List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory |
