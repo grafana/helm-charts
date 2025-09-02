@@ -1717,7 +1717,7 @@ per_tenant_overrides:
   #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
-# you can use your self memcacherd by set enable: false and host + service
+# you can use your own self deployed memcached by setting `memcached.enabled` to false and `memcached.host` + `memcached.service`
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
