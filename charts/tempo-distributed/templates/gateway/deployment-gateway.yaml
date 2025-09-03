@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "tempo.podAnnotations" (dict "ctx" . "component" "gateway") | nindent 8 }}
+        {{- include "tempo.podAnnotations" $dict | nindent 8 }}
       labels:
         {{- include "tempo.selectorLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
