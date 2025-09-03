@@ -34,13 +34,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
-        {{- with .Values.tempo.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.queryFrontend.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "tempo.podAnnotations" (dict "ctx" . "component" "queryFrontend") | nindent 8 }}
     spec:
       {{- if or (.Values.queryFrontend.priorityClassName) (.Values.global.priorityClassName) }}
       priorityClassName: {{ default .Values.queryFrontend.priorityClassName .Values.global.priorityClassName }}
