@@ -34,7 +34,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        {{- include "tempo.podAnnotations" (dict "ctx" . "component" "compactor") | nindent 8 }}
+        {{- include "tempo.podAnnotations" (dict "ctx" . "component" "distributor") | nindent 8 }}
     spec:
       {{- if or (.Values.distributor.priorityClassName) (.Values.global.priorityClassName) }}
       priorityClassName: {{ default .Values.distributor.priorityClassName .Values.global.priorityClassName }}
