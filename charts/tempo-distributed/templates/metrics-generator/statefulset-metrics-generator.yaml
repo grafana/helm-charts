@@ -35,7 +35,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        {{- include "tempo.podAnnotations" (dict "ctx" . "component" "metricsGenerator") | nindent 8 }}
+        {{- include "tempo.podAnnotations" $dict | nindent 8 }}
     spec:
       {{- if or (.Values.metricsGenerator.priorityClassName) (.Values.global.priorityClassName) }}
       priorityClassName: {{ default .Values.metricsGenerator.priorityClassName .Values.global.priorityClassName }}
