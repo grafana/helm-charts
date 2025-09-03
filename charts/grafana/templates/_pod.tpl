@@ -151,7 +151,7 @@ initContainers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root }}"
+        value: {{ tpl (. | join ",") $root | quote }}
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -229,7 +229,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . }}"
+        value: {{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . | quote }}
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -387,7 +387,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root }}"
+        value: {{ tpl (. | join ",") $root | quote }}
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -515,7 +515,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.dashboards.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root }}"
+        value: {{ tpl (. | join ",") $root | quote }}
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -647,7 +647,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root }}"
+        value: {{ tpl (. | join ",") $root | quote }}
       {{- end }}
       {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -770,7 +770,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.notifiers.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root }}"
+        value: {{ tpl (. | join ",") $root | quote }}
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -893,7 +893,7 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.plugins.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (. | join ",") $root }}"
+        value: {{ tpl (. | join ",") $root | quote }}
       {{- end }}
       {{- with .Values.sidecar.plugins.script }}
       - name: SCRIPT
