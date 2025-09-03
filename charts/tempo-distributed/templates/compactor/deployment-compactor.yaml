@@ -6,10 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
-  {{- with .Values.compactor.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- include "tempo.podAnnotations" (dict "ctx" . "component" "compactor") | nindent 4 }}
 spec:
   minReadySeconds: {{ .Values.compactor.minReadySeconds }}
 {{- if not .Values.compactor.autoscaling.enabled }}
