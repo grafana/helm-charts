@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
-  {{- with .Values.distributor.annotations }}
+  {{- with .Values.compactor.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}
