@@ -6,8 +6,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
+  {{- with .Values.distributor.annotations }}
   annotations:
-    {{- include "tempo.podAnnotations" (dict "ctx" . "component" "compactor") | nindent 4 }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   minReadySeconds: {{ .Values.compactor.minReadySeconds }}
 {{- if not .Values.compactor.autoscaling.enabled }}
@@ -32,13 +34,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
-        {{- with .Values.tempo.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.compactor.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "tempo.podAnnotations" (dict "ctx" . "component" "compactor") | nindent 8 }}
     spec:
       {{- if or (.Values.compactor.priorityClassName) (.Values.global.priorityClassName) }}
       priorityClassName: {{ default .Values.compactor.priorityClassName .Values.global.priorityClassName }}
