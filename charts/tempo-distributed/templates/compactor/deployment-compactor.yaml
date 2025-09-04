@@ -62,7 +62,6 @@ spec:
         - args:
             - -target=compactor
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.compactor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

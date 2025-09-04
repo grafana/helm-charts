@@ -79,7 +79,6 @@ spec:
         - args:
             - -target=ingester
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- if ne $zoneName ""}}
             - -ingester.availability-zone={{ $zoneName }}
             {{- end }}
