@@ -1200,6 +1200,7 @@ containers:
       - name: GOMEMLIMIT
         valueFrom:
           resourceFieldRef:
+            divisor: "1"
             resource: limits.memory
       {{- end }}
       {{- range $key, $value := .Values.envValueFrom }}
