@@ -146,6 +146,10 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.distributor.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: config
