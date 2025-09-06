@@ -58,6 +58,18 @@ spec:
           {{- range .Values.extraArgs  }}
           - {{ . }}
           {{- end }}
+          {{- if .Values.extraEnv }}
+          env:
+            {{- with .Values.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.extraEnvFrom }}
+          envFrom:
+            {{- with .Values.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
           ports:
             - name: http-metrics
               containerPort: 8001
