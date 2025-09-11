@@ -15,7 +15,7 @@ on:
         type: boolean
       helm_version:
         description: version of the helm binary
-        default: v3.8.2
+        default: v3.18.6
         required: false
         type: string
       kind_kubectl_version:
@@ -42,7 +42,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Helm
-        uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4.3.0
+        uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
         with:
           version: ${{ inputs.helm_version }}
 
@@ -51,10 +51,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
+          python-version: 3.13
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
+        uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b # v2.7.0
+
+      - name: install helm unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --version 1.0.1
 
       - name: Run chart-testing (list-changed)
         id: list-changed

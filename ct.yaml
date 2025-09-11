@@ -1,6 +1,6 @@
 # See https://github.com/helm/chart-testing#configuration
-remote: origin
-target-branch: main
+additional-commands:
+  - helm unittest --strict --file 'unittests/**/*.yaml' {{ .Path }}
 chart-dirs:
   - charts
 chart-repos:
@@ -10,5 +10,7 @@ chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - hashicorp=https://helm.releases.hashicorp.com
   - minio=https://charts.min.io
-helm-extra-args: --timeout 600s
+remote: origin
+target-branch: main
+use-helmignore: true
 validate-maintainers: false
