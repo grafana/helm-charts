@@ -66,7 +66,7 @@ startupProbe: {}
 # -- Service account Configuration
 serviceAccount:
   # -- Enable service account
-  enabled: true
+  create: true
   # -- Name of the service account
   name: ""
   # -- Annotations for the service account
