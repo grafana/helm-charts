@@ -553,6 +553,8 @@ distributor:
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Container lifecycle hooks for the distributor
+  lifecycle: {}
   # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
@@ -610,6 +612,8 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # -- Trace Attribute bytes limit. This is the maximum number of bytes that can be used in a trace.0 for no limit.
+    max_attribute_bytes: 0
     # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
     # attributes exposed on /usage_metrics.
     cost_attribution:
@@ -1452,6 +1456,9 @@ config: |
     {{- end }}
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
+    {{- end }}
+    {{- if .Values.distributor.config.max_attribute_bytes }}
+    max_attribute_bytes: {{ .Values.distributor.config.max_attribute_bytes }}
     {{- end }}
   querier:
     frontend_worker:
