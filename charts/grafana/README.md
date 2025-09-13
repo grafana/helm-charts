@@ -55,8 +55,13 @@ need to instead set `global.imageRegistry`.
 
 ### To 10.0.0
 
-Static alerting resources now support Helm templating. If you are using the `alerting` configuration,
-double curly braces must be escaped using `{{ "{{" }}` syntax to prevent unintended template processing.
+Static alerting resources now support Helm templating. This means that alerting resources loaded from external files (`alerting.*.files`) are now processed by the Helm template engine.
+
+If you already use template expressions intended for Alertmanager (for example, `{{ $labels.instance }}`), these must now be escaped to avoid unintended Helm evaluation. To escape them, wrap the braces with an extra layer like this:
+
+`{{ "{{" }} $labels.instance {{ "}}" }}`
+
+This ensures the expressions are preserved for Alertmanager instead of being rendered by Helm.
 
 ## Configuration
 
