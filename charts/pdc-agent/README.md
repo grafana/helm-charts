@@ -38,6 +38,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
+| securityContext.readOnlyRootFilesystem | bool | `false` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | tokenSecretName | string | `""` | secretName Expects a secret with key `token` which contains the Access Policy token you generated |
 | tolerations | list | `[]` | not required, but left in as a choice |
