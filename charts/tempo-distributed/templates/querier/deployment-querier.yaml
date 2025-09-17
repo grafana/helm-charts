@@ -102,10 +102,10 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.tempo.readinessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           volumeMounts:
             - mountPath: /conf
               name: config
