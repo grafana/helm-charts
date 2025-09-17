@@ -486,6 +486,8 @@ metricsGenerator:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  # -- Annotations for distributor deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -633,6 +635,8 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
+  # -- Annotations for compactor deployment
+  annotations: {}
 
   # -- Autoscaling configurations
   autoscaling:
@@ -775,6 +779,8 @@ querier:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  # -- Annotations for querier deployment
+  annotations: {}
   autoscaling:
     # -- Enable autoscaling for the querier
     enabled: false
@@ -908,6 +914,8 @@ queryFrontend:
       backend: 127.0.0.1:3200
   # -- Number of replicas for the query-frontend
   replicas: 1
+  # -- Annotations for the query-frontend Deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -1076,6 +1084,8 @@ enterpriseFederationFrontend:
   enabled: false
   # -- Number of replicas for the federation-frontend
   replicas: 1
+  # -- Annotations for the federation-frontend Deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
