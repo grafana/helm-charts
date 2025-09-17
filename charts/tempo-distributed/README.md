@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.47.1](https://img.shields.io/badge/Version-1.47.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.47.3](https://img.shields.io/badge/Version-1.47.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -372,6 +372,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.config.log_discarded_spans.include_all_attributes | bool | `false` |  |
 | distributor.config.log_received_spans | object | `{"enabled":false,"filter_by_status_error":false,"include_all_attributes":false}` | Enable to log every received span to help debug ingestion or calculate span error distributions using the logs |
 | distributor.config.log_received_traces | string | `nil` | WARNING: Deprecated. Use log_received_spans instead. |
+| distributor.config.max_attribute_bytes | int | `0` | Trace Attribute bytes limit. This is the maximum number of bytes that can be used in a trace.0 for no limit. |
 | distributor.extraArgs | list | `[]` | Additional CLI args for the distributor |
 | distributor.extraContainers | list | `[]` | Containers to add to the distributor pod |
 | distributor.extraEnv | list | `[]` | Environment variables to add to the distributor pods |
@@ -384,6 +385,7 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.image.repository | string | `nil` | Docker image repository for the distributor image. Overrides `tempo.image.repository` |
 | distributor.image.tag | string | `nil` | Docker image tag for the distributor image. Overrides `tempo.image.tag` |
 | distributor.initContainers | list | `[]` | Init containers to add to the distributor pods |
+| distributor.lifecycle | object | `{}` | Container lifecycle hooks for the distributor |
 | distributor.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | distributor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
