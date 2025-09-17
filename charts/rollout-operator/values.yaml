@@ -56,6 +56,12 @@ securityContext: {}
 # -- List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`)
 extraArgs: []
 
+# -- Environment variables to add to rollout-operator container
+extraEnv: []
+
+# -- Environment variables from secrets or configmaps to add to rollout-operator container
+extraEnvFrom: []
+
 resources:
   limits:
     # cpu: "1"
