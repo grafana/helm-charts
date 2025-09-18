@@ -2,17 +2,17 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metricsGenerator") }}
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metrics-generator") }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tempo.labels" (dict "ctx" . "component" "metricsGenerator") | nindent 4 }}
+    {{- include "tempo.labels" (dict "ctx" . "component" "metrics-generator") | nindent 4 }}
 spec:
   minReplicaCount: {{ .Values.metricsGenerator.autoscaling.minReplicas }}
   maxReplicaCount: {{ .Values.metricsGenerator.autoscaling.maxReplicas }}
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metricsGenerator") }}
+    name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metrics-generator") }}
   triggers:
   {{- range .Values.metricsGenerator.autoscaling.keda.triggers }}
   - type: {{ .type | quote }}
