@@ -16,7 +16,7 @@ spec:
     - name: http-metrics
       port: 3200
       protocol: TCP
-      targetPort: 3200
+      targetPort: http-metrics
     - name: grpc
       port: 9095
       protocol: TCP

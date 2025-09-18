@@ -305,6 +305,7 @@ The memcached default args are removed and should be provided manually. The sett
 | cache.caches[0].roles[1] | string | `"bloom"` |  |
 | cache.caches[0].roles[2] | string | `"frontend-search"` |  |
 | compactor.affinity | string | Hard node and soft zone anti-affinity | Affinity for compactor pods. Passed through `tpl` and, thus, to be configured as string |
+| compactor.annotations | object | `{}` | Annotations for compactor deployment |
 | compactor.autoscaling | object | `{"enabled":false,"hpa":{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null},"keda":{"enabled":false,"triggers":[]},"maxReplicas":3,"minReplicas":1}` | Autoscaling configurations |
 | compactor.autoscaling.enabled | bool | `false` | Enable autoscaling for the compactor |
 | compactor.autoscaling.hpa | object | `{"behavior":{},"enabled":false,"targetCPUUtilizationPercentage":100,"targetMemoryUtilizationPercentage":null}` | Autoscaling via HPA object |
@@ -355,6 +356,7 @@ The memcached default args are removed and should be provided manually. The sett
 | config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
 | configStorageType | string | `"ConfigMap"` | Defines what kind of object stores the configuration, a ConfigMap or a Secret. In order to move sensitive information (such as credentials) from the ConfigMap/Secret to a more secure location (e.g. vault), it is possible to use [environment variables in the configuration](https://grafana.com/docs/mimir/latest/operators-guide/configuring/reference-configuration-parameters/#use-environment-variables-in-the-configuration). Such environment variables can be then stored in a separate Secret and injected via the global.extraEnvFrom value. For details about environment injection from a Secret please see [Secrets](https://kubernetes.io/docs/concepts/configuration/secret/#use-case-as-container-environment-variables). |
 | distributor.affinity | string | Hard node and soft zone anti-affinity | Affinity for distributor pods. Passed through `tpl` and, thus, to be configured as string |
+| distributor.annotations | object | `{}` | Annotations for distributor deployment |
 | distributor.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection. |
 | distributor.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | distributor.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the distributor |
@@ -412,6 +414,7 @@ The memcached default args are removed and should be provided manually. The sett
 | enterprise.image.repository | string | `"grafana/enterprise-traces"` | Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository' |
 | enterprise.image.tag | string | `"v2.8.1"` | Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag' |
 | enterpriseFederationFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| enterpriseFederationFrontend.annotations | object | `{}` | Annotations for the federation-frontend Deployment |
 | enterpriseFederationFrontend.autoscaling.enabled | bool | `false` | Enable autoscaling for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the federation-frontend |
 | enterpriseFederationFrontend.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the federation-frontend |
@@ -815,6 +818,7 @@ The memcached default args are removed and should be provided manually. The sett
 | provisioner.securityContext | object | `{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | Run containers as nonroot user (uid=10001)` |
 | provisioner.tolerations | list | `[]` | Tolerations for tokengen Pods |
 | querier.affinity | string | Hard node and soft zone anti-affinity | Affinity for querier pods. Passed through `tpl` and, thus, to be configured as string |
+| querier.annotations | object | `{}` | Annotations for querier deployment |
 | querier.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the querier service. This allows querier to work with istio protocol selection. |
 | querier.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | querier.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the querier |
@@ -853,6 +857,7 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.tolerations | list | `[]` | Tolerations for querier pods |
 | querier.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for querier pods. Passed through `tpl` and, thus, to be configured as string |
 | queryFrontend.affinity | string | Hard node and soft zone anti-affinity | Affinity for query-frontend pods. Passed through `tpl` and, thus, to be configured as string |
+| queryFrontend.annotations | object | `{}` | Annotations for the query-frontend Deployment |
 | queryFrontend.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the queryFrontend service. This allows queryFrontend to work with istio protocol selection. |
 | queryFrontend.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | queryFrontend.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the query-frontend |
