@@ -64,7 +64,6 @@ spec:
         - args:
             - -target=distributor
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.distributor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

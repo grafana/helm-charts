@@ -61,7 +61,6 @@ spec:
         - args:
             - -target=federation-frontend
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.enterpriseFederationFrontend.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
