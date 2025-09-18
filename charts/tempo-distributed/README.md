@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.47.4](https://img.shields.io/badge/Version-1.47.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.47.5](https://img.shields.io/badge/Version-1.47.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -666,7 +666,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.39-alpine"` | Memcached Docker image tag |
 | memcached.initContainers | list | `[]` | Init containers for the memcached pod |
 | memcached.livenessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":5}` | configuration for liveness probe for memcached statefulset |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
@@ -685,7 +685,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcachedExporter.image.registry | string | `nil` | The Docker registry for the Memcached Exporter image. Overrides `global.image.registry` |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
-| memcachedExporter.image.tag | string | `"v0.14.4"` | Memcached Exporter Docker image tag |
+| memcachedExporter.image.tag | string | `"v0.15.3"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
 | metaMonitoring.grafanaAgent.annotations | object | `{}` | Annotations to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that. |
 | metaMonitoring.grafanaAgent.enabled | bool | `false` | Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below. Note that you need to configure serviceMonitor in order to have some metrics available. |
