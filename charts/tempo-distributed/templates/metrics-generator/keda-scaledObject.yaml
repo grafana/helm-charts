@@ -1,0 +1,28 @@
+{{- if and .Values.metricsGenerator.autoscaling.enabled .Values.metricsGenerator.autoscaling.keda.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metricsGenerator") }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" (dict "ctx" . "component" "metricsGenerator") | nindent 4 }}
+spec:
+  minReplicaCount: {{ .Values.metricsGenerator.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.metricsGenerator.autoscaling.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "tempo.resourceName" (dict "ctx" . "component" "metricsGenerator") }}
+  triggers:
+  {{- range .Values.metricsGenerator.autoscaling.keda.triggers }}
+  - type: {{ .type | quote }}
+    metadata:
+      serverAddress: {{ .metadata.serverAddress }}
+      threshold: {{ .metadata.threshold | quote }}
+      query: |
+        {{- .metadata.query | nindent 8 }}
+      {{- if .metadata.customHeaders }}
+      customHeaders: {{ .metadata.customHeaders }}
+      {{- end }}
+  {{- end }}
+{{- end }}

@@ -150,6 +150,22 @@ ingester:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the ingester
     targetMemoryUtilizationPercentage:
+    # -- Autoscaling via keda/ScaledObject
+    keda:
+      # requires https://keda.sh/
+      enabled: false
+      # -- List of autoscaling triggers for the ingester
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "<set to a value below your rate limit>"
+      # -- KEDA autoscaling will automatically average out the value received by the number of replicas.
+      #     query: |-
+      #       sum(
+      #         tempo_ingester_traces_created_total{cluster=\"$cluster\", namespace=\"$namespace\"}
+      #       ) by (name)
+      #     customHeaders: X-Scope-OrgID=<tenant-id>
   image:
     # -- The Docker registry for the ingester image. Overrides `tempo.image.registry`
     registry: null
@@ -337,6 +353,37 @@ metricsGenerator:
   #      - domain.tld
   # -- Init containers for the metrics generator pod
   initContainers: []
+  autoscaling:
+    # -- Enable autoscaling for the metrics-generator. WARNING: Autoscaling metrics-generators can result in lost data. Only do this if you know what you're doing.
+    # -- Scaling down metrics-generators can cause backpressure on the distributor.
+    enabled: false
+    # -- Minimum autoscaling replicas for the metrics-generator
+    minReplicas: 2
+    # -- Maximum autoscaling replicas for the metrics-generator
+    maxReplicas: 3
+    # -- Autoscaling behavior configuration for the metrics-generator
+    behavior: {}
+    # -- Target CPU utilisation percentage for the metrics-generator
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for the metrics-generator
+    targetMemoryUtilizationPercentage:
+    # -- Autoscaling via keda/ScaledObject
+    keda:
+      # requires https://keda.sh/
+      enabled: false
+      # -- List of autoscaling triggers for the metrics-generator
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "<set to a value below your rate limit>"
+      # -- KEDA autoscaling will automatically average out the value received by the number of replicas.
+      # -- This example scales on distributor queue length to alleviate backpressure.
+      #     query: |-
+      #       sum(
+      #         tempo_distributor_queue_length{namespace=~".*"}
+      #       ) by (name)
+      #     customHeaders: X-Scope-OrgID=<tenant-id>
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
@@ -506,6 +553,22 @@ distributor:
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the distributor
     targetMemoryUtilizationPercentage:
+    # -- Autoscaling via keda/ScaledObject
+    keda:
+      # requires https://keda.sh/
+      enabled: false
+      # -- List of autoscaling triggers for the distributor
+      triggers: []
+      # - type: prometheus
+      #   metadata:
+      #     serverAddress: "http://<prometheus-host>:9090"
+      #     threshold: "<set to a value below your rate limit>"
+      # -- KEDA autoscaling will automatically average out the value received by the number of replicas.
+      #     query: |-
+      #       sum by(cluster) (
+      #       rate(tempo_distributor_spans_received_total{namespace=~".*"})
+      #       )
+      #     customHeaders: X-Scope-OrgID=<tenant-id>
   image:
     # -- The Docker registry for the distributor image. Overrides `tempo.image.registry`
     registry: null
@@ -665,12 +728,10 @@ compactor:
       #   metadata:
       #     serverAddress: "http://<prometheus-host>:9090"
       #     threshold: "250"
+      # -- KEDA autoscaling will automatically average out the value received by the number of replicas.
       #     query: |-
       #       sum by (cluster, namespace, tenant) (
       #         tempodb_compaction_outstanding_blocks{container="compactor", namespace=~".*"}
-      #       ) /
-      #       ignoring(tenant) group_left count by (cluster, namespace)(
-      #         tempo_build_info{container="compactor", namespace=~".*"}
       #       )
       #     customHeaders: X-Scope-OrgID=<tenant-id>
 
