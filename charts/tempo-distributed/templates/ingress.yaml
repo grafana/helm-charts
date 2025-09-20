@@ -8,6 +8,7 @@ metadata:
   name: {{ include "tempo.fullname" . }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
     {{- with .Values.ingress.labels }}
     {{- toYaml . | nindent 4}}
     {{- end}}
