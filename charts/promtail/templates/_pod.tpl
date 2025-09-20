@@ -4,7 +4,7 @@ Pod template used in Daemonset and Deployment
 {{- define "promtail.podTemplate" -}}
 metadata:
   labels:
-    {{- include "promtail.selectorLabels" . | nindent 4 }}
+    {{- include "promtail.podLabels" . | nindent 4 }}
     {{- with .Values.podLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
