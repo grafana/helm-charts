@@ -6,6 +6,7 @@ metadata:
   name: {{ include "tempo.resourceName" $dict }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   annotations:
     {{- if .Values.tokengenJob.annotations }}
     {{- toYaml .Values.tokengenJob.annotations | nindent 4 }}
@@ -20,6 +21,7 @@ spec:
     metadata:
       labels:
         {{- include "tempo.podLabels" $dict | nindent 8 }}
+        {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 8 }}
         {{- with .Values.tokengenJob.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

@@ -5,6 +5,7 @@ metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" . "component" "provisioner") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "provisioner") | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 rules:
 - apiGroups: [""]
@@ -17,6 +18,7 @@ metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" . "component" "provisioner") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "provisioner") | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io

@@ -7,6 +7,7 @@ metadata:
   name: {{ include "tempo.resourceName" $dict }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
 spec:
   selector:
     matchLabels:

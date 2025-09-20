@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 4 }}
+  {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   {{- with .Values.memcached.service.annotations }}
   annotations:
     {{- tpl (toYaml . | nindent 4) $ }}

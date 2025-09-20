@@ -14,6 +14,7 @@ metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" $.ctx "component" $.component) }}
   labels:
     {{- include "tempo.labels" (dict "ctx" $.ctx "component" $.component) | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   namespace: {{ $.ctx.Release.Namespace | quote }}
 spec:
   selector:

@@ -5,6 +5,7 @@ metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" . "component" "admin-api") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "admin-api" "memberlist" true) | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
     {{- with .Values.adminApi.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

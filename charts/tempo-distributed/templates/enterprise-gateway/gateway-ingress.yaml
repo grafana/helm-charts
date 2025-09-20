@@ -10,6 +10,7 @@ metadata:
   name: {{ include "tempo.resourceName" $dict }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   {{- with .Values.enterpriseGateway.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
