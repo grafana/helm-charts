@@ -5,6 +5,7 @@ metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" . "component" "provisioner") }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "provisioner") | nindent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
     {{- with .Values.provisioner.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -25,6 +26,7 @@ spec:
     metadata:
       labels:
         {{- include "tempo.podLabels" (dict "ctx" . "component" "provisioner") | nindent 8 }}
+        {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 8 }}
       annotations:
         {{- include "tempo.podAnnotations" (dict "ctx" . "component" "provisioner") | nindent 8 }}
       namespace: {{ .Release.Namespace | quote }}

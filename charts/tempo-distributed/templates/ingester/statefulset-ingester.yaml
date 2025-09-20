@@ -12,6 +12,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "ingester.labels" $dict | indent 4 }}
+    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   {{- if .Values.ingester.zoneAwareReplication.enabled }}
   annotations:
     {{- include "ingester.Annotations" $dict | nindent 4}}
@@ -40,6 +41,7 @@ spec:
     metadata:
       labels:
         {{- include "ingester.podLabels" $dict | nindent 8 }}
+        {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
