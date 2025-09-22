@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.48.1](https://img.shields.io/badge/Version-1.48.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.49.0](https://img.shields.io/badge/Version-1.49.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -528,6 +528,10 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.labels | object | `{}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| gateway.livenessProbe.httpGet.path | string | `"/"` |  |
+| gateway.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| gateway.livenessProbe.initialDelaySeconds | int | `30` |  |
+| gateway.livenessProbe.timeoutSeconds | int | `5` |  |
 | gateway.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | gateway.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
@@ -963,6 +967,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| tempo.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| tempo.livenessProbe.initialDelaySeconds | int | `60` |  |
+| tempo.livenessProbe.timeoutSeconds | int | `5` |  |
 | tempo.memberlist | object | `{"appProtocol":null,"service":{"annotations":{}}}` | Memberlist service configuration. |
 | tempo.memberlist.appProtocol | string | `nil` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https". |
 | tempo.memberlist.service | object | `{"annotations":{}}` | Adds the service field to the memberlist service |
