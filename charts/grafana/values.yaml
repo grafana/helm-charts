@@ -1606,12 +1606,18 @@ networkPolicy:
     ## to:
     ##  - namespaceSelector:
     ##    matchExpressions:
-  ##    - {key: role, operator: In, values: [grafana]}
-  ##
-  ##
-  ##
-  ##
-  ##
+    ##    - {key: role, operator: In, values: [grafana]}
+    ##
+    ## @param networkPolicy.egress.manualEgress Manually define all egress rules
+    manualEgress: []
+    ## E.X.
+    ##- to:
+    ##  - podSelector:
+    ##      matchLabels:
+    ##        app.kubernetes.io/name: other-pod
+    ##    ports:
+    ##    - protocol: TCP
+    ##      port: 3000
 
 # Enable backward compatibility of kubernetes where version below 1.13 doesn't have the enableServiceLinks option
 enableKubeBackwardCompatibility: false
