@@ -1,6 +1,6 @@
 # lgtm-distributed
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: ^7.3.9](https://img.shields.io/badge/AppVersion-^7.3.9-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: ^12.1.1](https://img.shields.io/badge/AppVersion-^12.1.1-informational?style=flat-square)
 
 Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
@@ -24,11 +24,11 @@ Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://grafana.github.io/helm-charts | grafana(grafana) | ^7.3.9 |
-| https://grafana.github.io/helm-charts | loki(loki-distributed) | ^0.79.0 |
-| https://grafana.github.io/helm-charts | mimir(mimir-distributed) | ^5.3.0 |
-| https://grafana.github.io/helm-charts | grafana-oncall(oncall) | ^1.3.114 |
-| https://grafana.github.io/helm-charts | tempo(tempo-distributed) | ^1.9.2 |
+| https://grafana.github.io/helm-charts | grafana(grafana) | ^10.0.0 |
+| https://grafana.github.io/helm-charts | loki(loki-distributed) | ^0.80.5 |
+| https://grafana.github.io/helm-charts | mimir(mimir-distributed) | ^5.8.0 |
+| https://grafana.github.io/helm-charts | grafana-oncall(oncall) | ^1.16.5 |
+| https://grafana.github.io/helm-charts | tempo(tempo-distributed) | ^1.48.0 |
 
 ## Values
 
