@@ -30,3 +30,21 @@ rules:
   - statefulsets/status
   verbs:
   - update
+{{- if .Values.webhooks.enabled }}
+- apiGroups:
+  - rollout-operator.grafana.com
+  resources:
+  - zoneawarepoddisruptionbudgets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+    - rollout-operator.grafana.com
+  resources:
+    - replicatemplates/scale
+    - replicatemplates/status
+  verbs:
+    - get
+    - patch
+  {{- end }}

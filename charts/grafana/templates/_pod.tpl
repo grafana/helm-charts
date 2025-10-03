@@ -1196,6 +1196,13 @@ containers:
         value: {{ (get .Values "grafana.ini").paths.plugins }}
       - name: GF_PATHS_PROVISIONING
         value: {{ (get .Values "grafana.ini").paths.provisioning }}
+      {{- if (.Values.resources.limits).memory }}
+      - name: GOMEMLIMIT
+        valueFrom:
+          resourceFieldRef:
+            divisor: "1"
+            resource: limits.memory
+      {{- end }}
       {{- range $key, $value := .Values.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
