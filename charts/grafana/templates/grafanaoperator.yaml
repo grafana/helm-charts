@@ -1,0 +1,27 @@
+{{- if .Values.grafanaOperator.enabled }}
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: {{ include "grafana.fullname" . }}
+  namespace: {{ include "grafana.namespace" . }}
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+    {{- with .Values.grafanaOperator.labels }}
+    {{- tpl (toYaml . | nindent 4) $ }}
+    {{- end }}
+spec:
+  external:
+    url: "{{ .Values.grafanaOperator.scheme }}://{{ include "grafana.fullname" . }}.{{ include "grafana.namespace" . }}.svc.cluster.local:{{ .Values.service.port }}{{ .Values.grafanaOperator.path }}"
+    adminUser:
+      name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+      key: {{ .Values.admin.userKey | default "admin-user" }}
+    adminPassword:
+      name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+      key: {{ .Values.admin.passwordKey | default "admin-password" }}
+  {{- with .Values.grafanaOperator.client }}
+  client:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+

@@ -284,6 +284,11 @@ This ensures the expressions are preserved for Alertmanager instead of being ren
 | `serviceMonitor.labels`                   | Labels for the servicemonitor passed to Prometheus Operator      |  `{}`                                |
 | `serviceMonitor.scrapeTimeout`            | Timeout after which the scrape is ended       | `30s`                                                   |
 | `serviceMonitor.relabelings`              | RelabelConfigs to apply to samples before scraping.     | `[]`                                      |
+| `grafanaOperator.enabled`                 | If true, a Grafana CR is created for a grafana operator                 | `false`     |                 |
+| `grafanaOperator.labels`                  | Additional Labels for `Grafana` CR `instanceSelector`s to match against | `{}`        |                 |
+| `grafanaOperator.path`                    | string                                                                  | `"/"`       |                 |
+| `grafanaOperator.scheme`                  | Override the default path                                               | `"http"`    |                 |
+| `grafanaOperator.client`                  | Configures the Grafana Operator HTTP Client when reconciling resources  | `{}`        |                 |
 | `serviceMonitor.metricRelabelings`        | MetricRelabelConfigs to apply to samples before ingestion.  | `[]`                                      |
 | `revisionHistoryLimit`                    | Number of old ReplicaSets to retain           | `10`                                                    |
 | `imageRenderer.enabled`                    | Enable the image-renderer deployment & service                                     | `false`                          |

@@ -266,6 +266,22 @@ serviceMonitor:
   basicAuth: {}
   targetLabels: []
 
+## Grafana Operator is an alternative solution for provisioning resources to Grafana instances
+##
+grafanaOperator:
+  ## If true, a Grafana CR is created for a grafana operator
+  ## https://github.com/grafana/grafana-operator
+  ##
+  enabled: false
+  ## Additional Labels for `Grafana` CR `instanceSelector`s to match against
+  labels: {}
+  scheme: http
+  ## Override the default path
+  path: /
+  ## Configures the Grafana Operator HTTP Client when reconciling resources
+  ## Allows: TLS, timeouts, headers..
+  client: {}
+
 extraExposePorts: []
  # - name: keycloak
  #   port: 8080
