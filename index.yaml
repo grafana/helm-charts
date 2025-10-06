@@ -612,6 +612,32 @@ entries:
     version: 1.0.0
   alloy-operator:
   - apiVersion: v2
+    appVersion: 1.3.0
+    created: "2025-10-06T18:02:11.740357054Z"
+    dependencies:
+    - condition: crds.deployAlloyCRD
+      name: alloy-crd
+      repository: https://grafana.github.io/helm-charts
+      version: 1.0.0
+    - condition: crds.deployPodLogsCRD
+      name: podlogs-crd
+      repository: ""
+      version: 0.0.0
+    description: A Helm chart the Alloy Operator, a project to innovate on creating
+      instances of Grafana Alloy.
+    digest: ee16a1c32a7ee9f331c117a8cbcabc9d5faf8f5690b7a051607a53de5b99b985
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    name: alloy-operator
+    sources:
+    - https://github.com/grafana/alloy-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-operator-0.3.10/alloy-operator-0.3.10.tgz
+    version: 0.3.10
+  - apiVersion: v2
     appVersion: 1.2.1
     created: "2025-08-26T16:48:22.71609471Z"
     dependencies:
@@ -1020,10 +1046,10 @@ entries:
     version: 0.2.6-beta.3
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2025-04-25T23:20:42.337406787Z"
+    created: "2025-04-25T23:00:32.242736951Z"
     description: A Helm chart the Alloy Operator, a project to innovate on creating
       instances of Grafana Alloy.
-    digest: 3314b50c5ed86483c93698ec664f3da31476a1184b896298d8e4a9d31baa9941
+    digest: b32bda54538a009c114537a9d746501b1fef466777b117c6389a3563b03b6721
     icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
     maintainers:
     - email: pete.wall@grafana.com
@@ -1037,10 +1063,10 @@ entries:
     version: 0.2.6-beta.2
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2025-04-25T23:00:32.242736951Z"
+    created: "2025-04-25T23:20:42.337406787Z"
     description: A Helm chart the Alloy Operator, a project to innovate on creating
       instances of Grafana Alloy.
-    digest: b32bda54538a009c114537a9d746501b1fef466777b117c6389a3563b03b6721
+    digest: 3314b50c5ed86483c93698ec664f3da31476a1184b896298d8e4a9d31baa9941
     icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
     maintainers:
     - email: pete.wall@grafana.com
@@ -97077,4 +97103,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-03T16:48:29.124263283Z"
+generated: "2025-10-06T18:02:11.765659418Z"
