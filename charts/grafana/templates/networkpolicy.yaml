@@ -24,9 +24,9 @@ spec:
   podSelector:
     matchLabels:
       {{- include "grafana.selectorLabels" . | nindent 6 }}
-
   {{- if .Values.networkPolicy.egress.enabled }}
   egress:
+    {{- if not .Values.networkPolicy.egress.manualEgress }}
     {{- if not .Values.networkPolicy.egress.blockDNSResolution }}
     - ports:
         - port: 53
@@ -38,6 +38,9 @@ spec:
       to:
         {{- toYaml . | nindent 12 }}
       {{- end }}
+    {{- else }}
+    {{- toYaml .Values.networkPolicy.egress.manualEgress | nindent 4 }}
+    {{- end }}
   {{- end }}
   {{- if .Values.networkPolicy.ingress }}
   ingress:
