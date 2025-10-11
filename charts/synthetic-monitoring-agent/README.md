@@ -1,6 +1,6 @@
 # synthetic-monitoring-agent
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.38.3](https://img.shields.io/badge/AppVersion-v0.38.3-informational?style=flat-square)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.38.3](https://img.shields.io/badge/AppVersion-v0.38.3-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
@@ -27,6 +27,7 @@ Grafana's Synthetic Monitoring application. The agent provides probe functionali
 | agent.apiToken | string | `""` | API token from Grafana Cloud when secret is created by the chart. |
 | agent.debug | bool | `false` | Enable / disable debug logging on the agent. |
 | agent.enableDisconnect | bool | `false` | Enable / disable the HTTP /disconnect endpoint |
+| agent.features | list | `[]` | Enable various feature gates such as adhoc, k6, traceroute See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/#available-feature-flags |
 | agent.verbose | bool | `false` | Enable / disable verbose logging on the agent. |
 | autoscaling.enabled | bool | `false` | Enable autoscaling |
 | autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas |
