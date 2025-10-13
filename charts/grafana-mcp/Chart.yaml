@@ -22,7 +22,9 @@ maintainers:
   - name: jkroepke
     email: github@jkroepke.de
   - name: KyriosGN0
-    email: avivguiser@gmail.com
+    email: avivguiser@gmail.com    
+  - name: QuentinBisson
+    email: quentin.bisson@gmail.com
 type: application
 keywords:
   - monitoring
