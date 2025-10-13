@@ -29,6 +29,8 @@ maintainers:
     email: mail@torstenwalter.de
   - name: jkroepke
     email: github@jkroepke.de
+  - name: QuentinBisson
+    email: quentin.bisson@gmail.com
 type: application
 keywords:
   - monitoring
