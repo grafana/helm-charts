@@ -22,8 +22,6 @@ maintainers:
   - name: zalegrala
   - name: Sheikh-Abubaker
     email: sheikhabubaker761@gmail.com
-  - name: QuentinBisson
-    email: quentin.bisson@gmail.com
 dependencies:
   - name: minio
     alias: minio
