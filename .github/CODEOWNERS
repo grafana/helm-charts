@@ -19,5 +19,5 @@
 /charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
 /charts/agent-operator/ @grafana/grafana-agent-maintainers
 /charts/cloudcost-exporter/ @grafana/platform-monitoring
-/charts/grafana-mcp/ @jkroepke @Sheikh-Abubaker @KyriosGN0
+/charts/grafana-mcp/ @jkroepke @Sheikh-Abubaker @KyriosGN0 @QuentinBisson
 /charts/pdc-agent/ @grafana/grafana-datasources-core-services
