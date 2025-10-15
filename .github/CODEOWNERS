@@ -11,7 +11,7 @@
 /charts/loki-canary/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/promtail/ @grafana/loki-squad @unguiculus @Whyeasy
 /charts/tempo/ @grafana/tempo @Sheikh-Abubaker @dgzlopes @swartz-k @BitProcessor @faustodavid
-/charts/tempo-distributed/ @grafana/tempo @Sheikh-Abubaker @swartz-k @BitProcessor @faustodavid
+/charts/tempo-distributed/ @grafana/tempo @Sheikh-Abubaker @swartz-k @BitProcessor @faustodavid @QuentinBisson
 /charts/enterprise-metrics/ @grafana/mimir-maintainers
 /charts/rollout-operator/ @grafana/mimir-maintainers
 /charts/enterprise-logs/ @grafana/loki-squad
