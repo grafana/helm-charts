@@ -101,7 +101,8 @@ spec:
           env:
             - name: GRAFANA_URL
               value: {{ .Values.grafana.url | quote }}
-            - name: GRAFANA_API_KEY
+            {{- if or .Values.grafana.apiKey .Values.grafana.apiKeySecret.name }}
+            - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
               valueFrom:
                 secretKeyRef:
                   {{- if .Values.grafana.apiKey }}
@@ -111,6 +112,7 @@ spec:
                   name: {{ .Values.grafana.apiKeySecret.name }}
                   key: {{ .Values.grafana.apiKeySecret.key }}
                   {{- end }}
+            {{- end }}
             {{- range $key, $value := .Values.env }}
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
