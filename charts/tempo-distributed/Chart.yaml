@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 1.48.0
+version: 1.48.1
 appVersion: 2.8.2
 engine: gotpl
 home: https://grafana.com/docs/tempo/latest/
@@ -22,6 +22,8 @@ maintainers:
   - name: zalegrala
   - name: Sheikh-Abubaker
     email: sheikhabubaker761@gmail.com
+  - name: QuentinBisson
+    email: quentin.bisson@gmail.com
 dependencies:
   - name: minio
     alias: minio
