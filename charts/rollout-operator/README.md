@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.33.0](https://img.shields.io/badge/Version-0.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.29.0](https://img.shields.io/badge/AppVersion-v0.29.0-informational?style=flat-square)
+![Version: 0.35.1](https://img.shields.io/badge/Version-0.35.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.31.1](https://img.shields.io/badge/AppVersion-v0.31.1-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -49,6 +49,8 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | extraArgs | list | `[]` | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`) |
+| extraEnv | list | `[]` | Environment variables to add to rollout-operator container |
+| extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to rollout-operator container |
 | fullnameOverride | string | `""` |  |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
