@@ -228,7 +228,7 @@ initContainers:
         value: "true"
       {{- end }}
       - name: METHOD
-        value: "LIST"
+        value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
         value: "{{ tpl .Values.sidecar.datasources.label $root }}"
       {{- with .Values.sidecar.datasources.labelValue }}
@@ -243,22 +243,80 @@ initContainers:
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.datasources.resource }}
+      {{- if .Values.sidecar.datasources.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.datasources.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.datasources.searchNamespace }}
+      {{- with .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
-      {{- with .Values.sidecar.skipTlsVerify }}
+      {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
-        value: "{{ . }}"
+        value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
       {{- with .Values.sidecar.datasources.script }}
       - name: SCRIPT
         value: {{ quote . }}
       {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.userKey | default "admin-user" }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- end }}
+      {{- if not .Values.sidecar.datasources.skipReload }}
+      - name: REQ_URL
+        value: {{ .Values.sidecar.datasources.reloadURL }}
+      - name: REQ_METHOD
+        value: POST
+      {{- end }}
+      {{- if .Values.sidecar.datasources.watchServerTimeout }}
+      {{- if ne .Values.sidecar.datasources.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.datasources.watchServerTimeout with .Values.sidecar.datasources.watchMethod %s" .Values.sidecar.datasources.watchMethod) }}
+      {{- end }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.datasources.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.watchClientTimeout }}
+      {{- if ne .Values.sidecar.datasources.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.datasources.watchClientTimeout with .Values.sidecar.datasources.watchMethod %s" .Values.sidecar.datasources.watchMethod) }}
+      {{- end }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.datasources.watchClientTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.datasources.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.datasources.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.datasources.maxReadRetries }}"
+      {{- end }}
+    {{- with .Values.sidecar.livenessProbe }}
+    livenessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
+    readinessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- with .Values.sidecar.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
