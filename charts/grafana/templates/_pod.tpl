@@ -123,6 +123,18 @@ initContainers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     {{- if .Values.sidecar.alerts.nativeSidecar }}
     restartPolicy: Always
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 20
+      periodSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 35
+      periodSeconds: 10
     {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.alerts.env }}
@@ -204,6 +216,18 @@ initContainers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     {{- if .Values.sidecar.datasources.nativeSidecar }}
     restartPolicy: Always
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 20
+      periodSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 35
+      periodSeconds: 10
     {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.datasources.env }}
@@ -277,6 +301,18 @@ initContainers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     {{- if .Values.sidecar.notifiers.nativeSidecar }}
     restartPolicy: Always
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 20
+      periodSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 35
+      periodSeconds: 10
     {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.notifiers.env }}
@@ -353,6 +389,18 @@ initContainers:
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
     {{- if .Values.sidecar.dashboards.nativeSidecar }}
     restartPolicy: Always
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 20
+      periodSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 35
+      periodSeconds: 10
     {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.dashboards.env }}
