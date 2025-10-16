@@ -981,13 +981,6 @@ sidecar:
   enableUniqueFilenames: false
   readinessProbe: {}
   livenessProbe: {}
-  # only applies to native sidecars
-  startupProbe:
-    httpGet:
-      path: /healthz
-      port: 8080
-    initialDelaySeconds: 10
-    periodSeconds: 2
   # Log level default for all sidecars. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. Defaults to INFO
   # logLevel: INFO
   alerts:
@@ -1069,6 +1062,14 @@ sidecar:
     initAlerts: false
     # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
     nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # Additional alerts sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
@@ -1150,6 +1151,14 @@ sidecar:
     initDashboards: false
     # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
     nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1261,6 +1270,14 @@ sidecar:
     initDatasources: false
     # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
     nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8082
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # Additional datasources sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the datasource sidecar emptyDir volume
@@ -1399,6 +1416,14 @@ sidecar:
     initNotifiers: false
     # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
     nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8083
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # Additional notifiers sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the notifier sidecar emptyDir volume
