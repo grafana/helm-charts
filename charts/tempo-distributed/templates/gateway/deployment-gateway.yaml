@@ -23,13 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print .Template.BasePath "/gateway/configmap-gateway.yaml") . | sha256sum }}
-        {{- with .Values.tempo.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.gateway.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "tempo.podAnnotations" $dict | nindent 8 }}
       labels:
         {{- include "tempo.selectorLabels" $dict | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
