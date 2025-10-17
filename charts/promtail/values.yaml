@@ -428,6 +428,10 @@ config:
   # Must be referenced in `config.file` to configure `positions`
   positions:
     filename: /run/promtail/positions.yaml
+  # -- A block configures controls the behavior of reading files from discovered targets.
+  # Must be referenced in `config.file` to configure `target_config`
+  target_config:
+    sync_period: "10s"
   # -- The config to enable tracing
   enableTracing: false
   # -- A section of reusable snippets that can be reference in `config.file`.
@@ -565,6 +569,9 @@ config:
 
     limits_config:
       {{- tpl .Values.config.snippets.extraLimitsConfig . | nindent 2 }}
+
+    target_config:
+      {{- tpl (toYaml .Values.config.target_config) . | nindent 2 }}
 
     tracing:
       enabled: {{ .Values.config.enableTracing }}
