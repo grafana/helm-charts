@@ -95,6 +95,10 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.compactor.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
