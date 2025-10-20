@@ -11,11 +11,11 @@ global:
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
-  clusterDomain: 'cluster.local'
+  clusterDomain: "cluster.local"
   # -- configures DNS service name
-  dnsService: 'kube-dns'
+  dnsService: "kube-dns"
   # -- configures DNS service namespace
-  dnsNamespace: 'kube-system'
+  dnsNamespace: "kube-system"
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []
@@ -27,7 +27,7 @@ global:
   extraArgs: []
   # -- Global storage class to be used for persisted components
   storageClass: null
-fullnameOverride: ''
+fullnameOverride: ""
 # fullnameOverride: tempo
 
 # -- Configuration is loaded from the secret called 'externalConfigSecretName'.
@@ -48,7 +48,7 @@ externalConfigSecretName: '{{ include "tempo.resourceName" (dict "ctx" . "compon
 externalRuntimeConfigName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "runtime") }}'
 
 # -- When 'useExternalConfig' is true, then changing 'externalConfigVersion' triggers restart of services - otherwise changes to the configuration cause a restart.
-externalConfigVersion: '0'
+externalConfigVersion: "0"
 
 # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
 reportingEnabled: true
@@ -103,10 +103,10 @@ tempo:
     # -- Configure the IP families for all tempo services
     # See the Service spec for details: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#servicespec-v1-core
     ipFamilies:
-      - 'IPv4'
+      - "IPv4"
     #   - 'IPv6'
     # -- Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack
-    ipFamilyPolicy: 'SingleStack'
+    ipFamilyPolicy: "SingleStack"
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -460,7 +460,21 @@ metricsGenerator:
         # -- Additional dimensions to add to the metrics along with the default dimensions.
         # -- The resource and span attributes to be added to the span metrics, if present.
         dimensions: []
-        histogram_buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.02, 2.05, 4.10]
+        histogram_buckets:
+          [
+            0.002,
+            0.004,
+            0.008,
+            0.016,
+            0.032,
+            0.064,
+            0.128,
+            0.256,
+            0.512,
+            1.02,
+            2.05,
+            4.10,
+          ]
     storage:
       path: /var/tempo/wal
       wal:
@@ -523,7 +537,7 @@ distributor:
     # -- Type of service for the distributor
     type: ClusterIP
     # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
-    loadBalancerIP: ''
+    loadBalancerIP: ""
     # -- If type is LoadBalancer limit incoming traffic from IPs.
     loadBalancerSourceRanges: []
     # -- If type is LoadBalancer you can set it to 'Local' [preserve the client source IP](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip)
@@ -768,7 +782,7 @@ compactor:
     dnsConfig:
       options:
         - name: ndots
-          value: "3"    # This is required for Azure Kubernetes Service (AKS) https://github.com/grafana/tempo/issues/1462
+          value: "3" # This is required for Azure Kubernetes Service (AKS) https://github.com/grafana/tempo/issues/1462
 
 # Configuration for the querier
 querier:
@@ -1185,7 +1199,7 @@ enterpriseFederationFrontend:
 multitenancyEnabled: false
 
 rollout_operator:
-# -- Enable rollout-operator. It must be enabled when using Zone Aware Replication.
+  # -- Enable rollout-operator. It must be enabled when using Zone Aware Replication.
   enabled: false
 
   podSecurityContext:
@@ -1273,6 +1287,7 @@ memberlist:
   bind_port: 7946
   packet_dial_timeout: "5s"
   packet_write_timeout: "5s"
+  join_members: ""
 
 # -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
 
@@ -1531,8 +1546,13 @@ config: |
     {{- with .Values.memberlist }}
       {{- toYaml . | nindent 2 }}
     {{- end }}
+    {{- if .Values.memberlist.join_members }}
+    join_members:
+      - {{ .Values.memberlist.join_members }} 
+    {{- else }}
     join_members:
       - dns+{{ include "tempo.fullname" . }}-gossip-ring:{{ .Values.memberlist.bind_port }}
+    {{- end }}
   overrides:
     {{- toYaml .Values.overrides | nindent 2 }}
   server:
@@ -1843,19 +1863,19 @@ metaMonitoring:
       # configuration to write logs to this Loki-compatible remote. Optional.
       remote:
         # -- Full URL for Loki push endpoint. Usually ends in /loki/api/v1/push
-        url: ''
+        url: ""
 
         auth:
           # -- Used to set X-Scope-OrgID header on requests. Usually not used in combination with username and password.
-          tenantId: ''
+          tenantId: ""
 
           # -- Basic authentication username. Optional.
-          username: ''
+          username: ""
 
           # -- The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set.
-          passwordSecretName: ''
+          passwordSecretName: ""
           # -- The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set.
-          passwordSecretKey: ''
+          passwordSecretKey: ""
 
       # -- Client configurations for the LogsInstance that will scrape Mimir pods. Follows the format of .remote.
       additionalClientConfigs: []
@@ -1866,18 +1886,18 @@ metaMonitoring:
       # Note that you need to configure serviceMonitor in order to have some metrics available.
       remote:
         # -- Full URL for Prometheus remote-write. Usually ends in /push
-        url: ''
+        url: ""
 
         # -- Used to add HTTP headers to remote-write requests.
         headers: {}
         auth:
           # -- Basic authentication username. Optional.
-          username: ''
+          username: ""
 
           # -- The value under key passwordSecretKey in this secret will be used as the basic authentication password. Required only if passwordSecretKey is set.
-          passwordSecretName: ''
+          passwordSecretName: ""
           # -- The value under this key in passwordSecretName will be used as the basic authentication password. Required only if passwordSecretName is set.
-          passwordSecretKey: ''
+          passwordSecretKey: ""
 
       # -- Additional remote-write for the MetricsInstance that will scrape Mimir pods. Follows the format of .remote.
       additionalRemoteWriteConfigs: []
@@ -1895,7 +1915,7 @@ metaMonitoring:
             app.kubernetes.io/name: kube-state-metrics
 
     # -- Sets the namespace of the resources. Leave empty or unset to use the same namespace as the Helm release.
-    namespace: ''
+    namespace: ""
 
     # -- Labels to add to all monitoring.grafana.com custom resources.
     # Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.labels for that.
@@ -1951,7 +1971,7 @@ minio:
       cpu: 100m
       memory: 128Mi
   # Changed the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root and OpenShift will not permit this.
-  configPathmc: '/tmp/minio/mc/'
+  configPathmc: "/tmp/minio/mc/"
 
 # Configuration for the gateway
 gateway:
@@ -2116,11 +2136,11 @@ gateway:
               '"$request" $body_bytes_sent "$http_referer" '
               '"$http_user_agent" "$http_x_forwarded_for"';
     # -- Allows appending custom configuration to the server block
-    serverSnippet: ''
+    serverSnippet: ""
     # -- Allows appending custom configuration to the http block
-    httpSnippet: ''
+    httpSnippet: ""
     # -- Allows overriding the DNS resolver address nginx will use
-    resolver: ''
+    resolver: ""
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
     # @default -- See values.yaml
     file: |
@@ -2304,7 +2324,7 @@ enterprise:
 # To set the license contents, use the flag `--set-file 'license.contents=./license.jwt'`
 # To use your own Kubernetes Secret, `--set license.external=true`.
 license:
-  contents: 'NOTAVALIDLICENSE'
+  contents: "NOTAVALIDLICENSE"
   external: false
   secretName: '{{ include "tempo.resourceName" (dict "ctx" . "component" "license") }}'
 
@@ -2392,7 +2412,6 @@ provisioner:
   extraVolumeMounts: []
   # -- Volumes to add to the provisioner pods
   extraVolumes: []
-
 
 kubectlImage:
   repository: alpine/kubectl
@@ -2576,8 +2595,7 @@ enterpriseGateway:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
 
-  securityContext:
-    {}
+  securityContext: {}
 
     # -- The SecurityContext for enterprise-gateway containers
   containerSecurityContext:
