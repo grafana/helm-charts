@@ -1287,7 +1287,7 @@ memberlist:
   bind_port: 7946
   packet_dial_timeout: "5s"
   packet_write_timeout: "5s"
-  join_members: ""
+  join_members: null
 
 # -- Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating
 
@@ -1546,10 +1546,7 @@ config: |
     {{- with .Values.memberlist }}
       {{- toYaml . | nindent 2 }}
     {{- end }}
-    {{- if .Values.memberlist.join_members }}
-    join_members:
-      - {{ .Values.memberlist.join_members }} 
-    {{- else }}
+    {{- if eq .Values.memberlist.join_members nil }}
     join_members:
       - dns+{{ include "tempo.fullname" . }}-gossip-ring:{{ .Values.memberlist.bind_port }}
     {{- end }}
