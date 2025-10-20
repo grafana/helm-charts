@@ -26340,6 +26340,21 @@ entries:
     version: 0.1.0
   grafana-operator:
   - apiVersion: v2
+    appVersion: v5.20.0
+    created: "2025-10-20T07:49:51.723564287Z"
+    dependencies:
+    - condition: crds.immutable
+      name: crds
+      repository: ""
+      version: 0.0.*
+    description: Helm chart for the Grafana Operator
+    digest: c40cdd0b2a7d0911eba50c0b50ce9293000579c865369bb369e3c1a276a6dbfa
+    name: grafana-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-operator-v5.20.0/grafana-operator-v5.20.0.tgz
+    version: v5.20.0
+  - apiVersion: v2
     appVersion: v5.19.4
     created: "2025-08-06T09:54:00.341937892Z"
     description: Helm chart for the Grafana Operator
@@ -97677,4 +97692,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-18T12:48:57.021914563Z"
+generated: "2025-10-20T07:49:51.749172888Z"
