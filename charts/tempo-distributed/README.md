@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.48.0](https://img.shields.io/badge/Version-1.48.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
+![Version: 1.49.0](https://img.shields.io/badge/Version-1.49.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.2](https://img.shields.io/badge/AppVersion-2.8.2-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -558,7 +558,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.topologySpreadConstraints | string | Defaults to allow skew no more than 1 node per AZ | topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
-| global.commonLabels | object | `{}` | Adds labels to all generated K8S resources by the helm-chart |
+| global.commonLabels | object | `{}` | Adding common labels to all K8S resources |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.extraArgs | list | `[]` | Common args to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
