@@ -96,7 +96,7 @@ app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
 Common labels to add to all resources
 */}}
 {{ - define "tempo.commonLabels" -}}
-{{- toYaml .Values.commonLabels | nindent 0 }}
+  {{- toYaml .Values.commonLabels | nindent 0 }}
 {{- end -}}
 
 {{/*
