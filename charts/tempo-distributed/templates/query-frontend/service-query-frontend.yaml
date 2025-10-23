@@ -17,10 +17,12 @@ spec:
   ipFamilies: {{ .Values.tempo.service.ipFamilies }}
   ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
-    - name: http-metrics
+    - appProtocol: grpc
+      name: http-metrics
       port: 3200
       targetPort: http-metrics
-    - name: grpc
+    - appProtocol: grpc
+      name: grpc
       port: 9095
       protocol: TCP
       targetPort: grpc
