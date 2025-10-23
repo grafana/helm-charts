@@ -273,6 +273,9 @@ ingester:
     type: ClusterIP
     # -- https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/
     internalTrafficPolicy: Cluster
+  serviceDiscovery:
+    # -- Annotations for ingester discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -484,6 +487,9 @@ metricsGenerator:
     metrics_ingestion_time_range_slack: 30s
   service:
     # -- Annotations for Metrics Generator service
+    annotations: {}
+  serviceDiscovery:
+    # -- Annotations for Metrics Generator discovery service
     annotations: {}
   # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
   appProtocol:
