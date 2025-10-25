@@ -14,6 +14,9 @@ agent:
   enableDisconnect: false
   # -- Enable / disable verbose logging on the agent.
   verbose: false
+  # -- Enable various feature gates such as adhoc, k6, traceroute
+  # See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/#available-feature-flags
+  features: []
 
 # -- Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`.
 replicaCount: 1
