@@ -25,7 +25,7 @@ grafana:
         - name: Tempo
           uid: tempo
           type: tempo
-          url: http://{{ .Release.Name }}-tempo-query-frontend:3100
+          url: http://{{ .Release.Name }}-tempo-query-frontend:3200
           isDefault: false
           jsonData:
             tracesToLogsV2:
