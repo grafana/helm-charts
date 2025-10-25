@@ -20,6 +20,9 @@ loki:
   datasource:
     jsonData: "{}"
     uid: ""
+  image:
+    repository: grafana/loki
+    tag: 2.9.15
 
 
 promtail:
