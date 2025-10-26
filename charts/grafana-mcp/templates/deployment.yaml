@@ -73,9 +73,9 @@ spec:
         - name: mcp-grafana
           {{- $registry := .Values.image.registry -}}
           {{- if $registry }}
-          image: "{{ $registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ $registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           {{- else }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.readinessProbe }}
