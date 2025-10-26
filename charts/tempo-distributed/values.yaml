@@ -64,6 +64,12 @@ tempo:
     # -- Overrides the image tag whose default is the chart's appVersion
     tag: null
     pullPolicy: IfNotPresent
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
   readinessProbe:
     httpGet:
       path: /ready
@@ -2102,6 +2108,13 @@ gateway:
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
+  # Configures the liveness probe for the gateway
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-metrics
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
   # Configures the readiness probe for the gateway
   readinessProbe:
     httpGet:
