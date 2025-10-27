@@ -1,7 +1,7 @@
 apiVersion: v2
 name: grafana-mcp
-version: 0.1.3
-appVersion: latest
+version: 0.2.0
+appVersion: 0.7.6
 kubeVersion: "^1.8.0-0"
 description: MCP server for Grafana.
 home: https://grafana.com
@@ -23,6 +23,8 @@ maintainers:
     email: github@jkroepke.de
   - name: KyriosGN0
     email: avivguiser@gmail.com
+  - name: QuentinBisson
+    email: quentin.bisson@gmail.com
 type: application
 keywords:
   - monitoring
