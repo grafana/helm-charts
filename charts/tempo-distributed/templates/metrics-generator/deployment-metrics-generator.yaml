@@ -82,6 +82,8 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:

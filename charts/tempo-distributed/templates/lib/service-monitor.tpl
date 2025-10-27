@@ -52,7 +52,8 @@ spec:
           replacement: "{{ $.ctx.Release.Namespace }}/{{ $.component }}"
           targetLabel: job
         {{- if kindIs "string" .clusterLabel }}
-        - replacement: "{{ .clusterLabel | default (include "tempo.clusterName" $.ctx) }}"
+        - action: replace
+          replacement: "{{ .clusterLabel | default (include "tempo.clusterName" $.ctx) }}"
           targetLabel: cluster
         {{- end }}
         {{- with .relabelings }}
