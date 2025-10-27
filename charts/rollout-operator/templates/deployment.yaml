@@ -54,9 +54,24 @@ spec:
           {{- if .Values.webhooks.enabled }}
           - -server-tls.enabled=true
           - -server-tls.self-signed-cert.secret-name={{ .Values.webhooks.selfSignedCertSecretName }}
+          {{- if .Values.fullnameOverride }}
+          - -server-tls.self-signed-cert.dns-name={{ include "rollout-operator.fullname" .}}.{{ .Release.Namespace }}.svc
+          {{- end }}
           {{- end }}
           {{- range .Values.extraArgs  }}
           - {{ . }}
+          {{- end }}
+          {{- if .Values.extraEnv }}
+          env:
+            {{- with .Values.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.extraEnvFrom }}
+          envFrom:
+            {{- with .Values.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           ports:
             - name: http-metrics

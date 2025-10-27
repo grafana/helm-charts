@@ -13,9 +13,9 @@ image:
   # -- The Docker registry
   registry: docker.io
   # -- The Docker repository
-  repository: mcp/grafana
+  repository: grafana/mcp-grafana
   # -- Image tag
-  tag: "latest"
+  tag: ""
   # -- Image pull policy
   pullPolicy: IfNotPresent
 
