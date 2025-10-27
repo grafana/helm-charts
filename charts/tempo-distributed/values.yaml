@@ -64,6 +64,12 @@ tempo:
     # -- Overrides the image tag whose default is the chart's appVersion
     tag: null
     pullPolicy: IfNotPresent
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
   readinessProbe:
     httpGet:
       path: /ready
@@ -265,6 +271,9 @@ ingester:
     type: ClusterIP
     # -- https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/
     internalTrafficPolicy: Cluster
+  serviceDiscovery:
+    # -- Annotations for ingester discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -476,6 +485,9 @@ metricsGenerator:
     metrics_ingestion_time_range_slack: 30s
   service:
     # -- Annotations for Metrics Generator service
+    annotations: {}
+  serviceDiscovery:
+    # -- Annotations for Metrics Generator discovery service
     annotations: {}
   # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
   appProtocol:
@@ -1594,6 +1606,12 @@ config: |
       {{- if .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       blocklist_poll_stale_tenant_index: {{ .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_age }}
+      empty_tenant_deletion_age: {{ .Values.storage.trace.empty_tenant_deletion_age }}
+      {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_enabled }}
+      empty_tenant_deletion_enabled: {{ .Values.storage.trace.empty_tenant_deletion_enabled }}
+      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1667,7 +1685,12 @@ storage:
     blocklist_poll_tenant_index_builders: null
     # -- The oldest allowable tenant index.
     blocklist_poll_stale_tenant_index: null
-  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+    # -- How fast the poller will delete a tenant if it is empty. Will need to be enabled in 'empty_tenant_deletion_enabled'.
+    empty_tenant_deletion_age: null
+    # -- Delete empty tenants.
+    empty_tenant_deletion_enabled: null
+
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
@@ -2102,6 +2125,13 @@ gateway:
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
+  # Configures the liveness probe for the gateway
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-metrics
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
   # Configures the readiness probe for the gateway
   readinessProbe:
     httpGet:

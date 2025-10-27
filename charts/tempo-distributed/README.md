@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.50.0](https://img.shields.io/badge/Version-1.50.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.52.0](https://img.shields.io/badge/Version-1.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -532,6 +532,10 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.ingress.hosts | list | `[{"host":"gateway.tempo.example.com","paths":[{"path":"/"}]}]` | Hosts configuration for the gateway ingress |
 | gateway.ingress.labels | object | `{}` | Labels for the gateway ingress |
 | gateway.ingress.tls | list | `[{"hosts":["gateway.tempo.example.com"],"secretName":"tempo-gateway-tls"}]` | TLS configuration for the gateway ingress |
+| gateway.livenessProbe.httpGet.path | string | `"/"` |  |
+| gateway.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| gateway.livenessProbe.initialDelaySeconds | int | `30` |  |
+| gateway.livenessProbe.timeoutSeconds | int | `5` |  |
 | gateway.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | gateway.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | gateway.nginxConfig.file | string | See values.yaml | Config file contents for Nginx. Passed through the `tpl` function to allow templating |
@@ -618,6 +622,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.service.annotations | object | `{}` | Annotations for ingester service |
 | ingester.service.internalTrafficPolicy | string | `"Cluster"` | https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/ |
 | ingester.service.type | string | `"ClusterIP"` | Type of the service: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types |
+| ingester.serviceDiscovery.annotations | object | `{}` | Annotations for ingester discovery service |
 | ingester.statefulStrategy | object | `{"rollingUpdate":{"partition":0}}` | updateStrategy of the ingester statefulset. This is ignored when ingester.zoneAwareReplication.enabled=true. |
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
@@ -764,6 +769,7 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.replicas | int | `1` | Number of replicas for the metrics-generator |
 | metricsGenerator.resources | object | `{}` | Resource requests and limits for the metrics-generator |
 | metricsGenerator.service.annotations | object | `{}` | Annotations for Metrics Generator service |
+| metricsGenerator.serviceDiscovery.annotations | object | `{}` | Annotations for Metrics Generator discovery service |
 | metricsGenerator.terminationGracePeriodSeconds | int | `300` | Grace period to allow the metrics-generator to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so metrics-generators can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | metricsGenerator.tolerations | list | `[]` | Tolerations for metrics-generator pods |
 | metricsGenerator.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for metrics-generator pods. Passed through `tpl` and, thus, to be configured as string |
@@ -959,6 +965,8 @@ The memcached default args are removed and should be provided manually. The sett
 | storage.trace.blocklist_poll_fallback | string | `nil` | fallback to scanning the entire bucket. Set to false to disable this behavior. |
 | storage.trace.blocklist_poll_stale_tenant_index | string | `nil` | The oldest allowable tenant index. |
 | storage.trace.blocklist_poll_tenant_index_builders | string | `nil` | Maximum number of compactors that should build the tenant index. All other components will download the index. |
+| storage.trace.empty_tenant_deletion_age | string | `nil` | How fast the poller will delete a tenant if it is empty. Will need to be enabled in 'empty_tenant_deletion_enabled'. |
+| storage.trace.empty_tenant_deletion_enabled | string | `nil` | Delete empty tenants. |
 | storage.trace.pool.max_workers | int | `400` | Total number of workers pulling jobs from the queue |
 | storage.trace.pool.queue_depth | int | `20000` | Length of job queue. imporatant for querier as it queues a job for every block it has to search |
 | storage.trace.search.prefetch_trace_count | int | `1000` | Number of traces to prefetch while scanning blocks. Increasing this value can improve trace search performance at the cost of memory. |
@@ -967,6 +975,10 @@ The memcached default args are removed and should be provided manually. The sett
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
 | tempo.image.repository | string | `"grafana/tempo"` | Docker image repository |
 | tempo.image.tag | string | `nil` | Overrides the image tag whose default is the chart's appVersion |
+| tempo.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| tempo.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| tempo.livenessProbe.initialDelaySeconds | int | `60` |  |
+| tempo.livenessProbe.timeoutSeconds | int | `5` |  |
 | tempo.memberlist | object | `{"appProtocol":null,"service":{"annotations":{}}}` | Memberlist service configuration. |
 | tempo.memberlist.appProtocol | string | `nil` | Adds the appProtocol field to the memberlist service. This allows memberlist to work with istio protocol selection. Set the optional service protocol. Ex: "tcp", "http" or "https". |
 | tempo.memberlist.service | object | `{"annotations":{}}` | Adds the service field to the memberlist service |
