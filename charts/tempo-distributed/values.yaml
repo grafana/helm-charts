@@ -1006,7 +1006,7 @@ queryFrontend:
     tag: null
   service:
     # -- Port of the query-frontend service
-    port: 16686
+    port: 3200
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Labels for queryFrontend service
