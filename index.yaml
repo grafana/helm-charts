@@ -84945,6 +84945,24 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/pyroscope-0.5.4/pyroscope-0.5.4.tgz
     version: 0.5.4
+  pyroscope-monitoring:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2025-10-30T13:00:50.483679839Z"
+    dependencies:
+    - alias: monitoring
+      condition: monitoring.enabled
+      name: k8s-monitoring
+      repository: https://grafana.github.io/helm-charts
+      version: 3.5.3
+    description: A Helm chart for monitoring Grafana Pyroscope. This helm chart uses
+      otel-lgtm to monitor the health of the Grafana Pyroscope backend.
+    digest: 185fb2340a5af46e1ae4e7b98d63537b68af334414e92306e91e3409ac8141a1
+    name: pyroscope-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/pyroscope-monitoring-0.1.1/pyroscope-monitoring-0.1.1.tgz
+    version: 0.1.1
   rollout-operator:
   - apiVersion: v2
     appVersion: v0.32.0
@@ -98821,4 +98839,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-30T11:43:26.94637442Z"
+generated: "2025-10-30T13:00:50.51062948Z"
