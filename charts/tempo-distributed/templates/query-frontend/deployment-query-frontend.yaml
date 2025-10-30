@@ -118,7 +118,7 @@ spec:
             {{- end }}
         {{- if .Values.queryFrontend.query.enabled }}
         - args:
-            - -config=/conf/tempo.yaml
+            - -config=/conf/tempo-query.yaml
             {{- with .Values.queryFrontend.query.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -129,10 +129,8 @@ spec:
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: tempo-query
           ports:
-            - containerPort: {{ .Values.queryFrontend.service.port }}
-              name: jaeger-ui
-            - containerPort: 16687
-              name: jaeger-metrics
+            - containerPort: 7777
+              name: tempo-query
           {{- with .Values.queryFrontend.query.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}

@@ -28,12 +28,11 @@ spec:
       appProtocol: {{ .Values.queryFrontend.appProtocol.grpc }}
       {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
-    - name: tempo-query-jaeger-ui
-      port: {{ .Values.queryFrontend.service.port }}
-      targetPort: {{ .Values.queryFrontend.service.port }}
-    - name: tempo-query-metrics
-      port: 16687
-      targetPort: jaeger-metrics
+    - name: tempo-query
+      port: 7777
+      targetPort: tempo-query
+      protocol: TCP
+      appProtocol: grpc
     {{- end }}
   {{- if .Values.queryFrontend.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.queryFrontend.service.loadBalancerIP  }}
