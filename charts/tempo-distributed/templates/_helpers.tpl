@@ -93,13 +93,6 @@ app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
 {{- end -}}
 
 {{/*
-Common labels to add to all resources
-*/}}
-{{ - define "tempo.commonLabels" -}}
-  {{- toYaml .Values.commonLabels | nindent 0 }}
-{{- end -}}
-
-{{/*
 Simple service selector labels
 */}}
 {{- define "tempo.selectorLabels" -}}
