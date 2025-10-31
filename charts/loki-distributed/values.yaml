@@ -2098,3 +2098,28 @@ networkPolicy:
     podSelector: {}
     # -- Specifies the namespace the discovery Pods are running in
     namespaceSelector: {}
+# -- extraObjects could be utilized to add dynamic manifests via values
+extraObjects: []
+# Examples:
+# extraObjects:
+# - apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: tempo-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: aws
+#     data:
+#     - key: secret-access-key
+#       name: awssm-secret
+# Alternatively, you can use strings, which lets you use additional templating features:
+# extraObjects:
+# - |
+#   apiVersion: kubernetes-client.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: tempo-secrets-{{ .Release.Name }}
+#   spec:
+#     backendType: aws
+#     data:
+#     - key: secret-access-key
+#       name: {{ include "some-other-template" }}    
