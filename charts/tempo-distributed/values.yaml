@@ -271,6 +271,9 @@ ingester:
     type: ClusterIP
     # -- https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/
     internalTrafficPolicy: Cluster
+  serviceDiscovery:
+    # -- Annotations for ingester discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -299,6 +302,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-a statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-a pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-b
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -312,6 +319,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-b statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-b pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-c
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -325,6 +336,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-c statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-c pods
+        podAnnotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -482,6 +497,9 @@ metricsGenerator:
     metrics_ingestion_time_range_slack: 30s
   service:
     # -- Annotations for Metrics Generator service
+    annotations: {}
+  serviceDiscovery:
+    # -- Annotations for Metrics Generator discovery service
     annotations: {}
   # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
   appProtocol:
@@ -1600,6 +1618,12 @@ config: |
       {{- if .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       blocklist_poll_stale_tenant_index: {{ .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_age }}
+      empty_tenant_deletion_age: {{ .Values.storage.trace.empty_tenant_deletion_age }}
+      {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_enabled }}
+      empty_tenant_deletion_enabled: {{ .Values.storage.trace.empty_tenant_deletion_enabled }}
+      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1673,7 +1697,12 @@ storage:
     blocklist_poll_tenant_index_builders: null
     # -- The oldest allowable tenant index.
     blocklist_poll_stale_tenant_index: null
-  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+    # -- How fast the poller will delete a tenant if it is empty. Will need to be enabled in 'empty_tenant_deletion_enabled'.
+    empty_tenant_deletion_age: null
+    # -- Delete empty tenants.
+    empty_tenant_deletion_enabled: null
+
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
@@ -1694,7 +1723,7 @@ per_tenant_overrides:
   #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
-# you can use your self memcacherd by set enable: false and host + service
+# you can use your own self deployed memcached by setting `memcached.enabled` to false and `memcached.host` + `memcached.service`
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
@@ -1706,7 +1735,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.33-alpine
+    tag: 1.6.39-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1797,7 +1826,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.14.4
+    tag: v0.15.3
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
