@@ -58886,6 +58886,53 @@ entries:
   loki-stack:
   - apiVersion: v1
     appVersion: v2.9.3
+    created: "2025-10-31T19:31:08.533100673Z"
+    dependencies:
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.15.2
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: ^6.7.4
+    - condition: fluent-bit.enabled
+      name: fluent-bit
+      repository: https://grafana.github.io/helm-charts
+      version: ^2.3.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: ~6.43.0
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~19.7.2
+    - condition: filebeat.enabled
+      name: filebeat
+      repository: https://helm.elastic.co
+      version: ~7.17.1
+    - condition: logstash.enabled
+      name: logstash
+      repository: https://helm.elastic.co
+      version: ~7.17.1
+    deprecated: true
+    description: 'Loki: like Prometheus, but for logs.'
+    digest: fbb09188edc3aebf4cbf466e87c889e010c57d153ccc31a06a41de5f60a9aa93
+    home: https://grafana.com/loki
+    icon: https://raw.githubusercontent.com/grafana/loki/master/docs/sources/logo.png
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: lokiproject@googlegroups.com
+      name: Loki Maintainers
+    name: loki-stack
+    sources:
+    - https://github.com/grafana/loki
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/loki-stack-2.10.3/loki-stack-2.10.3.tgz
+    version: 2.10.3
+  - apiVersion: v1
+    appVersion: v2.9.3
     created: "2024-03-11T22:16:58.731021529Z"
     dependencies:
     - condition: loki.enabled
@@ -99100,4 +99147,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-31T19:25:03.242541755Z"
+generated: "2025-10-31T19:31:08.536937507Z"
