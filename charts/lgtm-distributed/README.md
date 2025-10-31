@@ -1,6 +1,6 @@
 # lgtm-distributed
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: ^7.3.9](https://img.shields.io/badge/AppVersion-^7.3.9-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: ^12.1.1](https://img.shields.io/badge/AppVersion-^12.1.1-informational?style=flat-square)
 
 Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
@@ -24,19 +24,19 @@ Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://grafana.github.io/helm-charts | grafana(grafana) | ^7.3.9 |
-| https://grafana.github.io/helm-charts | loki(loki-distributed) | ^0.79.0 |
-| https://grafana.github.io/helm-charts | mimir(mimir-distributed) | ^5.3.0 |
-| https://grafana.github.io/helm-charts | grafana-oncall(oncall) | ^1.3.114 |
-| https://grafana.github.io/helm-charts | tempo(tempo-distributed) | ^1.9.2 |
+| https://grafana.github.io/helm-charts | grafana(grafana) | ^10.0.0 |
+| https://grafana.github.io/helm-charts | loki(loki-distributed) | ^0.80.5 |
+| https://grafana.github.io/helm-charts | mimir(mimir-distributed) | ^5.8.0 |
+| https://grafana.github.io/helm-charts | grafana-oncall(oncall) | ^1.16.5 |
+| https://grafana.github.io/helm-charts | tempo(tempo-distributed) | ^1.48.0 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | grafana-oncall.enabled | bool | `false` | Deploy Grafana OnCall if enabled. See [upstream values.yaml](https://github.com/grafana/oncall/blob/dev/helm/oncall/values.yaml) for full values reference. |
-| grafana.datasources | object | `{"datasources.yaml":{"apiVersion":1,"datasources":[{"isDefault":false,"name":"Loki","type":"loki","uid":"loki","url":"http://{{ .Release.Name }}-loki-gateway"},{"isDefault":true,"name":"Mimir","type":"prometheus","uid":"prom","url":"http://{{ .Release.Name }}-mimir-nginx/prometheus"},{"isDefault":false,"jsonData":{"lokiSearch":{"datasourceUid":"loki"},"serviceMap":{"datasourceUid":"prom"},"tracesToLogsV2":{"datasourceUid":"loki"},"tracesToMetrics":{"datasourceUid":"prom"}},"name":"Tempo","type":"tempo","uid":"tempo","url":"http://{{ .Release.Name }}-tempo-query-frontend:3100"}]}}` | Grafana data sources config. Connects to all three by default |
-| grafana.datasources."datasources.yaml".datasources | list | `[{"isDefault":false,"name":"Loki","type":"loki","uid":"loki","url":"http://{{ .Release.Name }}-loki-gateway"},{"isDefault":true,"name":"Mimir","type":"prometheus","uid":"prom","url":"http://{{ .Release.Name }}-mimir-nginx/prometheus"},{"isDefault":false,"jsonData":{"lokiSearch":{"datasourceUid":"loki"},"serviceMap":{"datasourceUid":"prom"},"tracesToLogsV2":{"datasourceUid":"loki"},"tracesToMetrics":{"datasourceUid":"prom"}},"name":"Tempo","type":"tempo","uid":"tempo","url":"http://{{ .Release.Name }}-tempo-query-frontend:3100"}]` | Datasources linked to the Grafana instance. Override if you disable any components. |
+| grafana.datasources | object | `{"datasources.yaml":{"apiVersion":1,"datasources":[{"isDefault":false,"name":"Loki","type":"loki","uid":"loki","url":"http://{{ .Release.Name }}-loki-gateway"},{"isDefault":true,"name":"Mimir","type":"prometheus","uid":"prom","url":"http://{{ .Release.Name }}-mimir-nginx/prometheus"},{"isDefault":false,"jsonData":{"lokiSearch":{"datasourceUid":"loki"},"serviceMap":{"datasourceUid":"prom"},"tracesToLogsV2":{"datasourceUid":"loki"},"tracesToMetrics":{"datasourceUid":"prom"}},"name":"Tempo","type":"tempo","uid":"tempo","url":"http://{{ .Release.Name }}-tempo-query-frontend:3200"}]}}` | Grafana data sources config. Connects to all three by default |
+| grafana.datasources."datasources.yaml".datasources | list | `[{"isDefault":false,"name":"Loki","type":"loki","uid":"loki","url":"http://{{ .Release.Name }}-loki-gateway"},{"isDefault":true,"name":"Mimir","type":"prometheus","uid":"prom","url":"http://{{ .Release.Name }}-mimir-nginx/prometheus"},{"isDefault":false,"jsonData":{"lokiSearch":{"datasourceUid":"loki"},"serviceMap":{"datasourceUid":"prom"},"tracesToLogsV2":{"datasourceUid":"loki"},"tracesToMetrics":{"datasourceUid":"prom"}},"name":"Tempo","type":"tempo","uid":"tempo","url":"http://{{ .Release.Name }}-tempo-query-frontend:3200"}]` | Datasources linked to the Grafana instance. Override if you disable any components. |
 | grafana.enabled | bool | `true` | Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference. |
 | loki.enabled | bool | `true` | Deploy Loki if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed#values) for full values reference. |
 | mimir | object | `{"alertmanager":{"resources":{"requests":{"cpu":"20m"}}},"compactor":{"resources":{"requests":{"cpu":"20m"}}},"distributor":{"resources":{"requests":{"cpu":"20m"}}},"enabled":true,"ingester":{"replicas":2,"resources":{"requests":{"cpu":"20m"}},"zoneAwareReplication":{"enabled":false}},"minio":{"resources":{"requests":{"cpu":"20m"}}},"overrides_exporter":{"resources":{"requests":{"cpu":"20m"}}},"querier":{"replicas":1,"resources":{"requests":{"cpu":"20m"}}},"query_frontend":{"resources":{"requests":{"cpu":"20m"}}},"query_scheduler":{"replicas":1,"resources":{"requests":{"cpu":"20m"}}},"rollout_operator":{"resources":{"requests":{"cpu":"20m"}}},"ruler":{"resources":{"requests":{"cpu":"20m"}}},"store_gateway":{"resources":{"requests":{"cpu":"20m"}},"zoneAwareReplication":{"enabled":false}}}` | Mimir chart values. Resources are set to a minimum by default. |

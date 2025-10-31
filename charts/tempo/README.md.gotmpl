@@ -40,6 +40,22 @@ The command removes all the Kubernetes components associated with the chart and 
 
 A major chart version change indicates that there is an incompatible breaking change needing manual actions.
 
+### From Chart versions < 1.22.0
+* Breaking Change *
+Please be aware that we've updated the Tempo version to 2.8, which includes some breaking changes
+We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-8/) before upgrading.
+
+### From Chart versions < 1.21.1
+* Breaking Change *
+In order to be consistent with other projects and documentations, the default port has been changed from 3100 to 3200.
+
+### From Chart versions < 1.19.0
+* Breaking Change *
+In order to reduce confusion, the overrides configurations have been renamed as below.
+
+`global_overrides` =>  `overrides` (this is where the defaults for every tenant is set)
+`overrides` => `per_tenant_overrides` (this is where configurations for specific tenants can be set)
+
 ### From Chart versions < 1.17.0
 
 Please be aware that we've updated the Tempo version to 2.7, which includes some breaking changes
@@ -58,11 +74,11 @@ We recommend reviewing the [release notes](https://github.com/grafana/tempo/rele
 ### From Chart versions < 1.0.0
 
 Please note that we've incremented the major version when upgrading to Tempo 2.0. There were a large number of
-changes in this release (breaking and otherwise). It is encouraged to review the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-0/) 
+changes in this release (breaking and otherwise). It is encouraged to review the [release notes](https://grafana.com/docs/tempo/latest/release-notes/v2-0/)
 and [1.5 -> 2.0 upgrade guide](https://grafana.com/docs/tempo/latest/setup/upgrade/) before upgrading.
 
 ### From Chart versions < 0.7.0
 
 Upgrading from pre 0.7.0 will, by default, move your trace storage from `/tmp/tempo/traces` to `/var/tempo/traces`.
-This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the 
+This will cause Tempo to lose trace history. If you would like to retain history just copy the contents from the
 old folder to the new.

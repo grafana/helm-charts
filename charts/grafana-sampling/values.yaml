@@ -10,6 +10,12 @@ metricsGeneration:
     - deployment.environment
     - k8s.cluster.name
     - k8s.pod.name
+  serviceGraph:
+    # -- The interval at which metrics are flushed to downstream components.
+    metricsFlushInterval: 60s
+  spanMetrics:
+    # -- Time period after which metrics are considered stale and are removed from the cache.
+    metricsExpiration: 5m
 
 sampling:
   # -- Toggle tail sampling.
@@ -69,6 +75,34 @@ deployment:
       grpc:
         # -- gRPC max message receive size. Default to 4MB
         max_recv_msg_size: 4MB
+        keepalive:
+          serverParameters:
+            # -- Maximum age for non-idle connections. Default is infinity.
+            # @section -- Receivers: OTLP
+            maxConnectionAge: ""
+            # -- Time to wait before forcibly closing connections. Default is infinity.
+            # @section -- Receivers: OTLP
+            maxConnectionAgeGrace: ""
+            # -- Maximum age for idle connections. Default is infinity.
+            # @section -- Receivers: OTLP
+            maxConnectionIdle: ""
+            # -- How often to ping inactive clients to check for liveness. Default is 2 hours.
+            # @section -- Receivers: OTLP
+            time: ""
+            # -- Time to wait before closing inactive clients that don’t respond to liveness checks.
+            # Default is 20 seconds.
+            # @section -- Receivers: OTLP
+            timeout: ""
+
+          enforcementPolicy:
+            # -- Minimum time clients should wait before sending a keepalive ping. Default is 5 minutes.
+            # @section -- Receivers: OTLP
+            minTime: ""
+
+            # -- Allow clients to send keepalive pings when there are no active streams.
+            # @section -- Receivers: OTLP
+            permitWithoutStream: false
+
 
 statefulset:
   otlp:
@@ -77,6 +111,33 @@ statefulset:
       grpc:
         # -- gRPC max message receive size. Default to 4MB
         max_recv_msg_size: 4MB
+        keepalive:
+          serverParameters:
+            # -- Maximum age for non-idle connections. Default is infinity.
+            # @section -- Receivers: OTLP
+            maxConnectionAge: ""
+            # -- Time to wait before forcibly closing connections. Default is infinity.
+            # @section -- Receivers: OTLP
+            maxConnectionAgeGrace: ""
+            # -- Maximum age for idle connections. Default is infinity.
+            # @section -- Receivers: OTLP
+            maxConnectionIdle: ""
+            # -- How often to ping inactive clients to check for liveness. Default is 2 hours.
+            # @section -- Receivers: OTLP
+            time: ""
+            # -- Time to wait before closing inactive clients that don’t respond to liveness checks.
+            # Default is 20 seconds.
+            # @section -- Receivers: OTLP
+            timeout: ""
+
+          enforcementPolicy:
+            # -- Minimum time clients should wait before sending a keepalive ping. Default is 5 minutes.
+            # @section -- Receivers: OTLP
+            minTime: ""
+
+            # -- Allow clients to send keepalive pings when there are no active streams.
+            # @section -- Receivers: OTLP
+            permitWithoutStream: false
 
 # @ignored Ignore alloy deployment
 alloy-deployment:
@@ -169,3 +230,6 @@ alloy-statefulset:
     create: false
   rbac:
     create: false
+liveDebugging:
+  # -- Enable live debugging in the Alloy UI.
+  enabled: false
