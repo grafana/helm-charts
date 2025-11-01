@@ -66,6 +66,9 @@ spec:
             {{- with .Values.queryFrontend.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+            {{- with .Values.global.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: query-frontend
@@ -133,13 +136,23 @@ spec:
               name: jaeger-ui
             - containerPort: 16687
               name: jaeger-metrics
-          {{- with .Values.queryFrontend.query.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.queryFrontend.query.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.query.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
-          {{- with .Values.queryFrontend.query.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.queryFrontend.query.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queryFrontend.query.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.queryFrontend.query.resources | nindent 12 }}
