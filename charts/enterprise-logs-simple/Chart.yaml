@@ -9,7 +9,7 @@ deprecated: true
 home: "https://grafana.com/products/enterprise/logs/"
 dependencies:
   - name: loki-simple-scalable
-    version: ^0.3.0
+    version: ^0.4.0
     repository: https://grafana.github.io/helm-charts
   - name: minio
     alias: minio
