@@ -4,7 +4,7 @@
 {{- end }}
 {{- define "ingester.zoneAwareReplicationMap" -}}
 {{- $zonesMap := (dict) -}}
-{{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "annotations" (default (dict)) "nodeSelector" .ctx.Values.ingester.nodeSelector "podAnnotations" (default (dict)) "nodeSelector" "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
+{{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "annotations" (default (dict)) "nodeSelector" .ctx.Values.ingester.nodeSelector "podAnnotations" (default (dict)) "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
 {{- if .ctx.Values.ingester.zoneAwareReplication.enabled -}}
 {{- $numberOfZones := len .ctx.Values.ingester.zoneAwareReplication.zones -}}
 {{- if lt $numberOfZones 3 -}}
