@@ -155,6 +155,9 @@ extraObjects: []
 # -- Environment variables to add to the agent
 extraEnv: []
 
+# -- CLI arguments to add to the agent.
+extraArgs: []
+
 secret:
 # -- Reference an existing secret for API token
   existingSecret: ""
