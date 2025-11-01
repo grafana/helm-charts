@@ -1,6 +1,8 @@
 # lgtm-distributed
 
-![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: ^12.1.1](https://img.shields.io/badge/AppVersion-^12.1.1-informational?style=flat-square)
+> **:exclamation: This Helm Chart is deprecated!**
+
+![Version: 3.0.1](https://img.shields.io/badge/Version-3.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: ^12.1.1](https://img.shields.io/badge/AppVersion-^12.1.1-informational?style=flat-square)
 
 Umbrella chart for a distributed Loki, Grafana, Tempo and Mimir stack
 
