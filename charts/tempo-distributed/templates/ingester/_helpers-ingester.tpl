@@ -4,7 +4,7 @@
 {{- end }}
 {{- define "ingester.zoneAwareReplicationMap" -}}
 {{- $zonesMap := (dict) -}}
-{{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "nodeSelector" .ctx.Values.ingester.nodeSelector "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
+{{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "annotations" (default (dict)) "nodeSelector" .ctx.Values.ingester.nodeSelector "podAnnotations" (default (dict)) "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
 {{- if .ctx.Values.ingester.zoneAwareReplication.enabled -}}
 {{- $numberOfZones := len .ctx.Values.ingester.zoneAwareReplication.zones -}}
 {{- if lt $numberOfZones 3 -}}
@@ -16,7 +16,7 @@
 {{- $extraAffinity := $rolloutZone.extraAffinity | default (dict) -}}
 {{- $zoneAntiAffinity := include "ingester.zoneAntiAffinity" (dict "rolloutZoneName" $rolloutZone.name "topologyKey" $.ctx.Values.ingester.zoneAwareReplication.topologyKey) | fromYaml -}}
 {{- $mergedAffinity := mergeOverwrite $extraAffinity $zoneAntiAffinity -}}
-{{- $_ := set $zonesMap $rolloutZone.name (dict "affinity" $mergedAffinity "nodeSelector" ($rolloutZone.nodeSelector | default (dict)) "replicas" $replicaPerZone  "storageClass" $rolloutZone.storageClass) -}}
+{{- $_ := set $zonesMap $rolloutZone.name (dict "affinity" $mergedAffinity "annotations" ($rolloutZone.annotations | default (dict)) "nodeSelector" ($rolloutZone.nodeSelector | default (dict)) "podAnnotations" ($rolloutZone.podAnnotations | default (dict)) "replicas" $replicaPerZone  "storageClass" $rolloutZone.storageClass) -}}
 {{- end -}}
 {{- else -}}
 {{- $_ := set $zonesMap "" $defaultZone -}}
