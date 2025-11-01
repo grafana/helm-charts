@@ -141,6 +141,8 @@ rbac:
 ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
+  # -- Labels for the ingester StatefulSet
+  labels: {}
   # -- Number of replicas for the ingester
   replicas: 3
   # -- hostAliases to add
