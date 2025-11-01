@@ -61,6 +61,10 @@ spec:
             - -verbose
             {{- end }}
           env:
+          {{- with .Values.agent.features }}
+            - name: FEATURES
+              value: {{ join "," . | quote }}
+          {{- end }}
             - name: API_SERVER
               value: {{ .Values.agent.apiServerAddress | quote }}
             - name: API_TOKEN
