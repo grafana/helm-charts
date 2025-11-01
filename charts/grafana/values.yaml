@@ -959,6 +959,9 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
+    # TODO: Update version after https://github.com/kiwigrid/k8s-sidecar/pull/433 and https://github.com/kiwigrid/k8s-sidecar/pull/434 are merged and a new release is made
+    # The new version is needed to properly make grafana's container wait for the sidecars to initialize
+    # This prevents the main container from deleting dashboards due to the files not yet being present
     tag: 1.30.10
     sha: ""
   imagePullPolicy: IfNotPresent
@@ -1060,6 +1063,16 @@ sidecar:
     # This is needed if skipReload is true, to load any alerts defined at startup time.
     # Deploy the alert sidecar as an initContainer.
     initAlerts: false
+    # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+    nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # Additional alerts sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
@@ -1136,6 +1149,19 @@ sidecar:
     # Otherwise, it's executed as is. Shebangs known to work are #!/bin/sh and #!/usr/bin/env python
     script: null
     skipReload: false
+    # This is needed if skipReload is true, to load any dashboards defined at startup time.
+    # Deploy the dashboard sidecar as an initContainer.
+    initDashboards: false
+    # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+    nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
     # defaults to 60sec; much higher values like 3600 seconds (1h) are feasible for non-Azure K8S
     # watchServerTimeout: 3600
@@ -1245,6 +1271,16 @@ sidecar:
     # This is needed if skipReload is true, to load any datasources defined at startup time.
     # Deploy the datasources sidecar as an initContainer.
     initDatasources: false
+    # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+    nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8082
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # Additional datasources sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the datasource sidecar emptyDir volume
@@ -1381,6 +1417,16 @@ sidecar:
     # Deploy the notifier sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any notifiers defined at startup time.
     initNotifiers: false
+    # Use native sidecar https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/
+    nativeSidecar: false
+    # only applies to native sidecars
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 8083
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60 # 5 minutes
     # Additional notifiers sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the notifier sidecar emptyDir volume
