@@ -15,7 +15,7 @@ metadata:
   {{- if .Values.ingester.zoneAwareReplication.enabled }}
   annotations:
     {{- include "ingester.Annotations" $dict | nindent 4}}
-    {{- with $rolloutZone.annotations }}:
+    {{- with $rolloutZone.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- else }}
@@ -54,7 +54,7 @@ spec:
         {{- with .Values.ingester.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with $rolloutZone.podAnnotations }}:
+        {{- with $rolloutZone.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
