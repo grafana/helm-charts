@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.52.0](https://img.shields.io/badge/Version-1.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.52.6](https://img.shields.io/badge/Version-1.52.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -13,7 +13,7 @@ Grafana Tempo in MicroService mode
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.0.12 |
-| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.0 |
+| https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.1 |
 | https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.35.1 |
 
 ## Chart Repo
@@ -603,6 +603,7 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.image.repository | string | `nil` | Docker image repository for the ingester image. Overrides `tempo.image.repository` |
 | ingester.image.tag | string | `nil` | Docker image tag for the ingester image. Overrides `tempo.image.tag` |
 | ingester.initContainers | list | `[]` |  |
+| ingester.labels | object | `{}` | Labels for the ingester StatefulSet |
 | ingester.nodeSelector | object | `{}` | Node selector for ingester pods |
 | ingester.persistence | object | `{"annotations":{},"enabled":false,"inMemory":false,"labels":{},"size":"10Gi","storageClass":null}` | Persistence configuration for ingester |
 | ingester.persistence.annotations | object | `{}` | Annotations for ingester's persist volume claim |
@@ -627,22 +628,28 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.terminationGracePeriodSeconds | int | `300` | Grace period to allow the ingester to shutdown before it is killed. Especially for the ingestor, this must be increased. It must be long enough so ingesters can be gracefully shutdown flushing/transferring all data and to successfully leave the member ring on shutdown. |
 | ingester.tolerations | list | `[]` | Tolerations for ingester pods |
 | ingester.topologySpreadConstraints | string | Defaults to allow skew no more then 1 node per AZ | topologySpread for ingester pods. Passed through `tpl` and, thus, to be configured as string |
-| ingester.zoneAwareReplication | object | `{"enabled":false,"maxUnavailable":50,"topologyKey":null,"zones":[{"extraAffinity":{},"name":"zone-a","nodeSelector":null,"storageClass":null},{"extraAffinity":{},"name":"zone-b","nodeSelector":null,"storageClass":null},{"extraAffinity":{},"name":"zone-c","nodeSelector":null,"storageClass":null}]}` | EXPERIMENTAL Feature, disabled by default |
+| ingester.zoneAwareReplication | object | `{"enabled":false,"maxUnavailable":50,"topologyKey":null,"zones":[{"annotations":{},"extraAffinity":{},"name":"zone-a","nodeSelector":null,"podAnnotations":{},"storageClass":null},{"annotations":{},"extraAffinity":{},"name":"zone-b","nodeSelector":null,"podAnnotations":{},"storageClass":null},{"annotations":{},"extraAffinity":{},"name":"zone-c","nodeSelector":null,"podAnnotations":{},"storageClass":null}]}` | EXPERIMENTAL Feature, disabled by default |
 | ingester.zoneAwareReplication.enabled | bool | `false` | Enable zone-aware replication for ingester |
 | ingester.zoneAwareReplication.maxUnavailable | int | `50` | Maximum number of ingesters that can be unavailable per zone during rollout |
 | ingester.zoneAwareReplication.topologyKey | string | `nil` | topologyKey to use in pod anti-affinity. If unset, no anti-affinity rules are generated. If set, the generated anti-affinity rule makes sure that pods from different zones do not mix. E.g.: topologyKey: 'kubernetes.io/hostname' |
-| ingester.zoneAwareReplication.zones | list | `[{"extraAffinity":{},"name":"zone-a","nodeSelector":null,"storageClass":null},{"extraAffinity":{},"name":"zone-b","nodeSelector":null,"storageClass":null},{"extraAffinity":{},"name":"zone-c","nodeSelector":null,"storageClass":null}]` | Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list. |
-| ingester.zoneAwareReplication.zones[0] | object | `{"extraAffinity":{},"name":"zone-a","nodeSelector":null,"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones | list | `[{"annotations":{},"extraAffinity":{},"name":"zone-a","nodeSelector":null,"podAnnotations":{},"storageClass":null},{"annotations":{},"extraAffinity":{},"name":"zone-b","nodeSelector":null,"podAnnotations":{},"storageClass":null},{"annotations":{},"extraAffinity":{},"name":"zone-c","nodeSelector":null,"podAnnotations":{},"storageClass":null}]` | Zone definitions for ingester zones. Note: you have to redefine the whole list to change parts as YAML does not allow to modify parts of a list. |
+| ingester.zoneAwareReplication.zones[0] | object | `{"annotations":{},"extraAffinity":{},"name":"zone-a","nodeSelector":null,"podAnnotations":{},"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[0].annotations | object | `{}` | Specific annotations to add to zone-a statefulset |
 | ingester.zoneAwareReplication.zones[0].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[0].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-a |
+| ingester.zoneAwareReplication.zones[0].podAnnotations | object | `{}` | Specific annotations to add to zone-a pods |
 | ingester.zoneAwareReplication.zones[0].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
-| ingester.zoneAwareReplication.zones[1] | object | `{"extraAffinity":{},"name":"zone-b","nodeSelector":null,"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[1] | object | `{"annotations":{},"extraAffinity":{},"name":"zone-b","nodeSelector":null,"podAnnotations":{},"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[1].annotations | object | `{}` | Specific annotations to add to zone-b statefulset |
 | ingester.zoneAwareReplication.zones[1].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[1].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-b |
+| ingester.zoneAwareReplication.zones[1].podAnnotations | object | `{}` | Specific annotations to add to zone-b pods |
 | ingester.zoneAwareReplication.zones[1].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
-| ingester.zoneAwareReplication.zones[2] | object | `{"extraAffinity":{},"name":"zone-c","nodeSelector":null,"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[2] | object | `{"annotations":{},"extraAffinity":{},"name":"zone-c","nodeSelector":null,"podAnnotations":{},"storageClass":null}` | Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
+| ingester.zoneAwareReplication.zones[2].annotations | object | `{}` | Specific annotations to add to zone-c statefulset |
 | ingester.zoneAwareReplication.zones[2].extraAffinity | object | `{}` | extraAffinity adds user defined custom affinity rules (merged with generated rules) |
 | ingester.zoneAwareReplication.zones[2].nodeSelector | string | `nil` | nodeselector to restrict where pods of this zone can be placed. E.g.: nodeSelector:   topology.kubernetes.io/zone: zone-c |
+| ingester.zoneAwareReplication.zones[2].podAnnotations | object | `{}` | Specific annotations to add to zone-c pods |
 | ingester.zoneAwareReplication.zones[2].storageClass | string | `nil` | Ingester data Persistent Volume Storage Class If defined, storageClassName: <storageClass> If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`. |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` | If you enable this, make sure to disable the gateway's ingress. |
@@ -675,7 +682,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcached.image.registry | string | `nil` | The Docker registry for the Memcached image. Overrides `global.image.registry` |
 | memcached.image.repository | string | `"memcached"` | Memcached Docker image repository |
-| memcached.image.tag | string | `"1.6.33-alpine"` | Memcached Docker image tag |
+| memcached.image.tag | string | `"1.6.39-alpine"` | Memcached Docker image tag |
 | memcached.initContainers | list | `[]` | Init containers for the memcached pod |
 | memcached.livenessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":5}` | configuration for liveness probe for memcached statefulset |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
@@ -694,7 +701,7 @@ The memcached default args are removed and should be provided manually. The sett
 | memcachedExporter.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | memcachedExporter.image.registry | string | `nil` | The Docker registry for the Memcached Exporter image. Overrides `global.image.registry` |
 | memcachedExporter.image.repository | string | `"prom/memcached-exporter"` | Memcached Exporter Docker image repository |
-| memcachedExporter.image.tag | string | `"v0.14.4"` | Memcached Exporter Docker image tag |
+| memcachedExporter.image.tag | string | `"v0.15.3"` | Memcached Exporter Docker image tag |
 | memcachedExporter.resources | object | `{}` |  |
 | metaMonitoring.grafanaAgent.annotations | object | `{}` | Annotations to add to all monitoring.grafana.com custom resources. Does not affect the ServiceMonitors for kubernetes metrics; use serviceMonitor.annotations for that. |
 | metaMonitoring.grafanaAgent.enabled | bool | `false` | Controls whether to create PodLogs, MetricsInstance, LogsInstance, and GrafanaAgent CRs to scrape the ServiceMonitors of the chart and ship metrics and logs to the remote endpoints below. Note that you need to configure serviceMonitor in order to have some metrics available. |

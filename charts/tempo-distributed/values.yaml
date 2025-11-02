@@ -135,6 +135,8 @@ rbac:
 ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
+  # -- Labels for the ingester StatefulSet
+  labels: {}
   # -- Number of replicas for the ingester
   replicas: 3
   # -- hostAliases to add
@@ -302,6 +304,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-a statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-a pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-b
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -315,6 +321,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-b statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-b pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-c
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -328,6 +338,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-c statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-c pods
+        podAnnotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -1711,7 +1725,7 @@ per_tenant_overrides:
   #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
-# you can use your self memcacherd by set enable: false and host + service
+# you can use your own self deployed memcached by setting `memcached.enabled` to false and `memcached.host` + `memcached.service`
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
@@ -1723,7 +1737,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.33-alpine
+    tag: 1.6.39-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1814,7 +1828,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.14.4
+    tag: v0.15.3
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
