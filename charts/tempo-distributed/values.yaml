@@ -8,6 +8,12 @@ global:
     # Example:
     # pullSecrets: [ my-dockerconfigjson-secret ]
     pullSecrets: []
+  # -- Adding common labels to all K8S resources including pods
+  commonLabels: {}
+  # -- Adding labels to K8S resources (excluding pods)
+  labels: {}
+  # -- Adding labels to all pods
+  podLabels: {}
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
