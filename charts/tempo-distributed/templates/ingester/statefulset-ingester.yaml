@@ -28,6 +28,7 @@ spec:
   {{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ $rolloutZone.replicas }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "ingester.selectorLabels" $dict | nindent 6}}
