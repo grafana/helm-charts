@@ -5,7 +5,6 @@ metadata:
   name: {{ tpl .Values.externalRuntimeConfigName . }}
   labels:
     {{- include "tempo.labels" (dict "ctx" .) | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 data:
   overrides.yaml: |

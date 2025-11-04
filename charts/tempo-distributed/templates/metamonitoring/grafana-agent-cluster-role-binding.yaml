@@ -7,7 +7,6 @@ metadata:
   namespace: {{ .namespace | default $.Release.Namespace | quote }}
   labels:
     {{- include "tempo.labels" (dict "ctx" $ "component" "meta-monitoring" ) | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

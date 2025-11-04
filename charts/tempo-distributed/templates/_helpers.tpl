@@ -90,13 +90,12 @@ app.kubernetes.io/part-of: memberlist
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
-{{- end -}}
-
-{{/*
-Common labels to add to all resources
-*/}}
-{{ - define "tempo.commonLabels" -}}
-{{- toYaml .Values.commonLabels | nindent 0 }}
+{{- with .Values.global.commonLabels }}
+{{ toYaml . | indent 0 }}
+{{- end }}
+{{- with .Values.global.labels }}
+{{ toYaml . | indent 0 }}
+{{- end }}
 {{- end -}}
 
 {{/*
@@ -274,6 +273,12 @@ app.kubernetes.io/component: {{ .component }}
 {{- if .memberlist }}
 app.kubernetes.io/part-of: memberlist
 {{- end -}}
+{{- with .Values.global.commonLabels }}
+{{ toYaml . | indent 0 }}
+{{- end }}
+{{- with .Values.global.podLabels }}
+{{ toYaml . | indent 0 }}
+{{- end }}
 {{- end -}}
 
 {{/*

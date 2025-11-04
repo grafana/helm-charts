@@ -9,7 +9,6 @@ metadata:
   name: {{ tpl .Values.externalConfigSecretName . }}
   labels:
     {{- include "tempo.labels" (dict "ctx" .) | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 {{- if eq .Values.configStorageType "Secret" }}
 data:

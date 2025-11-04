@@ -15,7 +15,6 @@ metadata:
   namespace: {{ .namespace | default $.ctx.Release.Namespace | quote }}
   labels:
     {{- include "tempo.labels" $ | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
     {{- with .labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

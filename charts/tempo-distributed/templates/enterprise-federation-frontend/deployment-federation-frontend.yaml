@@ -7,7 +7,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   {{- with .Values.enterpriseFederationFrontend.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -29,7 +28,6 @@ spec:
     metadata:
       labels:
         {{- include "tempo.podLabels" $dict | nindent 8 }}
-        {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 8 }}
         {{- with .Values.tempo.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

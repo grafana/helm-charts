@@ -10,7 +10,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   {{- with .Values.ingester.service.annotations }}
   annotations:
     {{- tpl (toYaml . | nindent 4) $ }}

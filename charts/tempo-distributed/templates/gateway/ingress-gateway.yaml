@@ -15,7 +15,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
     {{- with .Values.gateway.ingress.labels }}
     {{- toYaml . | nindent 4}}
     {{- end}}

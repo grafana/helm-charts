@@ -7,7 +7,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
     prometheus.io/service-monitor: "false"
   {{- with .Values.metricsGenerator.serviceDiscovery.annotations }}
   annotations:

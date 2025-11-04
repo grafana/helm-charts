@@ -7,7 +7,6 @@ metadata:
     {{- toYaml .Values.adminApi.annotations | nindent 4 }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
-    {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 4 }}
   name: {{ include "tempo.resourceName" $dict }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
@@ -22,7 +21,6 @@ spec:
     metadata:
       labels:
         {{- include "tempo.podLabels" $dict | nindent 8 }}
-        {{- include "tempo.commonLabels" (dict "ctx" .) | nindent 8 }}
         {{- with .Values.adminApi.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
