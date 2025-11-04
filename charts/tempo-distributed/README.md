@@ -576,7 +576,7 @@ The memcached default args are removed and should be provided manually. The sett
 | global.extraEnvFrom | list | `[]` | Common environment variables which come from a ConfigMap or Secret to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
-| global.labels | object | `{}` | Adding labels to K8S resources  |
+| global.labels | object | `{}` | Adding labels to K8S resources (excluding pods) |
 | global.podLabels | object | `{}` | Adding labels to all pods |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global.storageClass | string | `nil` | Global storage class to be used for persisted components |

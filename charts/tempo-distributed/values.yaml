@@ -10,7 +10,7 @@ global:
     pullSecrets: []
   # -- Adding common labels to all K8S resources including pods
   commonLabels: {}
-  # -- Adding labels to K8S resources 
+  # -- Adding labels to K8S resources (excluding pods)
   labels: {}
   # -- Adding labels to all pods
   podLabels: {}
