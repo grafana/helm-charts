@@ -127,6 +127,8 @@ serviceAccount:
   name: null
   # -- Image pull secrets for the service account
   imagePullSecrets: []
+  # -- Labels for the service account
+  labels: {}
   # -- Annotations for the service account
   annotations: {}
   automountServiceAccountToken: false
