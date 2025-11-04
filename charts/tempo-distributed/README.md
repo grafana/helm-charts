@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.52.8](https://img.shields.io/badge/Version-1.52.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.52.9](https://img.shields.io/badge/Version-1.52.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -355,6 +355,8 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.replicas | int | `1` | Number of replicas for the compactor |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.service.annotations | object | `{}` | Annotations for compactor service |
+| compactor.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| compactor.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
