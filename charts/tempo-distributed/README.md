@@ -355,6 +355,8 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.replicas | int | `1` | Number of replicas for the compactor |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.service.annotations | object | `{}` | Annotations for compactor service |
+| compactor.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| compactor.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
