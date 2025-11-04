@@ -663,7 +663,11 @@ compactor:
   replicas: 1
   # -- Annotations for compactor deployment
   annotations: {}
-
+  # Strategy of updating pods
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   # -- Autoscaling configurations
   autoscaling:
     # -- Enable autoscaling for the compactor
