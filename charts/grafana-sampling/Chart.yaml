@@ -9,10 +9,10 @@ sources:
   - https://grafana.com/docs/grafana-cloud/monitor-applications/application-observability/setup/sampling/tail/
 dependencies:
   - name: alloy
-    version: 1.2.1
+    version: 1.4.0
     repository: https://grafana.github.io/helm-charts
     alias: alloy-deployment
   - name: alloy
-    version: 1.2.1
+    version: 1.4.0
     repository: https://grafana.github.io/helm-charts
     alias: alloy-statefulset
