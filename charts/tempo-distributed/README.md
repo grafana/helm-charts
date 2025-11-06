@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.52.7](https://img.shields.io/badge/Version-1.52.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.53.2](https://img.shields.io/badge/Version-1.53.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -355,6 +355,8 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.replicas | int | `1` | Number of replicas for the compactor |
 | compactor.resources | object | `{}` | Resource requests and limits for the compactor |
 | compactor.service.annotations | object | `{}` | Annotations for compactor service |
+| compactor.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| compactor.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
 | compactor.terminationGracePeriodSeconds | int | `30` | Grace period to allow the compactor to shutdown before it is killed |
 | compactor.tolerations | list | `[]` | Tolerations for compactor pods |
 | config | string | See values.yaml | Config file contents for Tempo distributed. Passed through the `tpl` function to allow templating |
@@ -566,6 +568,7 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.topologySpreadConstraints | string | Defaults to allow skew no more than 1 node per AZ | topologySpread for gateway pods. Passed through `tpl` and, thus, to be configured as string |
 | gateway.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
 | global.clusterDomain | string | `"cluster.local"` | configures cluster domain ("cluster.local" by default) |
+| global.commonLabels | object | `{}` | Adding common labels to all K8S resources including pods |
 | global.dnsNamespace | string | `"kube-system"` | configures DNS service namespace |
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | global.extraArgs | list | `[]` | Common args to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
@@ -573,6 +576,8 @@ The memcached default args are removed and should be provided manually. The sett
 | global.extraEnvFrom | list | `[]` | Common environment variables which come from a ConfigMap or Secret to add to all pods directly managed by this chart. scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen |
 | global.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets for all images, excluding enterprise. Names of existing secrets with private container registry credentials. Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod Example: pullSecrets: [ my-dockerconfigjson-secret ] |
 | global.image.registry | string | `"docker.io"` | Overrides the Docker registry globally for all images, excluding enterprise. |
+| global.labels | object | `{}` | Adding labels to K8S resources (excluding pods) |
+| global.podLabels | object | `{}` | Adding labels to all pods |
 | global.priorityClassName | string | `nil` | Overrides the priorityClassName for all pods |
 | global.storageClass | string | `nil` | Global storage class to be used for persisted components |
 | ingester.affinity | string | Soft node and soft zone anti-affinity | Affinity for ingester pods. Passed through `tpl` and, thus, to be configured as string |
@@ -962,6 +967,7 @@ The memcached default args are removed and should be provided manually. The sett
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.create | bool | `true` | Specifies whether a ServiceAccount should be created |
 | serviceAccount.imagePullSecrets | list | `[]` | Image pull secrets for the service account |
+| serviceAccount.labels | object | `{}` | Labels for the service account |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template |
 | storage.admin.backend | string | `"filesystem"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config |
 | storage.trace.backend | string | `"local"` | The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/tempo/latest/configuration/#storage |
