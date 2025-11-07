@@ -90,6 +90,12 @@ app.kubernetes.io/part-of: memberlist
 app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- if .ctx.Values.global.commonLabels }}
+{{ toYaml .ctx.Values.global.commonLabels | indent 0 }}
+{{- end }}
+{{- if .ctx.Values.global.labels }}
+{{ toYaml .ctx.Values.global.labels | indent 0 }}
+{{- end }}
 {{- end -}}
 
 {{/*
@@ -267,6 +273,12 @@ app.kubernetes.io/component: {{ .component }}
 {{- if .memberlist }}
 app.kubernetes.io/part-of: memberlist
 {{- end -}}
+{{- if .ctx.Values.global.commonLabels }}
+{{ toYaml .ctx.Values.global.commonLabels | indent 0 }}
+{{- end }}
+{{- if .ctx.Values.global.podLabels }}
+{{ toYaml .ctx.Values.global.podLabels | indent 0 }}
+{{- end }}
 {{- end -}}
 
 {{/*
