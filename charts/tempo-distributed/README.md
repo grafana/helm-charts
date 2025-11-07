@@ -1,6 +1,7 @@
 # tempo-distributed
 
-![Version: 1.53.2](https://img.shields.io/badge/Version-1.53.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+
+![Version: 1.53.3](https://img.shields.io/badge/Version-1.53.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square) 
 
 Grafana Tempo in MicroService mode
 
@@ -43,6 +44,7 @@ helm delete my-release
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
+
 
 ## Upgrading
 
@@ -147,6 +149,7 @@ minio:
   enabled: true
 ```
 * allow configuration to be stored in a secret.  See the documentation for `useExternalConfig` and `configStorageType` in the values file for more details.
+
 
 ### From chart version < 0.26.0
 
@@ -934,6 +937,8 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.replicas | int | `1` | Number of replicas for the query-frontend |
 | queryFrontend.resources | object | `{}` | Resource requests and limits for the query-frontend |
 | queryFrontend.service.annotations | object | `{}` | Annotations for queryFrontend service |
+| queryFrontend.service.grpcPort | int | `9095` | grpc Port of the query-frontend service |
+| queryFrontend.service.httpMetricsPort | int | `3200` | http Metrics port of the query-frontend service |
 | queryFrontend.service.labels | object | `{}` | Labels for queryFrontend service |
 | queryFrontend.service.loadBalancerIP | string | `""` | If type is LoadBalancer you can assign the IP to the LoadBalancer |
 | queryFrontend.service.loadBalancerSourceRanges | list | `[]` | If type is LoadBalancer limit incoming traffic from IPs. |
@@ -1065,6 +1070,8 @@ The other components are optional and must be explicitly enabled.
 | admin-api | yes |
 | enterprise-gateway | yes |
 
+
+
 ## [Configuration](https://grafana.com/docs/tempo/latest/configuration/)
 
 This chart configures Tempo in microservices mode.
@@ -1120,6 +1127,7 @@ global_overrides:
 
 * Volumes are mounted to `/var/tempo`. The various directories Tempo needs should be configured as subdirectories (e. g. `/var/tempo/wal`, `/var/tempo/traces`). Tempo will create the directories automatically.
 * The config file is mounted to `/conf/tempo-query.yaml` and passed as CLI arg.
+
 
 ### Example configuration using S3 for storage
 
