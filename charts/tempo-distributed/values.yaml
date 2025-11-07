@@ -8,6 +8,12 @@ global:
     # Example:
     # pullSecrets: [ my-dockerconfigjson-secret ]
     pullSecrets: []
+  # -- Adding common labels to all K8S resources including pods
+  commonLabels: {}
+  # -- Adding labels to K8S resources (excluding pods)
+  labels: {}
+  # -- Adding labels to all pods
+  podLabels: {}
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -64,6 +70,12 @@ tempo:
     # -- Overrides the image tag whose default is the chart's appVersion
     tag: null
     pullPolicy: IfNotPresent
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
   readinessProbe:
     httpGet:
       path: /ready
@@ -115,6 +127,8 @@ serviceAccount:
   name: null
   # -- Image pull secrets for the service account
   imagePullSecrets: []
+  # -- Labels for the service account
+  labels: {}
   # -- Annotations for the service account
   annotations: {}
   automountServiceAccountToken: false
@@ -129,6 +143,8 @@ rbac:
 ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
+  # -- Labels for the ingester StatefulSet
+  labels: {}
   # -- Number of replicas for the ingester
   replicas: 3
   # -- hostAliases to add
@@ -265,6 +281,9 @@ ingester:
     type: ClusterIP
     # -- https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/
     internalTrafficPolicy: Cluster
+  serviceDiscovery:
+    # -- Annotations for ingester discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -293,6 +312,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-a statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-a pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-b
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -306,6 +329,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-b statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-b pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-c
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -319,6 +346,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-c statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-c pods
+        podAnnotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -477,6 +508,9 @@ metricsGenerator:
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
+  serviceDiscovery:
+    # -- Annotations for Metrics Generator discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -486,6 +520,8 @@ metricsGenerator:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  # -- Annotations for distributor deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -612,6 +648,8 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # -- Trace Attribute bytes limit. This is the maximum number of bytes that can be used in a trace.0 for no limit.
+    max_attribute_bytes: 0
     # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
     # attributes exposed on /usage_metrics.
     cost_attribution:
@@ -631,7 +669,13 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
-
+  # -- Annotations for compactor deployment
+  annotations: {}
+  # Strategy of updating pods
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   # -- Autoscaling configurations
   autoscaling:
     # -- Enable autoscaling for the compactor
@@ -773,6 +817,8 @@ querier:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  # -- Annotations for querier deployment
+  annotations: {}
   autoscaling:
     # -- Enable autoscaling for the querier
     enabled: false
@@ -906,6 +952,8 @@ queryFrontend:
       backend: 127.0.0.1:3200
   # -- Number of replicas for the query-frontend
   replicas: 1
+  # -- Annotations for the query-frontend Deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -1074,6 +1122,8 @@ enterpriseFederationFrontend:
   enabled: false
   # -- Number of replicas for the federation-frontend
   replicas: 1
+  # -- Annotations for the federation-frontend Deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -1455,6 +1505,9 @@ config: |
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
     {{- end }}
+    {{- if .Values.distributor.config.max_attribute_bytes }}
+    max_attribute_bytes: {{ .Values.distributor.config.max_attribute_bytes }}
+    {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}:9095
@@ -1579,6 +1632,12 @@ config: |
       {{- if .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       blocklist_poll_stale_tenant_index: {{ .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_age }}
+      empty_tenant_deletion_age: {{ .Values.storage.trace.empty_tenant_deletion_age }}
+      {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_enabled }}
+      empty_tenant_deletion_enabled: {{ .Values.storage.trace.empty_tenant_deletion_enabled }}
+      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1652,7 +1711,12 @@ storage:
     blocklist_poll_tenant_index_builders: null
     # -- The oldest allowable tenant index.
     blocklist_poll_stale_tenant_index: null
-  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+    # -- How fast the poller will delete a tenant if it is empty. Will need to be enabled in 'empty_tenant_deletion_enabled'.
+    empty_tenant_deletion_age: null
+    # -- Delete empty tenants.
+    empty_tenant_deletion_enabled: null
+
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
@@ -1673,7 +1737,7 @@ per_tenant_overrides:
   #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
-# you can use your self memcacherd by set enable: false and host + service
+# you can use your own self deployed memcached by setting `memcached.enabled` to false and `memcached.host` + `memcached.service`
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
@@ -1685,7 +1749,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.33-alpine
+    tag: 1.6.39-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1776,7 +1840,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.14.4
+    tag: v0.15.3
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
@@ -2087,6 +2151,13 @@ gateway:
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
+  # Configures the liveness probe for the gateway
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-metrics
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
   # Configures the readiness probe for the gateway
   readinessProbe:
     httpGet:
