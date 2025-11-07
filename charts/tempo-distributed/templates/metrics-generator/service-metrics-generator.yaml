@@ -17,7 +17,8 @@ spec:
   ports:
     {{- range .Values.metricsGenerator.ports }}
     {{- if .service }}
-    - name: {{ .name | quote }}
+    - appProtocol: grpc
+      name: {{ .name | quote }}
       port: {{ .port }}
       protocol: TCP
       targetPort: {{ .port }}
