@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.1.0 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.1 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.35.1 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.37.1 |
 
 ## Chart Repo
 
