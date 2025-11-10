@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.54.1](https://img.shields.io/badge/Version-1.54.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.55.0](https://img.shields.io/badge/Version-1.55.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.1.0 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.1 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.35.1 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.37.1 |
 
 ## Chart Repo
 
