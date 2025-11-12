@@ -35,7 +35,6 @@ securityContext:
   runAsNonRoot: true
   privileged: false
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
 
 resources:
   requests:
