@@ -35,6 +35,7 @@ securityContext:
   runAsNonRoot: true
   privileged: false
   allowPrivilegeEscalation: false
+  # -- Enable running in a read-only root filesystem. 
   readOnlyRootFilesystem: false
 
 resources:
