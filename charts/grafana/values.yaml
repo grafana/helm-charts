@@ -959,10 +959,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    # TODO: Update version after https://github.com/kiwigrid/k8s-sidecar/pull/433 and https://github.com/kiwigrid/k8s-sidecar/pull/434 are merged and a new release is made
-    # The new version is needed to properly make grafana's container wait for the sidecars to initialize
-    # This prevents the main container from deleting dashboards due to the files not yet being present
-    tag: 1.30.10
+    tag: 2.1.2
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
