@@ -15,7 +15,7 @@ metadata:
   {{- if .Values.ingester.zoneAwareReplication.enabled }}
   annotations:
     {{- include "ingester.Annotations" $dict | nindent 4}}
-    {{- with $rolloutZone.annotations }}:
+    {{- with $rolloutZone.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- else }}
@@ -28,6 +28,7 @@ spec:
   {{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ $rolloutZone.replicas }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "ingester.selectorLabels" $dict | nindent 6}}
@@ -54,7 +55,7 @@ spec:
         {{- with .Values.ingester.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with $rolloutZone.podAnnotations }}:
+        {{- with $rolloutZone.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -78,7 +79,6 @@ spec:
         - args:
             - -target=ingester
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- if ne $zoneName ""}}
             - -ingester.availability-zone={{ $zoneName }}
             {{- end }}
