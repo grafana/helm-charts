@@ -64,7 +64,6 @@ spec:
         - args:
             - -target=distributor
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.distributor.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -138,6 +137,8 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:

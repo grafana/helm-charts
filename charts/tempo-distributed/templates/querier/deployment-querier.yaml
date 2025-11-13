@@ -62,7 +62,6 @@ spec:
         - args:
             - -target=querier
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.querier.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -100,6 +99,10 @@ spec:
             {{- toYaml .Values.querier.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
           securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tempo.livenessProbe }}
+          livenessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.tempo.readinessProbe }}
