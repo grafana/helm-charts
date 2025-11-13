@@ -4,6 +4,10 @@
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
+> [!NOTE]
+> Grafana Cloud Synthetic Monitoring does not officially support this chart.
+> If you are a Grafana Cloud customer and require support, please follow the [recommended installation methods](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/#deployment-with-kubernetes) listed in the public docs.
+
 **Homepage:** <https://grafana.net>
 
 ## Maintainers
