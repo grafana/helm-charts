@@ -78,6 +78,17 @@ spec:
             {{- range .Values.extraArgs }}
             - {{ . }}
             {{- end }}
+          {{- if .Values.securityContext.readOnlyRootFilesystem }}
+          volumeMounts:
+            - mountPath: /home/pdc/
+              name: ssh-cache
+          {{- end }}
+      {{- if .Values.securityContext.readOnlyRootFilesystem }}
+      volumes:
+        - name: ssh-cache
+          emptyDir:
+            sizeLimit: 50Mi
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
