@@ -21,6 +21,7 @@ labels: {}
 annotations: {}
 
 tempo:
+  registry: docker.io
   repository: grafana/tempo
   tag: ""
   pullPolicy: IfNotPresent
