@@ -46,7 +46,7 @@ spec:
           image: "{{ $.Values.provisioner.image.registry }}/{{ $.Values.provisioner.image.repository }}:{{ $.Values.provisioner.image.tag }}"
           imagePullPolicy: {{ $.Values.provisioner.image.pullPolicy }}
           command:
-            - /bin/bash
+            - /bin/sh
             - -euc
             - |
               {{- range $tenant := .Values.provisioner.additionalTenants }}
