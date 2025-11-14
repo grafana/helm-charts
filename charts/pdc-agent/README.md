@@ -41,10 +41,10 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | securityContext.readOnlyRootFilesystem | bool | `false` | Enable running in a read-only root filesystem. |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
-| serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account |
-| serviceAccount.create | bool | `false` | Create pdc-agent service account |
+| serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account. Disabled by default as the agent does not need Kubernetes API access |
+| serviceAccount.create | bool | `false` | Toggle to create ServiceAccount |
 | serviceAccount.labels | object | `{}` | Labels applied to created service account |
-| serviceAccount.name | string | `"pdc-agent"` | Server service account name |
+| serviceAccount.name | string | `"pdc-agent"` | Service account name |
 | tokenSecretName | string | `""` | secretName Expects a secret with key `token` which contains the Access Policy token you generated |
 | tolerations | list | `[]` | not required, but left in as a choice |
 
