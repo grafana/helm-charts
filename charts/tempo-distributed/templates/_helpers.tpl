@@ -384,6 +384,7 @@ spec:
         - name: patch-pvc-{{ $template }}-{{ $index }}
           image: {{ printf "%s/kubectl:%s" (coalesce $.context.Values.global.image.registry "registry.k8s.io") $.context.Capabilities.KubeVersion.Version }}
           command:
+            - kubectl
             - patch
             - pvc
             - --namespace={{ $newStatefulSet.metadata.namespace }}
