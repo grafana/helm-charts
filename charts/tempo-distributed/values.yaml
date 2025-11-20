@@ -1021,6 +1021,10 @@ queryFrontend:
   service:
     # -- Port of the query-frontend service
     port: 16686
+    # -- http Metrics port of the query-frontend service
+    httpMetricsPort: 3200
+    # -- grpc Port of the query-frontend service
+    grpcPort: 9095
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Labels for queryFrontend service
