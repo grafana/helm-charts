@@ -55,7 +55,7 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.registry | string | `""` |  |
+| image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"grafana/rollout-operator"` |  |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
