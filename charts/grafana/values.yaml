@@ -883,8 +883,8 @@ grafana.ini:
     check_for_updates: true
   log:
     mode: console
-  grafana_net:
-    url: https://grafana.net
+  grafana_com:
+    url: https://grafana.com
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
 ## grafana Authentication can be enabled with the following values on grafana.ini
