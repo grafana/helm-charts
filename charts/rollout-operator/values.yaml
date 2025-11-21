@@ -107,4 +107,4 @@ webhooks:
   # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
   failurePolicy: "Fail"
   # -- Secret resource name for the TLS certificate to be used with the webhooks
-  selfSignedCertSecretName: "certificate"
+  selfSignedCertSecretName: ""
