@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -38,6 +38,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
+| securityContext.readOnlyRootFilesystem | bool | `false` | Enable running in a read-only root filesystem. |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | tokenSecretName | string | `""` | secretName Expects a secret with key `token` which contains the Access Policy token you generated |
 | tolerations | list | `[]` | not required, but left in as a choice |
