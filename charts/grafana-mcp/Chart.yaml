@@ -1,7 +1,7 @@
 apiVersion: v2
 name: grafana-mcp
-version: 0.2.1
-appVersion: 0.7.8
+version: 0.2.2
+appVersion: 0.7.9
 kubeVersion: "^1.8.0-0"
 description: MCP server for Grafana.
 home: https://grafana.com
