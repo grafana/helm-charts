@@ -13,7 +13,7 @@ rules:
       - update
       - get
     resourceNames:
-      - {{ .Values.webhooks.selfSignedCertSecretName | default (include "rollout-operator.fullname" . )  }}
+      - {{ include "rollout-operator.secretName" . }}
   - apiGroups:
       - ""
     resources:
