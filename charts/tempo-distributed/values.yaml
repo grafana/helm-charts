@@ -1118,6 +1118,9 @@ queryFrontend:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
+  mcp_server:
+    # -- Enables Tempo MCP Server
+    enabled: false
 
 # Configuration for the federation-frontend
 # Can only be enabled if enterprise.enabled is true - requires license.
@@ -1525,6 +1528,8 @@ config: |
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
+    mcp_server:
+      enabled: {{ .Values.queryFrontend.mcp_server.enabled }}
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
     search:
