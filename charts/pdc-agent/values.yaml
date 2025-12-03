@@ -23,6 +23,9 @@ fullnameOverride: ""
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
+# -- custom deployment annotations 
+annotations: {}
+
 podSecurityContext:
   runAsUser: 30000
   runAsGroup: 30000
