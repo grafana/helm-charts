@@ -1005,8 +1005,8 @@ queryFrontend:
     # -- Docker image tag for the query-frontend image. Overrides `tempo.image.tag`
     tag: null
   service:
-    # -- Port of the query-frontend service
-    port: 3200
+    # -- Port of the tempo-query component in the queryFrontend service
+    port: 7777
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Labels for queryFrontend service

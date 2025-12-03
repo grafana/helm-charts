@@ -29,7 +29,7 @@ spec:
       {{- end }}
     {{- if .Values.queryFrontend.query.enabled }}
     - name: tempo-query
-      port: 7777
+      port: {{ .Values.queryFrontend.service.port }}
       targetPort: tempo-query
       protocol: TCP
       appProtocol: grpc
