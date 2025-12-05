@@ -153,6 +153,7 @@ securityContext:
 
 containerSecurityContext:
   allowPrivilegeEscalation: false
+  privileged: false
   capabilities:
     drop:
     - ALL
