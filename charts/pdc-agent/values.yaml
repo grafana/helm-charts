@@ -75,8 +75,10 @@ debug: false
 cluster: ""
 # -- The numeric ID of your Hosted Grafana stack
 hostedGrafanaId: ""
-# -- secretName Expects a secret with key `token` which contains the Access Policy token you generated
+# -- tokenSecretName Expects a secret which contains the Access Policy token you generated. See `tokenSecretKey` for the key name under which the value is expected.
 tokenSecretName: ""
+# -- tokenSecretKey Defines the key that is used to lookup the token value in the secret defined by `tokenSecretName`.
+tokenSecretKey: "token"
 # -- insecureTokenValue is used to set the token value directly in the deployment.yaml file. This is useful for testing purposes.
 insecureTokenValue: ""
 
