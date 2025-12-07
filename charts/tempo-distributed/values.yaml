@@ -59,6 +59,9 @@ externalConfigVersion: '0'
 # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
 reportingEnabled: true
 
+# -- Enable streaming over HTTP for tempo and Tempo gateway(nginx)
+streamOverHTTPEnabled: false
+
 tempo:
   image:
     # -- The Docker registry
@@ -1325,6 +1328,8 @@ memberlist:
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
 
+  stream_over_http_enabled: {{ .Values.streamOverHTTPEnabled }}
+
   usage_report:
     reporting_enabled: {{ .Values.reportingEnabled }}
 
@@ -2235,6 +2240,15 @@ gateway:
 
         server {
           listen             8080;
+
+          {{- if .Values.streamOverHTTPEnabled }}
+          http2 on;
+          
+          location /tempopb.StreamingQuerier/ {
+            set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            grpc_pass   grpc://$query_frontend:3200;
+          }
+          {{- end }}
 
           {{- if .Values.gateway.basicAuth.enabled }}
           auth_basic           "Tempo";

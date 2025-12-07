@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.57.0](https://img.shields.io/badge/Version-1.57.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.57.1](https://img.shields.io/badge/Version-1.57.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -986,6 +986,7 @@ The memcached default args are removed and should be provided manually. The sett
 | storage.trace.pool.max_workers | int | `400` | Total number of workers pulling jobs from the queue |
 | storage.trace.pool.queue_depth | int | `20000` | Length of job queue. imporatant for querier as it queues a job for every block it has to search |
 | storage.trace.search.prefetch_trace_count | int | `1000` | Number of traces to prefetch while scanning blocks. Increasing this value can improve trace search performance at the cost of memory. |
+| streamOverHTTPEnabled | bool | `false` | Enable streaming over HTTP for tempo and Tempo gateway(nginx) |
 | tempo.image.pullPolicy | string | `"IfNotPresent"` |  |
 | tempo.image.pullSecrets | list | `[]` | Optional list of imagePullSecrets. Overrides `global.image.pullSecrets` |
 | tempo.image.registry | string | `"docker.io"` | The Docker registry |
