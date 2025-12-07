@@ -54,6 +54,7 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 | fullnameOverride | string | `""` |  |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
+| hostNetwork | bool | `false` | Enable or disable the use of host networking for the pod. When true, the pod will use the node's network namespace |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"grafana/rollout-operator"` |  |
