@@ -2243,7 +2243,6 @@ gateway:
 
           {{- if .Values.streamOverHTTPEnabled }}
           http2 on;
-          
           location /tempopb.StreamingQuerier/ {
             set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
             grpc_pass   grpc://$query_frontend:3200;
