@@ -4,6 +4,10 @@ metadata:
   name: {{ include "pdc-agent.fullname" . }}
   labels:
     {{- include "pdc-agent.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
