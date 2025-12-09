@@ -33,6 +33,7 @@ Grafana Tempo Single Binary Mode
 | nodeSelector | object | `{}` | Node labels for pod assignment. See: https://kubernetes.io/docs/user-guide/node-selection/ |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | persistence.enableStatefulSetAutoDeletePVC | bool | `false` | Enable StatefulSetAutoDeletePVC feature |
+| persistence.enableStatefulSetRecreationForSizeChange | bool | `false` | Enable StatefulSetRecreation for changes to PVC size. This means that the StatefulSet will be deleted, recreated (with the same name) and rolled when a change to the PVC size is detected. That way the PVC can be resized without manual intervention. |
 | persistence.enabled | bool | `false` |  |
 | persistence.size | string | `"10Gi"` |  |
 | podAnnotations | object | `{}` | Pod Annotations |
