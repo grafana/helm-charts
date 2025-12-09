@@ -146,8 +146,17 @@ initContainers:
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
+      {{- if and .Values.sidecar.alerts.restartPolicy (eq .Values.sidecar.alerts.restartPolicy "Always")}}
+      - name: METHOD
+        value: {{ .Values.sidecar.alerts.watchMethod }}
+      {{- if eq .Values.sidecar.alerts.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- else }}
       - name: METHOD
         value: "LIST"
+      {{- end }}
       - name: LABEL
         value: "{{ tpl .Values.sidecar.alerts.label $root }}"
       {{- with .Values.sidecar.alerts.labelValue }}
@@ -373,8 +382,17 @@ initContainers:
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
+      {{- if and .Values.sidecar.notifiers.restartPolicy (eq .Values.sidecar.notifiers.restartPolicy "Always")}}
+      - name: METHOD
+        value: {{ .Values.sidecar.notifiers.watchMethod }}
+      {{- if eq .Values.sidecar.notifiers.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- else }}
       - name: METHOD
         value: LIST
+      {{- end }}
       - name: LABEL
         value: "{{ tpl .Values.sidecar.notifiers.label $root }}"
       {{- with .Values.sidecar.notifiers.labelValue }}
