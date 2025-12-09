@@ -138,10 +138,8 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
-      {{- if .Values.sidecar.alerts.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.alerts.startupProbe.httpGet.port | default "8080" }}"
-      {{- end }}
+        value: "{{ .Values.sidecar.alerts.startupProbe.httpGet.port | default "8081" }}"
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -236,10 +234,8 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
-      {{- if .Values.sidecar.datasources.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.datasources.startupProbe.httpGet.port | default "8081" }}"
-      {{- end }}
+        value: "{{ .Values.sidecar.datasources.startupProbe.httpGet.port | default "8082" }}"
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -374,10 +370,8 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.notifiers.startupProbe.httpGet.port | default "8082" }}"
-      {{- end }}
+        value: "{{ .Values.sidecar.notifiers.startupProbe.httpGet.port | default "8083" }}"
       {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -472,10 +466,8 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
-      {{- if .Values.sidecar.dashboards.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.dashboards.startupProbe.httpGet.port | default "8083" }}"
-      {{- end }}
+        value: "{{ .Values.sidecar.dashboards.startupProbe.httpGet.port | default "8084" }}"
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
