@@ -1,7 +1,5 @@
 {{- $dict := dict "ctx" . "component" "ingester" "memberlist" true -}}
 {{- $zonesMap := include "ingester.zoneAwareReplicationMap" $dict | fromYaml -}}
-{{- $storageClass := .Values.ingester.persistence.storageClass | default .Values.global.storageClass }}
-{{- if eq $storageClass "-" }}{{- $storageClass = "" }}{{- end }}
 {{- range $zoneName, $rolloutZone := $zonesMap -}}
 {{- with $ -}}
 {{- $_ := set $dict "rolloutZoneName" $zoneName -}}
@@ -212,13 +210,11 @@ spec:
         {{- end }}
         name: data
       spec:
-        {{- $storageClass := default .storageClass $rolloutZone.storageClass }}
-        {{- if $storageClass }}
-        {{- if (eq "-" $storageClass) }}
+        {{- $storageClass := coalesce $rolloutZone.storageClass .Values.ingester.persistence.storageClass .Values.global.storageClass }}
+        {{- if eq $storageClass "-" }}
         storageClassName: ""
-        {{- else }}
+        {{- else if $storageClass }}
         storageClassName: {{ $storageClass }}
-        {{- end }}
         {{- end }}
         accessModes:
           - ReadWriteOnce
