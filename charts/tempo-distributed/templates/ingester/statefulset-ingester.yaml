@@ -15,6 +15,9 @@ metadata:
   {{- if .Values.ingester.zoneAwareReplication.enabled }}
   annotations:
     {{- include "ingester.Annotations" $dict | nindent 4}}
+    {{- with $rolloutZone.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- else }}
   {{- with .Values.ingester.annotations }}
   annotations:
@@ -25,6 +28,7 @@ spec:
   {{- if not .Values.ingester.autoscaling.enabled }}
   replicas: {{ $rolloutZone.replicas }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "ingester.selectorLabels" $dict | nindent 6}}
@@ -51,6 +55,9 @@ spec:
         {{- with .Values.ingester.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with $rolloutZone.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- if or (.Values.ingester.priorityClassName) (.Values.global.priorityClassName) }}
       priorityClassName: {{ default .Values.ingester.priorityClassName .Values.global.priorityClassName }}
@@ -72,11 +79,13 @@ spec:
         - args:
             - -target=ingester
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- if ne $zoneName ""}}
             - -ingester.availability-zone={{ $zoneName }}
             {{- end }}
             {{- with .Values.ingester.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           image: {{ include "tempo.imageReference" $dict }}
@@ -98,10 +107,17 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-          {{- with .Values.ingester.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.ingester.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.ingester.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:

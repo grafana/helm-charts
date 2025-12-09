@@ -1,0 +1,31 @@
+apiVersion: v2
+name: grafana-mcp
+version: 0.2.2
+appVersion: 0.7.9
+kubeVersion: "^1.8.0-0"
+description: MCP server for Grafana.
+home: https://grafana.com
+icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
+sources:
+  - https://github.com/grafana/mcp-grafana
+  - https://github.com/grafana/helm-charts
+annotations:
+  "artifacthub.io/license": Apache-2.0
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/grafana/helm-charts
+    - name: Upstream Project
+      url: https://github.com/grafana/mcp-grafana
+maintainers:
+  - name: Sheikh-Abubaker
+    email: sheikhabubaker761@gmail.com
+  - name: jkroepke
+    email: github@jkroepke.de
+  - name: KyriosGN0
+    email: avivguiser@gmail.com
+  - name: QuentinBisson
+    email: quentin.bisson@gmail.com
+type: application
+keywords:
+  - monitoring
+  - mcp
