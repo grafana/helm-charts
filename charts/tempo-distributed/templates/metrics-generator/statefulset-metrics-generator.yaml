@@ -36,6 +36,9 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- if .Values.metricsGenerator.persistence.enabled }}
+        storage/size: {{ .Values.metricsGenerator.persistence.size | quote }}
+        {{- end }}
         {{- with .Values.tempo.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

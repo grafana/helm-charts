@@ -229,7 +229,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.datasources.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.datasources.startupProbe.httpGet.port | default "8080" }}"
+        value: "{{ .Values.sidecar.datasources.startupProbe.httpGet.port | default "8081" }}"
       {{- end }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
@@ -367,7 +367,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.notifiers.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.notifiers.startupProbe.httpGet.port | default "8080" }}"
+        value: "{{ .Values.sidecar.notifiers.startupProbe.httpGet.port | default "8082" }}"
       {{- end }}
       {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
@@ -441,7 +441,7 @@ initContainers:
     restartPolicy: {{ .Values.sidecar.dashboards.restartPolicy }}
     {{- with .Values.sidecar.dashboards.startupProbe }}
     startupProbe:
-      {{- toYaml . | nindent 6 }}u
+      {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- end }}
     env:
@@ -456,7 +456,7 @@ initContainers:
       {{- end }}
       {{- if .Values.sidecar.dashboards.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.dashboards.startupProbe.httpGet.port | default "8080" }}"
+        value: "{{ .Values.sidecar.dashboards.startupProbe.httpGet.port | default "8083" }}"
       {{- end }}
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED

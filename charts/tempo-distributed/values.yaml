@@ -236,6 +236,8 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
+    # -- Enable StatefulSetRecreation for changes to PVC size
+    enableStatefulSetRecreationForSizeChange: false
     # -- use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart**
     inMemory: false
     # -- Size of persistent or memory disk
@@ -435,6 +437,10 @@ metricsGenerator:
   persistence:
     # -- Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir
     enabled: false
+    # -- Enable StatefulSetRecreation for changes to PVC size.
+    # This means that the StatefulSet will be deleted, recreated (with the same name) and rolled when a change to the
+    # PVC size is detected. That way the PVC can be resized without manual intervention.
+    enableStatefulSetRecreationForSizeChange: false
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
