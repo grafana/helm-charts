@@ -1155,7 +1155,7 @@ sidecar:
     # startupProbe:
     #   httpGet:
     #     path: /healthz
-    #     port: 8080
+    #     port: 8083
     #   initialDelaySeconds: 5
     #   periodSeconds: 5
     #   failureThreshold: 60 # 5 minutes
@@ -1274,7 +1274,7 @@ sidecar:
     # startupProbe:
     #   httpGet:
     #     path: /healthz
-    #     port: 8080
+    #     port: 8081
     #   initialDelaySeconds: 5
     #   periodSeconds: 5
     #   failureThreshold: 60 # 5 minutes
@@ -1420,7 +1420,7 @@ sidecar:
     # startupProbe:
     #   httpGet:
     #     path: /healthz
-    #     port: 8080
+    #     port: 8082
     #   initialDelaySeconds: 5
     #   periodSeconds: 5
     #   failureThreshold: 60 # 5 minutes
