@@ -23,6 +23,9 @@ fullnameOverride: ""
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
+# -- custom deployment annotations
+annotations: {}
+
 podSecurityContext:
   runAsUser: 30000
   runAsGroup: 30000
@@ -31,7 +34,7 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-    - ALL
+      - ALL
   runAsNonRoot: true
   privileged: false
   allowPrivilegeEscalation: false
@@ -44,6 +47,18 @@ resources:
     cpu: 100m
     # -- Memory request for the container.
     memory: 256Mi
+
+serviceAccount:
+  # -- Toggle to create ServiceAccount
+  create: false
+  # -- Service account name
+  name: "pdc-agent"
+  # -- Annotations applied to created service account
+  annotations: {}
+  # -- Labels applied to created service account
+  labels: {}
+  # -- Automount API credentials for the Service Account. Disabled by default as the agent does not need Kubernetes API access
+  automountServiceAccountToken: false
 
 # -- not required, but left in as a choice
 nodeSelector: {}
