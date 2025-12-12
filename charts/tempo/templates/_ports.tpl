@@ -49,8 +49,13 @@
 {{- $port := regexSplit ":" . -1 | last }}
 - name: grpc-tempo-jaeger
   port: {{ $port }}
+  {{- if not $.Values.service.appProtocol.grpc }}
   protocol: TCP
+  {{- end }}
   targetPort: 14250
+  {{- if $.Values.service.appProtocol.grpc }}
+  appProtocol: {{ $.Values.service.appProtocol.grpc }}
+  {{- end }}
 {{- end }}
 - name: tempo-zipkin
   port: 9411
@@ -69,8 +74,13 @@
 {{- $port := regexSplit ":" . -1 | last }}
 - name: grpc-tempo-otlp
   port: {{ $port }}
+  {{- if not $.Values.service.appProtocol.grpc }}
   protocol: TCP
+  {{- end }}
   targetPort: 4317
+  {{- if $.Values.service.appProtocol.grpc }}
+  appProtocol: {{ $.Values.service.appProtocol.grpc }}
+  {{- end }}
 {{- end }}
 {{- $endpoint := .Values.tempo.receivers.otlp.protocols.http }}
 {{- with $endpoint.endpoint }}

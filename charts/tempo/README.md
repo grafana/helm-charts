@@ -41,6 +41,8 @@ Grafana Tempo Single Binary Mode
 | replicas | int | `1` | Define the amount of instances |
 | securityContext | object | `{"fsGroup":10001,"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001}` | securityContext for container |
 | service.annotations | object | `{}` |  |
+| service.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the service. This allows tempo to work with app protocol selection. |
+| service.appProtocol.grpc | string | `nil` | Set the optional appProtocol for grpc-tempo-otlp service port. Ex: "kubernetes.io/h2c", "kubernetes.io/ws", "grpc" etc. If this is set, it will remove the TCP protocol line from the port definition. |
 | service.clusterIP | string | `""` |  |
 | service.labels | object | `{}` |  |
 | service.loadBalancerIP | string | `nil` | IP address, in case of 'type: LoadBalancer' |
