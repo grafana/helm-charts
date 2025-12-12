@@ -26543,6 +26543,40 @@ entries:
   grafana-cloud-onboarding:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-12-12T16:45:09.607265038Z"
+    dependencies:
+    - condition: alloy-operator.enabled
+      name: alloy-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.3.14
+    - name: beyla
+      repository: https://grafana.github.io/helm-charts
+      version: 1.10.0
+    - condition: kube-state-metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 6.4.2
+    - condition: prometheus-node-exporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.49.2
+    - condition: prometheus-windows-exporter.enabled
+      name: prometheus-windows-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 0.12.2
+    - condition: kepler.enabled
+      name: kepler
+      repository: https://sustainable-computing-io.github.io/kepler-helm-chart
+      version: 0.6.1
+    description: A Helm chart for Grafana Cloud Onboarding on Kubernetes
+    digest: 2a471b0ea73ea568bfd10e87e0a4133697051df009578527b2ce5f35604fce6b
+    name: grafana-cloud-onboarding
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/grafana-cloud-onboarding-0.4.3/grafana-cloud-onboarding-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-12-05T16:33:12.274207462Z"
     dependencies:
     - condition: alloy-operator.enabled
@@ -101534,4 +101568,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-12T11:04:57.631472082Z"
+generated: "2025-12-12T16:45:09.63436467Z"
