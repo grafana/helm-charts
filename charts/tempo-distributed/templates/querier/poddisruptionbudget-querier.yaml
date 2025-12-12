@@ -1,4 +1,4 @@
-{{- if gt (int .Values.querier.replicas) 1 }}
+{{- if and (gt (int .Values.querier.replicas) 1) .Values.querier.podDisruptionBudget.enabled }}
 {{ $dict := dict "ctx" . "component" "querier" "memberlist" true }}
 apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
