@@ -35,7 +35,7 @@
               }' \
               "https://api.previews.chart-preview.com/previews")
             echo "response=$RESPONSE"
-            echo "url=$(echo $RESPONSE | jq -r '.preview_url')" >> $GITHUB_OUTPUT
+            echo "url=$(echo $RESPONSE | jq -r '.url')" >> $GITHUB_OUTPUT
 
         - name: Wait for Preview & Post Status
           uses: actions/github-script@v7
