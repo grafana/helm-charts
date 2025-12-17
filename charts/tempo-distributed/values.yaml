@@ -59,6 +59,9 @@ externalConfigVersion: '0'
 # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
 reportingEnabled: true
 
+# -- Enable streaming over HTTP for tempo and Tempo gateway(nginx)
+streamOverHTTPEnabled: false
+
 tempo:
   image:
     # -- The Docker registry
@@ -219,6 +222,10 @@ ingester:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for ingester
+    enabled: true
   # -- Override Pod Disruption Budget maxUnavailable with a static value
   # maxUnavailable: 1
   # -- Node selector for ingester pods
@@ -233,6 +240,8 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
+    # -- Enable StatefulSetRecreation for changes to PVC size
+    enableStatefulSetRecreationForSizeChange: false
     # -- use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart**
     inMemory: false
     # -- Size of persistent or memory disk
@@ -420,6 +429,10 @@ metricsGenerator:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for metrics-generator
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -432,6 +445,10 @@ metricsGenerator:
   persistence:
     # -- Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir
     enabled: false
+    # -- Enable StatefulSetRecreation for changes to PVC size.
+    # This means that the StatefulSet will be deleted, recreated (with the same name) and rolled when a change to the
+    # PVC size is detected. That way the PVC can be resized without manual intervention.
+    enableStatefulSetRecreationForSizeChange: false
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
@@ -621,6 +638,10 @@ distributor:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for distributor
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -762,6 +783,10 @@ compactor:
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for compactor
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -882,6 +907,10 @@ querier:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for querier
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Max Surge for querier pods
@@ -1100,6 +1129,10 @@ queryFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for query-frontend
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -1118,6 +1151,9 @@ queryFrontend:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
+  mcp_server:
+    # -- Enables Tempo MCP Server
+    enabled: false
 
 # Configuration for the federation-frontend
 # Can only be enabled if enterprise.enabled is true - requires license.
@@ -1213,6 +1249,10 @@ enterpriseFederationFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for enterprise-federation-frontend
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Node selector for federation-frontend pods
@@ -1321,6 +1361,8 @@ memberlist:
 # @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
+
+  stream_over_http_enabled: {{ .Values.streamOverHTTPEnabled }}
 
   usage_report:
     reporting_enabled: {{ .Values.reportingEnabled }}
@@ -1525,6 +1567,8 @@ config: |
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
+    mcp_server:
+      enabled: {{ .Values.queryFrontend.mcp_server.enabled }}
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
     search:
@@ -1798,6 +1842,10 @@ memcached:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for memcached
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Init containers for the memcached pod
@@ -2092,6 +2140,10 @@ gateway:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for gateway
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -2230,6 +2282,14 @@ gateway:
 
         server {
           listen             8080;
+
+          {{- if .Values.streamOverHTTPEnabled }}
+          http2 on;
+          location /tempopb.StreamingQuerier/ {
+            set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            grpc_pass   grpc://$query_frontend:3200;
+          }
+          {{- end }}
 
           {{- if .Values.gateway.basicAuth.enabled }}
           auth_basic           "Tempo";
