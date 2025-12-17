@@ -33,7 +33,7 @@
                   }
                 }
               }' \
-              "https://api.chart-preview.com/previews")
+              "https://api.previews.chart-preview.com/previews")
             echo "response=$RESPONSE"
             echo "url=$(echo $RESPONSE | jq -r '.preview_url')" >> $GITHUB_OUTPUT
 
@@ -44,7 +44,7 @@
               const maxAttempts = 30;
               for (let i = 0; i < maxAttempts; i++) {
                 const res = await fetch(
-                  `https://api.chart-preview.com/previews?repo=${{ github.repository }}&pr=${{ github.event.pull_request.number }}`,
+                  `https://api.previews.chart-preview.com/previews?repo=${{ github.repository }}&pr=${{ github.event.pull_request.number }}`,
                   { headers: { 'Authorization': 'Bearer ${{ secrets.PREVIEW_TOKEN }}' }}
                 );
                 const data = await res.json();
@@ -81,5 +81,5 @@
           run: |
             curl -fsSL -X DELETE \
               -H "Authorization: Bearer ${{ secrets.PREVIEW_TOKEN }}" \
-              "https://api.chart-preview.com/previews?repo=${{ github.repository }}&pr=${{ github.event.pull_request.number }}"
+              "https://api.previews.chart-preview.com/previews?repo=${{ github.repository }}&pr=${{ github.event.pull_request.number }}"
             echo "✅ Preview teardown triggered"
