@@ -30,6 +30,10 @@
                 "values": {
                   "rbac": {
                     "namespaced": true
+                  },
+                  "ingress": {
+                    "enabled": true,
+                    "ingressClassName": "nginx"
                   }
                 }
               }' \
