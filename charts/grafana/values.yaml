@@ -46,7 +46,7 @@ serviceAccount:
   # autoMount: false
   automountServiceAccountToken: false
 
-replicas: 2
+replicas: 1 
 
 ## Create a headless service for the deployment
 headlessService: false
