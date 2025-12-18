@@ -351,6 +351,12 @@ route:
     ## Additional custom rules that can be added to the route
     additionalRules: []
 
+    ## httpsRedirect adds a filter for redirecting to https (HTTP 301 Moved Permanently).
+    ## To redirect HTTP traffic to HTTPS, you need to have a Gateway with both HTTP and HTTPS listeners.
+    ## Matches and filters do not take effect if enabled.
+    ## Ref. https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/
+    httpsRedirect: false
+
 resources: {}
 #  limits:
 #    cpu: 100m
