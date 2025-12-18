@@ -1,89 +1,40 @@
-  name: Chart Preview
-  on:
-    pull_request:
-      types: [opened, synchronize, reopened, closed]
+name: Chart Preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
-  permissions:
-    statuses: write
-
-  jobs:
-    deploy-preview:
-      if: github.event.action != 'closed'
-      runs-on: ubuntu-latest
-      steps:
-        - name: Deploy Preview
-          id: preview
-          run: |
-            RESPONSE=$(curl -fsSL -X POST \
-              -H "Authorization: Bearer ${{ secrets.PREVIEW_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d '{
-                "repo": "${{ github.repository }}",
-                "pr": ${{ github.event.pull_request.number }},
-                "git": {
-                  "provider": "github",
-                  "owner": "${{ github.repository_owner }}",
-                  "repo": "${{ github.event.repository.name }}",
-                  "ref": "${{ github.event.pull_request.head.sha }}",
-                  "chartPath": "charts/grafana"
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Preview
+        run: |
+          curl -fsSL -X POST \
+            -H "Authorization: Bearer ${{ secrets.PREVIEW_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repo": "${{ github.repository }}",
+              "pr": ${{ github.event.pull_request.number }},
+              "git": {
+                "provider": "github",
+                "owner": "${{ github.repository_owner }}",
+                "repo": "${{ github.event.repository.name }}",
+                "ref": "${{ github.event.pull_request.head.sha }}",
+                "chartPath": "charts/grafana"
+              },
+              "values": {
+                "rbac": {
+                  "namespaced": true
                 },
-                "values": {
-                  "rbac": {
-                    "namespaced": true
-                  },
-                  "ingress": {
-                    "enabled": true,
-                    "ingressClassName": "nginx"
-                  }
+                "ingress": {
+                  "enabled": true,
+                  "ingressClassName": "nginx"
                 }
-              }' \
-              "https://api.previews.chart-preview.com/previews")
-            echo "response=$RESPONSE"
-            echo "url=$(echo $RESPONSE | jq -r '.url')" >> $GITHUB_OUTPUT
-
-        - name: Wait for Preview & Post Status
-          uses: actions/github-script@v7
-          with:
-            script: |
-              const maxAttempts = 30;
-              for (let i = 0; i < maxAttempts; i++) {
-                const res = await fetch(
-                  `https://api.previews.chart-preview.com/previews?repo=${{ github.repository }}&pr=${{ github.event.pull_request.number }}`,
-                  { headers: { 'Authorization': 'Bearer ${{ secrets.PREVIEW_TOKEN }}' }}
-                );
-                const data = await res.json();
-                console.log(`Attempt ${i+1}: Status = ${data.data?.status}`);
-
-                if (data.data?.status === 'Ready') {
-                  await github.rest.repos.createCommitStatus({
-                    owner: context.repo.owner, repo: context.repo.repo,
-                    sha: context.sha, state: 'success',
-                    target_url: '${{ steps.preview.outputs.url }}',
-                    description: 'Preview ready', context: 'Chart Preview'
-                  });
-                  console.log('✅ Preview ready: ${{ steps.preview.outputs.url }}');
-                  return;
-                } else if (data.data?.status === 'Failed') {
-                  await github.rest.repos.createCommitStatus({
-                    owner: context.repo.owner, repo: context.repo.repo,
-                    sha: context.sha, state: 'failure',
-                    description: data.data.message?.slice(0,140) || 'Deploy failed',
-                    context: 'Chart Preview'
-                  });
-                  core.setFailed(data.data.message);
-                  return;
-                }
-                await new Promise(r => setTimeout(r, 10000));
+              },
+              "head": {
+                "owner": "${{ github.repository_owner }}",
+                "repo": "${{ github.event.repository.name }}",
+                "sha": "${{ github.event.pull_request.head.sha }}"
               }
-              core.setFailed('Timeout waiting for preview');
-
-    teardown-preview:
-      if: github.event.action == 'closed'
-      runs-on: ubuntu-latest
-      steps:
-        - name: Teardown Preview
-          run: |
-            curl -fsSL -X DELETE \
-              -H "Authorization: Bearer ${{ secrets.PREVIEW_TOKEN }}" \
-              "https://api.previews.chart-preview.com/previews?repo=${{ github.repository }}&pr=${{ github.event.pull_request.number }}"
-            echo "✅ Preview teardown triggered"
+            }' \
+            "https://api.previews.chart-preview.com/previews"
