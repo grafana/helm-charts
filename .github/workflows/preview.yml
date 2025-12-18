@@ -30,6 +30,11 @@ jobs:
                   "enabled": true,
                   "ingressClassName": "nginx"
                 }
+              },
+              "head": {
+                "owner": "${{ github.repository_owner }}",
+                "repo": "${{ github.event.repository.name }}",
+                "sha": "${{ github.event.pull_request.head.sha }}"
               }
             }' \
             "https://api.previews.chart-preview.com/previews"
