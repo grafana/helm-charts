@@ -36,6 +36,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.hostNetwork }}
+      hostNetwork: {{ . }}
+      {{- end }}
       {{- with .Values.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}
@@ -54,9 +57,7 @@ spec:
           {{- if .Values.webhooks.enabled }}
           - -server-tls.enabled=true
           - -server-tls.self-signed-cert.secret-name={{ .Values.webhooks.selfSignedCertSecretName }}
-          {{- if .Values.fullnameOverride }}
-          - -server-tls.self-signed-cert.dns-name={{ include "rollout-operator.fullname" .}}.{{ .Release.Namespace }}.svc
-          {{- end }}
+          - -server-tls.self-signed-cert.dns-name={{ include "rollout-operator.fullname" . }}.{{ .Release.Namespace }}.svc
           {{- end }}
           {{- range .Values.extraArgs  }}
           - {{ . }}

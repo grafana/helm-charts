@@ -12,7 +12,7 @@ revisionHistoryLimit: 10
 
 image:
   repository: grafana/rollout-operator
-  registry: ""
+  registry: docker.io
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -24,6 +24,10 @@ hostAliases: []
 #  - ip: 1.2.3.4
 #    hostnames:
 #      - domain.tld
+
+# -- Enable or disable the use of host networking for the pod.
+# When true, the pod will use the node's network namespace
+hostNetwork: false
 
 nameOverride: ""
 fullnameOverride: ""
@@ -108,3 +112,15 @@ webhooks:
   failurePolicy: "Fail"
   # -- Secret resource name for the TLS certificate to be used with the webhooks
   selfSignedCertSecretName: "certificate"
+  # -- objectSelector to filter which objects the webhooks apply to.
+  objectSelector: {}
+  # See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-objectselector
+  # Example:
+  #   objectSelector:
+  #     matchLabels:
+  #       app: loki
+  #     matchExpressions:
+  #       - key: environment
+  #         operator: In
+  #         values:
+  #           - production
