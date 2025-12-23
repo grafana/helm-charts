@@ -7,9 +7,12 @@ global:
   # -- Common labels for all object directly managed by this chart.
   commonLabels: {}
 
+# -- Number of old ReplicaSets to retain
+revisionHistoryLimit: 10
 
 image:
   repository: grafana/rollout-operator
+  registry: docker.io
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -21,6 +24,10 @@ hostAliases: []
 #  - ip: 1.2.3.4
 #    hostnames:
 #      - domain.tld
+
+# -- Enable or disable the use of host networking for the pod.
+# When true, the pod will use the node's network namespace
+hostNetwork: false
 
 nameOverride: ""
 fullnameOverride: ""
@@ -50,6 +57,15 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+# -- List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`)
+extraArgs: []
+
+# -- Environment variables to add to rollout-operator container
+extraEnv: []
+
+# -- Environment variables from secrets or configmaps to add to rollout-operator container
+extraEnvFrom: []
 
 resources:
   limits:
@@ -87,3 +103,24 @@ serviceMonitor:
   # -- ServiceMonitor relabel configs to apply to samples before scraping
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   relabelings: []
+
+webhooks:
+  # -- Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks.
+  # Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory.
+  enabled: true
+  # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
+  failurePolicy: "Fail"
+  # -- Secret resource name for the TLS certificate to be used with the webhooks
+  selfSignedCertSecretName: "certificate"
+  # -- objectSelector to filter which objects the webhooks apply to.
+  objectSelector: {}
+  # See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-objectselector
+  # Example:
+  #   objectSelector:
+  #     matchLabels:
+  #       app: loki
+  #     matchExpressions:
+  #       - key: environment
+  #         operator: In
+  #         values:
+  #           - production

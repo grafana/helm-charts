@@ -63,11 +63,11 @@ spec:
         {{- range $key, $value := .Values.tempo.extraArgs }}
         - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
-        image: {{ .Values.tempo.repository }}:{{ .Values.tempo.tag | default .Chart.AppVersion }}
+        image: {{ .Values.tempo.registry }}/{{ .Values.tempo.repository }}:{{ .Values.tempo.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
         name: tempo
         ports:
-        - containerPort: 3100
+        - containerPort: 3200
           name: prom-metrics
         - containerPort: 6831
           name: jaeger-thrift-c
@@ -125,8 +125,8 @@ spec:
         {{- end }}
       {{- if .Values.tempoQuery.enabled }}
       - args:
-        - --query.base-path=/
-        - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
+        - -config
+        - /conf/tempo-query.yaml
         {{- range $key, $value := .Values.tempoQuery.extraArgs }}
         - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
