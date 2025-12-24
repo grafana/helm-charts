@@ -327,6 +327,10 @@ persistence:
   enabled: false
     # -- Enable StatefulSetAutoDeletePVC feature
   enableStatefulSetAutoDeletePVC: false
+  # -- Enable StatefulSetRecreation for changes to PVC size.
+  # This means that the StatefulSet will be deleted, recreated (with the same name) and rolled when a change to the
+  # PVC size is detected. That way the PVC can be resized without manual intervention.
+  enableStatefulSetRecreationForSizeChange: false
   # storageClassName: local-path
   accessModes:
     - ReadWriteOnce
