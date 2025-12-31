@@ -80,12 +80,12 @@ deploymentStrategy:
 readinessProbe:
   httpGet:
     path: /api/health
-    port: 3000
+    port: grafana
 
 livenessProbe:
   httpGet:
     path: /api/health
-    port: 3000
+    port: grafana
   initialDelaySeconds: 60
   timeoutSeconds: 30
   failureThreshold: 10
