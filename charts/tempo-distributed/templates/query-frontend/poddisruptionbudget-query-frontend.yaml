@@ -1,4 +1,4 @@
-{{- if gt (int .Values.queryFrontend.replicas) 1 }}
+{{- if and (gt (int .Values.queryFrontend.replicas) 1) .Values.queryFrontend.podDisruptionBudget.enabled }}
 {{ $dict := dict "ctx" . "component" "query-frontend" }}
 apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
