@@ -8,6 +8,12 @@ global:
     # Example:
     # pullSecrets: [ my-dockerconfigjson-secret ]
     pullSecrets: []
+  # -- Adding common labels to all K8S resources including pods
+  commonLabels: {}
+  # -- Adding labels to K8S resources (excluding pods)
+  labels: {}
+  # -- Adding labels to all pods
+  podLabels: {}
   # -- Overrides the priorityClassName for all pods
   priorityClassName: null
   # -- configures cluster domain ("cluster.local" by default)
@@ -19,6 +25,12 @@ global:
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []
+  # -- Common environment variables which come from a ConfigMap or Secret to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
+  extraEnvFrom: []
+  # -- Common args to add to all pods directly managed by this chart.
+  # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
+  extraArgs: []
   # -- Global storage class to be used for persisted components
   storageClass: null
 fullnameOverride: ''
@@ -47,6 +59,9 @@ externalConfigVersion: '0'
 # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
 reportingEnabled: true
 
+# -- Enable streaming over HTTP for tempo and Tempo gateway(nginx)
+streamOverHTTPEnabled: false
+
 tempo:
   image:
     # -- The Docker registry
@@ -58,6 +73,12 @@ tempo:
     # -- Overrides the image tag whose default is the chart's appVersion
     tag: null
     pullPolicy: IfNotPresent
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
   readinessProbe:
     httpGet:
       path: /ready
@@ -109,6 +130,8 @@ serviceAccount:
   name: null
   # -- Image pull secrets for the service account
   imagePullSecrets: []
+  # -- Labels for the service account
+  labels: {}
   # -- Annotations for the service account
   annotations: {}
   automountServiceAccountToken: false
@@ -123,6 +146,8 @@ rbac:
 ingester:
   # -- Annotations for the ingester StatefulSet
   annotations: {}
+  # -- Labels for the ingester StatefulSet
+  labels: {}
   # -- Number of replicas for the ingester
   replicas: 3
   # -- hostAliases to add
@@ -197,6 +222,10 @@ ingester:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for ingester
+    enabled: true
   # -- Override Pod Disruption Budget maxUnavailable with a static value
   # maxUnavailable: 1
   # -- Node selector for ingester pods
@@ -211,6 +240,8 @@ ingester:
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
     enabled: false
+    # -- Enable StatefulSetRecreation for changes to PVC size
+    enableStatefulSetRecreationForSizeChange: false
     # -- use emptyDir with ramdisk instead of PVC. **Please note that all data in ingester will be lost on pod restart**
     inMemory: false
     # -- Size of persistent or memory disk
@@ -259,6 +290,9 @@ ingester:
     type: ClusterIP
     # -- https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy/
     internalTrafficPolicy: Cluster
+  serviceDiscovery:
+    # -- Annotations for ingester discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -287,6 +321,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-a statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-a pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-b
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -300,6 +338,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-b statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-b pods
+        podAnnotations: {}
       # -- Name of the zone, used in labels and selectors. Must follow Kubernetes naming restrictions: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       - name: zone-c
         # -- nodeselector to restrict where pods of this zone can be placed. E.g.:
@@ -313,6 +355,10 @@ ingester:
         # If set to "-", then use `storageClassName: ""`, which disables dynamic provisioning
         # If undefined or set to null (the default), then fall back to the value of `ingester.persistentVolume.storageClass`.
         storageClass: null
+        # -- Specific annotations to add to zone-c statefulset
+        annotations: {}
+        # -- Specific annotations to add to zone-c pods
+        podAnnotations: {}
 
 # Configuration for the metrics-generator
 metricsGenerator:
@@ -383,6 +429,10 @@ metricsGenerator:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for metrics-generator
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -395,6 +445,10 @@ metricsGenerator:
   persistence:
     # -- Enable creating PVCs if you have kind set to StatefulSet. This disables using local disk or memory configured in walEmptyDir
     enabled: false
+    # -- Enable StatefulSetRecreation for changes to PVC size.
+    # This means that the StatefulSet will be deleted, recreated (with the same name) and rolled when a change to the
+    # PVC size is detected. That way the PVC can be resized without manual intervention.
+    enableStatefulSetRecreationForSizeChange: false
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
@@ -471,6 +525,9 @@ metricsGenerator:
   service:
     # -- Annotations for Metrics Generator service
     annotations: {}
+  serviceDiscovery:
+    # -- Annotations for Metrics Generator discovery service
+    annotations: {}
   # -- Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
@@ -480,6 +537,8 @@ metricsGenerator:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  # -- Annotations for distributor deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -547,6 +606,8 @@ distributor:
   resources: {}
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Container lifecycle hooks for the distributor
+  lifecycle: {}
   # -- topologySpread for distributor pods. Passed through `tpl` and, thus, to be configured as string
   # @default -- Defaults to allow skew no more then 1 node per AZ
   topologySpreadConstraints: |
@@ -577,6 +638,10 @@ distributor:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for distributor
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -604,6 +669,8 @@ distributor:
       filter_by_status_error: false
     # -- Disables write extension with inactive ingesters
     extend_writes: null
+    # -- Trace Attribute bytes limit. This is the maximum number of bytes that can be used in a trace.0 for no limit.
+    max_attribute_bytes: 0
     # Configures usage trackers in the distributor which expose metrics of ingested traffic grouped by configurable
     # attributes exposed on /usage_metrics.
     cost_attribution:
@@ -623,7 +690,13 @@ distributor:
 compactor:
   # -- Number of replicas for the compactor
   replicas: 1
-
+  # -- Annotations for compactor deployment
+  annotations: {}
+  # Strategy of updating pods
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   # -- Autoscaling configurations
   autoscaling:
     # -- Enable autoscaling for the compactor
@@ -710,6 +783,10 @@ compactor:
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for compactor
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -765,6 +842,8 @@ querier:
   #  - ip: 1.2.3.4
   #    hostnames:
   #      - domain.tld
+  # -- Annotations for querier deployment
+  annotations: {}
   autoscaling:
     # -- Enable autoscaling for the querier
     enabled: false
@@ -828,6 +907,10 @@ querier:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for querier
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Max Surge for querier pods
@@ -898,6 +981,8 @@ queryFrontend:
       backend: 127.0.0.1:3200
   # -- Number of replicas for the query-frontend
   replicas: 1
+  # -- Annotations for the query-frontend Deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -965,6 +1050,10 @@ queryFrontend:
   service:
     # -- Port of the query-frontend service
     port: 16686
+    # -- http Metrics port of the query-frontend service
+    httpMetricsPort: 3200
+    # -- grpc Port of the query-frontend service
+    grpcPort: 9095
     # -- Annotations for queryFrontend service
     annotations: {}
     # -- Labels for queryFrontend service
@@ -1040,6 +1129,10 @@ queryFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for query-frontend
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -1058,6 +1151,9 @@ queryFrontend:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
+  mcp_server:
+    # -- Enables Tempo MCP Server
+    enabled: false
 
 # Configuration for the federation-frontend
 # Can only be enabled if enterprise.enabled is true - requires license.
@@ -1066,6 +1162,8 @@ enterpriseFederationFrontend:
   enabled: false
   # -- Number of replicas for the federation-frontend
   replicas: 1
+  # -- Annotations for the federation-frontend Deployment
+  annotations: {}
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
@@ -1151,6 +1249,10 @@ enterpriseFederationFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for enterprise-federation-frontend
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Node selector for federation-frontend pods
@@ -1259,6 +1361,8 @@ memberlist:
 # @default -- See values.yaml
 config: |
   multitenancy_enabled: {{ .Values.multitenancyEnabled }}
+
+  stream_over_http_enabled: {{ .Values.streamOverHTTPEnabled }}
 
   usage_report:
     reporting_enabled: {{ .Values.reportingEnabled }}
@@ -1447,6 +1551,9 @@ config: |
     {{- if .Values.distributor.config.extend_writes }}
     extend_writes: {{ .Values.distributor.config.extend_writes }}
     {{- end }}
+    {{- if .Values.distributor.config.max_attribute_bytes }}
+    max_attribute_bytes: {{ .Values.distributor.config.max_attribute_bytes }}
+    {{- end }}
   querier:
     frontend_worker:
       frontend_address: {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend-discovery") }}:9095
@@ -1460,6 +1567,8 @@ config: |
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
+    mcp_server:
+      enabled: {{ .Values.queryFrontend.mcp_server.enabled }}
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
     search:
@@ -1571,6 +1680,12 @@ config: |
       {{- if .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       blocklist_poll_stale_tenant_index: {{ .Values.storage.trace.blocklist_poll_stale_tenant_index }}
       {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_age }}
+      empty_tenant_deletion_age: {{ .Values.storage.trace.empty_tenant_deletion_age }}
+      {{- end }}
+      {{- if .Values.storage.trace.empty_tenant_deletion_enabled }}
+      empty_tenant_deletion_enabled: {{ .Values.storage.trace.empty_tenant_deletion_enabled }}
+      {{- end }}
 
 # Set Tempo server configuration
 # Refers to https://grafana.com/docs/tempo/latest/configuration/#server
@@ -1644,7 +1759,12 @@ storage:
     blocklist_poll_tenant_index_builders: null
     # -- The oldest allowable tenant index.
     blocklist_poll_stale_tenant_index: null
-  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true.
+    # -- How fast the poller will delete a tenant if it is empty. Will need to be enabled in 'empty_tenant_deletion_enabled'.
+    empty_tenant_deletion_age: null
+    # -- Delete empty tenants.
+    empty_tenant_deletion_enabled: null
+
+  # Settings for the Admin client storage backend and buckets. Only valid is enterprise.enabled is true
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: filesystem
@@ -1665,7 +1785,7 @@ per_tenant_overrides:
   #     - span-metrics
 
 # memcached is for all of the Tempo pieces to coordinate with each other.
-# you can use your self memcacherd by set enable: false and host + service
+# you can use your own self deployed memcached by setting `memcached.enabled` to false and `memcached.host` + `memcached.service`
 memcached:
   # -- Specified whether the memcached cachce should be enabled
   enabled: true
@@ -1677,7 +1797,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.33-alpine
+    tag: 1.6.39-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   host: memcached
@@ -1722,6 +1842,10 @@ memcached:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for memcached
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Init containers for the memcached pod
@@ -1768,7 +1892,7 @@ memcachedExporter:
     # -- Memcached Exporter Docker image repository
     repository: prom/memcached-exporter
     # -- Memcached Exporter Docker image tag
-    tag: v0.14.4
+    tag: v0.15.3
     # -- Memcached Exporter Docker image pull policy
     pullPolicy: IfNotPresent
     # -- Memcached Exporter resource requests and limits
@@ -2016,6 +2140,10 @@ gateway:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for gateway
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -2079,6 +2207,13 @@ gateway:
       {{ htpasswd (required "'gateway.basicAuth.username' is required" .Values.gateway.basicAuth.username) (required "'gateway.basicAuth.password' is required" .Values.gateway.basicAuth.password) }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
+  # Configures the liveness probe for the gateway
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-metrics
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
   # Configures the readiness probe for the gateway
   readinessProbe:
     httpGet:
@@ -2147,6 +2282,14 @@ gateway:
 
         server {
           listen             8080;
+
+          {{- if .Values.streamOverHTTPEnabled }}
+          http2 on;
+          location /tempopb.StreamingQuerier/ {
+            set $query_frontend {{ include "tempo.resourceName" (dict "ctx" . "component" "query-frontend") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }};
+            grpc_pass   grpc://$query_frontend:3200;
+          }
+          {{- end }}
 
           {{- if .Values.gateway.basicAuth.enabled }}
           auth_basic           "Tempo";
@@ -2372,7 +2515,7 @@ provisioner:
 
 
 kubectlImage:
-  repository: bitnami/kubectl
+  repository: alpine/kubectl
   tag: latest
   pullPolicy: IfNotPresent
 

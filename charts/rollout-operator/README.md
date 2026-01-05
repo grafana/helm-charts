@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.30.0](https://img.shields.io/badge/Version-0.30.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.28.0](https://img.shields.io/badge/AppVersion-v0.28.0-informational?style=flat-square)
+![Version: 0.40.0](https://img.shields.io/badge/Version-0.40.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.33.0](https://img.shields.io/badge/AppVersion-v0.33.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -35,16 +35,28 @@ helm install  -n <namespace> <release> grafana/rollout-operator
 The Grafana rollout-operator should be installed in the same namespace as the statefulsets it is operating upon.
 It is not a highly available application and runs as a single pod.
 
+### Upgrade of Grafana Rollout Operator
+
+Starting with v0.33.0 of the rollout-operator chart, the rollout-operator webhooks are enabled. See https://github.com/grafana/rollout-operator/#webhooks.
+
+Before upgrading to this version, make sure that the CustomResourceDefinitions (CRDs) in the `crds` directory are applied to your cluster.
+
+Manually applying these CRDs is only required if upgrading from a chart <= v0.32.0.
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | extraArgs | list | `[]` | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`) |
+| extraEnv | list | `[]` | Environment variables to add to rollout-operator container |
+| extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to rollout-operator container |
 | fullnameOverride | string | `""` |  |
 | global.commonLabels | object | `{}` | Common labels for all object directly managed by this chart. |
 | hostAliases | list | `[]` | hostAliases to add |
+| hostNetwork | bool | `false` | Enable or disable the use of host networking for the pod. When true, the pod will use the node's network namespace |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"grafana/rollout-operator"` |  |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
@@ -58,6 +70,7 @@ It is not a highly available application and runs as a single pod.
 | resources.limits.memory | string | `"200Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"100Mi"` |  |
+| revisionHistoryLimit | int | `10` | Number of old ReplicaSets to retain |
 | securityContext | object | `{}` |  |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
@@ -71,3 +84,7 @@ It is not a highly available application and runs as a single pod.
 | serviceMonitor.relabelings | list | `[]` | ServiceMonitor relabel configs to apply to samples before scraping https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig |
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tolerations | list | `[]` |  |
+| webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks. Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory. |
+| webhooks.failurePolicy | string | `"Fail"` | Validating and mutating webhook failure policy. `Ignore` or `Fail`. |
+| webhooks.objectSelector | object | `{}` | objectSelector to filter which objects the webhooks apply to. |
+| webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |

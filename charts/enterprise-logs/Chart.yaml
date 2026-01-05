@@ -1,7 +1,8 @@
 apiVersion: "v2"
 name: "enterprise-logs"
 type: application
-version: "2.5.0"
+version: "2.5.1"
+deprecated: true
 appVersion: "v1.5.2"
 kubeVersion: "^1.10.0-0"
 description: "Grafana Enterprise Logs"
@@ -12,6 +13,6 @@ dependencies:
   repository: "https://grafana.github.io/helm-charts"
 - name: minio
   alias: minio
-  version: 8.0.9
-  repository: https://helm.min.io/
+  version: 4.0.12
+  repository: https://charts.min.io/
   condition: minio.enabled
