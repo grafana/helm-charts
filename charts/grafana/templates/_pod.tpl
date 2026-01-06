@@ -139,7 +139,7 @@ initContainers:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.alerts.startupProbe.httpGet.port | default "8081" }}"
+        value: {{ include "grafana.sidecar.alerts.healthPort" . }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -235,7 +235,7 @@ initContainers:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.datasources.startupProbe.httpGet.port | default "8082" }}"
+        value: {{ include "grafana.sidecar.datasources.healthPort" . }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -371,7 +371,7 @@ initContainers:
         value: "{{ $value }}"
       {{- end }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.notifiers.startupProbe.httpGet.port | default "8083" }}"
+        value: {{ include "grafana.sidecar.notifiers.healthPort" . }}
       {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -467,7 +467,7 @@ initContainers:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.dashboards.startupProbe.httpGet.port | default "8084" }}"
+        value: {{ include "grafana.sidecar.dashboards.healthPort" . }}
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
