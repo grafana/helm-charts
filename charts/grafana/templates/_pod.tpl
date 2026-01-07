@@ -1294,6 +1294,8 @@ containers:
         {{- with .Values.persistence.subPath }}
         subPath: {{ tpl . $root }}
         {{- end }}
+      - name: search
+        mountPath: "/var/lib/grafana-search"
       {{- with .Values.dashboards }}
       {{- range $provider, $dashboards := . }}
       {{- range $key, $value := $dashboards }}
@@ -1618,6 +1620,8 @@ volumes:
     emptyDir: {}
     {{- end }}
   {{- end }}
+  - name: search
+    emptyDir: {}
   {{- if .Values.sidecar.alerts.enabled }}
   - name: sc-alerts-volume
     {{- if .Values.sidecar.alerts.sizeLimit }}
