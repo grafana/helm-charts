@@ -138,16 +138,23 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
-      {{- if .Values.sidecar.alerts.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.alerts.startupProbe.httpGet.port | default "8080" }}"
-      {{- end }}
+        value: {{ include "grafana.sidecar.alerts.healthPort" . }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
+      {{- if and .Values.sidecar.alerts.restartPolicy (eq .Values.sidecar.alerts.restartPolicy "Always")}}
+      - name: METHOD
+        value: {{ .Values.sidecar.alerts.watchMethod }}
+      {{- if eq .Values.sidecar.alerts.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- else }}
       - name: METHOD
         value: "LIST"
+      {{- end }}
       - name: LABEL
         value: "{{ tpl .Values.sidecar.alerts.label $root }}"
       {{- with .Values.sidecar.alerts.labelValue }}
@@ -227,10 +234,8 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
-      {{- if .Values.sidecar.datasources.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.datasources.startupProbe.httpGet.port | default "8081" }}"
-      {{- end }}
+        value: {{ include "grafana.sidecar.datasources.healthPort" . }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -365,16 +370,23 @@ initContainers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.notifiers.startupProbe.httpGet.port | default "8082" }}"
-      {{- end }}
+        value: {{ include "grafana.sidecar.notifiers.healthPort" . }}
       {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
+      {{- if and .Values.sidecar.notifiers.restartPolicy (eq .Values.sidecar.notifiers.restartPolicy "Always")}}
+      - name: METHOD
+        value: {{ .Values.sidecar.notifiers.watchMethod }}
+      {{- if eq .Values.sidecar.notifiers.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- else }}
       - name: METHOD
         value: LIST
+      {{- end }}
       - name: LABEL
         value: "{{ tpl .Values.sidecar.notifiers.label $root }}"
       {{- with .Values.sidecar.notifiers.labelValue }}
@@ -454,10 +466,8 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
-      {{- if .Values.sidecar.dashboards.startupProbe }}
       - name: HEALTH_PORT
-        value: "{{ .Values.sidecar.dashboards.startupProbe.httpGet.port | default "8083" }}"
-      {{- end }}
+        value: {{ include "grafana.sidecar.dashboards.healthPort" . }}
       {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -1284,6 +1294,8 @@ containers:
         {{- with .Values.persistence.subPath }}
         subPath: {{ tpl . $root }}
         {{- end }}
+      - name: search
+        mountPath: "/var/lib/grafana-search"
       {{- with .Values.dashboards }}
       {{- range $provider, $dashboards := . }}
       {{- range $key, $value := $dashboards }}
@@ -1608,6 +1620,8 @@ volumes:
     emptyDir: {}
     {{- end }}
   {{- end }}
+  - name: search
+    emptyDir: {}
   {{- if .Values.sidecar.alerts.enabled }}
   - name: sc-alerts-volume
     {{- if .Values.sidecar.alerts.sizeLimit }}

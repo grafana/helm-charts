@@ -1,6 +1,6 @@
 # tempo-distributed
 
-![Version: 1.58.1](https://img.shields.io/badge/Version-1.58.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.60.0](https://img.shields.io/badge/Version-1.60.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
 
@@ -14,7 +14,7 @@ Grafana Tempo in MicroService mode
 |------------|------|---------|
 | https://charts.min.io/ | minio(minio) | 4.1.0 |
 | https://grafana.github.io/helm-charts | grafana-agent-operator(grafana-agent-operator) | 0.5.1 |
-| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.37.1 |
+| https://grafana.github.io/helm-charts | rollout_operator(rollout-operator) | 0.40.0 |
 
 ## Chart Repo
 
@@ -350,6 +350,8 @@ The memcached default args are removed and should be provided manually. The sett
 | compactor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | compactor.nodeSelector | object | `{}` | Node selector for compactor pods |
 | compactor.podAnnotations | object | `{}` | Annotations for compactor pods |
+| compactor.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| compactor.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for compactor |
 | compactor.podLabels | object | `{}` | Labels for compactor pods |
 | compactor.priorityClassName | string | `nil` | The name of the PriorityClass for compactor pods |
 | compactor.replicas | int | `1` | Number of replicas for the compactor |
@@ -398,6 +400,8 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | distributor.nodeSelector | object | `{}` | Node selector for distributor pods |
 | distributor.podAnnotations | object | `{}` | Annotations for distributor pods |
+| distributor.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| distributor.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for distributor |
 | distributor.podLabels | object | `{}` | Labels for distributor pods |
 | distributor.priorityClassName | string | `nil` | The name of the PriorityClass for distributor pods |
 | distributor.replicas | int | `1` | Number of replicas for the distributor |
@@ -440,6 +444,8 @@ The memcached default args are removed and should be provided manually. The sett
 | enterpriseFederationFrontend.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | enterpriseFederationFrontend.nodeSelector | object | `{}` | Node selector for federation-frontend pods |
 | enterpriseFederationFrontend.podAnnotations | object | `{}` | Annotations for federation-frontend pods |
+| enterpriseFederationFrontend.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| enterpriseFederationFrontend.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for enterprise-federation-frontend |
 | enterpriseFederationFrontend.podLabels | object | `{}` | Labels for enterpriseFederationFrontend pods |
 | enterpriseFederationFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for federation-frontend pods |
 | enterpriseFederationFrontend.proxy_targets | list | `[]` |  |
@@ -547,6 +553,8 @@ The memcached default args are removed and should be provided manually. The sett
 | gateway.nginxConfig.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | gateway.nodeSelector | object | `{}` | Node selector for gateway pods |
 | gateway.podAnnotations | object | `{}` | Annotations for gateway pods |
+| gateway.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| gateway.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for gateway |
 | gateway.podLabels | object | `{}` | Labels for gateway pods |
 | gateway.priorityClassName | string | `nil` | The name of the PriorityClass for gateway pods |
 | gateway.readinessProbe.httpGet.path | string | `"/"` |  |
@@ -622,6 +630,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
 | ingester.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | ingester.podAnnotations | object | `{}` | Annotations for ingester pods |
+| ingester.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| ingester.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for ingester |
 | ingester.podLabels | object | `{}` | Labels for ingester pods |
 | ingester.priorityClassName | string | `nil` | The name of the PriorityClass for ingester pods |
 | ingester.replicas | int | `3` | Number of replicas for the ingester |
@@ -693,6 +703,8 @@ The memcached default args are removed and should be provided manually. The sett
 | memcached.livenessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":5}` | configuration for liveness probe for memcached statefulset |
 | memcached.maxUnavailable | int | `1` | Pod Disruption Budget maxUnavailable |
 | memcached.podAnnotations | object | `{}` | Annotations for memcached pods |
+| memcached.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| memcached.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for memcached |
 | memcached.podLabels | object | `{}` | Labels for memcached pods |
 | memcached.readinessProbe | object | `{"failureThreshold":6,"initialDelaySeconds":5,"periodSeconds":5,"successThreshold":1,"tcpSocket":{"port":"client"},"timeoutSeconds":3}` | configuration for readiness probe for memcached statefulset |
 | memcached.replicas | int | `1` |  |
@@ -777,6 +789,8 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Retain"` | Volume retention behavior that applies when the StatefulSet is deleted |
 | metricsGenerator.persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Retain"` | Volume retention behavior when the replica count of the StatefulSet is reduced |
 | metricsGenerator.podAnnotations | object | `{}` | Annotations for metrics-generator pods |
+| metricsGenerator.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| metricsGenerator.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for metrics-generator |
 | metricsGenerator.podLabels | object | `{}` | Labels for metrics-generator pods |
 | metricsGenerator.ports | list | `[{"name":"grpc","port":9095,"service":true},{"name":"http-memberlist","port":7946,"service":false},{"name":"http-metrics","port":3200,"service":true}]` | Default ports |
 | metricsGenerator.priorityClassName | string | `nil` | The name of the PriorityClass for metrics-generator pods |
@@ -867,6 +881,8 @@ The memcached default args are removed and should be provided manually. The sett
 | querier.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | querier.nodeSelector | object | `{}` | Node selector for querier pods |
 | querier.podAnnotations | object | `{}` | Annotations for querier pods |
+| querier.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| querier.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for querier |
 | querier.podLabels | object | `{}` | Labels for querier pods |
 | querier.priorityClassName | string | `nil` | The name of the PriorityClass for querier pods |
 | querier.replicas | int | `1` | Number of replicas for the querier |
@@ -920,6 +936,8 @@ The memcached default args are removed and should be provided manually. The sett
 | queryFrontend.minReadySeconds | int | `10` | Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating |
 | queryFrontend.nodeSelector | object | `{}` | Node selector for query-frontend pods |
 | queryFrontend.podAnnotations | object | `{}` | Annotations for query-frontend pods |
+| queryFrontend.podDisruptionBudget | object | `{"enabled":true}` | Pod Disruption Budget configuration |
+| queryFrontend.podDisruptionBudget.enabled | bool | `true` | Enable PodDisruptionBudget for query-frontend |
 | queryFrontend.podLabels | object | `{}` | Labels for queryFrontend pods |
 | queryFrontend.priorityClassName | string | `nil` | The name of the PriorityClass for query-frontend pods |
 | queryFrontend.query.config | string | `"backend: 127.0.0.1:3200\n"` |  |

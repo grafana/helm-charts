@@ -222,6 +222,10 @@ ingester:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for ingester
+    enabled: true
   # -- Override Pod Disruption Budget maxUnavailable with a static value
   # maxUnavailable: 1
   # -- Node selector for ingester pods
@@ -425,6 +429,10 @@ metricsGenerator:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "metrics-generator") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for metrics-generator
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -630,6 +638,10 @@ distributor:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for distributor
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -771,6 +783,10 @@ compactor:
   resources: {}
   # -- Grace period to allow the compactor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for compactor
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -891,6 +907,10 @@ querier:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "querier" "memberlist" true) | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for querier
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Max Surge for querier pods
@@ -1109,6 +1129,10 @@ queryFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "query-frontend") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for query-frontend
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -1225,6 +1249,10 @@ enterpriseFederationFrontend:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 12 }}
             topologyKey: failure-domain.beta.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for enterprise-federation-frontend
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Node selector for federation-frontend pods
@@ -1814,6 +1842,10 @@ memcached:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for memcached
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Init containers for the memcached pod
@@ -2108,6 +2140,10 @@ gateway:
               matchLabels:
                 {{- include "tempo.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 12 }}
             topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for gateway
+    enabled: true
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
