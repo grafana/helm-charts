@@ -1476,6 +1476,8 @@ containers:
         value: {{ (get .Values "grafana.ini").paths.plugins }}
       - name: GF_PATHS_PROVISIONING
         value: {{ (get .Values "grafana.ini").paths.provisioning }}
+      - name: GF_UNIFIED_STORAGE_INDEX_PATH
+        value: {{ (get .Values "grafana.ini").unified_storage.index_path }}
       {{- if (.Values.resources.limits).memory }}
       - name: GOMEMLIMIT
         valueFrom:
