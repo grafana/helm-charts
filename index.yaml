@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   alloy:
   - apiVersion: v2
+    appVersion: v1.12.2
+    created: "2026-01-12T16:21:00.989966611Z"
+    dependencies:
+    - condition: crds.create
+      name: crds
+      repository: ""
+      version: 0.0.0
+    description: Grafana Alloy
+    digest: 7f2c6aaa82405ad3a13c88cb387d4f3323ae8135ad135b3d45f77719c591344c
+    icon: https://raw.githubusercontent.com/grafana/alloy/main/docs/sources/assets/alloy_icon_orange.svg
+    name: alloy
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-1.5.2/alloy-1.5.2.tgz
+    version: 1.5.2
+  - apiVersion: v2
     appVersion: v1.12.1
     created: "2025-12-16T18:09:35.485939047Z"
     dependencies:
@@ -102715,4 +102731,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-12T14:58:06.215323597Z"
+generated: "2026-01-12T16:21:00.996451192Z"
