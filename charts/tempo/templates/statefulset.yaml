@@ -191,7 +191,9 @@ spec:
     type: {{- toYaml .Values.tempo.updateStrategy | nindent 6 }}
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: storage
         annotations: {{- toYaml .Values.persistence.annotations | nindent 10 }}
       spec:
