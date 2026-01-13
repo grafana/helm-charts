@@ -25,8 +25,12 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
+  {{- if .Values.persistence.volumeName }}
+  volumeName: {{ .Values.persistence.volumeName }}
+  {{- else }}
   {{- if and (.Values.persistence.lookupVolumeName) (lookup "v1" "PersistentVolumeClaim" (include "grafana.namespace" .) (include "grafana.fullname" .)) }}
   volumeName: {{ (lookup "v1" "PersistentVolumeClaim" (include "grafana.namespace" .) (include "grafana.fullname" .)).spec.volumeName }}
+  {{- end }}
   {{- end }}
   {{- with .Values.persistence.storageClassName }}
   storageClassName: {{ . }}
