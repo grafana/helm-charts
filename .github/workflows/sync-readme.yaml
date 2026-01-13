@@ -1,26 +1,25 @@
+permissions: {}
+
 on:
   push:
     branches:
       - 'main'
     paths:
       - 'README.md'
-permissions: {}
+
 jobs:
   build:
     permissions:
       contents: write # for git push
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - run: |
           cp -f README.md ${{ runner.temp }}/README.md
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           ref: gh-pages
-          persist-credentials: false
       - run: |
           cp -f ${{ runner.temp }}/README.md .
           git config user.name "$GITHUB_ACTOR"
