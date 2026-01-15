@@ -145,6 +145,7 @@ dnsConfig: {}
   #     value: "2"
   #   - name: edns0
 
+hostUsers: ~
 securityContext:
   runAsNonRoot: true
   runAsUser: 472
@@ -893,6 +894,8 @@ grafana.ini:
     url: https://grafana.net
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else if (and .Values.route.main.enabled .Values.route.main.hostnames) }}{{ tpl (.Values.route.main.hostnames | first) . }}{{ else }}''{{ end }}"
+  unified_storage:
+    index_path: /var/lib/grafana-search/bleve
 ## grafana Authentication can be enabled with the following values on grafana.ini
  # server:
       # The full public facing url you use in browser, used for redirects and emails
@@ -1500,6 +1503,8 @@ imageRenderer:
   # image-renderer deployment serviceAccount
   serviceAccountName: ""
   automountServiceAccountToken: false
+  # image-renderer deployment hostUsers
+  hostUsers: ~
   # image-renderer deployment securityContext
   securityContext: {}
   # image-renderer deployment container securityContext

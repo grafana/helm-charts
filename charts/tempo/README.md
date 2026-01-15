@@ -1,6 +1,6 @@
 # tempo
 
-![Version: 1.24.1](https://img.shields.io/badge/Version-1.24.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.24.3](https://img.shields.io/badge/Version-1.24.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo Single Binary Mode
 
@@ -71,7 +71,14 @@ Grafana Tempo Single Binary Mode
 | tempo.livenessProbe.timeoutSeconds | int | `5` |  |
 | tempo.memBallastSizeMbs | int | `1024` |  |
 | tempo.metricsGenerator.enabled | bool | `false` | If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/) |
+| tempo.metricsGenerator.processor | object | `{}` | Processor-specific configuration for metrics generator (optional) Supports service_graphs, span_metrics, and local_blocks processors |
+| tempo.metricsGenerator.registry | object | `{}` | Registry configuration for metrics generator (optional) |
 | tempo.metricsGenerator.remoteWriteUrl | string | `"http://prometheus.monitoring:9090/api/v1/write"` |  |
+| tempo.metricsGenerator.storage | object | `{"path":"/tmp/tempo","remote_write":[]}` | Storage configuration for metrics generator This section configures the storage path and remote write endpoints |
+| tempo.metricsGenerator.storage.path | string | `"/tmp/tempo"` | Path for storing metrics blocks. Defaults to /tmp/tempo for backward compatibility, but /var/tempo/metrics is recommended for production with persistent storage |
+| tempo.metricsGenerator.storage.remote_write | list | `[]` | Optional remote write configuration (will use remoteWriteUrl if not specified) Supports full Prometheus remote_write config: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write |
+| tempo.metricsGenerator.traces_storage | object | `{"path":"/tmp/traces"}` | Traces storage (WAL) configuration for metrics generator This configures the Write Ahead Log for traces used by the metrics generator |
+| tempo.metricsGenerator.traces_storage.path | string | `"/tmp/traces"` | Path for traces storage WAL used by metrics generator |
 | tempo.multitenancyEnabled | bool | `false` |  |
 | tempo.overrides | object | `{"defaults":{},"per_tenant_override_config":"/conf/overrides.yaml"}` | The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details. |
 | tempo.overrides.defaults | object | `{}` | Default config values for all tenants, can be overridden by per-tenant overrides. If a tenant's specific overrides are not found in the `per_tenant_overrides` block, the values in this `default` block will be used. Configs inside this block should follow the new overrides indentation format |
