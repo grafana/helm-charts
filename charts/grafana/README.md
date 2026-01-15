@@ -1,6 +1,26 @@
 # Grafana Helm Chart
 
-* Installs the web dashboarding system [Grafana](http://grafana.org/)
+## Deprecation Notice: Grafana Helm Chart
+
+> [!IMPORTANT]
+> The Grafana Helm chart contained in this repository is now **deprecated**.
+> 
+> We are transitioning maintenance of the chart to the **Grafana community–supported Helm chart**, which provides a more actively maintained and extensible configuration surface for Kubernetes operators
+
+Helm administrators should begin migrating to the community chart to ensure continued access to updates, fixes, and new features. The community chart is available here:
+
+**https://github.com/grafana-community/helm-charts/tree/main/charts/grafana**
+
+Key points for migration:
+
+- Future development efforts for deploying Grafana via Helm will occur exclusively in the community repository.
+- This chart will receive no updates until its removal in a future release cycle.
+- Users should review values compatibility and upgrade paths when transitioning workloads. This should be 100% capatible with the community as community is a fork of this repo.
+
+Thank you for your collaboration and for helping streamline Helm-based deployments across the Grafana ecosystem.
+
+<hr/><hr/><hr/>
+
 
 ## Get Repo Info
 
