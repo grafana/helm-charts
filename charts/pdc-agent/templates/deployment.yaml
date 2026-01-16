@@ -58,7 +58,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ required "A secret name for the PDC agent token is required" .Values.tokenSecretName }}
-                  key: token
+                  key: {{ required "A secret key for the PDC agent token is required" .Values.tokenSecretKey | quote }}
               {{- else if .Values.insecureTokenValue }}
               value: {{ .Values.insecureTokenValue | quote }}
               {{- else }}
