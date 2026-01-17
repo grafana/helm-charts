@@ -37,6 +37,14 @@ helm delete my-release
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
+## Upgrading
+
+A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 0.1.3
+If you are upgrading from a chart version older than 0.1.3, we have changed the image to be pulled from
+`grafana/mcp-grafana` instead of `mcp/grafana` and the default tag to be the chart's appVersion instead of `latest`.
+
 ## Values
 
 | Key | Type | Default | Description |
@@ -63,11 +71,11 @@ The command removes all the Kubernetes components associated with the chart and 
 | grafana.apiKeySecret.name | string | `""` | Name of the secret containing the API key |
 | grafana.url | string | `"http://grafana:3000"` | Grafana URL (should point to the main Grafana service) |
 | hostAliases | list | `[]` | Host aliases |
-| image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"mcp/grafana","tag":"latest"}` | Image configuration |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"grafana/mcp-grafana","tag":""}` | Image configuration |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.registry | string | `"docker.io"` | The Docker registry |
-| image.repository | string | `"mcp/grafana"` | The Docker repository |
-| image.tag | string | `"latest"` | Image tag |
+| image.repository | string | `"grafana/mcp-grafana"` | The Docker repository |
+| image.tag | string | `""` | Image tag |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress | object | `{"annotations":{},"className":"","enabled":false,"hosts":[{"host":"mcp-grafana.local","paths":[{"path":"/","pathType":"Prefix"}]}],"labels":{},"tls":[]}` | Ingress configuration |
 | ingress.annotations | object | `{}` | Ingress annotations |
@@ -105,10 +113,10 @@ The command removes all the Kubernetes components associated with the chart and 
 | service.sessionAffinity | string | `""` | Session affinity |
 | service.sessionAffinityConfig | object | `{}` | Session affinity config |
 | service.type | string | `"ClusterIP"` | Service type |
-| serviceAccount | object | `{"annotations":{},"automountServiceAccountToken":false,"enabled":true,"labels":{},"name":""}` | Service account Configuration |
+| serviceAccount | object | `{"annotations":{},"automountServiceAccountToken":false,"create":true,"labels":{},"name":""}` | Service account Configuration |
 | serviceAccount.annotations | object | `{}` | Annotations for the service account |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token |
-| serviceAccount.enabled | bool | `true` | Enable service account |
+| serviceAccount.create | bool | `true` | Enable service account |
 | serviceAccount.labels | object | `{}` | Labels for the service account |
 | serviceAccount.name | string | `""` | Name of the service account |
 | startupProbe | object | `{}` | MCP server Startup probe configuration |

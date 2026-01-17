@@ -76,10 +76,17 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-          {{- with .Values.gateway.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.gateway.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.gateway.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.gateway.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.gateway.readinessProbe | nindent 12 }}
           volumeMounts:

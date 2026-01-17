@@ -1,9 +1,0 @@
-dependencies:
-- name: loki-simple-scalable
-  repository: https://grafana.github.io/helm-charts
-  version: 0.3.2
-- name: minio
-  repository: https://helm.min.io/
-  version: 8.0.9
-digest: sha256:5c04ba24c657a1cfaf96ff9b35bc018056c9c4de1a6e7ac5b2d9143e1fb11c2b
-generated: "2022-04-01T13:37:13.444741911-06:00"

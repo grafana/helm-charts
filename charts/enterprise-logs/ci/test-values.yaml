@@ -25,3 +25,5 @@ loki-distributed:
   indexGateway:
     persistence:
       enabled: false
+tokengen:
+  enable: false
