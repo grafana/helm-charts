@@ -890,8 +890,6 @@ grafana.ini:
     check_for_updates: true
   log:
     mode: console
-  grafana_net:
-    url: https://grafana.net
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else if (and .Values.route.main.enabled .Values.route.main.hostnames) }}{{ tpl (.Values.route.main.hostnames | first) . }}{{ else }}''{{ end }}"
   unified_storage:
