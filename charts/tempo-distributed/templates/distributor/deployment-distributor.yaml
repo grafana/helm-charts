@@ -22,7 +22,7 @@ spec:
 {{- with .Values.distributor.strategy }}
   strategy:
 {{- toYaml . | nindent 4 }}
-{{- end }}      
+{{- end }}
   template:
     metadata:
       labels:
@@ -64,8 +64,10 @@ spec:
         - args:
             - -target=distributor
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.distributor.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           image: {{ include "tempo.imageReference" $dict }}
@@ -75,7 +77,7 @@ spec:
             - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
               protocol: TCP
-            - containerPort: 3100
+            - containerPort: 3200
               name: http-metrics
             {{- if .Values.traces.jaeger.thriftCompact.enabled }}
             - containerPort: 6831
@@ -126,16 +128,27 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-          {{- with .Values.distributor.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.distributor.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.distributor.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.tempo.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.tempo.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.distributor.resources | nindent 12 }}
           {{- with .Values.tempo.securityContext }}
           securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.distributor.lifecycle }}
+          lifecycle:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:

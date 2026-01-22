@@ -46,7 +46,7 @@ spec:
           image: "{{ $.Values.provisioner.image.registry }}/{{ $.Values.provisioner.image.repository }}:{{ $.Values.provisioner.image.tag }}"
           imagePullPolicy: {{ $.Values.provisioner.image.pullPolicy }}
           command:
-            - /bin/bash
+            - /bin/sh
             - -euc
             - |
               {{- range $tenant := .Values.provisioner.additionalTenants }}
@@ -84,7 +84,7 @@ spec:
           image: {{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}
           imagePullPolicy: {{ .Values.kubectlImage.pullPolicy | default "IfNotPresent" }}
           command:
-            - /bin/bash
+            - /bin/sh
             - -exuc
             - |
               # In this case, the admin resources have already been created, the provisioner job
