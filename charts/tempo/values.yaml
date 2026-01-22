@@ -49,6 +49,36 @@ tempo:
     # -- If true, enables Tempo's metrics generator (https://grafana.com/docs/tempo/next/metrics-generator/)
     enabled: false
     remoteWriteUrl: "http://prometheus.monitoring:9090/api/v1/write"
+    # -- Processor-specific configuration for metrics generator (optional)
+    # Supports service_graphs, span_metrics, and local_blocks processors
+    processor: {}
+    #   local_blocks:
+    #     flush_to_storage: true
+    #     filter_server_spans: false
+    #     max_block_duration: 1m
+    #   service_graphs:
+    #     wait: 10s
+    #     max_items: 10000
+    #   span_metrics:
+    #     enable_target_info: true
+    # -- Registry configuration for metrics generator (optional)
+    registry: {}
+    #   collection_interval: 15s
+    #   external_labels:
+    #     cluster: "primary"
+    # -- Storage configuration for metrics generator
+    # This section configures the storage path and remote write endpoints
+    storage:
+      # -- Path for storing metrics blocks. Defaults to /tmp/tempo for backward compatibility, but /var/tempo/metrics is recommended for production with persistent storage
+      path: "/tmp/tempo"
+      # -- Optional remote write configuration (will use remoteWriteUrl if not specified)
+      # Supports full Prometheus remote_write config: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
+      remote_write: []
+    # -- Traces storage (WAL) configuration for metrics generator
+    # This configures the Write Ahead Log for traces used by the metrics generator
+    traces_storage:
+      # -- Path for traces storage WAL used by metrics generator
+      path: "/tmp/traces"
   # -- Configuration options for the ingester.
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#ingester
   ingester: {}
@@ -195,12 +225,25 @@ config: |
       {{- toYaml .Values.tempo.overrides | nindent 6 }}
       {{- if .Values.tempo.metricsGenerator.enabled }}
     metrics_generator:
-          storage:
-            path: "/tmp/tempo"
-            remote_write:
-              - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
-          traces_storage:
-            path: "/tmp/traces"
+      {{- if .Values.tempo.metricsGenerator.processor }}
+      processor:
+        {{- toYaml .Values.tempo.metricsGenerator.processor | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tempo.metricsGenerator.registry }}
+      registry:
+        {{- toYaml .Values.tempo.metricsGenerator.registry | nindent 8 }}
+      {{- end }}
+      storage:
+        path: {{ .Values.tempo.metricsGenerator.storage.path | quote }}
+        {{- if .Values.tempo.metricsGenerator.storage.remote_write }}
+        remote_write:
+          {{- toYaml .Values.tempo.metricsGenerator.storage.remote_write | nindent 10 }}
+        {{- else }}
+        remote_write:
+          - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+        {{- end }}
+      traces_storage:
+        path: {{ .Values.tempo.metricsGenerator.traces_storage.path | quote }}
       {{- end }}
 
 tempoQuery:
