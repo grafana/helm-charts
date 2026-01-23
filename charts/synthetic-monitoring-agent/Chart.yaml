@@ -1,5 +1,6 @@
 apiVersion: v2
 appVersion: v0.38.3
+deprecated: true
 description: |
   Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
@@ -19,4 +20,4 @@ name: synthetic-monitoring-agent
 sources:
   - https://github.com/grafana/synthetic-monitoring-agent
 type: application
-version: 1.2.0
+version: 1.2.1
