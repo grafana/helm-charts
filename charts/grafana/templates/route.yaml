@@ -1,5 +1,5 @@
 {{- range $name, $route := .Values.route }}
-  {{- if $route.enabled -}}
+{{- if $route.enabled }}
 ---
 apiVersion: {{ $route.apiVersion | default "gateway.networking.k8s.io/v1" }}
 kind: {{ $route.kind | default "HTTPRoute" }}
@@ -29,9 +29,19 @@ spec:
     {{- if $route.additionalRules }}
     {{- tpl (toYaml $route.additionalRules) $ | nindent 4 }}
     {{- end }}
+    {{- if $route.httpsRedirect }}
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+    {{- else }}
     - backendRefs:
         - name: {{ include "grafana.fullname" $ }}
           port: {{ $.Values.service.port }}
+          group: ''
+          kind: Service
+          weight: 1
       {{- with $route.filters }}
       filters:
         {{- toYaml . | nindent 8 }}
@@ -40,5 +50,6 @@ spec:
       matches:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- end }}
+    {{- end }}
+{{- end }}
 {{- end }}

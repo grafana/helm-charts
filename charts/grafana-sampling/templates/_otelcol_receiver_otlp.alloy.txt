@@ -5,6 +5,43 @@ otelcol.receiver.otlp "default" {
   // configures the default grpc endpoint "0.0.0.0:4317"
   grpc {
     max_recv_msg_size = {{ .Values.deployment.otlp.receiver.grpc.max_recv_msg_size | quote }}
+
+    {{- $hasServerParameters := and .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters (or .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle) }}
+    {{- $hasEnforcementPolicy := and .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy (or .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream) }}
+    {{- if or $hasServerParameters $hasEnforcementPolicy }}
+    keepalive {
+      {{- if $hasServerParameters }}
+      server_parameters {
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge }}
+        max_connection_age = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace }}
+        max_connection_age_grace = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle }}
+        max_connection_idle = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.time }}
+        time = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.time | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.timeout }}
+        timeout = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.timeout | quote }}
+        {{- end }}
+      }
+      {{- end }}
+      {{- if $hasEnforcementPolicy }}
+      enforcement_policy {
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.maxConnectionAge }}
+        min_time = {{ .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        permit_without_stream = {{ .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        {{- end }}
+      }
+      {{- end }}
+    }
+    {{- end }}
+
   }
 
   // configures the default http/protobuf endpoint "0.0.0.0:4318"
@@ -24,6 +61,43 @@ otelcol.receiver.otlp "default" {
   // configures the default grpc endpoint "0.0.0.0:4317"
   grpc {
     max_recv_msg_size = {{ .Values.statefulset.otlp.receiver.grpc.max_recv_msg_size | quote }}
+
+    {{- $hasServerParameters := and .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters (or .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle) }}
+    {{- $hasEnforcementPolicy := and .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy (or .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream) }}
+    {{- if or $hasServerParameters $hasEnforcementPolicy }}
+    keepalive {
+      {{- if $hasServerParameters }}
+      server_parameters {
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge }}
+        max_connection_age = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace }}
+        max_connection_age_grace = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle }}
+        max_connection_idle = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.time }}
+        time = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.time | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.timeout }}
+        timeout = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.timeout | quote }}
+        {{- end }}
+      }
+      {{- end }}
+      {{- if $hasEnforcementPolicy }}
+      enforcement_policy {
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.maxConnectionAge }}
+        min_time = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        permit_without_stream = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        {{- end }}
+      }
+      {{- end }}
+    }
+    {{- end }}
+
   }
 
   output {

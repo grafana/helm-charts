@@ -60,6 +60,9 @@ spec:
             {{- if .Values.agent.verbose }}
             - -verbose
             {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . | quote }}
+            {{- end }}
           env:
             - name: API_SERVER
               value: {{ .Values.agent.apiServerAddress | quote }}

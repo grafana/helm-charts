@@ -1,0 +1,222 @@
+# -- Number of replicas for the MCP server
+replicas: 1
+
+# -- Deployment strategy
+deploymentStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+
+# -- Image configuration
+image:
+  # -- The Docker registry
+  registry: docker.io
+  # -- The Docker repository
+  repository: grafana/mcp-grafana
+  # -- Image tag
+  tag: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+# -- Grafana connection configuration
+grafana:
+  # -- Grafana URL (should point to the main Grafana service)
+  url: "http://grafana:3000"
+  # -- Grafana ApiKey (if not using a secret)
+  apiKey: ""
+  # -- Secret containing the Grafana API key
+  apiKeySecret:
+    # -- Name of the secret containing the API key
+    name: ""
+    # -- Key within the secret that contains the API key
+    key: ""
+
+# -- Enable debug mode
+debug: false
+
+# -- Categories to disable (e.g., oncall, incident, sift)
+disabledCategories: []
+
+# -- Additional command line arguments
+extraArgs: []
+
+# -- Environment variables
+env: {}
+
+# -- Environment variables from other sources
+envValueFrom: {}
+
+# -- Environment variables from ConfigMaps or Secrets
+envFrom: []
+
+# -- MCP server Readiness probe configuration
+readinessProbe: {}
+#
+
+# -- MCP server Liveness probe configuration
+livenessProbe: {}
+
+# -- MCP server Startup probe configuration
+startupProbe: {}
+
+# -- Service account Configuration
+serviceAccount:
+  # -- Enable service account
+  create: true
+  # -- Name of the service account
+  name: ""
+  # -- Annotations for the service account
+  annotations: {}
+  # -- Labels for the service account
+  labels: {}
+  # -- Automount service account token
+  automountServiceAccountToken: false
+
+# -- Service configuration
+service:
+  # -- Enable service
+  enabled: true
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 8000
+  # -- Service annotations
+  annotations: {}
+  # -- Service labels
+  labels: {}
+  # -- Cluster IP (if type is ClusterIP)
+  clusterIP: ""
+  # -- External IPs
+  externalIPs: []
+  # -- Load balancer IP
+  loadBalancerIP: ""
+  # -- Load balancer source ranges
+  loadBalancerSourceRanges: []
+  # -- External name (if type is ExternalName)
+  externalName: ""
+  # -- Node port (if type is NodePort or LoadBalancer)
+  nodePort: ""
+  # -- Extra ports
+  extraPorts: []
+  # -- Session affinity
+  sessionAffinity: ""
+  # -- Session affinity config
+  sessionAffinityConfig: {}
+
+# -- Ingress configuration
+ingress:
+  # -- Enable ingress
+  enabled: false
+  # -- Ingress class name
+  className: ""
+  # -- Ingress annotations
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- Ingress hosts
+  hosts:
+    - host: mcp-grafana.local
+      paths:
+        - path: /
+          pathType: Prefix
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: mcp-grafana-tls
+  #    hosts:
+  #      - mcp-grafana.local
+  # -- Ingress labels
+  labels: {}
+
+# -- Resource requests and limits
+resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 250m
+  #   memory: 256Mi
+
+# -- Container security context
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+# -- Pod security context
+securityContext:
+  fsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+# -- Automount service account token
+automountServiceAccountToken: true
+
+# -- Node selector
+nodeSelector: {}
+
+# -- Tolerations
+tolerations: []
+
+# -- Affinity
+affinity: {}
+
+# -- Topology spread constraints
+topologySpreadConstraints: []
+
+# -- Priority class name
+priorityClassName: ""
+
+# -- Runtime class name
+runtimeClassName: ""
+
+# -- Scheduler name
+schedulerName: ""
+
+# -- Host aliases
+hostAliases: []
+
+# -- DNS policy
+dnsPolicy: ""
+
+# -- DNS config
+dnsConfig: {}
+
+# -- Pod annotations
+podAnnotations: {}
+
+# -- Pod labels
+podLabels: {}
+
+# -- Deployment annotations
+annotations: {}
+
+# -- Deployment labels
+labels: {}
+
+# -- Lifecycle hooks
+lifecycle: {}
+
+# -- Volume mounts
+volumeMounts: []
+
+# -- Volumes
+volumes: []
+
+# -- Init containers
+initContainers: []
+
+# -- Extra init containers
+extraInitContainers: []
+
+# -- Extra containers
+extraContainers: []

@@ -48,7 +48,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      accessModes: {{ .Values.persistence.accessModes }}
+      accessModes:
+        {{- range .Values.persistence.accessModes }}
+        - {{ . | quote }}
+        {{- end }}
       storageClassName: {{ .Values.persistence.storageClassName }}
       {{- with .Values.persistence.volumeName }}
       volumeName: {{ . | quote }}

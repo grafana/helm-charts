@@ -1,0 +1,44 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Chart Repo
+
+Add the following repo to use the chart:
+
+```console
+helm repo add grafana https://grafana.github.io/helm-charts
+```
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+helm install --set grafana.apiKey=<Grafana_ApiKey> my-release grafana/grafana-mcp
+```
+
+
+## Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```console
+helm delete my-release
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
+
+## Upgrading
+
+A major chart version change indicates that there is an incompatible breaking change needing manual actions.
+
+### From Chart versions < 0.1.3
+If you are upgrading from a chart version older than 0.1.3, we have changed the image to be pulled from
+`grafana/mcp-grafana` instead of `mcp/grafana` and the default tag to be the chart's appVersion instead of `latest`.
+
+{{ template "chart.valuesSection" . }}
