@@ -1,5 +1,5 @@
 {{- if .Values.metricsGenerator.enabled }}
-{{- if gt (int .Values.metricsGenerator.replicas) 1 }}
+{{- if and (gt (int .Values.metricsGenerator.replicas) 1) .Values.metricsGenerator.podDisruptionBudget.enabled }}
 {{ $dict := dict "ctx" . "component" "metrics-generator" "memberlist" true }}
 apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
@@ -7,10 +7,11 @@ metadata:
   name: {{ include "tempo.resourceName" $dict }}
   labels:
     {{- include "tempo.labels" $dict | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
-  maxUnavailable: 1
+  maxUnavailable: {{ .Values.metricsGenerator.maxUnavailable }}
 {{- end }}
 {{- end }}

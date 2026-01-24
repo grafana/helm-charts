@@ -6,6 +6,10 @@ schedulerName: "{{ . }}"
 {{- end }}
 serviceAccountName: {{ include "grafana.serviceAccountName" . }}
 automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
+shareProcessNamespace: {{ .Values.shareProcessNamespace }}
+{{- if kindIs "bool" .Values.hostUsers }}
+hostUsers: {{ .Values.hostUsers }}
+{{- end }}
 {{- with .Values.securityContext }}
 securityContext:
   {{- toYaml . | nindent 2 }}
@@ -24,7 +28,13 @@ dnsConfig:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
-{{- if ( or .Values.persistence.enabled .Values.dashboards .Values.extraInitContainers (and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts) (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources) (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)) }}
+{{- if ( or (and .Values.persistence.enabled .Values.initChownData.enabled)
+        .Values.dashboards
+        .Values.extraInitContainers
+        (and .Values.sidecar.alerts.enabled .Values.sidecar.alerts.initAlerts)
+        (and .Values.sidecar.datasources.enabled .Values.sidecar.datasources.initDatasources)
+        (and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers)
+        (and .Values.sidecar.dashboards.enabled .Values.sidecar.dashboards.initDashboards)) }}
 initContainers:
 {{- end }}
 {{- if ( and .Values.persistence.enabled .Values.initChownData.enabled ) }}
@@ -114,22 +124,45 @@ initContainers:
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    {{- if .Values.sidecar.alerts.restartPolicy }}
+    restartPolicy: {{ .Values.sidecar.alerts.restartPolicy }}
+    {{- with .Values.sidecar.alerts.startupProbe }}
+    startupProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.alerts.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.alerts.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
+      - name: HEALTH_PORT
+        value: {{ include "grafana.sidecar.alerts.healthPort" . }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
+      {{- if and .Values.sidecar.alerts.restartPolicy (eq .Values.sidecar.alerts.restartPolicy "Always")}}
+      - name: METHOD
+        value: {{ .Values.sidecar.alerts.watchMethod }}
+      {{- if eq .Values.sidecar.alerts.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- else }}
       - name: METHOD
         value: "LIST"
+      {{- end }}
       - name: LABEL
-        value: "{{ .Values.sidecar.alerts.label }}"
+        value: "{{ tpl .Values.sidecar.alerts.label $root }}"
       {{- with .Values.sidecar.alerts.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.alerts.logLevel }}
       - name: LOG_LEVEL
@@ -145,7 +178,7 @@ initContainers:
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: {{ . | join "," | quote }}
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -187,6 +220,13 @@ initContainers:
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    {{- if .Values.sidecar.datasources.restartPolicy }}
+    restartPolicy: {{ .Values.sidecar.datasources.restartPolicy }}
+    {{- with .Values.sidecar.datasources.startupProbe }}
+    startupProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.datasources.env }}
       - name: "{{ $key }}"
@@ -197,17 +237,19 @@ initContainers:
         valueFrom:
           {{- tpl (toYaml $value) $ | nindent 10 }}
       {{- end }}
+      - name: HEALTH_PORT
+        value: {{ include "grafana.sidecar.datasources.healthPort" . }}
       {{- if .Values.sidecar.datasources.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
       - name: METHOD
-        value: "LIST"
+        value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.datasources.label }}"
+        value: "{{ tpl .Values.sidecar.datasources.label $root }}"
       {{- with .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
@@ -217,18 +259,84 @@ initContainers:
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.datasources.resource }}
+      {{- if .Values.sidecar.datasources.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.datasources.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.datasources.searchNamespace }}
+      {{- with .Values.sidecar.datasources.searchNamespace }}
       - name: NAMESPACE
-        value: "{{ tpl (.Values.sidecar.datasources.searchNamespace | join ",") . }}"
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
-      {{- with .Values.sidecar.skipTlsVerify }}
+      {{- if .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
-        value: "{{ . }}"
+        value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
+      {{- with .Values.sidecar.datasources.script }}
+      - name: SCRIPT
+        value: {{ quote . }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.userKey | default "admin-user" }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- end }}
+      {{- if not .Values.sidecar.datasources.skipReload }}
+      - name: REQ_URL
+        value: {{ .Values.sidecar.datasources.reloadURL }}
+      - name: REQ_METHOD
+        value: POST
+      {{- if eq .Values.sidecar.datasources.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- end }}
+      {{- if .Values.sidecar.datasources.watchServerTimeout }}
+      {{- if ne .Values.sidecar.datasources.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.datasources.watchServerTimeout with .Values.sidecar.datasources.watchMethod %s" .Values.sidecar.datasources.watchMethod) }}
+      {{- end }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.datasources.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.watchClientTimeout }}
+      {{- if ne .Values.sidecar.datasources.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.datasources.watchClientTimeout with .Values.sidecar.datasources.watchMethod %s" .Values.sidecar.datasources.watchMethod) }}
+      {{- end }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: "{{ .Values.sidecar.datasources.watchClientTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.datasources.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.datasources.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.datasources.maxReadRetries }}"
+      {{- end }}
+    {{- with .Values.sidecar.livenessProbe }}
+    livenessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
+    readinessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- with .Values.sidecar.resources }}
     resources:
       {{- toYaml . | nindent 6 }}
@@ -240,6 +348,9 @@ initContainers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+      {{- with .Values.sidecar.datasources.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end }}
 {{- if and .Values.sidecar.notifiers.enabled .Values.sidecar.notifiers.initNotifiers }}
   - name: {{ include "grafana.name" . }}-init-sc-notifiers
@@ -250,22 +361,40 @@ initContainers:
     image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
     {{- end }}
     imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    {{- if .Values.sidecar.notifiers.restartPolicy }}
+    restartPolicy: {{ .Values.sidecar.notifiers.restartPolicy }}
+    {{- with .Values.sidecar.notifiers.startupProbe }}
+    startupProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
     env:
       {{- range $key, $value := .Values.sidecar.notifiers.env }}
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      - name: HEALTH_PORT
+        value: {{ include "grafana.sidecar.notifiers.healthPort" . }}
       {{- if .Values.sidecar.notifiers.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
       {{- end }}
+      {{- if and .Values.sidecar.notifiers.restartPolicy (eq .Values.sidecar.notifiers.restartPolicy "Always")}}
+      - name: METHOD
+        value: {{ .Values.sidecar.notifiers.watchMethod }}
+      {{- if eq .Values.sidecar.notifiers.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- else }}
       - name: METHOD
         value: LIST
+      {{- end }}
       - name: LABEL
-        value: "{{ .Values.sidecar.notifiers.label }}"
+        value: "{{ tpl .Values.sidecar.notifiers.label $root }}"
       {{- with .Values.sidecar.notifiers.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       - name: LOG_LEVEL
@@ -287,6 +416,10 @@ initContainers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
+      {{- with .Values.sidecar.notifiers.script }}
+      - name: SCRIPT
+        value: {{ quote . }}
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -306,6 +439,154 @@ initContainers:
     volumeMounts:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
+      {{- with .Values.sidecar.notifiers.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
+{{- end}}
+{{- if and .Values.sidecar.dashboards.enabled .Values.sidecar.dashboards.initDashboards }}
+  - name: {{ include "grafana.name" . }}-init-sc-dashboard
+    {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
+    {{- if .Values.sidecar.image.sha }}
+    image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@sha256:{{ .Values.sidecar.image.sha }}"
+    {{- else }}
+    image: "{{ $registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.sidecar.imagePullPolicy }}
+    {{- if .Values.sidecar.dashboards.restartPolicy }}
+    restartPolicy: {{ .Values.sidecar.dashboards.restartPolicy }}
+    {{- with .Values.sidecar.dashboards.startupProbe }}
+    startupProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
+    env:
+      {{- range $key, $value := .Values.sidecar.dashboards.env }}
+      - name: "{{ $key }}"
+        value: "{{ $value }}"
+      {{- end }}
+      {{- range $key, $value := .Values.sidecar.dashboards.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
+      - name: HEALTH_PORT
+        value: {{ include "grafana.sidecar.dashboards.healthPort" . }}
+      {{- if .Values.sidecar.dashboards.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
+      {{- end }}
+      - name: METHOD
+        value: {{ .Values.sidecar.dashboards.watchMethod }}
+      - name: LABEL
+        value: "{{ tpl .Values.sidecar.dashboards.label $root }}"
+      {{- with .Values.sidecar.dashboards.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote (tpl . $root) }}
+      {{- end }}
+      {{- if or .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
+      - name: LOG_LEVEL
+        value: {{ default .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
+      {{- end }}
+      - name: FOLDER
+        value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
+      - name: RESOURCE
+        value: {{ quote .Values.sidecar.dashboards.resource }}
+      {{- if .Values.sidecar.dashboards.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.dashboards.resourceName }}
+      {{- end }}
+      {{- with .Values.sidecar.enableUniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "{{ . }}"
+      {{- end }}
+      {{- with .Values.sidecar.dashboards.searchNamespace }}
+      - name: NAMESPACE
+        value: "{{ tpl (. | join ",") $root }}"
+      {{- end }}
+      {{- with .Values.sidecar.skipTlsVerify }}
+      - name: SKIP_TLS_VERIFY
+        value: "{{ . }}"
+      {{- end }}
+      {{- with .Values.sidecar.dashboards.folderAnnotation }}
+      - name: FOLDER_ANNOTATION
+        value: "{{ . }}"
+      {{- end }}
+      {{- with .Values.sidecar.dashboards.script }}
+      - name: SCRIPT
+        value: {{ quote . }}
+      {{- end }}
+      {{- if not .Values.sidecar.dashboards.skipReload }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.userKey | default "admin-user" }}
+      {{- end }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_PASSWORD) (not .Values.env.GF_SECURITY_ADMIN_PASSWORD__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      - name: REQ_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ (tpl .Values.admin.existingSecret .) | default (include "grafana.fullname" .) }}
+            key: {{ .Values.admin.passwordKey | default "admin-password" }}
+      {{- end }}
+      - name: REQ_URL
+        value: {{ .Values.sidecar.dashboards.reloadURL }}
+      - name: REQ_METHOD
+        value: POST
+      {{- if eq .Values.sidecar.dashboards.watchMethod "WATCH" }}
+      - name: REQ_SKIP_INIT
+        value: "true"
+      {{- end }}
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.watchServerTimeout }}
+      {{- if ne .Values.sidecar.dashboards.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.dashboards.watchServerTimeout with .Values.sidecar.dashboards.watchMethod %s" .Values.sidecar.dashboards.watchMethod) }}
+      {{- end }}
+      - name: WATCH_SERVER_TIMEOUT
+        value: "{{ .Values.sidecar.dashboards.watchServerTimeout }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.watchClientTimeout }}
+      {{- if ne .Values.sidecar.dashboards.watchMethod "WATCH" }}
+        {{- fail (printf "Cannot use .Values.sidecar.dashboards.watchClientTimeout with .Values.sidecar.dashboards.watchMethod %s" .Values.sidecar.dashboards.watchMethod) }}
+      {{- end }}
+      - name: WATCH_CLIENT_TIMEOUT
+        value: {{ .Values.sidecar.dashboards.watchClientTimeout | quote }}
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.dashboards.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.dashboards.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.dashboards.maxReadRetries }}"
+      {{- end }}
+    {{- with .Values.sidecar.livenessProbe }}
+    livenessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.readinessProbe }}
+    readinessProbe:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.sidecar.securityContext }}
+    securityContext:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    volumeMounts:
+      - name: sc-dashboard-volume
+        mountPath: {{ .Values.sidecar.dashboards.folder | quote }}
+      {{- with .Values.sidecar.dashboards.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
 {{- with .Values.extraInitContainers }}
   {{- tpl (toYaml .) $root | nindent 2 }}
@@ -332,6 +613,11 @@ containers:
       - name: "{{ $key }}"
         value: "{{ $value }}"
       {{- end }}
+      {{- range $key, $value := .Values.sidecar.alerts.envValueFrom }}
+      - name: {{ $key | quote }}
+        valueFrom:
+          {{- tpl (toYaml $value) $ | nindent 10 }}
+      {{- end }}
       {{- if .Values.sidecar.alerts.ignoreAlreadyProcessed }}
       - name: IGNORE_ALREADY_PROCESSED
         value: "true"
@@ -339,10 +625,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.alerts.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.alerts.label }}"
+        value: "{{ tpl .Values.sidecar.alerts.label $root }}"
       {{- with .Values.sidecar.alerts.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.alerts.logLevel }}
       - name: LOG_LEVEL
@@ -352,13 +638,17 @@ containers:
         value: "/etc/grafana/provisioning/alerting"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.alerts.resource }}
+      {{- if .Values.sidecar.alerts.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.alerts.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.searchNamespace }}
       - name: NAMESPACE
-        value: {{ . | join "," | quote }}
+        value: "{{ tpl (. | join ",") $root }}"
       {{- end }}
       {{- with .Values.sidecar.alerts.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
@@ -368,7 +658,7 @@ containers:
       - name: SCRIPT
         value: {{ quote . }}
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_ADMIN_USER__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
@@ -402,6 +692,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.alerts.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.alerts.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.alerts.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.alerts.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.alerts.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.alerts.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.alerts.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -425,7 +727,7 @@ containers:
       {{- toYaml . | trim | nindent 6 }}
       {{- end }}
 {{- end}}
-{{- if .Values.sidecar.dashboards.enabled }}
+{{- if and .Values.sidecar.dashboards.enabled (not .Values.sidecar.dashboards.initDashboards) }}
   - name: {{ include "grafana.name" . }}-sc-dashboard
     {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
@@ -451,10 +753,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.dashboards.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.dashboards.label }}"
+        value: "{{ tpl .Values.sidecar.dashboards.label $root }}"
       {{- with .Values.sidecar.dashboards.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.dashboards.logLevel }}
       - name: LOG_LEVEL
@@ -464,6 +766,10 @@ containers:
         value: "{{ .Values.sidecar.dashboards.folder }}{{- with .Values.sidecar.dashboards.defaultFolderName }}/{{ . }}{{- end }}"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.dashboards.resource }}
+      {{- if .Values.sidecar.dashboards.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.dashboards.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
@@ -482,10 +788,10 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.dashboards.script }}
       - name: SCRIPT
-        value: "{{ . }}"
+        value: {{ quote . }}
       {{- end }}
       {{- if not .Values.sidecar.dashboards.skipReload }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_ADMIN_USER__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
@@ -517,6 +823,18 @@ containers:
       {{- end }}
       - name: WATCH_CLIENT_TIMEOUT
         value: {{ .Values.sidecar.dashboards.watchClientTimeout | quote }}
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.dashboards.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.dashboards.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.dashboards.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.dashboards.maxReadRetries }}"
       {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
@@ -567,10 +885,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.datasources.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.datasources.label }}"
+        value: "{{ tpl .Values.sidecar.datasources.label $root }}"
       {{- with .Values.sidecar.datasources.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.datasources.logLevel }}
       - name: LOG_LEVEL
@@ -580,6 +898,10 @@ containers:
         value: "/etc/grafana/provisioning/datasources"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.datasources.resource }}
+      {{- if .Values.sidecar.datasources.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.datasources.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
@@ -592,11 +914,11 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ .Values.sidecar.skipTlsVerify }}"
       {{- end }}
-      {{- if .Values.sidecar.datasources.script }}
+      {{- with .Values.sidecar.datasources.script }}
       - name: SCRIPT
-        value: "{{ .Values.sidecar.datasources.script }}"
+        value: {{ quote . }}
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_ADMIN_USER__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
@@ -630,6 +952,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.datasources.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.datasources.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.datasources.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.datasources.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.datasources.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.datasources.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -649,8 +983,11 @@ containers:
     volumeMounts:
       - name: sc-datasources-volume
         mountPath: "/etc/grafana/provisioning/datasources"
+      {{- with .Values.sidecar.datasources.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
-{{- if .Values.sidecar.notifiers.enabled }}
+{{- if and .Values.sidecar.notifiers.enabled (not .Values.sidecar.notifiers.initNotifiers) }}
   - name: {{ include "grafana.name" . }}-sc-notifiers
     {{- $registry := .Values.global.imageRegistry | default .Values.sidecar.image.registry -}}
     {{- if .Values.sidecar.image.sha }}
@@ -671,10 +1008,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.notifiers.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.notifiers.label }}"
+        value: "{{ tpl .Values.sidecar.notifiers.label $root }}"
       {{- with .Values.sidecar.notifiers.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
+        value: {{ quote (tpl . $root) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.notifiers.logLevel }}
       - name: LOG_LEVEL
@@ -684,6 +1021,10 @@ containers:
         value: "/etc/grafana/provisioning/notifiers"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.notifiers.resource }}
+      {{- if .Values.sidecar.notifiers.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.notifiers.resourceName }}
+      {{- end }}
       {{- if .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ .Values.sidecar.enableUniqueFilenames }}"
@@ -696,11 +1037,11 @@ containers:
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
-      {{- if .Values.sidecar.notifiers.script }}
+      {{- with .Values.sidecar.notifiers.script }}
       - name: SCRIPT
-        value: "{{ .Values.sidecar.notifiers.script }}"
+        value: {{ quote . }}
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_ADMIN_USER__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
@@ -734,6 +1075,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.notifiers.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.notifiers.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.notifiers.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.notifiers.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.notifiers.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.notifiers.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -753,6 +1106,9 @@ containers:
     volumeMounts:
       - name: sc-notifiers-volume
         mountPath: "/etc/grafana/provisioning/notifiers"
+      {{- with .Values.sidecar.notifiers.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
 {{- if .Values.sidecar.plugins.enabled }}
   - name: {{ include "grafana.name" . }}-sc-plugins
@@ -775,10 +1131,10 @@ containers:
       - name: METHOD
         value: {{ .Values.sidecar.plugins.watchMethod }}
       - name: LABEL
-        value: "{{ .Values.sidecar.plugins.label }}"
+        value: "{{ tpl .Values.sidecar.plugins.label $root }}"
       {{- if .Values.sidecar.plugins.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote .Values.sidecar.plugins.labelValue }}
+        value: {{ quote (tpl .Values.sidecar.plugins.labelValue $) }}
       {{- end }}
       {{- if or .Values.sidecar.logLevel .Values.sidecar.plugins.logLevel }}
       - name: LOG_LEVEL
@@ -788,6 +1144,10 @@ containers:
         value: "/etc/grafana/provisioning/plugins"
       - name: RESOURCE
         value: {{ quote .Values.sidecar.plugins.resource }}
+      {{- if .Values.sidecar.plugins.resourceName }}
+      - name: RESOURCE_NAME
+        value: {{ quote .Values.sidecar.plugins.resourceName }}
+      {{- end }}
       {{- with .Values.sidecar.enableUniqueFilenames }}
       - name: UNIQUE_FILENAMES
         value: "{{ . }}"
@@ -798,13 +1158,13 @@ containers:
       {{- end }}
       {{- with .Values.sidecar.plugins.script }}
       - name: SCRIPT
-        value: "{{ . }}"
+        value: {{ quote . }}
       {{- end }}
       {{- with .Values.sidecar.skipTlsVerify }}
       - name: SKIP_TLS_VERIFY
         value: "{{ . }}"
       {{- end }}
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_ADMIN_USER__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: REQ_USERNAME
         valueFrom:
           secretKeyRef:
@@ -838,6 +1198,18 @@ containers:
       - name: WATCH_CLIENT_TIMEOUT
         value: "{{ .Values.sidecar.plugins.watchClientTimeout }}"
       {{- end }}
+      {{- if .Values.sidecar.plugins.maxTotalRetries }}
+      - name: REQ_RETRY_TOTAL
+        value: "{{ .Values.sidecar.plugins.maxTotalRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.maxConnectRetries }}
+      - name: REQ_RETRY_CONNECT
+        value: "{{ .Values.sidecar.plugins.maxConnectRetries }}"
+      {{- end }}
+      {{- if .Values.sidecar.plugins.maxReadRetries }}
+      - name: REQ_RETRY_READ
+        value: "{{ .Values.sidecar.plugins.maxReadRetries }}"
+      {{- end }}
     {{- with .Values.sidecar.livenessProbe }}
     livenessProbe:
       {{- toYaml . | nindent 6 }}
@@ -857,8 +1229,11 @@ containers:
     volumeMounts:
       - name: sc-plugins-volume
         mountPath: "/etc/grafana/provisioning/plugins"
+      {{- with .Values.sidecar.plugins.extraMounts }}
+      {{- toYaml . | trim | nindent 6 }}
+      {{- end }}
 {{- end}}
-  - name: {{ .Chart.Name }}
+  - name: grafana
     {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
     {{- if .Values.image.sha }}
     image: "{{ $registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
@@ -902,6 +1277,8 @@ containers:
         {{- with .Values.persistence.subPath }}
         subPath: {{ tpl . $root }}
         {{- end }}
+      - name: search
+        mountPath: "/var/lib/grafana-search"
       {{- with .Values.dashboards }}
       {{- range $provider, $dashboards := . }}
       {{- range $key, $value := $dashboards }}
@@ -1019,12 +1396,15 @@ containers:
       - name: {{ .Values.gossipPortName }}-udp
         containerPort: 9094
         protocol: UDP
+      - name: profiling
+        containerPort: 6060
+        protocol: TCP
     env:
       - name: POD_IP
         valueFrom:
           fieldRef:
             fieldPath: status.podIP
-      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
+      {{- if and (not .Values.env.GF_SECURITY_ADMIN_USER) (not .Values.env.GF_SECURITY_ADMIN_USER__FILE) (not .Values.env.GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION) }}
       - name: GF_SECURITY_ADMIN_USER
         valueFrom:
           secretKeyRef:
@@ -1059,9 +1439,17 @@ containers:
       {{- end }}
       {{- if .Values.imageRenderer.enabled }}
       - name: GF_RENDERING_SERVER_URL
+        {{- if .Values.imageRenderer.serverURL }}
+        value: {{ .Values.imageRenderer.serverURL | quote }}
+        {{- else }}
         value: http://{{ include "grafana.fullname" . }}-image-renderer.{{ include "grafana.namespace" . }}:{{ .Values.imageRenderer.service.port }}/render
+        {{- end }}
       - name: GF_RENDERING_CALLBACK_URL
+        {{- if .Values.imageRenderer.renderingCallbackURL }}
+        value: {{ .Values.imageRenderer.renderingCallbackURL | quote }}
+        {{- else }}
         value: {{ .Values.imageRenderer.grafanaProtocol }}://{{ include "grafana.fullname" . }}.{{ include "grafana.namespace" . }}:{{ .Values.service.port }}/{{ .Values.imageRenderer.grafanaSubPath }}
+        {{- end }}
       {{- end }}
       - name: GF_PATHS_DATA
         value: {{ (get .Values "grafana.ini").paths.data }}
@@ -1071,6 +1459,15 @@ containers:
         value: {{ (get .Values "grafana.ini").paths.plugins }}
       - name: GF_PATHS_PROVISIONING
         value: {{ (get .Values "grafana.ini").paths.provisioning }}
+      - name: GF_UNIFIED_STORAGE_INDEX_PATH
+        value: {{ (get .Values "grafana.ini").unified_storage.index_path }}
+      {{- if (.Values.resources.limits).memory }}
+      - name: GOMEMLIMIT
+        valueFrom:
+          resourceFieldRef:
+            divisor: "1"
+            resource: limits.memory
+      {{- end }}
       {{- range $key, $value := .Values.envValueFrom }}
       - name: {{ $key | quote }}
         valueFrom:
@@ -1208,23 +1605,29 @@ volumes:
     emptyDir: {}
     {{- end }}
   {{- end }}
+  - name: search
+    emptyDir: {}
   {{- if .Values.sidecar.alerts.enabled }}
   - name: sc-alerts-volume
+    {{- if .Values.sidecar.alerts.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.alerts.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- if .Values.sidecar.dashboards.enabled }}
   - name: sc-dashboard-volume
+    {{- if .Values.sidecar.dashboards.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.dashboards.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- if .Values.sidecar.dashboards.SCProvider }}
   - name: sc-dashboard-provider
     configMap:
@@ -1233,30 +1636,36 @@ volumes:
   {{- end }}
   {{- if .Values.sidecar.datasources.enabled }}
   - name: sc-datasources-volume
+    {{- if .Values.sidecar.datasources.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.datasources.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- if .Values.sidecar.plugins.enabled }}
   - name: sc-plugins-volume
+    {{- if .Values.sidecar.plugins.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.plugins.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- if .Values.sidecar.notifiers.enabled }}
   - name: sc-notifiers-volume
+    {{- if .Values.sidecar.notifiers.sizeLimit }}
     emptyDir:
       {{- with .Values.sidecar.notifiers.sizeLimit }}
       sizeLimit: {{ . }}
-      {{- else }}
-      {}
       {{- end }}
+    {{- else }}
+    emptyDir: {}
+    {{- end }}
   {{- end }}
   {{- range .Values.extraSecretMounts }}
   {{- if .secretName }}

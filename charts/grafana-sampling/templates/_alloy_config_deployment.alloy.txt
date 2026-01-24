@@ -1,0 +1,8 @@
+{{- define "alloy.config.deployment" -}}
+  {{- include "deployment.receiver.otlp" . }}
+  {{- include "deployment.processor.batch" . }}
+  {{- include "deployment.exporter.loadbalancing" . }}
+  {{- if .Values.liveDebugging.enabled -}}
+    {{- include "liveDebugging" . }}
+  {{- end -}}
+{{- end -}}

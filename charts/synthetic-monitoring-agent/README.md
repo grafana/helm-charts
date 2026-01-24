@@ -1,8 +1,12 @@
 # synthetic-monitoring-agent
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.9.3-0-gcd7aadd](https://img.shields.io/badge/AppVersion-v0.9.3--0--gcd7aadd-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.38.3](https://img.shields.io/badge/AppVersion-v0.38.3-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
+
+> [!NOTE]
+> Grafana Cloud Synthetic Monitoring does not officially support this chart.
+> If you are a Grafana Cloud customer and require support, please follow the [recommended installation methods](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/#deployment-with-kubernetes) listed in the public docs.
 
 **Homepage:** <https://grafana.net>
 
@@ -17,10 +21,6 @@ Grafana's Synthetic Monitoring application. The agent provides probe functionali
 ## Source Code
 
 * <https://github.com/grafana/synthetic-monitoring-agent>
-
-## Requirements
-
-Kubernetes: `^1.16.0-0`
 
 ## Values
 
@@ -37,6 +37,9 @@ Kubernetes: `^1.16.0-0`
 | autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas |
 | autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage |
 | autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage |
+| deploymentStrategy | object | `{}` | See `kubectl explain deployment.spec.strategy` for more ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy |
+| extraArgs | list | `[]` | CLI arguments to add to the agent. |
+| extraEnv | list | `[]` | Environment variables to add to the agent |
 | extraObjects | list | `[]` | Add dynamic manifests via values: |
 | fullnameOverride | string | `""` | Override the fullname of the chart. |
 | hostAliases | list | `[]` | hostAliases to add |
@@ -50,12 +53,12 @@ Kubernetes: `^1.16.0-0`
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | podAnnotations | object | `{}` | Annotations to add to each pod. |
 | podLabels | object | `{}` | Labels to add to each pod. |
-| podSecurityContext | object | `{"fsGroup":65534}` | Security context on the Pod level. |
+| podSecurityContext | object | `{"fsGroup":12345}` | Security context on the Pod level. |
 | readinessProbe | object | `{"httpGet":{"path":"/ready","port":"http"}}` | Readiness probe for the agent |
 | replicaCount | int | `1` | Number of replicas to use; ignored if `autoscaling.enabled` is set to `true`. |
 | resources | object | `{}` | Default resources to apply. |
 | secret.existingSecret | string | `""` | Reference an existing secret for API token |
-| securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534}` | Security context for the container level. |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"add":["NET_RAW"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":12345,"seccompProfile":{"type":"RuntimeDefault"}}` | Security context for the container level. |
 | service.annotations | object | `{}` | Annotations for the service |
 | service.port | int | `4050` | Service port. |
 | service.type | string | `"ClusterIP"` | Type of service to create. |

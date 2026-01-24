@@ -11,6 +11,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 spec:
   replicas: {{ .Values.adminApi.replicas }}
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
@@ -53,6 +54,9 @@ spec:
             {{- range $key, $value := .Values.adminApi.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
+            {{- range $key, $value := .Values.global.extraArgs }}
+            - "-{{ $key }}={{ $value }}"
+            {{- end }}
           volumeMounts:
             - mountPath: /conf
               name: config
@@ -82,6 +86,7 @@ spec:
             {{- toYaml .Values.adminApi.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.adminApi.containerSecurityContext | nindent 12 }}
+          {{- if or .Values.global.extraEnv .Values.adminApi.env }}
           env:
             {{- with .Values.global.extraEnv }}
               {{ toYaml . | nindent 12 }}
@@ -89,6 +94,7 @@ spec:
             {{- with .Values.adminApi.env }}
               {{ toYaml . | nindent 12 }}
             {{- end }}
+          {{- end }}
           envFrom:
             {{- with .Values.global.extraEnvFrom }}
               {{- toYaml . | nindent 12 }}

@@ -8,13 +8,15 @@ metadata:
   {{- include "tempo.labels" (dict "ctx" . "component" "memcached") | nindent 4 }}
   {{- with .Values.memcached.service.annotations }}
   annotations:
-  {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
+  ipFamilies: {{ .Values.tempo.service.ipFamilies }}
+  ipFamilyPolicy: {{ .Values.tempo.service.ipFamilyPolicy }}
   ports:
   - name: memcached-client
     port: 11211
-    targetPort: 11211
+    targetPort: client
   - name: http-metrics
     port: 9150
     targetPort: http-metrics

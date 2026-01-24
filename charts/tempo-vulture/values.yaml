@@ -1,3 +1,8 @@
+global:
+  # -- Common labels for all object directly managed by this chart.
+  # scope: *
+  commonLabels: {}
+
 # -- Overrides the chart's name
 nameOverride: ""
 # -- Overrides the chart's computed fullname
@@ -40,7 +45,10 @@ resources: {}
 nodeSelector: {}
 # -- Tolerations for vulture pods
 tolerations: []
-
+# -- SecurityContext holds container-level security attributes and common container settings
+securityContext: {}
+# -- podSecurityContext holds pod-level security attributes and common container settings
+podSecurityContext: {}
 
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
@@ -53,25 +61,25 @@ serviceAccount:
   # -- Annotations for the service account
   annotations: {}
 
-# ServiceMonitor configuration
-serviceMonitor:
-  # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
+# PodMonitor configuration
+podMonitor:
+  # -- If enabled, PodMonitor resources for Prometheus Operator are created
   enabled: false
-  # -- Alternative namespace for ServiceMonitor resources
+  # -- Alternative namespace for PodMonitor resources
   namespace: null
-  # -- Namespace selector for ServiceMonitor resources
+  # -- Namespace selector for PodMonitor resources
   namespaceSelector: {}
-  # -- ServiceMonitor annotations
+  # -- PodMonitor annotations
   annotations: {}
-  # -- Additional ServiceMonitor labels
+  # -- Additional PodMonitor labels
   labels: {}
-  # -- ServiceMonitor scrape interval
+  # -- PodMonitor scrape interval
   interval: null
-  # -- ServiceMonitor scrape timeout in Go duration format (e.g. 15s)
+  # -- PodMonitor scrape timeout in Go duration format (e.g. 15s)
   scrapeTimeout: null
 
 tempoAddress:
   # -- the url towards your Tempo distributor, e.g. http://distributor
   push:
-  # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
+  # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3200
   query:

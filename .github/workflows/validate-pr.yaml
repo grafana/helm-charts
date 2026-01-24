@@ -8,18 +8,22 @@ on:
       - reopened
       - synchronize
 
+permissions:
+  pull-requests: read
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
-
+        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
       - name: Validate PR
         run: scripts/validate-pr.sh
         env:

@@ -1,6 +1,13 @@
+# Deprecation Notice
+
+**This chart is deprecated and will no longer receive updates or support.**
+
+Please consider using the [loki](https://github.com/grafana/loki/tree/main/production/helm/loki)
+chart instead, which provides comprehensive features and ongoing maintenance.
+
 # loki-canary
 
-![Version: 0.14.0](https://img.shields.io/badge/Version-0.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
+![Version: 0.14.1](https://img.shields.io/badge/Version-0.14.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.1](https://img.shields.io/badge/AppVersion-2.9.1-informational?style=flat-square)
 
 Helm chart for Grafana Loki Canary
 

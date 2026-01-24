@@ -1,0 +1,118 @@
+{{- define "deployment.receiver.otlp" -}}
+otelcol.receiver.otlp "default" {
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.receiver.otlp/
+
+  // configures the default grpc endpoint "0.0.0.0:4317"
+  grpc {
+    max_recv_msg_size = {{ .Values.deployment.otlp.receiver.grpc.max_recv_msg_size | quote }}
+
+    {{- $hasServerParameters := and .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters (or .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle) }}
+    {{- $hasEnforcementPolicy := and .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy (or .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream) }}
+    {{- if or $hasServerParameters $hasEnforcementPolicy }}
+    keepalive {
+      {{- if $hasServerParameters }}
+      server_parameters {
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge }}
+        max_connection_age = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace }}
+        max_connection_age_grace = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle }}
+        max_connection_idle = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.time }}
+        time = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.time | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.timeout }}
+        timeout = {{ .Values.deployment.otlp.receiver.grpc.keepalive.serverParameters.timeout | quote }}
+        {{- end }}
+      }
+      {{- end }}
+      {{- if $hasEnforcementPolicy }}
+      enforcement_policy {
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.maxConnectionAge }}
+        min_time = {{ .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime | quote }}
+        {{- end }}
+        {{- if .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        permit_without_stream = {{ .Values.deployment.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        {{- end }}
+      }
+      {{- end }}
+    }
+    {{- end }}
+
+  }
+
+  // configures the default http/protobuf endpoint "0.0.0.0:4318"
+  http { }
+
+  output {
+    traces = [otelcol.processor.batch.default.input]
+  }
+}
+
+{{ end }}
+
+{{- define "statefulset.receiver.otlp" -}}
+otelcol.receiver.otlp "default" {
+  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.receiver.otlp/
+
+  // configures the default grpc endpoint "0.0.0.0:4317"
+  grpc {
+    max_recv_msg_size = {{ .Values.statefulset.otlp.receiver.grpc.max_recv_msg_size | quote }}
+
+    {{- $hasServerParameters := and .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters (or .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle) }}
+    {{- $hasEnforcementPolicy := and .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy (or .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream) }}
+    {{- if or $hasServerParameters $hasEnforcementPolicy }}
+    keepalive {
+      {{- if $hasServerParameters }}
+      server_parameters {
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge }}
+        max_connection_age = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAge | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace }}
+        max_connection_age_grace = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionAgeGrace | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle }}
+        max_connection_idle = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.maxConnectionIdle | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.time }}
+        time = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.time | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.timeout }}
+        timeout = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.serverParameters.timeout | quote }}
+        {{- end }}
+      }
+      {{- end }}
+      {{- if $hasEnforcementPolicy }}
+      enforcement_policy {
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.maxConnectionAge }}
+        min_time = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.minTime | quote }}
+        {{- end }}
+        {{- if .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        permit_without_stream = {{ .Values.statefulset.otlp.receiver.grpc.keepalive.enforcementPolicy.permitWithoutStream }}
+        {{- end }}
+      }
+      {{- end }}
+    }
+    {{- end }}
+
+  }
+
+  output {
+    traces = [
+      {{ if .Values.sampling.enabled }}
+      otelcol.processor.tail_sampling.default.input,
+      {{ else }}
+      otelcol.processor.batch.default.input,
+      {{ end }}
+      {{ if .Values.metricsGeneration.enabled }}
+      otelcol.connector.servicegraph.default.input,
+      otelcol.processor.transform.drop_unneeded_resource_attributes.input,
+      {{ end }}
+    ]
+  }
+}
+
+{{ end }}

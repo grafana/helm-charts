@@ -11,7 +11,7 @@ metadata:
     {{- end }}
   {{- with .Values.gateway.service.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml . | nindent 4) $ }}
   {{- end }}
 spec:
   type: {{ .Values.gateway.service.type }}
@@ -29,6 +29,12 @@ spec:
       nodePort: {{ .Values.gateway.service.nodePort }}
       {{- end }}
       protocol: TCP
+    {{- if .Values.traces.otlp.grpc.enabled }}
+    - name: grpc-otlp
+      port: {{ .Values.traces.otlp.grpc.port }}
+      targetPort: grpc-otlp
+      protocol: TCP
+    {{- end }}
     {{ range .Values.gateway.service.additionalPorts }}
     - name: {{ .name }}
       port: {{ .port }}

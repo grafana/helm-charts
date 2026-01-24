@@ -53,6 +53,16 @@ to `global.imageRegistry`. If you were not previously setting `global.image.regi
 is required on upgrade. If you were previously setting `global.image.registry`, you will
 need to instead set `global.imageRegistry`.
 
+### To 10.0.0
+
+Static alerting resources now support Helm templating. This means that alerting resources loaded from external files (`alerting.*.files`) are now processed by the Helm template engine.
+
+If you already use template expressions intended for Alertmanager (for example, `{{ $labels.instance }}`), these must now be escaped to avoid unintended Helm evaluation. To escape them, wrap the braces with an extra layer like this:
+
+`{{ "{{" }} $labels.instance {{ "}}" }}`
+
+This ensures the expressions are preserved for Alertmanager instead of being rendered by Helm.
+
 ## Configuration
 
 | Parameter                                 | Description                                   | Default                                                 |
@@ -75,6 +85,7 @@ need to instead set `global.imageRegistry`.
 | `service.enabled`                         | Enable grafana service                        | `true`                                                  |
 | `service.ipFamilies`                      | Kubernetes service IP families                | `[]`                                                    |
 | `service.ipFamilyPolicy`                  | Kubernetes service IP family policy           | `""`                                                    |
+| `service.sessionAffinity`                 | Kubernetes service session affinity config    | `""`                                                    |
 | `service.type`                            | Kubernetes service type                       | `ClusterIP`                                             |
 | `service.port`                            | Kubernetes port where service is exposed      | `80`                                                    |
 | `service.portName`                        | Name of the port on the service               | `service`                                               |
@@ -113,6 +124,7 @@ need to instead set `global.imageRegistry`.
 | `persistence.type`                        | Type of persistence (`pvc` or `statefulset`)  | `pvc`                                                   |
 | `persistence.size`                        | Size of persistent volume claim               | `10Gi`                                                  |
 | `persistence.existingClaim`               | Use an existing PVC to persist data (can be templated) | `nil`                                          |
+| `persistence.volumeName`                  | If using a PVC, then use a specific PV name   | `nil`                                                   |
 | `persistence.storageClassName`            | Type of persistent volume claim               | `nil`                                                   |
 | `persistence.accessModes`                 | Persistence access modes                      | `[ReadWriteOnce]`                                       |
 | `persistence.annotations`                 | PersistentVolumeClaim annotations             | `{}`                                                    |
@@ -121,7 +133,7 @@ need to instead set `global.imageRegistry`.
 | `persistence.subPath`                     | Mount a sub dir of the persistent volume (can be templated) | `nil`                                     |
 | `persistence.inMemory.enabled`            | If persistence is not enabled, whether to mount the local storage in-memory to improve performance | `false`                                                   |
 | `persistence.inMemory.sizeLimit`          | SizeLimit for the in-memory local storage     | `nil`                                                   |
-| `persistence.disableWarning`              | Hide NOTES warning, useful when persiting to a database | `false`                                       |
+| `persistence.disableWarning`              | Hide NOTES warning, useful when persisting to a database | `false`                                       |
 | `initChownData.enabled`                   | If false, don't reset data ownership at startup | true                                                  |
 | `initChownData.image.registry`            | init-chown-data container image registry      | `docker.io`                                               |
 | `initChownData.image.repository`          | init-chown-data container image repository    | `busybox`                                               |
@@ -129,6 +141,7 @@ need to instead set `global.imageRegistry`.
 | `initChownData.image.sha`                 | init-chown-data container image sha (optional)| `""`                                                    |
 | `initChownData.image.pullPolicy`          | init-chown-data container image pull policy   | `IfNotPresent`                                          |
 | `initChownData.resources`                 | init-chown-data pod resource requests & limits | `{}`                                                   |
+| `initChownData.securityContext`           | init-chown-data pod securityContext           | `{"readOnlyRootFilesystem": false, "runAsNonRoot": false}`, "runAsUser": 0, "seccompProfile": {"type": "RuntimeDefault"}, "capabilities": {"add": ["CHOWN"], "drop": ["ALL"]}}` |
 | `schedulerName`                           | Alternate scheduler name                      | `nil`                                                   |
 | `env`                                     | Extra environment variables passed to pods    | `{}`                                                    |
 | `envValueFrom`                            | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
@@ -149,6 +162,7 @@ need to instead set `global.imageRegistry`.
 | `alerting`                                | Configure grafana alerting (passed through tpl) | `{}`                                                  |
 | `notifiers`                               | Configure grafana notifiers                   | `{}`                                                    |
 | `dashboardProviders`                      | Configure grafana dashboard providers         | `{}`                                                    |
+| `defaultCurlOptions`                      | Configure default curl short options for all dashboards, the beginning dash is required  | `-skf`       |
 | `dashboards`                              | Dashboards to import                          | `{}`                                                    |
 | `dashboardsConfigMaps`                    | ConfigMaps reference that contains dashboards | `{}`                                                    |
 | `grafana.ini`                             | Grafana's primary configuration               | `{}`                                                    |
@@ -165,23 +179,29 @@ need to instead set `global.imageRegistry`.
 | `lifecycleHooks`                          | Lifecycle hooks for podStart and preStop [Example](https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/#define-poststart-and-prestop-handlers)     | `{}`                                                    |
 | `sidecar.image.registry`                  | Sidecar image registry                        | `quay.io`                          |
 | `sidecar.image.repository`                | Sidecar image repository                      | `kiwigrid/k8s-sidecar`                          |
-| `sidecar.image.tag`                       | Sidecar image tag                             | `1.26.0`                                                |
+| `sidecar.image.tag`                       | Sidecar image tag                             | `2.5.0`                                                |
 | `sidecar.image.sha`                       | Sidecar image sha (optional)                  | `""`                                                    |
 | `sidecar.imagePullPolicy`                 | Sidecar image pull policy                     | `IfNotPresent`                                          |
 | `sidecar.resources`                       | Sidecar resources                             | `{}`                                                    |
 | `sidecar.securityContext`                 | Sidecar securityContext                       | `{}`                                                    |
 | `sidecar.enableUniqueFilenames`           | Sets the kiwigrid/k8s-sidecar UNIQUE_FILENAMES environment variable. If set to `true` the sidecar will create unique filenames where duplicate data keys exist between ConfigMaps and/or Secrets within the same or multiple Namespaces. | `false`                           |
 | `sidecar.alerts.enabled`             | Enables the cluster wide search for alerts and adds/updates/deletes them in grafana |`false`       |
-| `sidecar.alerts.label`               | Label that config maps with alerts should have to be added | `grafana_alert`                               |
-| `sidecar.alerts.labelValue`          | Label value that config maps with alerts should have to be added | `""`                                |
+| `sidecar.alerts.env`                 | Extra environment variables passed to pods    | `{}`                                                    |
+| `sidecar.alerts.envValueFrom`        | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
+| `sidecar.alerts.label`               | Label that config maps with alerts should have to be added (can be templated) | `grafana_alert`                               |
+| `sidecar.alerts.labelValue`          | Label value that config maps with alerts should have to be added (can be templated) | `""`                                |
 | `sidecar.alerts.searchNamespace`     | Namespaces list. If specified, the sidecar will search for alerts config-maps  inside these namespaces. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.alerts.watchMethod`         | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. | `WATCH` |
 | `sidecar.alerts.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.alerts.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/alerting/reload"` |
 | `sidecar.alerts.skipReload`          | Enabling this omits defining the REQ_URL and REQ_METHOD environment variables | `false` |
 | `sidecar.alerts.initAlerts`          | Set to true to deploy the alerts sidecar as an initContainer. This is needed if skipReload is true, to load any alerts defined at startup time. | `false` |
+| `sidecar.alerts.restartPolicy`        |  Set to `Always` to enable native sidecars. `sidecar.alerts.initAlerts` must be `true` | `""`|
+| `sidecar.alerts.startupProbe`         |  Startup probe for the native sidecar | `{}` |
 | `sidecar.alerts.extraMounts`         | Additional alerts sidecar volume mounts. | `[]`                               |
 | `sidecar.dashboards.enabled`              | Enables the cluster wide search for dashboards and adds/updates/deletes them in grafana | `false`       |
+| `sidecar.dashboards.env`                  | Extra environment variables passed to pods    | `{}`                                                    |
+| `sidecar.dashboards.envValueFrom`         | Environment variables from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
 | `sidecar.dashboards.SCProvider`           | Enables creation of sidecar provider          | `true`                                                  |
 | `sidecar.dashboards.provider.name`        | Unique name of the grafana provider           | `sidecarProvider`                                       |
 | `sidecar.dashboards.provider.orgid`       | Id of the organisation, to which the dashboards should be added | `1`                                   |
@@ -193,8 +213,8 @@ need to instead set `global.imageRegistry`.
 | `sidecar.dashboards.provider.foldersFromFilesStructure`        | Allow Grafana to replicate dashboard structure from filesystem.                                 | `false`                                                  |
 | `sidecar.dashboards.watchMethod`          | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. | `WATCH` |
 | `sidecar.skipTlsVerify`                   | Set to true to skip tls verification for kube api calls | `nil`                                         |
-| `sidecar.dashboards.label`                | Label that config maps with dashboards should have to be added | `grafana_dashboard`                                |
-| `sidecar.dashboards.labelValue`                | Label value that config maps with dashboards should have to be added | `""`                                |
+| `sidecar.dashboards.label`                | Label that config maps with dashboards should have to be added (can be templated) | `grafana_dashboard`                                |
+| `sidecar.dashboards.labelValue`                | Label value that config maps with dashboards should have to be added (can be templated) | `""`                                |
 | `sidecar.dashboards.folder`               | Folder in the pod that should hold the collected dashboards (unless `sidecar.dashboards.defaultFolderName` is set). This path will be mounted. | `/tmp/dashboards`    |
 | `sidecar.dashboards.folderAnnotation`     | The annotation the sidecar will look for in configmaps to override the destination folder for files | `nil`                                                  |
 | `sidecar.dashboards.defaultFolderName`    | The default folder name, it will create a subfolder under the `sidecar.dashboards.folder` and put dashboards in there instead | `nil`                                |
@@ -202,26 +222,33 @@ need to instead set `global.imageRegistry`.
 | `sidecar.dashboards.script`               | Absolute path to shell script to execute after a configmap got reloaded. | `nil`                                |
 | `sidecar.dashboards.reloadURL`            | Full url of dashboards configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/dashboards/reload"` |
 | `sidecar.dashboards.skipReload`           | Enabling this omits defining the REQ_USERNAME, REQ_PASSWORD, REQ_URL and REQ_METHOD environment variables | `false` |
+| `sidecar.dashboards.initDashboards`     | Set to true to deploy the dashboards sidecar as an initContainer in addition to a container. This is needed if skipReload is true, to load any dashboards defined at startup time. | `false` |
+| `sidecar.dashboards.restartPolicy`        |  Set to `Always` to enable native sidecars. `sidecar.dashboards.initAlerts` must be `true` | `""`|
+| `sidecar.dashboards.startupProbe`         |  Startup probe for the native sidecar | `{}` |
 | `sidecar.dashboards.resource`             | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.dashboards.extraMounts`          | Additional dashboard sidecar volume mounts. | `[]`                               |
 | `sidecar.datasources.enabled`             | Enables the cluster wide search for datasources and adds/updates/deletes them in grafana |`false`       |
-| `sidecar.datasources.label`               | Label that config maps with datasources should have to be added | `grafana_datasource`                               |
-| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added | `""`                                |
+| `sidecar.datasources.label`               | Label that config maps with datasources should have to be added (can be templated) | `grafana_datasource`                               |
+| `sidecar.datasources.labelValue`          | Label value that config maps with datasources should have to be added (can be templated) | `""`                                |
 | `sidecar.datasources.searchNamespace`     | Namespaces list. If specified, the sidecar will search for datasources config-maps  inside these namespaces. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.datasources.watchMethod`         | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. | `WATCH` |
 | `sidecar.datasources.resource`            | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.datasources.reloadURL`           | Full url of datasource configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/datasources/reload"` |
 | `sidecar.datasources.skipReload`          | Enabling this omits defining the REQ_URL and REQ_METHOD environment variables | `false` |
 | `sidecar.datasources.initDatasources`     | Set to true to deploy the datasource sidecar as an initContainer in addition to a container. This is needed if skipReload is true, to load any datasources defined at startup time. | `false` |
+| `sidecar.datasources.restartPolicy`        |  Set to `Always` to enable native sidecars. `sidecar.datasources.initAlerts` must be `true` | `""`|
+| `sidecar.datasources.startupProbe`         |  Startup probe for the native sidecar | `{}` |
 | `sidecar.notifiers.enabled`               | Enables the cluster wide search for notifiers and adds/updates/deletes them in grafana | `false`        |
-| `sidecar.notifiers.label`                 | Label that config maps with notifiers should have to be added | `grafana_notifier`                               |
-| `sidecar.notifiers.labelValue`            | Label value that config maps with notifiers should have to be added | `""`                                |
+| `sidecar.notifiers.label`                 | Label that config maps with notifiers should have to be added (can be templated) | `grafana_notifier`                               |
+| `sidecar.notifiers.labelValue`            | Label value that config maps with notifiers should have to be added (can be templated) | `""`                                |
 | `sidecar.notifiers.searchNamespace`       | Namespaces list. If specified, the sidecar will search for notifiers config-maps (or secrets) inside these namespaces. Otherwise the namespace in which the sidecar is running will be used. It's also possible to specify ALL to search in all namespaces. | `nil`                               |
 | `sidecar.notifiers.watchMethod`           | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. | `WATCH` |
 | `sidecar.notifiers.resource`              | Should the sidecar looks into secrets, configmaps or both. | `both`                               |
 | `sidecar.notifiers.reloadURL`             | Full url of notifier configuration reload API endpoint, to invoke after a config-map change | `"http://localhost:3000/api/admin/provisioning/notifications/reload"` |
 | `sidecar.notifiers.skipReload`            | Enabling this omits defining the REQ_URL and REQ_METHOD environment variables | `false` |
 | `sidecar.notifiers.initNotifiers`         | Set to true to deploy the notifier sidecar as an initContainer in addition to a container. This is needed if skipReload is true, to load any notifiers defined at startup time. | `false` |
+| `sidecar.notifiers.restartPolicy`        |  Set to `Always` to enable native sidecars. `sidecar.notifiers.initAlerts` must be `true` | `""`|
+| `sidecar.notifiers.startupProbe`         |  Startup probe for the native sidecar | `{}` |
 | `smtp.existingSecret`                     | The name of an existing secret containing the SMTP credentials. | `""`                                  |
 | `smtp.userKey`                            | The key in the existing SMTP secret containing the username. | `"user"`                                 |
 | `smtp.passwordKey`                        | The key in the existing SMTP secret containing the password. | `"password"`                             |
@@ -254,7 +281,7 @@ need to instead set `global.imageRegistry`.
 | `downloadDashboards.resources`            | Resources of `download-dashboards` container  | `{}`                                                    |
 | `downloadDashboardsImage.registry`        | Curl docker image registry                    | `docker.io`                                       |
 | `downloadDashboardsImage.repository`      | Curl docker image repository                  | `curlimages/curl`                                       |
-| `downloadDashboardsImage.tag`             | Curl docker image tag                         | `7.73.0`                                                |
+| `downloadDashboardsImage.tag`             | Curl docker image tag                         | `8.9.1`                                                 |
 | `downloadDashboardsImage.sha`             | Curl docker image sha (optional)              | `""`                                                    |
 | `downloadDashboardsImage.pullPolicy`      | Curl docker image pull policy                 | `IfNotPresent`                                          |
 | `namespaceOverride`                       | Override the deployment namespace             | `""` (`Release.Namespace`)                              |
@@ -274,6 +301,7 @@ need to instead set `global.imageRegistry`.
 | `imageRenderer.image.repository`           | image-renderer Image repository                                                    | `grafana/grafana-image-renderer` |
 | `imageRenderer.image.tag`                  | image-renderer Image tag                                                           | `latest`                         |
 | `imageRenderer.image.sha`                  | image-renderer Image sha (optional)                                                | `""`                             |
+| `imageRenderer.image.pullSecrets`                  |  image-renderer Image pull secrets (optional)                              | `[]`                             |
 | `imageRenderer.image.pullPolicy`           | image-renderer ImagePullPolicy                                                     | `Always`                         |
 | `imageRenderer.env`                        | extra env-vars for image-renderer                                                  | `{}`                             |
 | `imageRenderer.envValueFrom`               | Environment variables for image-renderer from alternate sources. See the API docs on [EnvVarSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#envvarsource-v1-core) for format details. Can be templated | `{}` |
@@ -292,6 +320,8 @@ need to instead set `global.imageRegistry`.
 | `imageRenderer.service.targetPort`         | image-renderer service port used by service                                        | `8081`                           |
 | `imageRenderer.appProtocol`                | Adds the appProtocol field to the service                                          | ``                               |
 | `imageRenderer.grafanaSubPath`             | Grafana sub path to use for image renderer callback url                            | `''`                             |
+| `imageRenderer.serverURL`                  | Remote image renderer url                                                          | `''`                             |
+| `imageRenderer.renderingCallbackURL`       | Callback url for the Grafana image renderer                                        | `''`                             |
 | `imageRenderer.podPortName`                | name of the image-renderer port on the pod                                         | `http`                           |
 | `imageRenderer.revisionHistoryLimit`       | number of image-renderer replica sets to keep                                      | `10`                             |
 | `imageRenderer.networkPolicy.limitIngress` | Enable a NetworkPolicy to limit inbound traffic from only the created grafana pods | `true`                           |
@@ -391,7 +421,16 @@ dashboards:
       - name: DS_LOKI
         value: Loki
     local-dashboard:
-      url: https://raw.githubusercontent.com/user/repository/master/dashboards/dashboard.json
+      url: https://github.com/cloudnative-pg/grafana-dashboards/blob/main/charts/cluster/grafana-dashboard.json
+      # redirects to:
+      # https://raw.githubusercontent.com/cloudnative-pg/grafana-dashboards/refs/heads/main/charts/cluster/grafana-dashboard.json
+
+      # default: -skf
+      # -s  - silent mode
+      # -k  - allow insecure (eg: non-TLS) connections
+      # -f  - fail fast
+      # -L  - follow HTTP redirects
+      curlOptions: -Lf
 ```
 
 ## BASE64 dashboards
@@ -425,7 +464,7 @@ kind: ConfigMap
 metadata:
   name: sample-grafana-dashboard
   labels:
-     grafana_dashboard: "1"
+    grafana_dashboard: "1"
 data:
   k8s-dashboard.json: |-
   [...]
@@ -586,7 +625,7 @@ kind: ConfigMap
 metadata:
   name: sample-grafana-alert
   labels:
-     grafana_alert: "1"
+    grafana_alert: "1"
 data:
   k8s-alert.yml: |-
     apiVersion: 1
@@ -662,7 +701,7 @@ The two possibilities for static alerting resource provisioning are:
 * The format of the files is defined in the [Grafana documentation](https://grafana.com/docs/grafana/next/alerting/set-up/provision-alerting-resources/file-provisioning/) on file provisioning.
 * The chart supports importing YAML and JSON files.
 * The filename must be unique, otherwise one volume mount will overwrite the other.
-* In case of inlining, double curly braces that arise from the Grafana configuration format and are not intended as templates for the chart must be escaped.
+* Alerting configurations support Helm templating. Double curly braces that arise from the Grafana configuration format and are not intended as templates for the chart must be escaped.
 * The number of total files under `alerting:` is not limited. Each file will end up as a volume mount in the corresponding provisioning folder of the deployed Grafana instance.
 * The file size for each import is limited by what the function `.Files.Get` can handle, which suffices for most cases.
 
@@ -718,7 +757,7 @@ stringData:
 Include in the `extraSecretMounts` configuration flag:
 
 ```yaml
-- extraSecretMounts:
+extraSecretMounts:
   - name: auth-generic-oauth-secret-mount
     secretName: auth-generic-oauth-secret
     defaultMode: 0440
@@ -731,7 +770,7 @@ Include in the `extraSecretMounts` configuration flag:
 This example uses a CSI driver e.g. retrieving secrets using [Azure Key Vault Provider](https://github.com/Azure/secrets-store-csi-driver-provider-azure)
 
 ```yaml
-- extraSecretMounts:
+extraSecretMounts:
   - name: secrets-store-inline
     mountPath: /run/secrets
     readOnly: true
@@ -775,7 +814,11 @@ grafana.ini:
     ha_peers: {{ Name }}-headless:9094
     ha_listen_address: ${POD_IP}:9094
     ha_advertise_address: ${POD_IP}:9094
+    rule_version_record_limit: "5"
 
   alerting:
     enabled: false
 ```
+
+### Installing plugins
+For installing plugins please see the [official documentation](https://grafana.com/docs/grafana/latest/administration/plugin-management/#install-plugins-using-the-grafana-helm-chart).

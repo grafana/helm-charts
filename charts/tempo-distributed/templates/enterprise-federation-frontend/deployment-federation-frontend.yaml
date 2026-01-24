@@ -16,7 +16,7 @@ spec:
 {{- if not .Values.enterpriseFederationFrontend.autoscaling.enabled }}
   replicas: {{ .Values.enterpriseFederationFrontend.replicas }}
 {{- end }}
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: {{ .Values.tempo.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
@@ -61,23 +61,35 @@ spec:
         - args:
             - -target=federation-frontend
             - -config.file=/conf/tempo.yaml
-            - -mem-ballast-size-mbs=1024
             {{- with .Values.enterpriseFederationFrontend.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           image: {{ include "tempo.imageReference" $dict }}
           imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
           name: federation-frontend
           ports:
-            - containerPort: 3100
+            - containerPort: 3200
               name: http-metrics
-          {{- with .Values.enterpriseFederationFrontend.extraEnv }}
+          {{- if or .Values.global.extraEnv .Values.enterpriseFederationFrontend.extraEnv }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.global.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.enterpriseFederationFrontend.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
-          {{- with .Values.enterpriseFederationFrontend.extraEnvFrom }}
+          {{- if or .Values.global.extraEnvFrom .Values.enterpriseFederationFrontend.extraEnvFrom }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- with .Values.enterpriseFederationFrontend.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.enterpriseFederationFrontend.resources | nindent 12 }}
