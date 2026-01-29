@@ -1567,8 +1567,10 @@ config: |
       query_timeout: {{ .Values.querier.config.search.query_timeout }}
     max_concurrent_queries: {{ .Values.querier.config.max_concurrent_queries }}
   query_frontend:
+    {{- if not .Values.enterprise.enabled }}
     mcp_server:
       enabled: {{ .Values.queryFrontend.mcp_server.enabled }}
+    {{- end }}
     max_outstanding_per_tenant: {{ .Values.queryFrontend.config.max_outstanding_per_tenant }}
     max_retries: {{ .Values.queryFrontend.config.max_retries }}
     search:
