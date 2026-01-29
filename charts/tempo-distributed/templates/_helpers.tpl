@@ -38,7 +38,7 @@ Docker image selector for Tempo. Hierachy based on global, component, and tempo 
 Optional list of imagePullSecrets for Tempo docker images
 */}}
 {{- define "tempo.imagePullSecrets" -}}
-{{- $imagePullSecrets := coalesce .global.pullSecrets .component.pullSecrets .tempo.pullSecrets -}}
+{{- $imagePullSecrets := coalesce .component.pullSecrets .tempo.pullSecrets .global.pullSecrets -}}
 {{- if $imagePullSecrets  -}}
 imagePullSecrets:
 {{- range $imagePullSecrets }}
