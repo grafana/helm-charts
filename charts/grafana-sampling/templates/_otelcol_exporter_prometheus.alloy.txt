@@ -1,8 +1,0 @@
-{{- define "statefulset.exporter.prometheus" -}}
-otelcol.exporter.prometheus "grafana_cloud_prometheus" {
-  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.exporter.prometheus/
-  add_metric_suffixes = {{ not .Values.metricsGeneration.legacy }}
-  forward_to          = [prometheus.remote_write.grafana_cloud_prometheus.receiver]
-}
-
-{{ end }}

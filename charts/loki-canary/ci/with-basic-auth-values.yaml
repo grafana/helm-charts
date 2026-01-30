@@ -1,6 +1,0 @@
-lokiAddress: loki:3100
-
-basicAuth:
-  enabled: true
-  username: user
-  password: pass

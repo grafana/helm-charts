@@ -1,8 +1,0 @@
-{{- define "auth.basic" -}}
-otelcol.auth.basic "grafana_cloud_tempo" {
-  // https://grafana.com/docs/alloy/latest/reference/components/otelcol.auth.basic/
-  username = env("GRAFANA_CLOUD_TEMPO_USERNAME")
-  password = env("GRAFANA_CLOUD_API_KEY")
-}
-
-{{ end }}

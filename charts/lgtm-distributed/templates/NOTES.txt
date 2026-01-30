@@ -1,1 +1,0 @@
-Release name should be limited to 25 characters to not exceed the resource name limits of 63 characters.
