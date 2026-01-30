@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/grafana)](https://artifacthub.io/packages/search?repo=grafana)
+[![Release Charts](https://github.com/grafana-community/helm-charts/actions/workflows/release.yaml/badge.svg)](https://github.com/grafana-community/helm-charts/actions/workflows/release.yaml)
 
 The code is provided as-is with no warranties.
 
