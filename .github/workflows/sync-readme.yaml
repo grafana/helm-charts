@@ -17,10 +17,9 @@ jobs:
           persist-credentials: false
       - run: |
           cp -f README.md ${{ runner.temp }}/README.md
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the push the commit later on in this workflow
         with:
           ref: gh-pages
-          persist-credentials: false
       - run: |
           cp -f ${{ runner.temp }}/README.md .
           git config user.name "$GITHUB_ACTOR"

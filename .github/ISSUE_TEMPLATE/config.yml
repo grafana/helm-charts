@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Migrated charts
+    url: https://github.com/grafana-community/helm-charts/issues
+    about: The charts grafana-mcp, grafana, synthetic-monitoring-agent, tempo-distributed, tempo-vulture, and tempo have been migrated to the grafana-community/helm-charts repository. See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
