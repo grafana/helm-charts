@@ -89542,6 +89542,33 @@ entries:
   synthetic-monitoring-agent:
   - apiVersion: v2
     appVersion: v0.38.3
+    created: "2026-01-30T06:36:23.138297275Z"
+    deprecated: true
+    description: 'Grafana''s Synthetic Monitoring application. The agent provides
+      probe functionality and executes network checks for monitoring remote targets.  >
+      [!NOTE] > Grafana Cloud Synthetic Monitoring does not officially support this
+      chart. > If you are a Grafana Cloud customer and require support, please follow
+      the [recommended installation methods](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/#deployment-with-kubernetes)
+      listed in the public docs. '
+    digest: de946c8101727ee234cf8a1a19bb89d07d528ba0f6705d4224bcc07aadd43d2d
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    - email: scott.crooks@gmail.com
+      name: sc250024
+    name: synthetic-monitoring-agent
+    sources:
+    - https://github.com/grafana/synthetic-monitoring-agent
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/synthetic-monitoring-agent-1.2.1/synthetic-monitoring-agent-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v2
+    appVersion: v0.38.3
     created: "2025-11-13T14:01:12.252077415Z"
     description: 'Grafana''s Synthetic Monitoring application. The agent provides
       probe functionality and executes network checks for monitoring remote targets.  >
@@ -104060,4 +104087,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-30T06:30:23.744536887Z"
+generated: "2026-01-30T06:36:23.142279678Z"
