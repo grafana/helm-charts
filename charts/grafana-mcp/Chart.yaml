@@ -9,23 +9,27 @@ home: https://grafana.com
 icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
 sources:
   - https://github.com/grafana/mcp-grafana
-  - https://github.com/grafana/helm-charts
+  - https://github.com/grafana-community/helm-charts
 annotations:
   "artifacthub.io/license": Apache-2.0
   "artifacthub.io/links": |
     - name: Chart Source
-      url: https://github.com/grafana/helm-charts
+      url: https://github.com/grafana-community/helm-charts
     - name: Upstream Project
       url: https://github.com/grafana/mcp-grafana
 maintainers:
-  - name: Sheikh-Abubaker
+  - name: Mohammad Abubaker
     email: sheikhabubaker761@gmail.com
-  - name: jkroepke
+    url: https://github.com/Sheikh-Abubaker
+  - name: Jan-Otto Kröpke
     email: github@jkroepke.de
-  - name: KyriosGN0
+    url: https://github.com/jkroepke
+  - name: Aviv Guiser
     email: avivguiser@gmail.com
-  - name: QuentinBisson
+    url: https://github.com/KyriosGN0
+  - name: Quentin Bisson
     email: quentin.bisson@gmail.com
+    url: https://github.com/QuentinBisson
 type: application
 keywords:
   - monitoring

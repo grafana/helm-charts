@@ -1,23 +1,23 @@
+permissions: {}
+
 on:
   push:
     branches:
       - 'main'
     paths:
       - 'README.md'
-permissions: {}
+
 jobs:
   build:
     permissions:
       contents: write # for git push
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-        with:
-          persist-credentials: false
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - run: |
           cp -f README.md ${{ runner.temp }}/README.md
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the push the commit later on in this workflow
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           ref: gh-pages
       - run: |

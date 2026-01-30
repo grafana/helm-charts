@@ -11,13 +11,6 @@ icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/
 sources:
   - https://github.com/grafana/tempo
 maintainers:
-  - name: joe-elliott
-    email: number101010@gmail.com
-  - name: swartz-k
-    email: 9215868@gmail.com
-  - name: annanay25
-  - name: mdisibio
-  - name: dgzlopes
-  - name: mapno
-  - name: Sheikh-Abubaker
+  - name: Mohammad Abubaker
     email: sheikhabubaker761@gmail.com
+    url: https://github.com/Sheikh-Abubaker

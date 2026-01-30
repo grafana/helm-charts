@@ -11,20 +11,15 @@ icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/
 sources:
   - https://github.com/grafana/tempo
 maintainers:
-  - name: joe-elliott
-    email: number101010@gmail.com
-  - name: swartz-k
-    email: 9215868@gmail.com
-  - name: annanay25
-  - name: mdisibio
-  - name: mapno
-  - name: BitProcessor
-  - name: faustodavid
-  - name: zalegrala
-  - name: Sheikh-Abubaker
+  - name: Ilia Lazebnik
+    email: Ilia.lazebnik@gmail.com
+    url: https://github.com/DrFaust92
+  - name: Mohammad Abubaker
     email: sheikhabubaker761@gmail.com
-  - name: QuentinBisson
+    url: https://github.com/Sheikh-Abubaker
+  - name: Quentin Bisson
     email: quentin.bisson@gmail.com
+    url: https://github.com/QuentinBisson
 dependencies:
   - name: minio
     alias: minio

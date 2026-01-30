@@ -1,23 +1,17 @@
-# See https://github.com/scottrigby/prometheus-helm-charts/issues/12
+# See https://github.com/prometheus-community/helm-charts/issues/12
 # https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
 # https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
 
 # The repo admins team will be the default owners for everything in the repo.
 # Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
-* @grafana/helm-charts-admins
+* @grafana-community/helm-charts-admins
 
-/charts/grafana/ @jkroepke @maorfr @torstenwalter @Xtigyro @zanhsieh @QuentinBisson
-/charts/loki-distributed/ @grafana/loki-squad @unguiculus @Whyeasy
-/charts/loki-canary/ @grafana/loki-squad @unguiculus @Whyeasy
-/charts/promtail/ @grafana/loki-squad @unguiculus @Whyeasy
-/charts/tempo/ @grafana/tempo @Sheikh-Abubaker @dgzlopes @swartz-k @BitProcessor @faustodavid
-/charts/tempo-distributed/ @grafana/tempo @Sheikh-Abubaker @swartz-k @BitProcessor @faustodavid @QuentinBisson
-/charts/enterprise-metrics/ @grafana/mimir-maintainers
-/charts/rollout-operator/ @grafana/mimir-maintainers
-/charts/enterprise-logs/ @grafana/loki-squad
-/charts/tempo-vulture/ @grafana/tempo @Whyeasy @dgzlopes
-/charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
-/charts/agent-operator/ @grafana/grafana-agent-maintainers
-/charts/cloudcost-exporter/ @grafana/platform-monitoring
-/charts/grafana-mcp/ @jkroepke @Sheikh-Abubaker @KyriosGN0 @QuentinBisson
-/charts/pdc-agent/ @grafana/grafana-datasources-core-services
+/.github/workflows/ @jkroepke @TheRealNoob
+/renovate.json @jkroepke
+
+/charts/grafana-mcp/ @KyriosGN0 @QuentinBisson @Sheikh-Abubaker @jkroepke
+/charts/grafana/ @QuentinBisson @jkroepke
+/charts/synthetic-monitoring-agent/ @KyriosGN0 @Sheikh-Abubaker
+/charts/tempo-distributed/ @DrFaust92 @QuentinBisson @Sheikh-Abubaker
+/charts/tempo-vulture/ @KyriosGN0 @QuentinBisson @Sheikh-Abubaker
+/charts/tempo/ @Sheikh-Abubaker

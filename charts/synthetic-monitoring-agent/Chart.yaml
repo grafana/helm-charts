@@ -9,12 +9,12 @@ description: |
 home: https://grafana.net
 icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
 maintainers:
-  - email: zanhsieh@gmail.com
-    name: zanhsieh
-  - email: mail@torstenwalter.de
-    name: torstenwalter
-  - email: scott.crooks@gmail.com
-    name: sc250024
+  - name: Mohammad Abubaker
+    email: sheikhabubaker761@gmail.com
+    url: https://github.com/Sheikh-Abubaker
+  - name: Aviv Guiser
+    email: avivguiser@gmail.com
+    url: https://github.com/KyriosGN0
 name: synthetic-monitoring-agent
 sources:
   - https://github.com/grafana/synthetic-monitoring-agent
