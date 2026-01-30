@@ -1,12 +1,18 @@
 # synthetic-monitoring-agent
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.38.3](https://img.shields.io/badge/AppVersion-v0.38.3-informational?style=flat-square)
+![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.38.3](https://img.shields.io/badge/AppVersion-v0.38.3-informational?style=flat-square)
 
 Grafana's Synthetic Monitoring application. The agent provides probe functionality and executes network checks for monitoring remote targets.
 
 > [!NOTE]
 > Grafana Cloud Synthetic Monitoring does not officially support this chart.
 > If you are a Grafana Cloud customer and require support, please follow the [recommended installation methods](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/#deployment-with-kubernetes) listed in the public docs.
+
+## 📦 Chart Migration
+
+**This chart is being migrated to [grafana-community/helm-charts](https://github.com/grafana-community/helm-charts).**
+
+After January 30th, 2026, updates and support for this chart will be provided in the new repository. Please update your Helm repository configuration to ensure you continue receiving updates.
 
 **Homepage:** <https://grafana.net>
 
