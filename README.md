@@ -22,6 +22,22 @@ You can then run `helm search repo grafana-community` to see the charts.
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
 Chart documentation is available in [grafana directory](https://github.com/grafana-community/helm-charts/blob/main/charts/grafana/README.md).
 
+**OCI artifacts of all Grafana Community Helm charts are available in [ghcr.io](https://github.com/orgs/grafana-community/packages?repo_name=helm-charts).**
+
+## Helm Provenance and Integrity
+
+All charts in this repository are signed. More information about how to verify charts can be found in the official [Helm documentation](https://helm.sh/docs/topics/provenance/).
+
+A local running gpg agent is mandatory.
+
+To import the signing key for this repository, please run the following command:
+
+```console
+curl https://grafana-community.github.io/helm-charts/pubkey.gpg | gpg --import
+```
+
+After importing the key, you can use the `--verify` flag during `helm install` to enable chart signature validation.
+
 ## Contributing
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
