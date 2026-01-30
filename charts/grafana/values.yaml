@@ -123,7 +123,7 @@ testFramework:
     # -- The Docker registry
     registry: docker.io
     repository: bats/bats
-    tag: "v1.4.1"
+    tag: "1.13.0"
   imagePullPolicy: IfNotPresent
   securityContext: {}
   containerSecurityContext: {}
@@ -190,7 +190,7 @@ downloadDashboardsImage:
   # -- The Docker registry
   registry: docker.io
   repository: curlimages/curl
-  tag: 8.9.1
+  tag: 8.18.0
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -469,7 +469,7 @@ initChownData:
     # -- The Docker registry
     registry: docker.io
     repository: library/busybox
-    tag: "1.31.1"
+    tag: "1.37.0"
     sha: ""
     pullPolicy: IfNotPresent
 
