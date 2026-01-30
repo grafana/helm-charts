@@ -63,6 +63,10 @@ If you already use template expressions intended for Alertmanager (for example, 
 
 This ensures the expressions are preserved for Alertmanager instead of being rendered by Helm.
 
+### To 11.0.0
+
+The minimum required Kubernetes version is now 1.25. All references to deprecated APIs have been removed.
+
 ## Configuration
 
 | Parameter                                 | Description                                   | Default                                                 |
