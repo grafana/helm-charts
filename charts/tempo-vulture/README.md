@@ -1,14 +1,8 @@
 # tempo-vulture
 
-![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo Vulture - A tool to monitor Tempo performance.
-
-## 📦 Chart Migration
-
-**This chart is being migrated to [grafana-community/helm-charts](https://github.com/grafana-community/helm-charts).**
-
-After January 30th, 2026, updates and support for this chart will be provided in the new repository. Please update your Helm repository configuration to ensure you continue receiving updates.
 
 ## Source Code
 
