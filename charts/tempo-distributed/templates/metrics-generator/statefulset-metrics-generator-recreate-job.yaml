@@ -1,3 +1,0 @@
-{{- if and .Values.metricsGenerator.persistence.enabled .Values.metricsGenerator.persistence.enableStatefulSetRecreationForSizeChange -}}
-  {{- include "tempo.statefulset.recreateOnSizeChangeHook" (dict "context" . "pathToStatefulsetTemplate" "/metrics-generator/statefulset-metrics-generator.yaml") -}}
-{{- end -}}

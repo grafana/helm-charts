@@ -1,3 +1,0 @@
-{{- if .Values.queryFrontend.query.enabled }}
-{{- include "tempo.lib.serviceMonitor" (dict "ctx" $ "component" "tempo-query") }}
-{{- end }}
