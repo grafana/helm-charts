@@ -1,9 +1,7 @@
 {{- if and .Values.queryFrontend.query.enabled .Values.queryFrontend.ingress.enabled -}}
 {{ $dict := dict "ctx" . "component" "query-frontend"  }}
-{{- $ingressApiIsStable := eq (include "tempo.ingress.isStable" .) "true" -}}
-{{- $ingressSupportsIngressClassName := eq (include "tempo.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "tempo.ingress.supportsPathType" .) "true" -}}
-apiVersion: {{ include "tempo.ingress.apiVersion" . }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "tempo.resourceName" $dict }}
@@ -15,9 +13,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and $ingressSupportsIngressClassName .Values.queryFrontend.ingress.ingressClassName }}
   ingressClassName: {{ .Values.queryFrontend.ingress.ingressClassName }}
-  {{- end -}}
   {{- if .Values.queryFrontend.ingress.tls }}
   tls:
     {{- range .Values.queryFrontend.ingress.tls }}
@@ -41,15 +37,10 @@ spec:
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- if $ingressApiIsStable }}
               service:
                 name: {{ include "tempo.resourceName" $dict }}
                 port:
                   number: {{ $.Values.queryFrontend.service.port }}
-              {{- else }}
-              serviceName: {{ include "tempo.resourceName" $dict }}
-              servicePort: {{ $.Values.queryFrontend.service.port }}
-              {{- end }}
           {{- end }}
     {{- end }}
 {{- end }}

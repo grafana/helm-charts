@@ -1,10 +1,8 @@
 {{- if .Values.enterprise.enabled -}}
 {{ $dict := dict "ctx" . "component" "enterprise-gateway" }}
 {{- if .Values.enterpriseGateway.ingress.enabled -}}
-{{- $ingressApiIsStable := eq (include "tempo.ingress.isStable" .) "true" -}}
-{{- $ingressSupportsIngressClassName := eq (include "tempo.ingress.supportsIngressClassName" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "tempo.ingress.supportsPathType" .) "true" -}}
-apiVersion: {{ include "tempo.ingress.apiVersion" . }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "tempo.resourceName" $dict }}
@@ -16,9 +14,7 @@ metadata:
   {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  {{- if and $ingressSupportsIngressClassName .Values.enterpriseGateway.ingress.ingressClassName }}
   ingressClassName: {{ .Values.enterpriseGateway.ingress.ingressClassName }}
-  {{- end -}}
   {{- if .Values.enterpriseGateway.ingress.tls }}
   tls:
     {{- range .Values.enterpriseGateway.ingress.tls }}
@@ -42,15 +38,10 @@ spec:
             pathType: {{ .pathType }}
             {{- end }}
             backend:
-              {{- if $ingressApiIsStable }}
               service:
                 name: {{ include "tempo.resourceName" $dict }}
                 port:
                   number: {{ $.Values.enterpriseGateway.service.port | default (include "tempo.serverHttpListenPort" $ ) }}
-              {{- else }}
-              serviceName: {{ include "tempo.resourceName" $dict }}
-              servicePort: {{ $.Values.enterpriseGateway.service.port | default (include "tempo.serverHttpListenPort" $ ) }}
-              {{- end }}
           {{- end }}
     {{- end }}
 {{- end -}}
