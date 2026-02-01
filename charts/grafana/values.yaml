@@ -248,6 +248,10 @@ service:
   # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
   appProtocol: ""
   sessionAffinity: ""
+  # trafficDistribution can be used to specify preferences for how traffic is distributed to endpoints.
+  # Supported values: "PreferClose" (prefer endpoints topologically closer to the client)
+  # ref: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
+  trafficDistribution: ""
 
 serviceMonitor:
   ## If true, a ServiceMonitor CR is created for a prometheus operator
@@ -1480,6 +1484,9 @@ imageRenderer:
     targetPort: 8081
     # Adds the appProtocol field to the image-renderer service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
     appProtocol: ""
+    # trafficDistribution can be used to specify preferences for how traffic is distributed to endpoints.
+    # ref: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
+    trafficDistribution: ""
   serviceMonitor:
     ## If true, a ServiceMonitor CRD is created for a prometheus operator
     ## https://github.com/coreos/prometheus-operator

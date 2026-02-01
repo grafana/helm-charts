@@ -18,6 +18,9 @@ spec:
   {{- with .Values.imageRenderer.service.clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
+  {{- with .Values.imageRenderer.service.trafficDistribution }}
+  trafficDistribution: {{ . }}
+  {{- end }}
   ports:
     - name: {{ .Values.imageRenderer.service.portName }}
       port: {{ .Values.imageRenderer.service.port }}
