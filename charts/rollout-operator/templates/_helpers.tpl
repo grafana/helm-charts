@@ -92,3 +92,11 @@ Create the image name
 {{- (printf "%s:%s" .Values.image.repository $imageTag) }}
 {{- end -}}
 {{- end -}}
+
+{{- define "rollout-operator.secretName" -}}
+{{- if .Values.webhook.selfSignedCertSecretName }}
+{{- .Values.webhook.selfSignedCertSecretName }}
+{{- else }}
+{{- include "rollout-operator.fullname" . }}
+{{- end }}
+{{- end }}
