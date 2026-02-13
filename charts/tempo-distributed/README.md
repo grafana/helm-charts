@@ -375,6 +375,8 @@ The memcached default args are removed and should be provided manually. The sett
 | distributor.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | distributor.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the distributor |
 | distributor.autoscaling.enabled | bool | `false` | Enable autoscaling for the distributor |
+| distributor.autoscaling.keda | object | `{"enabled":false,"triggers":[]}` | Autoscaling via keda/ScaledObject |
+| distributor.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the distributor |
 | distributor.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the distributor |
 | distributor.autoscaling.minReplicas | int | `1` | Minimum autoscaling replicas for the distributor |
 | distributor.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the distributor |
@@ -600,6 +602,8 @@ The memcached default args are removed and should be provided manually. The sett
 | ingester.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
 | ingester.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the ingester |
 | ingester.autoscaling.enabled | bool | `false` | Enable autoscaling for the ingester. WARNING: Autoscaling ingesters can result in lost data. Only do this if you know what you're doing. |
+| ingester.autoscaling.keda | object | `{"enabled":false,"triggers":[]}` | Autoscaling via keda/ScaledObject |
+| ingester.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the ingester |
 | ingester.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the ingester |
 | ingester.autoscaling.minReplicas | int | `2` | Minimum autoscaling replicas for the ingester |
 | ingester.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the ingester |
@@ -763,6 +767,14 @@ The memcached default args are removed and should be provided manually. The sett
 | metricsGenerator.annotations | object | `{}` | Annotations for the metrics-generator StatefulSet |
 | metricsGenerator.appProtocol | object | `{"grpc":null}` | Adds the appProtocol field to the metricsGenerator service. This allows metricsGenerator to work with istio protocol selection. |
 | metricsGenerator.appProtocol.grpc | string | `nil` | Set the optional grpc service protocol. Ex: "grpc", "http2" or "https" |
+| metricsGenerator.autoscaling.behavior | object | `{}` | Autoscaling behavior configuration for the metrics-generator |
+| metricsGenerator.autoscaling.enabled | bool | `false` | Scaling down metrics-generators can cause backpressure on the distributor. |
+| metricsGenerator.autoscaling.keda | object | `{"enabled":false,"triggers":[]}` | Autoscaling via keda/ScaledObject |
+| metricsGenerator.autoscaling.keda.triggers | list | `[]` | List of autoscaling triggers for the metrics-generator |
+| metricsGenerator.autoscaling.maxReplicas | int | `3` | Maximum autoscaling replicas for the metrics-generator |
+| metricsGenerator.autoscaling.minReplicas | int | `2` | Minimum autoscaling replicas for the metrics-generator |
+| metricsGenerator.autoscaling.targetCPUUtilizationPercentage | int | `60` | Target CPU utilisation percentage for the metrics-generator |
+| metricsGenerator.autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target memory utilisation percentage for the metrics-generator |
 | metricsGenerator.config | object | `{"metrics_ingestion_time_range_slack":"30s","processor":{"service_graphs":{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10},"span_metrics":{"dimensions":[],"histogram_buckets":[0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.02,2.05,4.1]}},"registry":{"collection_interval":"15s","external_labels":{},"stale_duration":"15m"},"storage":{"path":"/var/tempo/wal","remote_write":[],"remote_write_add_org_id_header":true,"remote_write_flush_deadline":"1m","wal":null},"traces_storage":{"path":"/var/tempo/traces"}}` | More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator |
 | metricsGenerator.config.processor.service_graphs | object | `{"dimensions":[],"histogram_buckets":[0.1,0.2,0.4,0.8,1.6,3.2,6.4,12.8],"max_items":10000,"wait":"10s","workers":10}` | For processors to be enabled and generate metrics, pass the names of the processors to `overrides.defaults.metrics_generator.processors` value like `[service-graphs, span-metrics]`. |
 | metricsGenerator.config.processor.service_graphs.dimensions | list | `[]` | The resource and span attributes to be added to the service graph metrics, if present. |
