@@ -225,15 +225,37 @@ jobs:
           echo "Result of chart package:"
           ls -l "${CR_PACKAGE_PATH}"
 
-      - name: Create tag and check if exists on origin
+      - name: Check if tag or release already exists
+        id: check-skip
+        env:
+          TAGNAME: ${{ steps.parse-chart.outputs.tagname }}
+        run: |
+          skip=false
+          if git -C source ls-remote --exit-code --tags origin "refs/tags/${TAGNAME}" >/dev/null 2>&1; then
+            echo "Tag ${TAGNAME} already exists on origin, skipping release steps"
+            skip=true
+          fi
+          if [[ "$skip" != "true" ]]; then
+            resp=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ env.AUTHTOKEN }}" \
+              "https://api.github.com/repos/grafana/helm-charts/releases/tags/${TAGNAME}")
+            if [[ "$resp" == "200" ]]; then
+              echo "Release for tag ${TAGNAME} already exists, skipping release steps"
+              skip=true
+            fi
+          fi
+          echo "skip_release=${skip}" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        if: steps.check-skip.outputs.skip_release != 'true'
         env:
           TAGNAME: ${{ steps.parse-chart.outputs.tagname }}
         run: |
           cd source
-          echo "Making tag ${TAGNAME}"
+          echo "Creating tag ${TAGNAME}"
           git tag "${TAGNAME}"
 
       - name: Make github release
+        if: steps.check-skip.outputs.skip_release != 'true'
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # tags/v1
         with:
           body: |
@@ -250,6 +272,7 @@ jobs:
           token: ${{ env.AUTHTOKEN }}
 
       - name: Push release tag on origin
+        if: steps.check-skip.outputs.skip_release != 'true'
         env:
           TAGNAME: ${{ steps.parse-chart.outputs.tagname }}
         run: |
@@ -258,11 +281,13 @@ jobs:
           git push origin "${TAGNAME}"
 
       - name: Update helm repo index.yaml
+        if: steps.check-skip.outputs.skip_release != 'true'
         run: |
           cd helm-charts
           "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
 
       - name: Login to GHCR
+        if: steps.check-skip.outputs.skip_release != 'true'
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
         with:
           registry: ghcr.io
@@ -272,6 +297,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push charts to GHCR
+        if: steps.check-skip.outputs.skip_release != 'true'
         env:
           PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
         run: |
