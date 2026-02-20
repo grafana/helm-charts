@@ -23,6 +23,9 @@ fullnameOverride: ""
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
+# -- custom pod annotations
+podAnnotations: {}
+
 # -- custom deployment annotations
 annotations: {}
 
