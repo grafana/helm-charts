@@ -54,4 +54,4 @@ spec:
     categories:
       # Include in "kubectl get all" output
       - all
-{{- if .Values.crds.install }}
+{{- end }}
