@@ -62,7 +62,7 @@ spec:
     {{- end }}
     {{- if .Values.traces.otlp.grpc.enabled }}
     - name: grpc-distributor-otlp
-      port: 4317
+      port: {{ .Values.traces.otlp.grpc.port }}
       protocol: TCP
       targetPort: grpc-otlp
       {{- if .Values.distributor.appProtocol.grpc }}
