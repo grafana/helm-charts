@@ -57,4 +57,4 @@ spec:
     singular: zoneawarepoddisruptionbudget
     shortNames:
       - zdpb
-{{- if .Values.crds.install }}
+{{- end }}
