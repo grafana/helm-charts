@@ -1,0 +1,101 @@
+nameOverride: ''
+fullnameOverride: ''
+
+imagePullSecrets: []
+
+manager:
+  args: []
+
+  image:
+    repository: "ghcr.io/grafana/tempo-operator/tempo-operator"
+    tag: "0.11.1"
+    pullPolicy: IfNotPresent
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8081
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+  readinessProbe:
+    httpGet:
+      path: /readyz
+      port: 8081
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+
+
+  webhook:
+    generateCertificate: true
+
+  config:
+    apiVersion: config.tempo.grafana.com/v1alpha1
+    kind: ProjectConfig
+    distribution: community
+    health:
+      healthProbeBindAddress: :8081
+    metrics:
+      bindAddress: 127.0.0.1:8080
+    webhook:
+      port: 9443
+    leaderElection:
+      leaderElect: true
+      resourceName: 8b886b0f.grafana.com
+    # leaderElectionReleaseOnCancel defines if the leader should step down volume
+    # when the Manager ends. This requires the binary to immediately end when the
+    # Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
+    # speeds up voluntary leader transitions as the new leader don't have to wait
+    # LeaseDuration time first.
+    # In the default scaffold provided, the program ends immediately after
+    # the manager stops, so would be fine to enable this option. However,
+    # if you are doing or is intended to do any operation such as perform cleanups
+    # after the manager stops then its usage might be unsafe.
+    # leaderElectionReleaseOnCancel: true
+    featureGates:
+      openshift:
+        openshiftRoute: false
+        servingCertsService: false
+        oAuthProxy:
+          defaultEnabled: false
+      prometheusOperator: false
+      grafanaOperator: false
+      httpEncryption: true
+      grpcEncryption: true
+      tlsProfile: Modern
+      builtInCertManagement:
+        enabled: true
+        # CA certificate validity: 5 years
+        caValidity: 43830h
+        # CA certificate refresh at 80% of validity
+        caRefresh: 35064h
+        # Target certificate validity: 90d
+        certValidity: 2160h
+        # Target certificate refresh at 80% of validity
+        certRefresh: 1728h
+      observability:
+        metrics:
+          createServiceMonitors: false
+          createPrometheusRules: false
+
+  serviceAccount:
+    create: true
+
+    # To use an existing service account, enter its name below.
+    # Only used if serviceAccount.create == false
+    serviceAccountName: ""
+
+
+rbac:
+  enabled: true
