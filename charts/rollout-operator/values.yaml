@@ -110,8 +110,8 @@ webhooks:
   enabled: true
   # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
   failurePolicy: "Fail"
-  # -- Secret resource name for the TLS certificate to be used with the webhooks
-  selfSignedCertSecretName: "certificate"
+  # -- Secret resource name for the TLS certificate to be used with the webhooks. If not set, a secret's name will be generated using the fullname template.
+  selfSignedCertSecretName: ""
   # -- objectSelector to filter which objects the webhooks apply to.
   objectSelector: {}
   # See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-objectselector
