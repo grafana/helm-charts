@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -46,7 +46,8 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | serviceAccount.create | bool | `false` | Toggle to create ServiceAccount |
 | serviceAccount.labels | object | `{}` | Labels applied to created service account |
 | serviceAccount.name | string | `"pdc-agent"` | Service account name |
-| tokenSecretName | string | `""` | secretName Expects a secret with key `token` which contains the Access Policy token you generated |
+| tokenSecretKey | string | `"token"` | tokenSecretKey Defines the key that is used to lookup the token value in the secret defined by `tokenSecretName`. |
+| tokenSecretName | string | `""` | tokenSecretName Expects a secret which contains the Access Policy token you generated. See `tokenSecretKey` for the key name under which the value is expected. |
 | tolerations | list | `[]` | not required, but left in as a choice |
 
 ----------------------------------------------
