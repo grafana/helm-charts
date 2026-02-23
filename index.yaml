@@ -2753,6 +2753,18 @@ entries:
     version: 1.0.0
   cloudcost-exporter:
   - apiVersion: v2
+    appVersion: v0.22.0
+    created: "2026-02-23T13:49:08.446836997Z"
+    description: Cloud Cost Exporter exports cloud provider agnostic cost metrics
+      to Prometheus.
+    digest: c54f9acd13bc113b99e04fb107b66c529a752c71d0f7441e39b4f5e6023d60e1
+    home: https://github.com/grafana/cloudcost-exporter
+    name: cloudcost-exporter
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/cloudcost-exporter-1.1.0/cloudcost-exporter-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
     appVersion: 0.22.0
     created: "2026-02-19T13:05:34.359332109Z"
     description: Cloud Cost Exporter exports cloud provider agnostic cost metrics
@@ -104665,4 +104677,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-23T12:56:57.648193044Z"
+generated: "2026-02-23T13:49:08.473377315Z"
