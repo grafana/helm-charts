@@ -63,7 +63,7 @@ spec:
         {{- range $key, $value := .Values.tempo.extraArgs }}
         - "-{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
         {{- end }}
-        image: {{ .Values.tempo.registry }}/{{ .Values.tempo.repository }}:{{ .Values.tempo.tag | default .Chart.AppVersion }}
+        image: {{ .Values.global.imageRegistry | default .Values.tempo.registry }}/{{ .Values.tempo.repository }}:{{ .Values.tempo.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.tempo.pullPolicy }}
         name: tempo
         ports:

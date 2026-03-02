@@ -2,6 +2,9 @@ global:
   # -- Common labels for all object directly managed by this chart.
   commonLabels: {}
 
+  # -- Overrides the Docker registry globally for all images
+  imageRegistry: null
+
 # -- Overrides the chart's name
 nameOverride: ""
 

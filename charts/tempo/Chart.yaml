@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo
 description: Grafana Tempo Single Binary Mode
 type: application
-version: 1.26.5
+version: 1.26.6
 # renovate: docker=docker.io/grafana/tempo
 appVersion: 2.10.1
 home: https://grafana.net
