@@ -1299,7 +1299,7 @@ containers:
       {{- with .Values.datasources }}
       {{- $datasources := . }}
       {{- range (keys . | sortAlpha) }}
-      {{- if (or (hasKey (index $datasources .) "secret")) }} {{/*check if current datasource should be handeled as secret */}}
+      {{- if (or (hasKey (index $datasources .) "secret")) }} {{/*check if current datasource should be handled as secret */}}
       - name: config-secret
         mountPath: "/etc/grafana/provisioning/datasources/{{ . }}"
         subPath: {{ . | quote }}
@@ -1313,7 +1313,7 @@ containers:
       {{- with .Values.notifiers }}
       {{- $notifiers := . }}
       {{- range (keys . | sortAlpha) }}
-      {{- if (or (hasKey (index $notifiers .) "secret")) }} {{/*check if current notifier should be handeled as secret */}}
+      {{- if (or (hasKey (index $notifiers .) "secret")) }} {{/*check if current notifier should be handled as secret */}}
       - name: config-secret
         mountPath: "/etc/grafana/provisioning/notifiers/{{ . }}"
         subPath: {{ . | quote }}
@@ -1327,7 +1327,7 @@ containers:
       {{- with .Values.alerting }}
       {{- $alertingmap := .}}
       {{- range (keys . | sortAlpha) }}
-      {{- if (or (hasKey (index $.Values.alerting .) "secret") (hasKey (index $.Values.alerting .) "secretFile")) }} {{/*check if current alerting entry should be handeled as secret */}}
+      {{- if (or (hasKey (index $.Values.alerting .) "secret") (hasKey (index $.Values.alerting .) "secretFile")) }} {{/*check if current alerting entry should be handled as secret */}}
       - name: config-secret
         mountPath: "/etc/grafana/provisioning/alerting/{{ . }}"
         subPath: {{ . | quote }}
