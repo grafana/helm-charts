@@ -14,7 +14,7 @@ spec:
   {{- if .Values.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
-  {{- if and (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) (.Values.persistence.enableStatefulSetAutoDeletePVC) (.Values.persistence.enabled) }}
+  {{- if and (.Values.persistence.enableStatefulSetAutoDeletePVC) (.Values.persistence.enabled) }}
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Delete
     whenScaled: Delete
