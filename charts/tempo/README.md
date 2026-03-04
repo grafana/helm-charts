@@ -69,7 +69,7 @@ We recommend reviewing the [release notes](https://grafana.com/docs/tempo/latest
 
 ### From Chart versions < 1.12.0
 
-Upgrading to chart 1.12.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+Upgrading to chart 1.12.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarily be split into two memberlist clusters until all components are rolled out.
 This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
 
 ### From Chart versions < 1.2.0
