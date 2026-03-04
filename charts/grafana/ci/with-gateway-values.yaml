@@ -1,0 +1,38 @@
+route:
+  main:
+    enabled: true
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    annotations:
+      test-annotation: test-value
+    labels:
+      test-label: test-value
+    hostnames:
+      - grafana.example.com
+    parentRefs:
+      - name: my-gateway
+        namespace: default
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
+    filters:
+      - type: RequestHeaderModifier
+        requestHeaderModifier:
+          set:
+            - name: X-Custom-Header
+              value: custom-value
+    timeouts:
+      request: 10s
+      backendRequest: 5s
+  redirect:
+    enabled: true
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    parentRefs:
+      - name: my-gateway
+        namespace: default
+        sectionName: http
+    hostnames:
+      - grafana.example.com
+    httpsRedirect: true

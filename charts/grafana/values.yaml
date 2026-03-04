@@ -341,6 +341,12 @@ route:
           type: PathPrefix
           value: /
 
+    ## Timeouts define the timeouts that can be configured for an HTTP request.
+    ## Ref. https://gateway-api.sigs.k8s.io/api-types/httproute/#timeouts-optional
+    timeouts: {}
+    # request: 10s
+    # backendRequest: 5s
+
     ## Filters define the filters that are applied to requests that match this rule.
     filters: []
 
