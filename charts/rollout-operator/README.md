@@ -62,7 +62,7 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 | imagePullSecrets | list | `[]` |  |
 | minReadySeconds | int | `10` |  |
 | nameOverride | string | `""` |  |
-| namespaceSelector.matchExpressions | list | `[]` | Namespace selector to filter which namespaces the webhooks apply to. See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector Accepts any valid Kubernetes LabelSelector (matchLabels, matchExpressions, or both). If not set or empty, defaults to matching the release namespace. Set to null to disable entirely, e.g. when objectSelector alone is sufficient. Example:   namespaceSelector:     matchLabels:       kubernetes.io/metadata.name: logging     matchExpressions:       - key: team         operator: NotIn         values:           - team-a |
+| namespaceSelector | object | `{"matchExpressions":[]}` | Namespace selector applied to all webhooks. Defaults to restricting to the release namespace. See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` | Pod Annotations |
 | podLabels | object | `{}` | Pod (extra) Labels |

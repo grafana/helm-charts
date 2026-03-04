@@ -125,19 +125,36 @@ webhooks:
   #         values:
   #           - production
 
+# -- Namespace selector applied to all webhooks. Defaults to restricting to the release namespace.
+# See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
 namespaceSelector:
-  # -- Namespace selector to filter which namespaces the webhooks apply to.
-  # See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector
-  # Accepts any valid Kubernetes LabelSelector (matchLabels, matchExpressions, or both).
-  # If not set or empty, defaults to matching the release namespace.
-  # Set to null to disable entirely, e.g. when objectSelector alone is sufficient.
-  # Example:
-  #   namespaceSelector:
-  #     matchLabels:
-  #       kubernetes.io/metadata.name: logging
+  # Example 1 - matchExpressions only: merged with the default release namespace matchLabels.
+  #   values.yaml:
   #     matchExpressions:
   #       - key: team
   #         operator: NotIn
-  #         values:
-  #           - team-a
+  #         values: [team-a]
+  #   renders:
+  #     namespaceSelector:
+  #       matchLabels:
+  #         kubernetes.io/metadata.name: <release-namespace>
+  #       matchExpressions:
+  #         - key: team
+  #           operator: NotIn
+  #           values: [team-a]
+  #
+  # Example 2 - matchLabels set: full selector is user-controlled (matchExpressions also supported).
+  #   values.yaml:
+  #     matchLabels:
+  #       kubernetes.io/metadata.name: logging
+  #   renders:
+  #     namespaceSelector:
+  #       matchLabels:
+  #         kubernetes.io/metadata.name: logging
+  #
+  # Example 3 - set to null: omits namespaceSelector entirely (e.g. when objectSelector alone is sufficient).
+  #   values.yaml:
+  #     namespaceSelector: null
+  #   renders:
+  #     (nothing)
   matchExpressions: []
