@@ -97,7 +97,7 @@ A default affinity has been defined in this version for the compactor following 
 
 ### From Chart versions < 1.21.0
 
-Upgrading to chart 1.21.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarilly be split into two memberlist clusters until all components are rolled out.
+Upgrading to chart 1.21.0 will set the memberlist cluster_label config option. During rollout your cluster will temporarily be split into two memberlist clusters until all components are rolled out.
 This will interrupt reads and writes. This config option is set to prevent cross talk between Tempo and other memberlist clusters.
 
 ### From Chart versions < 1.18.0
@@ -241,7 +241,7 @@ Option 1
 Uninstall the old release and re-install the new one. There will be no data loss, as the collectors/agents can cache for a short period.
 
 Option 2
-Add new selector labels to the existing pods. This option will make your pods also temporarely unavailable, option 1 is faster:
+Add new selector labels to the existing pods. This option will make your pods also temporarily unavailable, option 1 is faster:
 
 ```
 kubectl label pod -n <namespace> -l app.kubernetes.io/component=<release-name>-tempo-distributed-<component>,app.kubernetes.io/instance=<instance-name> app.kubernetes.io/component=<component> --overwrite
@@ -415,7 +415,7 @@ config: |
 
 gRPC for Open Telemetry is disabled by default, simply flip the bool in the `traces` block to turn it on.
 
-If you have enabled the gateway as well, this will let you push traces using the default Open Telemetry API path (`/opentelemetry.proto.collector.trace.v1.TraceService/Export`), on the 4317 port. This port can be overwriten as well in the values.
+If you have enabled the gateway as well, this will let you push traces using the default Open Telemetry API path (`/opentelemetry.proto.collector.trace.v1.TraceService/Export`), on the 4317 port. This port can be overwritten as well in the values.
 
 ```yaml
 traces:

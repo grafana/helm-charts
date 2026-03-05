@@ -2499,7 +2499,7 @@ provisioner:
   # Example: "http://tempo-admin-api.namespace.svc:3100"
   apiUrl: ""
   # -- Additional tenants to be created. Each tenant will get a read and write policy
-  # and associated token. Tenant must have a name and a namespace for the secret containting
+  # and associated token. Tenant must have a name and a namespace for the secret containing
   # the token to be created in. For example
   # additionalTenants:
   #   - name: tempo

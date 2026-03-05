@@ -1,0 +1,4 @@
+[codespell]
+# AKS = Azure Kubernetes Service (valid acronym)
+# notin = Kubernetes matchExpression operator "NotIn"
+ignore-words-list = aks,notin
