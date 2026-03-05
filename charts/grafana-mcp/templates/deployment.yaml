@@ -126,10 +126,13 @@ spec:
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or (.Values.debug) (.Values.disabledCategories) (.Values.extraArgs) }}
+          {{- if or (.Values.debug) (.Values.metrics.enabled) (.Values.disabledCategories) (.Values.extraArgs) }}
           args:
             {{- if .Values.debug }}
             - -debug
+            {{- end }}
+            {{- if .Values.metrics.enabled }}
+            - --metrics
             {{- end }}
             {{- range .Values.disabledCategories }}
             - --disable-{{ . }}

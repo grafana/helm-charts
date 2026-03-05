@@ -220,3 +220,29 @@ extraInitContainers: []
 
 # -- Extra containers
 extraContainers: []
+
+# -- Metrics configuration
+metrics:
+  # -- Enable Prometheus metrics endpoint (adds --metrics flag)
+  enabled: false
+
+# -- ServiceMonitor configuration for Prometheus Operator
+serviceMonitor:
+  # -- Enable ServiceMonitor
+  enabled: false
+  # -- ServiceMonitor labels
+  labels: {}
+  # -- ServiceMonitor annotations
+  annotations: {}
+  # -- Scrape interval
+  interval: 30s
+  # -- Scrape timeout
+  scrapeTimeout: 10s
+  # -- Metrics path
+  path: /metrics
+  # -- Additional relabelings
+  relabelings: []
+  # -- Additional metric relabelings
+  metricRelabelings: []
+  # -- Namespace selector
+  namespaceSelector: {}
