@@ -25,5 +25,5 @@ dependencies:
   repository:  "https://helm.elastic.co"
 - name: "logstash"
   condition: logstash.enabled
-  version: "~7.17.1"
+  version: "~8.5.0"
   repository:  "https://helm.elastic.co"
