@@ -48,6 +48,9 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| annotations | object | `{}` | Additional annotations to add to the deployment |
+| crds.install | bool | `true` | Install and upgrade CRDs |
+| crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | extraArgs | list | `[]` | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`) |
 | extraEnv | list | `[]` | Environment variables to add to rollout-operator container |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to rollout-operator container |
