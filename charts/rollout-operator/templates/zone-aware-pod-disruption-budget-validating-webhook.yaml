@@ -46,5 +46,6 @@ webhooks:
       {{- toYaml . | nindent 6 }}
     {{- end }}
     sideEffects: None
+    timeoutSeconds: {{.Values.webhooks.timeoutSeconds}}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
 {{- end -}}
