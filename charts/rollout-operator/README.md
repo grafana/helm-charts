@@ -89,3 +89,4 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 | webhooks.failurePolicy | string | `"Fail"` | Validating and mutating webhook failure policy. `Ignore` or `Fail`. |
 | webhooks.objectSelector | object | `{}` | objectSelector to filter which objects the webhooks apply to. |
 | webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |
+| webhooks.timeoutSeconds | int | `10` | Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30. |

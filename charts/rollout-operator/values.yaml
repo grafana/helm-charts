@@ -108,6 +108,8 @@ webhooks:
   # -- Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks.
   # Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory.
   enabled: true
+  # -- Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30.
+  timeoutSeconds: 10
   # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
   failurePolicy: "Fail"
   # -- Secret resource name for the TLS certificate to be used with the webhooks
