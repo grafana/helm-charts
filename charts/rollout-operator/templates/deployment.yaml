@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "rollout-operator.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas | default 1 }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   minReadySeconds: {{ .Values.minReadySeconds }}
   selector:
