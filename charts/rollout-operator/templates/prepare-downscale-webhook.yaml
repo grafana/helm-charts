@@ -48,6 +48,6 @@ webhooks:
     {{- end }}
     sideEffects: NoneOnDryRun
     matchPolicy: Equivalent
-    timeoutSeconds: 10
+    timeoutSeconds: {{.Values.webhooks.timeoutSeconds}}
     failurePolicy: {{.Values.webhooks.failurePolicy}}
 {{- end -}}
