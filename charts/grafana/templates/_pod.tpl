@@ -1442,7 +1442,7 @@ containers:
         {{- if .Values.imageRenderer.serverURL }}
         value: {{ .Values.imageRenderer.serverURL | quote }}
         {{- else }}
-        value: http://{{ include "grafana.fullname" . }}-image-renderer.{{ include "grafana.namespace" . }}:{{ .Values.imageRenderer.service.port }}/render
+        value: http://{{ include "grafana.imageRenderer.fullname" . }}-image-renderer.{{ include "grafana.namespace" . }}:{{ .Values.imageRenderer.service.port }}/render
         {{- end }}
       - name: GF_RENDERING_CALLBACK_URL
         {{- if .Values.imageRenderer.renderingCallbackURL }}
