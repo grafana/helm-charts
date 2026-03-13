@@ -1,8 +1,8 @@
 apiVersion: v2
 name: grafana-mcp
-version: 0.8.0
+version: 0.8.1
 # renovate: docker=docker.io/grafana/mcp-grafana
-appVersion: 0.11.2
+appVersion: 0.11.3
 kubeVersion: "^1.25.0-0"
 description: MCP server for Grafana.
 home: https://grafana.com
