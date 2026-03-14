@@ -1,4 +1,4 @@
-{{- if .Values.gateway.autoscaling.enabled }}
+{{- if and .Values.gateway.enabled .Values.gateway.autoscaling.enabled }}
 {{- $apiVersion := include "tempo.hpa.apiVersion" . -}}
 apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler
