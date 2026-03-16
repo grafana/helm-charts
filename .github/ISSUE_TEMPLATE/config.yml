@@ -18,3 +18,6 @@ contact_links:
   - name: Create tempo chart issues here
     url: https://github.com/grafana-community/helm-charts/issues/new/choose
     about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create loki chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
