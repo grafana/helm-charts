@@ -131,6 +131,59 @@ ingress:
   # -- Ingress labels
   labels: {}
 
+# -- Configure the gateway routes for the chart here.
+# More routes can be added by adding a dictionary key like the 'main' route.
+# [[ref]](https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io%2fv1)
+route:
+  main:
+    # -- Enables or disables the route
+    enabled: false
+
+    # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1beta1
+    # If not set, the latest available version will be auto-detected
+    apiVersion: ""
+    # -- Set the route kind
+    # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+    kind: HTTPRoute
+
+    # -- Route annotations
+    annotations: {}
+    # -- Route labels
+    labels: {}
+
+    # -- Hostnames for the route
+    hostnames: []
+    # - mcp-grafana.example.com
+
+    # -- Parent references (gateway to attach to)
+    parentRefs: []
+    # - name: my-gateway
+    #   namespace: gateway-namespace
+
+    # -- Matches define conditions for matching incoming requests
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
+
+    # -- Timeouts define the timeouts that can be configured for an HTTP request.
+    # Ref. https://gateway-api.sigs.k8s.io/api-types/httproute/#timeouts-optional
+    timeouts: {}
+    # request: 10s
+    # backendRequest: 5s
+
+    # -- Filters define the filters that are applied to requests that match this rule.
+    filters: []
+
+    # -- Additional custom rules that can be added to the route
+    additionalRules: []
+
+    # -- httpsRedirect adds a filter for redirecting to https (HTTP 301 Moved Permanently).
+    # To redirect HTTP traffic to HTTPS, you need to have a Gateway with both HTTP and HTTPS listeners.
+    # Matches and filters do not take effect if enabled.
+    # Ref. https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/
+    httpsRedirect: false
+
 # -- Resource requests and limits
 resources: {}
   # limits:

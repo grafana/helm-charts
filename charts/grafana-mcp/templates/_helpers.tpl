@@ -88,3 +88,16 @@ Formats imagePullSecrets. Input is (dict "root" . "imagePullSecrets" .{specific 
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Return the appropriate apiVersion for Gateway API routes.
+*/}}
+{{- define "grafana-mcp.gatewayApi.apiVersion" -}}
+{{- if .Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1" }}
+{{- print "gateway.networking.k8s.io/v1" }}
+{{- else if .Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1beta1" }}
+{{- print "gateway.networking.k8s.io/v1beta1" }}
+{{- else }}
+{{- print "gateway.networking.k8s.io/v1" }}
+{{- end }}
+{{- end }}
