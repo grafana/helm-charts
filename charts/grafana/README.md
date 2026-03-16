@@ -153,6 +153,7 @@ dashboards:
       file: dashboards/custom-dashboard.json
     prometheus-stats:
       # Ref: https://grafana.com/dashboards/2
+      # title: My Custom Title   # optional; when set for a downloaded dashboard (gnetId or url), overrides the title displayed in Grafana
       gnetId: 2
       revision: 2
       datasource: Prometheus

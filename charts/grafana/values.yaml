@@ -835,6 +835,8 @@ defaultCurlOptions: "-skf"
 ## ref: https://grafana.com/dashboards
 ##
 ## dashboards per provider, use provider name as key.
+## For dashboards downloaded via gnetId or url, the optional "title" key overrides
+## the dashboard title in the downloaded JSON so the UI displays your custom title.
 ##
 dashboards: {}
   # default:
@@ -844,6 +846,7 @@ dashboards: {}
   #   custom-dashboard:
   #     file: dashboards/custom-dashboard.json
   #   prometheus-stats:
+  #     title: My Custom Dashboard Title   # optional; overrides the dashboard title in the downloaded JSON
   #     gnetId: 2
   #     revision: 2
   #     datasource: Prometheus
