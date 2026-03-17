@@ -3572,7 +3572,7 @@ memcached:
     # -- Memcached Docker image repository
     repository: memcached
     # -- Memcached Docker image tag
-    tag: 1.6.39-alpine
+    tag: 1.6.41-alpine
     # -- Memcached Docker image pull policy
     pullPolicy: IfNotPresent
   # -- The SecurityContext override for memcached pods
@@ -3613,7 +3613,7 @@ memcachedExporter:
   enabled: true
   image:
     repository: prom/memcached-exporter
-    tag: v0.15.4
+    tag: v0.15.5
     pullPolicy: IfNotPresent
   resources:
     requests: {}
