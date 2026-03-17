@@ -976,14 +976,13 @@
 
             // Load first chart or chart from URL
             const urlParams = getUrlParams();
+            currentPage++;
+            isLoadingMore = false;
             if (urlParams.chart && charts.has(urlParams.chart)) {
                 selectChart(urlParams.chart, currentOwner, currentRepo);
             } else {
                 selectChart(Array.from(charts).sort()[0], currentOwner, currentRepo);
             }
-
-            currentPage++;
-            isLoadingMore = false;
 
         } catch (error) {
             showError(error.message);
