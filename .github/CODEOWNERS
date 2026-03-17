@@ -13,6 +13,7 @@
 
 /charts/grafana-mcp/ @KyriosGN0 @QuentinBisson @Sheikh-Abubaker @jkroepke
 /charts/grafana/ @QuentinBisson @jkroepke
+/charts/loki/ @QuentinBisson @TheRealNoob @jkroepke
 /charts/synthetic-monitoring-agent/ @KyriosGN0 @Sheikh-Abubaker
 /charts/tempo-distributed/ @DrFaust92 @QuentinBisson @Sheikh-Abubaker
 /charts/tempo-vulture/ @KyriosGN0 @QuentinBisson @Sheikh-Abubaker

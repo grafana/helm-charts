@@ -9,6 +9,8 @@ policy:
             keys: ["grafana"]
           - name: "chart/grafana-mcp"
             keys: ["grafana-mcp"]
+          - name: "chart/loki"
+            keys: ["loki"]
           - name: "chart/synthetic-monitoring-agent"
             keys: ["synthetic-monitoring-agent"]
           - name: "chart/tempo"

@@ -18,6 +18,7 @@ body:
       options:
         - grafana
         - grafana-mcp
+        - loki
         - synthetic-monitoring-agent
         - tempo
         - tempo-distributed

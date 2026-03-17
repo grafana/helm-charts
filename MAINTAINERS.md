@@ -28,6 +28,12 @@
 - Jan-Otto Kröpke (<github@jkroepke.de> / @jkroepke)
 - Quentin Bisson (<quentin.bisson@gmail.com> / @QuentinBisson)
 
+### loki
+
+- Jan-Otto Kröpke (<github@jkroepke.de> / @jkroepke)
+- Michael Timmerman (<mike1118@live.com> / @TheRealNoob)
+- Quentin Bisson (<quentin.bisson@gmail.com> / @QuentinBisson)
+
 ### synthetic-monitoring-agent
 
 - Aviv Guiser (<avivguiser@gmail.com> / @KyriosGN0)
