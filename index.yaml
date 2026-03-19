@@ -89088,6 +89088,37 @@ entries:
   pyroscope:
   - apiVersion: v2
     appVersion: 1.19.0
+    created: "2026-03-19T08:12:40.779741602Z"
+    dependencies:
+    - alias: agent
+      condition: agent.enabled
+      name: grafana-agent
+      repository: https://grafana.github.io/helm-charts
+      version: 0.44.2
+    - alias: alloy
+      condition: alloy.enabled
+      name: alloy
+      repository: https://grafana.github.io/helm-charts
+      version: 1.5.2
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 4.1.0
+    description: "\U0001F525 horizontally-scalable, highly-available, multi-tenant
+      continuous profiling aggregation system"
+    digest: e500da1af601c7cc43c24888b61a4d779104987cffb316e996bc27652f691467
+    home: https://grafana.com/oss/pyroscope/
+    name: pyroscope
+    sources:
+    - https://github.com/grafana/pyroscope
+    - https://github.com/grafana/pyroscope/tree/main/operations/pyroscope/helm/pyroscope
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/pyroscope-1.19.1/pyroscope-1.19.1.tgz
+    version: 1.19.1
+  - apiVersion: v2
+    appVersion: 1.19.0
     created: "2026-03-13T16:44:30.723075571Z"
     dependencies:
     - alias: agent
@@ -105499,4 +105530,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-17T09:32:14.632746962Z"
+generated: "2026-03-19T08:12:40.806126424Z"
