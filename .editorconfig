@@ -6,3 +6,7 @@ charset = utf-8
 [*.sh]
 indent_style = space
 indent_size = 2
+
+[*.{yaml,tpl}]
+indent_style = space
+indent_size = 2

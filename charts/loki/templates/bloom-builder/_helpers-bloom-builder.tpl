@@ -20,13 +20,3 @@ bloom-builder selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: bloom-builder
 {{- end }}
-
-{{/*
-bloom-builder priority class name
-*/}}
-{{- define "loki.bloomBuilderPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.bloomBuilder.priorityClassName -}}
-{{- if $pcn }}
-priorityClassName: {{ $pcn }}
-{{- end }}
-{{- end }}

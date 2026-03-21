@@ -1,6 +1,129 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema",
   "properties": {
+    "global": {
+      "type": ["object"]
+    },
+    "kubeVersionOverride": {
+      "type": "string"
+    },
+    "nameOverride": {
+      "type": "string"
+    },
+    "fullnameOverride": {
+      "type": "string"
+    },
+    "namespaceOverride": {
+      "type": "string"
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "deploymentMode": {
+      "type": "string",
+      "enum": ["SingleBinary", "SimpleScalable", "Distributed", "SingleBinary<->SimpleScalable", "SimpleScalable<->Distributed"]
+    },
+    "commonLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "dnsConfig": {
+          "type": "object"
+        },
+        "nodeSelector": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "hostAliases" : {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ip": {
+                "type": "string"
+              },
+              "hostnames": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "hostUsers": {
+          "type": ["boolean", "null"]
+        },
+        "priorityClassName": {
+          "type": "string"
+        },
+        "podSecurityContext": {
+          "type": ["object", "null"]
+        },
+        "terminationGracePeriodSeconds": {
+          "type": "integer"
+        },
+        "command": {
+          "type": ["string", "null"]
+        },
+        "extraArgs": {
+          "type": ["array"]
+        },
+        "extraEnv": {
+          "type": ["array"],
+            "items": {
+              "type": "object",
+              "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "extraEnvFrom": {
+          "type": ["array"]
+        },
+        "extraVolumes": {
+          "type": ["array"]
+        },
+        "extraVolumeMounts": {
+          "type": ["array"]
+        },
+        "containerSecurityContext": {
+          "type": ["object", "null"]
+        },
+        "livenessProbe": {
+          "type": ["object"]
+        },
+        "readinessProbe": {
+          "type": ["object"]
+        },
+        "startupProbe": {
+          "type": ["object"]
+        },
+        "tolerations": {
+          "type": ["array"]
+        }
+      }
+    },
     "loki": {
       "type": "object",
       "properties": {

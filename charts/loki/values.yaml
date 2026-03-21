@@ -2,7 +2,7 @@
 # This is useful when using `helm template`, because then helm will use the client version of kubectl as the Kubernetes version,
 # which may or may not match your cluster's server version. Example: 'v1.24.4'. Set to null to use the version that helm
 # devises.
-kubeVersionOverride: null
+kubeVersionOverride: ""
 
 global:
   # -- Overrides the Docker registry globally for all images (standard format)
@@ -38,13 +38,13 @@ global:
   # scope: backend, bloom-builder, bloom-gateway, bloom-planner, compactor, distributor, index-gateway, ingester, overrides-exporter, pattern-ingester, querier, query-frontend, query-scheduler, read, ruler, write.
   extraVolumeMounts: []
 # -- Overrides the chart's name
-nameOverride: null
+nameOverride: ""
 # -- Overrides the chart's computed fullname
-fullnameOverride: null
+fullnameOverride: ""
 # -- Overrides the chart's namespace
-namespaceOverride: null
+namespaceOverride: ""
 # -- Overrides the chart's cluster label
-clusterLabelOverride: null
+clusterLabelOverride: ""
 # -- Image pull secrets for Docker images
 imagePullSecrets: []
 # -- Deployment mode lets you specify how to deploy Loki.
@@ -59,6 +59,62 @@ imagePullSecrets: []
 deploymentMode: SimpleScalable
 # -- Labels to be added to resources
 commonLabels: {}
+
+######################################################################################################################
+#
+# Defaults applied to all loki configurations
+# Current supported scope: bloom-builder
+#
+######################################################################################################################
+defaults:
+  # -- DNSConfig for loki pods
+  dnsConfig: {}
+  # -- hostAliases for loki pods
+  hostAliases: []
+  #  - ip: 1.2.3.4
+  #    hostnames:
+  #      - domain.tld
+  # -- Use the host's user namespace for loki pods
+  hostUsers: null
+  # -- The name of the PriorityClass for loki pods
+  priorityClassName: ""
+  # -- The SecurityContext for loki pods
+  podSecurityContext:
+    fsGroup: 101
+    runAsGroup: 101
+    runAsNonRoot: true
+    runAsUser: 101
+  # -- Grace period to allow the gateway to shutdown before it is killed
+  terminationGracePeriodSeconds: 30
+  # -- Command to execute instead of defined in Docker image
+  command: null
+  # -- Common additional CLI arguments for loki pods
+  extraArgs: []
+  # -- Common environment variables to add to all pods directly managed by this chart.
+  extraEnv: []
+  # -- Common source of environment injections to add to all pods directly managed by this chart.
+  # For example to inject values from a Secret, use:
+  # extraEnvFrom:
+  #   - secretRef:
+  #       name: mysecret
+  extraEnvFrom: []
+  # -- Common volumes to add to all pods directly managed by this chart.
+  extraVolumes: []
+  # -- Common mount points to add to all pods directly managed by this chart.
+  extraVolumeMounts: []
+  # -- The SecurityContext for Loki containers for loki pods
+  containerSecurityContext: {}
+  # -- Configures the liveness probe for loki pods
+  livenessProbe: {}
+  # -- Configures the readiness probe for loki pods
+  readinessProbe: {}
+  # -- Configures the startup probe for loki pods
+  startupProbe: {}
+  # -- Node selector for loki pods
+  nodeSelector: {}
+  # -- Tolerations for loki pods
+  tolerations: []
+
 ######################################################################################################################
 #
 # Base Loki Configs including kubernetes configurations and configurations for Loki itself,
@@ -2896,6 +2952,35 @@ bloomBuilder:
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: ""
+  # -- Update strategy for bloom-builder deployment
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  ephemeralDataVolume:
+    # -- Enable generic ephemeral volume-backed storage for the bloom-builder `data` volume.
+    enabled: false
+    # -- Set access modes on the generated volumeClaimTemplate.
+    accessModes:
+      - ReadWriteOnce
+    # -- Size of the generated volumeClaimTemplate.
+    size: 10Gi
+    # -- Storage class to be used for the generated volumeClaimTemplate.
+    # If defined, storageClassName: <storageClass>.
+    # If set to "-", storageClassName: "", which disables dynamic provisioning.
+    # If empty or set to null, no storageClassName spec is set, choosing the default provisioner.
+    storageClass: null
+    # -- Volume attributes class name to be used for the generated volumeClaimTemplate.
+    # If empty or set to null, no volumeAttributesClassName spec is set.
+    # Requires Kubernetes 1.31
+    volumeAttributesClassName: null
+    # -- Selector for the generated volumeClaimTemplate.
+    selector: null
+    # -- Annotations for the generated volumeClaimTemplate.
+    annotations: {}
+    # -- Labels for the generated volumeClaimTemplate.
+    labels: {}
 
 # -- Configuration for the pattern ingester
 patternIngester:
