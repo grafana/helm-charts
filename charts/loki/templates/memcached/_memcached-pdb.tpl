@@ -11,7 +11,7 @@ valuesSection and component are specified separately because helm prefers camelc
 {{ with $.memcacheConfig }}
 {{- if and .enabled -}}
 {{- if gt (int .replicas) 1 }}
-apiVersion: {{ include "loki.pdb.apiVersion" $.ctx }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.resourceName" (dict "ctx" $.ctx "component" $.component "suffix" .suffix) }}

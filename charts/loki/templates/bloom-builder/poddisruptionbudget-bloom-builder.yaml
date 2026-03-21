@@ -3,7 +3,7 @@
 {{- if kindIs "invalid" .Values.bloomBuilder.maxUnavailable }}
 {{- fail "`.Values.bloomBuilder.maxUnavailable` must be set when `.Values.bloomBuilder.replicas` is greater than 1." }}
 {{- else }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.bloomBuilderFullname" . }}

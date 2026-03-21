@@ -3,7 +3,7 @@
 {{- if kindIs "invalid" .Values.queryFrontend.maxUnavailable }}
 {{- fail "`.Values.queryFrontend.maxUnavailable` must be set when `.Values.queryFrontend.replicas` is greater than 1." }}
 {{- else }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.queryFrontendFullname" . }}

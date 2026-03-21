@@ -3,7 +3,7 @@
 {{- if kindIs "invalid" .Values.queryScheduler.maxUnavailable }}
 {{- fail "`.Values.queryScheduler.maxUnavailable` must be set when `.Values.queryScheduler.replicas` is greater than 1." }}
 {{- else }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.querySchedulerFullname" . }}

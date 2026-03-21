@@ -3,7 +3,7 @@
 {{- if kindIs "invalid" .Values.querier.maxUnavailable }}
 {{- fail "`.Values.querier.maxUnavailable` must be set when `.Values.querier.replicas` is greater than 1." }}
 {{- else }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.querierFullname" . }}

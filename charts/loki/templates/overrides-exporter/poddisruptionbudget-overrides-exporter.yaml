@@ -3,7 +3,7 @@
 {{- if kindIs "invalid" .Values.overridesExporter.maxUnavailable }}
 {{- fail "`.Values.overridesExporter.maxUnavailable` must be set when `.Values.overridesExporter.replicas` is greater than 1." }}
 {{- else }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.overridesExporterFullname" . }}

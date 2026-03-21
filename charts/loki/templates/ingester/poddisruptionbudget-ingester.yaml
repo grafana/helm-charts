@@ -3,7 +3,7 @@
 {{- if kindIs "invalid" .Values.ingester.maxUnavailable }}
 {{- fail "`.Values.ingester.maxUnavailable` must be set when `.Values.ingester.replicas` is greater than 1." }}
 {{- else }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.ingesterFullname" . }}

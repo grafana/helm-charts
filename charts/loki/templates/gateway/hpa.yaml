@@ -1,10 +1,5 @@
-{{- $autoscalingv2 := .Capabilities.APIVersions.Has "autoscaling/v2" -}}
 {{- if .Values.gateway.autoscaling.enabled }}
-{{- if $autoscalingv2 }}
 apiVersion: autoscaling/v2
-{{- else }}
-apiVersion: autoscaling/v2beta1
-{{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "loki.gatewayFullname" . }}
@@ -27,24 +22,16 @@ spec:
     - type: Resource
       resource:
         name: memory
-        {{- if $autoscalingv2 }}
         target:
           type: Utilization
           averageUtilization: {{ . }}
-        {{- else }}
-        targetAverageUtilization: {{ . }}
-        {{- end }}
   {{- end }}
   {{- with .Values.gateway.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
-        {{- if $autoscalingv2 }}
         target:
           type: Utilization
           averageUtilization: {{ . }}
-        {{- else }}
-        targetAverageUtilization: {{ . }}
-        {{- end }}
   {{- end }}
 {{- end }}

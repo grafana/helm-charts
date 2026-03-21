@@ -874,18 +874,10 @@ serviceAccount:
   automountServiceAccountToken: true
 # RBAC configuration
 rbac:
-  # -- If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp.
-  pspEnabled: false
-  # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
+  # -- For OpenShift set sccEnabled to 'true' to use the SecurityContextConstraints.
   sccEnabled: false
   # -- Toggle this to true to allow the use of hostPath volumes on OpenShift
   sccAllowHostDirVolumePlugin: false
-  # -- Specify PSP annotations
-  # Ref: https://kubernetes.io/docs/reference/access-authn-authz/psp-to-pod-security-standards/#podsecuritypolicy-annotations
-  pspAnnotations: {}
-  # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
-  # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
-  # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
   # -- Whether to install RBAC in the namespace only or cluster-wide. Useful if you want to watch ConfigMap globally.
   namespaced: false
 ######################################################################################################################

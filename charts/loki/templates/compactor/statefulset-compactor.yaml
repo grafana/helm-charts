@@ -20,7 +20,7 @@ spec:
       partition: 0
   serviceName: {{ include "loki.compactorFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
-  {{- if and (semverCompare ">= 1.23-0" (include "loki.kubeVersion" .)) (.Values.compactor.persistence.enableStatefulSetAutoDeletePVC)  }}
+  {{- if and (.Values.compactor.persistence.enableStatefulSetAutoDeletePVC)  }}
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: {{ .Values.compactor.persistence.whenDeleted }}
     whenScaled: {{ .Values.compactor.persistence.whenScaled }}
@@ -45,7 +45,6 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if semverCompare ">=1.19-0" (include "loki.kubeVersion" .) }}
       {{- with .Values.compactor.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- tpl ( . | toYaml) $ | nindent 8 }}
@@ -53,7 +52,6 @@ spec:
       {{- with .Values.compactor.dnsConfig | default .Values.loki.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
       {{- end }}
       serviceAccountName: {{ include "loki.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}

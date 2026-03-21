@@ -1,6 +1,6 @@
 {{- if and .Values.resultsCache.enabled (.Values.memcached.enabled) }}
 {{- if gt (int .Values.resultsCache.replicas) 1 }}
-apiVersion: {{ include "loki.pdb.apiVersion" . }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "loki.fullname" . }}-memcached-results-cache

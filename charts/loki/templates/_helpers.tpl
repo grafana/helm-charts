@@ -550,40 +550,6 @@ Memcached Exporter Docker image
 {{- end -}}
 
 {{/*
-Return the appropriate apiVersion for ingress.
-*/}}
-{{- define "loki.ingress.apiVersion" -}}
-  {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19-0" (include "loki.kubeVersion" .)) -}}
-      {{- print "networking.k8s.io/v1" -}}
-  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
-    {{- print "networking.k8s.io/v1beta1" -}}
-  {{- else -}}
-    {{- print "extensions/v1beta1" -}}
-  {{- end -}}
-{{- end -}}
-
-{{/*
-Return if ingress is stable.
-*/}}
-{{- define "loki.ingress.isStable" -}}
-  {{- eq (include "loki.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
-{{- end -}}
-
-{{/*
-Return if ingress supports ingressClassName.
-*/}}
-{{- define "loki.ingress.supportsIngressClassName" -}}
-  {{- or (eq (include "loki.ingress.isStable" .) "true") (and (eq (include "loki.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" (include "loki.kubeVersion" .))) -}}
-{{- end -}}
-
-{{/*
-Return if ingress supports pathType.
-*/}}
-{{- define "loki.ingress.supportsPathType" -}}
-  {{- or (eq (include "loki.ingress.isStable" .) "true") (and (eq (include "loki.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18-0" (include "loki.kubeVersion" .))) -}}
-{{- end -}}
-
-{{/*
 Generate list of ingress service paths based on deployment type
 */}}
 {{- define "loki.ingress.servicePaths" -}}
@@ -656,23 +622,14 @@ Params:
   paths = list of url paths to allow ingress for
 */}}
 {{- define "loki.ingress.servicePath" -}}
-{{- $ingressApiIsStable := eq (include "loki.ingress.isStable" .ctx) "true" -}}
-{{- $ingressSupportsPathType := eq (include "loki.ingress.supportsPathType" .ctx) "true" -}}
 {{- range .paths }}
 - path: {{ . }}
-  {{- if $ingressSupportsPathType }}
   pathType: Prefix
-  {{- end }}
   backend:
-    {{- if $ingressApiIsStable }}
     service:
       name: {{ $.serviceName }}
       port:
         number: {{ $.ctx.Values.loki.server.http_listen_port }}
-    {{- else }}
-    serviceName: {{ $.serviceName }}
-    servicePort: {{ $.ctx.Values.loki.server.http_listen_port }}
-    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -1122,12 +1079,10 @@ http {
 
 {{/* Configure enableServiceLinks in pod */}}
 {{- define "loki.enableServiceLinks" -}}
-{{- if semverCompare ">=1.13-0" (include "loki.kubeVersion" .) -}}
 {{- if or (.Values.loki.enableServiceLinks) (ne .Values.loki.enableServiceLinks false) -}}
 enableServiceLinks: true
 {{- else -}}
 enableServiceLinks: false
-{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -1218,16 +1173,6 @@ enableServiceLinks: false
 checksum/config: {{ include "loki.configMapOrSecretContentHash" (dict "ctx" . "name" "/config.yaml") }}
 {{- end -}}
 
-{{/*
-Return the appropriate apiVersion for PodDisruptionBudget.
-*/}}
-{{- define "loki.pdb.apiVersion" -}}
-  {{- if and (.Capabilities.APIVersions.Has "policy/v1") (semverCompare ">=1.21-0" (include "loki.kubeVersion" .)) -}}
-    {{- print "policy/v1" -}}
-  {{- else -}}
-    {{- print "policy/v1beta1" -}}
-  {{- end -}}
-{{- end -}}
 
 {{/*
 Return the object store type for use with the test schema.
@@ -1244,13 +1189,7 @@ Return the object store type for use with the test schema.
 Return the appropriate apiVersion for HorizontalPodAutoscaler.
 */}}
 {{- define "loki.hpa.apiVersion" -}}
-  {{- if and (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">= 1.19-0" (include "loki.kubeVersion" .)) -}}
-      {{- print "autoscaling/v2" -}}
-  {{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta2" -}}
-    {{- print "autoscaling/v2beta2" -}}
-  {{- else -}}
-    {{- print "autoscaling/v2beta1" -}}
-  {{- end -}}
+  {{- print "autoscaling/v2" -}}
 {{- end -}}
 
 {{/*
@@ -1286,9 +1225,5 @@ storage_prefix: {{ .storage_prefix }}
 Pod security context
 */}}
 {{- define "loki.podSecurityContext" -}}
-{{- if semverCompare ">=1.23-0" $.Capabilities.KubeVersion.GitVersion }}
 {{- toYaml .Values.loki.podSecurityContext }}
-{{- else }}
-{{- toYaml (omit .Values.loki.podSecurityContext "fsGroupChangePolicy")  }}
-{{- end }}
 {{- end -}}
