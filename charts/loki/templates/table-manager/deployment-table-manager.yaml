@@ -92,10 +92,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/loki/config
-            {{- if .Values.enterprise.enabled }}
-            - name: license
-              mountPath: /etc/loki/license
-            {{- end }}
             {{- with (concat .Values.global.extraVolumeMounts .Values.tableManager.extraVolumeMounts) | uniq }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -123,15 +119,6 @@ spec:
       volumes:
         - name: config
           {{- include "loki.configVolume" . | nindent 10 }}
-        {{- if .Values.enterprise.enabled }}
-        - name: license
-          secret:
-          {{- if .Values.enterprise.useExternalLicense }}
-            secretName: {{ .Values.enterprise.externalLicenseName }}
-          {{- else }}
-            secretName: enterprise-logs-license
-          {{- end }}
-        {{- end }}
         {{- with (concat .Values.global.extraVolumes .Values.tableManager.extraVolumes) | uniq }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

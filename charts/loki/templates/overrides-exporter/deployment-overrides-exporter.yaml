@@ -105,10 +105,6 @@ spec:
               mountPath: /etc/loki/config
             - name: runtime-config
               mountPath: /etc/loki/runtime-config
-            {{- if .Values.enterprise.enabled }}
-            - name: license
-              mountPath: /etc/loki/license
-            {{- end }}
             {{- with (concat .Values.global.extraVolumeMounts .Values.overridesExporter.extraVolumeMounts) | uniq }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -135,15 +131,6 @@ spec:
         - name: runtime-config
           configMap:
             name: {{ template "loki.name" . }}-runtime
-        {{- if .Values.enterprise.enabled }}
-        - name: license
-          secret:
-          {{- if .Values.enterprise.useExternalLicense }}
-            secretName: {{ .Values.enterprise.externalLicenseName }}
-          {{- else }}
-            secretName: enterprise-logs-license
-          {{- end }}
-        {{- end }}
         {{- with (concat .Values.global.extraVolumes .Values.overridesExporter.extraVolumes) | uniq }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

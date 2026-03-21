@@ -12,15 +12,7 @@ Client definition for LogsInstance
 - url: {{ $url }}
   externalLabels:
     cluster: {{ include "loki.clusterLabel" . }}
-  {{- if .Values.enterprise.enabled }}
-  basicAuth:
-    username:
-      name: {{ include "enterprise-logs.selfMonitoringTenantSecret" . }}
-      key: username
-    password:
-      name: {{ include "enterprise-logs.selfMonitoringTenantSecret" . }}
-      key: password
-  {{- else if .Values.loki.auth_enabled }}
+  {{- if .Values.loki.auth_enabled }}
   tenantId: {{ .Values.monitoring.selfMonitoring.tenant.name | quote }}
   {{- end }}
 {{- end -}}

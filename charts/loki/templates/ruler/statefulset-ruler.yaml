@@ -112,10 +112,6 @@ spec:
               mountPath: /var/loki
             - name: tmp
               mountPath: /tmp/loki
-            {{- if .Values.enterprise.enabled }}
-            - name: license
-              mountPath: /etc/loki/license
-            {{- end }}
             {{- if and .Values.sidecar.rules.enabled .Values.ruler.sidecar }}
             - name: sc-rules-volume
               mountPath: {{ .Values.sidecar.rules.folder | quote }}
@@ -230,15 +226,6 @@ spec:
         - name: runtime-config
           configMap:
             name: {{ template "loki.name" . }}-runtime
-        {{- if .Values.enterprise.enabled }}
-        - name: license
-          secret:
-          {{- if .Values.enterprise.useExternalLicense }}
-            secretName: {{ .Values.enterprise.externalLicenseName }}
-          {{- else }}
-            secretName: enterprise-logs-license
-          {{- end }}
-        {{- end }}
         {{- if and .Values.sidecar.rules.enabled .Values.ruler.sidecar }}
         - name: sc-rules-volume
         {{- if .Values.sidecar.rules.sizeLimit }}

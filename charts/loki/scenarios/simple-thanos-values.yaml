@@ -37,14 +37,6 @@ loki:
       ruler: ruler_thanos
       admin: admin_thanos
 
-enterprise:
-  enabled: true
-  adminApi:
-    enabled: true
-  # Admin token secret for provisioner (must be created externally)
-  adminToken:
-    secret: loki-admin-token
-
 minio:
   enabled: true
 
