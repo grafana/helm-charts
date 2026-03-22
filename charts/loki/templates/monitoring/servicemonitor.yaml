@@ -38,10 +38,12 @@ spec:
       scrapeTimeout: {{ . }}
       {{- end }}
       relabelings:
+        {{- with .jobPrefix }}
         - sourceLabels: [job]
           action: replace
-          replacement: "{{ include "loki.namespace" $ }}/$1"
+          replacement: "{{ tpl . $}}$1"
           targetLabel: job
+        {{- end }}
         - action: replace
           replacement: "{{ include "loki.clusterLabel" $ }}"
           targetLabel: cluster

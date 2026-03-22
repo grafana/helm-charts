@@ -4364,6 +4364,9 @@ monitoring:
     scheme: http
     # -- ServiceMonitor will use these tlsConfig settings to make the health check requests
     tlsConfig: null
+    # -- ServiceMonitor job label prefix will be used to generate the job label for the scraped metrics.
+    # -- The job label is required for the included dashboards to work.
+    jobPrefix: '{{ include "loki.namespace" $ }}/'
     # -- DEPRECATED If defined, will create a MetricsInstance for the Grafana Agent Operator.
     metricsInstance:
       # -- If enabled, MetricsInstance resources for Grafana Agent Operator are created
