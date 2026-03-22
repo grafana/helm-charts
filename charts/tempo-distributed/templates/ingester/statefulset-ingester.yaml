@@ -69,7 +69,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
-      {{- include "tempo.ingesterImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "ingester") | nindent 6 -}}
       {{- with .Values.ingester.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

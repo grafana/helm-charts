@@ -52,7 +52,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
-      {{- include "tempo.enterpriseFederationFrontendImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "enterprise-federation-frontend") | nindent 6 -}}
       {{- with .Values.enterpriseFederationFrontend.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

@@ -51,7 +51,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
-      {{- include "tempo.distributorImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "distributor") | nindent 6 -}}
       {{- with .Values.distributor.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

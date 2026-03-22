@@ -47,7 +47,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
-      {{- include "tempo.memcachedExporterImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "memcached-exporter" "noTempoFallback" true) | nindent 6 -}}
       {{- with .Values.memcachedExporter.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

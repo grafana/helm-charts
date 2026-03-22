@@ -14,10 +14,3 @@ gateway image
 {{- include "tempo.tempoImage" $dict -}}
 {{- end }}
 
-{{/*
-gateway imagePullSecrets
-*/}}
-{{- define "tempo.gatewayImagePullSecrets" -}}
-{{- $dict := dict "component" .Values.gateway.image "global" .Values.global.image "tempo" (dict) -}}
-{{- include "tempo.imagePullSecrets" $dict -}}
-{{- end }}

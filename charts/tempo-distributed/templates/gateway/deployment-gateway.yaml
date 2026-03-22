@@ -49,7 +49,7 @@ spec:
       {{- end }}
       terminationGracePeriodSeconds: {{ .Values.gateway.terminationGracePeriodSeconds }}
       enableServiceLinks: false
-      {{- include "tempo.gatewayImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "gateway" "noTempoFallback" true) | nindent 6 -}}
       {{- with .Values.gateway.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

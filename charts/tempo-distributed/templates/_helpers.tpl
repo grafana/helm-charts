@@ -48,6 +48,28 @@ imagePullSecrets:
 {{- end -}}
 
 {{/*
+Generic component imagePullSecrets. Resolves the component's values section
+dynamically, following the same pattern as tempo.imageReference.
+Params:
+  ctx = root context (.)
+  component = component name (e.g., "distributor", "query-frontend")
+  noTempoFallback = optional, when true the tempo image is not used as fallback (for non-tempo images like gateway)
+*/}}
+{{- define "tempo.componentImagePullSecrets" -}}
+{{- $componentSection := include "tempo.componentSectionFromName" . -}}
+{{- if not (hasKey .ctx.Values $componentSection) -}}
+{{- print "Component section " $componentSection " does not exist" | fail -}}
+{{- end -}}
+{{- $component := (index .ctx.Values $componentSection).image | default dict -}}
+{{- $tempo := .ctx.Values.tempo.image -}}
+{{- if .noTempoFallback -}}
+{{- $tempo = dict -}}
+{{- end -}}
+{{- $dict := dict "tempo" $tempo "component" $component "global" .ctx.Values.global.image -}}
+{{- include "tempo.imagePullSecrets" $dict -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "tempo.chart" -}}

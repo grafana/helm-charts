@@ -36,7 +36,7 @@ spec:
         {{- toYaml .Values.enterpriseGateway.securityContext | nindent 8 }}
       initContainers:
         {{- toYaml .Values.enterpriseGateway.initContainers | nindent 8 }}
-      {{- include "tempo.enterpriseGatewayImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "enterprise-gateway") | nindent 6 -}}
       {{- with .Values.enterpriseGateway.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

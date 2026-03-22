@@ -38,7 +38,7 @@ spec:
         {{- with .Values.adminApi.initContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- include "tempo.adminApiImagePullSecrets" . | nindent 6 -}}
+      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "admin-api") | nindent 6 -}}
       {{- with .Values.adminApi.hostAliases }}
       hostAliases:
         {{- toYaml . | nindent 8 }}

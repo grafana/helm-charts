@@ -1,7 +1,3 @@
-{{- define "tempo.ingesterImagePullSecrets" -}}
-{{- $dict := dict "tempo" .Values.tempo.image "component" .Values.ingester.image "global" .Values.global.image -}}
-{{- include "tempo.imagePullSecrets" $dict -}}
-{{- end }}
 {{- define "ingester.zoneAwareReplicationMap" -}}
 {{- $zonesMap := (dict) -}}
 {{- $defaultZone := (dict "affinity" .ctx.Values.ingester.affinity "annotations" (default (dict)) "nodeSelector" .ctx.Values.ingester.nodeSelector "podAnnotations" (default (dict)) "replicas" .ctx.Values.ingester.replicas "storageClass" .ctx.Values.ingester.storageClass) -}}
