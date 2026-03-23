@@ -792,6 +792,12 @@ lokiCanary:
       maxUnavailable: 1
   # -- Replicas for `loki-canary` when using a Deployment
   replicas: 1
+  # -- Tenant to use for loki-canary
+  tenant:
+    # -- Name of the tenant for loki-canary
+    name: "self-monitoring"
+    # -- Password of the gateway for Basic auth for loki-canary
+    password: null
 ######################################################################################################################
 #
 # Service Accounts and Kubernetes RBAC
@@ -4273,18 +4279,8 @@ monitoring:
       grafana_dashboard: "1"
   # -- Recording rules for monitoring Loki, required for some dashboards
   rules:
-    # -- If enabled, create PrometheusRule resource with Loki recording rules
+    # -- If enabled, create PrometheusRule resources with Loki recording rules
     enabled: false
-    # -- Include alerting rules
-    alerting: true
-    # -- Specify which individual alerts should be disabled
-    # -- Instead of turning off each alert one by one, set the .monitoring.rules.alerting value to false instead.
-    # -- If you disable all the alerts and keep .monitoring.rules.alerting set to true, the chart will fail to render.
-    #
-    # -- DEPRECATED: use monitoring.rules.configs.*.enabled instead
-    disabled: {}
-    #  LokiRequestErrors: true
-    #  LokiRequestPanics: true
 
     configs:
       LokiRequestErrors:
@@ -4367,77 +4363,6 @@ monitoring:
     # -- ServiceMonitor job label prefix will be used to generate the job label for the scraped metrics.
     # -- The job label is required for the included dashboards to work.
     jobPrefix: '{{ include "loki.namespace" $ }}/'
-    # -- DEPRECATED If defined, will create a MetricsInstance for the Grafana Agent Operator.
-    metricsInstance:
-      # -- If enabled, MetricsInstance resources for Grafana Agent Operator are created
-      enabled: true
-      # -- MetricsInstance annotations
-      annotations: {}
-      # -- Additional MetricsInstance labels
-      labels: {}
-      # -- If defined a MetricsInstance will be created to remote write metrics.
-      remoteWrite: null
-  # -- DEPRECATED Self monitoring determines whether Loki should scrape its own logs.
-  # This feature relies on Grafana Agent Operator, which is deprecated.
-  # It will create custom resources for GrafanaAgent, LogsInstance, and PodLogs to configure
-  # scrape configs to scrape its own logs with the labels expected by the included dashboards.
-  selfMonitoring:
-    enabled: false
-    # -- Tenant to use for self monitoring
-    tenant:
-      # -- Name of the tenant
-      name: "self-monitoring"
-      # -- Password of the gateway for Basic auth
-      password: null
-      # -- Namespace to create additional tenant token secret in. Useful if your Grafana instance
-      # is in a separate namespace. Token will still be created in the canary namespace.
-      # @default -- The same namespace as the loki chart is installed in.
-      secretNamespace: '{{ include "loki.namespace" . }}'
-    # -- DEPRECATED Grafana Agent configuration
-    grafanaAgent:
-      # -- DEPRECATED Controls whether to install the Grafana Agent Operator and its CRDs.
-      # Note that helm will not install CRDs if this flag is enabled during an upgrade.
-      # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
-      installOperator: false
-      # -- Grafana Agent annotations
-      annotations: {}
-      # -- Additional Grafana Agent labels
-      labels: {}
-      # -- Enable the config read api on port 8080 of the agent
-      enableConfigReadAPI: false
-      # -- The name of the PriorityClass for GrafanaAgent pods
-      priorityClassName: null
-      # -- Resource requests and limits for the grafanaAgent pods
-      resources: {}
-      #   limits:
-      #     memory: 200Mi
-      #   requests:
-      #     cpu: 50m
-      #     memory: 100Mi
-      # -- Tolerations for GrafanaAgent pods
-      tolerations: []
-    # PodLogs configuration
-    podLogs:
-      # -- PodLogs version
-      apiVersion: monitoring.grafana.com/v1alpha1
-      # -- PodLogs annotations
-      annotations: {}
-      # -- Additional PodLogs labels
-      labels: {}
-      # -- PodLogs relabel configs to apply to samples before scraping
-      # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      relabelings: []
-      # -- Additional pipeline stages to process logs after scraping
-      # https://grafana.com/docs/agent/latest/operator/api/#pipelinestagespec-a-namemonitoringgrafanacomv1alpha1pipelinestagespeca
-      additionalPipelineStages: []
-    # LogsInstance configuration
-    logsInstance:
-      # -- LogsInstance annotations
-      annotations: {}
-      # -- Additional LogsInstance labels
-      labels: {}
-      # -- Additional clients for remote write
-      clients: null
 
 # -- DEPRECATED Configuration for the table-manager. The table-manager is only necessary when using a deprecated
 # index type such as Cassandra, Bigtable, or DynamoDB, it has not been necessary since loki introduced self-

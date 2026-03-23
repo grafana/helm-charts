@@ -17,9 +17,6 @@ If pods are taking too long to schedule make sure pod affinity can be fulfilled 
 Installed components:
 ***********************************************************************
 
-{{- if .Values.monitoring.selfMonitoring.enabled }}
-* grafana-agent-operator
-{{- end }}
 {{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
 * loki
 {{- else -}}
