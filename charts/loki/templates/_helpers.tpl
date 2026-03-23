@@ -618,6 +618,19 @@ http {
   default_type application/octet-stream;
   log_format   {{ .Values.gateway.nginxConfig.logFormat }}
 
+  {{- if .Values.gateway.metrics.enabled }}
+  # Exclude specific requests from logging
+  map $request_uri $track {
+    default 1;
+    ~^/$ 0;
+    ~^/health 0;
+    ~^/metrics 0;
+  }
+
+  # simple_upstream preset
+  log_format access_log_exporter '$http_host\t$request_method\t$status\t$request_completion\t$request_time\t$request_length\t$bytes_sent\t$upstream_addr\t$upstream_connect_time\t$upstream_header_time\t$upstream_response_time\t$request_uri';
+  access_log syslog:server=127.0.0.1:8514,nohostname access_log_exporter if=$track;
+  {{- end }}
   {{- if .Values.gateway.verboseLogging }}
   access_log   /dev/stderr  main;
   {{- else }}
@@ -671,6 +684,14 @@ http {
       {{- end }}
       return 200 'OK';
       auth_basic off;
+    }
+
+    location = /stub_status {
+      stub_status on;
+      access_log off;
+      allow 127.0.0.1;
+      deny all;
+      server_tokens on;  # expose nginx version
     }
 
     ########################################################
