@@ -1,0 +1,37 @@
+{{- $isDistributed := eq (include "loki.deployment.isDistributed" .) "true" -}}
+{{- if $isDistributed -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "loki.distributorFullname" . }}
+  namespace: {{ include "loki.namespace" . }}
+  labels:
+    {{- include "loki.distributorLabels" . | nindent 4 }}
+    app.kubernetes.io/part-of: memberlist
+  {{- with .Values.loki.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if not .Values.distributor.autoscaling.enabled }}
+  replicas: {{ .Values.distributor.replicas }}
+{{- end }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.distributor.maxSurge }}
+      maxUnavailable: 1
+  revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "loki.distributorSelectorLabels" . | nindent 6 }}
+  template:
+    {{- $args := list }}
+    {{- if .Values.ingester.zoneAwareReplication.enabled }}
+      {{- if and (.Values.ingester.zoneAwareReplication.migration.enabled) (not .Values.ingester.zoneAwareReplication.migration.writePath) }}
+        {{- $args = list "-distributor.zone-awareness-enabled=false" }}
+      {{- else }}
+        {{- $args = list "-distributor.zone-awareness-enabled=true" }}
+      {{- end }}
+    {{- end }}
+    {{- include "loki.podTemplate" (dict "target" "distributor" "component" .Values.distributor "ctx" . "args" $args) | nindent 4 }}
+{{- end }}

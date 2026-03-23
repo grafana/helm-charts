@@ -63,7 +63,7 @@ commonLabels: {}
 ######################################################################################################################
 #
 # Defaults applied to all loki configurations
-# Current supported scope: bloom-builder
+# Current supported scope: bloom-builder, distributor
 #
 ######################################################################################################################
 defaults:
@@ -79,11 +79,7 @@ defaults:
   # -- The name of the PriorityClass for loki pods
   priorityClassName: ""
   # -- The SecurityContext for loki pods
-  podSecurityContext:
-    fsGroup: 101
-    runAsGroup: 101
-    runAsNonRoot: true
-    runAsUser: 101
+  podSecurityContext: {}
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
   # -- Command to execute instead of defined in Docker image
@@ -114,6 +110,10 @@ defaults:
   nodeSelector: {}
   # -- Tolerations for loki pods
   tolerations: []
+  # -- Annotations for loki pods
+  podAnnotations: {}
+  # -- Additional labels for loki pod
+  podLabels: {}
   service:
     # -- Common annotations for all services
     annotations: {}

@@ -27,21 +27,5 @@ spec:
     matchLabels:
       {{- include "loki.bloomBuilderSelectorLabels" . | nindent 6 }}
   template:
-    metadata:
-      annotations:
-        {{- include "loki.config.checksum" . | nindent 8 }}
-        {{- with .Values.loki.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.bloomBuilder.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      labels:
-        {{- include "loki.bloomBuilderLabels" . | nindent 8 }}
-        app.kubernetes.io/part-of: memberlist
-        {{- with merge (dict) .Values.loki.podLabels .Values.defaults.podLabels .Values.bloomBuilder.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    spec:
-      {{- include "loki.pod" (dict "target" "bloom-builder" "component" .Values.bloomBuilder "ctx" .) | nindent 6 }}
+    {{- include "loki.podTemplate" (dict "target" "bloom-builder" "component" .Values.bloomBuilder "ctx" .) | nindent 4 }}
 {{- end -}}
