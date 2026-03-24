@@ -79,3 +79,17 @@ gateway:
     enabled: true
   metrics:
     enabled: false
+monitoring:
+  rules:
+    enabled: true
+    additionalGroups:
+      - name: "additional-rules"
+        rules:
+          - alert: HighRequestLatency
+            expr: 'job:request_latency_seconds:mean5m{job="myjob"} > 0.5'
+            for: 10m
+            labels:
+              severity: page
+            annotations:
+              summary: "High request latency"
+              description: "Request latency is above 0.5s for more than 10 minutes"
