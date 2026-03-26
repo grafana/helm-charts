@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 2.6.5
+version: 2.7.0
 # renovate: docker=docker.io/grafana/tempo
 appVersion: 2.10.3
 kubeVersion: "^1.25.0-0"
@@ -34,5 +34,5 @@ dependencies:
   - name: rollout-operator
     alias: rollout_operator
     repository: https://grafana.github.io/helm-charts
-    version: 0.45.0
+    version: 0.46.0
     condition: rollout_operator.enabled
