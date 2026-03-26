@@ -82,6 +82,7 @@ gateway:
 monitoring:
   rules:
     enabled: true
+    alerting: true
     additionalGroups:
       - name: "additional-rules"
         rules:
