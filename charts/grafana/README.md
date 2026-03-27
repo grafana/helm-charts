@@ -566,4 +566,18 @@ grafana.ini:
 ```
 
 ### Installing plugins
-For installing plugins please see the [official documentation](https://grafana.com/docs/grafana/latest/administration/plugin-management/#install-plugins-using-the-grafana-helm-chart).
+
+If you want to install a Grafana plugin using the helm chart, you can do so by using the identifier of the plugin, for example `digirich-bubblechart-panel` will install [Bubble Chart](https://grafana.com/grafana/plugins/digrich-bubblechart-panel/). 
+
+You can also install a plugin and a specific version by specifying the version and URL of the download file as shown in the example below : 
+
+```yaml
+plugins:
+  - digrich-bubblechart-panel
+  - grafana-clock-panel
+  ## You can also use other plugin download URL, as long as they are valid zip files,
+  ## and specify the name of the plugin as prefix, with an version. Like this:
+  # - marcusolsson-json-datasource@1.3.24@https://grafana.com/api/plugins/marcusolsson-json-datasource/versions/1.3.24/download
+```
+
+Generic documentation about plugins can be found in the [official documentation](https://grafana.com/docs/grafana/latest/administration/plugin-management/).
