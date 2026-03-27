@@ -17,7 +17,7 @@ The pull request will be squashed anyways when it is merged.
 
 For fast feedback, please @-mention maintainers that are listed in the Chart.yaml file.
 
-Please make sure you test your changes before you push them (see CONSTRIBUTING.md).
+Please make sure you test your changes before you push them (see CONTRIBUTING.md).
 Once the pull request is opened, GitHub Actions will run across your changes and do some initial checks and linting.
 These checks run very quickly.  Please check the results.
 -->
