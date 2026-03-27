@@ -2,8 +2,9 @@ apiVersion: v2
 name: loki
 description: Helm chart for Grafana Loki supporting monolithic, simple scalable, and microservices modes.
 type: application
-appVersion: 3.6.7
-version: 9.3.1
+# renovate: docker=docker.io/grafana/loki
+appVersion: 3.7.1
+version: 9.3.2
 kubeVersion: ">=1.25.0-0"
 home: https://grafana-community.github.io/helm-charts
 sources:
