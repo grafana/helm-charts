@@ -351,38 +351,6 @@
             stroke: currentColor;
         }
 
-        .load-more-section {
-            padding: 24px;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .load-more-btn {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 10px 24px;
-            border: 1px solid transparent;
-            border-radius: 6px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s, box-shadow 0.2s;
-        }
-
-        .load-more-btn:hover {
-            background-color: var(--accent-hover);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        }
-
-        .load-more-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .no-more-releases {
-            color: var(--text-tertiary);
-            font-style: italic;
-        }
 
         .dark-mode-toggle {
             position: fixed;
@@ -530,7 +498,6 @@
     let currentOwner = null;
     let currentRepo = null;
     let hasMoreReleases = true;
-    let isLoadingMore = false;
 
     // Dark mode toggle initialization
     const initializeDarkMode = () => {
@@ -927,67 +894,63 @@
         allReleases.length = 0;
         hasMoreReleases = true;
 
-        await loadMoreReleases();
-    };
-
-    // Load more releases (pagination)
-    const loadMoreReleases = async () => {
-        if (!currentOwner || !currentRepo || isLoadingMore) {
+        // Fetch all pages so every chart appears in the selector regardless of release frequency
+        try {
+            while (hasMoreReleases) {
+                await loadMoreReleases();
+            }
+        } catch (error) {
+            showError(error.message);
             return;
         }
 
-        isLoadingMore = true;
-
-        try {
-            const response = await fetch(
-                `https://api.github.com/repos/${currentOwner}/${currentRepo}/releases?per_page=100&page=${currentPage}`
-            );
-
-            if (!response.ok) {
-                throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+        // Build chart set from the complete release list
+        charts.clear();
+        allReleases.forEach(release => {
+            const parsed = parseTag(release.tag_name);
+            if (parsed) {
+                charts.add(parsed.chart);
             }
+        });
 
-            const newReleases = await response.json();
+        if (charts.size === 0) {
+            showError('No charts found in this repository. Make sure the releases use the format: chart-name-version');
+            return;
+        }
 
-            // Check if we got fewer than 100 releases, meaning no more pages
-            if (newReleases.length < 100) {
+        renderChartSelector();
+
+        const urlParams = getUrlParams();
+        if (urlParams.chart && charts.has(urlParams.chart)) {
+            selectChart(urlParams.chart, owner, repo);
+        } else {
+            selectChart(Array.from(charts).sort()[0], owner, repo);
+        }
+    };
+
+    // Load one page of releases — pure data fetch, no UI side-effects
+    const loadMoreReleases = async () => {
+        const response = await fetch(
+            `https://api.github.com/repos/${currentOwner}/${currentRepo}/releases?per_page=100&page=${currentPage}`
+        );
+
+        if (!response.ok) {
+            // 422 means we've exceeded GitHub's pagination offset limit — treat as end of results
+            if (response.status === 422) {
                 hasMoreReleases = false;
-            }
-
-            // Add new releases to the array
-            allReleases.push(...newReleases);
-
-            // Extract all chart names from all releases
-            charts.clear();
-            allReleases.forEach(release => {
-                const parsed = parseTag(release.tag_name);
-                if (parsed) {
-                    charts.add(parsed.chart);
-                }
-            });
-
-            if (charts.size === 0) {
-                showError('No charts found in this repository. Make sure the releases use the format: chart-name-version');
                 return;
             }
-
-            // Show chart selector
-            renderChartSelector();
-
-            // Load first chart or chart from URL
-            const urlParams = getUrlParams();
-            currentPage++;
-            isLoadingMore = false;
-            if (urlParams.chart && charts.has(urlParams.chart)) {
-                selectChart(urlParams.chart, currentOwner, currentRepo);
-            } else {
-                selectChart(Array.from(charts).sort()[0], currentOwner, currentRepo);
-            }
-
-        } catch (error) {
-            showError(error.message);
-            isLoadingMore = false;
+            throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
         }
+
+        const newReleases = await response.json();
+
+        if (newReleases.length < 100) {
+            hasMoreReleases = false;
+        }
+
+        allReleases.push(...newReleases);
+        currentPage++;
     };
 
     // Render chart selector buttons
@@ -1026,7 +989,7 @@
             btn.classList.toggle('active', btn.textContent === chartName);
         });
 
-        // Filter releases for this chart
+        // Filter releases for this chart and sort by semver descending
         const chartReleases = allReleases
             .map(release => {
                 const parsed = parseTag(release.tag_name);
@@ -1034,7 +997,16 @@
                     ? { ...release, chartName: parsed.chart, version: parsed.version }
                     : null;
             })
-            .filter(r => r !== null);
+            .filter(r => r !== null)
+            .sort((a, b) => {
+                const pa = a.version.split('.').map(Number);
+                const pb = b.version.split('.').map(Number);
+                for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+                    const diff = (pb[i] || 0) - (pa[i] || 0);
+                    if (diff !== 0) return diff;
+                }
+                return 0;
+            });
 
         renderReleases(chartReleases);
     };
@@ -1166,38 +1138,6 @@
             content.appendChild(releaseDiv);
         });
 
-        // Add load more section if there are more releases
-        if (hasMoreReleases) {
-            const loadMoreSection = document.createElement('div');
-            loadMoreSection.className = 'load-more-section';
-
-            const loadMoreBtn = document.createElement('button');
-            loadMoreBtn.className = 'load-more-btn';
-            loadMoreBtn.textContent = isLoadingMore ? 'Loading...' : 'Load More Releases';
-            loadMoreBtn.disabled = isLoadingMore;
-            loadMoreBtn.onclick = loadMoreReleasesAndRender;
-
-            loadMoreSection.appendChild(loadMoreBtn);
-            content.appendChild(loadMoreSection);
-        } else if (allReleases.length > 0) {
-            const loadMoreSection = document.createElement('div');
-            loadMoreSection.className = 'load-more-section';
-
-            const noMoreP = document.createElement('p');
-            noMoreP.className = 'no-more-releases';
-            noMoreP.textContent = 'All releases loaded';
-
-            loadMoreSection.appendChild(noMoreP);
-            content.appendChild(loadMoreSection);
-        }
-    };
-
-    // Load more releases and re-render
-    const loadMoreReleasesAndRender = async () => {
-        await loadMoreReleases();
-        if (currentChart) {
-            selectChart(currentChart, currentOwner, currentRepo);
-        }
     };
 
     // Handle browser back/forward
