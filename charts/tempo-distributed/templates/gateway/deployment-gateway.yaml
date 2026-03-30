@@ -104,6 +104,11 @@ spec:
               mountPath: /tmp
             - name: docker-entrypoint-d-override
               mountPath: /docker-entrypoint.d
+            {{- if .Values.gateway.nginxConfig.ssl }}
+            - name: gateway-tls
+              mountPath: /etc/nginx/ssl
+              readOnly: true
+            {{- end }}
             {{- if .Values.gateway.extraVolumeMounts }}
             {{- toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
             {{- end }}
@@ -152,6 +157,11 @@ spec:
           emptyDir: {}
         - name: docker-entrypoint-d-override
           emptyDir: {}
+        {{- if .Values.gateway.nginxConfig.ssl }}
+        - name: gateway-tls
+          secret:
+            secretName: {{ .Values.gateway.nginxConfig.tlsSecretName }}
+        {{- end }}
         {{- if .Values.gateway.extraVolumes }}
         {{- toYaml .Values.gateway.extraVolumes | nindent 8 }}
         {{- end }}

@@ -2261,6 +2261,10 @@ gateway:
     serverSnippet: ''
     # -- Allows appending custom configuration to the http block
     httpSnippet: ''
+    # -- Whether ssl should be appended to the listen directive of the server block or not.
+    ssl: false
+    # -- TLS secret name containing the certificate and key to be used if ssl is enabled. The secret must contain 'tls.crt' and 'tls.key'. Required if ssl is true.
+    tlsSecretName: ''
     # -- Allows overriding the DNS resolver address nginx will use
     resolver: ''
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating
@@ -2311,7 +2315,7 @@ gateway:
         {{- end }}
 
         server {
-          listen             8080;
+          listen             8080 {{- if .Values.gateway.nginxConfig.ssl }} ssl{{- end }};
 
           {{- if .Values.streamOverHTTPEnabled }}
           http2 on;
@@ -2381,6 +2385,11 @@ gateway:
             proxy_pass       http://$compactor:3200$request_uri;
           }
 
+          {{- if .Values.gateway.nginxConfig.ssl }}
+          ssl_certificate     /etc/nginx/ssl/tls.crt;
+          ssl_certificate_key /etc/nginx/ssl/tls.key;
+          {{- end }}
+
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
           {{ . | nindent 4 }}
           {{- end }}
@@ -2389,7 +2398,7 @@ gateway:
         {{- if .Values.traces.otlp.grpc.enabled }}
         # OTLP gRPC
         server {
-          listen               {{ .Values.traces.otlp.grpc.port }} http2;
+          listen               {{ .Values.traces.otlp.grpc.port }} http2 {{- if .Values.gateway.nginxConfig.ssl }} ssl{{- end }};
 
           {{- if .Values.gateway.basicAuth.enabled }}
           auth_basic           "Tempo";
@@ -2403,6 +2412,11 @@ gateway:
           location ~ /opentelemetry {
             grpc_pass          grpc://{{ include "tempo.resourceName" (dict "ctx" . "component" "distributor") }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.traces.otlp.grpc.port }};
           }
+
+          {{- if .Values.gateway.nginxConfig.ssl }}
+          ssl_certificate     /etc/nginx/ssl/tls.crt;
+          ssl_certificate_key /etc/nginx/ssl/tls.key;
+          {{- end }}
 
           {{- with .Values.gateway.nginxConfig.serverSnippet }}
           {{ . | nindent 4 }}
