@@ -7,6 +7,6 @@ dependencies:
   version: 0.5.2
 - name: rollout-operator
   repository: https://grafana.github.io/helm-charts
-  version: 0.46.0
-digest: sha256:b3a6c4c25769fd48e72a07bd25d52c42511373e76d481c7e4ba248bd6799e630
-generated: "2026-03-26T18:32:56.956406905Z"
+  version: 0.47.0
+digest: sha256:5aa3120496bc691599ab2a3f66d878c8d6820f4f08adfafb8d808e49c52f319a
+generated: "2026-04-02T01:22:35.815595148Z"
