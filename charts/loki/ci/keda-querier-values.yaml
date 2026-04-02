@@ -1,0 +1,48 @@
+deploymentMode: Distributed
+loki:
+  commonConfig:
+    replication_factor: 1
+  useTestSchema: true
+  storage:
+    bucketNames:
+      chunks: chunks
+      ruler: ruler
+      admin: admin
+  kedaAutoscaling:
+    prometheusAddress: http://prometheus:9090
+    customHeaders: X-Scope-OrgID=tenant1
+# Disable scalable-mode targets
+read:
+  replicas: 0
+write:
+  replicas: 0
+backend:
+  replicas: 0
+# Disable non-essential distributed components to speed up CI
+compactor:
+  replicas: 0
+indexGateway:
+  replicas: 0
+ruler:
+  replicas: 0
+# Minimum components required for querier readiness
+distributor:
+  replicas: 1
+ingester:
+  replicas: 1
+  zoneAwareReplication:
+    enabled: false
+queryFrontend:
+  replicas: 1
+queryScheduler:
+  replicas: 1
+querier:
+  replicas: 1
+  kedaAutoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 20
+    # No Prometheus in CI — fall back to minReplicas immediately on trigger failure
+    fallback:
+      failureThreshold: 1
+      replicas: 1

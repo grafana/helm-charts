@@ -122,6 +122,26 @@ defaults:
     # -- trafficDistribution for services
     # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
     trafficDistribution: ""
+  # -- KEDA autoscaling shared configuration for all components that support KEDA
+  kedaAutoscaling:
+    # -- Prometheus server address for KEDA triggers
+    prometheusAddress: ""
+    # -- Whether to skip SSL verification when connecting to Prometheus
+    unsafeSsl: false
+    # -- Whether to ignore null values from Prometheus queries
+    ignoreNullValues: true
+    # -- Custom HTTP headers to include in Prometheus requests. Useful for multi-tenant setups (e.g. "X-Scope-OrgID=tenant1")
+    customHeaders: ""
+    # -- Interval (seconds) to poll each trigger. Overridable per component.
+    pollingInterval: 30
+    # -- KEDA trigger authentication settings. Ref: https://keda.sh/docs/latest/concepts/authentication/
+    authentication:
+      # -- Enable TriggerAuthentication for KEDA triggers
+      enabled: false
+      # -- Authentication modes for the trigger (e.g. "bearer", "basic")
+      authModes: ""
+      # -- Secret key references for TriggerAuthentication
+      secretTargetRef: []
 
 ######################################################################################################################
 #
@@ -2257,6 +2277,35 @@ querier:
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the querier. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 10
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the querier. Defaults to a Prometheus trigger using inflight requests.
+    triggers:
+      - type: prometheus
+        name: querier_autoscaling_metric
+        metadata:
+          serverAddress: "{{ .Values.defaults.kedaAutoscaling.prometheusAddress }}"
+          query: sum(max_over_time(loki_query_scheduler_inflight_requests{quantile="0.75"}[2m]))
+          threshold: "4"
+          unsafeSsl: "{{ .Values.defaults.kedaAutoscaling.unsafeSsl }}"
+          ignoreNullValues: "{{ .Values.defaults.kedaAutoscaling.ignoreNullValues }}"
+          customHeaders: "{{ .Values.defaults.kedaAutoscaling.customHeaders }}"
+          authModes: "{{ .Values.defaults.kedaAutoscaling.authentication.authModes }}"
   image:
     # -- The Docker registry for the querier image. Overrides `loki.image.registry`
     registry: null
