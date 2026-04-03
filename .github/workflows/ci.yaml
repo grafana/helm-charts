@@ -161,6 +161,7 @@ jobs:
           # VALIDATE_MARKDOWN: true - disable to for now.
           VALIDATE_RENOVATE: true
           VALIDATE_SHELL_SHFMT: true
+          VALIDATE_SPELL_CODESPELL: true
           # VALIDATE_XML: true
           # VALIDATE_YAML: true
 
