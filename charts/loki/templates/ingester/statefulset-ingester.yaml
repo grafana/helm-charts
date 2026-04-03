@@ -22,7 +22,7 @@ spec:
   podManagementPolicy: Parallel
 {{- with .Values.ingester.updateStrategy }}
   updateStrategy:
-     {{- tpl (. | toYaml) $ | nindent 4 }}
+    {{- tpl (. | toYaml) $ | nindent 4 }}
 {{- end }}
   serviceName: {{ include "loki.ingesterFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
@@ -108,10 +108,7 @@ spec:
             - name: http-memberlist
               containerPort: 7946
               protocol: TCP
-          {{- with (concat .Values.global.extraEnv .Values.ingester.extraEnv) | uniq }}
-          env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+          {{- include "loki.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.ingester.extraEnv) "resources" .Values.ingester.resources "factor" .Values.defaults.goSettings.goMemLimitFactor "gogc" .Values.defaults.goSettings.gogc) | nindent 10 }}
           {{- with (concat .Values.global.extraEnvFrom .Values.ingester.extraEnvFrom) | uniq }}
           envFrom:
             {{- toYaml . | nindent 12 }}

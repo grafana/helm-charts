@@ -15,7 +15,7 @@ spec:
   replicas: {{ .Values.indexGateway.replicas }}
 {{- with .Values.indexGateway.updateStrategy }}
   updateStrategy:
-     {{- tpl (. | toYaml) $ | nindent 4 }}
+    {{- tpl (. | toYaml) $ | nindent 4 }}
 {{- end }}
   serviceName: {{ include "loki.indexGatewayFullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
@@ -96,10 +96,7 @@ spec:
               containerPort: 7946
               protocol: TCP
             {{- end }}
-          {{- with (concat .Values.global.extraEnv .Values.indexGateway.extraEnv) | uniq }}
-          env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+          {{- include "loki.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.indexGateway.extraEnv) "resources" .Values.indexGateway.resources "factor" .Values.defaults.goSettings.goMemLimitFactor "gogc" .Values.defaults.goSettings.gogc) | nindent 10 }}
           {{- with (concat .Values.global.extraEnvFrom .Values.indexGateway.extraEnvFrom) | uniq }}
           envFrom:
             {{- toYaml . | nindent 12 }}

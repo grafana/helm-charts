@@ -182,6 +182,19 @@
               "type": "object"
             }
           }
+        },
+        "goSettings": {
+          "type": "object",
+          "properties": {
+            "goMemLimitFactor": {
+              "type": "number",
+              "description": "Fraction of the container memory limit used to compute GOMEMLIMIT. Set to 0 to disable."
+            },
+            "gogc": {
+              "type": "integer",
+              "description": "Value to set for GOGC alongside GOMEMLIMIT. Set to 0 to disable."
+            }
+          }
         }
       },
       "additionalProperties": false
