@@ -688,6 +688,7 @@ http {
 
     location = /stub_status {
       stub_status on;
+      satisfy any;
       access_log off;
       allow 127.0.0.1;
       deny all;
