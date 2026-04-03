@@ -63,7 +63,7 @@ commonLabels: {}
 ######################################################################################################################
 #
 # Defaults applied to all loki configurations
-# Current supported scope: bloom-builder, distributor
+# Current supported scope: backend, bloom-builder, distributor
 #
 ######################################################################################################################
 defaults:
@@ -110,10 +110,14 @@ defaults:
   nodeSelector: {}
   # -- Tolerations for loki pods
   tolerations: []
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: false
   # -- Annotations for loki pods
   podAnnotations: {}
   # -- Additional labels for loki pod
   podLabels: {}
+  # -- Should enableServiceLinks be enabled. Default to enable
+  enableServiceLinks: true
   service:
     # -- Common annotations for all services
     annotations: {}
@@ -1776,6 +1780,8 @@ read:
 backend:
   # -- Number of replicas for the backend
   replicas: 3
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: true
   autoscaling:
     # -- Enable autoscaling for the backend.
     enabled: false
@@ -3467,30 +3473,30 @@ bloomBuilder:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
-
-  ephemeralDataVolume:
-    # -- Enable generic ephemeral volume-backed storage for the bloom-builder `data` volume.
-    enabled: false
-    # -- Set access modes on the generated volumeClaimTemplate.
-    accessModes:
-      - ReadWriteOnce
-    # -- Size of the generated volumeClaimTemplate.
-    size: 10Gi
-    # -- Storage class to be used for the generated volumeClaimTemplate.
-    # If defined, storageClassName: <storageClass>.
-    # If set to "-", storageClassName: "", which disables dynamic provisioning.
-    # If empty or set to null, no storageClassName spec is set, choosing the default provisioner.
-    storageClass: null
-    # -- Volume attributes class name to be used for the generated volumeClaimTemplate.
-    # If empty or set to null, no volumeAttributesClassName spec is set.
-    # Requires Kubernetes 1.31
-    volumeAttributesClassName: null
-    # -- Selector for the generated volumeClaimTemplate.
-    selector: null
-    # -- Annotations for the generated volumeClaimTemplate.
-    annotations: {}
-    # -- Labels for the generated volumeClaimTemplate.
-    labels: {}
+  persistence:
+    ephemeralDataVolume:
+      # -- Enable generic ephemeral volume-backed storage for the bloom-builder `data` volume.
+      enabled: false
+      # -- Set access modes on the generated volumeClaimTemplate.
+      accessModes:
+        - ReadWriteOnce
+      # -- Size of the generated volumeClaimTemplate.
+      size: 10Gi
+      # -- Storage class to be used for the generated volumeClaimTemplate.
+      # If defined, storageClassName: <storageClass>.
+      # If set to "-", storageClassName: "", which disables dynamic provisioning.
+      # If empty or set to null, no storageClassName spec is set, choosing the default provisioner.
+      storageClass: null
+      # -- Volume attributes class name to be used for the generated volumeClaimTemplate.
+      # If empty or set to null, no volumeAttributesClassName spec is set.
+      # Requires Kubernetes 1.31
+      volumeAttributesClassName: null
+      # -- Selector for the generated volumeClaimTemplate.
+      selector: null
+      # -- Annotations for the generated volumeClaimTemplate.
+      annotations: {}
+      # -- Labels for the generated volumeClaimTemplate.
+      labels: {}
 
 # -- Configuration for the pattern ingester
 patternIngester:

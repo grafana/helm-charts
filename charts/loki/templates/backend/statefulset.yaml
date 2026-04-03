@@ -1,0 +1,78 @@
+{{- $isSimpleScalable := eq (include "loki.deployment.isScalable" .) "true" -}}
+{{- if and $isSimpleScalable (not .Values.read.legacyReadTarget ) }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "loki.backendFullname" . }}
+  namespace: {{ include "loki.namespace" . }}
+  labels:
+    {{- include "loki.backendLabels" . | nindent 4 }}
+    app.kubernetes.io/part-of: memberlist
+  {{- if or (not (empty .Values.loki.annotations)) (not (empty .Values.backend.annotations))}}
+  annotations:
+    {{- with merge (dict) .Values.loki.annotations .Values.backend.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+{{- if not .Values.backend.autoscaling.enabled }}
+  {{- if eq .Values.deploymentMode "SingleBinary" }}
+  replicas: 0
+  {{- else }}
+  replicas: {{ .Values.backend.replicas }}
+  {{- end }}
+{{- end }}
+  podManagementPolicy: {{ .Values.backend.podManagementPolicy }}
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+  serviceName: {{ include "loki.backendFullname" . }}-headless
+  revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
+  {{- if and (.Values.backend.persistence.enableStatefulSetAutoDeletePVC) (.Values.backend.persistence.volumeClaimsEnabled) }}
+  {{/*
+    Data on the backend nodes is easy to replace, so we want to always delete PVCs to make
+    operation easier, and will rely on re-fetching data when needed.
+  */}}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "loki.backendSelectorLabels" . | nindent 6 }}
+  template:
+    {{- include "loki.podTemplate" (dict "target" "backend" "component" .Values.backend "ctx" . "args" (list "-legacy-read-mode=false")) | nindent 4 }}
+    {{- include "loki.backendSidecar" . | nindent 8 }}
+  {{- if .Values.backend.persistence.volumeClaimsEnabled }}
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: data
+        {{- with .Values.backend.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.backend.persistence.labels }}
+        labels:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- toYaml .Values.backend.persistence.accessModes | nindent 10 }}
+        {{- with .Values.backend.persistence.storageClass }}
+        storageClassName: {{ if (eq "-" .) }}""{{ else }}{{ . }}{{ end }}
+        {{- end }}
+        {{- with .Values.backend.persistence.volumeAttributesClassName }}
+        volumeAttributesClassName: {{ . }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.backend.persistence.size | quote }}
+        {{- with .Values.backend.persistence.selector }}
+        selector:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+  {{- end }}
+{{- end }}

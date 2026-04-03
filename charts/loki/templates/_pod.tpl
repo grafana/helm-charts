@@ -15,7 +15,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
   labels:
-    {{ include "loki.labels" . | nindent 4 }}
+    {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target }}
     app.kubernetes.io/part-of: memberlist
     {{- with (mergeOverwrite (dict) .Values.loki.podLabels .Values.defaults.podLabels $component.podLabels) }}
@@ -27,6 +27,16 @@ spec:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
   {{- end }}
   serviceAccountName: {{ include "loki.serviceAccountName" . }}
+  {{- if (kindIs "bool" $component.enableServiceLinks) }}
+  enableServiceLinks: {{ $component.enableServiceLinks }}
+  {{- else if (kindIs "bool" .Values.defaults.enableServiceLinks) }}
+  enableServiceLinks: {{ .Values.defaults.enableServiceLinks }}
+  {{- else if (kindIs "bool" .Values.loki.hostUsers) }}
+  enableServiceLinks: {{ .Values.loki.enableServiceLinks }}
+  {{- end }}
+  {{- if (kindIs "bool" (coalesce $component.automountServiceAccountToken .Values.defaults.automountServiceAccountToken)) }}
+  automountServiceAccountToken: {{ (coalesce $component.automountServiceAccountToken .Values.defaults.automountServiceAccountToken) }}
+  {{- end }}
   {{- with .Values.imagePullSecrets }}
   imagePullSecrets:
     {{- toYaml . | nindent 4 }}
@@ -64,6 +74,63 @@ spec:
       {{- tpl . $ctx | nindent 4 }}
     {{- end }}
   {{- end }}
+  {{- with $component.affinity }}
+  affinity:
+    {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+  {{- end }}
+  {{- with (coalesce $component.nodeSelector .Values.defaults.nodeSelector .Values.loki.nodeSelector) }}
+  nodeSelector:
+    {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+  {{- end }}
+  {{- with (coalesce $component.tolerations .Values.defaults.tolerations .Values.loki.tolerations) }}
+  tolerations:
+    {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+  {{- end }}
+  volumes:
+    - name: config
+      {{- include "loki.configVolume" . | nindent 6 }}
+    - name: runtime-config
+      configMap:
+        name: {{ template "loki.name" . }}-runtime
+    - name: temp
+      emptyDir: {}
+    - name: data
+      {{- if dig "persistence" "ephemeralDataVolume" "enabled" false $component }}
+      ephemeral:
+        volumeClaimTemplate:
+          metadata:
+            {{- with $component.ephemeralDataVolume.annotations }}
+            annotations:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with $component.ephemeralDataVolume.labels }}
+            labels:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+          spec:
+            accessModes:
+              {{- toYaml $component.ephemeralDataVolume.accessModes | nindent 12 }}
+            {{- if not (kindIs "invalid" $component.ephemeralDataVolume.storageClass) }}
+            storageClassName: {{ if (eq "-" $component.ephemeralDataVolume.storageClass) }}""{{ else }}{{ $component.ephemeralDataVolume.storageClass }}{{ end }}
+            {{- end }}
+            {{- with $component.ephemeralDataVolume.volumeAttributesClassName }}
+            volumeAttributesClassName: {{ . }}
+            {{- end }}
+            resources:
+              requests:
+                storage: {{ $component.ephemeralDataVolume.size | quote }}
+            {{- with $component.ephemeralDataVolume.selector }}
+            selector:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+      {{- else if not (or (dig "persistence" "volumeClaimsEnabled" false $component) (dig "persistence" "enabled" false $component)) }}
+        {{- with (dig "persistence" "dataVolumeParameters" (dict "emptyDir" (dict)) $component) }}
+      {{- toYaml . | nindent 6 }}
+        {{- end }}
+      {{- end }}
+    {{- with (coalesce $component.extraVolumes .Values.defaults.extraVolumes .Values.global.extraVolumes) }}
+    {{- toYaml . | nindent 8 }}
+    {{- end }}
   containers:
     - name: {{ $target }}
       image: {{ include "loki.image" . }}
@@ -143,61 +210,6 @@ spec:
       {{- else if kindIs "string" . }}
         {{- tpl . $ctx | nindent 4 }}
       {{- end }}
-    {{- end }}
-  {{- with $component.affinity }}
-  affinity:
-    {{- tpl ( . | toYaml) $ctx | nindent 4 }}
-  {{- end }}
-  {{- with (coalesce $component.nodeSelector .Values.defaults.nodeSelector .Values.loki.nodeSelector) }}
-  nodeSelector:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- with (coalesce $component.tolerations .Values.defaults.tolerations .Values.loki.tolerations) }}
-  tolerations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  volumes:
-    - name: config
-      {{- include "loki.configVolume" . | nindent 6 }}
-    - name: runtime-config
-      configMap:
-        name: {{ template "loki.name" . }}-runtime
-    - name: temp
-      emptyDir: {}
-    - name: data
-      {{- if dig "ephemeralDataVolume" "enabled" false $component }}
-      ephemeral:
-        volumeClaimTemplate:
-          metadata:
-            {{- with $component.ephemeralDataVolume.annotations }}
-            annotations:
-              {{- toYaml . | nindent 14 }}
-            {{- end }}
-            {{- with $component.ephemeralDataVolume.labels }}
-            labels:
-              {{- toYaml . | nindent 14 }}
-            {{- end }}
-          spec:
-            accessModes:
-              {{- toYaml $component.ephemeralDataVolume.accessModes | nindent 12 }}
-            {{- if not (kindIs "invalid" $component.ephemeralDataVolume.storageClass) }}
-            storageClassName: {{ if (eq "-" $component.ephemeralDataVolume.storageClass) }}""{{ else }}{{ $component.ephemeralDataVolume.storageClass }}{{ end }}
-            {{- end }}
-            {{- with $component.ephemeralDataVolume.volumeAttributesClassName }}
-            volumeAttributesClassName: {{ . }}
-            {{- end }}
-            resources:
-              requests:
-                storage: {{ $component.ephemeralDataVolume.size | quote }}
-            {{- with $component.ephemeralDataVolume.selector }}
-            selector:
-              {{- toYaml . | nindent 14 }}
-            {{- end }}
-      {{- else }}
-      emptyDir: {}
-      {{- end }}
-    {{- with (coalesce $component.extraVolumes .Values.defaults.extraVolumes .Values.global.extraVolumes) }}
-    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
 {{- end }}
