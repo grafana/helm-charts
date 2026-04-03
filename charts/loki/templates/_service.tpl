@@ -13,9 +13,9 @@ apiVersion: v1
 kind: Service
 metadata:
   {{- if $name }}
-  name: {{ $name }}
+  name: "{{ $name }}"
   {{- else }}
-  name: "{{ include "loki.fullname" . }}-{{ $target }}"
+  name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target) }}"
   {{- end }}
   namespace: "{{ include "loki.namespace" . }}"
   labels:
@@ -70,7 +70,7 @@ metadata:
   {{ if $headlessName }}
   name: {{ $headlessName }}
   {{ else }}
-  name: "{{ include "loki.fullname" . }}-{{ $target }}-headless"
+  name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target "suffix" "headless") }}"
   {{- end }}
   namespace: {{ include "loki.namespace" . }}
   labels:

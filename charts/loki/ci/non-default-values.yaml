@@ -3,10 +3,13 @@ nameOverride: '{{ $.Release.Name }}'
 test:
   enabled: true
 loki:
+  auth_enabled: true
   commonConfig:
     replication_factor: 1
   useTestSchema: true
   tenants:
+    - name: "self-monitoring"
+      password: "self-monitoring"
     - name: "test-user-1"
       password: "test-password-1"
     - name: "test-user-2"
@@ -16,9 +19,42 @@ loki:
       - name: ndots
         value: "3"
 ingester:
-  replicas: 0
+  replicas: 1
   zoneAwareReplication:
     enabled: true
+    zoneA:
+      extraAffinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: name
+                    operator: In
+                    values:
+                      - '{{ include "loki.prefixIngesterName" . }}ingester-zone-a'
+              topologyKey: kubernetes.io/hostname
+    zoneB:
+      extraAffinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: name
+                    operator: In
+                    values:
+                      - '{{ include "loki.prefixIngesterName" . }}ingester-zone-b'
+              topologyKey: kubernetes.io/hostname
+    zoneC:
+      extraAffinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: name
+                    operator: In
+                    values:
+                      - '{{ include "loki.prefixIngesterName" . }}ingester-zone-c'
+              topologyKey: kubernetes.io/hostname
   dnsConfig:
     options:
       - name: ndots
@@ -32,25 +68,48 @@ write:
 backend:
   replicas: 0
 ruler:
-  replicas: 1
+  replicas: 2
+  affinity: null
 distributor:
-  replicas: 1
+  replicas: 2
+  affinity: null
 memcached:
   enabled: true
   replicas: 1
 compactor:
   replicas: 1
 indexGateway:
-  replicas: 1
+  replicas: 2
+  affinity: null
 querier:
-  replicas: 1
+  replicas: 2
+  affinity: null
 queryFrontend:
-  replicas: 1
+  replicas: 2
+  affinity: null
 queryScheduler:
+  replicas: 2
+  affinity: null
+bloomBuilder:
+  enabled: true
+  replicas: 2
+  affinity: null
+bloomCompactor:
+  enabled: true
   replicas: 1
+bloomGateway:
+  enabled: true
+  replicas: 2
+  affinity: null
+bloomPlanner:
+  enabled: true
+  replicas: 2
+  affinity: null
 lokiCanary:
   enabled: true
   kind: Deployment
+  tenant:
+    password: "self-monitoring"
 chunksCache:
   suffix: "l1"
   enabled: true
@@ -75,14 +134,24 @@ resultsCache:
       baz: qux
 gateway:
   enabled: true
+  replicas: 2
+  affinity: null
   basicAuth:
     enabled: true
   metrics:
-    enabled: false
+    enabled: true
 monitoring:
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: kube-prometheus-stack
+  dashboards:
+    enabled: true
   rules:
     enabled: true
     alerting: true
+    labels:
+      release: kube-prometheus-stack
     additionalGroups:
       - name: "additional-rules"
         rules:

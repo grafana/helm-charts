@@ -1,5 +1,5 @@
 {{/*
-memcached StatefulSet
+memcached PDB
 Params:
   ctx = . context
   memcacheConfig = cache config

@@ -781,7 +781,17 @@ lokiCanary:
   # -- The name of the PriorityClass for loki-canary pods
   priorityClassName: null
   # -- Use the host's user namespace in loki-canary pods
-  hostUsers: nil
+  hostUsers: null
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Image to use for loki canary
   image:
     # -- The Docker registry
@@ -1013,6 +1023,16 @@ gateway:
   extraContainers: []
   # -- Grace period to allow the gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Affinity for gateway pods.
   # @default -- Hard node anti-affinity
   # The value will be passed through tpl.
@@ -1327,6 +1347,16 @@ singleBinary:
   podLabels: {}
   # -- Additional selector labels for each `single binary` pod
   selectorLabels: {}
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   service:
     # -- Annotations for single binary Service
     annotations: {}
@@ -1536,7 +1566,18 @@ write:
   # -- DNS config for write pods
   dnsConfig: {}
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for write pods
   nodeSelector: {}
   # -- Topology Spread Constraints for write pods
@@ -1685,7 +1726,18 @@ read:
   # -- DNS config for read pods
   dnsConfig: {}
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget for read pods
+    enabled: true
+    # -- Annotations for read Pod Disruption Budget
+    annotations: {}
+    # -- Labels for read Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for read pods
   nodeSelector: {}
   # -- Topology Spread Constraints for read pods
@@ -1822,7 +1874,18 @@ backend:
   # -- DNS config for backend pods
   dnsConfig: {}
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for backend pods
   nodeSelector: {}
   # -- Topology Spread Constraints for backend pods
@@ -1999,7 +2062,18 @@ ingester:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for ingester pods
   nodeSelector: {}
   # -- Tolerations for ingester pods
@@ -2208,6 +2282,16 @@ distributor:
   extraContainers: []
   # -- Grace period to allow the distributor to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Affinity for distributor pods.
   # @default -- Hard node anti-affinity
   # The value will be passed through tpl.
@@ -2365,6 +2449,16 @@ querier:
   initContainers: []
   # -- Grace period to allow the querier to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- topologySpread for querier pods.
   # @default -- Defaults to allow skew no more then 1 node
   # The value will be passed through tpl.
@@ -2504,6 +2598,16 @@ queryFrontend:
   extraContainers: []
   # -- Grace period to allow the query-frontend to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Affinity for query-frontend pods.
   # @default -- Hard node anti-affinity
   # The value will be passed through tpl.
@@ -2621,7 +2725,18 @@ queryScheduler:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for query-scheduler pods
   nodeSelector: {}
   # -- Topology Spread Constraints for query-scheduler pods
@@ -2707,6 +2822,16 @@ indexGateway:
   initContainers: []
   # -- Grace period to allow the index-gateway to shutdown before it is killed.
   terminationGracePeriodSeconds: 300
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Lifecycle for the index-gateway container
   lifecycle: {}
   # -- Affinity for index-gateway pods.
@@ -2999,6 +3124,16 @@ bloomGateway:
   initContainers: []
   # -- Grace period to allow the bloom-gateway to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for bloom-gateway pods
   nodeSelector: {}
   # -- Tolerations for bloom-gateway pods
@@ -3137,6 +3272,16 @@ bloomPlanner:
   initContainers: []
   # -- Grace period to allow the bloom-planner to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for bloom-planner pods
   nodeSelector: {}
   # -- Tolerations for bloom-planner pods
@@ -3284,6 +3429,16 @@ bloomBuilder:
   extraContainers: []
   # -- Grace period to allow the bloom-builder to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Affinity for bloom-builder pods.
   # @default -- Hard node anti-affinity
   # The value will be passed through tpl.
@@ -3403,6 +3558,16 @@ patternIngester:
   initContainers: []
   # -- Grace period to allow the pattern ingester to shutdown before it is killed
   terminationGracePeriodSeconds: 30
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Node selector for pattern ingester pods
   nodeSelector: {}
   # -- Topology Spread Constraints for pattern ingester pods
@@ -3535,6 +3700,16 @@ ruler:
   initContainers: []
   # -- Grace period to allow the ruler to shutdown before it is killed
   terminationGracePeriodSeconds: 300
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Affinity for ruler pods.
   # @default -- Hard node anti-affinity
   # The value will be passed through tpl.
@@ -3883,7 +4058,18 @@ resultsCache:
   # -- Tolerations for results-cache pods
   tolerations: []
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- DNSConfig for results-cache
   dnsConfig: {}
   # -- The name of the PriorityClass for results-cache pods
