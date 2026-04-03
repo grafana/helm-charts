@@ -1,4 +1,19 @@
 {{- $isSingleBinary := eq (include "loki.deployment.isSingleBinary" .) "true" -}}
 {{- if $isSingleBinary -}}
-{{- include "loki.pdb" (dict "target" "single-binary" "component" .Values.singleBinary "ctx" . "name" (include "loki.fullname" .)) }}
+{{- /* In older Loki helm chart version, the singleBinary PDB was configured through
+.Values.podDisruptionBudget. To avoid breaking change, we merge the two dict together,
+and .Values.podDisruptionBudget will override .Values.singleBinary.podDisruptionBudget if both are set.
+loki.pdb template helper expect the PDB configuration to be in the podDisruptionBudget dict,
+so we merge it into the component dict before passing to the template helper.
+*/ -}}
+{{- include "loki.pdb" (dict
+    "target" "single-binary"
+    "component" (mergeOverwrite
+        (dict)
+        .Values.singleBinary
+        (dict "podDisruptionBudget" .Values.podDisruptionBudget)
+    )
+    "ctx" .
+    "name" (include "loki.fullname" .)
+) }}
 {{- end }}
