@@ -507,7 +507,7 @@ loki:
   commonConfig:
     path_prefix: /var/loki
     replication_factor: 3
-    # -- The gRPC address of the compactor. The use of compactor_grpc_address is prefered over compactor_address.
+    # -- The gRPC address of the compactor. The use of compactor_grpc_address is preferred over compactor_address.
     # If a customized compactor_address is set, compactor_grpc_address should be set to an empty string.
     compactor_grpc_address: '{{ include "loki.compactorAddress" . }}'
   # -- Storage config. Providing this will automatically populate all necessary storage configs in the templated config.
@@ -1016,9 +1016,11 @@ gateway:
   containerSecurityContext:
     readOnlyRootFilesystem: true
     capabilities:
-      drop:
-        - ALL
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
     allowPrivilegeEscalation: false
+
   # -- Use the host's user namespace in the gateway
   hostUsers: nil
   # -- Resource requests and limits for the gateway
@@ -1192,7 +1194,9 @@ gateway:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
       capabilities:
-        drop: ["all"]
+        drop: ["ALL"]
+      seccompProfile:
+        type: RuntimeDefault
       privileged: false
       runAsNonRoot: true
       runAsUser: 65532
@@ -1709,7 +1713,7 @@ read:
   resources: {}
   # -- liveness probe settings for read pods. If empty, applies no livenessProbe
   livenessProbe: {}
-    # -- statup probe for the read pods. If empty, applies no startupProbe
+  # -- startup probe for the read pods. If empty, applies no startupProbe
   startupProbe: {}
   # -- Grace period to allow the read to shutdown before it is killed
   terminationGracePeriodSeconds: 30
@@ -4262,7 +4266,7 @@ chunksCache:
   l2:
     # -- Append to the name of the resources to make names different for l1 and l2
     suffix: "l2"
-    # -- The age of chunks should be transfered from l1 cache to l2
+    # -- The age of chunks should be transferred from l1 cache to l2
     # 4 days
     l2ChunkCacheHandoff: 345600s
     # -- Specifies whether memcached based chunks-cache-l2 should be enabled
