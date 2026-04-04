@@ -4,3 +4,4 @@
 .agents/worktrees/
 # Chart dependencies
 /charts/*/charts
+__snaphot__/

@@ -128,6 +128,17 @@ spec:
       {{- toYaml . | nindent 6 }}
         {{- end }}
       {{- end }}
+    {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
+    - name: sc-rules-volume
+      {{- if .Values.sidecar.sizeLimit }}
+      emptyDir:
+        sizeLimit: {{ .Values.sidecar.sizeLimit }}
+      {{- else }}
+      emptyDir: {}
+      {{- end }}
+    - name: sc-rules-temp
+      emptyDir: {}
+    {{- end }}
     {{- with (coalesce $component.extraVolumes .Values.defaults.extraVolumes .Values.global.extraVolumes) }}
     {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -194,6 +205,10 @@ spec:
           mountPath: /tmp
         - name: data
           mountPath: /var/loki
+        {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
+        - name: sc-rules-volume
+          mountPath: {{ .Values.sidecar.rules.folder | quote }}
+        {{- end }}
         {{- with (concat .Values.global.extraVolumeMounts .Values.defaults.extraVolumeMounts $component.extraVolumeMounts) | uniq }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -201,12 +216,108 @@ spec:
       resources:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
+    {{- include "loki.rulesSidecar" . | nindent 4 }}
+      {{- end }}
     {{- with $component.extraContainers }}
-      {{- if kindIs "map" . }}
+      {{- if kindIs "slice" . }}
         {{- tpl (toYaml .) $ctx | nindent 4 }}
       {{- else if kindIs "string" . }}
         {{- tpl . $ctx | nindent 4 }}
       {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}
+
+
+{{/*
+rules sidecar
+*/}}
+{{- define "loki.rulesSidecar" -}}
+{{- if .Values.sidecar.rules.enabled }}
+- name: loki-sc-rules
+  {{- $dict := dict "service" .Values.sidecar.image "global" .Values.global }}
+  image: {{ include "loki.baseImage" $dict }}
+  imagePullPolicy: {{ .Values.sidecar.image.pullPolicy }}
+  {{- with .Values.sidecar.resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.sidecar.securityContext }}
+  securityContext:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.sidecar.livenessProbe }}
+    {{- if .enabled | default true }}
+  livenessProbe:
+    {{- toYaml (omit . "enabled") | nindent 8 }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.sidecar.readinessProbe }}
+    {{- if .enabled | default true }}
+  readinessProbe:
+    {{- toYaml (omit . "enabled") | nindent 8 }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.sidecar.startupProbe }}
+    {{- if .enabled | default true }}
+  startupProbe:
+    {{- toYaml (omit . "enabled") | nindent 8 }}
+    {{- end }}
+  {{- end }}
+  env:
+    - name: METHOD
+      value: {{ .Values.sidecar.rules.watchMethod }}
+    - name: LABEL
+      value: "{{ .Values.sidecar.rules.label }}"
+    {{- if .Values.sidecar.rules.labelValue }}
+    - name: LABEL_VALUE
+      value: {{ quote .Values.sidecar.rules.labelValue }}
+    {{- end }}
+    - name: FOLDER
+      value: "{{ .Values.sidecar.rules.folder }}"
+    {{- if .Values.sidecar.rules.folderAnnotation }}
+    - name: FOLDER_ANNOTATION
+      value: "{{ .Values.sidecar.rules.folderAnnotation }}"
+    {{- end }}
+    - name: RESOURCE
+      value: {{ quote .Values.sidecar.rules.resource }}
+    {{- if .Values.sidecar.enableUniqueFilenames }}
+    - name: UNIQUE_FILENAMES
+      value: "{{ .Values.sidecar.enableUniqueFilenames }}"
+    {{- end }}
+    {{- if .Values.sidecar.rules.searchNamespace }}
+    - name: NAMESPACE
+      value: "{{ .Values.sidecar.rules.searchNamespace | join "," }}"
+    {{- end }}
+    {{- if .Values.sidecar.skipTlsVerify }}
+    - name: SKIP_TLS_VERIFY
+      value: "{{ .Values.sidecar.skipTlsVerify }}"
+    {{- end }}
+    {{- if .Values.sidecar.disableX509StrictVerification }}
+    - name: DISABLE_X509_STRICT_VERIFICATION
+      value: "{{ .Values.sidecar.disableX509StrictVerification }}"
+    {{- end }}
+    {{- if .Values.sidecar.rules.script }}
+    - name: SCRIPT
+      value: "{{ .Values.sidecar.rules.script }}"
+    {{- end }}
+    {{- if .Values.sidecar.rules.watchServerTimeout }}
+    - name: WATCH_SERVER_TIMEOUT
+      value: "{{ .Values.sidecar.rules.watchServerTimeout }}"
+    {{- end }}
+    {{- if .Values.sidecar.rules.watchClientTimeout }}
+    - name: WATCH_CLIENT_TIMEOUT
+      value: "{{ .Values.sidecar.rules.watchClientTimeout }}"
+    {{- end }}
+    {{- if .Values.sidecar.rules.logLevel }}
+    - name: LOG_LEVEL
+      value: "{{ .Values.sidecar.rules.logLevel }}"
+    {{- end }}
+  volumeMounts:
+    - name: sc-rules-temp
+      mountPath: /tmp
+    - name: sc-rules-volume
+      mountPath: {{ .Values.sidecar.rules.folder | quote }}
+{{- end }}
 {{- end }}

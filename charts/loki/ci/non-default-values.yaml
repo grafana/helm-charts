@@ -59,6 +59,9 @@ ingester:
     options:
       - name: ndots
         value: "4"
+sidecar:
+  rules:
+    enabled: true
 minio:
   enabled: true
 read:

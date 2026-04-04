@@ -1,0 +1,259 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: backend sidecar
+templates:
+  - backend/statefulset.yaml
+  - config.yaml
+
+set:
+  deploymentMode: SimpleScalable
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  read.legacyReadTarget: false
+
+tests:
+  - it: should render the backend rules sidecar with default rule settings
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: backend/statefulset.yaml
+      - isKind:
+          of: StatefulSet
+        template: backend/statefulset.yaml
+      - template:
+          backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+            image: docker.io/kiwigrid/k8s-sidecar:2.5.4
+          any: true
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: METHOD
+            value: WATCH
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LABEL
+            value: loki_rule
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: FOLDER
+            value: /rules
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: RESOURCE
+            value: both
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: sc-rules-volume
+            emptyDir: {}
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: sc-rules-volume
+            mountPath: /rules
+
+  - it: should render optional sidecar env vars and a sized shared volume when configured
+    set:
+      sidecar.enableUniqueFilenames: true
+      sidecar.skipTlsVerify: true
+      sidecar.disableX509StrictVerification: true
+      sidecar.sizeLimit: 1Gi
+      sidecar.rules.watchMethod: SLEEP
+      sidecar.rules.label: custom_rule
+      sidecar.rules.labelValue: tenant-a
+      sidecar.rules.folder: /tmp/rules
+      sidecar.rules.folderAnnotation: loki-folder
+      sidecar.rules.resource: configmap
+      sidecar.rules.script: /reload.sh
+      sidecar.rules.watchServerTimeout: 120
+      sidecar.rules.watchClientTimeout: 130
+      sidecar.rules.logLevel: DEBUG
+    asserts:
+      - template: backend/statefulset.yaml
+        hasDocuments:
+          count: 1
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: METHOD
+            value: SLEEP
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LABEL
+            value: custom_rule
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LABEL_VALUE
+            value: tenant-a
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: FOLDER
+            value: /tmp/rules
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: FOLDER_ANNOTATION
+            value: loki-folder
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: RESOURCE
+            value: configmap
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: UNIQUE_FILENAMES
+            value: "true"
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: SKIP_TLS_VERIFY
+            value: "true"
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: DISABLE_X509_STRICT_VERIFICATION
+            value: "true"
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: SCRIPT
+            value: /reload.sh
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: WATCH_SERVER_TIMEOUT
+            value: "120"
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: WATCH_CLIENT_TIMEOUT
+            value: "130"
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: LOG_LEVEL
+            value: DEBUG
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: sc-rules-volume
+            emptyDir:
+              sizeLimit: 1Gi
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: sc-rules-volume
+            mountPath: /tmp/rules
+
+  - it: should not add the sidecar container or shared volume when disabled via sidecar.rules.enabled
+    set:
+      sidecar.rules.enabled: false
+    asserts:
+      - template: backend/statefulset.yaml
+        hasDocuments:
+          count: 1
+      - template: backend/statefulset.yaml
+        isKind:
+          of: StatefulSet
+      - notContains:
+          template: backend/statefulset.yaml
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+      - template: backend/statefulset.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: sc-rules-volume
+      - template: backend/statefulset.yaml
+        notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: sc-rules-volume
+
+  - it: should not add the sidecar container or shared volume when disabled via backend.sidecar
+    set:
+      backend.sidecar: false
+    asserts:
+      - template: backend/statefulset.yaml
+        hasDocuments:
+          count: 1
+      - template: backend/statefulset.yaml
+        isKind:
+          of: StatefulSet
+      - notContains:
+          template: backend/statefulset.yaml
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+      - template: backend/statefulset.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: sc-rules-volume
+      - template: backend/statefulset.yaml
+        notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: sc-rules-volume
+
+  - it: should preserve backend extra containers alongside the generated sidecar
+    set:
+      backend:
+        extraContainers:
+          - name: extra-helper
+            image: busybox:1.36
+            command:
+              - sh
+              - -c
+              - sleep 3600
+    asserts:
+      - template: backend/statefulset.yaml
+        hasDocuments:
+          count: 1
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers
+          content:
+            name: extra-helper
+            image: busybox:1.36
+          any: true
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+          any: true

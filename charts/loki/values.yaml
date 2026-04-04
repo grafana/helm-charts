@@ -1796,6 +1796,8 @@ read:
 backend:
   # -- Number of replicas for the backend
   replicas: 3
+  # -- Whether to enable the rules sidecar
+  sidecar: true
   # -- Set this toggle to false to opt out of automounting API credentials for the service account
   automountServiceAccountToken: true
   autoscaling:

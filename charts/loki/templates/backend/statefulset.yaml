@@ -43,7 +43,6 @@ spec:
       {{- include "loki.backendSelectorLabels" . | nindent 6 }}
   template:
     {{- include "loki.podTemplate" (dict "target" "backend" "component" .Values.backend "ctx" . "args" (list "-legacy-read-mode=false")) | nindent 4 }}
-    {{- include "loki.backendSidecar" . | nindent 8 }}
   {{- if .Values.backend.persistence.volumeClaimsEnabled }}
   volumeClaimTemplates:
     - apiVersion: v1

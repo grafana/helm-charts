@@ -14,3 +14,7 @@ write:
   replicas: 1
 backend:
   replicas: 1
+
+sidecar:
+  rules:
+    enabled: true
