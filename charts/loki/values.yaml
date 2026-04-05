@@ -684,7 +684,9 @@ loki:
   # --  Optional querier configuration
   querier: {}
   # --  Optional ingester configuration
-  ingester: {}
+  ingester:
+    wal:
+      flush_on_shutdown: true
   # --  Optional ingester client configuration
   ingester_client: {}
   # --  Optional block builder configuration
@@ -1538,8 +1540,6 @@ write:
     appProtocol:
       # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
       grpc: ""
-  # -- Comma-separated list of Loki modules to load for the write
-  targetModule: "write"
   # -- Additional CLI args for the write
   extraArgs: []
   # -- Environment variables to add to the write pods
@@ -1859,8 +1859,6 @@ backend:
     appProtocol:
       # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
       grpc: ""
-  # -- Comma-separated list of Loki modules to load for the backend
-  targetModule: "backend"
   # -- Additional CLI args for the backend
   extraArgs: []
   # -- Environment variables to add to the backend pods
