@@ -140,7 +140,7 @@ spec:
       emptyDir: {}
     {{- end }}
     {{- with (coalesce $component.extraVolumes .Values.defaults.extraVolumes .Values.global.extraVolumes) }}
-    {{- toYaml . | nindent 8 }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   containers:
     - name: {{ $target }}

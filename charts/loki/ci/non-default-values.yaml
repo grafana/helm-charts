@@ -1,3 +1,11 @@
+global:
+  extraVolumes:
+    - name: ca-bundle
+      configMap:
+        name: kube-root-ca.crt
+        items:
+          - key: ca.crt
+            path: ca.crt
 deploymentMode: Distributed
 nameOverride: '{{ $.Release.Name }}'
 test:
