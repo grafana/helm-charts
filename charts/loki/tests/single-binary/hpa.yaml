@@ -1,0 +1,68 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: single-binary hpa
+templates:
+  - templates/single-binary/hpa.yaml
+set:
+    deploymentMode: SingleBinary
+    singleBinary:
+      autoscaling:
+        enabled: true
+tests:
+  - it: should create a single-binary HPA when deploymentMode is SingleBinary and autoscaling enabled
+    set:
+      singleBinary:
+        autoscaling:
+          minReplicas: 1
+          maxReplicas: 3
+          targetCPUUtilizationPercentage: 50
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - matchRegex:
+          path: metadata.name
+          pattern: ".*-single-binary$"
+      - equal:
+          path: spec.minReplicas
+          value: 1
+      - equal:
+          path: spec.maxReplicas
+          value: 3
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: StatefulSet
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: cpu
+
+  - it: should not render single-binary HPA when object storage is not used
+    set:
+      loki:
+        storage:
+          type: filesystem
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render behavior when behavior is provided
+    set:
+      singleBinary:
+        autoscaling:
+          behavior:
+            enabled: true
+            scaleDown:
+              stabilizationWindowSeconds: 300
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.behavior.scaleDown.stabilizationWindowSeconds
+          value: 300
+
+  - it: should not render single-binary HPA when autoscaling is disabled
+    set:
+      singleBinary:
+        autoscaling:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

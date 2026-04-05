@@ -1,0 +1,100 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: write hpa
+templates:
+  - templates/write/hpa.yaml
+set:
+  deploymentMode: SimpleScalable
+  write:
+    autoscaling:
+      enabled: true
+tests:
+  - it: should create a write HPA when deploymentMode is SimpleScalable and autoscaling enabled
+    set:
+      write:
+        autoscaling:
+          minReplicas: 2
+          maxReplicas: 6
+          targetCPUUtilizationPercentage: 60
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - matchRegex:
+          path: metadata.name
+          pattern: ".*-write$"
+      - equal:
+          path: spec.minReplicas
+          value: 2
+      - equal:
+          path: spec.maxReplicas
+          value: 6
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: StatefulSet
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: cpu
+
+  - it: should render memory metric when targetMemoryUtilizationPercentage is set
+    set:
+      write:
+        autoscaling:
+          minReplicas: 2
+          maxReplicas: 6
+          targetMemoryUtilizationPercentage: 70
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: memory
+      - equal:
+          path: spec.metrics[0].resource.target.averageUtilization
+          value: 70
+
+  - it: should render behavior.scaleUp when behavior.enabled is true
+    set:
+      write:
+        autoscaling:
+          behavior:
+            enabled: true
+            scaleUp:
+              policies:
+                - type: Pods
+                  value: 2
+                  periodSeconds: 60
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.behavior.scaleUp.policies[0].value
+          value: 2
+
+  - it: should render customMetrics when provided
+    set:
+      write:
+        autoscaling:
+          targetCPUUtilizationPercentage: 0
+          targetMemoryUtilizationPercentage: 0
+          customMetrics:
+            - type: Pods
+              pods:
+                metric:
+                  name: loki_lines_total
+                target:
+                  type: AverageValue
+                  averageValue: 10k
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.metrics[0].type
+          value: Pods
+
+  - it: should not render write HPA when autoscaling is disabled
+    set:
+      write:
+        autoscaling:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

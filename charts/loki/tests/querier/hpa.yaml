@@ -1,0 +1,61 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: querier hpa
+templates:
+  - templates/querier/hpa.yaml
+tests:
+  - it: should create a querier HPA when deploymentMode is Distributed and autoscaling enabled
+    set:
+      deploymentMode: Distributed
+      querier:
+        autoscaling:
+          enabled: true
+          minReplicas: 2
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 55
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - matchRegex:
+          path: metadata.name
+          pattern: ".*-querier$"
+      - equal:
+          path: spec.minReplicas
+          value: 2
+      - equal:
+          path: spec.maxReplicas
+          value: 5
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: cpu
+
+  - it: should not render querier HPA when autoscaling is disabled
+    set:
+      deploymentMode: Distributed
+      querier:
+        autoscaling:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render memory metric for querier when targetMemoryUtilizationPercentage is set
+    set:
+      deploymentMode: Distributed
+      querier:
+        autoscaling:
+          enabled: true
+          minReplicas: 1
+          maxReplicas: 3
+          targetMemoryUtilizationPercentage: 65
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: memory
+      - equal:
+          path: spec.metrics[0].resource.target.averageUtilization
+          value: 65

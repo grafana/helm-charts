@@ -1083,13 +1083,6 @@ Return the object store type for use with the test schema.
 {{- end -}}
 
 {{/*
-Return the appropriate apiVersion for HorizontalPodAutoscaler.
-*/}}
-{{- define "loki.hpa.apiVersion" -}}
-  {{- print "autoscaling/v2" -}}
-{{- end -}}
-
-{{/*
 compute a ConfigMap or Secret checksum only based on its .data content.
 This function needs to be called with a context object containing the following keys:
 - ctx: the current Helm context (what '.' is at the call site)

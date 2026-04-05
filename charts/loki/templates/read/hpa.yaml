@@ -1,43 +1,8 @@
 {{- $isSimpleScalable := eq (include "loki.deployment.isScalable" .) "true" -}}
-{{- if and $isSimpleScalable ( .Values.read.autoscaling.enabled ) }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ include "loki.readFullname" . }}
-  namespace: {{ include "loki.namespace" $ }}
-  labels:
-    {{- include "loki.readLabels" . | nindent 4 }}
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-{{- if and $isSimpleScalable (not .Values.read.legacyReadTarget ) }}
-    kind: Deployment
-    name: {{ include "loki.readFullname" . }}
-{{- else }}
-    kind: StatefulSet
-    name: {{ include "loki.readFullname" . }}
-{{- end }}
-  minReplicas: {{ .Values.read.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.read.autoscaling.maxReplicas }}
-  {{- with .Values.read.autoscaling.behavior }}
-  behavior:
-    {{- toYaml . | nindent 4 }}
+{{- if $isSimpleScalable }}
+{{- $kind := "StatefulSet" -}}
+  {{- if and $isSimpleScalable (not .Values.read.legacyReadTarget ) }}
+  {{- $kind = "Deployment" -}}
   {{- end }}
-  metrics:
-  {{- with .Values.read.autoscaling.targetMemoryUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: {{ . }}
-  {{- end }}
-  {{- with .Values.read.autoscaling.targetCPUUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ . }}
-  {{- end }}
+{{- include "loki.hpa" (dict "target" "read" "component" .Values.read "ctx" . "kind" $kind) }}
 {{- end }}

@@ -84,6 +84,9 @@ ruler:
 distributor:
   replicas: 2
   affinity: null
+  autoscaling:
+    enabled: true
+    minReplicas: 2
 memcached:
   enabled: true
   replicas: 1
@@ -95,9 +98,15 @@ indexGateway:
 querier:
   replicas: 2
   affinity: null
+  autoscaling:
+    enabled: true
+    minReplicas: 2
 queryFrontend:
   replicas: 2
   affinity: null
+  autoscaling:
+    enabled: true
+    minReplicas: 2
 queryScheduler:
   replicas: 2
   affinity: null
@@ -105,6 +114,9 @@ bloomBuilder:
   enabled: true
   replicas: 2
   affinity: null
+  autoscaling:
+    enabled: true
+    minReplicas: 2
 bloomCompactor:
   enabled: true
   replicas: 1

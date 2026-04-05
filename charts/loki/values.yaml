@@ -1351,7 +1351,23 @@ singleBinary:
     # -- Target CPU utilisation percentage for the single binary
     targetCPUUtilizationPercentage: 60
     # -- Target memory utilisation percentage for the single binary
-    targetMemoryUtilizationPercentage:
+    targetMemoryUtilizationPercentage: null
+    # -- Allows one to define custom metrics using the HPA/v2 schema (for example, Pods, Object or External metrics)
+    customMetrics: []
+    # - type: Pods
+    #   pods:
+    #     metric:
+    #       name: loki_lines_total
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 10k
+    behavior:
+      # -- Enable autoscaling behaviours
+      enabled: false
+      # -- define scale down policies, must conform to HPAScalingRules
+      scaleDown: {}
+      # -- define scale up policies, must conform to HPAScalingRules
+      scaleUp: {}
   image:
     # -- The Docker registry for the single binary image. Overrides `loki.image.registry`
     registry: null
