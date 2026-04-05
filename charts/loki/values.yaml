@@ -1715,8 +1715,6 @@ read:
     appProtocol:
       # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
       grpc: ""
-  # -- Comma-separated list of Loki modules to load for the read
-  targetModule: "read"
   # -- Whether or not to use the 2 target type simple scalable mode (read, write) or the
   # 3 target type (read, write, backend). Legacy refers to the 2 target type, so true will
   # run two targets, false will run 3 targets.

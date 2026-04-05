@@ -20,20 +20,3 @@ read selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: read
 {{- end }}
-
-{{/*
-read priority class name
-*/}}
-{{- define "loki.readPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.read.priorityClassName -}}
-{{- if $pcn }}
-priorityClassName: {{ $pcn }}
-{{- end }}
-{{- end }}
-
-{{/*
-read target
-*/}}
-{{- define "loki.readTarget" -}}
-{{- .Values.read.targetModule -}}{{- if .Values.loki.ui.enabled -}},ui{{- end -}}
-{{- end -}}
