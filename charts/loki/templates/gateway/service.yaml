@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "loki.gatewayFullname" . }}
+  name: {{ include "loki.resourceName" (dict "ctx" . "component" "gateway") }}
   namespace: {{ include "loki.namespace" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
