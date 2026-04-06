@@ -1,0 +1,65 @@
+suite: querier PodDisruptionBudget
+templates:
+  - templates/querier/pdb.yaml
+set:
+  deploymentMode: Distributed
+  loki.storage.type: gcs
+  loki.storage.bucketNames.chunks: test
+  loki.storage.bucketNames.ruler: test
+  loki.storage.bucketNames.admin: test
+  querier.podDisruptionBudget.enabled: true
+  querier.maxUnavailable: 1
+tests:
+  - it: should not render PDB when replicas is 0 and no autoscaling
+    set:
+      querier.replicas: 0
+      querier.autoscaling.enabled: false
+      querier.kedaAutoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render PDB when static replicas > 1
+    set:
+      querier.replicas: 3
+      querier.autoscaling.enabled: false
+      querier.kedaAutoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodDisruptionBudget
+
+  - it: should render PDB when HPA is enabled with minReplicas > 1
+    set:
+      querier.replicas: 0
+      querier.autoscaling.enabled: true
+      querier.autoscaling.minReplicas: 3
+      querier.kedaAutoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodDisruptionBudget
+
+  - it: should render PDB when KEDA is enabled with minReplicas > 1
+    set:
+      querier.replicas: 0
+      querier.autoscaling.enabled: false
+      querier.kedaAutoscaling.enabled: true
+      querier.kedaAutoscaling.minReplicas: 3
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodDisruptionBudget
+
+  - it: should not render PDB when KEDA minReplicas is 1
+    set:
+      querier.replicas: 0
+      querier.autoscaling.enabled: false
+      querier.kedaAutoscaling.enabled: true
+      querier.kedaAutoscaling.minReplicas: 1
+    asserts:
+      - hasDocuments:
+          count: 0

@@ -4,8 +4,9 @@ PDB helper
 
 {{- define "loki.pdb" }}
 {{- if and (.component.podDisruptionBudget.enabled) (or
-  (and (not (dig "autoscaling" "enabled" false .component)) (gt (int .component.replicas | default 1) 1))
-  (and (dig "autoscaling" "enabled" false .component) (gt (int ((dig "autoscaling" "minReplicas" 1 .component))) 1)))
+  (and (not (dig "autoscaling" "enabled" false .component)) (not (dig "kedaAutoscaling" "enabled" false .component)) (gt (int .component.replicas | default 1) 1))
+  (and (dig "autoscaling" "enabled" false .component) (gt (int ((dig "autoscaling" "minReplicas" 1 .component))) 1))
+  (and (dig "kedaAutoscaling" "enabled" false .component) (gt (int ((dig "kedaAutoscaling" "minReplicas" 1 .component))) 1)))
 -}}
   {{- $target := .target }}
   {{- $ctx := .ctx }}
