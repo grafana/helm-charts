@@ -53,6 +53,30 @@ See the [changelog](https://grafana-community.github.io/helm-charts/changelog/?c
 
 ## Upgrading
 
+### From 9.x to 10.0.0 ([#270](https://github.com/grafana-community/helm-charts/pull/270))
+
+The `indexGateway.persistence.inMemory` has been replaced with `indexGateway.persistence.dataVolumeParameters` to establish a more consistent configuration for persistence across all components.  
+
+Before:
+
+```yaml
+indexGateway:
+  persistence:
+    inMemory: true
+    size: 10Gi
+```
+
+After:
+
+```yaml
+indexGateway:
+  persistence:
+    dataVolumeParameters:
+      emptyDir: 
+        medium: Memory
+        sizeLimit: 10Gi
+```
+
 ### From 8.x to 9.0.0 ([#187](https://github.com/grafana-community/helm-charts/pull/187))
 
 The `monitoring.selfMonitoring` component has been removed along with `grafana-agent-operator` subchart dependency.  Additionally, loki-canary tenant authentication has been moved as it was located under selfMonitoring.

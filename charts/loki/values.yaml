@@ -2897,9 +2897,10 @@ indexGateway:
     # -- Set access modes on the PersistentVolumeClaim
     accessModes:
       - ReadWriteOnce
-    # -- Use emptyDir with ramdisk for storage. **Please note that all data in indexGateway will be lost on pod restart**
-    inMemory: false
-    # -- Size of persistent or memory disk
+    # -- Parameters used for the `data` volume when volumeClaimEnabled if false
+    dataVolumeParameters:
+      emptyDir: {}
+    # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
     # If defined, storageClassName: <storageClass>.
