@@ -169,36 +169,45 @@ Base template for building docker image reference
 Determines the final image name, respecting the global registry if defined, unless the local repository
 already contains a full registry (indicated by a dot '.') for backwards-compatibility.
 It also respects `.digest` as well as `.sha` (deprecated).
-*/}}
-{{- define "loki.baseImage" }}
-{{- $registry := .global.imageRegistry | default ((.global.image).registry) | default .global.registry | default .service.registry | default "" -}}
-{{- $repository := .service.repository | default "" -}}
-{{- $sha := and .service.sha (printf "@sha256:%s" .service.sha) | default "" -}}
-{{- $digest := and .service.digest (printf "@%s" .service.digest) | default $sha -}}
-{{- $ref := ternary (printf ":%s" (.service.tag | default .defaultVersion | toString)) ($digest) (empty $digest) -}}
 
+Parameters:
+  ctx = . root context
+  component = component name (optional)
+  defaultVersion = default version to use if tag is not defined (optional)
+  default = default image config to use if component config is not defined (optional)
+*/}}
+{{- define "loki.image" }}
+{{- $ctx := .ctx -}}
+{{- $component := .component | default .service | default dict -}}
+{{- $defaultVersion := .defaultVersion -}}
+{{- $default := .default | default dict -}}
+{{- $global := dict -}}
+{{- if $ctx -}}
+{{- $global = $ctx.Values.global | default dict -}}
+{{- else -}}
+{{- $global = .global | default dict -}}
+{{- end -}}
+
+{{- /* Resolve image source values with clear precedence. */ -}}
+{{- $registry := coalesce $global.imageRegistry $global.image.registry $global.registry $component.registry $default.registry "" -}}
+{{- $repository := coalesce $component.repository $default.repository "" -}}
+
+{{- /* Prefer digest over tag, and support deprecated sha fallback. */ -}}
+{{- $sha := coalesce $component.sha $default.sha "" -}}
+{{- $shaRef := ternary (printf "@sha256:%s" $sha) "" (not (empty $sha)) -}}
+{{- $digest := coalesce $component.digest $default.digest "" -}}
+{{- $digestRef := ternary (printf "@%s" $digest) $shaRef (not (empty $digest)) -}}
+{{- $tagRef := printf ":%s" (coalesce $component.tag $default.tag $defaultVersion | toString) -}}
+{{- $ref := ternary $tagRef $digestRef (empty $digestRef) -}}
+
+{{- /* Keep backwards-compatible behavior: do not prefix fully-qualified repositories. */ -}}
 {{- $prefix := "" -}}
-{{- $firstSegment := (split "/" $repository)._0 -}}
-{{- if and $registry (not (contains "." $firstSegment)) -}}
+{{- $firstRepositorySegment := (split "/" $repository)._0 -}}
+{{- if and $registry (not (contains "." $firstRepositorySegment)) -}}
 {{- $prefix = printf "%s/" $registry -}}
 {{- end -}}
 
 {{- printf "%s%s%s" $prefix $repository $ref -}}
-{{- end -}}
-
-{{/*
-Docker image name for Loki
-*/}}
-{{- define "loki.lokiImage" -}}
-{{- $dict := dict "service" .Values.loki.image "global" .Values.global "defaultVersion" .Chart.AppVersion -}}
-{{- include "loki.baseImage" $dict -}}
-{{- end -}}
-
-{{/*
-Docker image name
-*/}}
-{{- define "loki.image" -}}
-{{- include "loki.lokiImage" . -}}
 {{- end -}}
 
 {{/*
@@ -433,25 +442,6 @@ configMap:
 {{- end -}}
 {{- end -}}
 
-{{/*
-Memcached Docker image
-*/}}
-{{- define "loki.memcachedImage" -}}
-{{- $dict := dict "service" .Values.memcached.image "global" .Values.global -}}
-{{- include "loki.image" $dict -}}
-{{- end }}
-
-{{/*
-Memcached Exporter Docker image
-*/}}
-{{- define "loki.memcachedExporterImage" -}}
-{{- $dict := dict "service" .Values.memcachedExporter.image "global" .Values.global -}}
-{{- include "loki.image" $dict -}}
-{{- end }}
-
-{{/*
-Memcached Exporter Docker image
-*/}}
 {{- define "loki.memcached.suffix" -}}
 {{- $suffix := default "" . -}}
 {{ if ne $suffix "" }}-{{ $suffix }}{{ end }}

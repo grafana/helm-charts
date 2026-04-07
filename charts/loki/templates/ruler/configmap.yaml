@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "loki.rulerFullname" $ }}-{{ include "loki.rulerRulesDirName" $dir }}
+  name: {{ include "loki.resourceName" (dict "ctx" . "component" "ruler") }}-{{ include "loki.rulerRulesDirName" $dir }}
   namespace: {{ include "loki.namespace" $ }}
   labels:
     {{- include "loki.rulerLabels" $ | nindent 4 }}

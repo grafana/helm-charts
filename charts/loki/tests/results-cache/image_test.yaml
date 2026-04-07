@@ -1,0 +1,137 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: results-cache memcached image
+templates:
+  - results-cache/statefulset-results-cache.yaml
+  - config.yaml
+set:
+  deploymentMode: Distributed
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  memcached.enabled: true
+  resultsCache.enabled: true
+  memcached.image.tag: 1.6.41-alpine
+
+tests:
+  - it: should use memcached image defaults for result-cache
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should override repository and tag for memcached in result-cache
+    set:
+      memcached.image.repository: custom/memcached
+      memcached.image.tag: custom-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: custom/memcached:custom-tag
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should override registry for memcached in result-cache
+    set:
+      memcached.image.registry: quay.io
+      memcached.image.repository: custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: quay.io/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should let global imageRegistry override memcached registry in result-cache
+    set:
+      global.imageRegistry: registry.example.com
+      memcached.image.registry: quay.io
+      memcached.image.repository: custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.com/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should keep fully qualified memcached repository without global imageRegistry prefix
+    set:
+      global.imageRegistry: registry.example.com
+      memcached.image.repository: ghcr.io/custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should support deprecated global.image.registry override for result-cache memcached
+    set:
+      global.image.registry: deprecated.registry.example.com
+      memcached.image.repository: custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: deprecated.registry.example.com/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should support deprecated global.registry override for result-cache memcached
+    set:
+      global.registry: deprecated2.registry.example.com
+      memcached.image.repository: custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: deprecated2.registry.example.com/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should let memcached image tag override default tag for result-cache
+    set:
+      memcached.image.tag: memcached-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: memcached:memcached-tag
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should prefer memcached image digest over tag for result-cache
+    set:
+      memcached.image.repository: custom/memcached
+      memcached.image.tag: ignored-tag
+      memcached.image.digest: sha256:d1g357
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: custom/memcached@sha256:d1g357
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should use memcached image sha as digest fallback for result-cache when digest is not set
+    set:
+      memcached.image.repository: custom/memcached
+      memcached.image.tag: ignored-tag
+      memcached.image.sha: abcdef0123456789
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: custom/memcached@sha256:abcdef0123456789
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should prefer global.imageRegistry over deprecated global registry keys for result-cache memcached
+    set:
+      global.imageRegistry: current.registry.example.com
+      global.image.registry: deprecated.registry.example.com
+      global.registry: deprecated2.registry.example.com
+      memcached.image.repository: custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: current.registry.example.com/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml
+
+  - it: should prefer deprecated global.image.registry over deprecated global.registry for result-cache memcached when imageRegistry is unset
+    set:
+      global.image.registry: preferred.registry.example.com
+      global.registry: fallback.registry.example.com
+      memcached.image.repository: custom/memcached
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: preferred.registry.example.com/custom/memcached:1.6.41-alpine
+        template: results-cache/statefulset-results-cache.yaml

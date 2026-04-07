@@ -1,0 +1,164 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: single-binary image
+templates:
+  - single-binary/statefulset.yaml
+  - config.yaml
+set:
+  deploymentMode: SingleBinary
+  loki.useTestSchema: true
+  loki.image.tag: 0.0.0
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+
+tests:
+  - it: should use loki image defaults when singleBinary image is not set
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should override repository and tag at singleBinary component level
+    set:
+      singleBinary.image.repository: custom/loki-singleBinary
+      singleBinary.image.tag: custom-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-singleBinary:custom-tag
+        template: single-binary/statefulset.yaml
+
+  - it: should override registry at singleBinary component level
+    set:
+      singleBinary.image.registry: quay.io
+      singleBinary.image.repository: custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: quay.io/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should let global imageRegistry override singleBinary and loki registries
+    set:
+      global.imageRegistry: registry.example.com
+      singleBinary.image.registry: quay.io
+      singleBinary.image.repository: custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.com/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should keep fully qualified singleBinary repository without global imageRegistry prefix
+    set:
+      global.imageRegistry: registry.example.com
+      singleBinary.image.repository: ghcr.io/custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should support deprecated global.image.registry override
+    set:
+      global.image.registry: deprecated.registry.example.com
+      singleBinary.image.repository: custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: deprecated.registry.example.com/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should support deprecated global.registry override
+    set:
+      global.registry: deprecated2.registry.example.com
+      singleBinary.image.repository: custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: deprecated2.registry.example.com/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should let singleBinary image tag override loki image tag
+    set:
+      singleBinary.image.tag: singleBinary-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki:singleBinary-tag
+        template: single-binary/statefulset.yaml
+
+  - it: should prefer singleBinary image digest over tag
+    set:
+      singleBinary.image.repository: custom/loki-singleBinary
+      singleBinary.image.tag: ignored-tag
+      singleBinary.image.digest: sha256:d1g357
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-singleBinary@sha256:d1g357
+        template: single-binary/statefulset.yaml
+
+  - it: should use singleBinary image sha as digest fallback when digest is not set
+    set:
+      singleBinary.image.repository: custom/loki-singleBinary
+      singleBinary.image.tag: ignored-tag
+      singleBinary.image.sha: abcdef0123456789
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-singleBinary@sha256:abcdef0123456789
+        template: single-binary/statefulset.yaml
+
+  - it: should prefer singleBinary digest over loki digest
+    set:
+      singleBinary.image.repository: custom/loki-singleBinary
+      singleBinary.image.digest: sha256:component
+      loki.image.digest: sha256:default
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-singleBinary@sha256:component
+        template: single-binary/statefulset.yaml
+
+  - it: should prefer global.imageRegistry over deprecated global registry keys
+    set:
+      global.imageRegistry: current.registry.example.com
+      global.image.registry: deprecated.registry.example.com
+      global.registry: deprecated2.registry.example.com
+      singleBinary.image.repository: custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: current.registry.example.com/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should prefer deprecated global.image.registry over deprecated global.registry when imageRegistry is unset
+    set:
+      global.image.registry: preferred.registry.example.com
+      global.registry: fallback.registry.example.com
+      singleBinary.image.repository: custom/loki-singleBinary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: preferred.registry.example.com/custom/loki-singleBinary:0.0.0
+        template: single-binary/statefulset.yaml
+
+  - it: should use default loki image digest when singleBinary image is not set
+    set:
+      loki.image.digest: sha256:defaultdigest
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki@sha256:defaultdigest
+        template: single-binary/statefulset.yaml
+
+  - it: should use default loki image sha as digest fallback when digest is not set and singleBinary image is not set
+    set:
+      loki.image.sha: deadbeef01234567
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki@sha256:deadbeef01234567
+        template: single-binary/statefulset.yaml

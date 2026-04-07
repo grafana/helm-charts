@@ -22,14 +22,6 @@ app.kubernetes.io/component: canary
 {{- end }}
 
 {{/*
-Docker image name for loki-canary
-*/}}
-{{- define "loki-canary.image" -}}
-{{- $dict := dict "service" .Values.lokiCanary.image "global" .Values.global "defaultVersion" .Chart.AppVersion -}}
-{{- include "loki.baseImage" $dict -}}
-{{- end -}}
-
-{{/*
 canary priority class name
 */}}
 {{- define "loki-canary.priorityClassName" -}}

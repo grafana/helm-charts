@@ -50,7 +50,7 @@ spec:
         {{- include "loki.podSecurityContext" $ | nindent 8 }}
       containers:
         - name: loki-canary
-          image: {{ include "loki-canary.image" $ }}
+          image: {{ include "loki.image" (dict "ctx" $ "component" $.Values.lokiCanary.image "defaultVersion" $.Chart.AppVersion) }}
           imagePullPolicy: {{ $.Values.loki.image.pullPolicy }}
           args:
             - -addr={{- default (include "loki.host" $) .lokiurl }}

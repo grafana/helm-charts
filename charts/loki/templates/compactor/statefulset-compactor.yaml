@@ -75,7 +75,7 @@ spec:
       {{- end }}
       containers:
         - name: compactor
-          image: {{ include "loki.image" . }}
+          image: {{ include "loki.image" (dict "ctx" . "component" .Values.compactor.image "default" .Values.loki.image "defaultVersion" .Chart.AppVersion) }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.compactor.command }}
           command:

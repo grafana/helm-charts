@@ -22,26 +22,8 @@ app.kubernetes.io/component: ruler
 {{- end }}
 
 {{/*
-ruler image
-*/}}
-{{- define "loki.rulerImage" -}}
-{{- $dict := dict "loki" .Values.loki.image "service" .Values.ruler.image "global" .Values.global "defaultVersion" .Chart.AppVersion -}}
-{{- include "loki.lokiImage" $dict -}}
-{{- end }}
-
-{{/*
 format rules dir
 */}}
 {{- define "loki.rulerRulesDirName" -}}
 rules-{{ . | replace "_" "-" | trimSuffix "-" | lower }}
-{{- end }}
-
-{{/*
-ruler priority class name
-*/}}
-{{- define "loki.rulerPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.ruler.priorityClassName -}}
-{{- if $pcn }}
-priorityClassName: {{ $pcn }}
-{{- end }}
 {{- end }}

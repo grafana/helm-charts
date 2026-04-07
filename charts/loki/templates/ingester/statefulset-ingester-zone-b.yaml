@@ -99,7 +99,7 @@ spec:
       {{- end }}
       containers:
         - name: ingester
-          image: {{ include "loki.image" . }}
+          image: {{ include "loki.image" (dict "ctx" . "component" .Values.ingester.image "default" .Values.loki.image "defaultVersion" .Chart.AppVersion) }}
           imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.ingester.command }}
           command:

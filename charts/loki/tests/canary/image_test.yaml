@@ -1,0 +1,163 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: canary image
+templates:
+  - loki-canary/daemonset.yaml
+  - config.yaml
+set:
+  deploymentMode: Distributed
+  loki.useTestSchema: true
+  lokiCanary.image.tag: 0.0.0
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+
+tests:
+  - it: should use canary image defaults when lokiCanary image is not set
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should override repository and tag at canary component level
+    set:
+      lokiCanary.image.repository: custom/loki-canary
+      lokiCanary.image.tag: custom-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-canary:custom-tag
+        template: loki-canary/daemonset.yaml
+
+  - it: should override registry at canary component level
+    set:
+      lokiCanary.image.registry: quay.io
+      lokiCanary.image.repository: custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: quay.io/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should let global imageRegistry override canary and lokiCanary registries
+    set:
+      global.imageRegistry: registry.example.com
+      lokiCanary.image.registry: quay.io
+      lokiCanary.image.repository: custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.com/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should keep fully qualified canary repository without global imageRegistry prefix
+    set:
+      global.imageRegistry: registry.example.com
+      lokiCanary.image.repository: ghcr.io/custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should support deprecated global.image.registry override
+    set:
+      global.image.registry: deprecated.registry.example.com
+      lokiCanary.image.repository: custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: deprecated.registry.example.com/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should support deprecated global.registry override
+    set:
+      global.registry: deprecated2.registry.example.com
+      lokiCanary.image.repository: custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: deprecated2.registry.example.com/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should let lokiCanary image tag override canary default tag
+    set:
+      lokiCanary.image.tag: canary-tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki-canary:canary-tag
+        template: loki-canary/daemonset.yaml
+
+  - it: should prefer lokiCanary image digest over tag
+    set:
+      lokiCanary.image.repository: custom/loki-canary
+      lokiCanary.image.tag: ignored-tag
+      lokiCanary.image.digest: sha256:d1g357
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-canary@sha256:d1g357
+        template: loki-canary/daemonset.yaml
+
+  - it: should use lokiCanary image sha as digest fallback when digest is not set
+    set:
+      lokiCanary.image.repository: custom/loki-canary
+      lokiCanary.image.tag: ignored-tag
+      lokiCanary.image.sha: abcdef0123456789
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-canary@sha256:abcdef0123456789
+        template: loki-canary/daemonset.yaml
+
+  - it: should prefer canary digest when digest is set
+    set:
+      lokiCanary.image.repository: custom/loki-canary
+      lokiCanary.image.digest: sha256:component
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/custom/loki-canary@sha256:component
+        template: loki-canary/daemonset.yaml
+
+  - it: should prefer global.imageRegistry over deprecated global registry keys
+    set:
+      global.imageRegistry: current.registry.example.com
+      global.image.registry: deprecated.registry.example.com
+      global.registry: deprecated2.registry.example.com
+      lokiCanary.image.repository: custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: current.registry.example.com/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should prefer deprecated global.image.registry over deprecated global.registry when imageRegistry is unset
+    set:
+      global.image.registry: preferred.registry.example.com
+      global.registry: fallback.registry.example.com
+      lokiCanary.image.repository: custom/loki-canary
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: preferred.registry.example.com/custom/loki-canary:0.0.0
+        template: loki-canary/daemonset.yaml
+
+  - it: should use canary digest when lokiCanary digest is set
+    set:
+      lokiCanary.image.digest: sha256:defaultdigest
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki-canary@sha256:defaultdigest
+        template: loki-canary/daemonset.yaml
+
+  - it: should use canary sha as digest fallback when lokiCanary digest is not set
+    set:
+      lokiCanary.image.sha: deadbeef01234567
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/grafana/loki-canary@sha256:deadbeef01234567
+        template: loki-canary/daemonset.yaml

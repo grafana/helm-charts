@@ -14,6 +14,7 @@ metadata:
     {{- with (mergeOverwrite (dict) .Values.loki.podAnnotations .Values.defaults.podAnnotations $component.podAnnotations) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    kubectl.kubernetes.io/default-container: "{{ $target }}"
   labels:
     {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target }}
@@ -130,21 +131,26 @@ spec:
       {{- end }}
     {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
     - name: sc-rules-volume
-      {{- if .Values.sidecar.sizeLimit }}
+      {{- if .Values.sidecar.rules.sizeLimit }}
       emptyDir:
-        sizeLimit: {{ .Values.sidecar.sizeLimit }}
+        sizeLimit: {{ .Values.sidecar.rules.sizeLimit }}
       {{- else }}
       emptyDir: {}
       {{- end }}
     - name: sc-rules-temp
       emptyDir: {}
+    {{- range $dir, $_ := .Values.ruler.directories }}
+    - name: {{ include "loki.rulerRulesDirName" $dir }}
+      configMap:
+        name: {{ include "loki.resourceName" (dict "ctx" . "component" $target) }}-{{ include "loki.rulerRulesDirName" $dir }}
+    {{- end }}
     {{- end }}
     {{- with (coalesce $component.extraVolumes .Values.defaults.extraVolumes .Values.global.extraVolumes) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   containers:
     - name: {{ $target }}
-      image: {{ include "loki.image" . }}
+      image: {{ include "loki.image" (dict "ctx" . "component" $component.image "default" .Values.loki.image "defaultVersion" .Chart.AppVersion) }}
       imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
       {{- with coalesce $component.command .Values.defaults.command .Values.loki.command }}
       command:
@@ -208,6 +214,10 @@ spec:
         {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
         - name: sc-rules-volume
           mountPath: {{ .Values.sidecar.rules.folder | quote }}
+          {{- range $dir, $_ := .Values.ruler.directories }}
+        - name: rules-{{ include "loki.rulerRulesDirName" $dir }}
+          mountPath: /etc/loki/rules/{{ $dir }}
+          {{- end }}
         {{- end }}
         {{- with (concat .Values.global.extraVolumeMounts .Values.defaults.extraVolumeMounts $component.extraVolumeMounts) | uniq }}
         {{- toYaml . | nindent 8 }}
@@ -236,8 +246,7 @@ rules sidecar
 {{- define "loki.rulesSidecar" -}}
 {{- if .Values.sidecar.rules.enabled }}
 - name: loki-sc-rules
-  {{- $dict := dict "service" .Values.sidecar.image "global" .Values.global }}
-  image: {{ include "loki.baseImage" $dict }}
+  image: {{ include "loki.image" (dict "ctx" . "component" .Values.sidecar.image) }}
   imagePullPolicy: {{ .Values.sidecar.image.pullPolicy }}
   {{- with .Values.sidecar.resources }}
   resources:

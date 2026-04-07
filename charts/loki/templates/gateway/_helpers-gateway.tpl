@@ -29,14 +29,6 @@ gateway auth secret name
 {{- end }}
 
 {{/*
-gateway Docker image
-*/}}
-{{- define "loki.gatewayImage" -}}
-{{- $dict := dict "service" .Values.gateway.image "global" .Values.global -}}
-{{- include "loki.baseImage" $dict -}}
-{{- end }}
-
-{{/*
 gateway priority class name
 */}}
 {{- define "loki.gatewayPriorityClassName" -}}
