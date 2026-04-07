@@ -3940,6 +3940,16 @@ overridesExporter:
   initContainers: []
   # -- Grace period to allow the overrides-exporter to shutdown before it is killed
   terminationGracePeriodSeconds: 300
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- Affinity for overrides-exporter pods.
   # @default -- Hard node anti-affinity
   # The value will be passed through tpl.
