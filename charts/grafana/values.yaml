@@ -272,9 +272,9 @@ serviceMonitor:
   targetLabels: []
 
 extraExposePorts: []
- # - name: keycloak
- #   port: 8080
- #   targetPort: 8080
+  # - name: keycloak
+  #   port: 8080
+  #   targetPort: 8080
 
 # overrides pod.spec.hostAliases in the grafana deployment's pods
 hostAliases: []
@@ -899,21 +899,21 @@ grafana.ini:
   unified_storage:
     index_path: /var/lib/grafana-search/bleve
 ## grafana Authentication can be enabled with the following values on grafana.ini
- # server:
-      # The full public facing url you use in browser, used for redirects and emails
- #    root_url:
- # https://grafana.com/docs/grafana/latest/auth/github/#enable-github-in-grafana
- # auth.github:
- #    enabled: false
- #    allow_sign_up: false
- #    scopes: user:email,read:org
- #    auth_url: https://github.com/login/oauth/authorize
- #    token_url: https://github.com/login/oauth/access_token
- #    api_url: https://api.github.com/user
- #    team_ids:
- #    allowed_organizations:
- #    client_id:
- #    client_secret:
+  # server:
+  # The full public facing url you use in browser, used for redirects and emails
+  #    root_url:
+  # https://grafana.com/docs/grafana/latest/auth/github/#enable-github-in-grafana
+  # auth.github:
+  #    enabled: false
+  #    allow_sign_up: false
+  #    scopes: user:email,read:org
+  #    auth_url: https://github.com/login/oauth/authorize
+  #    token_url: https://github.com/login/oauth/access_token
+  #    api_url: https://api.github.com/user
+  #    team_ids:
+  #    allowed_organizations:
+  #    client_id:
+  #    client_secret:
 ## LDAP Authentication can be enabled with the following values on grafana.ini
 ## NOTE: Grafana will fail to start if the value for ldap.toml is invalid
   # auth.ldap:
@@ -970,7 +970,7 @@ sidecar:
     # -- The Docker registry
     registry: quay.io
     repository: kiwigrid/k8s-sidecar
-    tag: 2.5.4
+    tag: 2.5.5
     sha: ""
   imagePullPolicy: IfNotPresent
   resources: {}
