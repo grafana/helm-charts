@@ -741,7 +741,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $querierUrl }}$request_uri;
+      set $backend     "{{ $querierUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     {{- end }}
 
@@ -750,25 +751,29 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $distributorUrl }}$request_uri;
+      set $backend     "{{ $distributorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /loki/api/v1/push {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $distributorUrl }}$request_uri;
+      set $backend     "{{ $distributorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /distributor/ring {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $distributorUrl }}$request_uri;
+      set $backend     "{{ $distributorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /otlp/v1/logs {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $distributorUrl }}$request_uri;
+      set $backend     "{{ $distributorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # Ingester
@@ -776,13 +781,15 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $ingesterUrl }}$request_uri;
+      set $backend     "{{ $ingesterUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location ^~ /ingester/ {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $ingesterUrl }}$request_uri;
+      set $backend     "{{ $ingesterUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /ingester {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
@@ -796,7 +803,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $ingesterUrl }}$request_uri;
+      set $backend     "{{ $ingesterUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # MemberListKV
@@ -804,7 +812,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $ingesterUrl }}$request_uri;
+      set $backend     "{{ $ingesterUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # Ruler
@@ -812,43 +821,50 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /api/prom/rules {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location ^~ /api/prom/rules/ {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /loki/api/v1/rules {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location ^~ /loki/api/v1/rules/ {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /prometheus/api/v1/alerts {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /prometheus/api/v1/rules {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $rulerUrl }}$request_uri;
+      set $backend     "{{ $rulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # Compactor
@@ -856,19 +872,22 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $compactorUrl }}$request_uri;
+      set $backend     "{{ $compactorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /loki/api/v1/delete {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $compactorUrl }}$request_uri;
+      set $backend     "{{ $compactorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /loki/api/v1/cache/generation_numbers {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $compactorUrl }}$request_uri;
+      set $backend     "{{ $compactorUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # IndexGateway
@@ -876,7 +895,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $indexGatewayUrl }}$request_uri;
+      set $backend     "{{ $indexGatewayUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # QueryScheduler
@@ -884,7 +904,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $schedulerUrl }}$request_uri;
+      set $backend     "{{ $schedulerUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # Config
@@ -892,7 +913,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $ingesterUrl }}$request_uri;
+      set $backend     "{{ $ingesterUrl }}";
+      proxy_pass       $backend$request_uri;
     }
 
     # QueryFrontend, Querier
@@ -902,7 +924,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $queryFrontendUrl }}$request_uri;
+      set $backend     "{{ $queryFrontendUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /loki/api/v1/tail {
       proxy_set_header Upgrade $http_upgrade;
@@ -910,13 +933,15 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $queryFrontendUrl }}$request_uri;
+      set $backend     "{{ $queryFrontendUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location ^~ /api/prom/ {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $queryFrontendUrl }}$request_uri;
+      set $backend     "{{ $queryFrontendUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /api/prom {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
@@ -930,7 +955,8 @@ http {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      proxy_pass       {{ $queryFrontendUrl }}$request_uri;
+      set $backend     "{{ $queryFrontendUrl }}";
+      proxy_pass       $backend$request_uri;
     }
     location = /loki/api/v1 {
       {{- with .Values.gateway.nginxConfig.locationSnippet }}
