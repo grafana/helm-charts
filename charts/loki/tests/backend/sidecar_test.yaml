@@ -10,7 +10,6 @@ set:
   loki.storage.bucketNames.chunks: chunks
   loki.storage.bucketNames.ruler: ruler
   loki.storage.bucketNames.admin: admin
-  read.legacyReadTarget: false
 
 tests:
   - it: should render the backend rules sidecar with default rule settings

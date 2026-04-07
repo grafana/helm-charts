@@ -29,9 +29,7 @@ Installed components:
 {{- if eq (include "loki.deployment.isScalable" .) "true" }}
 * read
 * write
-{{- if not .Values.read.legacyReadTarget }}
 * backend
-{{- end }}
 {{- else }}
 * compactor
 * index gateway

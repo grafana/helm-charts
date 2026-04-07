@@ -1292,7 +1292,6 @@ ingress:
     # -- Paths that are exposed by Loki Ruler.
     # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.rulerFullname"}}`.
     # If deployment mode is SimpleScalable, the requests are forwarded to k8s service: `{{"loki.backendFullname"}}`.
-    # If deployment mode is SimpleScalable but `read.legacyReadTarget` is `true`, the requests are forwarded to k8s service: `{{"loki.readFullname"}}`.
     # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.singleBinaryFullname"}}`
     ruler:
       - /api/prom/rules
@@ -1721,10 +1720,6 @@ read:
     appProtocol:
       # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
       grpc: ""
-  # -- Whether or not to use the 2 target type simple scalable mode (read, write) or the
-  # 3 target type (read, write, backend). Legacy refers to the 2 target type, so true will
-  # run two targets, false will run 3 targets.
-  legacyReadTarget: false
   # -- Additional CLI args for the read
   extraArgs: []
   # -- init containers to add to the read pods
@@ -1787,31 +1782,6 @@ read:
   tolerations: []
   # -- The default is to deploy all pods in parallel.
   podManagementPolicy: "Parallel"
-  # -- read.persistence is used only if legacyReadTarget is set to true
-  persistence:
-    # -- Enable StatefulSetAutoDeletePVC feature
-    enableStatefulSetAutoDeletePVC: true
-    # -- Set access modes on the PersistentVolumeClaim
-    accessModes:
-      - ReadWriteOnce
-    # -- Size of persistent disk
-    size: 10Gi
-    # -- Storage class to be used.
-    # If defined, storageClassName: <storageClass>.
-    # If set to "-", storageClassName: "", which disables dynamic provisioning.
-    # If empty or set to null, no storageClassName spec is
-    # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
-    storageClass: null
-    # -- Volume attributes class name to be used.
-    # If empty or set to null, no volumeAttributesClassName spec is set.
-    # Requires Kubernetes 1.31
-    volumeAttributesClassName: null
-    # -- Selector for persistent disk
-    selector: null
-    # -- Annotations for volume claim
-    annotations: {}
-    # -- Labels for volume claim
-    labels: {}
 # --  Configuration for the backend pod(s)
 backend:
   # -- Number of replicas for the backend

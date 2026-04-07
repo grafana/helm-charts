@@ -1,8 +1,4 @@
 {{- $isSimpleScalable := eq (include "loki.deployment.isScalable" .) "true" -}}
 {{- if $isSimpleScalable }}
-{{- $kind := "StatefulSet" -}}
-  {{- if and $isSimpleScalable (not .Values.read.legacyReadTarget ) }}
-  {{- $kind = "Deployment" -}}
-  {{- end }}
-{{- include "loki.hpa" (dict "target" "read" "component" .Values.read "ctx" . "kind" $kind) }}
+{{- include "loki.hpa" (dict "target" "read" "component" .Values.read "ctx" . "kind" "Deployment") }}
 {{- end }}
