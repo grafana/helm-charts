@@ -208,6 +208,8 @@ loki:
     runAsGroup: 10001
     runAsNonRoot: true
     runAsUser: 10001
+    seccompProfile:
+      type: RuntimeDefault
   # -- The SecurityContext for Loki containers
   containerSecurityContext:
     readOnlyRootFilesystem: true
@@ -215,6 +217,8 @@ loki:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
   # -- Should enableServiceLinks be enabled. Default to enable
   enableServiceLinks: true
   # -- DNS config for Loki pods
@@ -1022,6 +1026,8 @@ gateway:
     runAsGroup: 101
     runAsNonRoot: true
     runAsUser: 101
+    seccompProfile:
+      type: RuntimeDefault
   # -- The SecurityContext for gateway containers
   containerSecurityContext:
     readOnlyRootFilesystem: true
@@ -3977,6 +3983,8 @@ memcached:
     runAsUser: 11211
     runAsGroup: 11211
     fsGroup: 11211
+    seccompProfile:
+      type: RuntimeDefault
   # -- The name of the PriorityClass for memcached pods
   priorityClassName: null
   # -- The SecurityContext for memcached containers
@@ -3985,6 +3993,9 @@ memcached:
     capabilities:
       drop: [ALL]
     allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   # -- Readiness probe for memcached pods (probe port defaults to container port)
   readinessProbe:
     tcpSocket:
@@ -4020,6 +4031,9 @@ memcachedExporter:
     capabilities:
       drop: [ALL]
     allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   # -- Extra args to add to the exporter container.
   # Example:
   # extraArgs:
@@ -4438,6 +4452,9 @@ rollout_operator:
     capabilities:
       drop: [ALL]
     allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
 # -- Configuration for the minio subchart
 minio:
   enabled: false
