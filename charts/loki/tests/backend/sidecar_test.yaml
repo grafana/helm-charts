@@ -10,6 +10,8 @@ set:
   loki.storage.bucketNames.chunks: chunks
   loki.storage.bucketNames.ruler: ruler
   loki.storage.bucketNames.admin: admin
+  loki.image.tag: 0.0.0
+  sidecar.image.tag: 0.0.0
 
 tests:
   - it: should render the backend rules sidecar with default rule settings
@@ -26,7 +28,7 @@ tests:
           path: spec.template.spec.containers
           content:
             name: loki-sc-rules
-            image: docker.io/kiwigrid/k8s-sidecar:2.5.4
+            image: docker.io/kiwigrid/k8s-sidecar:0.0.0
           any: true
       - template: backend/statefulset.yaml
         contains:
