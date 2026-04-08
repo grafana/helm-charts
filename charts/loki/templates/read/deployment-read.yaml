@@ -19,7 +19,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- if not .Values.read.autoscaling.enabled }}
+  {{- if and (not .Values.read.autoscaling.enabled) (not .Values.read.kedaAutoscaling.enabled) }}
   replicas: {{ .Values.read.replicas }}
   {{- end }}
   strategy:

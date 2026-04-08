@@ -15,7 +15,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if not .Values.bloomBuilder.autoscaling.enabled }}
+  {{- if and (not .Values.bloomBuilder.autoscaling.enabled) (not .Values.bloomBuilder.kedaAutoscaling.enabled) }}
   replicas: {{ .Values.bloomBuilder.replicas }}
   {{- end }}
   {{- with .Values.bloomBuilder.strategy }}

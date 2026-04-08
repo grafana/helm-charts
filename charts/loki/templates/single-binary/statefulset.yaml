@@ -19,7 +19,9 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
+{{- if and (not .Values.singleBinary.autoscaling.enabled) (not .Values.singleBinary.kedaAutoscaling.enabled) }}
   replicas: {{ include "loki.singleBinaryReplicas" . }}
+{{- end }}
   podManagementPolicy: Parallel
   updateStrategy:
     rollingUpdate:

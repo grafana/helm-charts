@@ -1,0 +1,60 @@
+suite: backend KEDA ScaledObject
+templates:
+  - backend/so.yaml
+
+tests:
+  - it: should not render ScaledObject when kedaAutoscaling is disabled
+    set:
+      deploymentMode: SimpleScalable
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      backend.kedaAutoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render ScaledObject in non-scalable mode
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      backend.kedaAutoscaling.enabled: true
+      backend.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: test
+          metadata:
+            query: test
+            threshold: "1"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render ScaledObject when kedaAutoscaling is enabled in simple-scalable mode
+    set:
+      deploymentMode: SimpleScalable
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      backend.kedaAutoscaling.enabled: true
+      backend.kedaAutoscaling.minReplicas: 3
+      backend.kedaAutoscaling.maxReplicas: 6
+      backend.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: backend_metric
+          metadata:
+            serverAddress: http://prometheus:9090
+            query: sum(loki_compactor_running)
+            threshold: "1"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ScaledObject
+      - equal:
+          path: spec.minReplicaCount
+          value: 3
+      - equal:
+          path: spec.maxReplicaCount
+          value: 6
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: StatefulSet

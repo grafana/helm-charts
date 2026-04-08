@@ -12,7 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if not .Values.queryFrontend.autoscaling.enabled }}
+{{- if and (not .Values.queryFrontend.autoscaling.enabled) (not .Values.queryFrontend.kedaAutoscaling.enabled) }}
   replicas: {{ .Values.queryFrontend.replicas }}
 {{- end }}
   strategy:

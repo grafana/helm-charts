@@ -16,7 +16,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-{{- if not .Values.gateway.autoscaling.enabled }}
+{{- if and (not .Values.gateway.autoscaling.enabled) (not .Values.gateway.kedaAutoscaling.enabled) }}
   replicas: {{ .Values.gateway.replicas }}
 {{- end }}
 {{- with .Values.gateway.deploymentStrategy }}

@@ -46,6 +46,9 @@ tests:
       - equal:
           path: spec.cooldownPeriod
           value: 300
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
 
   - it: should include customHeaders in default Prometheus trigger
     set:
@@ -61,3 +64,40 @@ tests:
       - matchRegex:
           path: spec.triggers[0].metadata.customHeaders
           pattern: X-Scope-OrgID=tenant1
+
+  - it: should include fallback configuration
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      defaults.kedaAutoscaling.prometheusAddress: http://prometheus:9090
+      querier.kedaAutoscaling.enabled: true
+      querier.kedaAutoscaling.fallback:
+        failureThreshold: 3
+        replicas: 2
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.fallback.failureThreshold
+          value: 3
+      - equal:
+          path: spec.fallback.replicas
+          value: 2
+
+  - it: should include behavior configuration
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      defaults.kedaAutoscaling.prometheusAddress: http://prometheus:9090
+      querier.kedaAutoscaling.enabled: true
+      querier.kedaAutoscaling.behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 300
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.advanced.horizontalPodAutoscalerConfig.behavior.scaleDown.stabilizationWindowSeconds
+          value: 300

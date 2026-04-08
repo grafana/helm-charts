@@ -16,7 +16,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if not .Values.ingester.autoscaling.enabled }}
+{{- if and (not .Values.ingester.autoscaling.enabled) (not .Values.ingester.kedaAutoscaling.enabled) }}
   replicas: {{ .Values.ingester.replicas }}
 {{- end }}
   podManagementPolicy: Parallel

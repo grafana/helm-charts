@@ -28,6 +28,24 @@ ruler:
 # Minimum components required for querier readiness
 distributor:
   replicas: 1
+  kedaAutoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    fallback:
+      failureThreshold: 1
+      replicas: 1
+    triggers:
+      - type: prometheus
+        name: distributor_autoscaling_metric
+        metadata:
+          serverAddress: "{{ .Values.defaults.kedaAutoscaling.prometheusAddress }}"
+          query: sum(rate(loki_distributor_bytes_received_total[2m]))
+          threshold: "1000000"
+          unsafeSsl: "{{ .Values.defaults.kedaAutoscaling.unsafeSsl }}"
+          ignoreNullValues: "{{ .Values.defaults.kedaAutoscaling.ignoreNullValues }}"
+          customHeaders: "{{ .Values.defaults.kedaAutoscaling.customHeaders }}"
+          authModes: "{{ .Values.defaults.kedaAutoscaling.authentication.authModes }}"
 ingester:
   replicas: 1
   zoneAwareReplication:

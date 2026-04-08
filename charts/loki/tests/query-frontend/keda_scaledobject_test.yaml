@@ -1,0 +1,60 @@
+suite: query-frontend KEDA ScaledObject
+templates:
+  - query-frontend/so.yaml
+
+tests:
+  - it: should not render ScaledObject when kedaAutoscaling is disabled
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      queryFrontend.kedaAutoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render ScaledObject in non-distributed mode
+    set:
+      deploymentMode: SimpleScalable
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      queryFrontend.kedaAutoscaling.enabled: true
+      queryFrontend.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: test
+          metadata:
+            query: test
+            threshold: "1"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render ScaledObject when kedaAutoscaling is enabled in distributed mode
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      queryFrontend.kedaAutoscaling.enabled: true
+      queryFrontend.kedaAutoscaling.minReplicas: 2
+      queryFrontend.kedaAutoscaling.maxReplicas: 10
+      queryFrontend.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: query_frontend_metric
+          metadata:
+            serverAddress: http://prometheus:9090
+            query: sum(cortex_query_frontend_queue_length)
+            threshold: "10"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ScaledObject
+      - equal:
+          path: spec.minReplicaCount
+          value: 2
+      - equal:
+          path: spec.maxReplicaCount
+          value: 10
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment

@@ -1,0 +1,81 @@
+suite: ingester KEDA ScaledObject
+templates:
+  - ingester/so.yaml
+
+tests:
+  - it: should not render ScaledObject when kedaAutoscaling is disabled
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      ingester.kedaAutoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render ScaledObject in non-distributed mode
+    set:
+      deploymentMode: SimpleScalable
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      ingester.kedaAutoscaling.enabled: true
+      ingester.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: test
+          metadata:
+            query: test
+            threshold: "1"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render ScaledObject when kedaAutoscaling is enabled in distributed mode
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 1
+      loki.useTestSchema: true
+      ingester.zoneAwareReplication.enabled: false
+      ingester.kedaAutoscaling.enabled: true
+      ingester.kedaAutoscaling.minReplicas: 2
+      ingester.kedaAutoscaling.maxReplicas: 10
+      ingester.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: ingester_metric
+          metadata:
+            serverAddress: http://prometheus:9090
+            query: sum(loki_ingester_memory_streams)
+            threshold: "10000"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ScaledObject
+      - equal:
+          path: spec.minReplicaCount
+          value: 2
+      - equal:
+          path: spec.maxReplicaCount
+          value: 10
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: StatefulSet
+
+  - it: should render ScaledObject per zone when zone-aware replication is enabled
+    set:
+      deploymentMode: Distributed
+      loki.commonConfig.replication_factor: 3
+      loki.useTestSchema: true
+      ingester.zoneAwareReplication.enabled: true
+      ingester.kedaAutoscaling.enabled: true
+      ingester.kedaAutoscaling.minReplicas: 2
+      ingester.kedaAutoscaling.maxReplicas: 10
+      ingester.kedaAutoscaling.triggers:
+        - type: prometheus
+          name: ingester_metric
+          metadata:
+            serverAddress: http://prometheus:9090
+            query: sum(loki_ingester_memory_streams)
+            threshold: "10000"
+    asserts:
+      - hasDocuments:
+          count: 3

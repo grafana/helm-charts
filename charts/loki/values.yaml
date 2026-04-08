@@ -987,6 +987,26 @@ gateway:
     #     - type: Pods
     #       value: 1
     #       periodSeconds: 180
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the gateway. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 3
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the gateway.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   deploymentStrategy:
     type: RollingUpdate
   image:
@@ -1374,6 +1394,26 @@ singleBinary:
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the single binary. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 3
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the single binary.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the single binary image. Overrides `loki.image.registry`
     registry: null
@@ -1528,6 +1568,26 @@ write:
             value: 1
             periodSeconds: 1800
         stabilizationWindowSeconds: 3600
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the write. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 2
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 6
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the write.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the write image. Overrides `loki.image.registry`
     registry: null
@@ -1687,6 +1747,26 @@ read:
     #   - type: Pods
     #     value: 1
     #     periodSeconds: 180
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the read. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 2
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 6
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the read.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the read image. Overrides `loki.image.registry`
     registry: null
@@ -1816,6 +1896,26 @@ backend:
     #     - type: Pods
     #       value: 1
     #       periodSeconds: 180
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the backend. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 3
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 6
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the backend.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the backend image. Overrides `loki.image.registry`
     registry: null
@@ -1986,6 +2086,26 @@ ingester:
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the ingester. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 3
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the ingester.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the ingester image. Overrides `loki.image.registry`
     registry: null
@@ -2236,6 +2356,26 @@ distributor:
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the distributor. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 3
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the distributor.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the distributor image. Overrides `loki.image.registry`
     registry: null
@@ -2554,6 +2694,26 @@ queryFrontend:
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the query-frontend. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 3
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the query-frontend.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the query-frontend image. Overrides `loki.image.registry`
     registry: null
@@ -3391,6 +3551,26 @@ bloomBuilder:
       scaleDown: {}
       # -- define scale up policies, must conform to HPAScalingRules
       scaleUp: {}
+  kedaAutoscaling:
+    # -- Enable KEDA autoscaling for the bloom-builder. Mutually exclusive with autoscaling.enabled
+    enabled: false
+    # -- Interval (seconds) to poll each trigger. Defaults to defaults.kedaAutoscaling.pollingInterval if not set.
+    pollingInterval: null
+    # -- Minimum replicas for KEDA autoscaling
+    minReplicas: 1
+    # -- Maximum replicas for KEDA autoscaling
+    maxReplicas: 3
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
+    cooldownPeriod: 300
+    # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
+    fallback: {}
+    # -- Behavior configuration for KEDA ScaledObject (horizontalPodAutoscalerConfig.behavior).
+    # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#advanced
+    behavior: {}
+    # -- KEDA triggers for the bloom-builder.
+    # Ref: https://keda.sh/docs/latest/scalers/
+    triggers: []
   image:
     # -- The Docker registry for the bloom-builder image. Overrides `loki.image.registry`
     registry: null
