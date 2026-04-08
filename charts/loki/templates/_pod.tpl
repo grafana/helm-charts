@@ -7,6 +7,7 @@ Pod helper
 {{- $ctx := .ctx }}
 {{- $component := .component }}
 {{- $args := .args }}
+{{- $rolloutZoneName := .rolloutZoneName | default "" }}
 {{- with $ctx }}
 metadata:
   annotations:
@@ -19,6 +20,10 @@ metadata:
     {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target }}
     app.kubernetes.io/part-of: memberlist
+    {{- if $rolloutZoneName }}
+    name: {{ $target }}-{{ $rolloutZoneName }}
+    rollout-group: {{ $target }}
+    {{- end }}
     {{- with (mergeOverwrite (dict) .Values.loki.podLabels .Values.defaults.podLabels $component.podLabels) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -75,13 +80,38 @@ spec:
       {{- tpl . $ctx | nindent 4 }}
     {{- end }}
   {{- end }}
-  {{- with $component.affinity }}
+  {{- if $rolloutZoneName }}
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: rollout-group
+                operator: In
+                values:
+                  - {{ with $component.rolloutGroupPrefix }}{{ . }}-{{ end }}{{ $target }}
+              - key: name
+                operator: NotIn
+                values:
+                  - {{- if $component.addIngesterNamePrefix -}}loki-{{ end }}{{ $target }}-{{ $rolloutZoneName }}
+          topologyKey: kubernetes.io/hostname
+    {{- with (dig "zoneAwareReplication" (printf "zone%s" (upper (splitList "-" $rolloutZoneName | last))) "extraAffinity" nil $component) }}
+      {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+    {{- end }}
+  {{- else }}
+    {{- with $component.affinity }}
   affinity:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+    {{- end }}
   {{- end }}
+  {{- if (dig "zoneAwareReplication" (printf "zone%s" (upper (splitList "-" $rolloutZoneName | last))) "extraNodeSelector" nil $component) }}
+  nodeSelector:
+    {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+  {{- else }}
   {{- with (coalesce $component.nodeSelector .Values.defaults.nodeSelector .Values.loki.nodeSelector) }}
   nodeSelector:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
+  {{- end }}
   {{- end }}
   {{- with (coalesce $component.tolerations .Values.defaults.tolerations .Values.loki.tolerations) }}
   tolerations:
@@ -124,6 +154,13 @@ spec:
             selector:
               {{- toYaml . | nindent 14 }}
             {{- end }}
+      {{- else if dig "persistence" "inMemory" false $component }}
+    - name: data
+      emptyDir:
+        medium: Memory
+        {{- with $component.persistence.size }}
+        sizeLimit: {{ . }}
+        {{- end }}
       {{- else if not (or (dig "persistence" "volumeClaimsEnabled" false $component) (dig "persistence" "enabled" false $component)) }}
         {{- with (dig "persistence" "dataVolumeParameters" (dict "emptyDir" (dict)) $component) }}
       {{- toYaml . | nindent 6 }}

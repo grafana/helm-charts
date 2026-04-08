@@ -6,16 +6,21 @@ Service helper
 {{- $target := .target }}
 {{- $ctx := .ctx }}
 {{- $component := .component }}
-{{- $name := .name }}
+{{- $rolloutZoneName := .rolloutZoneName }}
 {{- $headlessName := .headlessName }}
+{{- $name := .name }}
+{{- $serviceEnabled := kindIs "bool" .serviceEnabled | ternary .serviceEnabled true }}
+{{- $headlessServiceEnabled := kindIs "bool" .headlessServiceEnabled | ternary .headlessServiceEnabled true }}
+{{- $publishNotReadyAddresses := kindIs "bool" .publishNotReadyAddresses | ternary .publishNotReadyAddresses true }}
 {{- with $ctx }}
+{{- if $serviceEnabled }}
 apiVersion: v1
 kind: Service
 metadata:
   {{- if $name }}
   name: "{{ $name }}"
   {{- else }}
-  name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target) }}"
+  name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target "rolloutZoneName" $rolloutZoneName) }}"
   {{- end }}
   namespace: "{{ include "loki.namespace" . }}"
   labels:
@@ -30,7 +35,9 @@ metadata:
     {{- end }}
 spec:
   type: {{ $component.serviceType | default $component.service.type | default "ClusterIP" }}
-  publishNotReadyAddresses: true
+  {{- with $publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
   ports:
     - name: http-metrics
       port: 3100
@@ -63,6 +70,8 @@ spec:
   sessionAffinityConfig:
     {{- toYaml . | nindent 4 }}
 {{- end }}
+{{- end }}
+{{- if $headlessServiceEnabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -70,7 +79,7 @@ metadata:
   {{ if $headlessName }}
   name: {{ $headlessName }}
   {{ else }}
-  name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target "suffix" "headless") }}"
+  name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target "suffix" "headless" "rolloutZoneName" $rolloutZoneName) }}"
   {{- end }}
   namespace: {{ include "loki.namespace" . }}
   labels:
@@ -88,7 +97,9 @@ metadata:
 spec:
   clusterIP: None
   type: ClusterIP
-  publishNotReadyAddresses: true
+  {{- with $publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
   ports:
     - name: http-metrics
       port: 3100
@@ -111,5 +122,10 @@ spec:
   selector:
     {{ include "loki.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target | quote }}
+    {{ if $rolloutZoneName }}
+    name: {{ include "loki.prefixIngesterName" . }}ingester-{{ $rolloutZoneName }}
+    rollout-group: {{ include "loki.prefixRolloutGroup" . }}ingester
+    {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

@@ -27,9 +27,12 @@ loki:
       - name: ndots
         value: "3"
 ingester:
-  replicas: 1
+  replicas: 2
+  affinity: null
   zoneAwareReplication:
     enabled: true
+    migration:
+      enabled: true
     zoneA:
       extraAffinity:
         podAntiAffinity:

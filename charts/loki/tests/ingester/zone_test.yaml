@@ -1,0 +1,495 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: ingester zone statefulsets
+templates:
+  - ingester/statefulset-ingester-zone.yaml
+  - config.yaml
+set:
+  deploymentMode: Distributed
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  ingester.zoneAwareReplication.enabled: true
+  ingester.replicas: 3
+
+tests:
+  # ── Conditional rendering ────────────────────────────────────────────────────
+
+  - it: should not render when deploymentMode is not Distributed
+    set:
+      deploymentMode: SimpleScalable
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not render when zoneAwareReplication is disabled
+    set:
+      ingester.zoneAwareReplication.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should render exactly three StatefulSets when zone aware replication is enabled
+    asserts:
+      - hasDocuments:
+          count: 3
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should render all three StatefulSets as kind StatefulSet
+    asserts:
+      - isKind:
+          of: StatefulSet
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Names ────────────────────────────────────────────────────────────────────
+
+  - it: should name zone-a StatefulSet with zone-a suffix
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should name zone-b StatefulSet with zone-b suffix
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-b
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should name zone-c StatefulSet with zone-c suffix
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-c
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Labels ───────────────────────────────────────────────────────────────────
+
+  - it: should set the rollout-group label to ingester
+    asserts:
+      - equal:
+          path: metadata.labels["rollout-group"]
+          value: ingester
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set the name label for zone-a
+    asserts:
+      - equal:
+          path: metadata.labels.name
+          value: ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set the name label for zone-b
+    asserts:
+      - equal:
+          path: metadata.labels.name
+          value: ingester-zone-b
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set the name label for zone-c
+    asserts:
+      - equal:
+          path: metadata.labels.name
+          value: ingester-zone-c
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should include rolloutGroupPrefix in rollout-group label when set
+    set:
+      ingester.rolloutGroupPrefix: myprefix
+    asserts:
+      - equal:
+          path: metadata.labels["rollout-group"]
+          value: myprefix-ingester
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should include loki- prefix in name label when addIngesterNamePrefix is true
+    set:
+      ingester.addIngesterNamePrefix: true
+    asserts:
+      - equal:
+          path: metadata.labels.name
+          value: loki-ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set app.kubernetes.io/part-of memberlist label
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/part-of"]
+          value: memberlist
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Annotations ──────────────────────────────────────────────────────────────
+
+  - it: should set rollout-max-unavailable annotation based on maxUnavailablePct
+    asserts:
+      - equal:
+          path: metadata.annotations["rollout-max-unavailable"]
+          value: "1"
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should add zoneA annotations to all zone StatefulSets
+    set:
+      ingester.zoneAwareReplication.zoneA.annotations:
+        custom-annotation: zone-a-value
+      ingester.zoneAwareReplication.zoneB.annotations:
+        custom-annotation: zone-b-value
+      ingester.zoneAwareReplication.zoneC.annotations:
+        custom-annotation: zone-c-value
+    asserts:
+      - equal:
+          path: metadata.annotations["custom-annotation"]
+          value: zone-a-value
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: metadata.annotations["custom-annotation"]
+          value: zone-b-value
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: metadata.annotations["custom-annotation"]
+          value: zone-c-value
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Spec ─────────────────────────────────────────────────────────────────────
+
+  - it: should set podManagementPolicy to Parallel
+    asserts:
+      - equal:
+          path: spec.podManagementPolicy
+          value: Parallel
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should calculate per-zone replicas as ceil(total / 3) for even split
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should ceil-divide replicas per zone when not evenly divisible
+    set:
+      ingester.replicas: 4
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should omit replicas field when autoscaling is enabled
+    set:
+      ingester.autoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set headless serviceName for zone-a
+    asserts:
+      - equal:
+          path: spec.serviceName
+          value: RELEASE-NAME-loki-ingester-zone-a-headless
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set headless serviceName for zone-b
+    asserts:
+      - equal:
+          path: spec.serviceName
+          value: RELEASE-NAME-loki-ingester-zone-b-headless
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set headless serviceName for zone-c
+    asserts:
+      - equal:
+          path: spec.serviceName
+          value: RELEASE-NAME-loki-ingester-zone-c-headless
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Selector labels ──────────────────────────────────────────────────────────
+
+  - it: should include zone name in selector matchLabels for zone-a
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels.name
+          value: ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should include rollout-group in selector matchLabels
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels["rollout-group"]
+          value: ingester
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Container args ───────────────────────────────────────────────────────────
+
+  - it: should set zone-specific availability-zone arg for zone-a
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -ingester.availability-zone=zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set zone-specific availability-zone arg for zone-b
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -ingester.availability-zone=zone-b
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set zone-specific availability-zone arg for zone-c
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -ingester.availability-zone=zone-c
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set unregister-on-shutdown=false arg in all zones
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -ingester.unregister-on-shutdown=false
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set tokens-file-path arg in all zones
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -ingester.tokens-file-path=/var/loki/ring-tokens
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Persistence ──────────────────────────────────────────────────────────────
+
+  - it: should render volumeClaimTemplates when persistence is enabled
+    set:
+      ingester.persistence.enabled: true
+    asserts:
+      - isNotNull:
+          path: spec.volumeClaimTemplates
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].metadata.name
+          value: data
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not render volumeClaimTemplates when persistence is disabled
+    set:
+      ingester.persistence.enabled: false
+    asserts:
+      - notExists:
+          path: spec.volumeClaimTemplates
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should set persistentVolumeClaimRetentionPolicy when enableStatefulSetAutoDeletePVC is true
+    set:
+      ingester.persistence.enableStatefulSetAutoDeletePVC: true
+      ingester.persistence.whenDeleted: Delete
+      ingester.persistence.whenScaled: Retain
+    asserts:
+      - equal:
+          path: spec.persistentVolumeClaimRetentionPolicy.whenDeleted
+          value: Delete
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.persistentVolumeClaimRetentionPolicy.whenScaled
+          value: Retain
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not set persistentVolumeClaimRetentionPolicy when enableStatefulSetAutoDeletePVC is false
+    set:
+      ingester.persistence.enableStatefulSetAutoDeletePVC: false
+    asserts:
+      - notExists:
+          path: spec.persistentVolumeClaimRetentionPolicy
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should render memory-backed data emptyDir when ingester.persistence.inMemory is enabled
+    set:
+      ingester.persistence.inMemory: true
+      ingester.persistence.enabled: false
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir:
+              medium: Memory
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+      - notExists:
+          path: spec.volumeClaimTemplates
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should render memory-backed data emptyDir with sizeLimit when ingester.persistence.size is set
+    set:
+      ingester.persistence.inMemory: true
+      ingester.persistence.enabled: false
+      ingester.persistence.size: 5Gi
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir:
+              medium: Memory
+              sizeLimit: 5Gi
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  # ── Migration mode ───────────────────────────────────────────────────────────
+
+  - it: should still render zone StatefulSets when migration is enabled
+    set:
+      ingester.zoneAwareReplication.migration.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 3
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should merge zoneA extraAffinity into pod affinity for zone-a
+    set:
+      ingester.zoneAwareReplication.zoneA.extraAffinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/zone
+                    operator: In
+                    values:
+                      - zone-a
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key
+          value: topology.kubernetes.io/zone
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]
+          value: zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should merge zoneB extraAffinity into pod affinity for zone-b
+    set:
+      ingester.zoneAwareReplication.zoneB.extraAffinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/zone
+                    operator: In
+                    values:
+                      - zone-b
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key
+          value: topology.kubernetes.io/zone
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]
+          value: zone-b
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should merge zoneC extraAffinity into pod affinity for zone-c
+    set:
+      ingester.zoneAwareReplication.zoneC.extraAffinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/zone
+                    operator: In
+                    values:
+                      - zone-c
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key
+          value: topology.kubernetes.io/zone
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]
+          value: zone-c
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not apply zoneA nodeSelector key to pod nodeSelector (current behavior)
+    set:
+      ingester.zoneAwareReplication.zoneA.nodeSelector:
+        topology.kubernetes.io/zone: zone-a
+    asserts:
+      - notExists:
+          path: spec.template.spec.nodeSelector
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not apply zoneB nodeSelector key to pod nodeSelector (current behavior)
+    set:
+      ingester.zoneAwareReplication.zoneB.nodeSelector:
+        topology.kubernetes.io/zone: zone-b
+    asserts:
+      - notExists:
+          path: spec.template.spec.nodeSelector
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not apply zoneC nodeSelector key to pod nodeSelector (current behavior)
+    set:
+      ingester.zoneAwareReplication.zoneC.nodeSelector:
+        topology.kubernetes.io/zone: zone-c
+    asserts:
+      - notExists:
+          path: spec.template.spec.nodeSelector
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not apply zoneA podAnnotations to pod metadata annotations (current behavior)
+    set:
+      ingester.zoneAwareReplication.zoneA.podAnnotations:
+        zonal-pod-annotation: zone-a-value
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["zonal-pod-annotation"]
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not apply zoneB podAnnotations to pod metadata annotations (current behavior)
+    set:
+      ingester.zoneAwareReplication.zoneB.podAnnotations:
+        zonal-pod-annotation: zone-b-value
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["zonal-pod-annotation"]
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should not apply zoneC podAnnotations to pod metadata annotations (current behavior)
+    set:
+      ingester.zoneAwareReplication.zoneC.podAnnotations:
+        zonal-pod-annotation: zone-c-value
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["zonal-pod-annotation"]
+        documentIndex: 2
+        template: ingester/statefulset-ingester-zone.yaml
