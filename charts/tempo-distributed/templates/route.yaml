@@ -1,0 +1,40 @@
+{{- if and .Values.ingress.enabled .Values.route.enabled -}}
+{{- fail "You have selected both ingress.enabled and route.enabled, you must select either ingress or route but not both" -}}
+{{- end -}}
+{{- if .Values.route.enabled }}
+apiVersion: {{ .Values.route.apiVersion | default (include "tempo.gatewayApi.apiVersion" .) }}
+kind: {{ .Values.route.kind | default "HTTPRoute" }}
+metadata:
+  name: {{ include "tempo.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+    {{- with .Values.route.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.route.parentRefs }}
+  parentRefs:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.route.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range $svcName, $paths := .Values.route.paths }}
+    {{- range $paths }}
+    - matches:
+        - path:
+            type: {{ .pathType | default "PathPrefix" }}
+            value: {{ .path }}
+      backendRefs:
+        - name: {{ include "tempo.fullname" $ }}-{{ $svcName }}
+          port: {{ .port | default (include "tempo.serverHttpListenPort" $ | trim | int) }}
+    {{- end }}
+    {{- end }}
+{{- end }}

@@ -284,6 +284,19 @@ checksum/config: {{ include (print .ctx.Template.BasePath "/configmap-tempo.yaml
 {{/*
 Cluster name that shows up in dashboard metrics
 */}}
+{{/*
+Return the appropriate apiVersion for Gateway API resources.
+*/}}
+{{- define "tempo.gatewayApi.apiVersion" -}}
+{{- if .Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1" }}
+{{- print "gateway.networking.k8s.io/v1" }}
+{{- else if .Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1beta1" }}
+{{- print "gateway.networking.k8s.io/v1beta1" }}
+{{- else }}
+{{- print "gateway.networking.k8s.io/v1" }}
+{{- end }}
+{{- end }}
+
 {{- define "tempo.clusterName" -}}
 {{ (include "tempo.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
 {{- end -}}

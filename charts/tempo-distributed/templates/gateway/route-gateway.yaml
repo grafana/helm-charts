@@ -1,0 +1,50 @@
+{{- if and .Values.gateway.ingress.enabled .Values.gateway.route.enabled -}}
+{{- fail "You have selected both gateway.ingress.enabled and gateway.route.enabled, you must select either ingress or route but not both" -}}
+{{- end -}}
+{{- if .Values.gateway.enabled -}}
+{{- if .Values.gateway.route.enabled -}}
+{{ $dict := dict "ctx" . "component" "gateway" }}
+apiVersion: {{ .Values.gateway.route.apiVersion | default (include "tempo.gatewayApi.apiVersion" .) }}
+kind: {{ .Values.gateway.route.kind | default "HTTPRoute" }}
+metadata:
+  name: {{ include "tempo.resourceName" $dict }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- with .Values.gateway.route.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.gateway.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.gateway.route.parentRefs }}
+  parentRefs:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.gateway.route.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- with .Values.gateway.route.additionalRules }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - backendRefs:
+        - name: {{ include "tempo.resourceName" $dict }}
+          port: {{ .Values.gateway.service.port }}
+      {{- with .Values.gateway.route.filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.route.matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.gateway.route.timeouts }}
+      timeouts:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}

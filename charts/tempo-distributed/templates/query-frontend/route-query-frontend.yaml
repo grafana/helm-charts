@@ -1,0 +1,45 @@
+{{- if and .Values.queryFrontend.query.enabled .Values.queryFrontend.route.enabled -}}
+{{ $dict := dict "ctx" . "component" "query-frontend" }}
+apiVersion: {{ .Values.queryFrontend.route.apiVersion | default (include "tempo.gatewayApi.apiVersion" .) }}
+kind: {{ .Values.queryFrontend.route.kind | default "HTTPRoute" }}
+metadata:
+  name: {{ include "tempo.resourceName" $dict }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" $dict | nindent 4 }}
+    {{- with .Values.queryFrontend.route.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.queryFrontend.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.queryFrontend.route.parentRefs }}
+  parentRefs:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.queryFrontend.route.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- with .Values.queryFrontend.route.additionalRules }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - backendRefs:
+        - name: {{ include "tempo.resourceName" $dict }}
+          port: {{ .Values.queryFrontend.service.port }}
+      {{- with .Values.queryFrontend.route.filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.queryFrontend.route.matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.queryFrontend.route.timeouts }}
+      timeouts:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
