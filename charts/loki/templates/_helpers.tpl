@@ -986,7 +986,7 @@ enableServiceLinks: false
 {{- $isSimpleScalable := eq (include "loki.deployment.isScalable" .) "true" -}}
 {{- $isDistributed := eq (include "loki.deployment.isDistributed" .) "true" -}}
 {{- $isSingleBinary := eq (include "loki.deployment.isSingleBinary" .) "true" -}}
-{{- $compactorAddress := include "loki.backendFullname" . -}}
+{{- $compactorAddress := include "loki.resourceName" (dict "ctx" . "component" "backend") -}}
 {{- if $isSingleBinary -}}
 {{/* single binary */}}
 {{- $compactorAddress = include "loki.singleBinaryFullname" . -}}
