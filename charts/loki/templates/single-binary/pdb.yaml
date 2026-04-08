@@ -3,7 +3,7 @@
 {{- /*
 In older Loki helm chart version, the singleBinary PDB was configured through
 .Values.podDisruptionBudget (now deprecated). To avoid breaking change, deep-merge both dicts with
-.Values.podDisruptionBudget taking precedence over .Values.singleBinary.podDisruptionBudget.
+.Values.singleBinary.podDisruptionBudget taking precedence over .Values.podDisruptionBudget.
 
 The helper expects the PDB config to be located at <component>.podDisruptionBudget so that's where we merge to.
 
@@ -16,8 +16,8 @@ The base of enabled: true ensures old-format values (which lacked the enabled ke
         .Values.singleBinary
         (dict "podDisruptionBudget" (mergeOverwrite
             (dict "enabled" true)
-            .Values.singleBinary.podDisruptionBudget
             .Values.podDisruptionBudget
+            .Values.singleBinary.podDisruptionBudget
         ))
     )
     "ctx" .

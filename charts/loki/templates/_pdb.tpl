@@ -12,12 +12,13 @@ PDB helper
   {{- $ctx := .ctx }}
   {{- $component := .component }}
   {{- with $ctx }}
-    {{- $podDisruptionBudget := omit ($component.podDisruptionBudget | default dict) "enabled" "labels" "annotations" }}
+    {{- $podDisruptionBudget := dict }}
     {{- if hasKey $component "maxUnavailable"}}
     {{- if not (kindIs "invalid" $component.maxUnavailable) }}
     {{- $_ := set $podDisruptionBudget "maxUnavailable" $component.maxUnavailable }}
     {{- end }}
     {{- end }}
+    {{- $_ := mergeOverwrite $podDisruptionBudget (omit ($component.podDisruptionBudget | default dict) "enabled" "labels" "annotations") }}
     {{- if (omit $podDisruptionBudget "selector") }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget

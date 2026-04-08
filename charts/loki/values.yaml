@@ -2318,6 +2318,7 @@ distributor:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Max Surge for distributor pods
   maxSurge: 0
@@ -2497,6 +2498,7 @@ querier:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Max Surge for querier pods
   maxSurge: 0
@@ -2634,6 +2636,7 @@ queryFrontend:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Node selector for query-frontend pods
   nodeSelector: {}
@@ -2860,6 +2863,7 @@ indexGateway:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Node selector for index-gateway pods
   nodeSelector: {}
@@ -3466,6 +3470,7 @@ bloomBuilder:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Node selector for bloom-builder pods
   nodeSelector: {}
@@ -3547,6 +3552,7 @@ patternIngester:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Additional CLI args for the pattern ingester
   extraArgs: []
@@ -3737,6 +3743,7 @@ ruler:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Node selector for ruler pods
   nodeSelector: {}
@@ -3934,6 +3941,7 @@ overridesExporter:
               app.kubernetes.io/instance: '{{ .Release.Name }}'
           topologyKey: kubernetes.io/hostname
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: null
   # -- Node selector for overrides-exporter pods
   nodeSelector: {}
@@ -4218,7 +4226,18 @@ chunksCache:
   # -- Tolerations for chunks-cache pods
   tolerations: []
   # -- Pod Disruption Budget maxUnavailable
+  # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
   maxUnavailable: 1
+  podDisruptionBudget:
+    # -- Enable Pod Disruption Budget
+    enabled: true
+    # -- Annotations for Pod Disruption Budget
+    annotations: {}
+    # -- Labels for Pod Disruption Budget
+    labels: {}
+    # minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: IfHealthyBudget
   # -- DNSConfig for chunks-cache
   dnsConfig: {}
   # -- The name of the PriorityClass for chunks-cache pods
@@ -4338,7 +4357,18 @@ chunksCache:
     # -- Tolerations for chunks-cache-l2 pods
     tolerations: []
     # -- Pod Disruption Budget maxUnavailable
+    # @deprecated -- This is deprecated in favor of `podDisruptionBudget.maxUnavailable`.
     maxUnavailable: 1
+    podDisruptionBudget:
+      # -- Enable Pod Disruption Budget
+      enabled: true
+      # -- Annotations for Pod Disruption Budget
+      annotations: {}
+      # -- Labels for Pod Disruption Budget
+      labels: {}
+      # minAvailable: 1
+      # maxUnavailable: 1
+      # unhealthyPodEvictionPolicy: IfHealthyBudget
     # -- DNSConfig for chunks-cache-l2
     dnsConfig: {}
     # -- The name of the PriorityClass for chunks-cache-l2 pods
