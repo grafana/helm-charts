@@ -589,6 +589,12 @@
         window.history.pushState({ owner, repo, chart }, '', newUrl);
     };
 
+    // Detect whether a version string is a major release (X.0.0)
+    const isMajorVersion = (version) => {
+        const parts = version.split('.').map(Number);
+        return parts.length >= 3 && parts[1] === 0 && parts[2] === 0;
+    };
+
     // Parse release tag to extract chart name and version
     const parseTag = (tag) => {
         const match = tag.match(/^(.+?)-(\d+\..+)$/);
@@ -1118,6 +1124,16 @@
 
                 linksDiv.appendChild(templatesLink);
                 linksDiv.appendChild(valuesLink);
+            }
+
+            // Add upgrading guide link for major versions (X.0.0)
+            if (isMajorVersion(release.version)) {
+                const upgradingLink = document.createElement('a');
+                upgradingLink.href = `https://github.com/${owner}/${repo}/blob/main/charts/${release.chartName}/README.md#upgrading`;
+                upgradingLink.target = '_blank';
+                upgradingLink.className = 'artifacthub-link';
+                upgradingLink.textContent = '⬆️ Upgrading Guide';
+                linksDiv.appendChild(upgradingLink);
             }
 
             headerDiv.appendChild(versionLink);
