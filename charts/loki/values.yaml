@@ -812,6 +812,24 @@ lokiCanary:
     # minAvailable: 1
     # maxUnavailable: 1
     # unhealthyPodEvictionPolicy: IfHealthyBudget
+  # -- The SecurityContext for loki-canary pods
+  podSecurityContext:
+    fsGroup: 10001
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  # -- The SecurityContext for loki-canary containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
   # -- Image to use for loki canary
   image:
     # -- The Docker registry
@@ -4972,6 +4990,8 @@ sidecar:
       drop:
         - ALL
     allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
   # -- Set to true to skip tls verification for kube api calls.
   skipTlsVerify: false
   # -- Set to true to disable strict x509 verification for kube api calls.

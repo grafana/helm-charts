@@ -71,7 +71,7 @@ spec:
   {{- with (coalesce $component.priorityClassName .Values.defaults.priorityClassName .Values.loki.priorityClassName .Values.global.priorityClassName) }}
   priorityClassName: {{ . }}
   {{- end }}
-  {{- with (coalesce .Values.defaults.podSecurityContext .Values.loki.podSecurityContext) }}
+  {{- with (coalesce $component.podSecurityContext .Values.defaults.podSecurityContext .Values.loki.podSecurityContext) }}
   securityContext:
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -233,7 +233,7 @@ spec:
       envFrom:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with (coalesce .Values.defaults.containerSecurityContext .Values.loki.containerSecurityContext) }}
+      {{- with (coalesce $component.containerSecurityContext .Values.defaults.containerSecurityContext .Values.loki.containerSecurityContext) }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}

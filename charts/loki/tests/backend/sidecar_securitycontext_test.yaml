@@ -1,0 +1,60 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: backend sidecar securityContext
+templates:
+  - backend/statefulset.yaml
+  - config.yaml
+
+set:
+  deploymentMode: SimpleScalable
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  loki.image.tag: 0.0.0
+  sidecar.image.tag: 0.0.0
+
+tests:
+  - it: should render sidecar with seccompProfile RuntimeDefault by default
+    asserts:
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+            securityContext:
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+              allowPrivilegeEscalation: false
+              seccompProfile:
+                type: RuntimeDefault
+          any: true
+
+  - it: should allow overriding sidecar securityContext
+    set:
+      sidecar.securityContext:
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: Localhost
+          localhostProfile: my-profile.json
+    asserts:
+      - template: backend/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+            securityContext:
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+              allowPrivilegeEscalation: false
+              seccompProfile:
+                type: Localhost
+                localhostProfile: my-profile.json
+          any: true

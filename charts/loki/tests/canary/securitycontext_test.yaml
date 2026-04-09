@@ -1,0 +1,64 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: canary securityContext
+templates:
+  - loki-canary/daemonset.yaml
+  - config.yaml
+
+set:
+  deploymentMode: Distributed
+  loki.useTestSchema: true
+  lokiCanary.image.tag: 0.0.0
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+
+tests:
+  - it: should render canary pod with seccompProfile RuntimeDefault by default
+    asserts:
+      - template: loki-canary/daemonset.yaml
+        equal:
+          path: spec.template.spec.securityContext.seccompProfile
+          value:
+            type: RuntimeDefault
+
+  - it: should render canary container with seccompProfile RuntimeDefault by default
+    asserts:
+      - template: loki-canary/daemonset.yaml
+        equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile
+          value:
+            type: RuntimeDefault
+
+  - it: should allow overriding canary podSecurityContext at component level
+    set:
+      lokiCanary.podSecurityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+    asserts:
+      - template: loki-canary/daemonset.yaml
+        equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 1000
+
+  - it: should allow overriding canary containerSecurityContext at component level
+    set:
+      lokiCanary.containerSecurityContext:
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: Localhost
+          localhostProfile: my-profile.json
+    asserts:
+      - template: loki-canary/daemonset.yaml
+        equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile
+          value:
+            type: Localhost
+            localhostProfile: my-profile.json
