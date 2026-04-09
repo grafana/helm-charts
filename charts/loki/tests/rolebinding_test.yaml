@@ -1,0 +1,79 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: rolebinding
+templates:
+  - rolebinding.yaml
+
+tests:
+  - it: is not rendered by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: is not rendered when namespaced=true but sidecar.rules.enabled=false
+    set:
+      rbac.namespaced: true
+      sidecar.rules.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: is rendered when rbac.namespaced=true and sidecar.rules.enabled=true
+    set:
+      rbac.namespaced: true
+      sidecar.rules.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: kind
+          value: RoleBinding
+
+  - it: is rendered when rbac.sccEnabled=true
+    set:
+      rbac.sccEnabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: kind
+          value: RoleBinding
+
+  - it: subject uses global service account name by default (namespaced)
+    set:
+      rbac.namespaced: true
+      sidecar.rules.enabled: true
+    asserts:
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-loki
+
+  - it: subject uses custom serviceAccount.name when set (namespaced)
+    set:
+      rbac.namespaced: true
+      sidecar.rules.enabled: true
+      serviceAccount.name: my-custom-sa
+    asserts:
+      - equal:
+          path: subjects[0].name
+          value: my-custom-sa
+
+  - it: subject uses custom serviceAccount.name when set (sccEnabled)
+    set:
+      rbac.sccEnabled: true
+      serviceAccount.name: my-custom-sa
+    asserts:
+      - equal:
+          path: subjects[0].name
+          value: my-custom-sa
+
+  - it: roleRef references the loki role by name
+    set:
+      rbac.namespaced: true
+      sidecar.rules.enabled: true
+    asserts:
+      - equal:
+          path: roleRef.name
+          value: loki
+      - equal:
+          path: roleRef.kind
+          value: Role

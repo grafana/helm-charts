@@ -12,6 +12,6 @@ roleRef:
   name: {{ include "loki.name" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "loki.serviceAccountName" . }}
+    name: {{ include "loki.serviceAccountName" (dict "ctx" . "component" .Values "target" "") }}
     namespace: {{ include "loki.namespace" $ }}
 {{- end }}
