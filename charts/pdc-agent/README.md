@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
+![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -30,6 +30,14 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | not required, but left in as a choice |
 | podLabels | object | `{}` |  |
+| podMonitor.additionalLabels | object | `{}` | Additional labels for the PodMonitor |
+| podMonitor.enabled | bool | `false` | Enable PodMonitor |
+| podMonitor.honorLabels | bool | `false` | When true, labels from the scraped target take precedence over conflicting Prometheus labels |
+| podMonitor.interval | string | `"30s"` | Scrape interval |
+| podMonitor.namespace | string | `""` | Namespace for the PodMonitor. Defaults to the release namespace |
+| podMonitor.path | string | `"/metrics"` | Metrics path |
+| podMonitor.port | string | `"metrics"` | Port name to scrape |
+| podMonitor.scheme | string | `"http"` | HTTP scheme to use for scraping |
 | podSecurityContext.fsGroup | int | `30000` |  |
 | podSecurityContext.runAsGroup | int | `30000` |  |
 | podSecurityContext.runAsUser | int | `30000` |  |

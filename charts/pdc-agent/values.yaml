@@ -70,6 +70,25 @@ affinity: {}
 # -- The port where metrics are served from the pdc agent
 metricsPort: 8090
 
+# Configuration for the PodMonitor resource (requires Prometheus Operator)
+podMonitor:
+  # -- Enable PodMonitor
+  enabled: false
+  # -- Namespace for the PodMonitor. Defaults to the release namespace
+  namespace: ""
+  # -- Additional labels for the PodMonitor
+  additionalLabels: {}
+  # -- Scrape interval
+  interval: "30s"
+  # -- Port name to scrape
+  port: "metrics"
+  # -- HTTP scheme to use for scraping
+  scheme: "http"
+  # -- Metrics path
+  path: "/metrics"
+  # -- When true, labels from the scraped target take precedence over conflicting Prometheus labels
+  honorLabels: false
+
 # -- Enable debug logging for the agent. Useful for seeing SSH debug logs
 debug: false
 
