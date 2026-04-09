@@ -20,13 +20,3 @@ distributor selector labels
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: distributor
 {{- end }}
-
-{{/*
-distributor priority class name
-*/}}
-{{- define "loki.distributorPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.distributor.priorityClassName -}}
-{{- if $pcn }}
-priorityClassName: {{ $pcn }}
-{{- end }}
-{{- end }}

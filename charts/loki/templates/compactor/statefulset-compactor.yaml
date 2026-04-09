@@ -53,7 +53,12 @@ spec:
       dnsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" . "component" .Values.compactor "target" "compactor") }}
+      {{- if (kindIs "bool" .Values.compactor.automountServiceAccountToken) }}
+      automountServiceAccountToken: {{ .Values.compactor.automountServiceAccountToken }}
+      {{- else if (kindIs "bool" .Values.defaults.automountServiceAccountToken) }}
+      automountServiceAccountToken: {{ .Values.defaults.automountServiceAccountToken }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -76,7 +81,7 @@ spec:
       containers:
         - name: compactor
           image: {{ include "loki.image" (dict "ctx" . "component" .Values.compactor.image "default" .Values.loki.image "defaultVersion" .Chart.AppVersion) }}
-          imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+          imagePullPolicy: {{ coalesce .Values.compactor.image.pullPolicy .Values.loki.image.pullPolicy }}
           {{- if or .Values.loki.command .Values.compactor.command }}
           command:
             - {{ coalesce .Values.compactor.command .Values.loki.command | quote }}

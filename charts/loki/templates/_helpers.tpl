@@ -152,13 +152,22 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Create the name of the service account to use.
+
+Input parameters:
+  ctx = root context for looking up values
+  component = component name
+  target = target context
 */}}
 {{- define "loki.serviceAccountName" -}}
-{{- if .Values.serviceAccount.name }}
-  {{- tpl .Values.serviceAccount.name $ }}
-{{- else if .Values.serviceAccount.create -}}
-  {{- include "loki.fullname" . }}
+{{- if .component.serviceAccount.name }}
+  {{- tpl .component.serviceAccount.name $ }}
+{{- else if .component.serviceAccount.create -}}
+  {{- include "loki.resourceName" (dict "ctx" .ctx "component" .target) }}
+{{- else if .ctx.Values.serviceAccount.name }}
+  {{- tpl .ctx.Values.serviceAccount.name $ }}
+{{- else if .ctx.Values.serviceAccount.create -}}
+  {{- include "loki.fullname" .ctx }}
 {{- else -}}
   {{- "default" }}
 {{- end -}}

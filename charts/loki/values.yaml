@@ -119,7 +119,7 @@ defaults:
   # -- Tolerations for loki pods
   tolerations: []
   # -- Set this toggle to false to opt out of automounting API credentials for the service account
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
   # -- Annotations for loki pods
   podAnnotations: {}
   # -- Additional labels for loki pod
@@ -796,6 +796,8 @@ lokiCanary:
   tolerations: []
   # -- Affinity for canary pods
   affinity: {}
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: false
   # -- The name of the PriorityClass for loki-canary pods
   priorityClassName: null
   # -- Use the host's user namespace in loki-canary pods
@@ -823,7 +825,7 @@ lokiCanary:
     # -- Docker image pull policy
     pullPolicy: IfNotPresent
   # -- Liveness probe
-  livenessProbe:
+  livenessProbe: {}
   # -- Readiness probe
   readinessProbe:
     httpGet:
@@ -832,7 +834,7 @@ lokiCanary:
     initialDelaySeconds: 15
     timeoutSeconds: 1
   # -- Startup probe
-  startupProbe:
+  startupProbe: {}
   # -- Update strategy for the `loki-canary` Daemonset pods
   updateStrategy:
     type: RollingUpdate
@@ -846,6 +848,20 @@ lokiCanary:
     name: "self-monitoring"
     # -- Password of the gateway for Basic auth for loki-canary
     password: null
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: true
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: false
 ######################################################################################################################
 #
 # Service Accounts and Kubernetes RBAC
@@ -1091,6 +1107,8 @@ gateway:
   dnsConfig: {}
   # -- Node selector for gateway pods
   nodeSelector: {}
+  # -- Set this toggle to false to opt out of automounting API credentials for the service account
+  automountServiceAccountToken: false
   # -- Topology Spread Constraints for gateway pods
   # The value will be passed through tpl.
   topologySpreadConstraints: []
@@ -1118,6 +1136,20 @@ gateway:
     sessionAffinity: ""
     # -- Session affinity config for gateway Service
     sessionAffinityConfig: {}
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: true
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: false
   # Gateway ingress configuration
   ingress:
     # -- Specifies whether an ingress for the gateway should be created
@@ -1718,6 +1750,21 @@ write:
     annotations: {}
     # -- Labels for volume claim
     labels: {}
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: true
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # --  Configuration for the read pod(s)
 read:
   # -- Number of replicas for the read
@@ -1862,7 +1909,21 @@ read:
   # -- Tolerations for read pods
   tolerations: []
   # -- The default is to deploy all pods in parallel.
-  podManagementPolicy: "Parallel"
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # --  Configuration for the backend pod(s)
 backend:
   # -- Number of replicas for the backend
@@ -2037,6 +2098,20 @@ backend:
     annotations: {}
     # -- Labels for volume claim
     labels: {}
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
 ######################################################################################################################
 #
 # Microservices Mode
@@ -2253,6 +2328,20 @@ ingester:
     enableStatefulSetAutoDeletePVC: false
     whenDeleted: Retain
     whenScaled: Retain
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
   # -- Adds the appProtocol field to the ingester service. This allows ingester to work with istio protocol selection.
   # @deprecated -- This option is deprecated in favor of `ingester.service.appProtocol`
   appProtocol:
@@ -2477,6 +2566,20 @@ distributor:
     grpc: ""
   # -- trafficDistribution for distributor service
   trafficDistribution: ""
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
 # --  Configuration for the querier
 querier:
   # -- Number of replicas for the querier
@@ -2656,6 +2759,21 @@ querier:
     grpc: ""
   # -- trafficDistribution for querier service
   trafficDistribution: ""
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # -- Configuration for the query-frontend
 queryFrontend:
   # -- Number of replicas for the query-frontend
@@ -2816,6 +2934,21 @@ queryFrontend:
     enabled: true
   # -- trafficDistribution for query-frontend service
   trafficDistribution: ""
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # -- Configuration for the query-scheduler
 queryScheduler:
   # -- Number of replicas for the query-scheduler.
@@ -2926,6 +3059,22 @@ queryScheduler:
     grpc: ""
   # -- trafficDistribution for query-scheduler service
   trafficDistribution: ""
+
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # -- Configuration for the index-gateway
 indexGateway:
   # -- Number of replicas for the index-gateway
@@ -3074,6 +3223,21 @@ indexGateway:
     # -- Optional for updateStrategy.type=RollingUpdate. See [Partitioned rolling updates](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#partitions) in the StatefulSet docs for details.
     # rollingUpdate:
     #   partition: 0
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # -- Configuration for the compactor
 compactor:
   # -- Number of replicas for the compactor
@@ -3215,6 +3379,7 @@ compactor:
     annotations: {}
     # -- Set this toggle to false to opt out of automounting API credentials for the service account
     automountServiceAccountToken: true
+
 # -- Configuration for the bloom-gateway
 bloomGateway:
   # -- Number of replicas for the bloom-gateway
@@ -3351,15 +3516,17 @@ bloomGateway:
     whenDeleted: Retain
     whenScaled: Retain
   serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
     create: false
-    # -- The name of the ServiceAccount to use for the bloom-gateway.
-    # If not set and create is true, a name is generated by appending
-    # "-bloom-gateway" to the common ServiceAccount.
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
     name: null
-    # -- Image pull secrets for the bloom-gateway service account
+    # -- Image pull secrets for the service account
     imagePullSecrets: []
-    # -- Annotations for the bloom-gateway service account
+    # -- Annotations for the service account
     annotations: {}
+    # -- Labels for the service account
+    labels: {}
     # -- Set this toggle to false to opt out of automounting API credentials for the service account
     automountServiceAccountToken: true
 
@@ -3499,15 +3666,17 @@ bloomPlanner:
     whenDeleted: Retain
     whenScaled: Retain
   serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
     create: false
-    # -- The name of the ServiceAccount to use for the bloom-planner.
-    # If not set and create is true, a name is generated by appending
-    # "-bloom-planner" to the common ServiceAccount.
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
     name: null
-    # -- Image pull secrets for the bloom-planner service account
+    # -- Image pull secrets for the service account
     imagePullSecrets: []
-    # -- Annotations for the bloom-planner service account
+    # -- Annotations for the service account
     annotations: {}
+    # -- Labels for the service account
+    labels: {}
     # -- Set this toggle to false to opt out of automounting API credentials for the service account
     automountServiceAccountToken: true
 
@@ -3690,6 +3859,20 @@ bloomBuilder:
       annotations: {}
       # -- Labels for the generated volumeClaimTemplate.
       labels: {}
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
 
 # -- Configuration for the pattern ingester
 patternIngester:
@@ -3818,17 +4001,20 @@ patternIngester:
     whenDeleted: Retain
     whenScaled: Retain
   serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
     create: false
-    # -- The name of the ServiceAccount to use for the pattern ingester.
-    # If not set and create is true, a name is generated by appending
-    # "-pattern-ingester" to the common ServiceAccount.
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
     name: null
-    # -- Image pull secrets for the pattern ingester service account
+    # -- Image pull secrets for the service account
     imagePullSecrets: []
-    # -- Annotations for the pattern ingester service account
+    # -- Annotations for the service account
     annotations: {}
+    # -- Labels for the service account
+    labels: {}
     # -- Set this toggle to false to opt out of automounting API credentials for the service account
     automountServiceAccountToken: true
+
 # -- Configuration for the ruler
 ruler:
   # -- The ruler component is optional and can be disabled if desired.
@@ -4027,6 +4213,21 @@ ruler:
   #           expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
   #           for: 2m
 
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # -- Configuration for the overrides-exporter
 overridesExporter:
   # -- The overrides-exporter component is optional and can be disabled if desired.
@@ -4135,6 +4336,21 @@ overridesExporter:
   appProtocol:
     grpc: ""
 
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true
+
 # You can use a self hosted memcached by setting enabled to false and providing addresses.
 memcached:
   # -- Enable the built in memcached server provided by the chart
@@ -4183,6 +4399,22 @@ memcached:
     failureThreshold: 3
   # -- Startup probe for memcached pods
   startupProbe: {}
+
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: true
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: false
+
 
 memcachedExporter:
   # -- Whether memcached metrics should be exported
@@ -4971,3 +5203,18 @@ tableManager:
   retention_deletes_enabled: false
   # -- Set retention period
   retention_period: 0
+
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: false
+    # -- The name of the ServiceAccount to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: null
+    # -- Image pull secrets for the service account
+    imagePullSecrets: []
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Labels for the service account
+    labels: {}
+    # -- Set this toggle to false to opt out of automounting API credentials for the service account
+    automountServiceAccountToken: true

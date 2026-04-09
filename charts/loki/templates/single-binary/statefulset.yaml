@@ -71,7 +71,7 @@ spec:
       topologySpreadConstraints:
         {{- tpl ( . | toYaml) $ | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "loki.serviceAccountName" . }}
+      serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" . "component" .Values "target" "" ) }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{ include "loki.enableServiceLinks" . }}
       {{- with .Values.imagePullSecrets }}

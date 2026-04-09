@@ -11,15 +11,19 @@ Pod helper
 {{- with $ctx }}
 metadata:
   annotations:
+    {{- if ne $target "canary" }}
     {{- include "loki.config.checksum" . | nindent 4 }}
-    {{- with (mergeOverwrite (dict) .Values.loki.podAnnotations .Values.defaults.podAnnotations $component.podAnnotations) }}
+    {{- end }}
+    {{- with (mergeOverwrite (dict) .Values.loki.podAnnotations .Values.defaults.podAnnotations ($component.podAnnotations | default (dict))) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
     kubectl.kubernetes.io/default-container: "{{ $target }}"
   labels:
     {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target }}
+    {{- if ne $target "canary" }}
     app.kubernetes.io/part-of: memberlist
+    {{- end }}
     {{- if $rolloutZoneName }}
     name: {{ $target }}-{{ $rolloutZoneName }}
     rollout-group: {{ $target }}
@@ -32,7 +36,7 @@ spec:
   topologySpreadConstraints:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
   {{- end }}
-  serviceAccountName: {{ include "loki.serviceAccountName" . }}
+  serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" . "component" $component "target" $target ) }}
   {{- if (kindIs "bool" $component.enableServiceLinks) }}
   enableServiceLinks: {{ $component.enableServiceLinks }}
   {{- else if (kindIs "bool" .Values.defaults.enableServiceLinks) }}
@@ -40,8 +44,10 @@ spec:
   {{- else if (kindIs "bool" .Values.loki.hostUsers) }}
   enableServiceLinks: {{ .Values.loki.enableServiceLinks }}
   {{- end }}
-  {{- if (kindIs "bool" (coalesce $component.automountServiceAccountToken .Values.defaults.automountServiceAccountToken)) }}
-  automountServiceAccountToken: {{ (coalesce $component.automountServiceAccountToken .Values.defaults.automountServiceAccountToken) }}
+  {{- if (kindIs "bool" $component.automountServiceAccountToken) }}
+  automountServiceAccountToken: {{ $component.automountServiceAccountToken }}
+  {{- else if (kindIs "bool" .Values.defaults.automountServiceAccountToken) }}
+  automountServiceAccountToken: {{ .Values.defaults.automountServiceAccountToken }}
   {{- end }}
   {{- with .Values.imagePullSecrets }}
   imagePullSecrets:
@@ -118,13 +124,14 @@ spec:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
   {{- end }}
   volumes:
+    - name: temp
+      emptyDir: {}
+    {{- if ne $target "canary" }}
     - name: config
       {{- include "loki.configVolume" . | nindent 6 }}
     - name: runtime-config
       configMap:
         name: {{ template "loki.name" . }}-runtime
-    - name: temp
-      emptyDir: {}
     - name: data
       {{- if dig "persistence" "ephemeralDataVolume" "enabled" false $component }}
       ephemeral:
@@ -166,6 +173,7 @@ spec:
       {{- toYaml . | nindent 6 }}
         {{- end }}
       {{- end }}
+    {{- end }}
     {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
     - name: sc-rules-volume
       {{- if .Values.sidecar.rules.sizeLimit }}
@@ -188,14 +196,16 @@ spec:
   containers:
     - name: {{ $target }}
       image: {{ include "loki.image" (dict "ctx" . "component" $component.image "default" .Values.loki.image "defaultVersion" .Chart.AppVersion) }}
-      imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+      imagePullPolicy: {{ coalesce $component.image.pullPolicy .Values.loki.image.pullPolicy }}
       {{- with coalesce $component.command .Values.defaults.command .Values.loki.command }}
       command:
         - {{ . | quote }}
       {{- end }}
       args:
+        {{- if ne $target "canary" }}
         - -config.file=/etc/loki/config/config.yaml
         - -target={{ $target }}{{- if and .Values.loki.ui.enabled (or (eq $target "read") (eq $target "query-frontend") (eq $target "querier")) }},ui{{- end }}
+        {{- end }}
         {{- with $args }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -203,6 +213,11 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       ports:
+        {{- if eq $target "canary" }}
+        - name: http-metrics
+          containerPort: 3500
+          protocol: TCP
+        {{- else }}
         - name: http-metrics
           containerPort: 3100
           protocol: TCP
@@ -212,6 +227,7 @@ spec:
         - name: http-memberlist
           containerPort: 7946
           protocol: TCP
+        {{- end }}
       {{- include "loki.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.defaults.extraEnv $component.extraEnv) "resources" $component.resources "factor" .Values.defaults.goSettings.goMemLimitFactor "gogc" .Values.defaults.goSettings.gogc) | nindent 6 }}
       {{- with (concat .Values.global.extraEnvFrom .Values.defaults.extraEnvFrom $component.extraEnvFrom) | uniq }}
       envFrom:
@@ -240,14 +256,16 @@ spec:
         {{- end }}
       {{- end }}
       volumeMounts:
+        {{- if ne $target "canary" }}
         - name: config
           mountPath: /etc/loki/config
         - name: runtime-config
           mountPath: /etc/loki/runtime-config
-        - name: temp
-          mountPath: /tmp
         - name: data
           mountPath: /var/loki
+        {{- end }}
+        - name: temp
+          mountPath: /tmp
         {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
         - name: sc-rules-volume
           mountPath: {{ .Values.sidecar.rules.folder | quote }}

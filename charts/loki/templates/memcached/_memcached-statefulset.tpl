@@ -52,7 +52,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "loki.serviceAccountName" $.ctx }}
+      serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" $.ctx "component" $.ctx.Values.memcached "target" "memcached" ) }}
       {{- if .priorityClassName }}
       priorityClassName: {{ .priorityClassName }}
       {{- end }}
