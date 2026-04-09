@@ -347,6 +347,15 @@ route:
     # request: 10s
     # backendRequest: 5s
 
+    ## SessionPersistence defines and configures session persistence for the route rule.
+    ## Ref. https://gateway-api.sigs.k8s.io/geps/gep-1619/
+    sessionPersistence: {}
+    # sessionName: grafana-session
+    # type: Cookie
+    # absoluteTimeout: 48h
+    # cookieConfig:
+    #   lifetimeType: Permanent
+
     ## Filters define the filters that are applied to requests that match this rule.
     filters: []
 
