@@ -161,11 +161,11 @@ Input parameters:
 */}}
 {{- define "loki.serviceAccountName" -}}
 {{- if .component.serviceAccount.name }}
-  {{- tpl .component.serviceAccount.name $ }}
+  {{- tpl .component.serviceAccount.name .ctx }}
 {{- else if .component.serviceAccount.create -}}
   {{- include "loki.resourceName" (dict "ctx" .ctx "component" .target) }}
 {{- else if .ctx.Values.serviceAccount.name }}
-  {{- tpl .ctx.Values.serviceAccount.name $ }}
+  {{- tpl .ctx.Values.serviceAccount.name .ctx }}
 {{- else if .ctx.Values.serviceAccount.create -}}
   {{- include "loki.fullname" .ctx }}
 {{- else -}}
