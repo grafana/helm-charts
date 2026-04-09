@@ -99,7 +99,7 @@ spec:
               - key: name
                 operator: NotIn
                 values:
-                  - {{- if $component.addIngesterNamePrefix -}}loki-{{ end }}{{ $target }}-{{ $rolloutZoneName }}
+                  - {{ if $component.addIngesterNamePrefix -}}loki-{{ end }}{{ $target }}-{{ $rolloutZoneName }}
           topologyKey: kubernetes.io/hostname
     {{- with (dig "zoneAwareReplication" (printf "zone%s" (upper (splitList "-" $rolloutZoneName | last))) "extraAffinity" nil $component) }}
       {{- tpl ( . | toYaml) $ctx | nindent 4 }}
