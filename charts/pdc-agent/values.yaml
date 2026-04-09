@@ -73,7 +73,7 @@ metricsPort: 8090
 # Configuration for the PodMonitor resource (requires Prometheus Operator)
 podMonitor:
   # -- Enable PodMonitor
-  enabled: false
+  enabled: true
   # -- Namespace for the PodMonitor. Defaults to the release namespace
   namespace: ""
   # -- Additional labels for the PodMonitor
@@ -86,7 +86,7 @@ podMonitor:
   scheme: "http"
   # -- Metrics path
   path: "/metrics"
-  # -- When true, labels from the scraped target take precedence over conflicting Prometheus labels
+  # -- When true preserves the metric's labels when they collide with the target's labels
   honorLabels: false
 
 # -- Enable debug logging for the agent. Useful for seeing SSH debug logs
