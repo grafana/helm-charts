@@ -179,7 +179,7 @@ spec:
     {{- range $dir, $_ := .Values.ruler.directories }}
     - name: {{ include "loki.rulerRulesDirName" $dir }}
       configMap:
-        name: {{ include "loki.resourceName" (dict "ctx" . "component" $target) }}-{{ include "loki.rulerRulesDirName" $dir }}
+        name: {{ include "loki.resourceName" (dict "ctx" $ctx "component" $target "suffix" (include "loki.rulerRulesDirName" $dir)) }}
     {{- end }}
     {{- end }}
     {{- with (coalesce $component.extraVolumes .Values.defaults.extraVolumes .Values.global.extraVolumes) }}
@@ -252,7 +252,7 @@ spec:
         - name: sc-rules-volume
           mountPath: {{ .Values.sidecar.rules.folder | quote }}
           {{- range $dir, $_ := .Values.ruler.directories }}
-        - name: rules-{{ include "loki.rulerRulesDirName" $dir }}
+        - name: {{ include "loki.rulerRulesDirName" $dir }}
           mountPath: /etc/loki/rules/{{ $dir }}
           {{- end }}
         {{- end }}

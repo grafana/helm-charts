@@ -84,6 +84,10 @@ backend:
 ruler:
   replicas: 2
   affinity: null
+  directories:
+    fake:
+      alerts.yaml: |
+        groups: {}
 distributor:
   replicas: 2
   affinity: null

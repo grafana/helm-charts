@@ -1,0 +1,63 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: ruler configmap
+templates:
+  - ruler/configmap.yaml
+
+set:
+  deploymentMode: Distributed
+  loki.storage.type: s3
+
+tests:
+  - it: should render one configmap for ruler.directories.fake and keep rule file content
+    set:
+      ruler:
+        directories:
+          fake:
+            alerts.yaml: |
+              groups:
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ruler-rules-fake
+      - equal:
+          path: data
+          value:
+            alerts.yaml: |
+              groups:
+
+  - it: should not render when deployment mode is not distributed
+    set:
+      deploymentMode: SingleBinary
+      ruler:
+        directories:
+          fake:
+            alerts.yaml: |
+              groups:
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render when no ruler directories are configured
+    set:
+      ruler.directories: {}
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should normalize directory names in generated configmap names
+    set:
+      ruler:
+        directories:
+          Tenant_Foo-:
+            alerts.yaml: |
+              groups:
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ruler-rules-tenant-foo
