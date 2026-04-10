@@ -1658,7 +1658,7 @@ config: |
     http_server_read_timeout: {{ .Values.server.http_server_read_timeout }}
     http_server_write_timeout: {{ .Values.server.http_server_write_timeout }}
   cache:
-  {{- toYaml .Values.cache | nindent 2}}
+  {{- include "tempo.cacheConfig" . | nindent 2}}
   storage:
     trace:
       {{- if .Values.storage.trace.block.version }}
@@ -1736,6 +1736,9 @@ server:
 # Use this block to configure caches available throughout the application.
 # Multiple caches can be created and assigned roles which determine how they are used by Tempo.
 # https://grafana.com/docs/tempo/latest/configuration/#cache
+# When memcached.enabled is true (the default), the cache.caches list is auto-generated from the
+# memcached and per-role memcached sections (memcachedBloom, memcachedParquetFooter, memcachedFrontendSearch).
+# When memcached.enabled is false, this block is passed through verbatim to allow configuring external caches.
 cache:
   caches:
     - memcached:
@@ -1831,6 +1834,10 @@ memcached:
   host: memcached
   # Number of replicas for memchached
   replicas: 1
+  # -- Timeout for cache operations
+  timeout: 500ms
+  # -- Enable consistent hashing for cache
+  consistentHash: true
   # -- Additional CLI args for memcached
   extraArgs: []
   # -- Toleration for memcached pods
@@ -1929,6 +1936,268 @@ memcachedExporter:
   resources: {}
   # -- Additional CLI args for the memcached exporter
   extraArgs: []
+
+# -- Configuration for a dedicated memcached cluster for the bloom cache role.
+# When enabled, bloom cache is served by its own memcached StatefulSet.
+# Image is shared with the main `memcached` section.
+memcachedBloom:
+  # -- Enable a dedicated memcached cluster for the bloom cache role
+  enabled: false
+  # -- Annotations for the memcached-bloom StatefulSet
+  annotations: {}
+  # -- Number of replicas for the bloom memcached StatefulSet
+  replicas: 1
+  # -- Timeout for bloom cache operations
+  timeout: 500ms
+  # -- Enable consistent hashing for bloom cache
+  consistentHash: true
+  # -- Additional CLI args for memcached
+  extraArgs: []
+  # -- Tolerations for memcached-bloom pods
+  tolerations: []
+  # -- Environment variables to add to memcached-bloom pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to memcached-bloom pods
+  extraEnvFrom: []
+  # -- Labels for memcached-bloom pods
+  podLabels: {}
+  # -- Annotations for memcached-bloom pods
+  podAnnotations: {}
+  # -- Resource requests and limits for memcached-bloom
+  resources: {}
+  # -- topologySpread for memcached-bloom pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more than 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-bloom") | nindent 6 }}
+  # -- Affinity for memcached-bloom pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-bloom") | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-bloom") | nindent 12 }}
+            topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for memcached-bloom
+    enabled: true
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
+  # -- Init containers for the memcached-bloom pod
+  initContainers: []
+  # -- Containers to add to the memcached-bloom pods
+  extraContainers: []
+  # -- Extra volume mounts for memcached-bloom pods
+  extraVolumeMounts: []
+  # -- Extra volumes for memcached-bloom StatefulSet
+  extraVolumes: []
+  service:
+    # -- Annotations for memcached-bloom service
+    annotations: {}
+  # -- configuration for readiness probe for memcached-bloom statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+  # -- configuration for liveness probe for memcached-bloom statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+# -- Configuration for a dedicated memcached cluster for the parquet-footer cache role.
+# When enabled, parquet-footer cache is served by its own memcached StatefulSet.
+# Image is shared with the main `memcached` section.
+memcachedParquetFooter:
+  # -- Enable a dedicated memcached cluster for the parquet-footer cache role
+  enabled: false
+  # -- Annotations for the memcached-parquet-footer StatefulSet
+  annotations: {}
+  # -- Number of replicas for the parquet-footer memcached StatefulSet
+  replicas: 1
+  # -- Timeout for parquet-footer cache operations
+  timeout: 500ms
+  # -- Enable consistent hashing for parquet-footer cache
+  consistentHash: true
+  # -- Additional CLI args for memcached
+  extraArgs: []
+  # -- Tolerations for memcached-parquet-footer pods
+  tolerations: []
+  # -- Environment variables to add to memcached-parquet-footer pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to memcached-parquet-footer pods
+  extraEnvFrom: []
+  # -- Labels for memcached-parquet-footer pods
+  podLabels: {}
+  # -- Annotations for memcached-parquet-footer pods
+  podAnnotations: {}
+  # -- Resource requests and limits for memcached-parquet-footer
+  resources: {}
+  # -- topologySpread for memcached-parquet-footer pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more than 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-parquet-footer") | nindent 6 }}
+  # -- Affinity for memcached-parquet-footer pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-parquet-footer") | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-parquet-footer") | nindent 12 }}
+            topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for memcached-parquet-footer
+    enabled: true
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
+  # -- Init containers for the memcached-parquet-footer pod
+  initContainers: []
+  # -- Containers to add to the memcached-parquet-footer pods
+  extraContainers: []
+  # -- Extra volume mounts for memcached-parquet-footer pods
+  extraVolumeMounts: []
+  # -- Extra volumes for memcached-parquet-footer StatefulSet
+  extraVolumes: []
+  service:
+    # -- Annotations for memcached-parquet-footer service
+    annotations: {}
+  # -- configuration for readiness probe for memcached-parquet-footer statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+  # -- configuration for liveness probe for memcached-parquet-footer statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+# -- Configuration for a dedicated memcached cluster for the frontend-search cache role.
+# When enabled, frontend-search cache is served by its own memcached StatefulSet.
+# Image is shared with the main `memcached` section.
+memcachedFrontendSearch:
+  # -- Enable a dedicated memcached cluster for the frontend-search cache role
+  enabled: false
+  # -- Annotations for the memcached-frontend-search StatefulSet
+  annotations: {}
+  # -- Number of replicas for the frontend-search memcached StatefulSet
+  replicas: 1
+  # -- Timeout for frontend-search cache operations
+  timeout: 500ms
+  # -- Enable consistent hashing for frontend-search cache
+  consistentHash: true
+  # -- Additional CLI args for memcached
+  extraArgs: []
+  # -- Tolerations for memcached-frontend-search pods
+  tolerations: []
+  # -- Environment variables to add to memcached-frontend-search pods
+  extraEnv: []
+  # -- Environment variables from secrets or configmaps to add to memcached-frontend-search pods
+  extraEnvFrom: []
+  # -- Labels for memcached-frontend-search pods
+  podLabels: {}
+  # -- Annotations for memcached-frontend-search pods
+  podAnnotations: {}
+  # -- Resource requests and limits for memcached-frontend-search
+  resources: {}
+  # -- topologySpread for memcached-frontend-search pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Defaults to allow skew no more than 1 node per AZ
+  topologySpreadConstraints: |
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-frontend-search") | nindent 6 }}
+  # -- Affinity for memcached-frontend-search pods. Passed through `tpl` and, thus, to be configured as string
+  # @default -- Hard node and soft zone anti-affinity
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-frontend-search") | nindent 10 }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "memcached-frontend-search") | nindent 12 }}
+            topologyKey: topology.kubernetes.io/zone
+  # -- Pod Disruption Budget configuration
+  podDisruptionBudget:
+    # -- Enable PodDisruptionBudget for memcached-frontend-search
+    enabled: true
+  # -- Pod Disruption Budget maxUnavailable
+  maxUnavailable: 1
+  # -- Init containers for the memcached-frontend-search pod
+  initContainers: []
+  # -- Containers to add to the memcached-frontend-search pods
+  extraContainers: []
+  # -- Extra volume mounts for memcached-frontend-search pods
+  extraVolumeMounts: []
+  # -- Extra volumes for memcached-frontend-search StatefulSet
+  extraVolumes: []
+  service:
+    # -- Annotations for memcached-frontend-search service
+    annotations: {}
+  # -- configuration for readiness probe for memcached-frontend-search statefulset
+  readinessProbe:
+    tcpSocket:
+      port: client
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+  # -- configuration for liveness probe for memcached-frontend-search statefulset
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
 metaMonitoring:
   # ServiceMonitor configuration
   serviceMonitor:

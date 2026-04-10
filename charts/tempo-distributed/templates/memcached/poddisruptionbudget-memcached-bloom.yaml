@@ -1,0 +1,1 @@
+{{- include "tempo.memcached.pdb" (dict "ctx" $ "memcachedConfig" .Values.memcachedBloom "component" "memcached-bloom") }}

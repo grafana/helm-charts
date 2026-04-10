@@ -411,6 +411,62 @@ config: |
         timeout: 500ms
 ```
 
+### Memcached cache configuration
+
+By default, the chart deploys a single shared memcached StatefulSet (`memcached`) used for all cache roles — bloom filters, parquet footer, and frontend search. This is the simplest setup and works well for most deployments.
+
+#### Default: single shared cache
+
+```yaml
+memcached:
+  enabled: true
+```
+
+All cache roles (bloom, parquet footer, frontend search) point at the same `<release>-memcached` service.
+
+#### Separate one cache role
+
+You can deploy a dedicated memcached cluster for a specific role by enabling the corresponding per-role section. The shared `memcached` cluster remains active for the other roles.
+
+For example, to give bloom filters their own cluster while keeping the rest on the shared one:
+
+```yaml
+memcachedBloom:
+  enabled: true
+  replicas: 2
+```
+
+Available per-role sections:
+
+| Key | Cache role |
+| --- | --- |
+| `memcachedBloom` | Bloom filter cache |
+| `memcachedParquetFooter` | Parquet footer cache |
+| `memcachedFrontendSearch` | Frontend search cache |
+
+#### Fully isolated caches per role
+
+To run a dedicated memcached cluster for every cache role, disable the shared cluster and enable all three per-role clusters:
+
+```yaml
+memcached:
+  enabled: false
+
+memcachedBloom:
+  enabled: true
+  replicas: 2
+
+memcachedParquetFooter:
+  enabled: true
+  replicas: 2
+
+memcachedFrontendSearch:
+  enabled: true
+  replicas: 2
+```
+
+Each role gets its own StatefulSet and Service, and Tempo is configured to use the matching host for every cache type.
+
 ### Enabling gRPC Open Telemetry
 
 gRPC for Open Telemetry is disabled by default, simply flip the bool in the `traces` block to turn it on.

@@ -1,0 +1,243 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: per-role memcached StatefulSets
+templates:
+  - memcached/statefulset-memcached-bloom.yaml
+  - memcached/statefulset-memcached-parquet-footer.yaml
+  - memcached/statefulset-memcached-frontend-search.yaml
+  - memcached/service-memcached-bloom.yaml
+  - memcached/service-memcached-parquet-footer.yaml
+  - memcached/service-memcached-frontend-search.yaml
+  - memcached/poddisruptionbudget-memcached-bloom.yaml
+  - memcached/poddisruptionbudget-memcached-parquet-footer.yaml
+  - memcached/poddisruptionbudget-memcached-frontend-search.yaml
+
+tests:
+  - it: no per-role resources rendered when all disabled (default)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: bloom StatefulSet rendered with correct name when enabled
+    set:
+      memcachedBloom.enabled: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-bloom
+        template: memcached/statefulset-memcached-bloom.yaml
+      - equal:
+          path: kind
+          value: StatefulSet
+        template: memcached/statefulset-memcached-bloom.yaml
+
+  - it: bloom StatefulSet uses memcached.image
+    set:
+      memcachedBloom.enabled: true
+      memcached.image.tag: 1.6.41-alpine
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/memcached:1.6.41-alpine
+        template: memcached/statefulset-memcached-bloom.yaml
+
+  - it: bloom StatefulSet respects replica count
+    set:
+      memcachedBloom.enabled: true
+      memcachedBloom.replicas: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+        template: memcached/statefulset-memcached-bloom.yaml
+
+  - it: bloom Service rendered with correct name
+    set:
+      memcachedBloom.enabled: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-bloom
+        template: memcached/service-memcached-bloom.yaml
+      - equal:
+          path: kind
+          value: Service
+        template: memcached/service-memcached-bloom.yaml
+
+  - it: bloom PDB not rendered when replicas is 1 (default)
+    set:
+      memcachedBloom.enabled: true
+      memcachedBloom.replicas: 1
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: memcached/poddisruptionbudget-memcached-bloom.yaml
+
+  - it: bloom PDB rendered when replicas > 1
+    set:
+      memcachedBloom.enabled: true
+      memcachedBloom.replicas: 3
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-bloom
+        template: memcached/poddisruptionbudget-memcached-bloom.yaml
+      - equal:
+          path: kind
+          value: PodDisruptionBudget
+        template: memcached/poddisruptionbudget-memcached-bloom.yaml
+
+  - it: parquet-footer StatefulSet rendered with correct name when enabled
+    set:
+      memcachedParquetFooter.enabled: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-parquet-footer
+        template: memcached/statefulset-memcached-parquet-footer.yaml
+
+  - it: frontend-search StatefulSet rendered with correct name when enabled
+    set:
+      memcachedFrontendSearch.enabled: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-frontend-search
+        template: memcached/statefulset-memcached-frontend-search.yaml
+
+  - it: all three per-role StatefulSets rendered when all enabled
+    set:
+      memcachedBloom.enabled: true
+      memcachedParquetFooter.enabled: true
+      memcachedFrontendSearch.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: memcached/statefulset-memcached-bloom.yaml
+      - hasDocuments:
+          count: 1
+        template: memcached/statefulset-memcached-parquet-footer.yaml
+      - hasDocuments:
+          count: 1
+        template: memcached/statefulset-memcached-frontend-search.yaml
+
+  - it: parquet-footer Service rendered with correct name when enabled
+    set:
+      memcachedParquetFooter.enabled: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-parquet-footer
+        template: memcached/service-memcached-parquet-footer.yaml
+      - equal:
+          path: kind
+          value: Service
+        template: memcached/service-memcached-parquet-footer.yaml
+
+  - it: frontend-search Service rendered with correct name when enabled
+    set:
+      memcachedFrontendSearch.enabled: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-frontend-search
+        template: memcached/service-memcached-frontend-search.yaml
+      - equal:
+          path: kind
+          value: Service
+        template: memcached/service-memcached-frontend-search.yaml
+
+  - it: parquet-footer PDB not rendered when replicas is 1 (default)
+    set:
+      memcachedParquetFooter.enabled: true
+      memcachedParquetFooter.replicas: 1
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: memcached/poddisruptionbudget-memcached-parquet-footer.yaml
+
+  - it: parquet-footer PDB rendered when replicas > 1
+    set:
+      memcachedParquetFooter.enabled: true
+      memcachedParquetFooter.replicas: 3
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-parquet-footer
+        template: memcached/poddisruptionbudget-memcached-parquet-footer.yaml
+
+  - it: frontend-search PDB not rendered when replicas is 1 (default)
+    set:
+      memcachedFrontendSearch.enabled: true
+      memcachedFrontendSearch.replicas: 1
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: memcached/poddisruptionbudget-memcached-frontend-search.yaml
+
+  - it: frontend-search PDB rendered when replicas > 1
+    set:
+      memcachedFrontendSearch.enabled: true
+      memcachedFrontendSearch.replicas: 2
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-memcached-frontend-search
+        template: memcached/poddisruptionbudget-memcached-frontend-search.yaml
+
+  - it: parquet-footer StatefulSet respects replica count
+    set:
+      memcachedParquetFooter.enabled: true
+      memcachedParquetFooter.replicas: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+        template: memcached/statefulset-memcached-parquet-footer.yaml
+
+  - it: frontend-search StatefulSet respects replica count
+    set:
+      memcachedFrontendSearch.enabled: true
+      memcachedFrontendSearch.replicas: 2
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+        template: memcached/statefulset-memcached-frontend-search.yaml
+
+  - it: per-role StatefulSets use memcached.image
+    set:
+      memcachedParquetFooter.enabled: true
+      memcachedFrontendSearch.enabled: true
+      memcached.image.tag: 1.6.41-alpine
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/memcached:1.6.41-alpine
+        template: memcached/statefulset-memcached-parquet-footer.yaml
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/memcached:1.6.41-alpine
+        template: memcached/statefulset-memcached-frontend-search.yaml
+
+  - it: per-role resources are passed to StatefulSet containers
+    set:
+      memcachedBloom.enabled: true
+      memcachedBloom.resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          memory: 1Gi
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: 250m
+        template: memcached/statefulset-memcached-bloom.yaml
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.memory
+          value: 512Mi
+        template: memcached/statefulset-memcached-bloom.yaml
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 1Gi
+        template: memcached/statefulset-memcached-bloom.yaml

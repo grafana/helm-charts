@@ -168,6 +168,60 @@ Calculate the config from structured and unstructured text input
 {{- end -}}
 
 {{/*
+Build the cache section for tempo.yaml.
+When memcached.enabled is true, auto-generates cache.caches from per-role memcached sections.
+Roles without a dedicated per-role instance fall back to the shared memcached cluster.
+When memcached.enabled is false, outputs the user-defined cache block from values.yaml verbatim.
+*/}}
+{{- define "tempo.cacheConfig" -}}
+{{- $fullname := include "tempo.fullname" . -}}
+{{- $roles := list "parquet-footer" "bloom" "frontend-search" -}}
+{{- $perRoleMap := dict
+    "parquet-footer"  (dict "section" "memcachedParquetFooter"  "component" "memcached-parquet-footer")
+    "bloom"           (dict "section" "memcachedBloom"          "component" "memcached-bloom")
+    "frontend-search" (dict "section" "memcachedFrontendSearch" "component" "memcached-frontend-search") -}}
+{{- if .Values.memcached.enabled -}}
+{{- $sharedRoles := list -}}
+{{- range $role := $roles -}}
+  {{- $mapping := get $perRoleMap $role -}}
+  {{- $vals := index $.Values (get $mapping "section") -}}
+  {{- if not (and $vals (index $vals "enabled")) -}}
+    {{- $sharedRoles = append $sharedRoles $role -}}
+  {{- end -}}
+{{- end -}}
+caches:
+{{- if gt (len $sharedRoles) 0 }}
+  - memcached:
+      host: {{ $fullname }}-memcached
+      service: memcached-client
+      consistent_hash: {{ .Values.memcached.consistentHash }}
+      timeout: {{ .Values.memcached.timeout }}
+    roles:
+    {{- range $sharedRoles }}
+      - {{ . }}
+    {{- end }}
+{{- end }}
+{{- range $role := $roles -}}
+  {{- $mapping := get $perRoleMap $role -}}
+  {{- $sectionName := get $mapping "section" -}}
+  {{- $component   := get $mapping "component" -}}
+  {{- $vals := index $.Values $sectionName -}}
+  {{- if and $vals (index $vals "enabled") }}
+  - memcached:
+      host: {{ $fullname }}-{{ $component }}
+      service: memcached-client
+      consistent_hash: {{ index $vals "consistentHash" }}
+      timeout: {{ index $vals "timeout" }}
+    roles:
+      - {{ $role }}
+  {{- end -}}
+{{- end }}
+{{- else -}}
+{{ toYaml .Values.cache }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Renders the overrides config
 */}}
 {{- define "tempo.overridesConfig" -}}

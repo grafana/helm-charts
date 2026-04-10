@@ -1,0 +1,126 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: cache config generation
+templates:
+  - configmap-tempo.yaml
+
+tests:
+  - it: default - single shared entry covering all three roles
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "host: .*-memcached\n"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "parquet-footer"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "bloom"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "frontend-search"
+      - notMatchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-bloom"
+      - notMatchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-parquet-footer"
+      - notMatchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-frontend-search"
+
+  - it: bloom enabled - bloom gets its own cluster, shared handles remaining roles
+    set:
+      memcachedBloom.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "host: .*-memcached\n"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-bloom"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "parquet-footer"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "frontend-search"
+      - notMatchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-parquet-footer"
+      - notMatchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-frontend-search"
+
+  - it: parquet-footer enabled - parquet-footer gets its own cluster
+    set:
+      memcachedParquetFooter.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-parquet-footer"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "bloom"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "frontend-search"
+
+  - it: frontend-search enabled - frontend-search gets its own cluster
+    set:
+      memcachedFrontendSearch.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-frontend-search"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "bloom"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "parquet-footer"
+
+  - it: all three enabled - each role has its own cluster, no shared entry
+    set:
+      memcachedBloom.enabled: true
+      memcachedParquetFooter.enabled: true
+      memcachedFrontendSearch.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-bloom"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-parquet-footer"
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "memcached-frontend-search"
+      - notMatchRegex:
+          path: data["tempo.yaml"]
+          pattern: "host: .*-memcached\n"
+
+  - it: custom timeout respected for bloom
+    set:
+      memcachedBloom.enabled: true
+      memcachedBloom.timeout: 1s
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "timeout: 1s"
+
+  - it: custom timeout respected for parquet-footer
+    set:
+      memcachedParquetFooter.enabled: true
+      memcachedParquetFooter.timeout: 2s
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "timeout: 2s"
+
+  - it: custom timeout respected for frontend-search
+    set:
+      memcachedFrontendSearch.enabled: true
+      memcachedFrontendSearch.timeout: 750ms
+    asserts:
+      - matchRegex:
+          path: data["tempo.yaml"]
+          pattern: "timeout: 750ms"
