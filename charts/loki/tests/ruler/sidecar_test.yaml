@@ -222,6 +222,43 @@ tests:
             name: rules-tenant-foo
             mountPath: /etc/loki/rules/Tenant_Foo-
 
+  - it: should render configmap-backed rule volumes and mounts for ruler directories without the rules sidecar
+    set:
+      sidecar.rules.enabled: false
+      loki.rulerConfig.storage.type: local
+      ruler:
+        directories:
+          fake:
+            alerts.yaml: |
+              groups:
+    asserts:
+      - template: ruler/statefulset.yaml
+        hasDocuments:
+          count: 1
+      - template: ruler/statefulset.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: rules-fake
+            configMap:
+              name: RELEASE-NAME-loki-ruler-rules-fake
+      - template: ruler/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: rules-fake
+            mountPath: /etc/loki/rules/fake
+      - template: ruler/statefulset.yaml
+        notContains:
+          path: spec.template.spec.containers
+          content:
+            name: loki-sc-rules
+      - template: ruler/statefulset.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: sc-rules-volume
+
   - it: should not add the sidecar container or shared volume when disabled via sidecar.rules.enabled
     set:
       sidecar.rules.enabled: false

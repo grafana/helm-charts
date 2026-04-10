@@ -185,6 +185,8 @@ spec:
       {{- end }}
     - name: sc-rules-temp
       emptyDir: {}
+    {{- end }}
+    {{- if has $target (list "ruler" "backend" "single-binary") }}
     {{- range $dir, $_ := .Values.ruler.directories }}
     - name: {{ include "loki.rulerRulesDirName" $dir }}
       configMap:
@@ -270,6 +272,8 @@ spec:
         {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
         - name: sc-rules-volume
           mountPath: {{ .Values.sidecar.rules.folder | quote }}
+        {{- end }}
+        {{- if has $target (list "ruler" "backend" "single-binary") }}
           {{- range $dir, $_ := .Values.ruler.directories }}
         - name: {{ include "loki.rulerRulesDirName" $dir }}
           mountPath: /etc/loki/rules/{{ $dir }}
