@@ -41,7 +41,7 @@ spec:
   enableServiceLinks: {{ $component.enableServiceLinks }}
   {{- else if (kindIs "bool" .Values.defaults.enableServiceLinks) }}
   enableServiceLinks: {{ .Values.defaults.enableServiceLinks }}
-  {{- else if (kindIs "bool" .Values.loki.hostUsers) }}
+  {{- else if (kindIs "bool" .Values.loki.enableServiceLinks) }}
   enableServiceLinks: {{ .Values.loki.enableServiceLinks }}
   {{- end }}
   {{- if (kindIs "bool" $component.automountServiceAccountToken) }}
