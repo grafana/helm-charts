@@ -1,0 +1,230 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: backend statefulset
+templates:
+  - backend/statefulset.yaml
+  - config.yaml
+set:
+  deploymentMode: SimpleScalable
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+
+tests:
+  - it: should not render when deploymentMode is not scalable
+    set:
+      deploymentMode: Distributed
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: backend/statefulset.yaml
+
+  - it: should render one StatefulSet in simple scalable mode
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: backend/statefulset.yaml
+      - isKind:
+          of: StatefulSet
+        template: backend/statefulset.yaml
+
+  - it: should set expected metadata labels
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: backend
+        template: backend/statefulset.yaml
+      - equal:
+          path: metadata.labels["app.kubernetes.io/part-of"]
+          value: memberlist
+        template: backend/statefulset.yaml
+
+  - it: should merge common and component statefulset annotations
+    set:
+      loki.annotations:
+        loki-annotation: loki-value
+      backend.annotations:
+        backend-annotation: backend-value
+    asserts:
+      - equal:
+          path: metadata.annotations["loki-annotation"]
+          value: loki-value
+        template: backend/statefulset.yaml
+      - equal:
+          path: metadata.annotations["backend-annotation"]
+          value: backend-value
+        template: backend/statefulset.yaml
+
+  - it: should set replicas from backend.replicas
+    set:
+      backend.replicas: 5
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 5
+        template: backend/statefulset.yaml
+
+  - it: should omit replicas when autoscaling is enabled
+    set:
+      backend.autoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+        template: backend/statefulset.yaml
+
+  - it: should omit replicas when kedaAutoscaling is enabled
+    set:
+      backend.kedaAutoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+        template: backend/statefulset.yaml
+
+  - it: should set expected statefulset spec fields
+    asserts:
+      - equal:
+          path: spec.podManagementPolicy
+          value: Parallel
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.serviceName
+          value: loki-backend-headless
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 10
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/component"]
+          value: backend
+        template: backend/statefulset.yaml
+
+  - it: should render backend podAnnotations in pod template annotations
+    set:
+      backend.podAnnotations:
+        custom-annotation: custom-value
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["custom-annotation"]
+          value: custom-value
+        template: backend/statefulset.yaml
+
+  - it: should render volumeClaimTemplates when volumeClaimsEnabled is true
+    set:
+      backend.persistence.volumeClaimsEnabled: true
+      backend.persistence.size: 25Gi
+    asserts:
+      - exists:
+          path: spec.volumeClaimTemplates
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].metadata.name
+          value: data
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          value: 25Gi
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.accessModes[0]
+          value: ReadWriteOnce
+        template: backend/statefulset.yaml
+
+  - it: should not render volumeClaimTemplates when volumeClaimsEnabled is false
+    set:
+      backend.persistence.volumeClaimsEnabled: false
+    asserts:
+      - notExists:
+          path: spec.volumeClaimTemplates
+        template: backend/statefulset.yaml
+
+  - it: should render PVC annotations labels selector storageClass and volumeAttributesClassName when configured
+    set:
+      backend.persistence.annotations:
+        pvc-annotation: pvc-value
+      backend.persistence.labels:
+        pvc-label: pvc-value
+      backend.persistence.selector:
+        matchLabels:
+          volume: loki-backend-storage
+      backend.persistence.storageClass: gp3
+      backend.persistence.volumeAttributesClassName: bronze
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].metadata.annotations["pvc-annotation"]
+          value: pvc-value
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].metadata.labels["pvc-label"]
+          value: pvc-value
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.selector.matchLabels.volume
+          value: loki-backend-storage
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          value: gp3
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.volumeAttributesClassName
+          value: bronze
+        template: backend/statefulset.yaml
+
+  - it: should render empty storageClassName when persistence.storageClass is dash
+    set:
+      backend.persistence.storageClass: "-"
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          value: ""
+        template: backend/statefulset.yaml
+
+  - it: should render persistentVolumeClaimRetentionPolicy when auto delete PVC is enabled with volume claims
+    set:
+      backend.persistence.enableStatefulSetAutoDeletePVC: true
+      backend.persistence.volumeClaimsEnabled: true
+    asserts:
+      - equal:
+          path: spec.persistentVolumeClaimRetentionPolicy.whenDeleted
+          value: Delete
+        template: backend/statefulset.yaml
+      - equal:
+          path: spec.persistentVolumeClaimRetentionPolicy.whenScaled
+          value: Delete
+        template: backend/statefulset.yaml
+
+  - it: should not render persistentVolumeClaimRetentionPolicy when auto delete PVC is disabled
+    set:
+      backend.persistence.enableStatefulSetAutoDeletePVC: false
+    asserts:
+      - notExists:
+          path: spec.persistentVolumeClaimRetentionPolicy
+        template: backend/statefulset.yaml
+
+  - it: should not render persistentVolumeClaimRetentionPolicy when volume claims are disabled
+    set:
+      backend.persistence.enableStatefulSetAutoDeletePVC: true
+      backend.persistence.volumeClaimsEnabled: false
+    asserts:
+      - notExists:
+          path: spec.persistentVolumeClaimRetentionPolicy
+        template: backend/statefulset.yaml
+
+  - it: should render memory-backed data volume when persistence.inMemory is enabled and volume claims are disabled
+    set:
+      backend.persistence.volumeClaimsEnabled: false
+      backend.persistence.inMemory: true
+      backend.persistence.size: 5Gi
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir:
+              medium: Memory
+              sizeLimit: 5Gi
+        template: backend/statefulset.yaml
+      - notExists:
+          path: spec.volumeClaimTemplates
+        template: backend/statefulset.yaml

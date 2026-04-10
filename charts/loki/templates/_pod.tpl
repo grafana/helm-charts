@@ -17,7 +17,7 @@ metadata:
     {{- with (mergeOverwrite (dict) .Values.loki.podAnnotations .Values.defaults.podAnnotations ($component.podAnnotations | default (dict))) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-    kubectl.kubernetes.io/default-container: "{{ $target }}"
+    kubectl.kubernetes.io/default-container: "{{ replace "single-binary" "loki" $target }}"
   labels:
     {{- include "loki.labels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target }}
@@ -36,7 +36,7 @@ spec:
   topologySpreadConstraints:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
   {{- end }}
-  serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" . "component" $component "target" $target ) }}
+  serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" . "component" (eq $target "single-binary" | ternary .Values $component) "target" (replace "single-binary" "" $target) ) }}
   {{- if (kindIs "bool" $component.enableServiceLinks) }}
   enableServiceLinks: {{ $component.enableServiceLinks }}
   {{- else if (kindIs "bool" .Values.defaults.enableServiceLinks) }}
@@ -132,8 +132,8 @@ spec:
     - name: runtime-config
       configMap:
         name: {{ template "loki.name" . }}-runtime
-    - name: data
       {{- if dig "persistence" "ephemeralDataVolume" "enabled" false $component }}
+    - name: {{ eq $target "single-binary" | ternary "storage" "data" }}
       ephemeral:
         volumeClaimTemplate:
           metadata:
@@ -162,16 +162,15 @@ spec:
               {{- toYaml . | nindent 14 }}
             {{- end }}
       {{- else if dig "persistence" "inMemory" false $component }}
-    - name: data
+    - name: {{ eq $target "single-binary" | ternary "storage" "data" }}
       emptyDir:
         medium: Memory
         {{- with $component.persistence.size }}
         sizeLimit: {{ . }}
         {{- end }}
       {{- else if not (or (dig "persistence" "volumeClaimsEnabled" false $component) (dig "persistence" "enabled" false $component)) }}
-        {{- with (dig "persistence" "dataVolumeParameters" (dict "emptyDir" (dict)) $component) }}
-      {{- toYaml . | nindent 6 }}
-        {{- end }}
+    - name: {{ eq $target "single-binary" | ternary "storage" "data" }}
+      {{- toYaml (dig "persistence" "dataVolumeParameters" (dict "emptyDir" (dict)) $component) | nindent 6 }}
       {{- end }}
     {{- end }}
     {{- if and $component.sidecar .Values.sidecar.rules.enabled }}
@@ -194,7 +193,7 @@ spec:
     {{- toYaml . | nindent 4 }}
     {{- end }}
   containers:
-    - name: {{ $target }}
+    - name: {{ replace "single-binary" "loki" $target }}
       image: {{ include "loki.image" (dict "ctx" . "component" $component.image "default" .Values.loki.image "defaultVersion" .Chart.AppVersion) }}
       imagePullPolicy: {{ coalesce $component.image.pullPolicy .Values.loki.image.pullPolicy }}
       {{- with coalesce $component.command .Values.defaults.command .Values.loki.command }}
@@ -204,7 +203,7 @@ spec:
       args:
         {{- if ne $target "canary" }}
         - -config.file=/etc/loki/config/config.yaml
-        - -target={{ $target }}{{- if and .Values.loki.ui.enabled (or (eq $target "read") (eq $target "query-frontend") (eq $target "querier")) }},ui{{- end }}
+        - -target={{ replace "single-binary" "all" $target }}{{- if and .Values.loki.ui.enabled (has $target (list "single-binary" "read" "query-frontend" "querier")) }},ui{{- end }}
         {{- end }}
         {{- with $args }}
         {{- toYaml . | nindent 8 }}
@@ -219,10 +218,10 @@ spec:
           protocol: TCP
         {{- else }}
         - name: http-metrics
-          containerPort: 3100
+          containerPort: {{ .Values.loki.server.http_listen_port }}
           protocol: TCP
         - name: grpc
-          containerPort: 9095
+          containerPort: {{ .Values.loki.server.grpc_listen_port }}
           protocol: TCP
         - name: http-memberlist
           containerPort: 7946
@@ -261,7 +260,7 @@ spec:
           mountPath: /etc/loki/config
         - name: runtime-config
           mountPath: /etc/loki/runtime-config
-        - name: data
+        - name: {{ eq $target "single-binary" | ternary "storage" "data" }}
           mountPath: /var/loki
         {{- end }}
         - name: temp

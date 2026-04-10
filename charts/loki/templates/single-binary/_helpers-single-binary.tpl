@@ -13,16 +13,6 @@ app.kubernetes.io/component: single-binary
 app.kubernetes.io/component: single-binary
 {{- end }}
 
-{{/*
-singleBinary priority class name
-*/}}
-{{- define "loki.singleBinaryPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.singleBinary.priorityClassName -}}
-{{- if $pcn }}
-priorityClassName: {{ $pcn }}
-{{- end }}
-{{- end }}
-
 {{/* singleBinary replicas calculation */}}
 {{- define "loki.singleBinaryReplicas" -}}
 {{- $replicas := 1 }}
@@ -32,10 +22,3 @@ priorityClassName: {{ $pcn }}
 {{- end }}
 {{- printf "%d" $replicas }}
 {{- end }}
-
-{{/*
-singleBinary target
-*/}}
-{{- define "loki.singleBinaryTarget" -}}
-{{- .Values.singleBinary.targetModule -}}{{- if .Values.loki.ui.enabled -}},ui{{- end -}}
-{{- end -}}
