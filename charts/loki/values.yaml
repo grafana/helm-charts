@@ -1270,7 +1270,7 @@ gateway:
     enabled: true
     image:
       repository: "ghcr.io/jkroepke/access-log-exporter"
-      tag: "0.3.8"
+      tag: "0.3.9"
       pullPolicy: IfNotPresent
     resources:
       requests: {}
