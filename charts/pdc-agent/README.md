@@ -31,7 +31,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | nodeSelector | object | `{}` | not required, but left in as a choice |
 | podLabels | object | `{}` |  |
 | podMonitor.additionalLabels | object | `{}` | Additional labels for the PodMonitor |
-| podMonitor.enabled | bool | `true` | Enable PodMonitor |
+| podMonitor.enabled | bool | `false` | Enable PodMonitor |
 | podMonitor.honorLabels | bool | `false` | When true preserves the metric's labels when they collide with the target's labels |
 | podMonitor.interval | string | `"30s"` | Scrape interval |
 | podMonitor.namespace | string | `""` | Namespace for the PodMonitor. Defaults to the release namespace |
