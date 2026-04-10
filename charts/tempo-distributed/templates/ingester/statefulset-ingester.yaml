@@ -99,15 +99,7 @@ spec:
               containerPort: {{ include "tempo.memberlistBindPort" . }}
             - name: http-metrics
               containerPort: 3200
-          {{- if or .Values.global.extraEnv .Values.ingester.extraEnv }}
-          env:
-            {{- with .Values.global.extraEnv }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.ingester.extraEnv }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- end }}
+          {{- include "tempo.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.ingester.extraEnv) "resources" .Values.ingester.resources "factor" .Values.global.goSettings.goMemLimitFactor "gogc" .Values.global.goSettings.gogc) | nindent 10 }}
           {{- if or .Values.global.extraEnvFrom .Values.ingester.extraEnvFrom }}
           envFrom:
             {{- with .Values.global.extraEnvFrom }}

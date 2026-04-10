@@ -22,6 +22,14 @@ global:
   dnsService: 'kube-dns'
   # -- configures DNS service namespace
   dnsNamespace: 'kube-system'
+  goSettings:
+    # -- Fraction of the container memory limit used to compute GOMEMLIMIT (e.g. 0.85 = 85%).
+    # Set to 0 to disable automatic GOMEMLIMIT injection.
+    goMemLimitFactor: 0.85
+    # -- Value to set for GOGC alongside GOMEMLIMIT. Lowering below the default of 100 reduces
+    # heap growth between GC cycles, working in tandem with GOMEMLIMIT to smooth memory usage.
+    # Set to 0 to disable automatic GOGC injection.
+    gogc: 80
   # -- Common environment variables to add to all pods directly managed by this chart.
   # scope: admin-api, compactor, distributor, enterprise-federation-frontend, gateway, ingester, memcached, metrics-generator, querier, query-frontend, tokengen
   extraEnv: []

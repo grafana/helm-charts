@@ -71,15 +71,7 @@ spec:
             - name: {{ .name | quote }}
               containerPort: {{ .port }}
             {{- end }}
-          {{- if or .Values.global.extraEnv .Values.metricsGenerator.extraEnv }}
-          env:
-            {{- with .Values.global.extraEnv }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.metricsGenerator.extraEnv }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- end }}
+          {{- include "tempo.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.metricsGenerator.extraEnv) "resources" .Values.metricsGenerator.resources "factor" .Values.global.goSettings.goMemLimitFactor "gogc" .Values.global.goSettings.gogc) | nindent 10 }}
           {{- if or .Values.global.extraEnvFrom .Values.metricsGenerator.extraEnvFrom }}
           envFrom:
             {{- with .Values.global.extraEnvFrom }}

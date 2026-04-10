@@ -76,15 +76,7 @@ spec:
               name: http-metrics
             - containerPort: {{ include "tempo.memberlistBindPort" . }}
               name: http-memberlist
-          {{- if or .Values.global.extraEnv .Values.compactor.extraEnv }}
-          env:
-            {{- with .Values.global.extraEnv }}
-              {{ toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.compactor.extraEnv }}
-              {{ toYaml . | nindent 12 }}
-            {{- end }}
-          {{- end }}
+          {{- include "tempo.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.compactor.extraEnv) "resources" .Values.compactor.resources "factor" .Values.global.goSettings.goMemLimitFactor "gogc" .Values.global.goSettings.gogc) | nindent 10 }}
           {{- if or .Values.global.extraEnvFrom .Values.compactor.extraEnvFrom }}
           envFrom:
             {{- with .Values.compactor.extraEnvFrom }}

@@ -78,13 +78,7 @@ spec:
             {{- toYaml .Values.enterpriseGateway.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.enterpriseGateway.containerSecurityContext | nindent 12 }}
-          env:
-            {{- with .Values.global.extraEnv }}
-              {{ toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.enterpriseGateway.env }}
-              {{ toYaml . | nindent 12 }}
-            {{- end }}
+          {{- include "tempo.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.enterpriseGateway.env) "resources" .Values.enterpriseGateway.resources "factor" .Values.global.goSettings.goMemLimitFactor "gogc" .Values.global.goSettings.gogc) | nindent 10 }}
           envFrom:
             {{- with .Values.global.extraEnvFrom }}
               {{- toYaml . | nindent 12 }}

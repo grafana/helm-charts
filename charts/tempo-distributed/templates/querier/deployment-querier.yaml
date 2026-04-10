@@ -77,15 +77,7 @@ spec:
               protocol: TCP
             - containerPort: 3200
               name: http-metrics
-          {{- if or .Values.global.extraEnv .Values.querier.extraEnv }}
-          env:
-            {{- with .Values.global.extraEnv }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.querier.extraEnv }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- end }}
+          {{- include "tempo.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.querier.extraEnv) "resources" .Values.querier.resources "factor" .Values.global.goSettings.goMemLimitFactor "gogc" .Values.global.goSettings.gogc) | nindent 10 }}
           {{- if or .Values.global.extraEnvFrom .Values.querier.extraEnvFrom }}
           envFrom:
             {{- with .Values.global.extraEnvFrom }}

@@ -342,6 +342,61 @@ Cluster name that shows up in dashboard metrics
 {{ (include "tempo.calculatedConfig" . | fromYaml).cluster_name | default .Release.Name }}
 {{- end -}}
 
+{{- define "tempo.memoryToMiB" -}}
+{{- $mem := . | toString -}}
+{{- if hasSuffix "Gi" $mem -}}
+  {{- mulf ((trimSuffix "Gi" $mem) | float64) 1024 | int -}}
+{{- else if hasSuffix "Mi" $mem -}}
+  {{- (trimSuffix "Mi" $mem) | int -}}
+{{- else if hasSuffix "G" $mem -}}
+  {{- mulf ((trimSuffix "G" $mem) | float64) 953.6743164 | int -}}
+{{- else if hasSuffix "M" $mem -}}
+  {{- mulf ((trimSuffix "M" $mem) | float64) 0.9536743164 | int -}}
+{{- else if hasSuffix "Ki" $mem -}}
+  {{- divf ((trimSuffix "Ki" $mem) | float64) 1024 | int -}}
+{{- else -}}
+  {{- divf ($mem | float64) 1048576 | int -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Build the env block for a Tempo component, auto-injecting GOMEMLIMIT and GOGC.
+
+Arguments (passed as a dict):
+  extraEnv  - already-concatenated extraEnv list for this component
+  resources - the component's resources block (.Values.<component>.resources)
+  factor    - fraction of memory limit for GOMEMLIMIT (default 0.85)
+  gogc      - value for GOGC env var (default 80)
+
+When the memory limit is not set, or GOMEMLIMIT is already defined in extraEnv,
+the list is returned unchanged so users retain full control.
+*/}}
+{{- define "tempo.componentEnv" -}}
+{{- $envList := .extraEnv | default list -}}
+{{- $resources := .resources | default dict -}}
+{{- $factor := .factor | default 0.85 | float64 -}}
+{{- $gogc := .gogc | default 80 | int -}}
+{{- $hasGomemlimit := false -}}
+{{- $hasGogc := false -}}
+{{- range $envList -}}
+  {{- if eq .name "GOMEMLIMIT" -}}{{- $hasGomemlimit = true -}}{{- end -}}
+  {{- if eq .name "GOGC" -}}{{- $hasGogc = true -}}{{- end -}}
+{{- end -}}
+{{- $memLimit := dig "limits" "memory" "" $resources -}}
+{{- if and (not $hasGomemlimit) $memLimit -}}
+  {{- $mib := include "tempo.memoryToMiB" $memLimit | int -}}
+  {{- $goMemMib := mulf ($mib | float64) $factor | int -}}
+  {{- $envList = append $envList (dict "name" "GOMEMLIMIT" "value" (printf "%dMiB" $goMemMib)) -}}
+{{- end -}}
+{{- if not $hasGogc -}}
+  {{- $envList = append $envList (dict "name" "GOGC" "value" ($gogc | toString)) -}}
+{{- end -}}
+{{- with $envList | uniq -}}
+env:
+  {{- toYaml . | nindent 2 }}
+{{- end -}}
+{{- end -}}
+
 {{- define "tempo.statefulset.recreateOnSizeChangeHook" -}}
   {{- $renderedStatefulSets := list -}}
   {{- range $renderedStatefulSet := include (print .context.Template.BasePath .pathToStatefulsetTemplate) .context | splitList "---" -}}
