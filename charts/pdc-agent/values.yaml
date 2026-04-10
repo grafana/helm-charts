@@ -73,7 +73,7 @@ metricsPort: 8090
 # Configuration for the PodMonitor resource (requires Prometheus Operator)
 podMonitor:
   # -- Enable PodMonitor
-  enabled: true
+  enabled: false
   # -- Namespace for the PodMonitor. Defaults to the release namespace
   namespace: ""
   # -- Additional labels for the PodMonitor
