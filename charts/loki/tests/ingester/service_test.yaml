@@ -1,0 +1,121 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: ingester service
+templates:
+  - ingester/service.yaml
+  - config.yaml
+
+set:
+  deploymentMode: Distributed
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  ingester.zoneAwareReplication.enabled: true
+  ingester.replicas: 3
+
+tests:
+  - it: renders one service and four headless services in distributed mode
+    asserts:
+      - hasDocuments:
+          count: 5
+        template: ingester/service.yaml
+
+  - it: keeps global service selector stable without name or rollout-group labels
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester
+        documentIndex: 0
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: ingester
+        documentIndex: 0
+        template: ingester/service.yaml
+      - notExists:
+          path: spec.selector.name
+        documentIndex: 0
+        template: ingester/service.yaml
+      - notExists:
+          path: spec.selector["rollout-group"]
+        documentIndex: 0
+        template: ingester/service.yaml
+
+  - it: sets default zonal headless selectors for zone-a
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-a-headless
+        documentIndex: 2
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector.name
+          value: ingester-zone-a
+        documentIndex: 2
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector["rollout-group"]
+          value: ingester
+        documentIndex: 2
+        template: ingester/service.yaml
+
+  - it: applies addIngesterNamePrefix to zonal headless service selectors
+    set:
+      ingester.addIngesterNamePrefix: true
+    asserts:
+      - equal:
+          path: spec.selector.name
+          value: loki-ingester-zone-a
+        documentIndex: 2
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector.name
+          value: loki-ingester-zone-b
+        documentIndex: 3
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector.name
+          value: loki-ingester-zone-c
+        documentIndex: 4
+        template: ingester/service.yaml
+
+  - it: applies rolloutGroupPrefix to zonal headless service selectors
+    set:
+      ingester.rolloutGroupPrefix: myprefix
+    asserts:
+      - equal:
+          path: spec.selector["rollout-group"]
+          value: myprefix-ingester
+        documentIndex: 2
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector["rollout-group"]
+          value: myprefix-ingester
+        documentIndex: 3
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector["rollout-group"]
+          value: myprefix-ingester
+        documentIndex: 4
+        template: ingester/service.yaml
+
+  - it: applies both prefixes to zonal headless service selectors together
+    set:
+      ingester.addIngesterNamePrefix: true
+      ingester.rolloutGroupPrefix: myprefix
+    asserts:
+      - equal:
+          path: spec.selector.name
+          value: loki-ingester-zone-a
+        documentIndex: 2
+        template: ingester/service.yaml
+      - equal:
+          path: spec.selector["rollout-group"]
+          value: myprefix-ingester
+        documentIndex: 2
+        template: ingester/service.yaml
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: ingester
+        documentIndex: 2
+        template: ingester/service.yaml

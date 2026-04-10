@@ -122,9 +122,9 @@ spec:
   selector:
     {{ include "loki.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: {{ $target | quote }}
-    {{ if $rolloutZoneName }}
-    name: {{ include "loki.prefixIngesterName" . }}ingester-{{ $rolloutZoneName }}
-    rollout-group: {{ include "loki.prefixRolloutGroup" . }}ingester
+    {{- if $rolloutZoneName }}
+    name: {{ if $component.addIngesterNamePrefix }}loki-{{ end }}{{ $target }}-{{ $rolloutZoneName }}
+    rollout-group: {{ with $component.rolloutGroupPrefix }}{{ . }}-{{ end }}{{ $target }}
     {{- end }}
 {{- end }}
 {{- end }}

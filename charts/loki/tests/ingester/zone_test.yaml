@@ -110,6 +110,14 @@ tests:
           path: metadata.labels["rollout-group"]
           value: myprefix-ingester
         template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.selector.matchLabels["rollout-group"]
+          value: myprefix-ingester
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.template.metadata.labels["rollout-group"]
+          value: myprefix-ingester
+        template: ingester/statefulset-ingester-zone.yaml
 
   - it: should include loki- prefix in name label when addIngesterNamePrefix is true
     set:
@@ -119,6 +127,37 @@ tests:
           path: metadata.labels.name
           value: loki-ingester-zone-a
         documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.selector.matchLabels.name
+          value: loki-ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: spec.template.metadata.labels.name
+          value: loki-ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+
+  - it: should keep StatefulSet resource names unchanged when both ingester prefixes are set
+    set:
+      ingester.addIngesterNamePrefix: true
+      ingester.rolloutGroupPrefix: myprefix
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-a
+        documentIndex: 0
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-b
+        documentIndex: 1
+        template: ingester/statefulset-ingester-zone.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester-zone-c
+        documentIndex: 2
         template: ingester/statefulset-ingester-zone.yaml
 
   - it: should set app.kubernetes.io/part-of memberlist label
@@ -282,7 +321,7 @@ tests:
     set:
       ingester.persistence.enabled: true
     asserts:
-      - isNotNull:
+      - exists:
           path: spec.volumeClaimTemplates
         template: ingester/statefulset-ingester-zone.yaml
       - equal:

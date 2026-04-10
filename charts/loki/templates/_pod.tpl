@@ -25,8 +25,8 @@ metadata:
     app.kubernetes.io/part-of: memberlist
     {{- end }}
     {{- if $rolloutZoneName }}
-    name: {{ $target }}-{{ $rolloutZoneName }}
-    rollout-group: {{ $target }}
+    name: {{ if $component.addIngesterNamePrefix }}loki-{{ end }}{{ $target }}-{{ $rolloutZoneName }}
+    rollout-group: {{ with $component.rolloutGroupPrefix }}{{ . }}-{{ end }}{{ $target }}
     {{- end }}
     {{- with (mergeOverwrite (dict) .Values.loki.podLabels .Values.defaults.podLabels $component.podLabels) }}
     {{- toYaml . | nindent 4 }}
