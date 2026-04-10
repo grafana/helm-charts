@@ -473,33 +473,39 @@ tests:
         documentIndex: 2
         template: ingester/statefulset-ingester-zone.yaml
 
-  - it: should not apply zoneA nodeSelector key to pod nodeSelector (current behavior)
+  - it: should apply zoneA nodeSelector to pod nodeSelector for zone-a
     set:
       ingester.zoneAwareReplication.zoneA.nodeSelector:
         topology.kubernetes.io/zone: zone-a
     asserts:
-      - notExists:
+      - equal:
           path: spec.template.spec.nodeSelector
+          value:
+            topology.kubernetes.io/zone: zone-a
         documentIndex: 0
         template: ingester/statefulset-ingester-zone.yaml
 
-  - it: should not apply zoneB nodeSelector key to pod nodeSelector (current behavior)
+  - it: should apply zoneB nodeSelector to pod nodeSelector for zone-b
     set:
       ingester.zoneAwareReplication.zoneB.nodeSelector:
         topology.kubernetes.io/zone: zone-b
     asserts:
-      - notExists:
+      - equal:
           path: spec.template.spec.nodeSelector
+          value:
+            topology.kubernetes.io/zone: zone-b
         documentIndex: 1
         template: ingester/statefulset-ingester-zone.yaml
 
-  - it: should not apply zoneC nodeSelector key to pod nodeSelector (current behavior)
+  - it: should apply zoneC nodeSelector to pod nodeSelector for zone-c
     set:
       ingester.zoneAwareReplication.zoneC.nodeSelector:
         topology.kubernetes.io/zone: zone-c
     asserts:
-      - notExists:
+      - equal:
           path: spec.template.spec.nodeSelector
+          value:
+            topology.kubernetes.io/zone: zone-c
         documentIndex: 2
         template: ingester/statefulset-ingester-zone.yaml
 
