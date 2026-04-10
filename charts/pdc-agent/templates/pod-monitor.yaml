@@ -5,7 +5,7 @@ metadata:
   name: {{ include "pdc-agent.fullname" . }}
   {{- with .Values.podMonitor.namespace }}
   namespace: {{ . | quote }}
-  {{- end }}why
+  {{- end }}
   labels:
     {{- include "pdc-agent.labels" . | nindent 4 }}
     {{- with .Values.podMonitor.additionalLabels }}
