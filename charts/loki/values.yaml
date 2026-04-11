@@ -146,6 +146,8 @@ defaults:
     customHeaders: ""
     # -- Interval (seconds) to poll each trigger. Overridable per component.
     pollingInterval: 30
+    # -- Period (seconds) to wait after the last trigger reported active before scaling back to 0. Overridable per component.
+    cooldownPeriod: 300
     # -- KEDA trigger authentication settings. Ref: https://keda.sh/docs/latest/concepts/authentication/
     authentication:
       # -- Enable TriggerAuthentication for KEDA triggers
@@ -1030,8 +1032,9 @@ gateway:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 3
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -1455,8 +1458,9 @@ singleBinary:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 3
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -1629,8 +1633,9 @@ write:
     minReplicas: 2
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 6
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -1823,8 +1828,9 @@ read:
     minReplicas: 2
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 6
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -1986,8 +1992,9 @@ backend:
     minReplicas: 3
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 6
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -2190,8 +2197,9 @@ ingester:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 3
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -2474,8 +2482,9 @@ distributor:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 3
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -2647,8 +2656,9 @@ querier:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 10
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -2841,8 +2851,9 @@ queryFrontend:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 3
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}
@@ -3749,8 +3760,9 @@ bloomBuilder:
     minReplicas: 1
     # -- Maximum replicas for KEDA autoscaling
     maxReplicas: 3
-    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds)
-    cooldownPeriod: 300
+    # -- Period to wait after the last trigger reported active before scaling the resource back to 0 (seconds).
+    # Defaults to defaults.kedaAutoscaling.cooldownPeriod if not set.
+    cooldownPeriod: null
     # -- Fallback configuration for KEDA ScaledObject. Applied when the trigger metric cannot be retrieved.
     # Ref: https://keda.sh/docs/latest/reference/scaledobject-spec/#fallback
     fallback: {}

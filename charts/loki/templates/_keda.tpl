@@ -37,7 +37,11 @@ spec:
   minReplicaCount: {{ $component.kedaAutoscaling.minReplicas }}
   maxReplicaCount: {{ $component.kedaAutoscaling.maxReplicas }}
   pollingInterval: {{ coalesce $component.kedaAutoscaling.pollingInterval .Values.defaults.kedaAutoscaling.pollingInterval }}
+  {{- if kindIs "int" $component.kedaAutoscaling.cooldownPeriod }}
   cooldownPeriod: {{ $component.kedaAutoscaling.cooldownPeriod }}
+  {{- else }}
+  cooldownPeriod: {{ .Values.defaults.kedaAutoscaling.cooldownPeriod }}
+  {{- end }}
   {{- with $component.kedaAutoscaling.fallback }}
   fallback:
     {{- toYaml . | nindent 4 }}
