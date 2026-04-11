@@ -20,11 +20,7 @@ metadata:
   {{- end }}
 spec:
 {{- if and (not .Values.write.autoscaling.enabled) (not .Values.write.kedaAutoscaling.enabled) }}
-  {{- if eq .Values.deploymentMode "SingleBinary" }}
-  replicas: 0
-  {{- else }}
   replicas: {{ .Values.write.replicas }}
-  {{- end }}
 {{- end }}
   podManagementPolicy: {{ .Values.write.podManagementPolicy }}
   updateStrategy:

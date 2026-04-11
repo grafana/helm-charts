@@ -1,8 +1,8 @@
 # $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
 suite: ingester image
 templates:
-  - ingester/statefulset-ingester.yaml
-  - ingester/statefulset-ingester-zone.yaml
+  - ingester/statefulset.yaml
+  - ingester/statefulset-zone.yaml
   - config.yaml
 set:
   deploymentMode: Distributed
@@ -20,7 +20,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/grafana/loki:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should override repository and tag at write component level
     set:
@@ -30,7 +30,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/custom/loki-write:custom-tag
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should override registry at write component level
     set:
@@ -40,7 +40,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: quay.io/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should let global imageRegistry override write and loki registries
     set:
@@ -51,7 +51,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: registry.example.com/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should keep fully qualified write repository without global imageRegistry prefix
     set:
@@ -61,7 +61,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: ghcr.io/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should support deprecated global.image.registry override
     set:
@@ -71,7 +71,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: deprecated.registry.example.com/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should support deprecated global.registry override
     set:
@@ -81,7 +81,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: deprecated2.registry.example.com/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should let write image tag override loki image tag
     set:
@@ -90,7 +90,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/grafana/loki:write-tag
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should prefer write image digest over tag
     set:
@@ -101,7 +101,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/custom/loki-write@sha256:d1g357
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should use write image sha as digest fallback when digest is not set
     set:
@@ -112,7 +112,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/custom/loki-write@sha256:abcdef0123456789
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should prefer write digest over loki digest
     set:
@@ -123,7 +123,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/custom/loki-write@sha256:component
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should prefer global.imageRegistry over deprecated global registry keys
     set:
@@ -135,7 +135,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: current.registry.example.com/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should prefer deprecated global.image.registry over deprecated global.registry when imageRegistry is unset
     set:
@@ -146,7 +146,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: preferred.registry.example.com/custom/loki-write:0.0.0
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should use default loki image digest when write image is not set
     set:
@@ -155,7 +155,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/grafana/loki@sha256:defaultdigest
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml
 
   - it: should use default loki image sha as digest fallback when digest is not set and write image is not set
     set:
@@ -164,4 +164,4 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/grafana/loki@sha256:deadbeef01234567
-        template: ingester/statefulset-ingester.yaml
+        template: ingester/statefulset.yaml

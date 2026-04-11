@@ -1,7 +1,7 @@
 # $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
 suite: chunks-cache memcached image
 templates:
-  - chunks-cache/statefulset-chunks-cache.yaml
+  - chunks-cache/statefulset.yaml
   - config.yaml
 set:
   deploymentMode: Distributed
@@ -19,7 +19,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should override repository and tag for memcached in chunks-cache
     set:
@@ -29,7 +29,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: custom/memcached:custom-tag
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should override registry for memcached in chunks-cache
     set:
@@ -39,7 +39,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: quay.io/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should let global imageRegistry override memcached registry in chunks-cache
     set:
@@ -50,7 +50,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: registry.example.com/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should keep fully qualified memcached repository without global imageRegistry prefix
     set:
@@ -60,7 +60,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: ghcr.io/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should support deprecated global.image.registry override for chunks-cache memcached
     set:
@@ -70,7 +70,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: deprecated.registry.example.com/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should support deprecated global.registry override for chunks-cache memcached
     set:
@@ -80,7 +80,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: deprecated2.registry.example.com/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should let memcached image tag override default tag for chunks-cache
     set:
@@ -89,7 +89,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: memcached:memcached-tag
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should prefer memcached image digest over tag for chunks-cache
     set:
@@ -100,7 +100,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: custom/memcached@sha256:d1g357
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should use memcached image sha as digest fallback for chunks-cache when digest is not set
     set:
@@ -111,7 +111,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: custom/memcached@sha256:abcdef0123456789
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should prefer global.imageRegistry over deprecated global registry keys for chunks-cache memcached
     set:
@@ -123,7 +123,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: current.registry.example.com/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
 
   - it: should prefer deprecated global.image.registry over deprecated global.registry for chunks-cache memcached when imageRegistry is unset
     set:
@@ -134,4 +134,4 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: preferred.registry.example.com/custom/memcached:1.6.41-alpine
-        template: chunks-cache/statefulset-chunks-cache.yaml
+        template: chunks-cache/statefulset.yaml
