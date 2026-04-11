@@ -21,12 +21,13 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          fetch-tags: 'false'
 
       # Using a GitHub App token, because GitHub Actions doesn't run on commits from github-actions bot
       # Used App:
       # https://github.com/organizations/prometheus-community/settings/apps/helm-charts-renovate-helper.
       # Ref: https://github.com/prometheus-community/helm-charts/issues/5213.
-      - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+      - uses: actions/create-github-app-token@7bd03711494f032dfa3be3558f7dc8787b0be333 # v3.1.0
         id: app-token
         with:
           app-id: ${{ secrets.APP_RENOVATE_HELPER_APP_ID }}
@@ -69,49 +70,49 @@ jobs:
         #language=bash
         run: |
           set -x
-          
+
           # Define the target directory
           TARGET_DIR="$CHART"
-          
+
           # Fetch deleted files in the target directory
           DELETED_FILES=$(git diff --diff-filter=D --name-only HEAD -- "$TARGET_DIR")
-          
+
           # Fetch added/modified files in the target directory
           MODIFIED_FILES=$(git diff --diff-filter=ACM --name-only HEAD -- "$TARGET_DIR")
-          
+
           # Exit early if no changes detected
           if [ -z "$DELETED_FILES" ] && [ -z "$MODIFIED_FILES" ]; then
             echo "No files added, modified, or deleted. Skipping."
             exit 0
           fi
-          
+
           # Create a temporary file for JSON output
           FILE_CHANGES_JSON_FILE=$(mktemp)
-          
+
           # Initialize JSON structure in the file
           echo '{ "deletions": [], "additions": [] }' > "$FILE_CHANGES_JSON_FILE"
-          
+
           # Add deletions
           for file in $DELETED_FILES; do
             jq --arg path "$file" '.deletions += [{"path": $path}]' "$FILE_CHANGES_JSON_FILE" > "$FILE_CHANGES_JSON_FILE.tmp"
             mv "$FILE_CHANGES_JSON_FILE.tmp" "$FILE_CHANGES_JSON_FILE"
           done
-          
+
           # Add additions (new or modified files)
           for file in $MODIFIED_FILES; do
             TMP_CONTENT_FILE=$(mktemp)
             base64 -w 0 <"$file" > "$TMP_CONTENT_FILE"
-          
+
             jq --arg path "$file" --rawfile content "$TMP_CONTENT_FILE" \
             '.additions += [{"path": $path, "contents": $content }]' "$FILE_CHANGES_JSON_FILE" > "$FILE_CHANGES_JSON_FILE.tmp"
-          
+
             mv "$FILE_CHANGES_JSON_FILE.tmp" "$FILE_CHANGES_JSON_FILE"
             rm "$TMP_CONTENT_FILE"
           done
-          
+
           # Create a temporary file for the final JSON payload
           JSON_PAYLOAD_FILE=$(mktemp)
-          
+
           # Construct the final JSON using jq and store it in a file
           jq -n --arg repo "$GITHUB_REPOSITORY" \
                 --arg branch "$GITHUB_HEAD_REF" \
@@ -120,11 +121,11 @@ jobs:
                 --slurpfile fileChanges "$FILE_CHANGES_JSON_FILE" \
                 '{
                   query: "mutation ($input: CreateCommitOnBranchInput!) {
-                    createCommitOnBranch(input: $input) { 
-                      commit { 
-                        url 
-                      } 
-                    } 
+                    createCommitOnBranch(input: $input) {
+                      commit {
+                        url
+                      }
+                    }
                   }",
                   variables: {
                     input: {
@@ -138,11 +139,11 @@ jobs:
                     }
                   }
                 }' > "$JSON_PAYLOAD_FILE"
-          
+
           # Call GitHub API
           curl https://api.github.com/graphql -f \
-               -sSf -H "Authorization: Bearer $GITHUB_TOKEN" \
-               --data "@$JSON_PAYLOAD_FILE"
-          
+            -sSf -H "Authorization: Bearer $GITHUB_TOKEN" \
+            --data "@$JSON_PAYLOAD_FILE"
+
           # Clean up temporary files
           rm "$FILE_CHANGES_JSON_FILE" "$JSON_PAYLOAD_FILE"
