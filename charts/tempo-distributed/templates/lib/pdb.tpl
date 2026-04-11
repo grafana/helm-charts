@@ -8,7 +8,7 @@ Params:
 {{- $componentSection := include "tempo.componentSectionFromName" . }}
 {{ with (index $.ctx.Values $componentSection) }}
 {{- if .podDisruptionBudget -}}
-apiVersion: {{ include "tempo.podDisruptionBudget.apiVersion" $.ctx }}
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "tempo.resourceName" (dict "ctx" $.ctx "component" $.component) }}
