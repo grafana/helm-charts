@@ -70,7 +70,7 @@ http://{{ include "loki.gatewayFullname" . }}.{{ include "loki.namespace" . }}.s
 {{- else }}
 {{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
 
-http://{{ include "loki.singleBinaryFullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.loki.server.http_listen_port }}/loki/api/v1/push
+http://{{ include "loki.fullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.loki.server.http_listen_port }}/loki/api/v1/push
 
 {{- end}}
 {{- if eq (include "loki.deployment.isScalable" .) "true" }}
@@ -93,7 +93,7 @@ You can test to send data from outside the cluster by port-forwarding the gatewa
 {{- else }}
 {{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
 
-  kubectl port-forward --namespace {{ include "loki.namespace" $ }} svc/{{ include "loki.singleBinaryFullname" . }} 3100:{{ .Values.loki.server.http_listen_port }} &
+  kubectl port-forward --namespace {{ include "loki.namespace" $ }} svc/{{ include "loki.fullname" . }} 3100:{{ .Values.loki.server.http_listen_port }} &
 
 {{- end}}
 {{- if eq (include "loki.deployment.isScalable" .) "true" }}
@@ -137,7 +137,7 @@ http://{{ include "loki.gatewayFullname" . }}.{{ include "loki.namespace" . }}.s
 {{- else }}
 {{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
 
-http://{{ include "loki.singleBinaryFullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.loki.server.http_listen_port }}/
+http://{{ include "loki.fullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.loki.server.http_listen_port }}/
 
 {{- end}}
 {{- if eq (include "loki.deployment.isScalable" .) "true" }}

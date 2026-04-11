@@ -1,4 +1,4 @@
 {{- $isSingleBinary := eq (include "loki.deployment.isSingleBinary" .) "true" -}}
 {{- if $isSingleBinary }}
-{{- include "loki.service" (dict "target" "single-binary" "component" .Values.singleBinary "ctx" . "name" (include "loki.singleBinaryFullname" .) "headlessName" (printf "%s-headless" (include "loki.name" . ))) }}
+{{- include "loki.service" (dict "target" "single-binary" "component" .Values.singleBinary "ctx" . "name" (include "loki.fullname" .) "headlessName" (printf "%s-headless" (include "loki.name" . ))) }}
 {{- end }}

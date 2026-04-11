@@ -8,7 +8,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "loki.singleBinaryFullname" . }}
+  name: {{ include "loki.fullname" . }}
   namespace: {{ include "loki.namespace" . }}
   labels:
     {{- include "loki.singleBinaryLabels" . | nindent 4 }}
@@ -30,7 +30,7 @@ spec:
   updateStrategy:
     rollingUpdate:
       partition: 0
-  serviceName: {{ include "loki.singleBinaryFullname" . }}-headless
+  serviceName: {{ include "loki.fullname" . }}-headless
   revisionHistoryLimit: {{ .Values.loki.revisionHistoryLimit }}
   {{- if and (.Values.singleBinary.persistence.enableStatefulSetAutoDeletePVC) (.Values.singleBinary.persistence.enabled) }}
   {{/*
