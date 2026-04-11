@@ -11,6 +11,9 @@ PDB helper
   {{- $target := .target }}
   {{- $ctx := .ctx }}
   {{- $component := .component }}
+  {{- $suffix := .suffix }}
+  {{- $extraMatchLabels := .extraMatchLabels }}
+  {{- $extraMatchExpressions := .extraMatchExpressions }}
   {{- with $ctx }}
     {{- $podDisruptionBudget := dict }}
     {{- if hasKey $component "maxUnavailable"}}
@@ -23,7 +26,7 @@ PDB helper
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "loki.resourceName" (dict "ctx" $ctx "component" $target) }}
+  name: {{ include "loki.resourceName" (dict "ctx" $ctx "component" $target "suffix" $suffix) }}
   namespace: {{ include "loki.namespace" $ctx }}
   {{- with $component.podDisruptionBudget.annotations }}
   annotations:
@@ -41,6 +44,13 @@ spec:
     matchLabels:
       {{- include "loki.selectorLabels" $ctx | nindent 6 }}
       app.kubernetes.io/component: {{ $target }}
+    {{- with $extraMatchLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with $extraMatchExpressions }}
+    matchExpressions:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}

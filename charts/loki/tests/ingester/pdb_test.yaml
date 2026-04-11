@@ -1,0 +1,86 @@
+suite: ingester PodDisruptionBudget
+templates:
+  - templates/ingester/pdb.yaml
+set:
+  deploymentMode: Distributed
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  ingester.zoneAwareReplication.enabled: false
+  ingester.replicas: 3
+  ingester.maxUnavailable: 1
+  ingester.podDisruptionBudget.enabled: true
+tests:
+  - it: should not render when zoneAwareReplication is enabled and migration is disabled
+    set:
+      ingester.zoneAwareReplication.enabled: true
+      ingester.zoneAwareReplication.migration.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render when zoneAwareReplication is disabled
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PodDisruptionBudget
+
+  - it: should render when migration is enabled
+    set:
+      ingester.zoneAwareReplication.enabled: true
+      ingester.zoneAwareReplication.migration.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: should not render when replicas is 1
+    set:
+      ingester.replicas: 1
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render when podDisruptionBudget is disabled
+    set:
+      ingester.podDisruptionBudget.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should have correct name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-loki-ingester
+
+  - it: should have correct selector with matchExpressions
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: loki
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/component: ingester
+      - contains:
+          path: spec.selector.matchExpressions
+          content:
+            key: rollout-group
+            operator: NotIn
+            values:
+              - ingester
+
+  - it: should use maxUnavailable from deprecated field
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: 1
+
+  - it: should use podDisruptionBudget.maxUnavailable when set
+    set:
+      ingester.podDisruptionBudget.maxUnavailable: 2
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: 2

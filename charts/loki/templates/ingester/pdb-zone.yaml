@@ -1,21 +1,7 @@
 {{- $isDistributed := eq (include "loki.deployment.isDistributed" .) "true" -}}
-{{- if and $isDistributed (gt (int .Values.ingester.replicas) 1) (.Values.ingester.zoneAwareReplication.enabled) }}
-{{- if kindIs "invalid" .Values.ingester.maxUnavailable }}
-{{- fail "`.Values.ingester.maxUnavailable` must be set when `.Values.ingester.replicas` is greater than 1." }}
-{{- else }}
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ include "loki.ingesterFullname" . }}-rollout
-  namespace: {{ include "loki.namespace" . }}
-  labels:
-    {{- include "loki.ingesterLabels" . | nindent 4 }}
-spec:
-  selector:
-    matchLabels:
-      rollout-group: {{ include "loki.prefixRolloutGroup" . }}ingester
-  {{- with .Values.ingester.maxUnavailable }}
-  maxUnavailable: {{ . }}
-  {{- end }}
-{{- end }}
+{{- if and $isDistributed (.Values.ingester.zoneAwareReplication.enabled) }}
+{{- $extraMatchLabels := dict
+  "rollout-group" (printf "%singester" (include "loki.prefixRolloutGroup" .))
+-}}
+{{- include "loki.pdb" (dict "target" "ingester" "component" .Values.ingester "ctx" . "suffix" "rollout" "extraMatchLabels" $extraMatchLabels) }}
 {{- end }}
