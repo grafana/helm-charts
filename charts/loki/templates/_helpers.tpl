@@ -1003,7 +1003,7 @@ enableServiceLinks: false
 {{- else if $isDistributed -}}
 {{- $compactorAddress = include "loki.resourceName" (dict "ctx" . "component" "compactor") -}}
 {{- end -}}
-{{- printf "%s.%s.svc.%s:%s" $compactorAddress .Release.Namespace .Values.global.clusterDomain (.Values.loki.server.grpc_listen_port | toString) }}
+{{- printf "%s.%s.svc.%s:%s" $compactorAddress (include "loki.namespace" .) .Values.global.clusterDomain (.Values.loki.server.grpc_listen_port | toString) }}
 {{- end }}
 
 {{/* Determine query-scheduler address */}}
@@ -1022,7 +1022,7 @@ enableServiceLinks: false
 {{- $isDistributed := eq (include "loki.deployment.isDistributed" .) "true" -}}
 {{- if $isDistributed -}}
 {{- $querierHost := include "loki.resourceName" (dict "ctx" . "component" "querier")}}
-{{- $querierUrl := printf "http://%s.%s.svc.%s:3100" $querierHost (include "loki.namespace" .) .Values.global.clusterDomain }}
+{{- $querierUrl := printf "http://%s.%s.svc.%s:%s" $querierHost (include "loki.namespace" .) .Values.global.clusterDomain (.Values.loki.server.http_listen_port | toString) }}
 {{- $querierAddress = $querierUrl }}
 {{- end -}}
 {{- printf "%s" $querierAddress }}
@@ -1124,16 +1124,20 @@ Pod security context
 
 {{- define "loki.memoryToMiB" -}}
 {{- $mem := . | toString -}}
-{{- if hasSuffix "Gi" $mem -}}
+{{- if hasSuffix "Ti" $mem -}}
+  {{- mulf ((trimSuffix "Ti" $mem) | float64) 1048576 | int -}}
+{{- else if hasSuffix "Gi" $mem -}}
   {{- mulf ((trimSuffix "Gi" $mem) | float64) 1024 | int -}}
 {{- else if hasSuffix "Mi" $mem -}}
   {{- (trimSuffix "Mi" $mem) | int -}}
+{{- else if hasSuffix "Ki" $mem -}}
+  {{- divf ((trimSuffix "Ki" $mem) | float64) 1024 | int -}}
+{{- else if hasSuffix "T" $mem -}}
+  {{- mulf ((trimSuffix "T" $mem) | float64) 953674.3164 | int -}}
 {{- else if hasSuffix "G" $mem -}}
   {{- mulf ((trimSuffix "G" $mem) | float64) 953.6743164 | int -}}
 {{- else if hasSuffix "M" $mem -}}
   {{- mulf ((trimSuffix "M" $mem) | float64) 0.9536743164 | int -}}
-{{- else if hasSuffix "Ki" $mem -}}
-  {{- divf ((trimSuffix "Ki" $mem) | float64) 1024 | int -}}
 {{- else -}}
   {{- divf ($mem | float64) 1048576 | int -}}
 {{- end -}}
