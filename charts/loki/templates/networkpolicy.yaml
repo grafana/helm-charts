@@ -11,7 +11,9 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      {{- include "loki.selectorLabels" . | nindent 6 }}
   egress:
     - to:
         - podSelector: {}
