@@ -469,7 +469,7 @@ Generate list of ingress service paths based on deployment type
 {{- include "loki.ingress.singleBinaryServicePaths" . }}
 {{- else if (eq (include "loki.deployment.isDistributed" .) "true") -}}
 {{- include "loki.ingress.distributedServicePaths" . }}
-{{- else if and (eq (include "loki.deployment.isScalable" .) "true") -}}
+{{- else if (eq (include "loki.deployment.isScalable" .) "true") -}}
 {{- include "loki.ingress.scalableServicePaths" . }}
 {{- end -}}
 {{- end -}}

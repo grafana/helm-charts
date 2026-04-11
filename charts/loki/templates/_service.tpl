@@ -40,11 +40,11 @@ spec:
   {{- end }}
   ports:
     - name: http-metrics
-      port: 3100
+      port: {{ .Values.loki.server.http_listen_port }}
       targetPort: http-metrics
       protocol: TCP
     - name: grpc
-      port: 9095
+      port: {{ .Values.loki.server.grpc_listen_port }}
       targetPort: grpc
       protocol: TCP
       {{- with (dig "appProtocol" "grpc" $component.service.appProtocol.grpc $component) }}
@@ -76,9 +76,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  {{ if $headlessName }}
-  name: {{ $headlessName }}
-  {{ else }}
+  {{- if $headlessName }}
+  name: "{{ $headlessName }}"
+  {{- else }}
   name: "{{ include "loki.resourceName" (dict "ctx" . "component" $target "suffix" "headless" "rolloutZoneName" $rolloutZoneName) }}"
   {{- end }}
   namespace: {{ include "loki.namespace" . }}
@@ -102,11 +102,11 @@ spec:
   {{- end }}
   ports:
     - name: http-metrics
-      port: 3100
+      port: {{ .Values.loki.server.http_listen_port }}
       targetPort: http-metrics
       protocol: TCP
     - name: grpc
-      port: 9095
+      port: {{ .Values.loki.server.grpc_listen_port }}
       targetPort: grpc
       protocol: TCP
       {{- with (dig "appProtocol" "grpc" $component.service.appProtocol.grpc $component) }}
