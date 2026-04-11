@@ -32,7 +32,7 @@ gateway auth secret name
 gateway priority class name
 */}}
 {{- define "loki.gatewayPriorityClassName" -}}
-{{- $pcn := coalesce .Values.global.priorityClassName .Values.gateway.priorityClassName -}}
+{{- $pcn := coalesce .Values.gateway.priorityClassName .Values.defaults.priorityClassName .Values.global.priorityClassName -}}
 {{- if $pcn }}
 priorityClassName: {{ $pcn }}
 {{- end }}

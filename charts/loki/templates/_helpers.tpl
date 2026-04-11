@@ -955,12 +955,20 @@ http {
 }
 {{- end }}
 
-{{/* Configure enableServiceLinks in pod */}}
+{{/*
+Resolve enableServiceLinks for a component using three-level cascade.
+Accepts (dict "component" ... "ctx" .).
+Returns "enableServiceLinks: <bool>" or empty string when unset at all levels.
+*/}}
 {{- define "loki.enableServiceLinks" -}}
-{{- if or (.Values.loki.enableServiceLinks) (ne .Values.loki.enableServiceLinks false) -}}
-enableServiceLinks: true
-{{- else -}}
-enableServiceLinks: false
+{{- $component := .component -}}
+{{- $ctx := .ctx -}}
+{{- if (kindIs "bool" $component.enableServiceLinks) -}}
+enableServiceLinks: {{ $component.enableServiceLinks }}
+{{- else if (kindIs "bool" $ctx.Values.defaults.enableServiceLinks) -}}
+enableServiceLinks: {{ $ctx.Values.defaults.enableServiceLinks }}
+{{- else if (kindIs "bool" $ctx.Values.loki.enableServiceLinks) -}}
+enableServiceLinks: {{ $ctx.Values.loki.enableServiceLinks }}
 {{- end -}}
 {{- end -}}
 

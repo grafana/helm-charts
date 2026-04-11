@@ -49,7 +49,10 @@ spec:
       {{- else if (kindIs "bool" .Values.defaults.automountServiceAccountToken) }}
       automountServiceAccountToken: {{ .Values.defaults.automountServiceAccountToken }}
       {{- end }}
-      {{ include "loki.enableServiceLinks" . }}
+      {{- $esl := include "loki.enableServiceLinks" (dict "component" .Values.gateway "ctx" .) }}
+      {{- if $esl }}
+      {{ $esl }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -109,8 +112,10 @@ spec:
             {{- if .Values.gateway.extraVolumeMounts }}
             {{- toYaml .Values.gateway.extraVolumeMounts | nindent 12 }}
             {{- end }}
+          {{- with (coalesce .Values.gateway.resources .Values.defaults.resources) }}
           resources:
-            {{- toYaml .Values.gateway.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- if .Values.gateway.metrics.enabled }}
         - name: exporter
           image: {{ include "loki.image" (dict "ctx" . "component" .Values.gateway.metrics.image) }}
@@ -160,11 +165,11 @@ spec:
       affinity:
         {{- tpl ( . | toYaml) $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.gateway.dnsConfig | default .Values.loki.dnsConfig }}
+      {{- with (coalesce .Values.gateway.dnsConfig .Values.defaults.dnsConfig .Values.loki.dnsConfig) }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.gateway.nodeSelector }}
+      {{- with (coalesce .Values.gateway.nodeSelector .Values.defaults.nodeSelector) }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -172,7 +177,7 @@ spec:
       topologySpreadConstraints:
         {{- tpl ( . | toYaml) $ | nindent 8 }}
       {{- end }}
-      {{- with .Values.gateway.tolerations }}
+      {{- with (coalesce .Values.gateway.tolerations .Values.defaults.tolerations) }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

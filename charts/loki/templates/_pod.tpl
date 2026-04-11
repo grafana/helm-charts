@@ -37,12 +37,9 @@ spec:
     {{- tpl ( . | toYaml) $ctx | nindent 4 }}
   {{- end }}
   serviceAccountName: {{ include "loki.serviceAccountName" (dict "ctx" . "component" (eq $target "single-binary" | ternary .Values $component) "target" (replace "single-binary" "" $target) ) }}
-  {{- if (kindIs "bool" $component.enableServiceLinks) }}
-  enableServiceLinks: {{ $component.enableServiceLinks }}
-  {{- else if (kindIs "bool" .Values.defaults.enableServiceLinks) }}
-  enableServiceLinks: {{ .Values.defaults.enableServiceLinks }}
-  {{- else if (kindIs "bool" .Values.loki.enableServiceLinks) }}
-  enableServiceLinks: {{ .Values.loki.enableServiceLinks }}
+  {{- $esl := include "loki.enableServiceLinks" (dict "component" $component "ctx" .) }}
+  {{- if $esl }}
+  {{ $esl }}
   {{- end }}
   {{- if (kindIs "bool" $component.automountServiceAccountToken) }}
   automountServiceAccountToken: {{ $component.automountServiceAccountToken }}
