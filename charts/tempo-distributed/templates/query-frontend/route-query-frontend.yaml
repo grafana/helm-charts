@@ -1,0 +1,9 @@
+{{- if .Values.queryFrontend.query.enabled -}}
+{{- range $name, $route := .Values.queryFrontend.route }}
+{{- if $route.enabled }}
+{{- $dict := dict "ctx" $ "component" "query-frontend" -}}
+---
+{{ include "tempo.route" (dict "ctx" $ "route" $route "component" "query-frontend" "name" (printf "%s-%s" (include "tempo.resourceName" $dict) $name) "serviceName" (include "tempo.resourceName" $dict) "servicePort" $.Values.queryFrontend.service.port) }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,9 @@
+{{- if .Values.gateway.enabled -}}
+{{- range $name, $route := .Values.gateway.route }}
+{{- if $route.enabled }}
+{{- $dict := dict "ctx" $ "component" "gateway" -}}
+---
+{{ include "tempo.route" (dict "ctx" $ "route" $route "component" "gateway" "name" (printf "%s-%s" (include "tempo.resourceName" $dict) $name) "serviceName" (include "tempo.resourceName" $dict) "servicePort" $.Values.gateway.service.port) }}
+{{- end }}
+{{- end }}
+{{- end }}

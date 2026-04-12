@@ -1,0 +1,6 @@
+{{- range $name, $route := .Values.route }}
+{{- if $route.enabled }}
+---
+{{ include "tempo.route" (dict "ctx" $ "route" $route "component" "gateway" "name" (printf "%s-%s" (include "tempo.fullname" $) $name)) }}
+{{- end }}
+{{- end }}

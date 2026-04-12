@@ -1116,6 +1116,41 @@ queryFrontend:
       - secretName: tempo-query-tls
         hosts:
           - query.tempo.example.com
+  # -- Gateway API route configuration for the query-frontend (Jaeger UI).
+  # Multiple routes can be added by adding a dictionary key like the 'main' route.
+  route:
+    main:
+      # -- Specifies whether a Gateway API route for the query-frontend should be created
+      enabled: false
+      # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1beta1
+      # If not set, the latest available version will be auto-detected
+      apiVersion: ""
+      # -- Set the route kind
+      # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+      kind: HTTPRoute
+      # -- Route annotations
+      annotations: {}
+      # -- Route labels
+      labels: {}
+      # -- Hostnames for the route
+      hostnames: []
+      # - query.tempo.example.com
+      # -- Parent references (gateway to attach to)
+      parentRefs: []
+      # - name: my-gateway
+      #   namespace: gateway-namespace
+      # -- Matches define conditions for matching incoming requests
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+      # -- Timeouts define the timeouts that can be configured for an HTTP request.
+      # Ref. https://gateway-api.sigs.k8s.io/api-types/httproute/#timeouts-optional
+      timeouts: {}
+      # -- Filters define the filters that are applied to requests that match this rule.
+      filters: []
+      # -- Additional custom rules that can be added to the route
+      additionalRules: []
   # -- The name of the PriorityClass for query-frontend pods
   priorityClassName: null
   # -- Labels for queryFrontend pods
@@ -2499,6 +2534,41 @@ gateway:
       - secretName: tempo-gateway-tls
         hosts:
           - gateway.tempo.example.com
+  # -- Gateway API route configuration for the gateway.
+  # Multiple routes can be added by adding a dictionary key like the 'main' route.
+  route:
+    main:
+      # -- Specifies whether a Gateway API route for the gateway should be created
+      enabled: false
+      # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1beta1
+      # If not set, the latest available version will be auto-detected
+      apiVersion: ""
+      # -- Set the route kind
+      # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+      kind: HTTPRoute
+      # -- Route annotations
+      annotations: {}
+      # -- Route labels
+      labels: {}
+      # -- Hostnames for the route
+      hostnames: []
+      # - gateway.tempo.example.com
+      # -- Parent references (gateway to attach to)
+      parentRefs: []
+      # - name: my-gateway
+      #   namespace: gateway-namespace
+      # -- Matches define conditions for matching incoming requests
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+      # -- Timeouts define the timeouts that can be configured for an HTTP request.
+      # Ref. https://gateway-api.sigs.k8s.io/api-types/httproute/#timeouts-optional
+      timeouts: {}
+      # -- Filters define the filters that are applied to requests that match this rule.
+      filters: []
+      # -- Additional custom rules that can be added to the route
+      additionalRules: []
   # Basic auth configuration
   basicAuth:
     # -- Enables basic authentication for the gateway
@@ -2725,6 +2795,54 @@ ingress:
       - path: /compactor/ring
   hosts:
     - tempo.example.com
+
+# -- Gateway API route configuration.
+# Multiple routes can be added by adding a dictionary key like the 'main' route.
+# This is useful for creating both HTTPRoute and GRPCRoute resources (e.g. for OTLP HTTP + gRPC).
+route:
+  main:
+    # -- Specifies whether a Gateway API route should be created
+    enabled: false
+    # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1beta1
+    # If not set, the latest available version will be auto-detected
+    apiVersion: ""
+    # -- Set the route kind
+    # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+    kind: HTTPRoute
+    # -- Route annotations
+    annotations: {}
+    # -- Route labels
+    labels: {}
+    # -- Hostnames for the route
+    hostnames: []
+    # - tempo.example.com
+    # -- Parent references (gateway to attach to)
+    parentRefs: []
+    # - name: my-gateway
+    #   namespace: gateway-namespace
+    # -- Paths to route to backend services. Each key is a service name suffix, and the value is a list of path matches.
+    paths:
+      distributor:
+        - path: /v1/traces
+          # -- pathType for the match (e.g. PathPrefix, Exact)
+          pathType: PathPrefix
+        - path: /distributor/ring
+          pathType: PathPrefix
+        - path: /ingester/ring
+          pathType: PathPrefix
+        - path: /metrics-generator/ring
+          pathType: PathPrefix
+      ingester:
+        - path: /flush
+          pathType: PathPrefix
+        - path: /shutdown
+          pathType: PathPrefix
+      query-frontend:
+        - path: /api
+          pathType: PathPrefix
+      compactor:
+        - path: /compactor/ring
+          pathType: PathPrefix
 
 ##############################################################################
 # The values in and after the `enterprise:` key configure the enterprise features
