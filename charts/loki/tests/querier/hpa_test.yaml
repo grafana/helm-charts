@@ -59,3 +59,41 @@ tests:
       - equal:
           path: spec.metrics[0].resource.target.averageUtilization
           value: 65
+
+  - it: should NOT render HPA behavior when behavior.enabled is false
+    set:
+      deploymentMode: Distributed
+      querier:
+        autoscaling:
+          enabled: true
+          behavior:
+            enabled: false
+            scaleDown:
+              stabilizationWindowSeconds: 300
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - notExists:
+          path: spec.behavior
+
+  - it: should render HPA behavior when behavior.enabled is true
+    set:
+      deploymentMode: Distributed
+      querier:
+        autoscaling:
+          enabled: true
+          behavior:
+            enabled: true
+            scaleDown:
+              stabilizationWindowSeconds: 300
+            scaleUp:
+              stabilizationWindowSeconds: 60
+    asserts:
+      - exists:
+          path: spec.behavior
+      - equal:
+          path: spec.behavior.scaleDown.stabilizationWindowSeconds
+          value: 300
+      - equal:
+          path: spec.behavior.scaleUp.stabilizationWindowSeconds
+          value: 60
