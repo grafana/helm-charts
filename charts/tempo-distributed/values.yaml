@@ -1029,6 +1029,8 @@ queryFrontend:
       target_bytes_per_job: 104857600
       # -- The maximum allowed value of spans per span set. 0 disables this limit.
       max_spans_per_span_set: 100
+      # -- The maximum allowed value for the limit parameter on search requests. 0 disables this limit.
+      # max_result_limit: 262144 maximum number of results returned by search requests
     # -- Trace by ID lookup configuration
     trace_by_id:
       # -- The number of shards to split a trace by ID query into.
@@ -1647,6 +1649,9 @@ config: |
       target_bytes_per_job: {{ .Values.queryFrontend.config.search.target_bytes_per_job }}
       concurrent_jobs: {{ .Values.queryFrontend.config.search.concurrent_jobs }}
       max_spans_per_span_set: {{ .Values.queryFrontend.config.search.max_spans_per_span_set }}
+      {{- with .Values.queryFrontend.config.search.max_result_limit }}
+      max_result_limit: {{ . }}
+      {{- end }}
     trace_by_id:
       query_shards: {{ .Values.queryFrontend.config.trace_by_id.query_shards }}
     metrics:
