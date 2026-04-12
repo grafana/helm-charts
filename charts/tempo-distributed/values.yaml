@@ -41,6 +41,7 @@ global:
   extraArgs: []
   # -- Global storage class to be used for persisted components
   storageClass: null
+
 fullnameOverride: ''
 # fullnameOverride: tempo
 
@@ -2504,6 +2505,8 @@ gateway:
     clusterIP: null
     # -- Node port if service type is NodePort
     nodePort: null
+    # -- Node port for the gRPC port if service type is NodePort
+    grpcNodePort: null
     # -- Load balancer IP address if service type is LoadBalancer
     loadBalancerIP: null
     # -- Annotations for the gateway service

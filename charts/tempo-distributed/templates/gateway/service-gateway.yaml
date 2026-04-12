@@ -34,6 +34,9 @@ spec:
       port: {{ .Values.traces.otlp.grpc.port }}
       targetPort: grpc-otlp
       protocol: TCP
+      {{- if and (eq "NodePort" .Values.gateway.service.type) .Values.gateway.service.grpcNodePort }}
+      nodePort: {{ .Values.gateway.service.grpcNodePort }}
+      {{- end }}
     {{- end }}
     {{ range .Values.gateway.service.additionalPorts }}
     - name: {{ .name }}

@@ -70,23 +70,12 @@ name: {{ printf "%s-%s" .component .rolloutZoneName }}
 rollout-group: {{ .component }}
 zone: {{ .rolloutZoneName }}
 {{- end }}
-helm.sh/chart: {{ include "tempo.chart" .ctx }}
-app.kubernetes.io/name: {{ include "tempo.name" .ctx }}
-app.kubernetes.io/instance: {{ .ctx.Release.Name }}
-{{- if .component }}
-app.kubernetes.io/component: {{ .component }}
-{{- end }}
-{{- if .memberlist }}
-app.kubernetes.io/part-of: memberlist
-{{- end }}
-{{- if .ctx.Chart.AppVersion }}
-app.kubernetes.io/version: {{ .ctx.Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .ctx.Release.Service }}
+{{- include "tempo.labels" (dict "ctx" .ctx "component" .component) }}
 {{- with .ctx.Values.ingester.labels }}
 {{ toYaml . }}
 {{- end }}
 {{- end -}}
+
 {{/*
 Resource name template
 */}}

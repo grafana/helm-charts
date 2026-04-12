@@ -9,7 +9,7 @@ metadata:
   name: {{ template "ingester.resourceName" $dict }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "ingester.labels" $dict | indent 4 }}
+    {{- include "ingester.labels" $dict | nindent 4 }}
   {{- if .Values.ingester.zoneAwareReplication.enabled }}
   annotations:
     {{- include "ingester.Annotations" $dict | nindent 4}}
