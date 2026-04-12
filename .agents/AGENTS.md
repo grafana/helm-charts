@@ -1,6 +1,6 @@
-# CLAUDE.md
+# Instructions for AI Agents
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The following guidelines apply to all files in this repository.
 
 ## Repository Overview
 
@@ -19,7 +19,7 @@ Each chart follows standard Helm structure (`Chart.yaml`, `values.yaml`, `templa
 Pull Requests against this repository require that all charts which implement helm-unittests(https://github.com/helm-unittest/helm-unittest) must pass all of their unittests.  This can be done via a single command run from the repository root:
 
 ```bash
-make helm-unittest
+make helm-unittest HELM_UNITTEST_CHART=<chart-name>
 ```
 
 ## Contributing Conventions
@@ -34,8 +34,4 @@ make helm-unittest
 
 ## Dependency Management
 
-Renovate manages automated dependency updates. Charts with subchart dependencies (e.g., `tempo-distributed` depends on `minio`, `grafana-agent-operator`, `rollout-operator`) declare them in `Chart.yaml`. Dependency repositories used in CI/release:
-
-```
-bitnami, grafana, grafana-community, prometheus-community, minio
-```
+Renovate manages all dependency updates.
