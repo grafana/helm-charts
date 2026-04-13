@@ -1,0 +1,18 @@
+rollout_operator:
+  enabled: true
+
+ingester:
+  replicas: 2
+  zoneAwareReplication:
+    enabled: true
+    topologyKey: kubernetes.io/hostname
+    zones:
+      - name: zone-a
+        nodeSelector:
+          topology.kubernetes.io/zone: zone-a
+      - name: zone-b
+        nodeSelector:
+          topology.kubernetes.io/zone: zone-b
+      - name: zone-c
+        nodeSelector:
+          topology.kubernetes.io/zone: zone-c

@@ -70,7 +70,7 @@ name: {{ printf "%s-%s" .component .rolloutZoneName }}
 rollout-group: {{ .component }}
 zone: {{ .rolloutZoneName }}
 {{- end }}
-{{- include "tempo.labels" (dict "ctx" .ctx "component" .component) }}
+{{ include "tempo.labels" (dict "ctx" .ctx "component" .component) }}
 {{- with .ctx.Values.ingester.labels }}
 {{ toYaml . }}
 {{- end }}
