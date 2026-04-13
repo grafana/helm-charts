@@ -1,0 +1,177 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: gateway HTTPRoute
+templates:
+  - gateway/route-gateway.yaml
+  - config.yaml
+
+set:
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  gateway.enabled: true
+  gateway.route.main.enabled: true
+  gateway.route.main.parentRefs:
+    - name: my-gateway
+      namespace: gateway-namespace
+  gateway.route.main.hostnames:
+    - gateway.loki.example.com
+
+tests:
+  - it: should render an HTTPRoute when route is enabled
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: gateway/route-gateway.yaml
+      - isKind:
+          of: HTTPRoute
+        template: gateway/route-gateway.yaml
+
+  - it: should use gateway.networking.k8s.io/v1 as default apiVersion
+    asserts:
+      - equal:
+          path: apiVersion
+          value: gateway.networking.k8s.io/v1
+        template: gateway/route-gateway.yaml
+
+  - it: should use the gateway fullname as the route name for the main route
+    asserts:
+      - matchRegex:
+          path: metadata.name
+          pattern: .*-loki-gateway$
+        template: gateway/route-gateway.yaml
+
+  - it: should append the route key as suffix for non-main routes
+    set:
+      gateway.route.main.enabled: false
+      gateway.route.grpc.enabled: true
+      gateway.route.grpc.parentRefs:
+        - name: my-gateway
+          namespace: gateway-namespace
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: gateway/route-gateway.yaml
+      - matchRegex:
+          path: metadata.name
+          pattern: .*-loki-gateway-grpc$
+        template: gateway/route-gateway.yaml
+
+  - it: should always route to the gateway service regardless of route key
+    set:
+      gateway.route.main.enabled: false
+      gateway.route.grpc.enabled: true
+      gateway.route.grpc.parentRefs:
+        - name: my-gateway
+          namespace: gateway-namespace
+    asserts:
+      - matchRegex:
+          path: spec.rules[0].backendRefs[0].name
+          pattern: .*-loki-gateway$
+        template: gateway/route-gateway.yaml
+
+  - it: should render parentRefs
+    asserts:
+      - equal:
+          path: spec.parentRefs[0].name
+          value: my-gateway
+        template: gateway/route-gateway.yaml
+      - equal:
+          path: spec.parentRefs[0].namespace
+          value: gateway-namespace
+        template: gateway/route-gateway.yaml
+
+  - it: should render hostnames
+    asserts:
+      - equal:
+          path: spec.hostnames[0]
+          value: gateway.loki.example.com
+        template: gateway/route-gateway.yaml
+
+  - it: should render default catch-all PathPrefix match
+    asserts:
+      - equal:
+          path: spec.rules[0].matches[0].path.type
+          value: PathPrefix
+        template: gateway/route-gateway.yaml
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /
+        template: gateway/route-gateway.yaml
+
+  - it: should point the default rule to the gateway service on port 80
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].port
+          value: 80
+        template: gateway/route-gateway.yaml
+      - matchRegex:
+          path: spec.rules[0].backendRefs[0].name
+          pattern: .*-loki-gateway$
+        template: gateway/route-gateway.yaml
+
+  - it: should support a custom apiVersion
+    set:
+      gateway.route.main.apiVersion: gateway.networking.k8s.io/v1beta1
+    asserts:
+      - equal:
+          path: apiVersion
+          value: gateway.networking.k8s.io/v1beta1
+        template: gateway/route-gateway.yaml
+
+  - it: should support custom matches
+    set:
+      gateway.route.main.matches:
+        - path:
+            type: PathPrefix
+            value: /loki/api/v1/push
+    asserts:
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /loki/api/v1/push
+        template: gateway/route-gateway.yaml
+
+  - it: should prepend additionalRules before the default rule
+    set:
+      gateway.route.main.additionalRules:
+        - backendRefs:
+            - name: special-backend
+              port: 8080
+          matches:
+            - headers:
+                - name: X-Scope-OrgID
+                  value: tenant1
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].name
+          value: special-backend
+        template: gateway/route-gateway.yaml
+
+  - it: should not render when gateway is disabled
+    set:
+      gateway.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: gateway/route-gateway.yaml
+
+  - it: should not render when all routes are disabled
+    set:
+      gateway.route.main.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: gateway/route-gateway.yaml
+
+  - it: should render multiple routes when multiple entries are enabled
+    set:
+      gateway.route.grpc.enabled: true
+      gateway.route.grpc.parentRefs:
+        - name: my-gateway
+          namespace: gateway-namespace
+      gateway.route.grpc.kind: GRPCRoute
+    asserts:
+      - hasDocuments:
+          count: 2
+        template: gateway/route-gateway.yaml
+

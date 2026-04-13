@@ -1,0 +1,250 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: HTTPRoute (direct)
+templates:
+  - route.yaml
+  - config.yaml
+
+set:
+  loki.useTestSchema: true
+  loki.storage.bucketNames.chunks: chunks
+  loki.storage.bucketNames.ruler: ruler
+  loki.storage.bucketNames.admin: admin
+  deploymentMode: SingleBinary
+  singleBinary.replicas: 1
+  route.main.enabled: true
+  route.main.parentRefs:
+    - name: my-gateway
+      namespace: gateway-namespace
+  route.main.hostnames:
+    - loki.example.com
+
+tests:
+  - it: should render an HTTPRoute when route is enabled
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: route.yaml
+      - isKind:
+          of: HTTPRoute
+        template: route.yaml
+
+  - it: should use gateway.networking.k8s.io/v1 as default apiVersion
+    asserts:
+      - equal:
+          path: apiVersion
+          value: gateway.networking.k8s.io/v1
+        template: route.yaml
+
+  - it: should use the loki fullname as the route name for the main route
+    asserts:
+      - matchRegex:
+          path: metadata.name
+          pattern: .*-loki$
+        template: route.yaml
+
+  - it: should append the route key as suffix for non-main routes
+    set:
+      route.main.enabled: false
+      route.push.enabled: true
+      route.push.parentRefs:
+        - name: my-gateway
+          namespace: gateway-namespace
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: route.yaml
+      - matchRegex:
+          path: metadata.name
+          pattern: .*-loki-push$
+        template: route.yaml
+
+  - it: should render parentRefs
+    asserts:
+      - equal:
+          path: spec.parentRefs[0].name
+          value: my-gateway
+        template: route.yaml
+      - equal:
+          path: spec.parentRefs[0].namespace
+          value: gateway-namespace
+        template: route.yaml
+
+  - it: should render hostnames
+    asserts:
+      - equal:
+          path: spec.hostnames[0]
+          value: loki.example.com
+        template: route.yaml
+
+  - it: should support a custom apiVersion
+    set:
+      route.main.apiVersion: gateway.networking.k8s.io/v1beta1
+    asserts:
+      - equal:
+          path: apiVersion
+          value: gateway.networking.k8s.io/v1beta1
+        template: route.yaml
+
+  - it: should use grpc_listen_port automatically for GRPCRoute
+    set:
+      route.main.kind: GRPCRoute
+      loki.server.grpc_listen_port: 9095
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].port
+          value: 9095
+        template: route.yaml
+
+  - it: should use backendPort override even for GRPCRoute
+    set:
+      route.main.kind: GRPCRoute
+      route.main.backendPort: 9999
+      loki.server.grpc_listen_port: 9095
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].port
+          value: 9999
+        template: route.yaml
+
+  - it: should not render when all routes are disabled
+    set:
+      route.main.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: route.yaml
+
+  - it: should prepend additionalRules before the generated rules
+    set:
+      route.main.additionalRules:
+        - backendRefs:
+            - name: special-backend
+              port: 8080
+          matches:
+            - path:
+                type: PathPrefix
+                value: /special
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].name
+          value: special-backend
+        template: route.yaml
+
+  # SingleBinary mode: all paths route to the single-binary service
+  - it: should route distributor paths to the single-binary service in SingleBinary mode
+    asserts:
+      - matchRegex:
+          path: spec.rules[0].backendRefs[0].name
+          pattern: .*-loki$
+        template: route.yaml
+      - equal:
+          path: spec.rules[0].backendRefs[0].port
+          value: 3100
+        template: route.yaml
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /api/prom/push
+        template: route.yaml
+      - equal:
+          path: spec.rules[0].matches[0].path.type
+          value: PathPrefix
+        template: route.yaml
+
+  - it: should route query paths to the single-binary service in SingleBinary mode
+    asserts:
+      - matchRegex:
+          path: spec.rules[1].backendRefs[0].name
+          pattern: .*-loki$
+        template: route.yaml
+      - equal:
+          path: spec.rules[1].matches[0].path.value
+          value: /api/prom/query
+        template: route.yaml
+
+  # Distributed mode: paths fan out to individual component services
+  - it: should route distributor paths to the distributor service in Distributed mode
+    set:
+      deploymentMode: Distributed
+      ingester.replicas: 1
+      distributor.replicas: 1
+      querier.replicas: 1
+      queryFrontend.replicas: 1
+      queryScheduler.replicas: 1
+    asserts:
+      - matchRegex:
+          path: spec.rules[0].backendRefs[0].name
+          pattern: .*-loki-distributor$
+        template: route.yaml
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /api/prom/push
+        template: route.yaml
+
+  - it: should route query paths to the query-frontend service in Distributed mode
+    set:
+      deploymentMode: Distributed
+      ingester.replicas: 1
+      distributor.replicas: 1
+      querier.replicas: 1
+      queryFrontend.replicas: 1
+      queryScheduler.replicas: 1
+    asserts:
+      - matchRegex:
+          path: spec.rules[1].backendRefs[0].name
+          pattern: .*-loki-query-frontend$
+        template: route.yaml
+      - equal:
+          path: spec.rules[1].matches[0].path.value
+          value: /api/prom/query
+        template: route.yaml
+
+  - it: should route query paths to the querier when query-frontend is disabled in Distributed mode
+    set:
+      deploymentMode: Distributed
+      ingester.replicas: 1
+      distributor.replicas: 1
+      querier.replicas: 1
+      queryFrontend.replicas: 0
+      queryScheduler.replicas: 1
+    asserts:
+      - matchRegex:
+          path: spec.rules[1].backendRefs[0].name
+          pattern: .*-loki-querier$
+        template: route.yaml
+      - equal:
+          path: spec.rules[1].matches[0].path.value
+          value: /api/prom/query
+        template: route.yaml
+
+  # SimpleScalable mode: write, read, backend
+  - it: should route distributor paths to the write service in SimpleScalable mode
+    set:
+      deploymentMode: SimpleScalable
+      write.replicas: 1
+      read.replicas: 1
+      backend.replicas: 1
+    asserts:
+      - matchRegex:
+          path: spec.rules[1].backendRefs[0].name
+          pattern: .*-loki-write$
+        template: route.yaml
+      - equal:
+          path: spec.rules[1].matches[0].path.value
+          value: /api/prom/push
+        template: route.yaml
+
+  - it: should route query paths to the read service in SimpleScalable mode
+    set:
+      deploymentMode: SimpleScalable
+      write.replicas: 1
+      read.replicas: 1
+      backend.replicas: 1
+    asserts:
+      - matchRegex:
+          path: spec.rules[0].backendRefs[0].name
+          pattern: .*-loki-read$
+        template: route.yaml
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /api/prom/query
+        template: route.yaml

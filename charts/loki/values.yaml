@@ -1223,6 +1223,43 @@ gateway:
       {{- end }}
     # -- Existing basic auth secret to use. Must contain '.htpasswd'
     existingSecret: null
+  # -- Gateway API routes configuration. Mutually exclusive with gateway.ingress.
+  # Use either ingress or route, but not both at once.
+  # Each entry in the map creates a separate HTTPRoute resource. The key "main" produces
+  # a route named after the gateway fullname; any other key appends the key as a suffix.
+  # This allows defining multiple routes, e.g. one HTTPRoute and one GRPCRoute.
+  route:
+    main:
+      # -- Specifies whether this Gateway API route should be created
+      enabled: false
+      # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1beta1.
+      # If not set, the latest available version will be auto-detected.
+      apiVersion: ""
+      # -- Set the route kind. Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+      kind: HTTPRoute
+      # -- Additional annotations for the route
+      annotations: {}
+      # -- Additional labels for the route
+      labels: {}
+      # -- Hostnames for the route
+      hostnames: []
+      # - gateway.loki.example.com
+      # -- Parent gateway references to attach the route to
+      parentRefs: []
+      # - name: my-gateway
+      #   namespace: gateway-namespace
+      # -- Additional rules to prepend before the default catch-all rule.
+      # Useful for advanced routing logic (e.g. header-based routing or auth policies).
+      additionalRules: []
+      # -- Matches for the default rule. Defaults to match all paths.
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+      # -- Filters for the default rule
+      filters: []
+      # -- Timeouts for the default rule
+      timeouts: {}
   # -- liveness probe for the nginx container in the gateway pods.
   livenessProbe: {}
   # Configures the readiness probe for the gateway
@@ -1331,7 +1368,7 @@ ingress:
     # -- Paths that are exposed by Loki Distributor.
     # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.distributorFullname"}}`.
     # If deployment mode is SimpleScalable, the requests are forwarded to write k8s service: `{{"loki.writeFullname"}}`.
-    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.singleBinaryFullname"}}`
+    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
     distributor:
       - /api/prom/push
       - /loki/api/v1/push
@@ -1339,7 +1376,7 @@ ingress:
     # -- Paths that are exposed by Loki Query Frontend.
     # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.queryFrontendFullname"}}`.
     # If deployment mode is SimpleScalable, the requests are forwarded to write k8s service: `{{"loki.readFullname"}}`.
-    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.singleBinaryFullname"}}`
+    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
     queryFrontend:
       - /api/prom/query
       # this path covers labels and labelValues endpoints
@@ -1366,7 +1403,7 @@ ingress:
     # -- Paths that are exposed by Loki Ruler.
     # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.rulerFullname"}}`.
     # If deployment mode is SimpleScalable, the requests are forwarded to k8s service: `{{"loki.backendFullname"}}`.
-    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.singleBinaryFullname"}}`
+    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
     ruler:
       - /api/prom/rules
       - /api/prom/api/v1/rules
@@ -1377,7 +1414,7 @@ ingress:
     # -- Paths that are exposed by Loki Compactor.
     # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.compactorFullname"}}`.
     # If deployment mode is SimpleScalable, the requests are forwarded to k8s service: `{{"loki.backendFullname"}}`.
-    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.singleBinaryFullname"}}`
+    # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
     compactor:
       - /loki/api/v1/delete
   # -- Hosts configuration for the ingress, passed through the `tpl` function to allow templating
@@ -1388,6 +1425,88 @@ ingress:
 #    - hosts:
 #       - loki.example.com
 #      secretName: loki-distributed-tls
+
+# -- Gateway API routes for direct routing to Loki services, bypassing the nginx gateway.
+# Use either this or the top-level ingress, but not both at once.
+# Each entry in the map creates a separate HTTPRoute resource. The key "main" produces
+# a route named after the loki fullname; any other key appends the key as a suffix.
+# This allows defining multiple routes, e.g. one HTTPRoute and one GRPCRoute.
+route:
+  main:
+    # -- Specifies whether this Gateway API route should be created
+    enabled: false
+    # -- Gateway API version to use. Auto-detected from cluster capabilities if empty.
+    apiVersion: ""
+    # -- Kind of the route resource. Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+    kind: HTTPRoute
+    # -- Annotations for the route
+    annotations: {}
+    # -- Labels for the route
+    labels: {}
+    # -- Hostnames for the route
+    hostnames: []
+    # -- Parent references for the route (required for Gateway API)
+    parentRefs: []
+    # -- Additional rules to prepend before the generated path-routing rules
+    additionalRules: []
+    # -- Backend port override for all generated rules.
+    # When unset, GRPCRoute automatically uses loki.server.grpc_listen_port (default 9095)
+    # and all other kinds use loki.server.http_listen_port (default 3100).
+    backendPort: null
+    # -- Paths routed to each Loki service group. The target service depends on the deployment mode.
+    paths:
+      # -- Paths that are exposed by Loki Distributor.
+      # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.distributorFullname"}}`.
+      # If deployment mode is SimpleScalable, the requests are forwarded to write k8s service: `{{"loki.writeFullname"}}`.
+      # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
+      distributor:
+        - /api/prom/push
+        - /loki/api/v1/push
+        - /otlp/v1/logs
+      # -- Paths that are exposed by Loki Query Frontend.
+      # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.queryFrontendFullname"}}`.
+      # If deployment mode is SimpleScalable, the requests are forwarded to read k8s service: `{{"loki.readFullname"}}`.
+      # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
+      queryFrontend:
+        - /api/prom/query
+        # this path covers labels and labelValues endpoints
+        - /api/prom/label
+        - /api/prom/series
+        - /api/prom/tail
+        - /loki/api/v1/query
+        - /loki/api/v1/query_range
+        - /loki/api/v1/tail
+        # this path covers labels and labelValues endpoints
+        - /loki/api/v1/label
+        - /loki/api/v1/labels
+        - /loki/api/v1/series
+        - /loki/api/v1/index/stats
+        - /loki/api/v1/index/volume
+        - /loki/api/v1/index/volume_range
+        - /loki/api/v1/format_query
+        - /loki/api/v1/detected_field
+        - /loki/api/v1/detected_fields
+        - /loki/api/v1/detected_labels
+        - /loki/api/v1/patterns
+        # this path covers UI API
+        - /ui
+      # -- Paths that are exposed by Loki Ruler.
+      # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.rulerFullname"}}`.
+      # If deployment mode is SimpleScalable, the requests are forwarded to k8s service: `{{"loki.backendFullname"}}`.
+      # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
+      ruler:
+        - /api/prom/rules
+        - /api/prom/api/v1/rules
+        - /api/prom/api/v1/alerts
+        - /loki/api/v1/rules
+        - /prometheus/api/v1/rules
+        - /prometheus/api/v1/alerts
+      # -- Paths that are exposed by Loki Compactor.
+      # If deployment mode is Distributed, the requests are forwarded to the service: `{{"loki.compactorFullname"}}`.
+      # If deployment mode is SimpleScalable, the requests are forwarded to k8s service: `{{"loki.backendFullname"}}`.
+      # If deployment mode is SingleBinary, the requests are forwarded to the central/single k8s service: `{{"loki.fullname"}}`
+      compactor:
+        - /loki/api/v1/delete
 
 ######################################################################################################################
 #

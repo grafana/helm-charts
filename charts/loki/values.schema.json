@@ -1,5 +1,48 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema",
+  "definitions": {
+    "routeEntry": {
+      "type": "object",
+      "properties": {
+        "enabled":        { "type": "boolean" },
+        "apiVersion":     { "type": "string" },
+        "kind":           { "type": "string", "enum": ["HTTPRoute", "GRPCRoute", "TCPRoute", "TLSRoute", "UDPRoute"] },
+        "annotations":    { "type": "object", "additionalProperties": { "type": "string" } },
+        "labels":         { "type": "object", "additionalProperties": { "type": "string" } },
+        "hostnames":      { "type": "array", "items": { "type": "string" } },
+        "parentRefs":     { "type": "array", "items": { "type": "object" } },
+        "additionalRules":{ "type": "array", "items": { "type": "object" } },
+        "backendPort":    { "type": ["integer", "null"] },
+        "paths": {
+          "type": "object",
+          "properties": {
+            "distributor":    { "type": "array", "items": { "type": "string" } },
+            "queryFrontend":  { "type": "array", "items": { "type": "string" } },
+            "ruler":          { "type": "array", "items": { "type": "string" } },
+            "compactor":      { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "gatewayRouteEntry": {
+      "type": "object",
+      "properties": {
+        "enabled":        { "type": "boolean" },
+        "apiVersion":     { "type": "string" },
+        "kind":           { "type": "string", "enum": ["HTTPRoute", "GRPCRoute", "TCPRoute", "TLSRoute", "UDPRoute"] },
+        "annotations":    { "type": "object", "additionalProperties": { "type": "string" } },
+        "labels":         { "type": "object", "additionalProperties": { "type": "string" } },
+        "hostnames":      { "type": "array", "items": { "type": "string" } },
+        "parentRefs":     { "type": "array", "items": { "type": "object" } },
+        "additionalRules":{ "type": "array", "items": { "type": "object" } },
+        "matches":        { "type": "array", "items": { "type": "object" } },
+        "filters":        { "type": "array", "items": { "type": "object" } },
+        "timeouts":       { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  },
   "properties": {
     "global": {
       "type": "object"
@@ -208,6 +251,23 @@
             "storage": {
               "type": ["object", "null"]
             }
+          }
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/routeEntry"
+      }
+    },
+    "gateway": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/gatewayRouteEntry"
           }
         }
       }
