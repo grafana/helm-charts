@@ -131,6 +131,45 @@ tempo:
     #   - 'IPv6'
     # -- Configure the IP family policy for all tempo services.  SingleStack, PreferDualStack or RequireDualStack
     ipFamilyPolicy: 'SingleStack'
+
+# -- Default values applied to every pod in this chart.
+# These values are overridden by component-specific settings.
+defaults:
+  # -- Default number of replicas for all components (overridden per component)
+  replicas: 1
+  # -- Default pod-level security context for all pods
+  podSecurityContext: {}
+  # -- Default container-level security context for all containers
+  containerSecurityContext: {}
+  # -- Default annotations for all pods
+  podAnnotations: {}
+  # -- Default labels for all pods
+  podLabels: {}
+  # -- Default node selector for all pods
+  nodeSelector: {}
+  # -- Default tolerations for all pods
+  tolerations: []
+  # -- Default affinity for all pods
+  affinity: {}
+  # -- Default priority class name for all pods
+  priorityClassName: ""
+  # -- Default resource requests and limits for all pods
+  resources: {}
+  # -- Default extra CLI args for all Tempo binary pods
+  extraArgs: []
+  # -- Default extra environment variables for all pods
+  extraEnv: []
+  # -- Default extra environment variables from ConfigMaps or Secrets for all pods
+  extraEnvFrom: []
+  # -- Default extra volume mounts for all pods
+  extraVolumeMounts: []
+  # -- Default extra volumes for all pods
+  extraVolumes: []
+  # -- Default liveness probe for all Tempo binary pods (overrides tempo.livenessProbe)
+  livenessProbe: {}
+  # -- Default readiness probe for all Tempo binary pods (overrides tempo.readinessProbe)
+  readinessProbe: {}
+
 serviceAccount:
   # -- Specifies whether a ServiceAccount should be created
   create: true
@@ -617,6 +656,9 @@ distributor:
   initContainers: []
   # -- Containers to add to the distributor pod
   extraContainers: []
+  # -- Additional ports to expose on the distributor container (e.g. trace receiver ports).
+  # Standard ports (http-metrics, http-memberlist) are always added automatically.
+  extraPorts: []
   # -- Liveness probe for distributor pods. Uses `tempo.livenessProbe` as default if not set.
   livenessProbe: {}
   # -- Readiness probe for distributor pods. Uses `tempo.readinessProbe` as default if not set.

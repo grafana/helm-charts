@@ -2,7 +2,7 @@ apiVersion: v2
 name: tempo-distributed
 description: Grafana Tempo in MicroService mode
 type: application
-version: 2.14.3
+version: 2.15.0
 # renovate: docker=docker.io/grafana/tempo
 appVersion: 2.10.4
 kubeVersion: "^1.25.0-0"

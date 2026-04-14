@@ -1,0 +1,351 @@
+# $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
+suite: distributor Deployment
+templates:
+  - distributor/deployment-distributor.yaml
+  - configmap-tempo.yaml
+
+tests:
+  - it: renders a Deployment with correct name and kind
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - equal:
+          path: kind
+          value: Deployment
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-tempo-distributor
+
+  - it: renders standard ports on the distributor container
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 7946
+            name: http-memberlist
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 3200
+            name: http-metrics
+            protocol: TCP
+
+  - it: does not render trace ports when all traces are disabled (default)
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].ports
+          value:
+            - containerPort: 7946
+              name: http-memberlist
+              protocol: TCP
+            - containerPort: 3200
+              name: http-metrics
+              protocol: TCP
+
+  - it: renders jaeger-compact port when traces.jaeger.thriftCompact is enabled
+    template: distributor/deployment-distributor.yaml
+    set:
+      traces.jaeger.thriftCompact.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 6831
+            name: jaeger-compact
+            protocol: UDP
+
+  - it: renders all trace ports when all traces are enabled
+    template: distributor/deployment-distributor.yaml
+    set:
+      traces.jaeger.thriftCompact.enabled: true
+      traces.jaeger.thriftBinary.enabled: true
+      traces.jaeger.thriftHttp.enabled: true
+      traces.jaeger.grpc.enabled: true
+      traces.zipkin.enabled: true
+      traces.otlp.http.enabled: true
+      traces.otlp.grpc.enabled: true
+      traces.opencensus.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 6831
+            name: jaeger-compact
+            protocol: UDP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 6832
+            name: jaeger-binary
+            protocol: UDP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 14268
+            name: jaeger-http
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 14250
+            name: grpc-jaeger
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 9411
+            name: zipkin
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 4318
+            name: otlp-http
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 4317
+            name: grpc-otlp
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 55678
+            name: opencensus
+            protocol: TCP
+
+  - it: renders user-defined distributor.extraPorts
+    template: distributor/deployment-distributor.yaml
+    set:
+      distributor.extraPorts:
+        - containerPort: 9999
+          name: custom-port
+          protocol: TCP
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 9999
+            name: custom-port
+            protocol: TCP
+
+  - it: uses tempo.podSecurityContext when no component override is set
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 1000
+
+  - it: component podSecurityContext overrides tempo.podSecurityContext
+    template: distributor/deployment-distributor.yaml
+    set:
+      distributor.podSecurityContext:
+        fsGroup: 2000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 2000
+
+  - it: defaults.podSecurityContext is used when neither component nor tempo override is set
+    template: distributor/deployment-distributor.yaml
+    set:
+      tempo.podSecurityContext: null
+      defaults.podSecurityContext:
+        fsGroup: 3000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 3000
+
+  - it: uses tempo.securityContext for container securityContext by default
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsUser
+          value: 1000
+
+  - it: defaults.nodeSelector is applied when component has no nodeSelector
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.nodeSelector:
+        kubernetes.io/os: linux
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector
+          value:
+            kubernetes.io/os: linux
+
+  - it: component nodeSelector overrides defaults.nodeSelector
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.nodeSelector:
+        kubernetes.io/os: linux
+      distributor.nodeSelector:
+        kubernetes.io/arch: amd64
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector
+          value:
+            kubernetes.io/arch: amd64
+
+  - it: defaults.tolerations are applied when component has no tolerations
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.tolerations:
+        - key: dedicated
+          operator: Equal
+          value: tempo
+          effect: NoSchedule
+    asserts:
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            key: dedicated
+            operator: Equal
+            value: tempo
+            effect: NoSchedule
+
+  - it: defaults.resources are used when neither component nor tempo resources are set
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.resources.limits.memory: 256Mi
+      defaults.resources.requests.cpu: 100m
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 256Mi
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: 100m
+
+  - it: component resources override defaults.resources
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.resources.limits.memory: 256Mi
+      distributor.resources.limits.memory: 512Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 512Mi
+
+  - it: defaults.podAnnotations are applied to pod
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.podAnnotations:
+        team: platform
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["team"]
+          value: platform
+
+  - it: component podAnnotations override defaults.podAnnotations
+    template: distributor/deployment-distributor.yaml
+    set:
+      defaults.podAnnotations:
+        env: default
+      distributor.podAnnotations:
+        env: production
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["env"]
+          value: production
+
+  - it: global.extraArgs are prepended to component extraArgs
+    template: distributor/deployment-distributor.yaml
+    set:
+      global.extraArgs:
+        - -config.expand-env=true
+      distributor.extraArgs:
+        - -log.level=debug
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -config.expand-env=true
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: -log.level=debug
+
+  - it: global.priorityClassName is used when no component override
+    template: distributor/deployment-distributor.yaml
+    set:
+      global.priorityClassName: high-priority
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: high-priority
+
+  - it: defaults.priorityClassName overrides global.priorityClassName
+    template: distributor/deployment-distributor.yaml
+    set:
+      global.priorityClassName: high-priority
+      defaults.priorityClassName: medium-priority
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: medium-priority
+
+  - it: component priorityClassName overrides defaults and global
+    template: distributor/deployment-distributor.yaml
+    set:
+      global.priorityClassName: high-priority
+      defaults.priorityClassName: medium-priority
+      distributor.priorityClassName: low-priority
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: low-priority
+
+  - it: uses tempo.livenessProbe when no component override
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /ready
+
+  - it: autoscaling disabled uses static replicas
+    template: distributor/deployment-distributor.yaml
+    set:
+      distributor.autoscaling.enabled: false
+      distributor.replicas: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: autoscaling enabled omits replicas from spec
+    template: distributor/deployment-distributor.yaml
+    set:
+      distributor.autoscaling.enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+
+  - it: volumes include config, runtime-config and distributor store
+    template: distributor/deployment-distributor.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: config
+            configMap:
+              name: RELEASE-NAME-tempo-config
+              items:
+                - key: "tempo.yaml"
+                  path: "tempo.yaml"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: runtime-config
+            configMap:
+              name: RELEASE-NAME-tempo-runtime
+              items:
+                - key: "overrides.yaml"
+                  path: "overrides.yaml"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tempo-distributor-store
+            emptyDir: {}

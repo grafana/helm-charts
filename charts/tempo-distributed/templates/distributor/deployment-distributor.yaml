@@ -1,4 +1,43 @@
 {{ $dict := dict "ctx" . "component" "distributor" "memberlist" true }}
+{{/*
+Build extraPorts by merging trace-protocol ports (derived from traces.* values) with any
+user-defined distributor.extraPorts.  This preserves backward compatibility: previously
+these protocol ports were rendered inline in this template; now they are supplied as
+component.extraPorts so the shared tempo.podTemplate helper renders them after the two
+standard ports (http-memberlist, http-metrics).
+Duplicates are removed so that a user can override a trace port via distributor.extraPorts
+without ending up with two entries for the same port.
+*/}}
+{{- $extraPorts := list }}
+{{- if .Values.traces.jaeger.thriftCompact.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 6831 "name" "jaeger-compact" "protocol" "UDP") }}
+{{- end }}
+{{- if .Values.traces.jaeger.thriftBinary.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 6832 "name" "jaeger-binary" "protocol" "UDP") }}
+{{- end }}
+{{- if .Values.traces.jaeger.thriftHttp.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 14268 "name" "jaeger-http" "protocol" "TCP") }}
+{{- end }}
+{{- if .Values.traces.jaeger.grpc.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 14250 "name" "grpc-jaeger" "protocol" "TCP") }}
+{{- end }}
+{{- if .Values.traces.zipkin.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 9411 "name" "zipkin" "protocol" "TCP") }}
+{{- end }}
+{{- if .Values.traces.otlp.http.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 4318 "name" "otlp-http" "protocol" "TCP") }}
+{{- end }}
+{{- if .Values.traces.otlp.grpc.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 4317 "name" "grpc-otlp" "protocol" "TCP") }}
+{{- end }}
+{{- if .Values.traces.opencensus.enabled }}
+{{- $extraPorts = append $extraPorts (dict "containerPort" 55678 "name" "opencensus" "protocol" "TCP") }}
+{{- end }}
+{{/* Append any user-defined extra ports after the trace-protocol ports; remove duplicates */}}
+{{- $extraPorts = concat $extraPorts (.Values.distributor.extraPorts | default list) | uniq }}
+{{/* Merge the computed extraPorts into a copy of the distributor component dict so that
+     tempo.podTemplate renders the full set of ports from $component.extraPorts */}}
+{{- $component := merge (dict "extraPorts" $extraPorts) .Values.distributor }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,177 +63,4 @@ spec:
 {{- toYaml . | nindent 4 }}
 {{- end }}
   template:
-    metadata:
-      labels:
-        {{- include "tempo.podLabels" $dict | nindent 8 }}
-        {{- with .Values.tempo.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.distributor.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
-        {{- with .Values.tempo.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.distributor.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    spec:
-      {{- if or (.Values.distributor.priorityClassName) (.Values.global.priorityClassName) }}
-      priorityClassName: {{ default .Values.distributor.priorityClassName .Values.global.priorityClassName }}
-      {{- end }}
-      serviceAccountName: {{ include "tempo.serviceAccountName" . }}
-      {{- with .Values.tempo.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      enableServiceLinks: false
-      {{- include "tempo.componentImagePullSecrets" (dict "ctx" . "component" "distributor") | nindent 6 -}}
-      {{- with .Values.distributor.hostAliases }}
-      hostAliases:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.distributor.initContainers }}
-      initContainers:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      containers:
-        - args:
-            - -target=distributor
-            - -config.file=/conf/tempo.yaml
-            {{- with .Values.distributor.extraArgs }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.global.extraArgs }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          image: {{ include "tempo.imageReference" $dict }}
-          imagePullPolicy: {{ .Values.tempo.image.pullPolicy }}
-          name: distributor
-          ports:
-            - containerPort: {{ include "tempo.memberlistBindPort" . }}
-              name: http-memberlist
-              protocol: TCP
-            - containerPort: 3200
-              name: http-metrics
-            {{- if .Values.traces.jaeger.thriftCompact.enabled }}
-            - containerPort: 6831
-              name: jaeger-compact
-              protocol: UDP
-            {{- end }}
-            {{- if .Values.traces.jaeger.thriftBinary.enabled }}
-            - containerPort: 6832
-              name: jaeger-binary
-              protocol: UDP
-            {{- end }}
-            {{- if .Values.traces.jaeger.thriftHttp.enabled }}
-            - containerPort: 14268
-              name: jaeger-http
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.jaeger.grpc.enabled }}
-            - containerPort: 14250
-              name: grpc-jaeger
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.zipkin.enabled }}
-            - containerPort: 9411
-              name: zipkin
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.otlp.http.enabled }}
-            - containerPort: 4318
-              name: otlp-http
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.otlp.grpc.enabled }}
-            - containerPort: 4317
-              name: grpc-otlp
-              protocol: TCP
-            {{- end }}
-            {{- if .Values.traces.opencensus.enabled }}
-            - containerPort: 55678
-              name: opencensus
-              protocol: TCP
-            {{- end }}
-          {{- include "tempo.componentEnv" (dict "extraEnv" (concat .Values.global.extraEnv .Values.distributor.extraEnv) "resources" .Values.distributor.resources "factor" .Values.global.goSettings.goMemLimitFactor "gogc" .Values.global.goSettings.gogc) | nindent 10 }}
-          {{- if or .Values.global.extraEnvFrom .Values.distributor.extraEnvFrom }}
-          envFrom:
-            {{- with .Values.distributor.extraEnvFrom }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.global.extraEnvFrom }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- end }}
-          {{- with or .Values.distributor.livenessProbe .Values.tempo.livenessProbe }}
-          livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with or .Values.distributor.readinessProbe .Values.tempo.readinessProbe }}
-          readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          resources:
-            {{- toYaml .Values.distributor.resources | nindent 12 }}
-          {{- with .Values.tempo.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.distributor.lifecycle }}
-          lifecycle:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          volumeMounts:
-            - mountPath: /conf
-              name: config
-            - mountPath: /runtime-config
-              name: runtime-config
-            - mountPath: /var/tempo
-              name: tempo-distributor-store
-            {{- if .Values.enterprise.enabled }}
-            - name: license
-              mountPath: /license
-            {{- end }}
-            {{- with .Values.distributor.extraVolumeMounts }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-        {{- with .Values.distributor.extraContainers }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      terminationGracePeriodSeconds: {{ .Values.distributor.terminationGracePeriodSeconds }}
-      {{- if semverCompare ">= 1.19-0" .Capabilities.KubeVersion.Version }}
-      {{- with .Values.distributor.topologySpreadConstraints }}
-      topologySpreadConstraints:
-        {{- tpl . $ | nindent 8 }}
-      {{- end }}
-      {{- end }}
-      {{- with .Values.distributor.affinity }}
-      affinity:
-        {{- tpl . $ | nindent 8 }}
-      {{- end }}
-      {{- with .Values.distributor.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.distributor.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      volumes:
-        - name: config
-          {{- include "tempo.configVolume" . | nindent 10 }}
-        - name: runtime-config
-          {{- include "tempo.runtimeVolume" . | nindent 10 }}
-        - name: tempo-distributor-store
-          emptyDir: {}
-        {{- if .Values.enterprise.enabled }}
-        - name: license
-          secret:
-            secretName: {{ tpl .Values.license.secretName . }}
-        {{- end }}
-        {{- with .Values.distributor.extraVolumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+    {{- include "tempo.podTemplate" (dict "ctx" $ "component" $component "target" "distributor") | nindent 4 }}
