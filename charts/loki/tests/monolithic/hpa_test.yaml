@@ -1,14 +1,14 @@
 # $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
-suite: single-binary hpa
+suite: monolithic hpa
 templates:
-  - templates/single-binary/hpa.yaml
+  - templates/monolithic/hpa.yaml
 set:
-    deploymentMode: SingleBinary
-    singleBinary:
-      autoscaling:
-        enabled: true
+  deploymentMode: Monolithic
+  singleBinary:
+    autoscaling:
+      enabled: true
 tests:
-  - it: should create a single-binary HPA when deploymentMode is SingleBinary and autoscaling enabled
+  - it: should create a monolithic HPA when deploymentMode is Monolithic and autoscaling enabled
     set:
       singleBinary:
         autoscaling:
@@ -20,7 +20,7 @@ tests:
           of: HorizontalPodAutoscaler
       - matchRegex:
           path: metadata.name
-          pattern: ".*-single-binary$"
+          pattern: ".*-single-binary"
       - equal:
           path: spec.minReplicas
           value: 1
@@ -34,7 +34,7 @@ tests:
           path: spec.metrics[0].resource.name
           value: cpu
 
-  - it: should not render single-binary HPA when object storage is not used
+  - it: should not render monolithic HPA when object storage is not used
     set:
       loki:
         storage:
@@ -58,7 +58,7 @@ tests:
           path: spec.behavior.scaleDown.stabilizationWindowSeconds
           value: 300
 
-  - it: should not render single-binary HPA when autoscaling is disabled
+  - it: should not render monolithic HPA when autoscaling is disabled
     set:
       singleBinary:
         autoscaling:

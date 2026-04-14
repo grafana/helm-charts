@@ -1,5 +1,5 @@
 {{- if and .Values.singleBinary.persistence.enabled .Values.singleBinary.persistence.enableStatefulSetRecreationForSizeChange -}}
-  {{- $newStatefulSet := include (print $.Template.BasePath "/single-binary/statefulset.yaml") . | fromYaml -}}
+  {{- $newStatefulSet := include (print $.Template.BasePath "/monolithic/statefulset.yaml") . | fromYaml -}}
   {{- $currentStatefulset := dict -}}
   {{- if $newStatefulSet -}}
     {{- $currentStatefulset = lookup $newStatefulSet.apiVersion $newStatefulSet.kind $newStatefulSet.metadata.namespace $newStatefulSet.metadata.name -}}
@@ -34,7 +34,7 @@ metadata:
   name: {{ $newStatefulSet.metadata.name }}-recreate
   namespace: {{ $newStatefulSet.metadata.namespace }}
   labels:
-    {{- include "loki.singleBinaryLabels" . | nindent 4 }}
+    {{- include "loki.monolithicLabels" . | nindent 4 }}
     app.kubernetes.io/component: statefulset-recreate-job
   annotations:
     "helm.sh/hook": pre-upgrade
@@ -45,7 +45,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "loki.singleBinarySelectorLabels" . | nindent 8 }}
+        {{- include "loki.monolithicSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: statefulset-recreate-job
     spec:
       restartPolicy: Never
@@ -79,7 +79,7 @@ metadata:
   name: {{ $newStatefulSet.metadata.name }}-recreate
   namespace: {{ $newStatefulSet.metadata.namespace }}
   labels:
-    {{- include "loki.singleBinaryLabels" . | nindent 4 }}
+    {{- include "loki.monolithicLabels" . | nindent 4 }}
     app.kubernetes.io/component: statefulset-recreate-job
   annotations:
     "helm.sh/hook": pre-upgrade
@@ -92,7 +92,7 @@ metadata:
   name: {{ $newStatefulSet.metadata.name }}-recreate
   namespace: {{ $newStatefulSet.metadata.namespace }}
   labels:
-    {{- include "loki.singleBinaryLabels" . | nindent 4 }}
+    {{- include "loki.monolithicLabels" . | nindent 4 }}
     app.kubernetes.io/component: statefulset-recreate-job
   annotations:
     "helm.sh/hook": pre-upgrade
@@ -128,7 +128,7 @@ metadata:
   name: {{ $newStatefulSet.metadata.name }}-recreate
   namespace: {{ $newStatefulSet.metadata.namespace }}
   labels:
-    {{- include "loki.singleBinaryLabels" . | nindent 4 }}
+    {{- include "loki.monolithicLabels" . | nindent 4 }}
     app.kubernetes.io/component: statefulset-recreate-job
   annotations:
     "helm.sh/hook": pre-upgrade

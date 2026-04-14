@@ -72,7 +72,7 @@
     },
     "deploymentMode": {
       "type": "string",
-      "enum": ["SingleBinary", "SimpleScalable", "Distributed", "SingleBinary<->SimpleScalable", "SimpleScalable<->Distributed"]
+      "enum": ["Monolithic", "SingleBinary", "SimpleScalable", "Distributed", "SingleBinary<->SimpleScalable", "Monolithic<->SimpleScalable", "SimpleScalable<->Distributed"]
     },
     "commonLabels": {
       "type": "object",

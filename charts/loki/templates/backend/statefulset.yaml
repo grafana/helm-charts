@@ -17,7 +17,7 @@ metadata:
   {{- end }}
 spec:
 {{- if and (not .Values.backend.autoscaling.enabled) (not .Values.backend.kedaAutoscaling.enabled) }}
-  {{- if eq .Values.deploymentMode "SingleBinary" }}
+  {{- if or (eq .Values.deploymentMode "SingleBinary") (eq .Values.deploymentMode "Monolithic") }}
   replicas: 0
   {{- else }}
   replicas: {{ .Values.backend.replicas }}

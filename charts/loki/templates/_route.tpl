@@ -98,7 +98,7 @@ Params:
 {{- $ctx := .ctx -}}
 {{- $paths := .paths -}}
 {{- $port := .port -}}
-{{- if eq (include "loki.deployment.isSingleBinary" $ctx) "true" -}}
+{{- if eq (include "loki.deployment.isMonolithic" $ctx) "true" -}}
 {{- $svc := include "loki.fullname" $ctx -}}
 {{- include "loki.route.serviceRule" (dict "ctx" $ctx "serviceName" $svc "paths" $paths.distributor "port" $port) }}
 {{- include "loki.route.serviceRule" (dict "ctx" $ctx "serviceName" $svc "paths" $paths.queryFrontend "port" $port) }}

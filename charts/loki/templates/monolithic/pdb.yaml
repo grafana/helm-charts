@@ -1,7 +1,7 @@
-{{- $isSingleBinary := eq (include "loki.deployment.isSingleBinary" .) "true" -}}
-{{- if $isSingleBinary -}}
+{{- $isMonolithic := eq (include "loki.deployment.isMonolithic" .) "true" -}}
+{{- if $isMonolithic -}}
 {{- /*
-In older Loki helm chart version, the singleBinary PDB was configured through
+In older Loki helm chart version, the monolithic PDB was configured through
 .Values.podDisruptionBudget (now deprecated). To avoid breaking change, deep-merge both dicts with
 .Values.singleBinary.podDisruptionBudget taking precedence over .Values.podDisruptionBudget.
 

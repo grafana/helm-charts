@@ -1,11 +1,11 @@
 # $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
-suite: single-binary sidecar
+suite: monolithic sidecar
 templates:
-  - single-binary/statefulset.yaml
+  - monolithic/statefulset.yaml
   - config.yaml
 
 set:
-  deploymentMode: SingleBinary
+  deploymentMode: Monolithic
   loki.useTestSchema: true
   loki.storage.bucketNames.chunks: chunks
   loki.storage.bucketNames.ruler: ruler
@@ -19,49 +19,49 @@ tests:
     asserts:
       - hasDocuments:
           count: 1
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - isKind:
           of: StatefulSet
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - template:
-          single-binary/statefulset.yaml
+          monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers
           content:
             name: loki-sc-rules
             image: docker.io/kiwigrid/k8s-sidecar:0.0.0
           any: true
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: METHOD
             value: WATCH
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: LABEL
             value: loki_rule
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: FOLDER
             value: /rules
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: RESOURCE
             value: both
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.volumes
           content:
             name: sc-rules-volume
             emptyDir: {}
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
@@ -85,95 +85,95 @@ tests:
       sidecar.rules.watchClientTimeout: 130
       sidecar.rules.logLevel: DEBUG
     asserts:
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         hasDocuments:
           count: 1
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: METHOD
             value: SLEEP
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: LABEL
             value: custom_rule
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: LABEL_VALUE
             value: tenant-a
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: FOLDER
             value: /tmp/rules
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: FOLDER_ANNOTATION
             value: loki-folder
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: RESOURCE
             value: configmap
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: UNIQUE_FILENAMES
             value: "true"
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: SKIP_TLS_VERIFY
             value: "true"
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: DISABLE_X509_STRICT_VERIFICATION
             value: "true"
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: SCRIPT
             value: /reload.sh
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: WATCH_SERVER_TIMEOUT
             value: "120"
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: WATCH_CLIENT_TIMEOUT
             value: "130"
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[1].env
           content:
             name: LOG_LEVEL
             value: DEBUG
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.volumes
           content:
             name: sc-rules-volume
             emptyDir:
               sizeLimit: 1Gi
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
@@ -184,23 +184,23 @@ tests:
     set:
       sidecar.rules.enabled: false
     asserts:
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         hasDocuments:
           count: 1
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         isKind:
           of: StatefulSet
       - notContains:
-          template: single-binary/statefulset.yaml
+          template: monolithic/statefulset.yaml
           path: spec.template.spec.containers
           content:
             name: loki-sc-rules
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         notContains:
           path: spec.template.spec.volumes
           content:
             name: sc-rules-volume
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         notContains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
@@ -210,23 +210,23 @@ tests:
     set:
       singleBinary.sidecar: false
     asserts:
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         hasDocuments:
           count: 1
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         isKind:
           of: StatefulSet
       - notContains:
-          template: single-binary/statefulset.yaml
+          template: monolithic/statefulset.yaml
           path: spec.template.spec.containers
           content:
             name: loki-sc-rules
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         notContains:
           path: spec.template.spec.volumes
           content:
             name: sc-rules-volume
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         notContains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
@@ -243,17 +243,17 @@ tests:
               - -c
               - sleep 3600
     asserts:
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         hasDocuments:
           count: 1
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers
           content:
             name: extra-helper
             image: busybox:1.36
           any: true
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers
           content:
@@ -266,17 +266,17 @@ tests:
       singleBinary.image.repository: custom/loki
       singleBinary.image.tag: 1.2.3
     asserts:
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         hasDocuments:
           count: 1
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers
           content:
             name: loki
             image: quay.io/custom/loki:1.2.3
           any: true
-      - template: single-binary/statefulset.yaml
+      - template: monolithic/statefulset.yaml
         contains:
           path: spec.template.spec.containers
           content:

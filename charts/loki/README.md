@@ -53,6 +53,15 @@ See the [changelog](https://grafana-community.github.io/helm-charts/changelog/?c
 
 ## Upgrading
 
+### From 11.x to 12.0.0 ([#258](https://github.com/grafana-community/helm-charts/pull/258))
+
+The `deploymentMode` default value has been changed to `Monolithic`. `SingleBinary` has been renamed to `Monolithic`. 
+The old naming `SingleBinary` is still supported. `SimpleScalable` is still supported but will be removed in Loki 4.0.0.
+
+Actions required:
+- If you are using `SimpleScalable` deployment mode, you have to explicitly set `deploymentMode: SimpleScalable` in your values file to avoid breaking changes. Consider migrating to `Monolithic` deployment mode as `SimpleScalable` will be removed in Loki 4.0.0.
+- If you are using `SingleBinary` deployment mode, you have to explicitly set `deploymentMode: Monolithic` in your values file to avoid breaking changes.
+
 ### From 10.x to 11.0.0 ([#273](https://github.com/grafana-community/helm-charts/pull/273))
 
 The `read.legacyReadTarget` option has been removed. Simple scalable deployments always requires a dedicated backend target.

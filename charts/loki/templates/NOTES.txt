@@ -17,7 +17,7 @@ If pods are taking too long to schedule make sure pod affinity can be fulfilled 
 Installed components:
 ***********************************************************************
 
-{{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
+{{- if eq (include "loki.deployment.isMonolithic" .) "true" }}
 * loki
 {{- else -}}
 {{- if .Values.gateway.enabled }}
@@ -43,7 +43,7 @@ Installed components:
 {{- end }}
 
 
-{{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
+{{- if eq (include "loki.deployment.isMonolithic" .) "true" }}
 
 Loki has been deployed as a single binary.
 This means a single pod is handling reads and writes. You can scale that pod vertically by adding more CPU and memory resources.
@@ -68,7 +68,7 @@ You can send logs from inside the cluster using the cluster DNS:
 http://{{ include "loki.gatewayFullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}/loki/api/v1/push
 
 {{- else }}
-{{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
+{{- if eq (include "loki.deployment.isMonolithic" .) "true" }}
 
 http://{{ include "loki.fullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.loki.server.http_listen_port }}/loki/api/v1/push
 
@@ -91,7 +91,7 @@ You can test to send data from outside the cluster by port-forwarding the gatewa
   kubectl port-forward --namespace {{ include "loki.namespace" $ }} svc/{{ include "loki.gatewayFullname" . }} 3100:{{ .Values.gateway.service.port }} &
 
 {{- else }}
-{{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
+{{- if eq (include "loki.deployment.isMonolithic" .) "true" }}
 
   kubectl port-forward --namespace {{ include "loki.namespace" $ }} svc/{{ include "loki.fullname" . }} 3100:{{ .Values.loki.server.http_listen_port }} &
 
@@ -135,7 +135,7 @@ If Grafana operates within the cluster, you'll set up a new Loki datasource by u
 http://{{ include "loki.gatewayFullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}/
 
 {{- else }}
-{{- if eq (include "loki.deployment.isSingleBinary" .) "true" }}
+{{- if eq (include "loki.deployment.isMonolithic" .) "true" }}
 
 http://{{ include "loki.fullname" . }}.{{ include "loki.namespace" . }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.loki.server.http_listen_port }}/
 

@@ -6,16 +6,16 @@
 {{- fail "Helm test requires the Loki Canary to be enabled"}}
 {{- end }}
 
-{{- $singleBinaryReplicas := int .Values.singleBinary.replicas }}
+{{- $monolithicReplicas := int .Values.singleBinary.replicas }}
 {{- $isUsingFilesystem := eq (include "loki.isUsingObjectStorage" .) "false" }}
 {{- $atLeastOneScalableReplica := or (gt (int .Values.backend.replicas) 0) (gt (int .Values.read.replicas) 0) (gt (int .Values.write.replicas) 0) }}
 {{- $atLeastOneDistributedReplica := or (gt (int .Values.ingester.replicas) 0) (gt (int .Values.distributor.replicas) 0) (gt (int .Values.querier.replicas) 0) (gt (int .Values.queryFrontend.replicas) 0) (gt (int .Values.queryScheduler.replicas) 0) (gt (int .Values.indexGateway.replicas) 0) (gt (int .Values.compactor.replicas) 0) (gt (int .Values.ruler.replicas) 0) }}
 
-{{- if and $isUsingFilesystem (gt $singleBinaryReplicas 1) }}
-{{- fail "Cannot run more than 1 Single Binary replica without an object storage backend."}}
+{{- if and $isUsingFilesystem (gt $monolithicReplicas 1) }}
+{{- fail "Cannot run more than 1 Monolithic replica without an object storage backend."}}
 {{- end }}
 
-{{- if and $isUsingFilesystem (and (eq $singleBinaryReplicas 0) (or $atLeastOneScalableReplica $atLeastOneDistributedReplica)) }}
+{{- if and $isUsingFilesystem (and (eq $monolithicReplicas 0) (or $atLeastOneScalableReplica $atLeastOneDistributedReplica)) }}
 {{- fail "Cannot run scalable targets (backend, read, write) or distributed targets without an object storage backend."}}
 {{- end }}
 
@@ -23,12 +23,12 @@
 {{- fail "You have more than zero replicas configured for scalable targets (backend, read, write) and distributed targets. If this was intentional change the deploymentMode to the transitional 'SimpleScalable<->Distributed' mode" }}
 {{- end }}
 
-{{- if and (gt $singleBinaryReplicas 0) $atLeastOneDistributedReplica }}
-{{- fail "You have more than zero replicas configured for both the single binary and distributed targets, there is no transition mode between these targets please change one or the other to zero or transition to the SimpleScalable mode first."}}
+{{- if and (gt $monolithicReplicas 0) $atLeastOneDistributedReplica }}
+{{- fail "You have more than zero replicas configured for both the monolithic and distributed targets, there is no transition mode between these targets please change one or the other to zero or transition to the SimpleScalable mode first."}}
 {{- end }}
 
-{{- if and (gt $singleBinaryReplicas 0) $atLeastOneScalableReplica (ne .Values.deploymentMode "SingleBinary<->SimpleScalable") }}
-{{- fail "You have more than zero replicas configured for both the single binary and simple scalable targets. If this was intentional change the deploymentMode to the transitional 'SingleBinary<->SimpleScalable' mode"}}
+{{- if and (gt $monolithicReplicas 0) $atLeastOneScalableReplica (ne .Values.deploymentMode "Monolithic<->SimpleScalable") (ne .Values.deploymentMode "SingleBinary<->SimpleScalable") }}
+{{- fail "You have more than zero replicas configured for both the monolithic and simple scalable targets. If this was intentional change the deploymentMode to the transitional 'Monolithic<->SimpleScalable' mode"}}
 {{- end }}
 
 {{- include "loki.validateAutoscaling" (dict "component" .Values.querier "name" "querier") }}

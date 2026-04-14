@@ -1,4 +1,5 @@
 ---
+deploymentMode: SimpleScalable
 gateway:
   ingress:
     enabled: true

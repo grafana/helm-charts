@@ -1,20 +1,20 @@
 {{/*
-singleBinary common labels
+monolithic common labels
 */}}
-{{- define "loki.singleBinaryLabels" -}}
+{{- define "loki.monolithicLabels" -}}
 {{ include "loki.labels" . }}
 app.kubernetes.io/component: single-binary
 {{- end }}
 
 
-{{/* singleBinary selector labels */}}
-{{- define "loki.singleBinarySelectorLabels" -}}
+{{/* monolithic selector labels */}}
+{{- define "loki.monolithicSelectorLabels" -}}
 {{ include "loki.selectorLabels" . }}
 app.kubernetes.io/component: single-binary
 {{- end }}
 
-{{/* singleBinary replicas calculation */}}
-{{- define "loki.singleBinaryReplicas" -}}
+{{/* monolithic replicas calculation */}}
+{{- define "loki.monolithicReplicas" -}}
 {{- $replicas := 1 }}
 {{- $usingObjectStorage := eq (include "loki.isUsingObjectStorage" .) "true" }}
 {{- if and $usingObjectStorage (gt (int .Values.singleBinary.replicas) 1)}}

@@ -1,5 +1,5 @@
-{{- $isSingleBinary := eq (include "loki.deployment.isSingleBinary" .) "true" -}}
+{{- $isMonolithic := eq (include "loki.deployment.isMonolithic" .) "true" -}}
 {{- $usingObjectStorage := eq (include "loki.isUsingObjectStorage" .) "true" }}
-{{- if and $isSingleBinary $usingObjectStorage }}
+{{- if and $isMonolithic $usingObjectStorage }}
 {{- include "loki.keda" (dict "target" "single-binary" "component" .Values.singleBinary "ctx" .) }}
 {{- end }}

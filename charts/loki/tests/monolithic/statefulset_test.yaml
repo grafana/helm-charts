@@ -1,7 +1,7 @@
 # $schema: https://raw.githubusercontent.com/helm-unittest/helm-unittest/refs/heads/main/schema/helm-testsuite.json
 suite: single-binary statefulset
 templates:
-  - single-binary/statefulset.yaml
+  - monolithic/statefulset.yaml
   - config.yaml
 set:
   deploymentMode: SingleBinary
@@ -17,27 +17,27 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should render one StatefulSet for single binary mode
     asserts:
       - hasDocuments:
           count: 1
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - isKind:
           of: StatefulSet
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should set expected metadata labels
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/component"]
           value: single-binary
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: metadata.labels["app.kubernetes.io/part-of"]
           value: memberlist
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should merge common and component statefulset annotations
     set:
@@ -49,18 +49,18 @@ tests:
       - equal:
           path: metadata.annotations["loki-annotation"]
           value: loki-value
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: metadata.annotations["single-binary-annotation"]
           value: single-binary-value
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should set replicas to 1 by default
     asserts:
       - equal:
           path: spec.replicas
           value: 1
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should set replicas from singleBinary.replicas when using object storage and replicas is greater than 1
     set:
@@ -69,7 +69,7 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should omit replicas when autoscaling is enabled
     set:
@@ -77,7 +77,7 @@ tests:
     asserts:
       - notExists:
           path: spec.replicas
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should omit replicas when kedaAutoscaling is enabled
     set:
@@ -85,26 +85,26 @@ tests:
     asserts:
       - notExists:
           path: spec.replicas
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should set expected statefulset spec fields
     asserts:
       - equal:
           path: spec.podManagementPolicy
           value: Parallel
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.serviceName
           value: RELEASE-NAME-loki-headless
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.revisionHistoryLimit
           value: 10
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/component"]
           value: single-binary
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should set storage size pod annotation when persistence is enabled
     set:
@@ -114,7 +114,7 @@ tests:
       - equal:
           path: spec.template.metadata.annotations["storage/size"]
           value: 42Gi
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should not set storage size pod annotation when persistence is disabled
     set:
@@ -122,7 +122,7 @@ tests:
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["storage/size"]
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should merge user pod annotations together with generated storage size annotation
     set:
@@ -134,11 +134,11 @@ tests:
       - equal:
           path: spec.template.metadata.annotations["storage/size"]
           value: 15Gi
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.template.metadata.annotations["custom-annotation"]
           value: custom-value
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should let user podAnnotations override generated storage size annotation
     set:
@@ -150,7 +150,7 @@ tests:
       - equal:
           path: spec.template.metadata.annotations["storage/size"]
           value: overridden-by-user
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should render volumeClaimTemplates when persistence is enabled
     set:
@@ -159,19 +159,19 @@ tests:
     asserts:
       - exists:
           path: spec.volumeClaimTemplates
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.volumeClaimTemplates[0].metadata.name
           value: storage
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
           value: 25Gi
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.volumeClaimTemplates[0].spec.accessModes[0]
           value: ReadWriteOnce
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should not render volumeClaimTemplates when persistence is disabled
     set:
@@ -179,7 +179,7 @@ tests:
     asserts:
       - notExists:
           path: spec.volumeClaimTemplates
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should render PVC annotations labels selector and storageClass when configured
     set:
@@ -195,19 +195,19 @@ tests:
       - equal:
           path: spec.volumeClaimTemplates[0].metadata.annotations["pvc-annotation"]
           value: pvc-value
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.volumeClaimTemplates[0].metadata.labels["pvc-label"]
           value: pvc-value
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.volumeClaimTemplates[0].spec.selector.matchLabels.volume
           value: loki-storage
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: gp3
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should render empty storageClassName when persistence.storageClass is dash
     set:
@@ -216,7 +216,7 @@ tests:
       - equal:
           path: spec.volumeClaimTemplates[0].spec.storageClassName
           value: ""
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should render persistentVolumeClaimRetentionPolicy when auto delete PVC is enabled
     set:
@@ -228,11 +228,11 @@ tests:
       - equal:
           path: spec.persistentVolumeClaimRetentionPolicy.whenDeleted
           value: Delete
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - equal:
           path: spec.persistentVolumeClaimRetentionPolicy.whenScaled
           value: Retain
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should not render persistentVolumeClaimRetentionPolicy when auto delete PVC is disabled
     set:
@@ -240,7 +240,7 @@ tests:
     asserts:
       - notExists:
           path: spec.persistentVolumeClaimRetentionPolicy
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
 
   - it: should render memory-backed storage volume when persistence.inMemory is enabled
     set:
@@ -255,7 +255,7 @@ tests:
             emptyDir:
               medium: Memory
               sizeLimit: 5Gi
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
       - notExists:
           path: spec.volumeClaimTemplates
-        template: single-binary/statefulset.yaml
+        template: monolithic/statefulset.yaml
