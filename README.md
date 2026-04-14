@@ -48,6 +48,9 @@ curl https://grafana-community.github.io/helm-charts/pubkey.gpg | gpg --import
 
 After importing the key, you can use the `--verify` flag during `helm install` to enable chart signature validation.
 
+> [!NOTE]
+> Chart releases published before the repository migration (end of January 2026) were signed by a different authority. Verifying those older releases with the current key will fail with `openpgp: signature made by unknown entity`. There are no plans to re-sign historical releases.
+
 ## Contributing
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
