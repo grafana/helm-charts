@@ -30175,6 +30175,17 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/helm-k6-operator-1.0.0/k6-operator-1.0.0.tgz
     version: 1.0.0
+  k8s-manifest-tail:
+  - apiVersion: v2
+    appVersion: 0.1.1
+    created: "2026-04-16T16:42:58.53897792Z"
+    description: Fetches and monitors Kubernetes manifests from a running cluster
+    digest: 17dfb55909a55122523ef7e0ceae2778a360e7033a41ac37ccfa83a6136f3da0
+    name: k8s-manifest-tail
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-manifest-tail-0.1.0/k8s-manifest-tail-0.1.0.tgz
+    version: 0.1.0
   k8s-monitoring:
   - apiVersion: v2
     appVersion: 4.0.1
@@ -106708,4 +106719,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-16T12:58:53.733792133Z"
+generated: "2026-04-16T16:42:58.587417496Z"
