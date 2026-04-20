@@ -18,6 +18,11 @@ on:
         default: v3.8.2
         required: false
         type: string
+      gateway_api_version:
+        description: version of the gateway-api CRDs
+        default: v1.4.1
+        required: false
+        type: string
       kind_kubectl_version:
         description: version of the kubectl binary used for the kind cluster
         required: false
@@ -81,15 +86,17 @@ jobs:
           version=$(kubectl version -o json | jq -r '.serverVersion.major + "." + .serverVersion.minor' | tr -d '+')
           major_version=$(echo $version | cut -d. -f1)
           minor_version=$(echo $version | cut -d. -f2)
-          
+
           # Compare version with 1.23. The gateway CRDs use x-kubernetes-validations, which is only supported from 1.23 onwards.
           if [ "$major_version" -eq 1 ] && [ "$minor_version" -ge 23 ] || [ "$major_version" -gt 1 ]; then
-            echo "Kubernetes version $version >= 1.23, applying Gateway API CRDs"
-            kubectl apply -k https://github.com/kubernetes-sigs/gateway-api/config/crd
+            echo "Kubernetes version $version >= 1.23, applying Gateway API CRDs ${GATEWAY_API_VERSION}"
+            kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/standard-install.yaml
           else
             echo "Kubernetes version $version < 1.23, skipping Gateway API CRDs installation"
             echo "Please use an older version of Gateway API CRDs or upgrade your Kubernetes version"
           fi
+        env:
+          GATEWAY_API_VERSION: ${{ inputs.gateway_api_version }}
 
       - name: Run chart-testing (install)
         run: |

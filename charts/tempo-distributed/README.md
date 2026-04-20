@@ -1,8 +1,14 @@
 # tempo-distributed
 
-![Version: 1.61.2](https://img.shields.io/badge/Version-1.61.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.61.3](https://img.shields.io/badge/Version-1.61.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 Grafana Tempo in MicroService mode
+
+## 📦 Chart Migration
+
+**This chart is being migrated to [grafana-community/helm-charts](https://github.com/grafana-community/helm-charts).**
+
+After January 30th, 2026, updates and support for this chart will be provided in the new repository. Please update your Helm repository configuration to ensure you continue receiving updates.
 
 ## Source Code
 

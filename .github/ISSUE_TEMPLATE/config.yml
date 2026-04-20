@@ -1,0 +1,23 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Create grafana-mcp chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create grafana chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create synthetic-monitoring-agent chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create tempo-distributed chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create tempo-vulture chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create tempo chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+  - name: Create loki chart issues here
+    url: https://github.com/grafana-community/helm-charts/issues/new/choose
+    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
