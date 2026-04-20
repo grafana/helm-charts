@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
+![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -29,6 +29,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | metricsPort | int | `8090` | The port where metrics are served from the pdc agent |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | not required, but left in as a choice |
+| podAnnotations | object | `{}` | custom pod annotations |
 | podLabels | object | `{}` |  |
 | podSecurityContext.fsGroup | int | `30000` |  |
 | podSecurityContext.runAsGroup | int | `30000` |  |
