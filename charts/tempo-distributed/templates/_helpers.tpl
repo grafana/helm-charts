@@ -441,6 +441,7 @@ rules:
     {{- end }}
     verbs:
       - patch
+      - get
   {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
