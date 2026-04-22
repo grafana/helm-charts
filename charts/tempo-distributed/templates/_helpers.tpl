@@ -389,7 +389,7 @@ spec:
             - pvc
             - --namespace={{ $newStatefulSet.metadata.namespace }}
             - {{ printf "%s-%s-%d" $template $newStatefulSet.metadata.name $index }}
-            - --type='json'
+            - --type=json
             - '-p=[{"op": "replace", "path": "/spec/resources/requests/storage", "value": "{{ $size }}"}]'
           {{- end }}
         {{- end }}
