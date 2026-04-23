@@ -1,0 +1,27 @@
+{{- if .Values.podMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "pdc-agent.fullname" . }}
+  {{- with .Values.podMonitor.namespace }}
+  namespace: {{ . | quote }}
+  {{- end }}
+  labels:
+    {{- include "pdc-agent.labels" . | nindent 4 }}
+    {{- with .Values.podMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  podMetricsEndpoints:
+    - honorLabels: {{ .Values.podMonitor.honorLabels | default false }}
+      interval: {{ .Values.podMonitor.interval | default "30s" | quote }}
+      port: {{ .Values.podMonitor.port | default "metrics" | quote }}
+      scheme: {{ .Values.podMonitor.scheme | default "http" | quote }}
+      path: {{ .Values.podMonitor.path | default "/metrics" | quote }}
+  selector:
+    matchLabels:
+      {{- include "pdc-agent.selectorLabels" . | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace | quote }}
+{{- end }}
