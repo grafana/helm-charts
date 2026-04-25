@@ -1,0 +1,4 @@
+# The CRDs in this subchart are installed from the crds/ directory and are not
+# templated. This subchart exists so the parent chart can conditionally include
+# CRDs via a dependency `condition`, allowing users with externally managed CRDs
+# to skip them entirely.
