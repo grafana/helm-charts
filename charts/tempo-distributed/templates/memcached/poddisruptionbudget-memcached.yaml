@@ -1,4 +1,4 @@
-{{- if gt (int .Values.memcached.replicas) 1 }}
+{{- if and (gt (int .Values.memcached.replicas) 1) .Values.memcached.podDisruptionBudget.enabled }}
 {{ $dict := dict "ctx" . "component" "memcached" }}
 apiVersion: {{ include "tempo.pdb.apiVersion" . }}
 kind: PodDisruptionBudget

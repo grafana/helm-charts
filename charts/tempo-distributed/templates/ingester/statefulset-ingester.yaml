@@ -1,7 +1,5 @@
 {{- $dict := dict "ctx" . "component" "ingester" "memberlist" true -}}
 {{- $zonesMap := include "ingester.zoneAwareReplicationMap" $dict | fromYaml -}}
-{{- $storageClass := .Values.ingester.persistence.storageClass | default .Values.global.storageClass }}
-{{- if eq $storageClass "-" }}{{- $storageClass = "" }}{{- end }}
 {{- range $zoneName, $rolloutZone := $zonesMap -}}
 {{- with $ -}}
 {{- $_ := set $dict "rolloutZoneName" $zoneName -}}
@@ -49,6 +47,9 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-tempo.yaml") . | sha256sum }}
+        {{- if .Values.ingester.persistence.enabled }}
+        storage/size: {{ .Values.ingester.persistence.size | quote }}
+        {{- end }}
         {{- with .Values.tempo.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -212,9 +213,14 @@ spec:
         {{- end }}
         name: data
       spec:
+        {{- $storageClass := coalesce $rolloutZone.storageClass .Values.ingester.persistence.storageClass .Values.global.storageClass }}
+        {{- if eq $storageClass "-" }}
+        storageClassName: ""
+        {{- else if $storageClass }}
+        storageClassName: {{ $storageClass }}
+        {{- end }}
         accessModes:
           - ReadWriteOnce
-        storageClassName: {{ if $storageClass }}{{ $storageClass }}{{ else }}{{- "" }}{{ end }}
         resources:
           requests:
             storage: {{ .Values.ingester.persistence.size | quote }}

@@ -29,6 +29,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | metricsPort | int | `8090` | The port where metrics are served from the pdc agent |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | not required, but left in as a choice |
+| podAnnotations | object | `{}` | custom pod annotations |
 | podLabels | object | `{}` |  |
 | podSecurityContext.fsGroup | int | `30000` |  |
 | podSecurityContext.runAsGroup | int | `30000` |  |
