@@ -41,6 +41,15 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+## Custom resource configuration. Set crds.enabled=false to skip CRD installation
+## when CRDs are managed out of band (e.g. shared rollout-operator instance).
+crds:
+  # -- Install CRDs as part of the chart (via the bundled `crds` subchart)
+  enabled: true
+
+# -- Additional annotations to add to the deployment
+annotations: {}
+
 # -- Pod Annotations
 podAnnotations: {}
 

@@ -4,13 +4,17 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.47.0](https://img.shields.io/badge/Version-0.47.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.36.1](https://img.shields.io/badge/AppVersion-v0.36.1-informational?style=flat-square)
+![Version: 0.48.0](https://img.shields.io/badge/Version-0.48.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.36.1](https://img.shields.io/badge/AppVersion-v0.36.1-informational?style=flat-square)
 
 Grafana rollout-operator
 
 ## Requirements
 
 Kubernetes: `^1.10.0-0`
+
+| Repository | Name | Version |
+|------------|------|---------|
+|  | crds | 0.0.0 |
 
 ## Installation
 
@@ -48,6 +52,8 @@ Manually applying these CRDs is only required if upgrading from a chart <= v0.32
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| annotations | object | `{}` | Additional annotations to add to the deployment |
+| crds.enabled | bool | `true` | Install CRDs as part of the chart (via the bundled `crds` subchart) |
 | extraArgs | list | `[]` | List of additional CLI arguments to configure rollout-operator (example: `--log.level=info`) |
 | extraEnv | list | `[]` | Environment variables to add to rollout-operator container |
 | extraEnvFrom | list | `[]` | Environment variables from secrets or configmaps to add to rollout-operator container |
