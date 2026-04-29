@@ -70,6 +70,9 @@ tolerations: []
 # --  not required, but left in as a choice
 affinity: {}
 
+# -- not required, but left in as a choice. DNS config for the agent pods. See https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config for more details.
+dnsConfig: {}
+
 # -- The port where metrics are served from the pdc agent
 metricsPort: 8090
 

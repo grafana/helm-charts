@@ -18,6 +18,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | annotations | object | `{}` | custom deployment annotations |
 | cluster | string | `""` | The cluster where your Hosted Grafana stack is running |
 | debug | bool | `false` | Enable debug logging for the agent. Useful for seeing SSH debug logs |
+| dnsConfig | object | `{}` |  Allows more control on the DNS settings for the Pod |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | hostedGrafanaId | string | `""` | The numeric ID of your Hosted Grafana stack |
