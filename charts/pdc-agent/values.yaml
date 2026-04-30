@@ -19,15 +19,19 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# This is for setting Kubernetes Labels to a Pod.
+# -- Annotations to add to the Pod resource
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+
+# -- Labels to add to the Pod resource
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
-# -- custom pod annotations
-podAnnotations: {}
-
-# -- custom deployment annotations
+# -- Annotations to add the Deployment resource
 annotations: {}
+
+# -- Labels to add to the Deployment resource
+labels: {}
 
 podSecurityContext:
   runAsUser: 30000
@@ -79,8 +83,16 @@ debug: false
 # For these values, see https://grafana.com/docs/grafana-cloud/connect-externally-hosted/private-data-source-connect/configure-pdc/#pdc-connection-steps
 # -- The cluster where your Hosted Grafana stack is running
 cluster: ""
+# -- If set, CLUSTER is read from this secret instead of the cluster value above
+clusterSecretName: ""
+# -- Defines the key used to lookup the cluster value in the secret defined by `clusterSecretName`.
+clusterSecretKey: "cluster"
 # -- The numeric ID of your Hosted Grafana stack
 hostedGrafanaId: ""
+# -- If set, HOSTED_GRAFANA_ID is read from this secret instead of the hostedGrafanaId value above
+hostedGrafanaIdSecretName: ""
+# -- Defines the key used to lookup the hosted Grafana ID value in the secret defined by `hostedGrafanaIdSecretName`.
+hostedGrafanaIdSecretKey: "hosted-grafana-id"
 # -- tokenSecretName Expects a secret which contains the Access Policy token you generated. See `tokenSecretKey` for the key name under which the value is expected.
 tokenSecretName: ""
 # -- tokenSecretKey Defines the key that is used to lookup the token value in the secret defined by `tokenSecretName`.
@@ -93,3 +105,9 @@ insecureTokenValue: ""
 # https://github.com/grafana/pdc-agent/blob/main/pkg/pdc/client.go
 # https://github.com/grafana/pdc-agent/blob/main/cmd/pdc/main.go
 extraArgs: []
+
+# -- Extra environment variables to set on the pdc-agent container.
+# Useful for configuring HTTP/HTTPS proxies or other runtime settings.
+extraEnv: []
+# - name: HTTP_PROXY
+#   value: "http://proxy.example.com:8080"

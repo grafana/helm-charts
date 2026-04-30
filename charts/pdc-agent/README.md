@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.45](https://img.shields.io/badge/AppVersion-0.0.45-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.57](https://img.shields.io/badge/AppVersion-0.0.57-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -15,22 +15,28 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | not required, but left in as a choice |
-| annotations | object | `{}` | custom deployment annotations |
+| annotations | object | `{}` | Annotations to add the Deployment resource |
 | cluster | string | `""` | The cluster where your Hosted Grafana stack is running |
+| clusterSecretKey | string | `"cluster"` | Defines the key used to lookup the cluster value in the secret defined by `clusterSecretName`. |
+| clusterSecretName | string | `""` | If set, CLUSTER is read from this secret instead of the cluster value above |
 | debug | bool | `false` | Enable debug logging for the agent. Useful for seeing SSH debug logs |
 | extraArgs | list | `[]` |  |
+| extraEnv | list | `[]` | Extra environment variables to set on the pdc-agent container. Useful for configuring HTTP/HTTPS proxies or other runtime settings. |
 | fullnameOverride | string | `""` |  |
 | hostedGrafanaId | string | `""` | The numeric ID of your Hosted Grafana stack |
+| hostedGrafanaIdSecretKey | string | `"hosted-grafana-id"` | Defines the key used to lookup the hosted Grafana ID value in the secret defined by `hostedGrafanaIdSecretName`. |
+| hostedGrafanaIdSecretName | string | `""` | If set, HOSTED_GRAFANA_ID is read from this secret instead of the hostedGrafanaId value above |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"grafana/pdc-agent"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | insecureTokenValue | string | `""` | insecureTokenValue is used to set the token value directly in the deployment.yaml file. This is useful for testing purposes. |
+| labels | object | `{}` | Labels to add to the Deployment resource |
 | metricsPort | int | `8090` | The port where metrics are served from the pdc agent |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | not required, but left in as a choice |
-| podAnnotations | object | `{}` | custom pod annotations |
-| podLabels | object | `{}` |  |
+| podAnnotations | object | `{}` | Annotations to add to the Pod resource For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| podLabels | object | `{}` | Labels to add to the Pod resource For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ |
 | podSecurityContext.fsGroup | int | `30000` |  |
 | podSecurityContext.runAsGroup | int | `30000` |  |
 | podSecurityContext.runAsUser | int | `30000` |  |
