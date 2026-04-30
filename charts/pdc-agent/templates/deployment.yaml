@@ -4,6 +4,9 @@ metadata:
   name: {{ include "pdc-agent.fullname" . }}
   labels:
     {{- include "pdc-agent.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -69,9 +72,26 @@ spec:
               {{- fail "Either tokenSecretName or insecureTokenValue must be provided" }}
               {{- end }}
             - name: CLUSTER
+              {{- if .Values.clusterSecretName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.clusterSecretName }}
+                  key: {{ default "cluster" .Values.clusterSecretKey | quote }}
+              {{- else }}
               value: {{ required "A cluster name is required" .Values.cluster | quote }}
+              {{- end }}
             - name: HOSTED_GRAFANA_ID
+              {{- if .Values.hostedGrafanaIdSecretName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.hostedGrafanaIdSecretName }}
+                  key: {{ default "hosted-grafana-id" .Values.hostedGrafanaIdSecretKey | quote }}
+              {{- else }}
               value: {{ required "A Hosted Grafana stack ID is required" .Values.hostedGrafanaId | quote }}
+              {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           args:
             - -cluster
             - $(CLUSTER)
