@@ -30524,6 +30524,16 @@ entries:
   k8s-manifest-tail:
   - apiVersion: v2
     appVersion: 0.1.1
+    created: "2026-05-07T15:55:51.850771684Z"
+    description: Fetches and monitors Kubernetes manifests from a running cluster
+    digest: 9fa9cf128ad3cd1265c10157307380925f547d70de5313f2f0599e7b61e2b06a
+    name: k8s-manifest-tail
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-manifest-tail-0.1.4/k8s-manifest-tail-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 0.1.1
     created: "2026-04-30T13:42:41.48254588Z"
     description: Fetches and monitors Kubernetes manifests from a running cluster
     digest: 1bb51204da1a409f753e699de96865a12a4a2d56fe065274c1941fa322fc0f11
@@ -107933,4 +107943,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-06T18:25:51.839759165Z"
+generated: "2026-05-07T15:55:51.879311884Z"
