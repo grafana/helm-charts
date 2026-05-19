@@ -254,3 +254,4 @@ jobs:
           PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
         run: |
           helm push "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+
