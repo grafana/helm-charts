@@ -1,0 +1,5 @@
+apiVersion: v2
+name: crds
+description: Grafana rollout-operator CRDs
+version: 0.0.0
+type: application

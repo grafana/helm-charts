@@ -1,3 +1,10 @@
+# ⚠️Deprecation Notice
+
+**This chart is deprecated and will no longer receive updates or support.**
+
+Please consider using the [loki](https://github.com/grafana/loki/tree/main/production/helm/loki)
+chart instead, which provides comprehensive features and ongoing maintenance.
+
 # Grafana Enterprise Logs Helm Chart
 
 A Helm chart for deploying [Grafana Enterprise Logs](https://grafana.com/products/enterprise/logs/) to Kubernetes.

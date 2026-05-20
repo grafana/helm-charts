@@ -1,4 +1,5 @@
 /charts/*/charts
+!/charts/rollout-operator/charts/
 .idea
 .vscode
 .project

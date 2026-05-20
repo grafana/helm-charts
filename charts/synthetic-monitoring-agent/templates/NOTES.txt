@@ -1,5 +1,0 @@
-***********************************************************************
- Welcome to Grafana Synthetic Monitoring Agent
- Chart version: {{ .Chart.Version }}
- Synthetic Monitoring Agent version: {{ .Chart.AppVersion }}
-***********************************************************************

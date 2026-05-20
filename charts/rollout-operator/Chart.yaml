@@ -2,7 +2,11 @@ apiVersion: v2
 name: rollout-operator
 description: "Grafana rollout-operator"
 type: application
-version: 0.38.0
-appVersion: v0.32.0
+version: 0.49.0
+appVersion: v0.36.2
 home: https://github.com/grafana/rollout-operator
 kubeVersion: ^1.10.0-0
+dependencies:
+  - name: crds
+    version: "0.0.0"
+    condition: crds.enabled
