@@ -11,5 +11,8 @@ spec:
     matchLabels:
       {{- include "tempo.metricsGeneratorSelectorLabels" . | nindent 6 }}
   maxUnavailable: 1
+  {{- with .Values.metricsGenerator.podDisruptionBudget.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
 {{- end }}
 {{- end }}

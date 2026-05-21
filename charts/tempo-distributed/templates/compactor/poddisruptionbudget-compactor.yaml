@@ -10,4 +10,7 @@ spec:
     matchLabels:
       {{- include "tempo.compactorSelectorLabels" . | nindent 6 }}
   maxUnavailable: 1
+  {{- with .Values.compactor.podDisruptionBudget.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
 {{- end }}

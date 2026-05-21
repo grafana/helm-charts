@@ -10,4 +10,7 @@ spec:
     matchLabels:
       {{- include "tempo.memcachedSelectorLabels" . | nindent 6 }}
   maxUnavailable: 1
+  {{- with .Values.memcached.podDisruptionBudget.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
 {{- end }}

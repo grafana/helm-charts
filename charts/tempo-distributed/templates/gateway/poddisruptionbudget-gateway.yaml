@@ -10,4 +10,7 @@ spec:
     matchLabels:
       {{- include "tempo.gatewaySelectorLabels" . | nindent 6 }}
   maxUnavailable: 1
+  {{- with .Values.gateway.podDisruptionBudget.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
 {{- end }}

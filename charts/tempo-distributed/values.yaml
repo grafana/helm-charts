@@ -63,6 +63,9 @@ ingester:
   annotations: {}
   # -- Number of replicas for the ingester
   replicas: 3
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the ingester PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   autoscaling:
     # -- Enable autoscaling for the ingester
     enabled: false
@@ -157,6 +160,9 @@ metricsGenerator:
   annotations: {}
   # -- Number of replicas for the metrics-generator
   replicas: 1
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the metrics-generator PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   image:
     # -- The Docker registry for the metrics-generator image. Overrides `tempo.image.registry`
     registry: null
@@ -230,6 +236,9 @@ metricsGenerator:
 distributor:
   # -- Number of replicas for the distributor
   replicas: 1
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the distributor PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   autoscaling:
     # -- Enable autoscaling for the distributor
     enabled: false
@@ -306,6 +315,9 @@ distributor:
     search_tags_deny_list: []
 
 compactor:
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the compactor PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   image:
     # -- The Docker registry for the compactor image. Overrides `tempo.image.registry`
     registry: null
@@ -349,6 +361,9 @@ compactor:
 querier:
   # -- Number of replicas for the querier
   replicas: 1
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the querier PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   image:
     # -- The Docker registry for the querier image. Overrides `tempo.image.registry`
     registry: null
@@ -429,6 +444,9 @@ queryFrontend:
       backend: 127.0.0.1:3100
   # -- Number of replicas for the query-frontend
   replicas: 1
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the query-frontend PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   autoscaling:
     # -- Enable autoscaling for the query-frontend
     enabled: false
@@ -752,6 +770,9 @@ memcached:
   host: memcached
   # Number of replicas for memchached
   replicas: 1
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the memcached PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   service: memcached-client
   # -- Memcached Docker image repository
   repository: memcached
@@ -855,6 +876,9 @@ gateway:
   enabled: false
   # -- Number of replicas for the gateway
   replicas: 1
+  podDisruptionBudget:
+    # -- Set unhealthyPodEvictionPolicy for the gateway PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   autoscaling:
     # -- Enable autoscaling for the gateway
     enabled: false
