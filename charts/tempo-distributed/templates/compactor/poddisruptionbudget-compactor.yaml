@@ -12,4 +12,7 @@ spec:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   maxUnavailable: {{ .Values.compactor.maxUnavailable }}
+  {{- with .Values.compactor.podDisruptionBudget.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
 {{- end }}

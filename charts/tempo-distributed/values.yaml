@@ -226,6 +226,8 @@ ingester:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for ingester
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the ingester PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Override Pod Disruption Budget maxUnavailable with a static value
   # maxUnavailable: 1
   # -- Node selector for ingester pods
@@ -433,6 +435,8 @@ metricsGenerator:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for metrics-generator
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the metrics-generator PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -642,6 +646,8 @@ distributor:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for distributor
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the distributor PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -787,6 +793,8 @@ compactor:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for compactor
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the compactor PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -911,6 +919,8 @@ querier:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for querier
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the querier PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Max Surge for querier pods
@@ -1133,6 +1143,8 @@ queryFrontend:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for query-frontend
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the query-frontend PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
@@ -1848,6 +1860,8 @@ memcached:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for memcached
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the memcached PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Init containers for the memcached pod
@@ -2146,6 +2160,8 @@ gateway:
   podDisruptionBudget:
     # -- Enable PodDisruptionBudget for gateway
     enabled: true
+    # -- Set unhealthyPodEvictionPolicy for the gateway PodDisruptionBudget. Requires policy/v1.
+    unhealthyPodEvictionPolicy: ""
   # -- Pod Disruption Budget maxUnavailable
   maxUnavailable: 1
   # -- Minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating

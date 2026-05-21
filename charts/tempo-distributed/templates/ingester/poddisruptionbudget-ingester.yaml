@@ -12,4 +12,7 @@ spec:
     matchLabels:
       {{- include "tempo.selectorLabels" $dict | nindent 6 }}
   maxUnavailable: {{ default (sub (.Values.ingester.replicas) (add (div .Values.ingester.config.replication_factor 2) 1)) .Values.ingester.maxUnavailable }}
+  {{- with .Values.ingester.podDisruptionBudget.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
 {{- end }}
