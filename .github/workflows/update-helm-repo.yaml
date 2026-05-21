@@ -143,7 +143,7 @@ jobs:
         env:
           HELM_REPO_TOKEN: ${{ secrets.helm_repo_token }}
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
-          GATB_TOKEN: ${{ steps.get-github-app-token.outputs.github_token }}
+          GATB_TOKEN: ${{ steps.get-github-app-token.outputs.token }}
           GITHUB_APP_INPUT: ${{ inputs.github_app }}
         run: |
           if [[ -n "${GITHUB_APP_INPUT}" ]]; then
