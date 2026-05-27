@@ -154,6 +154,22 @@ jobs:
             echo "AUTHTOKEN=${APP_TOKEN}" >> $GITHUB_ENV
           fi
 
+      # The cr tool requires a checkout of the target repository so that it can `git worktree
+      # add origin/<pages-branch>`. We check the gh-pages branch out at the workspace root so
+      # that planetscale/ghcommit-action (which runs from $GITHUB_WORKSPACE) can later commit
+      # the regenerated index.yaml via the GitHub API.
+      #
+      # This step runs BEFORE the source checkout because actions/checkout with no `path:`
+      # empties the target directory before cloning, which would otherwise wipe source/.
+      - name: Checkout helm-charts gh-pages
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          fetch-depth: 0
+          repository: grafana/helm-charts
+          ref: gh-pages
+          token: ${{ env.AUTHTOKEN }}
+          persist-credentials: false
+
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the release tags later on in this workflow
         with:
@@ -163,21 +179,6 @@ jobs:
       - name: Configure Git
         run: |
           cd source
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Checkout helm-charts
-        # The cr tool only works if the target repository is already checked out
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6 # zizmor: ignore[artipacked] without this ignore comment, zizmor would complain that persist-credentials is not explicitly set to false. We need it set to true (default) to be able to push the release tags later on in this workflow
-        with:
-          fetch-depth: 0
-          repository: grafana/helm-charts
-          path: helm-charts
-          token: ${{ env.AUTHTOKEN }}
-
-      - name: Configure Git for helm-charts
-        run: |
-          cd helm-charts
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
@@ -272,10 +273,28 @@ jobs:
           echo "Pushing tag ${TAGNAME}"
           git push origin "${TAGNAME}"
 
-      - name: Update helm repo index.yaml
+      # Generate the new index.yaml without pushing — cr writes the merged file to
+      # ${CR_INDEX_PATH}/index.yaml, leaving the gh-pages working tree (at the workspace root)
+      # untouched. We then stage it for ghcommit-action below.
+      - name: Generate helm repo index.yaml
         run: |
-          cd helm-charts
-          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}" --push
+          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}"
+          cp "${CR_INDEX_PATH}/index.yaml" index.yaml
+
+      # Publish index.yaml to gh-pages via the GitHub GraphQL `createCommitOnBranch` mutation
+      # so the commit is signed by GitHub's web-flow key (shown as Verified). The cr tool's
+      # built-in `--push` produces an unsigned commit, which breaks for repositories with
+      # "Require signed commits" branch protection. See https://github.com/helm/chart-releaser/issues/625
+      # for upstream tracking of a `cr` flag that would make this workaround unnecessary.
+      - name: Publish index.yaml to gh-pages
+        uses: planetscale/ghcommit-action@25309d8005ac7c3bcd61d3fe19b69e0fe47dbdde # v0.2.20
+        with:
+          commit_message: "Update index.yaml for ${{ steps.parse-chart.outputs.tagname }}"
+          repo: grafana/helm-charts
+          branch: gh-pages
+          file_pattern: index.yaml
+        env:
+          GITHUB_TOKEN: ${{ env.AUTHTOKEN }}
 
       - name: Login to GHCR
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
