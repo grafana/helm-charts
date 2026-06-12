@@ -852,6 +852,32 @@ entries:
     version: 1.0.0
   alloy-operator:
   - apiVersion: v2
+    appVersion: 1.10.0
+    created: "2026-06-12T22:09:49.690982713Z"
+    dependencies:
+    - condition: crds.deployAlloyCRD
+      name: alloy-crd
+      repository: https://grafana.github.io/helm-charts
+      version: 1.0.0
+    - condition: crds.deployPodLogsCRD
+      name: podlogs-crd
+      repository: ""
+      version: 0.0.0
+    description: A Helm chart the Alloy Operator, a project to innovate on creating
+      instances of Grafana Alloy.
+    digest: b982ac03b1f39bcd0d471b6bed70416ecc56abb52267c1adb95b661f4c803e69
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    name: alloy-operator
+    sources:
+    - https://github.com/grafana/alloy-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-operator-0.5.10/alloy-operator-0.5.10.tgz
+    version: 0.5.10
+  - apiVersion: v2
     appVersion: 1.9.0
     created: "2026-06-10T19:22:24.289025896Z"
     dependencies:
@@ -109442,4 +109468,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-12T20:13:19.660347265Z"
+generated: "2026-06-12T22:09:49.719732651Z"
