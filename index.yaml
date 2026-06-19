@@ -30785,6 +30785,30 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/helm-k6-operator-1.0.0/k6-operator-1.0.0.tgz
     version: 1.0.0
+  k8s-injection-controller:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2026-06-19T16:00:15.335359068Z"
+    description: Kubernetes admission controller for Grafana Beyla SDK auto-instrumentation.
+    digest: ce12d499e4f120a50ae208812848dae33e42d4454a6ea3dc448b57320aa94b9a
+    keywords:
+    - observability
+    - autoinstrumentation
+    - OpenTelemetry
+    maintainers:
+    - name: mariomac
+      url: https://github.com/mariomac
+    - name: grcevski
+      url: https://github.com/grcevski
+    - name: jack-berg
+      url: https://github.com/jack-berg
+    - name: jaydeluca
+      url: https://github.com/jaydeluca
+    name: k8s-injection-controller
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-injection-controller-0.1.0/k8s-injection-controller-0.1.0.tgz
+    version: 0.1.0
   k8s-manifest-tail:
   - apiVersion: v2
     appVersion: 0.1.1
@@ -109725,4 +109749,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-17T20:22:17.321813859Z"
+generated: "2026-06-19T16:00:15.36556273Z"
