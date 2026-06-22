@@ -291,6 +291,12 @@ jobs:
           PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
         run: |
           helm verify --keyring "${{ runner.temp }}/secring.gpg" "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz"
+
+      # TEMPORARY (testing): stop here so a run exercises package + sign + verify without cutting a
+      # release (no tag, GitHub release, index.yaml commit, or GHCR push). Remove before merging.
+      - name: Stop before release (testing only)
+        run: |
+          echo "::notice::Stopped after verify for testing; skipping tag/release/index/GHCR. Remove this step before merging."
           exit 1
 
       - name: Create tag and check if exists on origin
