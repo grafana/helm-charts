@@ -246,9 +246,8 @@ jobs:
       - name: Fetch GPG signing key from Vault
         if: steps.signing.outputs.enabled == 'true'
         uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # v1.1.0
-        
         with:
-          common_secrets: |
+          repo_secrets: |
             GPG_PRIVATE_KEY=helm-chart-signing-key:private_key
             GPG_PASSPHRASE=helm-chart-signing-key:passphrase
             GPG_KEY_NAME=helm-chart-signing-key:key_name
