@@ -232,14 +232,65 @@ jobs:
           tar -xzf cr.tar.gz -C "${CR_TOOL_PATH}"
           rm -f cr.tar.gz
 
+
+      - name: Determine if chart signing is enabled
+        id: signing
+        run: |
+          enabled=false
+          if [[ -f "${CR_CONFIGFILE}" ]]; then
+            enabled=$(yq '.sign // false' "${CR_CONFIGFILE}")
+          fi
+          echo "enabled=${enabled}" >> "${GITHUB_OUTPUT}"
+          echo "Chart signing enabled (from ${CR_CONFIGFILE}): ${enabled}"
+
+      - name: Fetch GPG signing key from Vault
+        if: steps.signing.outputs.enabled == 'true'
+        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # v1.1.0
+        
+        with:
+          common_secrets: |
+            GPG_PRIVATE_KEY=helm-chart-signing-key:private_key
+            GPG_PASSPHRASE=helm-chart-signing-key:passphrase
+            GPG_KEY_NAME=helm-chart-signing-key:key_name
+
+      - name: Configure GPG for chart signing
+        if: steps.signing.outputs.enabled == 'true'
+        env:
+          GPG_KEYRING: "${{ runner.temp }}/secring.gpg"
+          GPG_PASSPHRASE_FILE: "${{ runner.temp }}/gpg-passphrase"
+        run: |
+          mkdir -p "${HOME}/.gnupg"
+          chmod 0700 "${HOME}/.gnupg"
+          printf 'use-agent\npinentry-mode loopback\n' > "${HOME}/.gnupg/gpg.conf"
+          printf 'allow-loopback-pinentry\n' > "${HOME}/.gnupg/gpg-agent.conf"
+          gpgconf --kill gpg-agent
+          gpgconf --launch gpg-agent
+          printf '%s' "${GPG_PRIVATE_KEY}" | gpg --batch --yes --import
+          gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" \
+            --export-secret-keys "${GPG_KEY_NAME}" > "${GPG_KEYRING}"
+          printf '%s' "${GPG_PASSPHRASE}" > "${GPG_PASSPHRASE_FILE}"
+
       - name: Create helm package
         env:
           CHARTPATH: ${{ steps.parse-chart.outputs.chartpath }}
+          # Signing config consumed by `cr`. cr signs only when cr.yaml sets `sign: true`; when it
+          # does not these are inert (the keyring/passphrase files won't exist, cr won't read them,
+          # and CR_KEY is empty because the Vault step did not run).
+          CR_KEY: ${{ env.GPG_KEY_NAME }}
+          CR_KEYRING: "${{ runner.temp }}/secring.gpg"
+          CR_PASSPHRASE_FILE: "${{ runner.temp }}/gpg-passphrase"
         run: |
           cd source
           "${CR_TOOL_PATH}/cr" package "${CHARTPATH}" --config "${CR_CONFIGFILE}" --package-path "${CR_PACKAGE_PATH}"
           echo "Result of chart package:"
           ls -l "${CR_PACKAGE_PATH}"
+
+      - name: Verify signed package
+        if: steps.signing.outputs.enabled == 'true'
+        env:
+          PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
+        run: |
+          helm verify --keyring "${{ runner.temp }}/secring.gpg" "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz"
 
       - name: Create tag and check if exists on origin
         env:
