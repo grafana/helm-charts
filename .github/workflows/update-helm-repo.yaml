@@ -291,6 +291,7 @@ jobs:
           PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
         run: |
           helm verify --keyring "${{ runner.temp }}/secring.gpg" "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz"
+          exit 1
 
       - name: Create tag and check if exists on origin
         env:
