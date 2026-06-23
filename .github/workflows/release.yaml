@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write # to push chart release and create a release (helm/chart-releaser-action)
       packages: write # needed for ghcr access
-      id-token: write # OIDC token used by get-vault-secrets to authenticate to Vault
+      id-token: write
 
     runs-on: ubuntu-latest
     steps:
@@ -59,19 +59,13 @@ jobs:
           gpgconf --launch gpg-agent
           printf '%s' "${GPG_PRIVATE_KEY}" | gpg --batch --yes --import
 
-          # chart-releaser signs via Helm's provenance signer, which reads the
-          # private key from a legacy-format secret keyring. Modern GnuPG no
-          # longer keeps one, so export it explicitly.
           gpg --batch --yes --pinentry-mode loopback \
             --passphrase "${GPG_PASSPHRASE}" \
             --export-secret-keys "${GPG_KEY_NAME}" > "${HOME}/.gnupg/secring.gpg"
 
-          # Passphrase in a file for chart-releaser's --passphrase-file flag.
           umask 077
           printf '%s' "${GPG_PASSPHRASE}" > "${HOME}/.gnupg/cr-passphrase"
 
-          # Tell chart-releaser to sign. cr reads CR_* env vars (same mechanism
-          # as CR_TOKEN below): sign -> CR_SIGN, key -> CR_KEY, etc.
           {
             echo "CR_SIGN=true"
             echo "CR_KEY=${GPG_KEY_NAME}"
@@ -79,10 +73,6 @@ jobs:
             echo "CR_PASSPHRASE_FILE=${HOME}/.gnupg/cr-passphrase"
           } >> "${GITHUB_ENV}"
 
-      # chart-releaser packages, signs (CR_SIGN above), creates the GitHub
-      # release, and uploads both the .tgz and its .prov. The .prov also lands
-      # in .cr-release-packages/ next to the .tgz, so the GHCR push below
-      # uploads provenance automatically.
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
         with:
