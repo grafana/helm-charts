@@ -1,0 +1,124 @@
+name: Sign Chart Release
+
+# Signs chart archives after a release is published, regardless of which path
+# created the release (this repo's release.yaml, or another repo calling
+# update-helm-repo.yaml). For each `.tgz` asset on the release we download the
+# exact published bytes, build a Helm provenance (`.prov`) file by hand, sign it
+# with GPG, and upload it back onto the same release. Because `helm`'s verifier
+# resolves `<chart>.tgz.prov` from the same URL as the `.tgz`, this also covers
+# charts served from gh-pages (the index.yaml does not need to change).
+#
+# NOTE: GitHub does NOT re-trigger workflows for releases created with the
+# default GITHUB_TOKEN. release.yaml's chart-releaser-action uses GITHUB_TOKEN,
+# so releases from that path will not fire this workflow; the update-helm-repo
+# path uses a GitHub App / PAT token, which does. If signing for the direct
+# path is required, create those releases with an App token too.
+
+on:
+  release:
+    types: [published]
+
+permissions: {}
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # download release assets and upload the .prov files
+      id-token: write # OIDC token used by get-vault-secrets to authenticate to Vault
+    steps:
+      - name: Set up Helm
+        uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
+        with:
+          version: v3.16.2
+
+      - name: Fetch GPG signing key from Vault
+        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # v1.1.0
+        with:
+          repo_secrets: |
+            GPG_PRIVATE_KEY=helm-chart-signing-key:private_key
+            GPG_PASSPHRASE=helm-chart-signing-key:passphrase
+            GPG_KEY_NAME=helm-chart-signing-key:key_name
+
+      - name: Import GPG signing key
+        run: |
+          mkdir -p "${HOME}/.gnupg"
+          chmod 0700 "${HOME}/.gnupg"
+          printf 'use-agent\npinentry-mode loopback\n' > "${HOME}/.gnupg/gpg.conf"
+          printf 'allow-loopback-pinentry\n' > "${HOME}/.gnupg/gpg-agent.conf"
+          gpgconf --kill gpg-agent
+          gpgconf --launch gpg-agent
+          printf '%s' "${GPG_PRIVATE_KEY}" | gpg --batch --yes --import
+
+      - name: Sign release archives and upload provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+
+          workdir="$(mktemp -d)"
+          cd "${workdir}"
+
+          # Pull every chart archive attached to this release.
+          gh release download "${TAG}" --repo "${REPO}" --pattern '*.tgz' --dir "${workdir}" || true
+
+          shopt -s nullglob
+          archives=( *.tgz )
+          if [[ ${#archives[@]} -eq 0 ]]; then
+            echo "No .tgz assets on release ${TAG}; nothing to sign."
+            exit 0
+          fi
+
+          # Existing asset names, so re-runs don't try to re-upload a .prov.
+          existing="$(gh release view "${TAG}" --repo "${REPO}" --json assets --jq '.assets[].name')"
+
+          # Export the public key into a legacy keyring so we can `helm verify` each result.
+          keyring="${workdir}/pubring.gpg"
+          gpg --batch --yes --export "${GPG_KEY_NAME}" > "${keyring}"
+
+          for tgz in "${archives[@]}"; do
+            prov="${tgz}.prov"
+
+            if grep -qxF "${prov}" <<< "${existing}"; then
+              echo "${prov} already present on release ${TAG}; skipping."
+              continue
+            fi
+
+            echo "Signing ${tgz}"
+
+            # SHA-256 of the exact published archive bytes (helm verify recomputes this).
+            digest="$(sha256sum "${tgz}" | awk '{print $1}')"
+
+            # Top-level Chart.yaml becomes the provenance metadata block. Reading the
+            # first path component avoids picking up a subchart's Chart.yaml.
+            root="$(tar -tzf "${tgz}" | awk -F/ 'NR==1{print $1}')"
+            tar -xzOf "${tgz}" "${root}/Chart.yaml" > Chart.yaml
+
+            # Build the provenance message exactly as `helm package --sign` does:
+            #   <Chart.yaml>
+            #   ...
+            #   files:
+            #     <archive>: sha256:<digest>
+            # The separator is the literal sequence "\n...\n"; Helm uses the YAML
+            # document-end marker "..." because "---" is illegal inside a PGP
+            # clearsign block. A leading newline guarantees the separator is present
+            # even if Chart.yaml has no trailing newline.
+            {
+              cat Chart.yaml
+              printf '\n...\nfiles:\n  %s: sha256:%s\n' "${tgz}" "${digest}"
+            } > "${tgz}.message"
+
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "${GPG_PASSPHRASE}" \
+              --local-user "${GPG_KEY_NAME}" \
+              --digest-algo SHA256 \
+              --clearsign --output "${prov}" "${tgz}.message"
+
+            # Confirm the .prov verifies against the archive before publishing it.
+            helm verify --keyring "${keyring}" "${tgz}"
+
+            gh release upload "${TAG}" "${prov}" --repo "${REPO}"
+            echo "Uploaded ${prov}"
+          done
