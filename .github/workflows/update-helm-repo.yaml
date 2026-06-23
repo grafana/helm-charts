@@ -138,6 +138,11 @@ jobs:
           app-id: ${{ env.GITHUB_APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
+          # AUTHTOKEN only operates on the central helm-charts repository (checkout gh-pages,
+          # create the release, and push the index.yaml commit), so scope the token to that
+          # single repo with just contents:write instead of blanket installation access.
+          repositories: helm-charts
+          permission-contents: write
 
       - name: Set the correct token (Github App or PAT)
         env:
@@ -246,9 +251,8 @@ jobs:
       - name: Fetch GPG signing key from Vault
         if: steps.signing.outputs.enabled == 'true'
         uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # v1.1.0
-        
         with:
-          common_secrets: |
+          repo_secrets: |
             GPG_PRIVATE_KEY=helm-chart-signing-key:private_key
             GPG_PASSPHRASE=helm-chart-signing-key:passphrase
             GPG_KEY_NAME=helm-chart-signing-key:key_name
@@ -308,20 +312,30 @@ jobs:
           git tag "${TAGNAME}"
 
       - name: Make github release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # tags/v1
-        with:
-          body: |
-            ${{ steps.parse-chart.outputs.desc }}
+        env:
+          GH_TOKEN: ${{ env.AUTHTOKEN }}
+          TAGNAME: ${{ steps.parse-chart.outputs.tagname }}
+          DESC: ${{ steps.parse-chart.outputs.desc }}
+          PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
+        run: |
+          # The .prov provenance file only exists when chart signing is enabled; include it
+          # only when present (action-gh-release silently skipped missing files).
+          assets=( "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz" )
+          if [[ -f "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz.prov" ]]; then
+            assets+=( "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz.prov" )
+          fi
+          notes="$(cat <<EOF
+          ${DESC}
 
-            Source commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+          Source commit: https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}
 
-            Tag on source: https://github.com/${{ github.repository }}/releases/tag/${{ steps.parse-chart.outputs.tagname }}
-          files: |
-            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz
-            ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz.prov
-          repository: grafana/helm-charts
-          tag_name: ${{ steps.parse-chart.outputs.tagname }}
-          token: ${{ env.AUTHTOKEN }}
+          Tag on source: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${TAGNAME}
+          EOF
+          )"
+          gh release create "${TAGNAME}" "${assets[@]}" \
+            --repo grafana/helm-charts \
+            --title "${TAGNAME}" \
+            --notes "${notes}"
 
       - name: Push release tag on origin
         env:
@@ -336,7 +350,7 @@ jobs:
       # untouched. We then stage it for ghcommit-action below.
       - name: Generate helm repo index.yaml
         run: |
-          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${{ env.AUTHTOKEN }}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}"
+          "${CR_TOOL_PATH}/cr" index --config "${CR_CONFIGFILE}" --token "${AUTHTOKEN}" --index-path "${CR_INDEX_PATH}" --package-path "${CR_PACKAGE_PATH}"
           cp "${CR_INDEX_PATH}/index.yaml" index.yaml
 
       # Publish index.yaml to gh-pages via the GitHub GraphQL `createCommitOnBranch` mutation
