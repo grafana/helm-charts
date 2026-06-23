@@ -13,6 +13,11 @@ jobs:
       contents: write
       id-token: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          persist-credentials: false
+
       - name: Set up Helm
         uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
         with:
@@ -36,59 +41,9 @@ jobs:
           gpgconf --launch gpg-agent
           printf '%s' "${GPG_PRIVATE_KEY}" | gpg --batch --yes --import
 
-      - name: Sign release archives and upload provenance
+      - name: Sign release archive and upload provenance
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           TAG: ${{ github.event.release.tag_name }}
-        run: |
-          set -euo pipefail
-
-          workdir="$(mktemp -d)"
-          cd "${workdir}"
-
-          gh release download "${TAG}" --repo "${REPO}" --pattern '*.tgz' --dir "${workdir}" || true
-
-          shopt -s nullglob
-          archives=( *.tgz )
-          if [[ ${#archives[@]} -eq 0 ]]; then
-            echo "No .tgz assets on release ${TAG}; nothing to sign."
-            exit 0
-          fi
-
-          existing="$(gh release view "${TAG}" --repo "${REPO}" --json assets --jq '.assets[].name')"
-
-          keyring="${workdir}/pubring.gpg"
-          gpg --batch --yes --export "${GPG_KEY_NAME}" > "${keyring}"
-
-          for tgz in "${archives[@]}"; do
-            prov="${tgz}.prov"
-
-            if grep -qxF "${prov}" <<< "${existing}"; then
-              echo "${prov} already present on release ${TAG}; skipping."
-              continue
-            fi
-
-            echo "Signing ${tgz}"
-
-            digest="$(sha256sum "${tgz}" | awk '{print $1}')"
-
-            root="$(tar -tzf "${tgz}" | awk -F/ 'NR==1{print $1}')"
-            tar -xzOf "${tgz}" "${root}/Chart.yaml" > Chart.yaml
-
-            {
-              cat Chart.yaml
-              printf '\n...\nfiles:\n  %s: sha256:%s\n' "${tgz}" "${digest}"
-            } > "${tgz}.message"
-
-            gpg --batch --yes --pinentry-mode loopback \
-              --passphrase "${GPG_PASSPHRASE}" \
-              --local-user "${GPG_KEY_NAME}" \
-              --digest-algo SHA256 \
-              --clearsign --output "${prov}" "${tgz}.message"
-
-            helm verify --keyring "${keyring}" "${tgz}"
-
-            gh release upload "${TAG}" "${prov}" --repo "${REPO}"
-            echo "Uploaded ${prov}"
-          done
+        run: ./scripts/sign-release.sh
