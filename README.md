@@ -67,7 +67,7 @@ export CHART=grafana
 export VERSION=9.0.0
 export OCI_REF="ghcr.io/grafana/helm-charts/${CHART}:${VERSION}"
 
-export CERT_IDENTITY="^https://github.com/grafana/helm-charts/.github/workflows/update-helm-repo.yaml@.*$"
+export CERT_IDENTITY="^https://github\.com/grafana/helm-charts/\.github/workflows/update-helm-repo\.yaml@.*$"
 export CERT_ISSUER="https://token.actions.githubusercontent.com"
 ```
 
