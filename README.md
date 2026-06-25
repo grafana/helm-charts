@@ -46,6 +46,64 @@ Once your keyring is configured, pass the `--verify` flag to `helm install`,
 `helm upgrade`, `helm pull`, or `helm template` to validate a chart's signature and
 confirm its authenticity.
 
+## Verifying OCI charts with Cosign
+
+In addition to the GPG provenance described above, charts are also published as OCI
+artifacts to the GitHub Container Registry (GHCR) under `ghcr.io/grafana/helm-charts`.
+Each pushed chart is keyless-signed with [Cosign](https://docs.sigstore.dev/) using the
+release workflow's GitHub Actions identity (via Sigstore/Fulcio), and ships with two
+attestations:
+
+- an **SPDX SBOM** describing the chart package's contents, and
+- a **SLSA build provenance** statement describing how and where the chart was built.
+
+[Install Cosign](https://docs.sigstore.dev/system_config/installation/) (v2 or newer),
+then set the chart you want to verify along with the signing identity. The signatures and
+attestations are all produced by the reusable release workflow, so the keyless certificate
+identity is stable regardless of which chart triggered the release:
+
+```console
+export CHART=grafana
+export VERSION=9.0.0
+export OCI_REF="ghcr.io/grafana/helm-charts/${CHART}:${VERSION}"
+
+export CERT_IDENTITY="^https://github.com/grafana/helm-charts/.github/workflows/update-helm-repo.yaml@.*$"
+export CERT_ISSUER="https://token.actions.githubusercontent.com"
+```
+
+Verify the chart signature:
+
+```console
+cosign verify "${OCI_REF}" \
+  --certificate-identity-regexp "${CERT_IDENTITY}" \
+  --certificate-oidc-issuer "${CERT_ISSUER}"
+```
+
+Verify the SBOM attestation:
+
+```console
+cosign verify-attestation "${OCI_REF}" \
+  --type spdxjson \
+  --certificate-identity-regexp "${CERT_IDENTITY}" \
+  --certificate-oidc-issuer "${CERT_ISSUER}"
+```
+
+Verify the SLSA build provenance attestation:
+
+```console
+cosign verify-attestation "${OCI_REF}" \
+  --type slsaprovenance1 \
+  --certificate-identity-regexp "${CERT_IDENTITY}" \
+  --certificate-oidc-issuer "${CERT_ISSUER}"
+```
+
+A successful run prints the validated certificate identity and, for attestations, the
+decoded predicate. The build provenance can alternatively be verified with the GitHub CLI:
+
+```console
+gh attestation verify "oci://${OCI_REF}" --owner grafana
+```
+
 ## Contributing
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->

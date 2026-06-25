@@ -104,9 +104,10 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # allows GitHub App to generate id-token from Github's OIDC
+      id-token: write # allows GitHub App to generate id-token from Github's OIDC, and keyless cosign signing via Fulcio
       contents: write # allows GITHUB_TOKEN to push chart release, create release, and push tags to github
       packages: write # allows GITHUB_TOKEN to push package to ghcr
+      attestations: write # allows attaching SLSA build provenance to the pushed OCI chart
     env:
       # APP_ID and PRIVATE_KEY are overwritten by credentials from vault, if configured
       GITHUB_APP_ID: ${{ secrets.github_app_id }}
@@ -204,6 +205,7 @@ jobs:
           version=$(yq ".version" < ${changed}/Chart.yaml)
           echo "chartpath=${changed}" >> $GITHUB_OUTPUT
           echo "desc=${description}" >> $GITHUB_OUTPUT
+          echo "name=${name}" >> $GITHUB_OUTPUT
           if [[ -n "${HELM_TAG_PREFIX}" ]]; then
             echo "tagname=${HELM_TAG_PREFIX}-${name}-${version}" >> $GITHUB_OUTPUT
           else
@@ -371,7 +373,49 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push charts to GHCR
+        id: push
         env:
           PACKAGENAME: ${{ steps.parse-chart.outputs.packagename }}
+          CHARTNAME: ${{ steps.parse-chart.outputs.name }}
         run: |
-          helm push "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+          oci_repo="ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+          helm push "${CR_PACKAGE_PATH}/${PACKAGENAME}.tgz" "oci://${oci_repo}" 2>&1 | tee push-output.txt
+          digest=$(awk '/Digest: /{print $2}' push-output.txt)
+          if [[ -z "${digest}" ]]; then
+            echo "Could not determine the digest of the pushed chart" >&2
+            exit 1
+          fi
+          echo "digest=${digest}" >> "$GITHUB_OUTPUT"
+          echo "image=${oci_repo}/${CHARTNAME}" >> "$GITHUB_OUTPUT"
+          echo "oci_ref=${oci_repo}/${CHARTNAME}@${digest}" >> "$GITHUB_OUTPUT"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign chart with cosign (keyless)
+        env:
+          OCI_REF: ${{ steps.push.outputs.oci_ref }}
+        run: |
+          cosign sign --yes "${OCI_REF}"
+
+      - name: Generate SBOM for the chart package
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          file: ${{ env.CR_PACKAGE_PATH }}/${{ steps.parse-chart.outputs.packagename }}.tgz
+          format: spdx-json
+          output-file: ${{ github.workspace }}/sbom.spdx.json
+          upload-artifact: false
+
+      - name: Attach SBOM attestation (keyless)
+        env:
+          OCI_REF: ${{ steps.push.outputs.oci_ref }}
+          SBOM_PATH: ${{ github.workspace }}/sbom.spdx.json
+        run: |
+          cosign attest --yes --type spdxjson --predicate "${SBOM_PATH}" "${OCI_REF}"
+
+      - name: Attach SLSA build provenance attestation
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-name: ${{ steps.push.outputs.image }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
