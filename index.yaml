@@ -30955,6 +30955,119 @@ entries:
     version: 0.1.0
   k8s-monitoring:
   - apiVersion: v2
+    appVersion: 4.1.7
+    created: "2026-06-30T18:54:29.76117027Z"
+    dependencies:
+    - alias: annotationAutodiscovery
+      condition: annotationAutodiscovery.enabled
+      name: feature-annotation-autodiscovery
+      repository: ""
+      version: 1.0.0
+    - alias: applicationObservability
+      condition: applicationObservability.enabled
+      name: feature-application-observability
+      repository: ""
+      version: 1.0.0
+    - alias: autoInstrumentation
+      condition: autoInstrumentation.enabled
+      name: feature-auto-instrumentation
+      repository: ""
+      version: 1.0.0
+    - alias: clusterEvents
+      condition: clusterEvents.enabled
+      name: feature-cluster-events
+      repository: ""
+      version: 1.0.0
+    - alias: clusterMetrics
+      condition: clusterMetrics.enabled
+      name: feature-cluster-metrics
+      repository: ""
+      version: 1.0.0
+    - alias: costMetrics
+      condition: costMetrics.enabled
+      name: feature-cost-metrics
+      repository: ""
+      version: 1.0.0
+    - alias: hostMetrics
+      condition: hostMetrics.enabled
+      name: feature-host-metrics
+      repository: ""
+      version: 1.0.0
+    - alias: integrations
+      name: feature-integrations
+      repository: ""
+      version: 1.0.0
+    - alias: nodeLogs
+      condition: nodeLogs.enabled
+      name: feature-node-logs
+      repository: ""
+      version: 1.0.0
+    - alias: podLogsViaLoki
+      condition: podLogsViaLoki.enabled
+      name: feature-pod-logs-via-loki
+      repository: ""
+      version: 1.0.0
+    - alias: podLogsViaOpenTelemetry
+      condition: podLogsViaOpenTelemetry.enabled
+      name: feature-pod-logs-via-opentelemetry
+      repository: ""
+      version: 1.0.0
+    - alias: podLogsViaKubernetesApi
+      condition: podLogsViaKubernetesApi.enabled
+      name: feature-pod-logs-via-kubernetes-api
+      repository: ""
+      version: 1.0.0
+    - alias: podLogsObjects
+      condition: podLogsObjects.enabled
+      name: feature-pod-logs-objects
+      repository: ""
+      version: 1.0.0
+    - alias: profiling
+      condition: profiling.enabled
+      name: feature-profiling
+      repository: ""
+      version: 1.0.0
+    - alias: profilesReceiver
+      condition: profilesReceiver.enabled
+      name: feature-profiles-receiver
+      repository: ""
+      version: 1.0.0
+    - alias: prometheusOperatorObjects
+      condition: prometheusOperatorObjects.enabled
+      name: feature-prometheus-operator-objects
+      repository: ""
+      version: 1.0.0
+    - alias: kubernetesManifests
+      condition: kubernetesManifests.enabled
+      name: feature-kubernetes-manifests
+      repository: ""
+      version: 1.0.0
+    - alias: telemetryServices
+      name: telemetry-services
+      repository: ""
+      version: 1.0.0
+    - condition: alloy-operator.deploy
+      name: alloy-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.5.11
+    description: Capture all telemetry data from your Kubernetes cluster.
+    digest: 1484a5eea4d655e0de42cd900d2a76b5ddc1a98587fbd01459fb26e202a13b68
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: robert.lankford@grafana.com
+      name: rlankfo
+    - email: tyler.helmuth@grafana.com
+      name: TylerHelmuth
+    name: k8s-monitoring
+    sources:
+    - https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-4.1.7/k8s-monitoring-4.1.7.tgz
+    version: 4.1.7
+  - apiVersion: v2
     appVersion: 4.1.6
     created: "2026-06-17T20:22:17.290246968Z"
     dependencies:
@@ -109926,4 +110039,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-29T19:17:11.801752917Z"
+generated: "2026-06-30T18:54:29.789465492Z"
