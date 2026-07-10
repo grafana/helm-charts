@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   alloy:
   - apiVersion: v2
+    appVersion: v1.17.1
+    created: "2026-06-30T01:57:32Z"
+    dependencies:
+    - condition: crds.create
+      name: crds
+      repository: ""
+      version: 0.0.0
+    description: Grafana Alloy
+    digest: 668a0c904bad8437baa920f11b3792d742d51d35a1161ab53ea9e70df2e51e7c
+    icon: https://raw.githubusercontent.com/grafana/alloy/main/docs/sources/assets/alloy_icon_orange.svg
+    name: alloy
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/alloy-1.10.1/alloy-1.10.1.tgz
+    version: 1.10.1
+  - apiVersion: v2
     appVersion: v1.17.0
     created: "2026-06-12T19:56:37.876696237Z"
     dependencies:
