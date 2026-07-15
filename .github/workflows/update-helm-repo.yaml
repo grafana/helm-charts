@@ -138,6 +138,8 @@ jobs:
           app-id: ${{ env.GITHUB_APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
+          repositories: helm-charts
+          permission-contents: write
 
       - name: Set the correct token (Github App or PAT)
         env:
