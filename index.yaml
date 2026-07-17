@@ -95419,6 +95419,23 @@ entries:
     version: 0.1.1
   rollout-operator:
   - apiVersion: v2
+    appVersion: v0.38.1
+    created: "2026-07-15T20:53:23Z"
+    dependencies:
+    - condition: crds.enabled
+      name: crds
+      repository: ""
+      version: 0.1.0
+    description: Grafana rollout-operator
+    digest: 788a18eb4a6f3d7f95d6119e60877edef155cdf7139e776ed76ee9abbabc1a38
+    home: https://github.com/grafana/rollout-operator
+    kubeVersion: ^1.10.0-0
+    name: rollout-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/rollout-operator-0.50.1/rollout-operator-0.50.1.tgz
+    version: 0.50.1
+  - apiVersion: v2
     appVersion: v0.38.0
     created: "2026-06-10T05:06:18.355068734Z"
     dependencies:
