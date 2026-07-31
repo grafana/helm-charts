@@ -33475,6 +33475,95 @@ entries:
     - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-4.0.0-rc.1/k8s-monitoring-4.0.0-rc.1.tgz
     version: 4.0.0-rc.1
   - apiVersion: v2
+    appVersion: 3.8.12
+    created: "2026-07-31T14:22:08.386289644Z"
+    dependencies:
+    - alias: annotationAutodiscovery
+      condition: annotationAutodiscovery.enabled
+      name: feature-annotation-autodiscovery
+      repository: ""
+      version: 1.0.0
+    - alias: applicationObservability
+      condition: applicationObservability.enabled
+      name: feature-application-observability
+      repository: ""
+      version: 1.0.0
+    - alias: autoInstrumentation
+      condition: autoInstrumentation.enabled
+      name: feature-auto-instrumentation
+      repository: ""
+      version: 1.0.0
+    - alias: clusterEvents
+      condition: clusterEvents.enabled
+      name: feature-cluster-events
+      repository: ""
+      version: 1.0.0
+    - alias: clusterMetrics
+      condition: clusterMetrics.enabled
+      name: feature-cluster-metrics
+      repository: ""
+      version: 1.0.0
+    - alias: integrations
+      name: feature-integrations
+      repository: ""
+      version: 1.0.0
+    - alias: nodeLogs
+      condition: nodeLogs.enabled
+      name: feature-node-logs
+      repository: ""
+      version: 1.0.0
+    - alias: podLogs
+      condition: podLogs.enabled
+      name: feature-pod-logs
+      repository: ""
+      version: 1.0.0
+    - alias: podLogsViaKubernetesApi
+      condition: podLogsViaKubernetesApi.enabled
+      name: feature-pod-logs-via-kubernetes-api
+      repository: ""
+      version: 1.0.0
+    - alias: podLogsObjects
+      condition: podLogsObjects.enabled
+      name: feature-pod-logs-objects
+      repository: ""
+      version: 1.0.0
+    - alias: profiling
+      condition: profiling.enabled
+      name: feature-profiling
+      repository: ""
+      version: 1.0.0
+    - alias: profilesReceiver
+      condition: profilesReceiver.enabled
+      name: feature-profiles-receiver
+      repository: ""
+      version: 1.0.0
+    - alias: prometheusOperatorObjects
+      condition: prometheusOperatorObjects.enabled
+      name: feature-prometheus-operator-objects
+      repository: ""
+      version: 1.0.0
+    - condition: alloy-operator.deploy
+      name: alloy-operator
+      repository: https://grafana.github.io/helm-charts
+      version: 0.6.2
+    description: Capture all telemetry data from your Kubernetes cluster.
+    digest: f168c2c0c1893720851bd11b5cd580061a702ec4fb84f9f45d33e96a4925b217
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    maintainers:
+    - email: pete.wall@grafana.com
+      name: petewall
+    - email: robert.lankford@grafana.com
+      name: rlankfo
+    - email: tyler.helmuth@grafana.com
+      name: TylerHelmuth
+    name: k8s-monitoring
+    sources:
+    - https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/k8s-monitoring-3.8.12/k8s-monitoring-3.8.12.tgz
+    version: 3.8.12
+  - apiVersion: v2
     appVersion: 3.8.11
     created: "2026-07-16T20:53:51.606784144Z"
     dependencies:
@@ -111120,4 +111209,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-29T20:35:29.812657595Z"
+generated: "2026-07-31T14:22:08.416387188Z"
