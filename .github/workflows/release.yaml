@@ -77,7 +77,7 @@ jobs:
       # satisfying the gh-pages ruleset.
       - name: Publish index.yaml to gh-pages
         if: steps.generate-index.outputs.changed == 'true'
-        uses: planetscale/ghcommit-action@25309d8005ac7c3bcd61d3fe19b69e0fe47dbdde # v0.2.20
+        uses: planetscale/ghcommit-action@a6b150b81dca5dd027baa898604418eec9e11465 # v0.2.22
         with:
           commit_message: "Update index.yaml"
           repo: ${{ github.repository }}
