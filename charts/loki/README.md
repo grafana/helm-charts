@@ -1,5 +1,8 @@
 # Loki Helm chart
 
+## ⚠️ Helm Chart Migration
+As of March 16, 2026, the Grafana Loki Helm chart for OSS users has moved to [grafana-community/helm-charts](https://github.com/grafana-community/helm-charts) (forked at chart version 6.55.0). OSS users are encouraged to migrate to the community-maintained chart. The chart in this repository is now maintained for Grafana Enterprise Logs (GEL) users only. See [#20705 on the loki repo](https://github.com/grafana/loki/issues/20705) for details.
+
 The `loki` chart is the recommended Helm chart to install Grafana Loki. It is maintained by both Grafana Labs and the Loki community.
 
 The `loki` Helm chart at [https://grafana.github.io/helm-charts](https://grafana.github.io/helm-charts) is a publication of the source code at [**grafana/loki**](https://github.com/grafana/loki/tree/main/production/helm/loki).
