@@ -15,6 +15,14 @@ local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
   ),
   k8s: (import 'k8s.libsonnet'),
 
+  '#environment':: d.obj(
+    |||
+      `environment` provides a base to create an [inline Tanka
+      environment](https://tanka.dev/inline-environments#inline-environments).
+    |||
+  ),
+  environment: (import 'environment.libsonnet'),
+
   '#helm':: d.obj(
     |||
       `helm` allows the user to consume Helm Charts as plain Jsonnet resources.

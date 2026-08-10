@@ -2,7 +2,7 @@
 permalink: /
 ---
 
-# package tanka_util
+# tanka_util
 
 ```jsonnet
 local tanka_util = import "github.com/grafana/jsonnet-libs/tanka-util/main.libsonnet"
@@ -73,6 +73,19 @@ Kustomize functionality.
 
 ## Index
 
+* [`obj environment`](#obj-environment)
+  * [`fn new(name, namespace, apiserver)`](#fn-environmentnew)
+  * [`fn withApiServer(apiserver)`](#fn-environmentwithapiserver)
+  * [`fn withApplyStrategy(applyStrategy)`](#fn-environmentwithapplystrategy)
+  * [`fn withData(data)`](#fn-environmentwithdata)
+  * [`fn withDataMixin(data)`](#fn-environmentwithdatamixin)
+  * [`fn withInjectLabels(bool)`](#fn-environmentwithinjectlabels)
+  * [`fn withLabels(labels)`](#fn-environmentwithlabels)
+  * [`fn withLabelsMixin(labels)`](#fn-environmentwithlabelsmixin)
+  * [`fn withName(name)`](#fn-environmentwithname)
+  * [`fn withNamespace(namespace)`](#fn-environmentwithnamespace)
+  * [`fn withResourceDefaults(labels)`](#fn-environmentwithresourcedefaults)
+  * [`fn withResourceDefaultsMixin(labels)`](#fn-environmentwithresourcedefaultsmixin)
 * [`obj helm`](#obj-helm)
   * [`fn new(calledFrom)`](#fn-helmnew)
   * [`fn template(name, chart, conf)`](#fn-helmtemplate)
@@ -84,6 +97,121 @@ Kustomize functionality.
   * [`fn build(path, conf)`](#fn-kustomizebuild)
 
 ## Fields
+
+## obj environment
+
+`environment` provides a base to create an [inline Tanka
+environment](https://tanka.dev/inline-environments#inline-environments).
+
+
+### fn environment.new
+
+```ts
+new(name, namespace, apiserver)
+```
+
+`new` initiates an [inline Tanka environment](https://tanka.dev/inline-environments#inline-environments)
+
+
+### fn environment.withApiServer
+
+```ts
+withApiServer(apiserver)
+```
+
+`withApiServer` sets the Kubernetes cluster this environment should apply to.
+Must be the full URL, e.g. https://cluster.fqdn:6443
+
+
+### fn environment.withApplyStrategy
+
+```ts
+withApplyStrategy(applyStrategy)
+```
+
+`withApplyStrategy` sets the Kubernetes apply strategy used for this environment.
+Must be `client` or `server`
+
+
+### fn environment.withData
+
+```ts
+withData(data)
+```
+
+`withData` adds the actual Kubernetes resources to the inline environment.
+
+### fn environment.withDataMixin
+
+```ts
+withDataMixin(data)
+```
+
+`withDataMixin` adds the actual Kubernetes resources to the inline environment.
+*Note:* This function appends passed data to existing values
+
+
+### fn environment.withInjectLabels
+
+```ts
+withInjectLabels(bool)
+```
+
+`withInjectLabels` adds a "tanka.dev/environment" label to each created resource.
+Required for [garbage collection](https://tanka.dev/garbage-collection).
+
+
+### fn environment.withLabels
+
+```ts
+withLabels(labels)
+```
+
+`withLabels` adds arbitrary key:value labels.
+
+### fn environment.withLabelsMixin
+
+```ts
+withLabelsMixin(labels)
+```
+
+`withLabelsMixin` adds arbitrary key:value labels.
+*Note:* This function appends passed data to existing values
+
+
+### fn environment.withName
+
+```ts
+withName(name)
+```
+
+`withName` sets the environment `name`.
+
+### fn environment.withNamespace
+
+```ts
+withNamespace(namespace)
+```
+
+`withNamespace` sets the default namespace for objects that don't explicitely specify one.
+
+### fn environment.withResourceDefaults
+
+```ts
+withResourceDefaults(labels)
+```
+
+`withResourceDefaults` sets defaults for all resources in this environment.
+
+### fn environment.withResourceDefaultsMixin
+
+```ts
+withResourceDefaultsMixin(labels)
+```
+
+`withResourceDefaultsMixin` sets defaults for all resources in this environment.
+*Note:* This function appends passed data to existing values
+
 
 ## obj helm
 
