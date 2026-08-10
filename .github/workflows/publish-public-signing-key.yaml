@@ -38,7 +38,7 @@ jobs:
       # by GitHub's web-flow key (shown as Verified). This matches how index.yaml is published
       # and works with the "Require signed commits" branch protection on gh-pages.
       - name: Publish pubkey.gpg to gh-pages
-        uses: planetscale/ghcommit-action@25309d8005ac7c3bcd61d3fe19b69e0fe47dbdde # v0.2.20
+        uses: planetscale/ghcommit-action@a6b150b81dca5dd027baa898604418eec9e11465 # v0.2.22
         with:
           commit_message: "Publish Helm chart public signing key (pubkey.gpg)"
           repo: ${{ github.repository }}
