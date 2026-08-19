@@ -124,7 +124,7 @@ jobs:
       - name: Retrieve GitHub App credentials from Vault
         if: inputs.github_app == '' && env.VAULT_REPO_SECRET_NAME != ''
         id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # v1.1.0
+        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
         with:
           repo_secrets: |
             GITHUB_APP_ID=${{ env.VAULT_REPO_SECRET_NAME }}:app-id
@@ -250,7 +250,7 @@ jobs:
 
       - name: Fetch GPG signing key from Vault
         if: steps.signing.outputs.enabled == 'true'
-        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # v1.1.0
+        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
         with:
           repo_secrets: |
             GPG_PRIVATE_KEY=helm-chart-signing-key:private_key
