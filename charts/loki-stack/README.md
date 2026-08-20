@@ -2,7 +2,7 @@
 
 **This chart is deprecated and will no longer receive updates or support.**
 
-Please consider using the [loki](https://github.com/grafana/loki/tree/main/production/helm/loki)
+Please consider using the Community maintained [Loki](https://github.com/grafana-community/helm-charts/tree/main/charts/loki)
 chart instead, which provides comprehensive features and ongoing maintenance.
 
 # Loki-Stack Helm Chart
