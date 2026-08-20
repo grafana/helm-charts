@@ -12,3 +12,4 @@ chart-repos:
   - minio=https://charts.min.io
 helm-extra-args: --timeout 600s
 validate-maintainers: false
+exclude-deprecated: true
