@@ -53,9 +53,19 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_SKIP_EXISTING: "true"
 
+      # ghcommit-action reads HEAD from the directory it runs in, so it needs a gh-pages
+      # checkout. Must stay after the checkout above, which wipes the workspace.
+      - name: Checkout gh-pages
+        if: steps.chart-releaser.outputs.changed_charts != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: gh-pages
+          path: gh-pages
+          persist-credentials: false
+
       # Merge the freshly uploaded packages into the gh-pages index.yaml. cr writes the
-      # merged file to .cr-index/index.yaml only when the index actually changed; we
-      # stage it at the workspace root for ghcommit-action below.
+      # merged file to .cr-index/index.yaml only when the index actually changed; we copy
+      # it into the gh-pages checkout for ghcommit-action below.
       - name: Generate updated index.yaml
         id: generate-index
         if: steps.chart-releaser.outputs.changed_charts != ''
@@ -63,7 +73,7 @@ jobs:
           mkdir -p .cr-index
           cr index --config cr.yaml -o "${GITHUB_REPOSITORY_OWNER}" -r "${GITHUB_REPOSITORY#*/}" --index-path .cr-index --package-path .cr-release-packages
           if [[ -f .cr-index/index.yaml ]]; then
-            cp .cr-index/index.yaml index.yaml
+            cp .cr-index/index.yaml gh-pages/index.yaml
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "Index is already up to date; nothing to publish"
@@ -83,6 +93,8 @@ jobs:
           repo: ${{ github.repository }}
           branch: gh-pages
           file_pattern: index.yaml
+          # A directory path, not a repo name (that's `repo`).
+          repository: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
