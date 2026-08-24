@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 Docker image selector for Tempo. Hierachy based on global, component, and tempo values.
 */}}
 {{- define "tempo.tempoImage" -}}
-{{- $registry := coalesce .global.registry .component.registry .tempo.registry -}}
+{{- $registry := coalesce .component.registry .tempo.registry .global.registry -}}
 {{- $repository := coalesce .component.repository .tempo.repository -}}
 {{- $tag := coalesce .component.tag .tempo.tag .defaultVersion | toString -}}
 {{- printf "%s/%s:%s" $registry $repository $tag -}}
