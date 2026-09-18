@@ -8,6 +8,7 @@ metadata:
   name: {{ include "loki.rulerFullname" . }}
   labels:
     {{- include "loki.rulerLabels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
