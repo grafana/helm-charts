@@ -31,7 +31,7 @@ jobs:
           fi
 
       - name: Lint Code Base
-        uses: docker://github/super-linter:v3.12.0
+        uses: docker://github/super-linter:v3.17.2@sha256:7efd08279c13dd68e0271507adc9cf5719c655a9f7d218a63a9fb673378713ca
         env:
           FILTER_REGEX_EXCLUDE: .*(README\.md|Chart\.yaml|NOTES.txt).*
           FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
