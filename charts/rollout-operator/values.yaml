@@ -135,8 +135,18 @@ webhooks:
   enabled: true
   # -- Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30.
   timeoutSeconds: 10
-  # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
+  # -- Default failure policy for all rollout-operator webhooks. `Ignore` or `Fail`. Individual webhooks can override it with `webhooks.failurePolicies`.
   failurePolicy: "Fail"
+  # -- Per-webhook failure policy overrides. Each null or empty value inherits `webhooks.failurePolicy`.
+  failurePolicies:
+    # -- Failure policy for the no-downscale validating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`.
+    noDownscale: null
+    # -- Failure policy for the pod-eviction validating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`.
+    podEviction: null
+    # -- Failure policy for the prepare-downscale mutating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`.
+    prepareDownscale: null
+    # -- Failure policy for the ZoneAwarePodDisruptionBudget validating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`.
+    zpdbValidation: null
   # -- Secret resource name for the TLS certificate to be used with the webhooks
   selfSignedCertSecretName: "certificate"
   # -- objectSelector to filter which objects the webhooks apply to.

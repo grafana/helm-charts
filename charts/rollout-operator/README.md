@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.52.0](https://img.shields.io/badge/Version-0.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.40.0](https://img.shields.io/badge/AppVersion-v0.40.0-informational?style=flat-square)
+![Version: 0.53.0](https://img.shields.io/badge/Version-0.53.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.40.0](https://img.shields.io/badge/AppVersion-v0.40.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -108,7 +108,12 @@ The operator always requires its CRDs to be present in the cluster, so the chart
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tolerations | list | `[]` |  |
 | webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks. Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory. |
-| webhooks.failurePolicy | string | `"Fail"` | Validating and mutating webhook failure policy. `Ignore` or `Fail`. |
+| webhooks.failurePolicies | object | `{"noDownscale":null,"podEviction":null,"prepareDownscale":null,"zpdbValidation":null}` | Per-webhook failure policy overrides. Each null or empty value inherits `webhooks.failurePolicy`. |
+| webhooks.failurePolicies.noDownscale | string | `nil` | Failure policy for the no-downscale validating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`. |
+| webhooks.failurePolicies.podEviction | string | `nil` | Failure policy for the pod-eviction validating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`. |
+| webhooks.failurePolicies.prepareDownscale | string | `nil` | Failure policy for the prepare-downscale mutating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`. |
+| webhooks.failurePolicies.zpdbValidation | string | `nil` | Failure policy for the ZoneAwarePodDisruptionBudget validating webhook. `Ignore` or `Fail`. A null or empty value inherits `webhooks.failurePolicy`. |
+| webhooks.failurePolicy | string | `"Fail"` | Default failure policy for all rollout-operator webhooks. `Ignore` or `Fail`. Individual webhooks can override it with `webhooks.failurePolicies`. |
 | webhooks.objectSelector | object | `{}` | objectSelector to filter which objects the webhooks apply to. |
 | webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |
 | webhooks.timeoutSeconds | int | `10` | Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30. |
