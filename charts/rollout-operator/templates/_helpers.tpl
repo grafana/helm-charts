@@ -92,3 +92,27 @@ Create the image name
 {{- (printf "%s:%s" .Values.image.repository $imageTag) }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the configured failure policy for a webhook.
+*/}}
+{{- define "rollout-operator.webhookFailurePolicy" -}}
+{{- $ctx := .ctx -}}
+{{- $webhook := .webhook -}}
+{{- $validPolicies := list "Fail" "Ignore" -}}
+{{- $validOverrides := list "noDownscale" "podEviction" "prepareDownscale" "zpdbValidation" -}}
+{{- $overrides := default (dict) $ctx.Values.webhooks.failurePolicies -}}
+{{- if not (kindIs "map" $overrides) -}}
+{{- fail "webhooks.failurePolicies must be an object." -}}
+{{- end -}}
+{{- range $key, $_ := $overrides -}}
+{{- if not (has $key $validOverrides) -}}
+{{- fail (printf "webhooks.failurePolicies contains unknown key %q; valid keys are %s." $key (join ", " $validOverrides)) -}}
+{{- end -}}
+{{- end -}}
+{{- $policy := default $ctx.Values.webhooks.failurePolicy (get $overrides $webhook) -}}
+{{- if not (has $policy $validPolicies) -}}
+{{- fail (printf "failure policy for webhook %q must be one of: %s." $webhook (join ", " $validPolicies)) -}}
+{{- end -}}
+{{- $policy -}}
+{{- end -}}

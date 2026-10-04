@@ -1,0 +1,5 @@
+webhooks:
+  failurePolicy: Ignore
+  failurePolicies:
+    podEviction: Fail
+    zpdbValidation: Ignore

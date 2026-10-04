@@ -49,5 +49,5 @@ webhooks:
     sideEffects: NoneOnDryRun
     matchPolicy: Equivalent
     timeoutSeconds: {{.Values.webhooks.timeoutSeconds}}
-    failurePolicy: {{ default .Values.webhooks.failurePolicy .Values.webhooks.failurePolicies.prepareDownscale }}
+    failurePolicy: {{ include "rollout-operator.webhookFailurePolicy" (dict "ctx" . "webhook" "prepareDownscale") }}
 {{- end -}}
