@@ -47,5 +47,5 @@ webhooks:
     {{- end }}
     sideEffects: None
     timeoutSeconds: {{.Values.webhooks.timeoutSeconds}}
-    failurePolicy: {{.Values.webhooks.failurePolicy}}
+    failurePolicy: {{ default .Values.webhooks.failurePolicy .Values.webhooks.failurePolicies.zoneAwarePodDisruptionBudgetValidation }}
 {{- end -}}

@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.52.0](https://img.shields.io/badge/Version-0.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.40.0](https://img.shields.io/badge/AppVersion-v0.40.0-informational?style=flat-square)
+![Version: 0.53.0](https://img.shields.io/badge/Version-0.53.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.40.0](https://img.shields.io/badge/AppVersion-v0.40.0-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -108,6 +108,11 @@ The operator always requires its CRDs to be present in the cluster, so the chart
 | serviceMonitor.scrapeTimeout | string | `nil` | ServiceMonitor scrape timeout in Go duration format (e.g. 15s) |
 | tolerations | list | `[]` |  |
 | webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks. Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory. |
+| webhooks.failurePolicies | object | `{"noDownscale":null,"podEviction":null,"prepareDownscale":null,"zoneAwarePodDisruptionBudgetValidation":null}` | Per-webhook failure policy overrides. A null value inherits `webhooks.failurePolicy`. |
+| webhooks.failurePolicies.noDownscale | string | `nil` | Failure policy for the no-downscale validating webhook. |
+| webhooks.failurePolicies.podEviction | string | `nil` | Failure policy for the pod-eviction validating webhook. |
+| webhooks.failurePolicies.prepareDownscale | string | `nil` | Failure policy for the prepare-downscale mutating webhook. |
+| webhooks.failurePolicies.zoneAwarePodDisruptionBudgetValidation | string | `nil` | Failure policy for the ZoneAwarePodDisruptionBudget validating webhook. |
 | webhooks.failurePolicy | string | `"Fail"` | Validating and mutating webhook failure policy. `Ignore` or `Fail`. |
 | webhooks.objectSelector | object | `{}` | objectSelector to filter which objects the webhooks apply to. |
 | webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |

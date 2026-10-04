@@ -137,6 +137,16 @@ webhooks:
   timeoutSeconds: 10
   # -- Validating and mutating webhook failure policy. `Ignore` or `Fail`.
   failurePolicy: "Fail"
+  # -- Per-webhook failure policy overrides. A null value inherits `webhooks.failurePolicy`.
+  failurePolicies:
+    # -- Failure policy for the no-downscale validating webhook.
+    noDownscale: null
+    # -- Failure policy for the pod-eviction validating webhook.
+    podEviction: null
+    # -- Failure policy for the prepare-downscale mutating webhook.
+    prepareDownscale: null
+    # -- Failure policy for the ZoneAwarePodDisruptionBudget validating webhook.
+    zoneAwarePodDisruptionBudgetValidation: null
   # -- Secret resource name for the TLS certificate to be used with the webhooks
   selfSignedCertSecretName: "certificate"
   # -- objectSelector to filter which objects the webhooks apply to.
