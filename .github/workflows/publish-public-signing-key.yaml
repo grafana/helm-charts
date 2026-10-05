@@ -19,7 +19,7 @@ jobs:
       # ghcommit-action computes the file change against the checked-out branch, so we
       # check out gh-pages at the workspace root and write pubkey.gpg there.
       - name: Checkout gh-pages
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: gh-pages
           persist-credentials: false
