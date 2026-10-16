@@ -110,7 +110,7 @@ spec:
               protocol: TCP
             {{- end }}
             {{- if .Values.traces.otlp.grpc.enabled }}
-            - containerPort: 4317
+            - containerPort: {{ .Values.traces.otlp.grpc.port }}
               name: grpc-otlp
               protocol: TCP
             {{- end }}
