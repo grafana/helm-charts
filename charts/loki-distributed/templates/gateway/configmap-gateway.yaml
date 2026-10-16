@@ -5,6 +5,7 @@ metadata:
   name: {{ include "loki.gatewayFullname" . }}
   labels:
     {{- include "loki.gatewayLabels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
 data:
   nginx.conf: |
     {{- tpl .Values.gateway.nginxConfig.file . | nindent 4 }}
