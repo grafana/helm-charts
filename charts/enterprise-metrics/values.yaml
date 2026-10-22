@@ -13,7 +13,7 @@
 # Since the image is unique for all microservices, so are image settings.
 image:
   repository: grafana/metrics-enterprise
-  tag: v1.7.0
+  tag: v1.7.1@sha256:d6ff5573d95e2c49ad6d25ccbe2fa4a4877735d9f77b5f19fe0d807caf29e847
   pullPolicy: IfNotPresent
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
