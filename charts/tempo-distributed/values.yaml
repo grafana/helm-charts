@@ -2418,7 +2418,7 @@ enterprise:
     # -- Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository'
     repository: grafana/enterprise-traces
     # -- Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.8.1
+    tag: v2.8.13@sha256:cb93eff4a6283cefb940b01d4293315dba471beb56007b84581cbd980cb13a6a
     # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
