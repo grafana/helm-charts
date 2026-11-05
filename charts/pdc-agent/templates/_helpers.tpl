@@ -43,6 +43,16 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Pod labels: the common labels without helm.sh/chart. That label carries the chart version, so
+including it in the pod template changes the pod-template hash on every chart release, rolling
+the Deployment even when neither the image nor the configuration changed.
+app.kubernetes.io/version stays, since it is .Chart.AppVersion and so tracks the agent image.
+*/}}
+{{- define "pdc-agent.podLabels" -}}
+{{- omit (include "pdc-agent.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "pdc-agent.selectorLabels" -}}
