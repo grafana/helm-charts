@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "pdc-agent.labels" . | nindent 8 }}
+        {{- include "pdc-agent.podLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
