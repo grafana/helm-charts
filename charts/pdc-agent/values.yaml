@@ -37,6 +37,8 @@ podSecurityContext:
   runAsUser: 30000
   runAsGroup: 30000
   fsGroup: 30000
+  seccompProfile:
+    type: RuntimeDefault
 
 securityContext:
   capabilities:
@@ -45,6 +47,8 @@ securityContext:
   runAsNonRoot: true
   privileged: false
   allowPrivilegeEscalation: false
+  seccompProfile:
+    type: RuntimeDefault
   # -- Enable running in a read-only root filesystem.
   readOnlyRootFilesystem: false
 
