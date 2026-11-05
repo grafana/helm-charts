@@ -1,5 +1,9 @@
 # Notice of relocation
 
+## ⚠️ Deprecation and move to grafana-community
+
+The `mimir-distributed` chart is deprecated. `mimir-distributed` 6.3.0, released from [grafana/mimir](https://github.com/grafana/mimir), will be its last release. The chart is moving to the community-maintained [grafana-community/helm-charts](https://github.com/grafana-community/helm-charts) repository, where new issues and pull requests should be opened. See [grafana/mimir#17112](https://github.com/grafana/mimir/issues/17112) and [grafana-community/helm-charts#828](https://github.com/grafana-community/helm-charts/issues/828) for details.
+
 The `mimir-distributed` chart source code has moved to the [Grafana Mimir](https://github.com/grafana/mimir) GitHub repository.
 
 Contents of this file, including installation instructions are moved to this [README.md](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/README.md) in the new repository.
