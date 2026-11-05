@@ -3,6 +3,11 @@ prometheus.remote_write "grafana_cloud_prometheus" {
   // https://grafana.com/docs/alloy/latest/reference/components/prometheus.remote_write/
   endpoint {
     url = env("GRAFANA_CLOUD_PROMETHEUS_URL")
+    {{- with .Values.metricsGeneration.remoteWrite }}
+    {{- with .proxyURL }}
+    proxy_url = {{ . | quote }}
+    {{- end }}
+    {{- end }}
 
     basic_auth {
       username = env("GRAFANA_CLOUD_PROMETHEUS_USERNAME")
