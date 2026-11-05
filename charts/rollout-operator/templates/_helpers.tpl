@@ -54,6 +54,16 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Pod labels: the common labels without helm.sh/chart. That label carries the chart version, so
+including it in the pod template recreates the pod on every chart release even when neither the
+image nor the configuration changed. app.kubernetes.io/version stays, since it is .Chart.AppVersion
+and so tracks the operator image rather than chart metadata.
+*/}}
+{{- define "rollout-operator.podLabels" -}}
+{{- omit (include "rollout-operator.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "rollout-operator.selectorLabels" -}}
