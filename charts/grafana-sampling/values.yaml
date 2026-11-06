@@ -17,6 +17,10 @@ metricsGeneration:
     # -- Time period after which metrics are considered stale and are removed from the cache.
     metricsExpiration: 5m
 
+  remoteWrite:
+    # -- Optional HTTP proxy URL for Grafana Cloud Prometheus remote write.
+    proxyURL: ""
+
 sampling:
   # -- Toggle tail sampling.
   enabled: true
