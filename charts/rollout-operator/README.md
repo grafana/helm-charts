@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana rollout-operator](https://github.com/grafana/r
 
 # rollout-operator
 
-![Version: 0.53.1](https://img.shields.io/badge/Version-0.53.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.41.1](https://img.shields.io/badge/AppVersion-v0.41.1-informational?style=flat-square)
+![Version: 0.55.0](https://img.shields.io/badge/Version-0.55.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.41.1](https://img.shields.io/badge/AppVersion-v0.41.1-informational?style=flat-square)
 
 Grafana rollout-operator
 
@@ -88,13 +88,13 @@ The operator always requires its CRDs to be present in the cluster, so the chart
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` | Pod Annotations |
 | podLabels | object | `{}` | Pod (extra) Labels |
-| podSecurityContext | object | `{}` |  |
+| podSecurityContext | object | `{"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Pod-level security context. Defaults to the Pod Security Standards `restricted` profile. runAsUser is deliberately left unset: the image is distroless `:nonroot` and already runs as uid 65532, so pinning a uid here would only break overrides. |
 | priorityClassName | string | `""` |  |
 | resources.limits.memory | string | `"200Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"100Mi"` |  |
 | revisionHistoryLimit | int | `10` | Number of old ReplicaSets to retain |
-| securityContext | object | `{}` |  |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Container-level security context. Defaults to the Pod Security Standards `restricted` profile. rollout-operator is a static Go binary that writes nothing to disk -- its self-signed webhook certificate is held in memory and persisted to a Kubernetes Secret -- so a read-only root filesystem needs no writable volumes. |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
