@@ -57,7 +57,7 @@ dependencies:
     alias: mimir
     condition: mimir.enabled
     repository: "https://grafana.github.io/helm-charts"
-    version: "^5.8.0"
+    version: "^6.0.0"
   - name: tempo-distributed
     alias: tempo
     condition: tempo.enabled
