@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.57](https://img.shields.io/badge/AppVersion-0.0.57-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.57](https://img.shields.io/badge/AppVersion-0.0.57-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -22,6 +22,8 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | debug | bool | `false` | Enable debug logging for the agent. Useful for seeing SSH debug logs |
 | extraArgs | list | `[]` |  |
 | extraEnv | list | `[]` | Extra environment variables to set on the pdc-agent container. Useful for configuring HTTP/HTTPS proxies or other runtime settings. |
+| extraVolumeMounts | list | `[]` | Additional volume mounts to add to the pdc-agent container. Corresponds to `extraVolumes`. |
+| extraVolumes | list | `[]` | Additional volumes to add to the Pod. Use this to mount Secrets, ConfigMaps or other volumes. |
 | fullnameOverride | string | `""` |  |
 | hostedGrafanaId | string | `""` | The numeric ID of your Hosted Grafana stack |
 | hostedGrafanaIdSecretKey | string | `"hosted-grafana-id"` | Defines the key used to lookup the hosted Grafana ID value in the secret defined by `hostedGrafanaIdSecretName`. |
