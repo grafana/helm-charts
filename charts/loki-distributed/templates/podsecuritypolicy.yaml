@@ -6,6 +6,7 @@ metadata:
   name: {{ include "loki.fullname" . }}
   labels:
     {{- include "loki.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
 spec:
   privileged: false
   allowPrivilegeEscalation: false
