@@ -1,4 +1,4 @@
-{{- if and .Values.indexGateway.enabled .Values.querier.autoscaling.enabled }}
+{{- if and .Values.querier.enabled .Values.querier.autoscaling.enabled }}
 {{- $apiVersion := include "loki.hpa.apiVersion" . -}}
 apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler
