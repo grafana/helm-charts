@@ -73,7 +73,13 @@ jobs:
         run: |
           cd source
 
-          latest_tag=$( if ! git describe --tags --abbrev=0 2> /dev/null ; then git rev-list --max-parents=0 --first-parent HEAD ; fi )
+          # When a helm tag prefix is configured, restrict the comparison base
+          # to tags like "<prefix>-*". Otherwise, match any tag.
+          describe_match=()
+          if [[ -n "${HELM_TAG_PREFIX}" ]]; then
+            describe_match=(--match "${HELM_TAG_PREFIX}-*")
+          fi
+          latest_tag=$( if ! git describe --tags --abbrev=0 "${describe_match[@]}" 2> /dev/null ; then git rev-list --max-parents=0 --first-parent HEAD ; fi )
 
           echo "Running: ct list-changed --config ${CT_CONFIGFILE} --since ${latest_tag} --target-branch ${REF_NAME}"
           changed=$(ct list-changed --config "${CT_CONFIGFILE}" --since "${latest_tag}" --target-branch "${REF_NAME}")
