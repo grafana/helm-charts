@@ -9,7 +9,7 @@ description: "Grafana Enterprise Logs"
 home: "https://grafana.com/products/enterprise/logs/"
 dependencies:
 - name: "loki-distributed"
-  version: "0.55.0"
+  version: "0.80.6"
   repository: "https://grafana.github.io/helm-charts"
 - name: minio
   alias: minio
