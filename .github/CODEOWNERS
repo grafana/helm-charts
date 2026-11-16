@@ -16,7 +16,7 @@
 /charts/rollout-operator/ @grafana/mimir-maintainers
 /charts/enterprise-logs/ @grafana/loki-squad
 /charts/tempo-vulture/ @grafana/tempo @Whyeasy @dgzlopes
-/charts/synthetic-monitoring-agent/ @torstenwalter @zanhsieh
+/charts/synthetic-monitoring-agent/ @grafana/synthetic-monitoring-dev
 /charts/agent-operator/ @grafana/grafana-agent-maintainers
 /charts/cloudcost-exporter/ @grafana/platform-monitoring
 /charts/grafana-mcp/ @jkroepke @Sheikh-Abubaker @KyriosGN0 @QuentinBisson
