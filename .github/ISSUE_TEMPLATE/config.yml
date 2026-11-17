@@ -7,8 +7,8 @@ contact_links:
     url: https://github.com/grafana-community/helm-charts/issues/new/choose
     about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
   - name: Create synthetic-monitoring-agent chart issues here
-    url: https://github.com/grafana-community/helm-charts/issues/new/choose
-    about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
+    url: https://github.com/grafana/synthetic-monitoring-agent/issues/new
+    about: The synthetic-monitoring-agent chart is maintained in the grafana/synthetic-monitoring-agent repository.
   - name: Create tempo-distributed chart issues here
     url: https://github.com/grafana-community/helm-charts/issues/new/choose
     about: See https://github.com/grafana-community/helm-charts/issues/2 for more detailed information.
