@@ -139,6 +139,10 @@ webhooks:
   failurePolicy: "Fail"
   # -- Secret resource name for the TLS certificate to be used with the webhooks
   selfSignedCertSecretName: "certificate"
+  # -- Restrict the webhook ClusterRole's `patch` permission to the webhook configurations created by this chart.
+  # `list` and `watch` stay cluster-wide because they cannot be restricted by name.
+  # Leave this disabled if you create your own webhook configurations labeled with `grafana.com/inject-rollout-operator-ca: "true"`.
+  restrictPatchToOwnWebhooks: false
   # -- objectSelector to filter which objects the webhooks apply to.
   objectSelector: {}
   # See https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-objectselector
