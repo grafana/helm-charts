@@ -1,0 +1,5 @@
+webhooks:
+  podEviction:
+    enabled: false
+  prepareDownscale:
+    failurePolicy: Ignore

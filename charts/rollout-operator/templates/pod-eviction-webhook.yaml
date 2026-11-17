@@ -1,4 +1,5 @@
-{{- if and .Values.webhooks.enabled .Values.webhooks.podEviction.enabled -}}
+{{- $webhook := .Values.webhooks.podEviction | default dict -}}
+{{- if and .Values.webhooks.enabled (ne $webhook.enabled false) -}}
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -47,5 +48,5 @@ webhooks:
     {{- end }}
     sideEffects: None
     timeoutSeconds: {{.Values.webhooks.timeoutSeconds}}
-    failurePolicy: {{ .Values.webhooks.podEviction.failurePolicy | default .Values.webhooks.failurePolicy }}
+    failurePolicy: {{ $webhook.failurePolicy | default .Values.webhooks.failurePolicy }}
 {{- end -}}
