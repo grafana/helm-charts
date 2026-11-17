@@ -1,4 +1,4 @@
-{{- if .Values.webhooks.enabled -}}
+{{- if and .Values.webhooks.enabled .Values.webhooks.podEviction.enabled -}}
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -47,5 +47,5 @@ webhooks:
     {{- end }}
     sideEffects: None
     timeoutSeconds: {{.Values.webhooks.timeoutSeconds}}
-    failurePolicy: {{.Values.webhooks.failurePolicy}}
+    failurePolicy: {{ .Values.webhooks.podEviction.failurePolicy | default .Values.webhooks.failurePolicy }}
 {{- end -}}
