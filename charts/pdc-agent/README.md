@@ -20,6 +20,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | clusterSecretKey | string | `"cluster"` | Defines the key used to lookup the cluster value in the secret defined by `clusterSecretName`. |
 | clusterSecretName | string | `""` | If set, CLUSTER is read from this secret instead of the cluster value above |
 | debug | bool | `false` | Enable debug logging for the agent. Useful for seeing SSH debug logs |
+| dnsConfig | object | `{}` |  Allows more control on the DNS settings for the Pod |
 | extraArgs | list | `[]` |  |
 | extraEnv | list | `[]` | Extra environment variables to set on the pdc-agent container. Useful for configuring HTTP/HTTPS proxies or other runtime settings. |
 | fullnameOverride | string | `""` |  |
