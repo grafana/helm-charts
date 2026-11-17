@@ -22,6 +22,13 @@ spec:
   {{- with .Values.hostNetwork }}
   hostNetwork: {{ . }}
   {{- end }}
+  {{- with .Values.dnsPolicy }}
+  dnsPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.dnsConfig }}
+  dnsConfig:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- with .Values.priorityClassName }}
   priorityClassName: {{ . }}
   {{- end }}
