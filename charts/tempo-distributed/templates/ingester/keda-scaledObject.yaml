@@ -1,0 +1,28 @@
+{{- if and .Values.ingester.autoscaling.enabled .Values.ingester.autoscaling.keda.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tempo.labels" (dict "ctx" . "component" "ingester") | nindent 4 }}
+spec:
+  minReplicaCount: {{ .Values.ingester.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.ingester.autoscaling.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "tempo.resourceName" (dict "ctx" . "component" "ingester") }}
+  triggers:
+  {{- range .Values.ingester.autoscaling.keda.triggers }}
+  - type: {{ .type | quote }}
+    metadata:
+      serverAddress: {{ .metadata.serverAddress }}
+      threshold: {{ .metadata.threshold | quote }}
+      query: |
+        {{- .metadata.query | nindent 8 }}
+      {{- if .metadata.customHeaders }}
+      customHeaders: {{ .metadata.customHeaders }}
+      {{- end }}
+  {{- end }}
+{{- end }}
