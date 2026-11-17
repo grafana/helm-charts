@@ -111,3 +111,34 @@ extraArgs: []
 extraEnv: []
 # - name: HTTP_PROXY
 #   value: "http://proxy.example.com:8080"
+
+# -- Extra volumes to add to the Pod. Use `extraVolumeMounts` to mount them into the pdc-agent container.
+extraVolumes: []
+# - name: custom-ca
+#   secret:
+#     secretName: custom-ca
+
+# -- Extra volume mounts to add to the pdc-agent container. Corresponds to `extraVolumes`.
+extraVolumeMounts: []
+# - name: custom-ca
+#   mountPath: /etc/ssl/certs/custom-ca.pem
+#   subPath: ca.pem
+#   readOnly: true
+
+# -- Extra init containers to add to the Pod.
+# Set `restartPolicy: Always` on an entry to run it as a native sidecar (Kubernetes 1.29+).
+extraInitContainers: []
+# - name: wait-for-db
+#   image: busybox:1.37
+#   command: ["sh", "-c", "until nc -z db.example.internal 5432; do sleep 2; done"]
+
+# -- Extra containers to add to the Pod alongside the pdc-agent container.
+# Useful for sidecars such as a proxy that makes a private data source reachable on localhost.
+extraContainers: []
+# - name: cloud-sql-proxy
+#   image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.27.0
+#   args:
+#     - --port=5432
+#     - my-project:my-region:my-instance
+#   securityContext:
+#     runAsNonRoot: true

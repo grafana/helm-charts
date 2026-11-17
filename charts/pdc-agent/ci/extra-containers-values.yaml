@@ -1,0 +1,29 @@
+insecureTokenValue: "1234567890"
+cluster: "test-cluster"
+hostedGrafanaId: "1234567890"
+
+extraVolumes:
+  - name: shared
+    emptyDir: {}
+
+extraVolumeMounts:
+  - name: shared
+    mountPath: /shared
+    readOnly: true
+
+extraInitContainers:
+  - name: init
+    image: busybox:1.37
+    command: ["sh", "-c", "echo ready > /shared/ready"]
+    volumeMounts:
+      - name: shared
+        mountPath: /shared
+
+extraContainers:
+  - name: sidecar
+    image: busybox:1.37
+    command: ["sh", "-c", "cat /shared/ready && tail -f /dev/null"]
+    volumeMounts:
+      - name: shared
+        mountPath: /shared
+        readOnly: true
