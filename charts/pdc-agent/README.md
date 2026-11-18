@@ -1,6 +1,6 @@
 # pdc-agent
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.57](https://img.shields.io/badge/AppVersion-0.0.57-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.57](https://img.shields.io/badge/AppVersion-0.0.57-informational?style=flat-square)
 
 PDC agent is an agent for connecting to Grafana Private Data source Connect
 
@@ -40,6 +40,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | podSecurityContext.fsGroup | int | `30000` |  |
 | podSecurityContext.runAsGroup | int | `30000` |  |
 | podSecurityContext.runAsUser | int | `30000` |  |
+| podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | replicaCount | int | `3` | This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/ |
 | resources.requests.cpu | string | `"100m"` | CPU request for the container. There is no point setting the CPU higher than 1, because openssh is single threaded |
 | resources.requests.memory | string | `"256Mi"` | Memory request for the container. |
@@ -48,6 +49,7 @@ PDC agent is an agent for connecting to Grafana Private Data source Connect
 | securityContext.privileged | bool | `false` |  |
 | securityContext.readOnlyRootFilesystem | bool | `false` | Enable running in a read-only root filesystem. |
 | securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount API credentials for the Service Account. Disabled by default as the agent does not need Kubernetes API access |
 | serviceAccount.create | bool | `false` | Toggle to create ServiceAccount |
