@@ -99893,6 +99893,29 @@ entries:
     version: 0.1.0
   synthetic-monitoring-agent:
   - apiVersion: v2
+    appVersion: v0.71.0
+    created: "2026-11-20T08:38:43.275866524Z"
+    description: Grafana Synthetic Monitoring agent, to run private probes on Kubernetes.
+    digest: b81a5eb69e07d691c2cff398303a4c4e1198359ef22e4a5b002a5a6c98fe53e6
+    home: https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/set-up/set-up-private-probes/
+    icon: https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg
+    keywords:
+    - grafana
+    - synthetic-monitoring
+    - private-probe
+    kubeVersion: '>=1.27.0-0'
+    maintainers:
+    - name: grafana/synthetic-monitoring-be
+      url: https://github.com/orgs/grafana/teams/synthetic-monitoring-be
+    name: synthetic-monitoring-agent
+    sources:
+    - https://github.com/grafana/synthetic-monitoring-agent
+    - https://github.com/grafana/crocochrome
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/synthetic-monitoring-agent-2.0.1/synthetic-monitoring-agent-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
     appVersion: v0.69.0
     created: "2026-11-13T07:46:18.792992263Z"
     description: Grafana Synthetic Monitoring agent, to run private probes on Kubernetes.
@@ -114534,4 +114557,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-19T13:54:07.609277564Z"
+generated: "2026-11-20T08:38:43.302270015Z"
