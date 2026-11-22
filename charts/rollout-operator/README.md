@@ -10,7 +10,7 @@ Grafana rollout-operator
 
 ## Requirements
 
-Kubernetes: `^1.10.0-0`
+Kubernetes: `^1.19.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
@@ -88,13 +88,13 @@ The operator always requires its CRDs to be present in the cluster, so the chart
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` | Pod Annotations |
 | podLabels | object | `{}` | Pod (extra) Labels |
-| podSecurityContext | object | `{"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Pod-level security context. Defaults to the Pod Security Standards `restricted` profile. runAsUser is deliberately left unset: the image is distroless `:nonroot` and already runs as uid 65532, so pinning a uid here would only break overrides. |
+| podSecurityContext | object | `{"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Pod-level security context. Meets the Pod Security Standards `restricted` profile. runAsUser is deliberately left unset: the image is distroless `:nonroot` and already runs as uid 65532, so pinning a uid here would only break overrides. To remove a default, set that key to null. An empty map ({}) keeps all defaults. |
 | priorityClassName | string | `""` |  |
 | resources.limits.memory | string | `"200Mi"` |  |
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"100Mi"` |  |
 | revisionHistoryLimit | int | `10` | Number of old ReplicaSets to retain |
-| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Container-level security context. Defaults to the Pod Security Standards `restricted` profile. rollout-operator is a static Go binary that writes nothing to disk -- its self-signed webhook certificate is held in memory and persisted to a Kubernetes Secret -- so a read-only root filesystem needs no writable volumes. |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Container-level security context. Meets the Pod Security Standards `restricted` profile and also sets readOnlyRootFilesystem. rollout-operator is a static Go binary that writes nothing to disk -- its self-signed webhook certificate is held in memory and persisted to a Kubernetes Secret -- so a read-only root filesystem needs no writable volumes. To remove a default, set that key to null. An empty map ({}) keeps all defaults. |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |

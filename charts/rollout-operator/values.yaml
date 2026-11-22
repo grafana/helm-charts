@@ -72,18 +72,21 @@ podAnnotations: {}
 # -- Pod (extra) Labels
 podLabels: {}
 
-# -- Pod-level security context. Defaults to the Pod Security Standards `restricted`
+# -- Pod-level security context. Meets the Pod Security Standards `restricted`
 # profile. runAsUser is deliberately left unset: the image is distroless `:nonroot`
 # and already runs as uid 65532, so pinning a uid here would only break overrides.
+# To remove a default, set that key to null. An empty map ({}) keeps all defaults.
 podSecurityContext:
   runAsNonRoot: true
   seccompProfile:
     type: RuntimeDefault
 
-# -- Container-level security context. Defaults to the Pod Security Standards
-# `restricted` profile. rollout-operator is a static Go binary that writes nothing
-# to disk -- its self-signed webhook certificate is held in memory and persisted to
-# a Kubernetes Secret -- so a read-only root filesystem needs no writable volumes.
+# -- Container-level security context. Meets the Pod Security Standards
+# `restricted` profile and also sets readOnlyRootFilesystem. rollout-operator is a
+# static Go binary that writes nothing to disk -- its self-signed webhook certificate
+# is held in memory and persisted to a Kubernetes Secret -- so a read-only root
+# filesystem needs no writable volumes.
+# To remove a default, set that key to null. An empty map ({}) keeps all defaults.
 securityContext:
   allowPrivilegeEscalation: false
   capabilities:
