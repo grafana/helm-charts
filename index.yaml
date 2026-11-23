@@ -99024,6 +99024,23 @@ entries:
   rollout-operator:
   - apiVersion: v2
     appVersion: v0.42.0
+    created: "2026-11-23T07:34:08.632413107Z"
+    dependencies:
+    - condition: crds.enabled
+      name: crds
+      repository: ""
+      version: 0.1.0
+    description: Grafana rollout-operator
+    digest: 912477d906e3d8fb7a902156faee882447eb6b5d8465e8e73fff69b9b6a7fd18
+    home: https://github.com/grafana/rollout-operator
+    kubeVersion: ^1.10.0-0
+    name: rollout-operator
+    type: application
+    urls:
+    - https://github.com/grafana/helm-charts/releases/download/rollout-operator-0.55.0/rollout-operator-0.55.0.tgz
+    version: 0.55.0
+  - apiVersion: v2
+    appVersion: v0.42.0
     created: "2026-11-10T18:40:42.105719175Z"
     dependencies:
     - condition: crds.enabled
@@ -114588,4 +114605,4 @@ entries:
     urls:
     - https://github.com/grafana/helm-charts/releases/download/tempo-vulture-0.1.0/tempo-vulture-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-20T21:49:36.490144151Z"
+generated: "2026-11-23T07:34:08.638422902Z"
