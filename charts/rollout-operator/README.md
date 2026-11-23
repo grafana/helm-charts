@@ -110,5 +110,6 @@ The operator always requires its CRDs to be present in the cluster, so the chart
 | webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks. Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory. |
 | webhooks.failurePolicy | string | `"Fail"` | Validating and mutating webhook failure policy. `Ignore` or `Fail`. |
 | webhooks.objectSelector | object | `{}` | objectSelector to filter which objects the webhooks apply to. |
+| webhooks.restrictPatchToOwnWebhooks | bool | `false` | Restrict the webhook ClusterRole's `patch` permission to the webhook configurations created by this chart. `list` and `watch` stay cluster-wide because they cannot be restricted by name. Leave this disabled if you create your own webhook configurations labeled with `grafana.com/inject-rollout-operator-ca: "true"`. |
 | webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |
 | webhooks.timeoutSeconds | int | `10` | Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30. |

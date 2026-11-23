@@ -4,6 +4,34 @@ kind: ClusterRole
 metadata:
   name: {{ include "rollout-operator.fullname" . }}-webhook-clusterrole
 rules:
+{{- if .Values.webhooks.restrictPatchToOwnWebhooks }}
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - validatingwebhookconfigurations
+      - mutatingwebhookconfigurations
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - validatingwebhookconfigurations
+    verbs:
+      - patch
+    resourceNames:
+      - no-downscale-{{ .Release.Namespace }}
+      - pod-eviction-{{ .Release.Namespace }}
+      - zpdb-validation-{{ .Release.Namespace }}
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+    verbs:
+      - patch
+    resourceNames:
+      - prepare-downscale-{{ .Release.Namespace }}
+{{- else }}
   - apiGroups:
       - admissionregistration.k8s.io
     resources:
@@ -13,4 +41,5 @@ rules:
       - list
       - patch
       - watch
+{{- end }}
 {{- end -}}
