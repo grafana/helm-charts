@@ -109,6 +109,14 @@ The operator always requires its CRDs to be present in the cluster, so the chart
 | tolerations | list | `[]` |  |
 | webhooks.enabled | bool | `true` | Enable the rollout-operator webhooks. See https://github.com/grafana/rollout-operator/#webhooks. Note that the webhooks require custom resource definitions. If upgrading, manually apply the files in the `crds` directory. |
 | webhooks.failurePolicy | string | `"Fail"` | Validating and mutating webhook failure policy. `Ignore` or `Fail`. |
+| webhooks.noDownscale.enabled | bool | `true` | Enable the no-downscale validating webhook, which rejects downscales of resources labelled `grafana.com/no-downscale`. |
+| webhooks.noDownscale.failurePolicy | string | `""` | Failure policy for the no-downscale webhook. `Ignore` or `Fail`. Defaults to `webhooks.failurePolicy`. |
 | webhooks.objectSelector | object | `{}` | objectSelector to filter which objects the webhooks apply to. |
+| webhooks.podEviction.enabled | bool | `true` | Enable the pod-eviction validating webhook, which enforces ZoneAwarePodDisruptionBudgets on pod evictions. |
+| webhooks.podEviction.failurePolicy | string | `""` | Failure policy for the pod-eviction webhook. `Ignore` or `Fail`. Defaults to `webhooks.failurePolicy`. |
+| webhooks.prepareDownscale.enabled | bool | `true` | Enable the prepare-downscale mutating webhook, which calls the prepare-downscale endpoint before a StatefulSet is scaled down. |
+| webhooks.prepareDownscale.failurePolicy | string | `""` | Failure policy for the prepare-downscale webhook. `Ignore` or `Fail`. Defaults to `webhooks.failurePolicy`. |
 | webhooks.selfSignedCertSecretName | string | `"certificate"` | Secret resource name for the TLS certificate to be used with the webhooks |
 | webhooks.timeoutSeconds | int | `10` | Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30. |
+| webhooks.zpdbValidation.enabled | bool | `true` | Enable the zpdb-validation validating webhook, which validates ZoneAwarePodDisruptionBudget resources. |
+| webhooks.zpdbValidation.failurePolicy | string | `""` | Failure policy for the zpdb-validation webhook. `Ignore` or `Fail`. Defaults to `webhooks.failurePolicy`. |
