@@ -28,10 +28,7 @@ spec:
       {{- end }}
       namespace: {{ .Release.Namespace | quote }}
       labels:
-        {{- include "rollout-operator.selectorLabels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "rollout-operator.podLabels" . | nindent 8 }}
     spec:
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
