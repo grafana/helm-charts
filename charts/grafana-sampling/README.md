@@ -1,6 +1,6 @@
 # grafana-sampling
 
-![Version: 1.1.7](https://img.shields.io/badge/Version-1.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.11.3](https://img.shields.io/badge/AppVersion-v1.11.3-informational?style=flat-square)
+![Version: 1.1.8](https://img.shields.io/badge/Version-1.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.11.3](https://img.shields.io/badge/AppVersion-v1.11.3-informational?style=flat-square)
 
 A Helm chart for a layered OTLP tail sampling and metrics generation pipeline.
 
@@ -156,6 +156,7 @@ A major chart version change indicates that there is an incompatible breaking ch
 | metricsGeneration.dimensions | list | `["service.namespace","service.version","deployment.environment","k8s.cluster.name","k8s.pod.name"]` | Additional dimensions to add to generated metrics. |
 | metricsGeneration.enabled | bool | `true` | Toggle generation of spanmetrics and servicegraph metrics. |
 | metricsGeneration.legacy | bool | `true` | Use legacy metric names that match those used by the Tempo metrics generator. |
+| metricsGeneration.remoteWrite.proxyURL | string | `""` | Optional HTTP proxy URL for Grafana Cloud Prometheus remote write. |
 | metricsGeneration.serviceGraph.metricsFlushInterval | string | `"60s"` | The interval at which metrics are flushed to downstream components. |
 | metricsGeneration.spanMetrics.metricsExpiration | string | `"5m"` | Time period after which metrics are considered stale and are removed from the cache. |
 | sampling.decisionWait | string | `"15s"` | Wait time since the first span of a trace before making a sampling decision. |
