@@ -73,7 +73,10 @@ jobs:
         run: |
           cd source
 
-          latest_tag=$( if ! git describe --tags --abbrev=0 2> /dev/null ; then git rev-list --max-parents=0 --first-parent HEAD ; fi )
+          # Prefer a matching Helm tag with the configured prefix, then fall back to any tag or the first commit.
+          if [[ -z "${HELM_TAG_PREFIX}" ]] || ! latest_tag=$(git describe --tags --abbrev=0 --match "${HELM_TAG_PREFIX}-*" 2>/dev/null); then
+            latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 --first-parent HEAD)
+          fi
 
           echo "Running: ct list-changed --config ${CT_CONFIGFILE} --since ${latest_tag} --target-branch ${REF_NAME}"
           changed=$(ct list-changed --config "${CT_CONFIGFILE}" --since "${latest_tag}" --target-branch "${REF_NAME}")
@@ -236,7 +239,6 @@ jobs:
           curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/v1.4.0/chart-releaser_1.4.0_linux_amd64.tar.gz"
           tar -xzf cr.tar.gz -C "${CR_TOOL_PATH}"
           rm -f cr.tar.gz
-
 
       - name: Determine if chart signing is enabled
         id: signing
