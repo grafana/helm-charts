@@ -116,6 +116,12 @@ hostAliases: []
 # -- Controls whether the pod has the `hostNetwork` flag set.
 hostNetwork: null
 
+# -- Set dnsPolicy for the pod. If not set k8s defaults to ClusterFirst when hostNetwork=false and Default when hostNetwork=true
+dnsPolicy: null
+
+# -- Set dnsConfig for the pod. Read more about dnsConfig https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+dnsConfig: {}
+
 # -- Annotations for the DaemonSet
 annotations: {}
 
