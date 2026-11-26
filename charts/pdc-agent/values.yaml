@@ -111,3 +111,16 @@ extraArgs: []
 extraEnv: []
 # - name: HTTP_PROXY
 #   value: "http://proxy.example.com:8080"
+
+# -- Additional volumes to add to the Pod. Use this to mount Secrets, ConfigMaps or other volumes.
+extraVolumes: []
+# - name: custom-ca
+#   secret:
+#     secretName: custom-ca
+
+# -- Additional volume mounts to add to the pdc-agent container. Corresponds to `extraVolumes`.
+extraVolumeMounts: []
+# - name: custom-ca
+#   mountPath: /etc/ssl/certs/custom-ca.pem
+#   subPath: ca.pem
+#   readOnly: true
